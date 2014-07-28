@@ -1,0 +1,61 @@
+package org.score.content.httpclient;
+
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class PoolingHttpClientConnectionManagerBuilder {
+    private SessionObjectHolder connectionPoolHolder;
+    private SSLConnectionSocketFactory sslsf;
+    private String connectionManagerMapKey;
+
+    public PoolingHttpClientConnectionManagerBuilder setConnectionPoolHolder(SessionObjectHolder connectionPoolHolder) {
+        this.connectionPoolHolder = connectionPoolHolder;
+        return this;
+    }
+
+    public PoolingHttpClientConnectionManagerBuilder setSslsf(SSLConnectionSocketFactory sslsf) {
+        this.sslsf = sslsf;
+        return this;
+    }
+
+    public PoolingHttpClientConnectionManagerBuilder setConnectionManagerMapKey(String ... connectionManagerMapKeys) {
+        StringBuilder keyBuilder = new StringBuilder();
+        for (String token : connectionManagerMapKeys) {
+            keyBuilder.append(token).append(":");
+        }
+        if (keyBuilder.length() > 0) {
+            keyBuilder.deleteCharAt(keyBuilder.length() -1);
+        }
+        this.connectionManagerMapKey = keyBuilder.toString();
+        return this;
+    }
+
+    public synchronized PoolingHttpClientConnectionManager buildConnectionManager() {
+        Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
+                = (Map<String, PoolingHttpClientConnectionManager>) connectionPoolHolder.getObject();
+
+        if (connectionManagerMap == null) {
+            connectionManagerMap = new HashMap<String, PoolingHttpClientConnectionManager>();
+            connectionPoolHolder.setObject(connectionManagerMap);
+        }
+
+        PoolingHttpClientConnectionManager connManager = connectionManagerMap.get(connectionManagerMapKey);
+        if (connManager == null) {
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                    .register("https", sslsf)
+                    .build();
+            connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            connectionManagerMap.put(connectionManagerMapKey, connManager);
+        }
+
+        return connManager;
+    }
+}

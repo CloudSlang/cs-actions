@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.score.content</groupId>
+	<artifactId>score-content-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<scm>
+		<connection>scm:git:https://HPSoftware/score-content.git</connection>
+		<developerConnection>scm:git:git@github.com:HPSoftware/score-content.git</developerConnection>
+		<url>https://github.com/HPSoftware/score-content.git</url>
+		<tag>master</tag>
+	</scm>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-repository</id>
+            <name>nexus repository</name>
+            <url>http://16.60.152.89:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshot-repository</id>
+            <name>nexus snapshots repository</name>
+            <url>http://16.60.152.89:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+	<developers>
+		<developer>
+			<id>mihaidavid</id>
+			<email>mihai.david@hp.com</email>
+			<name>Mihai David</name>
+			<url>https://github.com/mihaidavid</url>
+			<organization>HP Software</organization>
+			<timezone>+2</timezone>
+		</developer>
+		<developer>
+			<id>adinatusa</id>
+			<email>adina.tusa@hp.com</email>
+			<name>Adina Tusa</name>
+			<url>https://github.com/adinatusa</url>
+			<organization>HP Software</organization>
+			<timezone>+2</timezone>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<modules>
+		<module>score-http-client</module>
+	</modules>
+</project>
