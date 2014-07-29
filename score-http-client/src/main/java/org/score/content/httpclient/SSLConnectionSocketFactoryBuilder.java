@@ -54,34 +54,34 @@ public class SSLConnectionSocketFactoryBuilder {
         SSLContextBuilder sslContextBuilder = SSLContexts.custom();
         if (!trustAllRoots) {
             boolean useClientCert = !StringUtils.isEmpty(keystore);
-        //validate SSL certificates sent by the server
+            //validate SSL certificates sent by the server
             boolean useTrustCert = !StringUtils.isEmpty(trustKeystore);
 
-        String javaKeystore = System.getProperty("java.home") + "\\lib\\security\\cacerts";
-        boolean storeExists = new File(javaKeystore).exists();
+            String javaKeystore = System.getProperty("java.home") + "\\lib\\security\\cacerts";
+            boolean storeExists = new File(javaKeystore).exists();
 
-        if (!useClientCert && storeExists) {
-            keystore = "file:" + javaKeystore;
+            if (!useClientCert && storeExists) {
+                keystore = "file:" + javaKeystore;
                 keystorePassword = (StringUtils.isEmpty(keystorePassword)) ? "changeit" : keystorePassword;
-            useClientCert = true;
-        } else if (!keystore.startsWith("http")) {
-            keystore = "file:" + keystore;
-        }
+                useClientCert = true;
+            } else if (!keystore.startsWith("http")) {
+                keystore = "file:" + keystore;
+            }
 
-        if (!useTrustCert && storeExists) {
-            trustKeystore = "file:" + javaKeystore;
+            if (!useTrustCert && storeExists) {
+                trustKeystore = "file:" + javaKeystore;
                 trustPassword = (StringUtils.isEmpty(trustPassword)) ? "changeit" : trustPassword;
-            useTrustCert = true;
-        } else if (!trustKeystore.startsWith("http")) {
-            trustKeystore = "file:" + trustKeystore;
-        }
-        createTrustKeystore(sslContextBuilder, useTrustCert);
+                useTrustCert = true;
+            } else if (!trustKeystore.startsWith("http")) {
+                trustKeystore = "file:" + trustKeystore;
+            }
+            createTrustKeystore(sslContextBuilder, useTrustCert);
             createKeystore(sslContextBuilder, useClientCert);
         } else {
             try {
                 sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
             } catch (Exception e) {
-                new IllegalArgumentException(TRUST_ALL_ROOTS_ERROR + trustAllRoots, e);
+                throw new RuntimeException(TRUST_ALL_ROOTS_ERROR + trustAllRoots, e);
             }
         }
 
@@ -89,12 +89,12 @@ public class SSLConnectionSocketFactoryBuilder {
         sslContextBuilder.useTLS();
 
         //todo remove ALLOW_ALL_HOSTNAME_VERIFIER
-        SSLConnectionSocketFactory sslsf = null;
+        SSLConnectionSocketFactory sslsf;
         try {
             sslsf = new SSLConnectionSocketFactory(
                     sslContextBuilder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         } catch (Exception e) {
-            new IllegalArgumentException(SSL_CONNECTION_ERROR, e);
+            throw new RuntimeException(SSL_CONNECTION_ERROR, e);
         }
         return sslsf;
     }
@@ -105,12 +105,10 @@ public class SSLConnectionSocketFactoryBuilder {
             try {
                 clientKeyStore = createKeyStore(new URL(keystore), keystorePassword);
                 sslContextBuilder.loadKeyMaterial(clientKeyStore, keystorePassword.toCharArray());
-            } catch (UnrecoverableKeyException ue) {
-                new IllegalArgumentException(BAD_KEYSTORE_ERROR, ue);
-            } catch (IOException ioe) {
-                new IllegalArgumentException(BAD_KEYSTORE_ERROR, ioe);
+            } catch (UnrecoverableKeyException | IOException ue) {
+                throw new RuntimeException(BAD_KEYSTORE_ERROR, ue);
             } catch (GeneralSecurityException gse) {
-                new IllegalArgumentException(INVALID_KEYSTORE_ERROR, gse);
+                throw new RuntimeException(INVALID_KEYSTORE_ERROR, gse);
             }
         }
     }
@@ -122,9 +120,9 @@ public class SSLConnectionSocketFactoryBuilder {
                 trustKeyStore = createKeyStore(new URL(trustKeystore), trustPassword);
                 sslContextBuilder.loadTrustMaterial(trustKeyStore);
             } catch (IOException ioe) {
-                new IllegalArgumentException(BAD_TRUST_KEYSTORE_ERROR, ioe);
+                throw new RuntimeException(BAD_TRUST_KEYSTORE_ERROR, ioe);
             } catch (GeneralSecurityException gse) {
-                new IllegalArgumentException(INVALID_TRUST_KEYSTORE_ERROR, gse);
+                throw new RuntimeException(INVALID_TRUST_KEYSTORE_ERROR, gse);
             }
         }
     }

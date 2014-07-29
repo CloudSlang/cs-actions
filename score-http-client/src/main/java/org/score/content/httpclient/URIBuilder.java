@@ -32,7 +32,7 @@ public class URIBuilder {
         return this;
     }
 
-    public URI buildURI() throws URISyntaxException {
+    public URI buildURI() {
 
         if (StringUtils.isEmpty(encodeQueryParams)) {
             encodeQueryParams = "true";

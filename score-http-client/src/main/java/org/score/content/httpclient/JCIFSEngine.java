@@ -12,12 +12,12 @@ import java.io.IOException;
 
 public class JCIFSEngine implements NTLMEngine {
 
-    private static final int TYPE_1_FLAGS = 
-            NtlmFlags.NTLMSSP_NEGOTIATE_56 | 
-            NtlmFlags.NTLMSSP_NEGOTIATE_128 | 
-            NtlmFlags.NTLMSSP_NEGOTIATE_NTLM2 | 
-            NtlmFlags.NTLMSSP_NEGOTIATE_ALWAYS_SIGN | 
-            NtlmFlags.NTLMSSP_REQUEST_TARGET;
+    private static final int TYPE_1_FLAGS =
+            NtlmFlags.NTLMSSP_NEGOTIATE_56 |
+                    NtlmFlags.NTLMSSP_NEGOTIATE_128 |
+                    NtlmFlags.NTLMSSP_NEGOTIATE_NTLM2 |
+                    NtlmFlags.NTLMSSP_NEGOTIATE_ALWAYS_SIGN |
+                    NtlmFlags.NTLMSSP_REQUEST_TARGET;
 
     public String generateType1Msg(final String domain, final String workstation)
             throws NTLMEngineException {
@@ -26,7 +26,7 @@ public class JCIFSEngine implements NTLMEngine {
     }
 
     public String generateType3Msg(final String username, final String password,
-            final String domain, final String workstation, final String challenge)
+                                   final String domain, final String workstation, final String challenge)
             throws NTLMEngineException {
         Type2Message type2Message;
         try {
@@ -36,7 +36,7 @@ public class JCIFSEngine implements NTLMEngine {
         }
         final int type2Flags = type2Message.getFlags();
         final int type3Flags = type2Flags
-                & (0xffffffff ^ (NtlmFlags.NTLMSSP_TARGET_TYPE_DOMAIN | NtlmFlags.NTLMSSP_TARGET_TYPE_SERVER));
+                & (~(NtlmFlags.NTLMSSP_TARGET_TYPE_DOMAIN | NtlmFlags.NTLMSSP_TARGET_TYPE_SERVER));
         final Type3Message type3Message = new Type3Message(type2Message, password, domain,
                 username, workstation, type3Flags);
         return Base64.encode(type3Message.toByteArray());

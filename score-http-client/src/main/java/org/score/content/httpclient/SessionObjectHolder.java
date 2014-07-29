@@ -5,7 +5,7 @@ package org.score.content.httpclient;
  * User: davidmih
  * Date: 7/25/14
  */
-public class SessionObjectHolder <T> {
+public class SessionObjectHolder<T> {
     private T object;
 
     public T getObject() {

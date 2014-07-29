@@ -26,6 +26,7 @@ public class CookieStoreBuilder {
             synchronized (this.getClass()) {
                 if (cookieStoreHolder.getObject() == null) {
                     cookieStore = new BasicCookieStore();
+                    //noinspection unchecked
                     cookieStoreHolder.setObject(cookieStore);
                 }
             }

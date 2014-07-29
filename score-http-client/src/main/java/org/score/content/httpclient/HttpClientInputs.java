@@ -6,8 +6,8 @@ package org.score.content.httpclient;
  * Date: 7/18/14
  */
 public enum HttpClientInputs {
-    URL ("url"),
-    METHOD ("method"),
+    URL("url"),
+    METHOD("method"),
     FOLLOW_REDIRECTS("followRedirects"),
     QUERY_PARAMS("queryParams"),
     ENCODE_QUERY_PARAMS("encodeQueryParams"),
@@ -47,10 +47,12 @@ public enum HttpClientInputs {
 //    OFFSET("offset"),
 //    LENGTH("length");
 
-    private String name;
+    private final String name;
+
     HttpClientInputs(String name) {
         this.name = name;
     }
+
     public String getName() {
         return name;
     }

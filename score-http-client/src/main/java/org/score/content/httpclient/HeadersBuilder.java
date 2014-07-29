@@ -10,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 public class HeadersBuilder {
     private String headers;
@@ -29,13 +26,13 @@ public class HeadersBuilder {
     }
 
     public Header[] buildHeaders() {
-        ArrayList<Header> headersArr = new ArrayList<Header>();
+        ArrayList<Header> headersArr = new ArrayList<>();
         if (!StringUtils.isEmpty(headers)) {
             BufferedReader in = new BufferedReader(new StringReader(headers));
 
             String str;
             try {
-                while((str = in.readLine()) != null){
+                while ((str = in.readLine()) != null) {
                     CharArrayBuffer charArrayBuffer = new CharArrayBuffer(str.length());
                     charArrayBuffer.append(str);
                     headersArr.add(new BufferedHeader(charArrayBuffer));

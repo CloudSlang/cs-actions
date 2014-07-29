@@ -1,8 +1,6 @@
 package org.score.content.httpclient;
 
 import org.apache.http.HttpHost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIUtils;
 
 import java.net.URI;

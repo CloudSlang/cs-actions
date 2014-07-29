@@ -1,11 +1,13 @@
 package org.score.content.httpclient;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeaderValueParser;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class HttpResponseConsumer {
     public void consume(Map<String, String> result) throws IOException {
         if (responseCharacterSet == null || responseCharacterSet.equals("")) {
             Header contentType = httpResponse.getEntity().getContentType();
-            if (contentType!= null) {
+            if (contentType != null) {
                 String value = contentType.getValue();
                 NameValuePair[] nameValuePairs = BasicHeaderValueParser.parseParameters(value, BasicHeaderValueParser.INSTANCE);
                 for (NameValuePair nameValuePair : nameValuePairs) {
@@ -53,8 +55,13 @@ public class HttpResponseConsumer {
             }
         }
 
-        String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
-        result.put(HttpClient.RETURN_RESULT, document);
+        if (StringUtils.isEmpty(destinationFile)) {
+            String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
+            result.put(HttpClient.RETURN_RESULT, document);
+        } else {
+            FileWriter fileWriter = new FileWriter(destinationFile);
+            IOUtils.copy(httpResponse.getEntity().getContent(), fileWriter, responseCharacterSet);
+        }
 
     }
 }

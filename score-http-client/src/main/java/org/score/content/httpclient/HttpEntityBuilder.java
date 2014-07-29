@@ -41,9 +41,7 @@ public class HttpEntityBuilder {
 
     public HttpEntity buildEntity() {
         if (!StringUtils.isEmpty(body)) {
-            StringEntity stringEntity = new StringEntity(body,
-                    ContentType.create(contentType, requestCharacterSet));
-            return stringEntity;
+            return new StringEntity(body, ContentType.create(contentType, requestCharacterSet));
         }
 
         if (!StringUtils.isEmpty(filePath)) {

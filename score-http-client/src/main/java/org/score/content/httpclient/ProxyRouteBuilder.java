@@ -24,8 +24,7 @@ public class ProxyRouteBuilder {
     public HttpRoutePlanner buildProxyRoute() {
         if (proxyHost != null) {
             HttpHost proxyHttpHost = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
-            DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxyHttpHost);
-            return routePlanner;
+            return new DefaultProxyRoutePlanner(proxyHttpHost);
         }
         return null;
     }

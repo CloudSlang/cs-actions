@@ -13,7 +13,7 @@ public class HeadersConsumer {
     }
 
     public void consume(Map<String, String> returnResult) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (Header header : headers) {
             result.append(header.toString()).append("\r\n");
         }

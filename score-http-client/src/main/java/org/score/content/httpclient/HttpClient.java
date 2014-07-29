@@ -1,6 +1,7 @@
 package org.score.content.httpclient;
 
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
@@ -16,7 +17,6 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,10 +38,6 @@ public class HttpClient {
     public static final String PROTOCOL_VERSION = "protocolVersion";
     public static final String REASON_PHRASE = "reasonPhrase";
 
-    protected Map<HttpClientInputs, String> httpClientInputs = new HashMap<>();
-    protected SessionObjectHolder cookieStoreHolder;
-    protected SessionObjectHolder connectionPoolHolder;
-
     private ProxyRouteBuilder proxyRouteBuilder = new ProxyRouteBuilder();
     private CookieStoreBuilder cookieStoreBuilder;
     private AuthSchemeProviderLookupBuilder authSchemeProviderLookupBuilder;
@@ -57,24 +53,6 @@ public class HttpClient {
     private FinalLocationConsumer finalLocationConsumer;
     private HeadersConsumer headersConsumer;
     private StatusConsumer statusConsumer;
-
-    public HttpClient() {
-        uriBuilder = new URIBuilder();
-        httpEntityBuilder = new HttpEntityBuilder();
-        headersBuilder = new HeadersBuilder();
-        requestConfigBuilder = new RequestConfigBuilder();
-        credentialsProviderBuilder = new CredentialsProviderBuilder();
-        authSchemeProviderLookupBuilder = new AuthSchemeProviderLookupBuilder();
-        cookieStoreBuilder = new CookieStoreBuilder();
-        proxyRouteBuilder = new ProxyRouteBuilder();
-        sslConnectionSocketFactoryBuilder = new SSLConnectionSocketFactoryBuilder();
-        poolingHttpClientConnectionManagerBuilder = new PoolingHttpClientConnectionManagerBuilder();
-        httpClientExecutor = new HttpClientExecutor();
-        httpResponseConsumer = new HttpResponseConsumer();
-        finalLocationConsumer = new FinalLocationConsumer();
-        headersConsumer = new HeadersConsumer();
-        statusConsumer = new StatusConsumer();
-    }
 
     final public Map<String, String> execute(
             String url,
@@ -109,62 +87,58 @@ public class HttpClient {
             String responseCharacterSet,
             String destinationFile,
             SessionObjectHolder cookieStoreHolder,
-            SessionObjectHolder connectionPoolHolder)   {
+            SessionObjectHolder connectionPoolHolder) {
 
         Map<String, Object> actionRequest = new HashMap<>();
-        actionRequest.put(HttpClientInputs.URL.getName(),url);
-        actionRequest.put(HttpClientInputs.METHOD.getName(),method);
-        actionRequest.put(HttpClientInputs.FOLLOW_REDIRECTS.getName(),followRedirects);
-        actionRequest.put(HttpClientInputs.QUERY_PARAMS.getName(),queryParams);
-        actionRequest.put(HttpClientInputs.ENCODE_QUERY_PARAMS.getName(),encodeQueryParams);
-        actionRequest.put(HttpClientInputs.SOURCE_FILE.getName(),sourceFile);
-        actionRequest.put(HttpClientInputs.REQUEST_CHARACTER_SET.getName(),requestCharacterSet);
-        actionRequest.put(HttpClientInputs.BODY.getName(),body);
-        actionRequest.put(HttpClientInputs.CONTENT_TYPE.getName(),contentType);
-        actionRequest.put(HttpClientInputs.AUTH_TYPE.getName(),authType);
-        actionRequest.put(HttpClientInputs.USERNAME.getName(),username);
-        actionRequest.put(HttpClientInputs.PASSWORD.getName(),password);
+        actionRequest.put(HttpClientInputs.URL.getName(), url);
+        actionRequest.put(HttpClientInputs.METHOD.getName(), method);
+        actionRequest.put(HttpClientInputs.FOLLOW_REDIRECTS.getName(), followRedirects);
+        actionRequest.put(HttpClientInputs.QUERY_PARAMS.getName(), queryParams);
+        actionRequest.put(HttpClientInputs.ENCODE_QUERY_PARAMS.getName(), encodeQueryParams);
+        actionRequest.put(HttpClientInputs.SOURCE_FILE.getName(), sourceFile);
+        actionRequest.put(HttpClientInputs.REQUEST_CHARACTER_SET.getName(), requestCharacterSet);
+        actionRequest.put(HttpClientInputs.BODY.getName(), body);
+        actionRequest.put(HttpClientInputs.CONTENT_TYPE.getName(), contentType);
+        actionRequest.put(HttpClientInputs.AUTH_TYPE.getName(), authType);
+        actionRequest.put(HttpClientInputs.USERNAME.getName(), username);
+        actionRequest.put(HttpClientInputs.PASSWORD.getName(), password);
         actionRequest.put(HttpClientInputs.KERBEROS_CONFIG_FILE.getName(), kerberosConfFile);
-        actionRequest.put(HttpClientInputs.PROXY_TYPE.getName(),proxyType);
-        actionRequest.put(HttpClientInputs.PROXY_HOST.getName(),proxyHost);
-        actionRequest.put(HttpClientInputs.PROXY_PORT.getName(),proxyPort);
-        actionRequest.put(HttpClientInputs.PROXY_AUTH_TYPE.getName(),proxyAuthType);
-        actionRequest.put(HttpClientInputs.PROXY_USERNAME.getName(),proxyUsername);
-        actionRequest.put(HttpClientInputs.PROXY_PASSWORD.getName(),proxyPassword);
-        actionRequest.put(HttpClientInputs.TRUST_ALL_ROOTS.getName(),trustAllRoots);
-        actionRequest.put(HttpClientInputs.TRUST_KEYSTORE.getName(),trustKeystore);
-        actionRequest.put(HttpClientInputs.TRUST_PASSWORD.getName(),trustPassword);
-        actionRequest.put(HttpClientInputs.KEYSTORE.getName(),keystore);
-        actionRequest.put(HttpClientInputs.KEYSTORE_PASSWORD.getName(),keystorePassword);
-        actionRequest.put(HttpClientInputs.CONNECTION_TIMEOUT.getName(),connectTimeout);
-        actionRequest.put(HttpClientInputs.SOCKET_TIMEOUT.getName(),socketTimeout);
-        actionRequest.put(HttpClientInputs.USE_COOKIES.getName(),useCookies);
-        actionRequest.put(HttpClientInputs.KEEP_ALIVE.getName(),keepAlive);
-        actionRequest.put(HttpClientInputs.HEADERS.getName(),headers);
-        actionRequest.put(HttpClientInputs.DESTINATION_FILE.getName(),destinationFile);
-        actionRequest.put(HttpClientInputs.RESPONSE_CHARACTER_SET.getName(),responseCharacterSet);
+        actionRequest.put(HttpClientInputs.PROXY_TYPE.getName(), proxyType);
+        actionRequest.put(HttpClientInputs.PROXY_HOST.getName(), proxyHost);
+        actionRequest.put(HttpClientInputs.PROXY_PORT.getName(), proxyPort);
+        actionRequest.put(HttpClientInputs.PROXY_AUTH_TYPE.getName(), proxyAuthType);
+        actionRequest.put(HttpClientInputs.PROXY_USERNAME.getName(), proxyUsername);
+        actionRequest.put(HttpClientInputs.PROXY_PASSWORD.getName(), proxyPassword);
+        actionRequest.put(HttpClientInputs.TRUST_ALL_ROOTS.getName(), trustAllRoots);
+        actionRequest.put(HttpClientInputs.TRUST_KEYSTORE.getName(), trustKeystore);
+        actionRequest.put(HttpClientInputs.TRUST_PASSWORD.getName(), trustPassword);
+        actionRequest.put(HttpClientInputs.KEYSTORE.getName(), keystore);
+        actionRequest.put(HttpClientInputs.KEYSTORE_PASSWORD.getName(), keystorePassword);
+        actionRequest.put(HttpClientInputs.CONNECTION_TIMEOUT.getName(), connectTimeout);
+        actionRequest.put(HttpClientInputs.SOCKET_TIMEOUT.getName(), socketTimeout);
+        actionRequest.put(HttpClientInputs.USE_COOKIES.getName(), useCookies);
+        actionRequest.put(HttpClientInputs.KEEP_ALIVE.getName(), keepAlive);
+        actionRequest.put(HttpClientInputs.HEADERS.getName(), headers);
+        actionRequest.put(HttpClientInputs.DESTINATION_FILE.getName(), destinationFile);
+        actionRequest.put(HttpClientInputs.RESPONSE_CHARACTER_SET.getName(), responseCharacterSet);
 
         return execute(actionRequest, cookieStoreHolder, connectionPoolHolder);
     }
-        
+
     final public Map<String, String> execute(Map<String, Object> actionRequest,
-                                  SessionObjectHolder cookieStoreHolder,
-                                  SessionObjectHolder connectionPoolHolder) {
+                                             SessionObjectHolder cookieStoreHolder,
+                                             SessionObjectHolder connectionPoolHolder) {
+        buildDefaultServices();
+
+        Map<HttpClientInputs, String> httpClientInputs = new HashMap<>();
         for (HttpClientInputs ooHttpClientInputs : HttpClientInputs.values()) {
             httpClientInputs.put(ooHttpClientInputs, (String) actionRequest.get(ooHttpClientInputs.getName()));
         }
 
-        this.cookieStoreHolder = cookieStoreHolder;
-        this.connectionPoolHolder = connectionPoolHolder;
-        URI uri;
-        try {
-            uri = uriBuilder.setUrl(httpClientInputs.get(HttpClientInputs.URL))
-                    .setQueryParams(httpClientInputs.get(HttpClientInputs.QUERY_PARAMS))
-                    .setEncodeQueryParams(httpClientInputs.get(HttpClientInputs.ENCODE_QUERY_PARAMS))
-                    .buildURI();
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("could not build URI from 'url' input");
-        }
+        URI uri = uriBuilder.setUrl(httpClientInputs.get(HttpClientInputs.URL))
+                .setQueryParams(httpClientInputs.get(HttpClientInputs.QUERY_PARAMS))
+                .setEncodeQueryParams(httpClientInputs.get(HttpClientInputs.ENCODE_QUERY_PARAMS))
+                .buildURI();
 
         HttpEntity httpEntity = httpEntityBuilder
                 .setBody(httpClientInputs.get(HttpClientInputs.BODY))
@@ -322,5 +296,53 @@ public class HttpClient {
 
     public void setPoolingHttpClientConnectionManagerBuilder(PoolingHttpClientConnectionManagerBuilder poolingHttpClientConnectionManagerBuilder) {
         this.poolingHttpClientConnectionManagerBuilder = poolingHttpClientConnectionManagerBuilder;
+    }
+
+    private void buildDefaultServices() {
+        if (uriBuilder == null) {
+            uriBuilder = new URIBuilder();
+        }
+        if (httpEntityBuilder == null) {
+            httpEntityBuilder = new HttpEntityBuilder();
+        }
+        if (headersBuilder == null) {
+            headersBuilder = new HeadersBuilder();
+        }
+        if (requestConfigBuilder == null) {
+            requestConfigBuilder = new RequestConfigBuilder();
+        }
+        if (credentialsProviderBuilder == null) {
+            credentialsProviderBuilder = new CredentialsProviderBuilder();
+        }
+        if (authSchemeProviderLookupBuilder == null) {
+            authSchemeProviderLookupBuilder = new AuthSchemeProviderLookupBuilder();
+        }
+        if (cookieStoreBuilder == null) {
+            cookieStoreBuilder = new CookieStoreBuilder();
+        }
+        if (proxyRouteBuilder == null) {
+            proxyRouteBuilder = new ProxyRouteBuilder();
+        }
+        if (sslConnectionSocketFactoryBuilder == null) {
+            sslConnectionSocketFactoryBuilder = new SSLConnectionSocketFactoryBuilder();
+        }
+        if (poolingHttpClientConnectionManagerBuilder == null) {
+            poolingHttpClientConnectionManagerBuilder = new PoolingHttpClientConnectionManagerBuilder();
+        }
+        if (httpClientExecutor == null) {
+            httpClientExecutor = new HttpClientExecutor();
+        }
+        if (httpResponseConsumer == null) {
+            httpResponseConsumer = new HttpResponseConsumer();
+        }
+        if (finalLocationConsumer == null) {
+            finalLocationConsumer = new FinalLocationConsumer();
+        }
+        if (headersConsumer == null) {
+            headersConsumer = new HeadersConsumer();
+        }
+        if (statusConsumer == null) {
+            statusConsumer = new StatusConsumer();
+        }
     }
 }

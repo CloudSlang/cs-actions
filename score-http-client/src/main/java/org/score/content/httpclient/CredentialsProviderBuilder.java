@@ -95,7 +95,7 @@ public class CredentialsProviderBuilder {
         return credentialsProvider;
     }
 
-    public static String[] getDomainUsername(String username) {
+    private static String[] getDomainUsername(String username) {
         String domain = null;
         String usernameWithoutDomain = username;
         int index = username.indexOf('\\');

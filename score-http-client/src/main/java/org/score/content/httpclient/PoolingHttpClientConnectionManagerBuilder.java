@@ -25,24 +25,25 @@ public class PoolingHttpClientConnectionManagerBuilder {
         return this;
     }
 
-    public PoolingHttpClientConnectionManagerBuilder setConnectionManagerMapKey(String ... connectionManagerMapKeys) {
+    public PoolingHttpClientConnectionManagerBuilder setConnectionManagerMapKey(String... connectionManagerMapKeys) {
         StringBuilder keyBuilder = new StringBuilder();
         for (String token : connectionManagerMapKeys) {
             keyBuilder.append(token).append(":");
         }
         if (keyBuilder.length() > 0) {
-            keyBuilder.deleteCharAt(keyBuilder.length() -1);
+            keyBuilder.deleteCharAt(keyBuilder.length() - 1);
         }
         this.connectionManagerMapKey = keyBuilder.toString();
         return this;
     }
 
     public synchronized PoolingHttpClientConnectionManager buildConnectionManager() {
-        Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
+        @SuppressWarnings("unchecked") Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
                 = (Map<String, PoolingHttpClientConnectionManager>) connectionPoolHolder.getObject();
 
         if (connectionManagerMap == null) {
-            connectionManagerMap = new HashMap<String, PoolingHttpClientConnectionManager>();
+            connectionManagerMap = new HashMap<>();
+            //noinspection unchecked
             connectionPoolHolder.setObject(connectionManagerMap);
         }
 
