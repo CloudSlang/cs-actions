@@ -25,7 +25,7 @@ import java.util.Map;
  * User: davidmih
  * Date: 7/15/14
  */
-public class HttpClient {
+public class HttpClientAction {
     public static final String RETURN_CODE = "returnCode";
     public static final String SUCCESS = "0";
 
@@ -187,7 +187,7 @@ public class HttpClient {
                 .buildAuthSchemeProviderLookup());
 
 
-        CookieStore cookieStore = cookieStoreBuilder
+        CookieStore cookieStore = cookieStoreHolder == null ? null : cookieStoreBuilder
                 .setUseCookies(httpClientInputs.get(HttpClientInputs.USE_COOKIES))
                 .setCookieStoreHolder(cookieStoreHolder)
                 .buildCookieStore();
@@ -211,16 +211,17 @@ public class HttpClient {
                 .setTrustKeystore(httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE))
                 .setTrustPassword(httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD)).build();
 
-        PoolingHttpClientConnectionManager connManager = poolingHttpClientConnectionManagerBuilder
-                .setConnectionManagerMapKey(
+        PoolingHttpClientConnectionManager connManager = connectionPoolHolder == null ? null:
+                poolingHttpClientConnectionManagerBuilder
+                    .setConnectionManagerMapKey(
                         httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS),
                         httpClientInputs.get(HttpClientInputs.KEYSTORE),
                         httpClientInputs.get(HttpClientInputs.KEYSTORE_PASSWORD),
                         httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE),
                         httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD))
-                .setConnectionPoolHolder(connectionPoolHolder)
-                .setSslsf(sslConnectionSocketFactory)
-                .buildConnectionManager();
+                    .setConnectionPoolHolder(connectionPoolHolder)
+                    .setSslsf(sslConnectionSocketFactory)
+                    .buildConnectionManager();
 
         httpClientBuilder.setConnectionManager(connManager);
 
