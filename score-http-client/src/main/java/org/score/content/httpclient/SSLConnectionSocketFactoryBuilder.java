@@ -64,7 +64,7 @@ public class SSLConnectionSocketFactoryBuilder {
                 keystore = "file:" + javaKeystore;
                 keystorePassword = (StringUtils.isEmpty(keystorePassword)) ? "changeit" : keystorePassword;
                 useClientCert = true;
-            } else if (!keystore.startsWith("http")) {
+            } else if (useClientCert && !keystore.startsWith("http")) {
                 keystore = "file:" + keystore;
             }
 
@@ -72,7 +72,7 @@ public class SSLConnectionSocketFactoryBuilder {
                 trustKeystore = "file:" + javaKeystore;
                 trustPassword = (StringUtils.isEmpty(trustPassword)) ? "changeit" : trustPassword;
                 useTrustCert = true;
-            } else if (!trustKeystore.startsWith("http")) {
+            } else if (useTrustCert && !trustKeystore.startsWith("http")) {
                 trustKeystore = "file:" + trustKeystore;
             }
             createTrustKeystore(sslContextBuilder, useTrustCert);
