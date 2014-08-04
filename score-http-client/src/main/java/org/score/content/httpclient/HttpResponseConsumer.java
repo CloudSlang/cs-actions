@@ -50,7 +50,7 @@ public class HttpResponseConsumer {
                 }
 
             }
-            if (responseCharacterSet == null) {
+            if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
                 responseCharacterSet = "ISO-8859-1";
             }
         }
