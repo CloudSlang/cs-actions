@@ -36,6 +36,6 @@ public class FinalLocationConsumer {
             //todo this is not a fatal error
             throw new IllegalArgumentException(e);
         }
-        returnResult.put(HttpClient.FINAL_LOCATION, location.toASCIIString());
+        returnResult.put(HttpClientAction.FINAL_LOCATION, location.toASCIIString());
     }
 }

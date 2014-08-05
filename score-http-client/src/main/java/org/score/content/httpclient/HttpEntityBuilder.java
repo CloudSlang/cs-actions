@@ -40,14 +40,18 @@ public class HttpEntityBuilder {
     }
 
     public HttpEntity buildEntity() {
+        ContentType parsedContentType = ContentType.parse(contentType);
+        if (!StringUtils.isEmpty(requestCharacterSet)) {
+            parsedContentType.withCharset(requestCharacterSet);
+        }
+
         if (!StringUtils.isEmpty(body)) {
-            return new StringEntity(body, ContentType.create(contentType, requestCharacterSet));
+            return new StringEntity(body, parsedContentType);
         }
 
         if (!StringUtils.isEmpty(filePath)) {
             File file = new File(filePath);
-            FileEntity fileEntity = new FileEntity(file,
-                    ContentType.create(contentType, requestCharacterSet));
+            FileEntity fileEntity = new FileEntity(file, parsedContentType);
             fileEntity.setChunked(true);
             return fileEntity;
         }

@@ -18,8 +18,8 @@ public class StatusConsumer {
     }
 
     public void consume(Map<String, String> returnResult) {
-        returnResult.put(HttpClient.STATUS_CODE, String.valueOf(statusLine.getStatusCode()));
-        returnResult.put(HttpClient.PROTOCOL_VERSION, statusLine.getProtocolVersion().toString());
-        returnResult.put(HttpClient.REASON_PHRASE, String.valueOf(String.valueOf(statusLine.getReasonPhrase())));
+        returnResult.put(HttpClientAction.STATUS_CODE, String.valueOf(statusLine.getStatusCode()));
+        returnResult.put(HttpClientAction.PROTOCOL_VERSION, statusLine.getProtocolVersion().toString());
+        returnResult.put(HttpClientAction.REASON_PHRASE, String.valueOf(String.valueOf(statusLine.getReasonPhrase())));
     }
 }

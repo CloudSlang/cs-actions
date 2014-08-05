@@ -57,7 +57,7 @@ public class HttpResponseConsumer {
 
         if (StringUtils.isEmpty(destinationFile)) {
             String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
-            result.put(HttpClient.RETURN_RESULT, document);
+            result.put(HttpClientAction.RETURN_RESULT, document);
         } else {
             FileWriter fileWriter = new FileWriter(destinationFile);
             IOUtils.copy(httpResponse.getEntity().getContent(), fileWriter, responseCharacterSet);

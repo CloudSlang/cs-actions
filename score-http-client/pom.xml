@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.score.content</groupId>
     <artifactId>score-http-client</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <scm>
@@ -16,12 +16,12 @@
 		<repository>
 			<id>nexus-repository</id>
 			<name>nexus repository</name>
-			<url>http://mydphdb0166.hpswlabs.adapps.hp.com:8081/nexus/content/repositories/releases/</url>
+			<url>http://16.60.152.89:8081/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshot-repository</id>
 			<name>nexus snapshots repository</name>
-			<url>http://mydphdb0166.hpswlabs.adapps.hp.com:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://16.60.152.89:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 

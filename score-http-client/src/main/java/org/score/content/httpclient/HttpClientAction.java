@@ -211,14 +211,14 @@ public class HttpClientAction {
                 .setTrustKeystore(httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE))
                 .setTrustPassword(httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD)).build();
 
-        PoolingHttpClientConnectionManager connManager = connectionPoolHolder == null ? null:
+        PoolingHttpClientConnectionManager connManager = connectionPoolHolder == null ? null :
                 poolingHttpClientConnectionManagerBuilder
                     .setConnectionManagerMapKey(
-                        httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS),
-                        httpClientInputs.get(HttpClientInputs.KEYSTORE),
-                        httpClientInputs.get(HttpClientInputs.KEYSTORE_PASSWORD),
-                        httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE),
-                        httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD))
+                            httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS),
+                            httpClientInputs.get(HttpClientInputs.KEYSTORE),
+                            httpClientInputs.get(HttpClientInputs.KEYSTORE_PASSWORD),
+                            httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE),
+                            httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD))
                     .setConnectionPoolHolder(connectionPoolHolder)
                     .setSslsf(sslConnectionSocketFactory)
                     .buildConnectionManager();

@@ -20,6 +20,6 @@ public class HeadersConsumer {
         if (result.length() != 0) {
             result.delete(result.length() - 2, result.length());
         }
-        returnResult.put(HttpClient.RESPONSE_HEADERS, result.toString());
+        returnResult.put(HttpClientAction.RESPONSE_HEADERS, result.toString());
     }
 }
