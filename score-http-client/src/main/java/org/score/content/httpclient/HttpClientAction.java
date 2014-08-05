@@ -9,7 +9,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.routing.HttpRoutePlanner;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -28,7 +27,6 @@ import java.util.Map;
 public class HttpClientAction {
     public static final String RETURN_CODE = "returnCode";
     public static final String SUCCESS = "0";
-
     //outputs
     public static final String RETURN_RESULT = "returnResult";
     public static final String EXCEPTION = "exception";
@@ -37,7 +35,6 @@ public class HttpClientAction {
     public static final String RESPONSE_HEADERS = "responseHeaders";
     public static final String PROTOCOL_VERSION = "protocolVersion";
     public static final String REASON_PHRASE = "reasonPhrase";
-
     private ProxyRouteBuilder proxyRouteBuilder = new ProxyRouteBuilder();
     private CookieStoreBuilder cookieStoreBuilder;
     private AuthSchemeProviderLookupBuilder authSchemeProviderLookupBuilder;
@@ -163,6 +160,8 @@ public class HttpClientAction {
                 .setConnectionTimeout(httpClientInputs.get(HttpClientInputs.CONNECTION_TIMEOUT))
                 .setSocketTimeout(httpClientInputs.get(HttpClientInputs.SOCKET_TIMEOUT))
                 .setFollowRedirects(httpClientInputs.get(HttpClientInputs.FOLLOW_REDIRECTS))
+                .setProxyHost(httpClientInputs.get(HttpClientInputs.PROXY_HOST))
+                .setProxyPort(httpClientInputs.get(HttpClientInputs.PROXY_PORT))
                 .buildRequestConfig();
         httpRequestBase.setConfig(requestConfig);
 
@@ -181,11 +180,9 @@ public class HttpClientAction {
                 .buildCredentialsProvider();
         httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
-
         httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeProviderLookupBuilder
                 .setAuthType(httpClientInputs.get(HttpClientInputs.AUTH_TYPE))
                 .buildAuthSchemeProviderLookup());
-
 
         CookieStore cookieStore = cookieStoreHolder == null ? null : cookieStoreBuilder
                 .setUseCookies(httpClientInputs.get(HttpClientInputs.USE_COOKIES))
@@ -194,15 +191,6 @@ public class HttpClientAction {
         if (cookieStore != null) {
             httpClientBuilder.setDefaultCookieStore(cookieStore);
         }
-
-        HttpRoutePlanner routePlanner = proxyRouteBuilder
-                .setProxyHost(httpClientInputs.get(HttpClientInputs.PROXY_HOST))
-                .setProxyPort(httpClientInputs.get(HttpClientInputs.PROXY_PORT))
-                .buildProxyRoute();
-        if (routePlanner != null) {
-            httpClientBuilder.setRoutePlanner(routePlanner);
-        }
-
 
         SSLConnectionSocketFactory sslConnectionSocketFactory = sslConnectionSocketFactoryBuilder
                 .setTrustAllRoots(httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS))
@@ -213,15 +201,15 @@ public class HttpClientAction {
 
         PoolingHttpClientConnectionManager connManager = connectionPoolHolder == null ? null :
                 poolingHttpClientConnectionManagerBuilder
-                    .setConnectionManagerMapKey(
-                            httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS),
-                            httpClientInputs.get(HttpClientInputs.KEYSTORE),
-                            httpClientInputs.get(HttpClientInputs.KEYSTORE_PASSWORD),
-                            httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE),
-                            httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD))
-                    .setConnectionPoolHolder(connectionPoolHolder)
-                    .setSslsf(sslConnectionSocketFactory)
-                    .buildConnectionManager();
+                        .setConnectionManagerMapKey(
+                                httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS),
+                                httpClientInputs.get(HttpClientInputs.KEYSTORE),
+                                httpClientInputs.get(HttpClientInputs.KEYSTORE_PASSWORD),
+                                httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE),
+                                httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD))
+                        .setConnectionPoolHolder(connectionPoolHolder)
+                        .setSslsf(sslConnectionSocketFactory)
+                        .buildConnectionManager();
 
         httpClientBuilder.setConnectionManager(connManager);
 
