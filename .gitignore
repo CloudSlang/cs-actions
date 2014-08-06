@@ -2,7 +2,6 @@
 *.log
 .idea/
 output/
-build/
 target/
 *.ipr
 *.iml
