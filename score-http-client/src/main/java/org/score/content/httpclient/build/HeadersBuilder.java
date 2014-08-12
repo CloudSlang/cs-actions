@@ -2,6 +2,7 @@ package org.score.content.httpclient.build;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BufferedHeader;
 import org.apache.http.util.CharArrayBuffer;
@@ -13,14 +14,14 @@ import java.util.ArrayList;
 
 public class HeadersBuilder {
     private String headers;
-    private String contentType;
+    private ContentType contentType;
 
     public HeadersBuilder setHeaders(String headers) {
         this.headers = headers;
         return this;
     }
 
-    public HeadersBuilder setContentType(String contentType) {
+    public HeadersBuilder setContentType(ContentType contentType) {
         this.contentType = contentType;
         return this;
     }
@@ -42,8 +43,8 @@ public class HeadersBuilder {
             }
         }
 
-        if (!StringUtils.isEmpty(contentType)) {
-            headersArr.add(new BasicHeader("Content-Type", contentType));
+        if (contentType != null && !contentType.toString().isEmpty()) {
+            headersArr.add(new BasicHeader("Content-Type", contentType.toString()));
         }
         return headersArr.toArray(new Header[headersArr.size()]);
     }

@@ -1,7 +1,6 @@
 package org.score.content.httpclient.build;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
@@ -12,8 +11,7 @@ import java.io.File;
 public class EntityBuilder {
     private String body;
     private String filePath;
-    private String contentType = "text/plain";
-    private String requestCharacterSet = Consts.ISO_8859_1.name();
+    private ContentType contentType;
 
     public EntityBuilder setBody(String body) {
         this.body = body;
@@ -25,33 +23,19 @@ public class EntityBuilder {
         return this;
     }
 
-    public EntityBuilder setContentType(String contentType) {
-        if (!StringUtils.isEmpty(contentType)) {
-            this.contentType = contentType;
-        }
-        return this;
-    }
-
-    public EntityBuilder setRequestCharacterSet(String requestCharacterSet) {
-        if (!StringUtils.isEmpty(requestCharacterSet)) {
-            this.requestCharacterSet = requestCharacterSet;
-        }
+    public EntityBuilder setContentType(ContentType contentType) {
+        this.contentType = contentType;
         return this;
     }
 
     public HttpEntity buildEntity() {
-        ContentType parsedContentType = ContentType.parse(contentType);
-        if (!StringUtils.isEmpty(requestCharacterSet)) {
-            parsedContentType.withCharset(requestCharacterSet);
-        }
-
         if (!StringUtils.isEmpty(body)) {
-            return new StringEntity(body, parsedContentType);
+            return new StringEntity(body, contentType);
         }
 
         if (!StringUtils.isEmpty(filePath)) {
             File file = new File(filePath);
-            FileEntity fileEntity = new FileEntity(file, parsedContentType);
+            FileEntity fileEntity = new FileEntity(file, contentType);
             fileEntity.setChunked(true);
             return fileEntity;
         }

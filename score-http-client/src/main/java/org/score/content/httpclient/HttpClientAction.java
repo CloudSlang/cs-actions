@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -46,6 +47,7 @@ public class HttpClientAction {
     private AuthSchemeProviderLookupBuilder authSchemeProviderLookupBuilder;
     private RequestConfigBuilder requestConfigBuilder;
     private HeadersBuilder headersBuilder;
+    private ContentTypeBuilder contentTypeBuilder;
     private EntityBuilder httpEntityBuilder;
     private URIBuilder uriBuilder;
     private CredentialsProviderBuilder credentialsProviderBuilder;
@@ -143,12 +145,14 @@ public class HttpClientAction {
                 .setEncodeQueryParams(httpClientInputs.get(HttpClientInputs.ENCODE_QUERY_PARAMS))
                 .buildURI();
 
+        ContentType contentType = contentTypeBuilder
+                .setContentType(httpClientInputs.get(HttpClientInputs.CONTENT_TYPE))
+                .setRequestCharacterSet(httpClientInputs.get(HttpClientInputs.REQUEST_CHARACTER_SET)).buildContentType();
+
         HttpEntity httpEntity = httpEntityBuilder
                 .setBody(httpClientInputs.get(HttpClientInputs.BODY))
                 .setFilePath(httpClientInputs.get(HttpClientInputs.SOURCE_FILE))
-                .setContentType(httpClientInputs.get(HttpClientInputs.CONTENT_TYPE))
-                .setRequestCharacterSet(httpClientInputs.get(HttpClientInputs.REQUEST_CHARACTER_SET)).buildEntity();
-
+                .setContentType(contentType).buildEntity();
 
         RequestBuilder requestBuilder = RequestBuilder.create(httpClientInputs.get(HttpClientInputs.METHOD).toUpperCase());
         requestBuilder.setUri(uri);
@@ -158,7 +162,7 @@ public class HttpClientAction {
 
         Header[] headers = headersBuilder
                 .setHeaders(httpClientInputs.get(HttpClientInputs.HEADERS))
-                .setContentType(httpClientInputs.get(HttpClientInputs.CONTENT_TYPE))
+                .setContentType(contentType)
                 .buildHeaders();
         httpRequestBase.setHeaders(headers);
 
@@ -296,6 +300,9 @@ public class HttpClientAction {
     private void buildDefaultServices() {
         if (uriBuilder == null) {
             uriBuilder = new URIBuilder();
+        }
+        if (contentTypeBuilder == null) {
+            contentTypeBuilder = new ContentTypeBuilder();
         }
         if (httpEntityBuilder == null) {
             httpEntityBuilder = new EntityBuilder();
