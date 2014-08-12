@@ -19,10 +19,8 @@ public enum HttpClientInputs {
     USERNAME("username"),
     PASSWORD("password"),
     KERBEROS_CONFIG_FILE("kerberosConfFile"),
-    PROXY_TYPE("proxyType"),
     PROXY_HOST("proxyHost"),
     PROXY_PORT("proxyPort"),
-    PROXY_AUTH_TYPE("proxyAuthType"),
     PROXY_USERNAME("proxyUsername"),
     PROXY_PASSWORD("proxyPassword"),
     TRUST_ALL_ROOTS("trustAllRoots"),
@@ -37,15 +35,6 @@ public enum HttpClientInputs {
     HEADERS("headers"),
     RESPONSE_CHARACTER_SET("responseCharacterSet"),
     DESTINATION_FILE("destinationFile");
-
-//    INPUT_NAME_LIST("inputNameList"),
-//    INPUT_VALUE_LIST("inputValueList"),
-//    NAME_LIST("nameList"),
-//    VALUES_LIST("valueList"),
-//    FILE_NAME_LIST("fileNameList"),
-//    FILE_VALUE_LIST("fileValueList"),
-//    OFFSET("offset"),
-//    LENGTH("length");
 
     private final String name;
 

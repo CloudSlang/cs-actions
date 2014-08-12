@@ -73,10 +73,8 @@ public class HttpClientAction {
             String username,
             String password,
             String kerberosConfFile,
-            String proxyType,
             String proxyHost,
             String proxyPort,
-            String proxyAuthType,
             String proxyUsername,
             String proxyPassword,
             String trustAllRoots,
@@ -108,10 +106,8 @@ public class HttpClientAction {
         actionRequest.put(HttpClientInputs.USERNAME.getName(), username);
         actionRequest.put(HttpClientInputs.PASSWORD.getName(), password);
         actionRequest.put(HttpClientInputs.KERBEROS_CONFIG_FILE.getName(), kerberosConfFile);
-        actionRequest.put(HttpClientInputs.PROXY_TYPE.getName(), proxyType);
         actionRequest.put(HttpClientInputs.PROXY_HOST.getName(), proxyHost);
         actionRequest.put(HttpClientInputs.PROXY_PORT.getName(), proxyPort);
-        actionRequest.put(HttpClientInputs.PROXY_AUTH_TYPE.getName(), proxyAuthType);
         actionRequest.put(HttpClientInputs.PROXY_USERNAME.getName(), proxyUsername);
         actionRequest.put(HttpClientInputs.PROXY_PASSWORD.getName(), proxyPassword);
         actionRequest.put(HttpClientInputs.TRUST_ALL_ROOTS.getName(), trustAllRoots);
