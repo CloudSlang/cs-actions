@@ -42,7 +42,6 @@ public class HttpClientAction {
     public static final String RESPONSE_HEADERS = "responseHeaders";
     public static final String PROTOCOL_VERSION = "protocolVersion";
     public static final String REASON_PHRASE = "reasonPhrase";
-    private ProxyRouteBuilder proxyRouteBuilder = new ProxyRouteBuilder();
     private CookieStoreBuilder cookieStoreBuilder;
     private AuthSchemeProviderLookupBuilder authSchemeProviderLookupBuilder;
     private RequestConfigBuilder requestConfigBuilder;
@@ -61,14 +60,6 @@ public class HttpClientAction {
 
     final public Map<String, String> execute(
             String url,
-            String method,
-            String followRedirects,
-            String queryParams,
-            String encodeQueryParams,
-            String sourceFile,
-            String requestCharacterSet,
-            String body,
-            String contentType,
             String authType,
             String username,
             String password,
@@ -89,6 +80,14 @@ public class HttpClientAction {
             String headers,
             String responseCharacterSet,
             String destinationFile,
+            String followRedirects,
+            String queryParams,
+            String encodeQueryParams,
+            String sourceFile,
+            String body,
+            String contentType,
+            String requestCharacterSet,
+            String method,
             SessionObjectHolder cookieStoreHolder,
             SessionObjectHolder connectionPoolHolder) {
 
@@ -253,10 +252,6 @@ public class HttpClientAction {
         return returnResult;
     }
 
-    public void setProxyRouteBuilder(ProxyRouteBuilder proxyRouteBuilder) {
-        this.proxyRouteBuilder = proxyRouteBuilder;
-    }
-
     public void setCookieStoreBuilder(CookieStoreBuilder cookieStoreBuilder) {
         this.cookieStoreBuilder = cookieStoreBuilder;
     }
@@ -317,9 +312,6 @@ public class HttpClientAction {
         }
         if (cookieStoreBuilder == null) {
             cookieStoreBuilder = new CookieStoreBuilder();
-        }
-        if (proxyRouteBuilder == null) {
-            proxyRouteBuilder = new ProxyRouteBuilder();
         }
         if (sslConnectionSocketFactoryBuilder == null) {
             sslConnectionSocketFactoryBuilder = new SSLConnectionSocketFactoryBuilder();
