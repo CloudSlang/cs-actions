@@ -1,10 +1,12 @@
 package org.score.content.httpclient.build;
 
-import org.apache.http.client.config.AuthSchemes;
-import org.score.content.httpclient.build.AuthSchemeProviderLookupBuilder;
 import org.apache.http.auth.AuthSchemeProvider;
+import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.config.Lookup;
-import org.apache.http.impl.auth.*;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.auth.BasicSchemeFactory;
+import org.apache.http.impl.auth.DigestSchemeFactory;
+import org.apache.http.impl.auth.KerberosSchemeFactory;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -16,7 +18,7 @@ import static org.junit.Assert.assertThat;
  * User: tusaa
  * Date: 7/1/14
  */
-public class AuthSchemeRegistryBuilderTest {
+public class AuthSchemeProviderLookupBuilderTest {
 
     @Test
     public void buildLookupWithBasicAuth(){

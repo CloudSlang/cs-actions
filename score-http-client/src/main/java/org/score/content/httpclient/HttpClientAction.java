@@ -1,5 +1,6 @@
 package org.score.content.httpclient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.CookieStore;
@@ -226,6 +227,13 @@ public class HttpClientAction {
                 .setCloseableHttpClient(closeableHttpClient)
                 .setHttpRequestBase(httpRequestBase)
                 .setContext(context).execute();
+
+        String keepAliveInput = httpClientInputs.get(HttpClientInputs.KEEP_ALIVE);
+        boolean keepAlive = StringUtils.isBlank(keepAliveInput) ? true : Boolean.parseBoolean(keepAliveInput);
+        if (!keepAlive) {
+            httpRequestBase.releaseConnection();
+            connManager.closeExpiredConnections();
+        }
 
         Map<String, String> returnResult = new HashMap<>();
 

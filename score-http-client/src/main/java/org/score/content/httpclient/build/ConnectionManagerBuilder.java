@@ -57,7 +57,6 @@ public class ConnectionManagerBuilder {
             connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             connectionManagerMap.put(connectionManagerMapKey, connManager);
         }
-
         return connManager;
     }
 }

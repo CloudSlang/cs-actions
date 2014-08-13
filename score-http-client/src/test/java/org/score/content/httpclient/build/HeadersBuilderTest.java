@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
  * User: tusaa
  * Date: 7/8/14
  */
-public class HeaderCollectionBuilderTest {
+public class HeadersBuilderTest {
 
     @Test
     public void build() {
