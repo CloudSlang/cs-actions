@@ -37,12 +37,12 @@ public class HttpClientAction {
     public static final String SUCCESS = "0";
     //outputs
     public static final String RETURN_RESULT = "returnResult";
-    public static final String EXCEPTION = "exception";
     public static final String STATUS_CODE = "statusCode";
     public static final String FINAL_LOCATION = "finalLocation";
     public static final String RESPONSE_HEADERS = "responseHeaders";
     public static final String PROTOCOL_VERSION = "protocolVersion";
     public static final String REASON_PHRASE = "reasonPhrase";
+
     private CookieStoreBuilder cookieStoreBuilder;
     private AuthSchemeProviderLookupBuilder authSchemeProviderLookupBuilder;
     private RequestConfigBuilder requestConfigBuilder;
@@ -92,106 +92,64 @@ public class HttpClientAction {
             SessionObjectHolder cookieStoreHolder,
             SessionObjectHolder connectionPoolHolder) {
 
-        Map<String, Object> actionRequest = new HashMap<>();
-        actionRequest.put(HttpClientInputs.URL.getName(), url);
-        actionRequest.put(HttpClientInputs.METHOD.getName(), method);
-        actionRequest.put(HttpClientInputs.FOLLOW_REDIRECTS.getName(), followRedirects);
-        actionRequest.put(HttpClientInputs.QUERY_PARAMS.getName(), queryParams);
-        actionRequest.put(HttpClientInputs.ENCODE_QUERY_PARAMS.getName(), encodeQueryParams);
-        actionRequest.put(HttpClientInputs.SOURCE_FILE.getName(), sourceFile);
-        actionRequest.put(HttpClientInputs.REQUEST_CHARACTER_SET.getName(), requestCharacterSet);
-        actionRequest.put(HttpClientInputs.BODY.getName(), body);
-        actionRequest.put(HttpClientInputs.CONTENT_TYPE.getName(), contentType);
-        actionRequest.put(HttpClientInputs.AUTH_TYPE.getName(), authType);
-        actionRequest.put(HttpClientInputs.USERNAME.getName(), username);
-        actionRequest.put(HttpClientInputs.PASSWORD.getName(), password);
-        actionRequest.put(HttpClientInputs.KERBEROS_CONFIG_FILE.getName(), kerberosConfFile);
-        actionRequest.put(HttpClientInputs.PROXY_HOST.getName(), proxyHost);
-        actionRequest.put(HttpClientInputs.PROXY_PORT.getName(), proxyPort);
-        actionRequest.put(HttpClientInputs.PROXY_USERNAME.getName(), proxyUsername);
-        actionRequest.put(HttpClientInputs.PROXY_PASSWORD.getName(), proxyPassword);
-        actionRequest.put(HttpClientInputs.TRUST_ALL_ROOTS.getName(), trustAllRoots);
-        actionRequest.put(HttpClientInputs.TRUST_KEYSTORE.getName(), trustKeystore);
-        actionRequest.put(HttpClientInputs.TRUST_PASSWORD.getName(), trustPassword);
-        actionRequest.put(HttpClientInputs.KEYSTORE.getName(), keystore);
-        actionRequest.put(HttpClientInputs.KEYSTORE_PASSWORD.getName(), keystorePassword);
-        actionRequest.put(HttpClientInputs.CONNECTION_TIMEOUT.getName(), connectTimeout);
-        actionRequest.put(HttpClientInputs.SOCKET_TIMEOUT.getName(), socketTimeout);
-        actionRequest.put(HttpClientInputs.USE_COOKIES.getName(), useCookies);
-        actionRequest.put(HttpClientInputs.KEEP_ALIVE.getName(), keepAlive);
-        actionRequest.put(HttpClientInputs.HEADERS.getName(), headers);
-        actionRequest.put(HttpClientInputs.DESTINATION_FILE.getName(), destinationFile);
-        actionRequest.put(HttpClientInputs.RESPONSE_CHARACTER_SET.getName(), responseCharacterSet);
-
-        return execute(actionRequest, cookieStoreHolder, connectionPoolHolder);
-    }
-
-    final public Map<String, String> execute(Map<String, Object> actionRequest,
-                                             SessionObjectHolder cookieStoreHolder,
-                                             SessionObjectHolder connectionPoolHolder) {
         buildDefaultServices();
 
-        Map<HttpClientInputs, String> httpClientInputs = new HashMap<>();
-        for (HttpClientInputs ooHttpClientInputs : HttpClientInputs.values()) {
-            httpClientInputs.put(ooHttpClientInputs, (String) actionRequest.get(ooHttpClientInputs.getName()));
-        }
-
-        URI uri = uriBuilder.setUrl(httpClientInputs.get(HttpClientInputs.URL))
-                .setQueryParams(httpClientInputs.get(HttpClientInputs.QUERY_PARAMS))
-                .setEncodeQueryParams(httpClientInputs.get(HttpClientInputs.ENCODE_QUERY_PARAMS))
+        URI uri = uriBuilder.setUrl(url)
+                .setQueryParams(queryParams)
+                .setEncodeQueryParams(encodeQueryParams)
                 .buildURI();
 
-        ContentType contentType = contentTypeBuilder
-                .setContentType(httpClientInputs.get(HttpClientInputs.CONTENT_TYPE))
-                .setRequestCharacterSet(httpClientInputs.get(HttpClientInputs.REQUEST_CHARACTER_SET)).buildContentType();
+        ContentType theContentType = contentTypeBuilder
+                .setContentType(contentType)
+                .setRequestCharacterSet(requestCharacterSet).buildContentType();
 
         HttpEntity httpEntity = httpEntityBuilder
-                .setBody(httpClientInputs.get(HttpClientInputs.BODY))
-                .setFilePath(httpClientInputs.get(HttpClientInputs.SOURCE_FILE))
-                .setContentType(contentType).buildEntity();
+                .setBody(body)
+                .setFilePath(sourceFile)
+                .setContentType(theContentType).buildEntity();
 
-        RequestBuilder requestBuilder = RequestBuilder.create(httpClientInputs.get(HttpClientInputs.METHOD).toUpperCase());
+        RequestBuilder requestBuilder = RequestBuilder.create(method.toUpperCase());
         requestBuilder.setUri(uri);
         requestBuilder.setEntity(httpEntity);
 
         HttpRequestBase httpRequestBase = (HttpRequestBase) requestBuilder.build();
 
-        Header[] headers = headersBuilder
-                .setHeaders(httpClientInputs.get(HttpClientInputs.HEADERS))
-                .setContentType(contentType)
+        Header[] theHeaders = headersBuilder
+                .setHeaders(headers)
+                .setContentType(theContentType)
                 .buildHeaders();
-        httpRequestBase.setHeaders(headers);
+        httpRequestBase.setHeaders(theHeaders);
 
         RequestConfig requestConfig = requestConfigBuilder
-                .setConnectionTimeout(httpClientInputs.get(HttpClientInputs.CONNECTION_TIMEOUT))
-                .setSocketTimeout(httpClientInputs.get(HttpClientInputs.SOCKET_TIMEOUT))
-                .setFollowRedirects(httpClientInputs.get(HttpClientInputs.FOLLOW_REDIRECTS))
-                .setProxyHost(httpClientInputs.get(HttpClientInputs.PROXY_HOST))
-                .setProxyPort(httpClientInputs.get(HttpClientInputs.PROXY_PORT))
+                .setConnectionTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
+                .setFollowRedirects(followRedirects)
+                .setProxyHost(proxyHost)
+                .setProxyPort(proxyPort)
                 .buildRequestConfig();
         httpRequestBase.setConfig(requestConfig);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
         CredentialsProvider credentialsProvider = credentialsProviderBuilder
-                .setAuthType(httpClientInputs.get(HttpClientInputs.AUTH_TYPE))
-                .setUsername(httpClientInputs.get(HttpClientInputs.USERNAME))
-                .setPassword(httpClientInputs.get(HttpClientInputs.PASSWORD))
+                .setAuthType(authType)
+                .setUsername(username)
+                .setPassword(password)
                 .setHost(uri.getHost())
                 .setPort(String.valueOf(uri.getPort()))
-                .setProxyUsername(httpClientInputs.get(HttpClientInputs.PROXY_USERNAME))
-                .setProxyPassword(httpClientInputs.get(HttpClientInputs.PROXY_PASSWORD))
-                .setProxyHost(httpClientInputs.get(HttpClientInputs.PROXY_HOST))
-                .setProxyPort(httpClientInputs.get(HttpClientInputs.PROXY_PORT))
+                .setProxyUsername(proxyUsername)
+                .setProxyPassword(proxyPassword)
+                .setProxyHost(proxyHost)
+                .setProxyPort(proxyPort)
                 .buildCredentialsProvider();
         httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
         httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeProviderLookupBuilder
-                .setAuthType(httpClientInputs.get(HttpClientInputs.AUTH_TYPE))
+                .setAuthType(authType)
                 .buildAuthSchemeProviderLookup());
 
         CookieStore cookieStore = cookieStoreHolder == null ? null : cookieStoreBuilder
-                .setUseCookies(httpClientInputs.get(HttpClientInputs.USE_COOKIES))
+                .setUseCookies(useCookies)
                 .setCookieStoreHolder(cookieStoreHolder)
                 .buildCookieStore();
         if (cookieStore != null) {
@@ -199,20 +157,20 @@ public class HttpClientAction {
         }
 
         SSLConnectionSocketFactory sslConnectionSocketFactory = sslConnectionSocketFactoryBuilder
-                .setTrustAllRoots(httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS))
-                .setKeystore(httpClientInputs.get(HttpClientInputs.KEYSTORE))
-                .setKeystorePassword(httpClientInputs.get(HttpClientInputs.KEYSTORE_PASSWORD))
-                .setTrustKeystore(httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE))
-                .setTrustPassword(httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD)).build();
+                .setTrustAllRoots(trustAllRoots)
+                .setKeystore(keystore)
+                .setKeystorePassword(keystorePassword)
+                .setTrustKeystore(trustKeystore)
+                .setTrustPassword(trustPassword).build();
 
         PoolingHttpClientConnectionManager connManager = connectionPoolHolder == null ? null :
                 poolingHttpClientConnectionManagerBuilder
                         .setConnectionManagerMapKey(
-                                httpClientInputs.get(HttpClientInputs.TRUST_ALL_ROOTS),
-                                httpClientInputs.get(HttpClientInputs.KEYSTORE),
-                                httpClientInputs.get(HttpClientInputs.KEYSTORE_PASSWORD),
-                                httpClientInputs.get(HttpClientInputs.TRUST_KEYSTORE),
-                                httpClientInputs.get(HttpClientInputs.TRUST_PASSWORD))
+                                trustAllRoots,
+                                keystore,
+                                keystorePassword,
+                                trustKeystore,
+                                trustPassword)
                         .setConnectionPoolHolder(connectionPoolHolder)
                         .setSslsf(sslConnectionSocketFactory)
                         .buildConnectionManager();
@@ -228,20 +186,15 @@ public class HttpClientAction {
                 .setHttpRequestBase(httpRequestBase)
                 .setContext(context).execute();
 
-        String keepAliveInput = httpClientInputs.get(HttpClientInputs.KEEP_ALIVE);
-        boolean keepAlive = StringUtils.isBlank(keepAliveInput) ? true : Boolean.parseBoolean(keepAliveInput);
-        if (!keepAlive) {
-            httpRequestBase.releaseConnection();
-            connManager.closeExpiredConnections();
-        }
+        checkKeepAlive(httpRequestBase, connManager, keepAlive);
 
         Map<String, String> returnResult = new HashMap<>();
 
         try {
             httpResponseConsumer
                     .setHttpResponse(httpResponse)
-                    .setResponseCharacterSet(httpClientInputs.get(HttpClientInputs.RESPONSE_CHARACTER_SET))
-                    .setDestinationFile(httpClientInputs.get(HttpClientInputs.DESTINATION_FILE))
+                    .setResponseCharacterSet(responseCharacterSet)
+                    .setDestinationFile(destinationFile)
                     .consume(returnResult);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -253,11 +206,18 @@ public class HttpClientAction {
                 .setTargetHost(context.getTargetHost()).consume(returnResult);
 
         headersConsumer.setHeaders(httpResponse.getAllHeaders()).consume(returnResult);
-
         statusConsumer.setStatusLine(httpResponse.getStatusLine()).consume(returnResult);
 
         returnResult.put(RETURN_CODE, SUCCESS);
         return returnResult;
+    }
+
+    private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager, String keepAliveInput) {
+        boolean keepAlive = StringUtils.isBlank(keepAliveInput) ? true : Boolean.parseBoolean(keepAliveInput);
+        if (!keepAlive) {
+            httpRequestBase.releaseConnection();
+            connManager.closeExpiredConnections();
+        }
     }
 
     public void setCookieStoreBuilder(CookieStoreBuilder cookieStoreBuilder) {
