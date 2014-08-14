@@ -2,6 +2,7 @@ package org.score.content.httpclient.consume;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -51,17 +52,25 @@ public class HttpResponseConsumer {
 
             }
             if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
-                responseCharacterSet = "ISO-8859-1";
+                responseCharacterSet = Consts.ISO_8859_1.name();
             }
         }
 
-        String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
         if (StringUtils.isEmpty(destinationFile)) {
+            String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
             result.put(HttpClientAction.RETURN_RESULT, document);
         } else {
-            Writer writer = new FileWriter(destinationFile);
-            writer.write(document);
-            IOUtils.closeQuietly(writer);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), responseCharacterSet));
+            BufferedWriter fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationFile), responseCharacterSet));
+            if (Consts.UTF_8.name().equalsIgnoreCase(responseCharacterSet)) {
+                fileWriter.write("\uFEFF");
+            }
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fileWriter.write(line + "\n");
+            }
+            fileWriter.flush();
+            fileWriter.close();
         }
     }
 }
