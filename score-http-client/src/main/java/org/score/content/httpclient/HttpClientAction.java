@@ -37,6 +37,7 @@ public class HttpClientAction {
     public static final String SUCCESS = "0";
     //outputs
     public static final String RETURN_RESULT = "returnResult";
+    public static final String EXCEPTION = "exception";
     public static final String STATUS_CODE = "statusCode";
     public static final String FINAL_LOCATION = "finalLocation";
     public static final String RESPONSE_HEADERS = "responseHeaders";
