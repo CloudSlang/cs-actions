@@ -62,13 +62,13 @@ public class HttpResponseConsumer {
         } else {
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), responseCharacterSet));
             BufferedWriter fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationFile), responseCharacterSet));
-            if (Consts.UTF_8.name().equalsIgnoreCase(responseCharacterSet)) {
-                fileWriter.write("\uFEFF");
+
+            char[] buffer = new char[1024];
+            int b;
+            while ((b = reader.read(buffer, 0, buffer.length)) != -1) {
+                fileWriter.write(buffer, 0, b);
             }
-            String line;
-            while ((line = reader.readLine()) != null) {
-                fileWriter.write(line + "\n");
-            }
+
             fileWriter.flush();
             fileWriter.close();
         }
