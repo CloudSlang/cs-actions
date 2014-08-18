@@ -10,14 +10,14 @@ import org.apache.http.entity.ContentType;
  * Date: 8/12/14
  */
 public class ContentTypeBuilder {
+    private static String DEFAULT_CONTENT_TYPE = "text/plain";
+    private static String DEFAULT_CHARACTER_SET = Consts.ISO_8859_1.name();
 
-    private String contentType = "text/plain";
-    private String requestCharacterSet = Consts.ISO_8859_1.name();
+    private String contentType;
+    private String requestCharacterSet;
 
     public ContentTypeBuilder setContentType(String contentType) {
-        if (!StringUtils.isEmpty(contentType)) {
-            this.contentType = contentType;
-        }
+        this.contentType = contentType;
         return this;
     }
 
@@ -29,7 +29,17 @@ public class ContentTypeBuilder {
     }
 
     public ContentType buildContentType() {
+        String contentType = this.contentType;
+        String requestCharacterSet = this.requestCharacterSet;
+        if (StringUtils.isEmpty(contentType)) {
+            contentType = DEFAULT_CONTENT_TYPE;
+            requestCharacterSet = DEFAULT_CHARACTER_SET;
+        }
         ContentType parsedContentType = ContentType.parse(contentType);
-        return parsedContentType.withCharset(requestCharacterSet);
+        //do not override contentType provide by user
+        if (!StringUtils.isEmpty(requestCharacterSet)) {
+            parsedContentType = parsedContentType.withCharset(requestCharacterSet);
+        }
+        return parsedContentType;
     }
 }
