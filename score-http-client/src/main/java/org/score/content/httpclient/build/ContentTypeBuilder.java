@@ -31,11 +31,12 @@ public class ContentTypeBuilder {
     public ContentType buildContentType() {
         String contentType = this.contentType;
         String requestCharacterSet = this.requestCharacterSet;
+        ContentType parsedContentType;
         if (StringUtils.isEmpty(contentType)) {
-            contentType = DEFAULT_CONTENT_TYPE;
-            requestCharacterSet = DEFAULT_CHARACTER_SET;
+            parsedContentType = ContentType.parse(DEFAULT_CONTENT_TYPE).withCharset(DEFAULT_CHARACTER_SET);
+        } else {
+            parsedContentType = ContentType.parse(contentType);
         }
-        ContentType parsedContentType = ContentType.parse(contentType);
         //do not override contentType provide by user
         if (!StringUtils.isEmpty(requestCharacterSet)) {
             parsedContentType = parsedContentType.withCharset(requestCharacterSet);
