@@ -1,7 +1,6 @@
 package org.score.content.httpclient.build;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.NameValuePair;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -33,10 +32,6 @@ public class URIBuilder {
     }
 
     public URI buildURI() {
-
-        if (StringUtils.isEmpty(encodeQueryParams)) {
-            encodeQueryParams = "true";
-        }
 
         org.apache.http.client.utils.URIBuilder uriBuilder;
         try {
