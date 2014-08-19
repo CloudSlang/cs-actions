@@ -169,9 +169,7 @@ public class HttpClientAction {
                         .setConnectionManagerMapKey(
                                 trustAllRoots,
                                 keystore,
-                                keystorePassword,
-                                trustKeystore,
-                                trustPassword)
+                                trustKeystore)
                         .setConnectionPoolHolder(connectionPoolHolder)
                         .setSslsf(sslConnectionSocketFactory)
                         .buildConnectionManager();

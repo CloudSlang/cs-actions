@@ -55,6 +55,8 @@ public class ConnectionManagerBuilder {
                     .register("https", sslsf)
                     .build();
             connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            //the DefaultMaxPerRoute default is 2
+            //connManager.setDefaultMaxPerRoute(1);
             connectionManagerMap.put(connectionManagerMapKey, connManager);
         }
         return connManager;
