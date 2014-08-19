@@ -38,24 +38,28 @@ public class HttpResponseConsumer {
     }
 
     public void consume(Map<String, String> result) throws IOException {
-        if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
-            Header contentType = httpResponse.getEntity().getContentType();
-            if (contentType != null) {
-                String value = contentType.getValue();
-                NameValuePair[] nameValuePairs = BasicHeaderValueParser.parseParameters(value, BasicHeaderValueParser.INSTANCE);
-                for (NameValuePair nameValuePair : nameValuePairs) {
-                    if (nameValuePair.getName().equalsIgnoreCase("charset")) {
-                        responseCharacterSet = nameValuePair.getValue();
-                        break;
+        if (httpResponse.getEntity() != null) {
+            if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
+                Header contentType = httpResponse.getEntity().getContentType();
+                if (contentType != null) {
+                    String value = contentType.getValue();
+                    NameValuePair[] nameValuePairs = BasicHeaderValueParser.parseParameters(value, BasicHeaderValueParser.INSTANCE);
+                    for (NameValuePair nameValuePair : nameValuePairs) {
+                        if (nameValuePair.getName().equalsIgnoreCase("charset")) {
+                            responseCharacterSet = nameValuePair.getValue();
+                            break;
+                        }
                     }
                 }
-
+                if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
+                    responseCharacterSet = Consts.ISO_8859_1.name();
+                }
             }
-            if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
-                responseCharacterSet = Consts.ISO_8859_1.name();
-            }
+            consumeResponseContent(result);
         }
+    }
 
+    private void consumeResponseContent(Map<String, String> result) throws IOException {
         if (StringUtils.isEmpty(destinationFile)) {
             String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
             result.put(HttpClientAction.RETURN_RESULT, document);
