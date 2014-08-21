@@ -98,7 +98,10 @@ public class CredentialsProviderBuilder {
     }
 
     private static String[] getDomainUsername(String username) {
-        final int atSlash = username.indexOf('/');
+        int atSlash = username.indexOf('/');
+        if (atSlash == -1) {
+            atSlash = username.indexOf('\\');
+        }
         String usernameWithoutDomain = username.substring(atSlash + 1);
         String domain = ".";
         if (atSlash >= 0) {
