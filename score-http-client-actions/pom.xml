@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.score.content</groupId>
     <artifactId>score-http-client-actions</artifactId>
-    <version>0.1.10-SNAPSHOT</version>
+    <version>0.1.11-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <scm>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.score.content</groupId>
             <artifactId>score-http-client</artifactId>
-            <version>1.2.15-TEST</version>
+            <version>0.1.11-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
