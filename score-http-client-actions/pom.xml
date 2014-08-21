@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.score.content</groupId>
             <artifactId>score-http-client-commons</artifactId>
-            <version>0.1.12-SNAPSHOT</version>
+            <version>0.1.12</version>
         </dependency>
     </dependencies>
 
