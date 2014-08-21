@@ -32,7 +32,7 @@ import java.util.Map;
  * User: davidmih
  * Date: 7/15/14
  */
-public class HttpClient {
+public class ScoreHttpClient {
     public static final String RETURN_CODE = "returnCode";
     public static final String SUCCESS = "0";
     //outputs
@@ -133,15 +133,14 @@ public class HttpClient {
                 .setTrustKeystore(httpClientInputs.getTrustKeystore())
                 .setTrustPassword(httpClientInputs.getTrustPassword()).build();
 
-        PoolingHttpClientConnectionManager connManager = httpClientInputs.getConnectionPoolHolder() == null ? null :
-                poolingHttpClientConnectionManagerBuilder
-                        .setConnectionManagerMapKey(
-                                httpClientInputs.getTrustAllRoots(),
-                                httpClientInputs.getKeystore(),
-                                httpClientInputs.getTrustKeystore())
-                        .setConnectionPoolHolder(httpClientInputs.getConnectionPoolHolder())
-                        .setSslsf(sslConnectionSocketFactory)
-                        .buildConnectionManager();
+        PoolingHttpClientConnectionManager connManager = poolingHttpClientConnectionManagerBuilder
+                .setConnectionManagerMapKey(
+                        httpClientInputs.getTrustAllRoots(),
+                        httpClientInputs.getKeystore(),
+                        httpClientInputs.getTrustKeystore())
+                .setConnectionPoolHolder(httpClientInputs.getConnectionPoolHolder())
+                .setSslsf(sslConnectionSocketFactory)
+                .buildConnectionManager();
 
         httpClientBuilder.setConnectionManager(connManager);
 

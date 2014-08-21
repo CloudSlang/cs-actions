@@ -42,8 +42,6 @@ public class CredentialsProviderBuilderTest {
         Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80));
 
         assertThat(credentials, instanceOf(Credentials.class));
-        //assertNull(credentials.getPassword());
-        //assertNull(credentials.getUserPrincipal());
     }
 
     @Test
