@@ -1,7 +1,7 @@
 package org.score.content.httpclient.consume;
 
 import org.apache.http.StatusLine;
-import org.score.content.httpclient.HttpClientAction;
+import org.score.content.httpclient.HttpClient;
 
 import java.util.Map;
 
@@ -19,8 +19,8 @@ public class StatusConsumer {
     }
 
     public void consume(Map<String, String> returnResult) {
-        returnResult.put(HttpClientAction.STATUS_CODE, String.valueOf(statusLine.getStatusCode()));
-        returnResult.put(HttpClientAction.PROTOCOL_VERSION, statusLine.getProtocolVersion().toString());
-        returnResult.put(HttpClientAction.REASON_PHRASE, String.valueOf(String.valueOf(statusLine.getReasonPhrase())));
+        returnResult.put(HttpClient.STATUS_CODE, String.valueOf(statusLine.getStatusCode()));
+        returnResult.put(HttpClient.PROTOCOL_VERSION, statusLine.getProtocolVersion().toString());
+        returnResult.put(HttpClient.REASON_PHRASE, String.valueOf(String.valueOf(statusLine.getReasonPhrase())));
     }
 }

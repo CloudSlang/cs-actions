@@ -1,7 +1,7 @@
 package org.score.content.httpclient.consume;
 
 import org.apache.http.Header;
-import org.score.content.httpclient.HttpClientAction;
+import org.score.content.httpclient.HttpClient;
 
 import java.util.Map;
 
@@ -21,6 +21,6 @@ public class HeadersConsumer {
         if (result.length() != 0) {
             result.delete(result.length() - 2, result.length());
         }
-        returnResult.put(HttpClientAction.RESPONSE_HEADERS, result.toString());
+        returnResult.put(HttpClient.RESPONSE_HEADERS, result.toString());
     }
 }

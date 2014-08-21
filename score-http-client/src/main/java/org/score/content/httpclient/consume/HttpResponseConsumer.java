@@ -7,7 +7,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeaderValueParser;
-import org.score.content.httpclient.HttpClientAction;
+import org.score.content.httpclient.HttpClient;
 
 import java.io.*;
 import java.util.Map;
@@ -62,7 +62,7 @@ public class HttpResponseConsumer {
     private void consumeResponseContent(Map<String, String> result) throws IOException {
         if (StringUtils.isEmpty(destinationFile)) {
             String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
-            result.put(HttpClientAction.RETURN_RESULT, document);
+            result.put(HttpClient.RETURN_RESULT, document);
         } else {
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), responseCharacterSet));
             BufferedWriter fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationFile), responseCharacterSet));

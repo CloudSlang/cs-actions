@@ -9,6 +9,8 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 
+import java.util.Locale;
+
 public class CredentialsProviderBuilder {
     private String authType;
     private String username;
@@ -96,13 +98,13 @@ public class CredentialsProviderBuilder {
     }
 
     private static String[] getDomainUsername(String username) {
-        String domain = null;
-        String usernameWithoutDomain = username;
-        int index = username.indexOf('\\');
-        if (index > 0) {
-            domain = username.substring(0, index);
-            usernameWithoutDomain = username.substring(index + 1);
+        final int atSlash = username.indexOf('/');
+        String usernameWithoutDomain = username.substring(atSlash + 1);
+        String domain = ".";
+        if (atSlash >= 0) {
+            domain = username.substring(0, atSlash).toUpperCase(Locale.ENGLISH);
         }
+
         return new String[]{domain, usernameWithoutDomain};
     }
 }

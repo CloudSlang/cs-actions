@@ -28,5 +28,6 @@
 
 	<modules>
 		<module>score-http-client</module>
+        <module>score-http-client-actions</module>
 	</modules>
 </project>

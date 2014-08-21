@@ -2,7 +2,7 @@ package org.score.content.httpclient.consume;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.utils.URIUtils;
-import org.score.content.httpclient.HttpClientAction;
+import org.score.content.httpclient.HttpClient;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,6 +37,6 @@ public class FinalLocationConsumer {
             //todo this is not a fatal error
             throw new IllegalArgumentException(e);
         }
-        returnResult.put(HttpClientAction.FINAL_LOCATION, location.toASCIIString());
+        returnResult.put(HttpClient.FINAL_LOCATION, location.toASCIIString());
     }
 }
