@@ -39,26 +39,29 @@ public class ConnectionManagerBuilder {
     }
 
     public synchronized PoolingHttpClientConnectionManager buildConnectionManager() {
-        @SuppressWarnings("unchecked") Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
-                = (Map<String, PoolingHttpClientConnectionManager>) connectionPoolHolder.getObject();
+        if (connectionPoolHolder != null) {
+            @SuppressWarnings("unchecked") Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
+                    = (Map<String, PoolingHttpClientConnectionManager>) connectionPoolHolder.getObject();
 
-        if (connectionManagerMap == null) {
-            connectionManagerMap = new HashMap<>();
-            //noinspection unchecked
-            connectionPoolHolder.setObject(connectionManagerMap);
-        }
+            if (connectionManagerMap == null) {
+                connectionManagerMap = new HashMap<>();
+                //noinspection unchecked
+                connectionPoolHolder.setObject(connectionManagerMap);
+            }
 
-        PoolingHttpClientConnectionManager connManager = connectionManagerMap.get(connectionManagerMapKey);
-        if (connManager == null) {
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                    .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                    .register("https", sslsf)
-                    .build();
-            connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-            //the DefaultMaxPerRoute default is 2
-            //connManager.setDefaultMaxPerRoute(1);
-            connectionManagerMap.put(connectionManagerMapKey, connManager);
+            PoolingHttpClientConnectionManager connManager = connectionManagerMap.get(connectionManagerMapKey);
+            if (connManager == null) {
+                Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                        .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                        .register("https", sslsf)
+                        .build();
+                connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+                //the DefaultMaxPerRoute default is 2
+                //connManager.setDefaultMaxPerRoute(1);
+                connectionManagerMap.put(connectionManagerMapKey, connManager);
+            }
+            return connManager;
         }
-        return connManager;
+        return null;
     }
 }

@@ -25,14 +25,13 @@ public class SSLConnectionSocketFactoryBuilder {
     public static final String INVALID_KEYSTORE_ERROR = "A keystore could not be found or it does not contain the needed certificate";
     public static final String BAD_TRUST_KEYSTORE_ERROR = "The trust keystore provided in the 'trustKeystore' input is corrupted OR the password (in the 'trustPassword' input) is incorrect";
     public static final String INVALID_TRUST_KEYSTORE_ERROR = "A trust keystore could not be found or it does not contain the needed certificate";
-
     private String trustAllRootsStr = "false";
     private String keystore;
     private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
 
-    private static KeyStore createKeyStore(final URL url, final String password)
+    protected KeyStore createKeyStore(final URL url, final String password)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
         if (url == null) {
             throw new IllegalArgumentException("Keystore url may not be null");
@@ -57,7 +56,7 @@ public class SSLConnectionSocketFactoryBuilder {
             //validate SSL certificates sent by the server
             boolean useTrustCert = !StringUtils.isEmpty(trustKeystore);
 
-            String javaKeystore = System.getProperty("java.home") + "\\lib\\security\\cacerts";
+            String javaKeystore = System.getProperty("java.home") + "/lib/security/cacerts";
             boolean storeExists = new File(javaKeystore).exists();
 
             if (!useClientCert && storeExists) {
@@ -99,7 +98,7 @@ public class SSLConnectionSocketFactoryBuilder {
         return sslsf;
     }
 
-    private void createKeystore(SSLContextBuilder sslContextBuilder, boolean useClientCert) {
+    protected void createKeystore(SSLContextBuilder sslContextBuilder, boolean useClientCert) {
         if (useClientCert) {
             KeyStore clientKeyStore;
             try {
@@ -113,7 +112,7 @@ public class SSLConnectionSocketFactoryBuilder {
         }
     }
 
-    private void createTrustKeystore(SSLContextBuilder sslContextBuilder, boolean useTrustCert) {
+    protected void createTrustKeystore(SSLContextBuilder sslContextBuilder, boolean useTrustCert) {
         if (useTrustCert) {
             KeyStore trustKeyStore;
             try {

@@ -59,7 +59,7 @@ public class HttpResponseConsumer {
         }
     }
 
-    private void consumeResponseContent(Map<String, String> result) throws IOException {
+    protected void consumeResponseContent(Map<String, String> result) throws IOException {
         if (StringUtils.isEmpty(destinationFile)) {
             String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
             result.put(HttpClientAction.RETURN_RESULT, document);

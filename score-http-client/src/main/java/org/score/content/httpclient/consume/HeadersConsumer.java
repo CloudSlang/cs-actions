@@ -15,11 +15,13 @@ public class HeadersConsumer {
 
     public void consume(Map<String, String> returnResult) {
         StringBuilder result = new StringBuilder();
-        for (Header header : headers) {
-            result.append(header.toString()).append("\r\n");
-        }
-        if (result.length() != 0) {
-            result.delete(result.length() - 2, result.length());
+        if (headers != null) {
+            for (Header header : headers) {
+                result.append(header.toString()).append("\r\n");
+            }
+            if (result.length() != 0) {
+                result.delete(result.length() - 2, result.length());
+            }
         }
         returnResult.put(HttpClientAction.RESPONSE_HEADERS, result.toString());
     }

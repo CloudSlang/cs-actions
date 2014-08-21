@@ -43,7 +43,6 @@ public class HttpClientAction {
     public static final String RESPONSE_HEADERS = "responseHeaders";
     public static final String PROTOCOL_VERSION = "protocolVersion";
     public static final String REASON_PHRASE = "reasonPhrase";
-
     private CookieStoreBuilder cookieStoreBuilder;
     private AuthSchemeProviderLookupBuilder authSchemeProviderLookupBuilder;
     private RequestConfigBuilder requestConfigBuilder;
@@ -164,15 +163,14 @@ public class HttpClientAction {
                 .setTrustKeystore(trustKeystore)
                 .setTrustPassword(trustPassword).build();
 
-        PoolingHttpClientConnectionManager connManager = connectionPoolHolder == null ? null :
-                poolingHttpClientConnectionManagerBuilder
-                        .setConnectionManagerMapKey(
-                                trustAllRoots,
-                                keystore,
-                                trustKeystore)
-                        .setConnectionPoolHolder(connectionPoolHolder)
-                        .setSslsf(sslConnectionSocketFactory)
-                        .buildConnectionManager();
+        PoolingHttpClientConnectionManager connManager = poolingHttpClientConnectionManagerBuilder
+                .setConnectionManagerMapKey(
+                        trustAllRoots,
+                        keystore,
+                        trustKeystore)
+                .setConnectionPoolHolder(connectionPoolHolder)
+                .setSslsf(sslConnectionSocketFactory)
+                .buildConnectionManager();
 
         httpClientBuilder.setConnectionManager(connManager);
 

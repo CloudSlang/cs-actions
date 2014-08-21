@@ -19,8 +19,15 @@ public class StatusConsumer {
     }
 
     public void consume(Map<String, String> returnResult) {
-        returnResult.put(HttpClientAction.STATUS_CODE, String.valueOf(statusLine.getStatusCode()));
-        returnResult.put(HttpClientAction.PROTOCOL_VERSION, statusLine.getProtocolVersion().toString());
-        returnResult.put(HttpClientAction.REASON_PHRASE, String.valueOf(String.valueOf(statusLine.getReasonPhrase())));
+        int statusLine = (this.statusLine != null) ? this.statusLine.getStatusCode() : 0;
+        returnResult.put(HttpClientAction.STATUS_CODE, String.valueOf(statusLine));
+
+        String protocolVersion = (this.statusLine != null && this.statusLine.getProtocolVersion() != null) ?
+                this.statusLine.getProtocolVersion().toString() : "";
+        returnResult.put(HttpClientAction.PROTOCOL_VERSION, protocolVersion);
+
+        String reasonPhrase = (this.statusLine != null && this.statusLine.getReasonPhrase() != null) ?
+                this.statusLine.getReasonPhrase() : "";
+        returnResult.put(HttpClientAction.REASON_PHRASE, reasonPhrase);
     }
 }
