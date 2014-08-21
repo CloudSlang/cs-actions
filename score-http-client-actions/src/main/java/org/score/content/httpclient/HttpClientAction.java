@@ -75,6 +75,6 @@ public class HttpClientAction {
         httpClientInputs.setCookieStoreHolder(cookieStoreHolder);
         httpClientInputs.setConnectionPoolHolder(connectionPoolHolder);
 
-        return new HttpClient().execute(httpClientInputs);
+        return new ScoreHttpClient().execute(httpClientInputs);
     }
 }
