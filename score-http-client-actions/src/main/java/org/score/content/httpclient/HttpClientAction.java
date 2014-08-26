@@ -1,5 +1,8 @@
 package org.score.content.httpclient;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -75,6 +78,22 @@ public class HttpClientAction {
         httpClientInputs.setCookieStoreHolder(cookieStoreHolder);
         httpClientInputs.setConnectionPoolHolder(connectionPoolHolder);
 
-        return new ScoreHttpClient().execute(httpClientInputs);
+        try {
+            return new ScoreHttpClient().execute(httpClientInputs);
+        } catch (Exception e) {
+            return exceptionResult(e.getMessage(), e);
+        }
+    }
+
+    private Map<String, String> exceptionResult(String message, Exception e) {
+        StringWriter writer = new StringWriter();
+        e.printStackTrace(new PrintWriter(writer));
+        String eStr = writer.toString().replace("" + (char) 0x00, "");
+
+        Map<String, String> returnResult = new HashMap<>();
+        returnResult.put("returnResult", message);
+        returnResult.put("returnCode", "-1");
+        returnResult.put("exception", eStr);
+        return returnResult;
     }
 }
