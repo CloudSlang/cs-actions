@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.score.content</groupId>
     <artifactId>score-http-client-commons</artifactId>
-    <version>10.20.2.2-SNAPSHOT</version>
+    <version>10.20.2.1</version>
     <packaging>jar</packaging>
 
     <scm>
