@@ -1,5 +1,12 @@
 package org.score.content.httpclient;
 
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -12,36 +19,53 @@ import java.util.Map;
  */
 public class HttpClientAction {
 
+    @Action(name = "Http Client",
+            outputs = {
+                    @Output(ScoreHttpClient.EXCEPTION),
+                    @Output(ScoreHttpClient.STATUS_CODE),
+                    @Output(ScoreHttpClient.FINAL_LOCATION),
+                    @Output(ScoreHttpClient.RESPONSE_HEADERS),
+                    @Output(ScoreHttpClient.PROTOCOL_VERSION),
+                    @Output(ScoreHttpClient.REASON_PHRASE),
+                    @Output("returnCode"),
+                    @Output("returnResult")
+            },
+            responses = {
+                    @Response(text = "success", field = "returnCode", value = "0", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = "failure", field = "returnCode", value = "-1", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+            }
+    )
     public Map<String, String> execute(
-            String url,
-            String authType,
-            String username,
-            String password,
-            String kerberosConfFile,
-            String proxyHost,
-            String proxyPort,
-            String proxyUsername,
-            String proxyPassword,
-            String trustAllRoots,
-            String trustKeystore,
-            String trustPassword,
-            String keystore,
-            String keystorePassword,
-            String connectTimeout,
-            String socketTimeout,
-            String useCookies,
-            String keepAlive,
-            String headers,
-            String responseCharacterSet,
-            String destinationFile,
-            String followRedirects,
-            String queryParams,
-            String encodeQueryParams,
-            String sourceFile,
-            String body,
-            String contentType,
-            String requestCharacterSet,
-            String method,
+            @Param(value = HttpClientInputs.URL, required = true) String url,
+            @Param(HttpClientInputs.AUTH_TYPE) String authType,
+            @Param(HttpClientInputs.USERNAME) String username,
+            @Param(HttpClientInputs.PASSWORD) String password,
+            @Param(HttpClientInputs.KERBEROS_CONFIG_FILE) String kerberosConfFile,
+            @Param(HttpClientInputs.PROXY_HOST) String proxyHost,
+            @Param(HttpClientInputs.PROXY_PORT) String proxyPort,
+            @Param(HttpClientInputs.PROXY_USERNAME) String proxyUsername,
+            @Param(HttpClientInputs.PROXY_PASSWORD) String proxyPassword,
+            @Param(HttpClientInputs.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(HttpClientInputs.TRUST_KEYSTORE) String trustKeystore,
+            @Param(HttpClientInputs.TRUST_PASSWORD) String trustPassword,
+            @Param(HttpClientInputs.KEYSTORE) String keystore,
+            @Param(HttpClientInputs.KEYSTORE_PASSWORD) String keystorePassword,
+            @Param(HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
+            @Param(HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
+            @Param(HttpClientInputs.USE_COOKIES) String useCookies,
+            @Param(HttpClientInputs.KEEP_ALIVE) String keepAlive,
+            @Param(HttpClientInputs.HEADERS) String headers,
+            @Param(HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
+            @Param(HttpClientInputs.DESTINATION_FILE) String destinationFile,
+            @Param(HttpClientInputs.FOLLOW_REDIRECTS) String followRedirects,
+            @Param(HttpClientInputs.QUERY_PARAMS) String queryParams,
+            @Param(HttpClientInputs.ENCODE_QUERY_PARAMS) String encodeQueryParams,
+            @Param(HttpClientInputs.SOURCE_FILE) String sourceFile,
+            @Param(HttpClientInputs.BODY) String body,
+            @Param(HttpClientInputs.CONTENT_TYPE) String contentType,
+            @Param(HttpClientInputs.REQUEST_CHARACTER_SET) String requestCharacterSet,
+            @Param(HttpClientInputs.METHOD) String method,
+            //todo adopt new sdk for sessions
             SessionObjectHolder cookieStoreHolder,
             SessionObjectHolder connectionPoolHolder) {
 
