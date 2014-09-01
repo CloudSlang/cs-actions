@@ -11,7 +11,6 @@ import org.apache.http.client.config.RequestConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.score.content.httpclient.build.RequestConfigBuilder;
 
 import java.net.URISyntaxException;
 

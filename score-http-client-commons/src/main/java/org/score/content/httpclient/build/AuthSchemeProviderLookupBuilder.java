@@ -11,6 +11,7 @@ import org.apache.http.impl.auth.DigestSchemeFactory;
 import org.apache.http.impl.auth.KerberosSchemeFactory;
 import org.apache.http.impl.auth.NTLMScheme;
 import org.apache.http.protocol.HttpContext;
+import org.score.content.httpclient.HttpClientInputs;
 import org.score.content.httpclient.build.JCIFSEngine;
 
 import java.nio.charset.Charset;
@@ -54,12 +55,6 @@ public class AuthSchemeProviderLookupBuilder {
                 //AuthSchemes.SPNEGO ?
                 registryBuilder.register(AuthSchemes.KERBEROS, new KerberosSchemeFactory());
                 break;
-            case FORM:
-                //todo
-                break;
-            case SPRING_FORM:
-                //todo
-                break;
 //            default:
 //                registryBuilder.register(AuthSchemes.NTLM, new NTLMSchemeFactory())
 //                        .register(AuthSchemes.BASIC, new BasicSchemeFactory())
@@ -67,6 +62,9 @@ public class AuthSchemeProviderLookupBuilder {
 //                        .register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory())
 //                        .register(AuthSchemes.KERBEROS, new KerberosSchemeFactory());
 //                break;
+            default:
+                throw new IllegalStateException("Unsupported '"+ HttpClientInputs.AUTH_TYPE
+                        +"'authentication scheme: " + authType);
         }
         return registryBuilder.build();
     }

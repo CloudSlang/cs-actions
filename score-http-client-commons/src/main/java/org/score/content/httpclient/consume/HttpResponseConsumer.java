@@ -7,9 +7,11 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeaderValueParser;
+import org.score.content.httpclient.HttpClientInputs;
 import org.score.content.httpclient.ScoreHttpClient;
 
 import java.io.*;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
 
 /**
@@ -61,12 +63,23 @@ public class HttpResponseConsumer {
 
     protected void consumeResponseContent(Map<String, String> result) throws IOException {
         if (StringUtils.isEmpty(destinationFile)) {
-            String document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
+            String document;
+            try {
+                document = IOUtils.toString(httpResponse.getEntity().getContent(), responseCharacterSet);
+            } catch (UnsupportedCharsetException e) {
+                throw new IllegalArgumentException("Could not parse responseCharacterSet. " + e.getMessage(), e);
+            }
             result.put(ScoreHttpClient.RETURN_RESULT, document);
         } else {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), responseCharacterSet));
-            BufferedWriter fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationFile), responseCharacterSet));
-
+            BufferedReader reader;
+            BufferedWriter fileWriter;
+            try {
+                reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), responseCharacterSet));
+                fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationFile), responseCharacterSet));
+            } catch (UnsupportedEncodingException e) {
+                throw new IllegalArgumentException("Could not parse '"+ HttpClientInputs.RESPONSE_CHARACTER_SET
+                        +"'. " + e.getMessage(), e);
+            }
             char[] buffer = new char[1024];
             int b;
             while ((b = reader.read(buffer, 0, buffer.length)) != -1) {

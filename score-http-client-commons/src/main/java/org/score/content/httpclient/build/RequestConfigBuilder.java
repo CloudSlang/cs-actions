@@ -3,6 +3,7 @@ package org.score.content.httpclient.build;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
+import org.score.content.httpclient.HttpClientInputs;
 
 public class RequestConfigBuilder {
     private String connectionTimeout = "-1";
@@ -47,11 +48,15 @@ public class RequestConfigBuilder {
     public RequestConfig buildRequestConfig() {
         HttpHost proxy = null;
         if (proxyHost != null && !proxyHost.isEmpty()) {
-            proxy = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
+            try {
+                proxy = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Cound not parse '"+ HttpClientInputs.PROXY_PORT
+                        +"' input: " + e.getMessage(), e);
+            }
         }
         return RequestConfig.custom()
                 .setConnectTimeout(Integer.parseInt(connectionTimeout))
-                        //todo not set for post ?
                 .setSocketTimeout(Integer.parseInt(socketTimeout))
                 .setProxy(proxy)
                 .setRedirectsEnabled(Boolean.parseBoolean(followRedirects)).build();

@@ -80,7 +80,7 @@ public class SSLConnectionSocketFactoryBuilder {
             try {
                 sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
             } catch (Exception e) {
-                throw new RuntimeException(TRUST_ALL_ROOTS_ERROR + trustAllRoots, e);
+                throw new IllegalArgumentException(e.getMessage() + ". " + TRUST_ALL_ROOTS_ERROR + trustAllRoots, e);
             }
         }
 
@@ -93,7 +93,7 @@ public class SSLConnectionSocketFactoryBuilder {
             sslsf = new SSLConnectionSocketFactory(
                     sslContextBuilder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         } catch (Exception e) {
-            throw new RuntimeException(SSL_CONNECTION_ERROR, e);
+            throw new RuntimeException(e.getMessage() + ". " +  SSL_CONNECTION_ERROR, e);
         }
         return sslsf;
     }
@@ -105,9 +105,9 @@ public class SSLConnectionSocketFactoryBuilder {
                 clientKeyStore = createKeyStore(new URL(keystore), keystorePassword);
                 sslContextBuilder.loadKeyMaterial(clientKeyStore, keystorePassword.toCharArray());
             } catch (UnrecoverableKeyException | IOException ue) {
-                throw new RuntimeException(BAD_KEYSTORE_ERROR, ue);
+                throw new IllegalArgumentException(ue.getMessage()  + ". " +  BAD_KEYSTORE_ERROR, ue);
             } catch (GeneralSecurityException gse) {
-                throw new RuntimeException(INVALID_KEYSTORE_ERROR, gse);
+                throw new IllegalArgumentException(gse.getMessage()  + ". " +  INVALID_KEYSTORE_ERROR, gse);
             }
         }
     }
@@ -119,9 +119,9 @@ public class SSLConnectionSocketFactoryBuilder {
                 trustKeyStore = createKeyStore(new URL(trustKeystore), trustPassword);
                 sslContextBuilder.loadTrustMaterial(trustKeyStore);
             } catch (IOException ioe) {
-                throw new RuntimeException(BAD_TRUST_KEYSTORE_ERROR, ioe);
+                throw new IllegalArgumentException(ioe.getMessage()  + ". " +  BAD_TRUST_KEYSTORE_ERROR, ioe);
             } catch (GeneralSecurityException gse) {
-                throw new RuntimeException(INVALID_TRUST_KEYSTORE_ERROR, gse);
+                throw new IllegalArgumentException(gse.getMessage() + ". " + INVALID_TRUST_KEYSTORE_ERROR , gse);
             }
         }
     }

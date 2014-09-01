@@ -6,9 +6,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
@@ -16,6 +14,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.score.content.httpclient.build.*;
+import org.score.content.httpclient.build.RequestBuilder;
 import org.score.content.httpclient.consume.FinalLocationConsumer;
 import org.score.content.httpclient.consume.HeadersConsumer;
 import org.score.content.httpclient.consume.HttpResponseConsumer;
@@ -24,6 +23,7 @@ import org.score.content.httpclient.execute.HttpClientExecutor;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +50,7 @@ public class ScoreHttpClient {
     private HeadersBuilder headersBuilder;
     private ContentTypeBuilder contentTypeBuilder;
     private EntityBuilder httpEntityBuilder;
+    private RequestBuilder requestBuilder;
     private URIBuilder uriBuilder;
     private CredentialsProviderBuilder credentialsProviderBuilder;
     private SSLConnectionSocketFactoryBuilder sslConnectionSocketFactoryBuilder;
@@ -78,11 +79,10 @@ public class ScoreHttpClient {
                 .setFilePath(httpClientInputs.getSourceFile())
                 .setContentType(theContentType).buildEntity();
 
-        RequestBuilder requestBuilder = RequestBuilder.create(httpClientInputs.getMethod().toUpperCase());
-        requestBuilder.setUri(uri);
-        requestBuilder.setEntity(httpEntity);
-
-        HttpRequestBase httpRequestBase = (HttpRequestBase) requestBuilder.build();
+        HttpRequestBase httpRequestBase =  requestBuilder
+                .setMethod(httpClientInputs.getMethod())
+                .setUri(uri)
+                .setEntity(httpEntity).build();
 
         Header[] theHeaders = headersBuilder
                 .setHeaders(httpClientInputs.getHeaders())
@@ -151,9 +151,8 @@ public class ScoreHttpClient {
         CloseableHttpResponse httpResponse = httpClientExecutor
                 .setCloseableHttpClient(closeableHttpClient)
                 .setHttpRequestBase(httpRequestBase)
-                .setContext(context).execute();
-
-        checkKeepAlive(httpRequestBase, connManager, httpClientInputs.getKeepAlive());
+                .setContext(context)
+                .setKeepAlive(httpClientInputs.getKeepAlive()).execute();
 
         Map<String, String> returnResult = new HashMap<>();
 
@@ -177,14 +176,6 @@ public class ScoreHttpClient {
 
         returnResult.put(RETURN_CODE, SUCCESS);
         return returnResult;
-    }
-
-    private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager, String keepAliveInput) {
-        boolean keepAlive = StringUtils.isBlank(keepAliveInput) ? true : Boolean.parseBoolean(keepAliveInput);
-        if (!keepAlive) {
-            httpRequestBase.releaseConnection();
-            connManager.closeExpiredConnections();
-        }
     }
 
     public void setCookieStoreBuilder(CookieStoreBuilder cookieStoreBuilder) {
@@ -232,6 +223,9 @@ public class ScoreHttpClient {
         }
         if (httpEntityBuilder == null) {
             httpEntityBuilder = new EntityBuilder();
+        }
+        if (requestBuilder == null) {
+            requestBuilder = new RequestBuilder();
         }
         if (headersBuilder == null) {
             headersBuilder = new HeadersBuilder();

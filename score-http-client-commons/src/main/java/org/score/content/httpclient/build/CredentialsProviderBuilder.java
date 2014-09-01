@@ -98,14 +98,11 @@ public class CredentialsProviderBuilder {
     }
 
     private static String[] getDomainUsername(String username) {
-        int atSlash = username.indexOf('/');
-        if (atSlash == -1) {
-            atSlash = username.indexOf('\\');
-        }
-        String usernameWithoutDomain = username.substring(atSlash + 1);
+        int atBackSlash = username.indexOf('\\');
+        String usernameWithoutDomain = username.substring(atBackSlash + 1);
         String domain = ".";
-        if (atSlash >= 0) {
-            domain = username.substring(0, atSlash).toUpperCase(Locale.ENGLISH);
+        if (atBackSlash >= 0) {
+            domain = username.substring(0, atBackSlash).toUpperCase(Locale.ENGLISH);
         }
 
         return new String[]{domain, usernameWithoutDomain};

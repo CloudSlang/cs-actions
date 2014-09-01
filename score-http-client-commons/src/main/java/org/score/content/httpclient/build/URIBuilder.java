@@ -1,11 +1,10 @@
 package org.score.content.httpclient.build;
 
 import org.apache.commons.lang3.StringUtils;
+import org.score.content.httpclient.HttpClientInputs;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,12 @@ public class URIBuilder {
     }
 
     public URI buildURI() {
-
+        try {
+            //validate as URL
+            new URL(url);
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("could not parse " + url, e);
+        }
         org.apache.http.client.utils.URIBuilder uriBuilder;
         try {
             uriBuilder = new org.apache.http.client.utils.URIBuilder(url);
@@ -57,6 +61,11 @@ public class URIBuilder {
                         }
                     } catch (UnsupportedEncodingException e) {
                         throw new IllegalArgumentException(e);
+                    } catch (IllegalArgumentException ie) {
+                        throw new IllegalArgumentException(
+                                HttpClientInputs.ENCODE_QUERY_PARAMS +
+                                        " is 'false' but queryParams are not properly encoded. "
+                                        + ie.getMessage(), ie);
                     }
                 }
                 //queryParamsMap.put(nameValue[0], nameValue.length == 2 ? nameValue[1] : "" );
@@ -68,7 +77,8 @@ public class URIBuilder {
         try {
             return uriBuilder.build();
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("could not build URL for " + url + " and queries " + encodeQueryParams, e);
+            throw new IllegalArgumentException("could not build '"+HttpClientInputs.URL
+                    +"' for " + url + " and queries " + encodeQueryParams, e);
         }
 
     }
