@@ -152,7 +152,9 @@ public class ScoreHttpClient {
                 .setCloseableHttpClient(closeableHttpClient)
                 .setHttpRequestBase(httpRequestBase)
                 .setContext(context)
-                .setKeepAlive(httpClientInputs.getKeepAlive()).execute();
+                .execute();
+
+        checkKeepAlive(httpRequestBase, connManager, httpClientInputs.getKeepAlive());
 
         Map<String, String> returnResult = new HashMap<>();
 
@@ -176,6 +178,14 @@ public class ScoreHttpClient {
 
         returnResult.put(RETURN_CODE, SUCCESS);
         return returnResult;
+    }
+
+    private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager, String keepAliveInput) {
+        boolean keepAlive = StringUtils.isBlank(keepAliveInput) ? true : Boolean.parseBoolean(keepAliveInput);
+        if (!keepAlive) {
+            httpRequestBase.releaseConnection();
+            connManager.closeExpiredConnections();
+        }
     }
 
     public void setCookieStoreBuilder(CookieStoreBuilder cookieStoreBuilder) {

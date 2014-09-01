@@ -20,7 +20,6 @@ public class HttpClientExecutor {
     private HttpRequestBase httpRequestBase;
     private CloseableHttpClient closeableHttpClient;
     private HttpClientContext context;
-    private String keepAlive;
 
     public HttpClientExecutor setHttpRequestBase(HttpRequestBase httpRequestBase) {
         this.httpRequestBase = httpRequestBase;
@@ -37,11 +36,6 @@ public class HttpClientExecutor {
         return this;
     }
 
-    public HttpClientExecutor setKeepAlive(String keepAliveInput) {
-        this.keepAlive = keepAliveInput;
-        return this;
-    }
-
     public CloseableHttpResponse execute() {
         CloseableHttpResponse response;
         try {
@@ -52,14 +46,6 @@ public class HttpClientExecutor {
             throw new RuntimeException("Connection error: " + connectEx.getMessage(), connectEx);
         } catch (IOException e) {
             throw new RuntimeException("Error while executing http request: " + e.getMessage(), e);
-        }
-        boolean keepAlive = StringUtils.isBlank(this.keepAlive) || Boolean.parseBoolean(this.keepAlive);
-        if (!keepAlive) {
-            try {
-                closeableHttpClient.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Error while closing the connection: " + e.getMessage(), e);
-            }
         }
         return response;
     }
