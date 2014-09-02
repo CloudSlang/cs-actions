@@ -17,8 +17,8 @@ public class ConnectionManagerBuilder {
     private SessionObjectHolder connectionPoolHolder;
     private SSLConnectionSocketFactory sslsf;
     private String connectionManagerMapKey;
-    private String defaultMaxPerRoute = "2";
-    private String totalMax = "20";
+    private String defaultMaxPerRoute;
+    private String totalMax;
 
     public ConnectionManagerBuilder setConnectionPoolHolder(SessionObjectHolder connectionPoolHolder) {
         this.connectionPoolHolder = connectionPoolHolder;
@@ -31,16 +31,12 @@ public class ConnectionManagerBuilder {
     }
 
     public ConnectionManagerBuilder setTotalMax(String totalMax) {
-        if (!StringUtils.isEmpty(totalMax)) {
-            this.totalMax = totalMax;
-        }
+        this.totalMax = totalMax;
         return this;
     }
 
     public ConnectionManagerBuilder setDefaultMaxPerRoute(String defaultMaxPerRoute) {
-        if (!StringUtils.isEmpty(defaultMaxPerRoute)) {
-            this.defaultMaxPerRoute = defaultMaxPerRoute;
-        }
+        this.defaultMaxPerRoute = defaultMaxPerRoute;
         return this;
     }
 
@@ -74,20 +70,26 @@ public class ConnectionManagerBuilder {
                         .register("https", sslsf)
                         .build();
                 connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-                //the DefaultMaxPerRoute default is 2
+
+                connectionManagerMap.put(connectionManagerMapKey, connManager);
+            }
+            //the DefaultMaxPerRoute default is 2
+            if (!StringUtils.isEmpty(defaultMaxPerRoute)) {
                 try {
                     connManager.setDefaultMaxPerRoute(Integer.parseInt(defaultMaxPerRoute));
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("the '"+ HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE
                             +"' input should be integer" +e.getMessage(), e);
                 }
+            }
+            //the Default totalMax default is 20
+            if (!StringUtils.isEmpty(totalMax)) {
                 try {
                     connManager.setMaxTotal(Integer.parseInt(totalMax));
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("the '"+ HttpClientInputs.CONNECTIONS_MAX_TOTAL
                             +"' input should be integer" +e.getMessage(), e);
                 }
-                connectionManagerMap.put(connectionManagerMapKey, connManager);
             }
             return connManager;
         }
