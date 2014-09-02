@@ -32,6 +32,8 @@ public class HttpClientInputs {
     public static final String SOCKET_TIMEOUT = "socketTimeout";
     public static final String USE_COOKIES = "useCookies";
     public static final String KEEP_ALIVE = "keepAlive";
+    public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
+    public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
     public static final String HEADERS = "headers";
     public static final String RESPONSE_CHARACTER_SET = "responseCharacterSet";
     public static final String DESTINATION_FILE = "destinationFile";
@@ -54,6 +56,8 @@ public class HttpClientInputs {
     private String socketTimeout;
     private String useCookies;
     private String keepAlive;
+    private String connectionsMaxPerRoute;
+    private String connectionsMaxTotal;
     private String headers;
     private String responseCharacterSet;
     private String destinationFile;
@@ -206,6 +210,22 @@ public class HttpClientInputs {
 
     public String getKeepAlive() {
         return keepAlive;
+    }
+
+    public String getConnectionsMaxPerRoute() {
+        return connectionsMaxPerRoute;
+    }
+
+    public void setConnectionsMaxPerRoute(String connectionsMaxPerRoute) {
+        this.connectionsMaxPerRoute = connectionsMaxPerRoute;
+    }
+
+    public String getConnectionsMaxTotal() {
+        return connectionsMaxTotal;
+    }
+
+    public void setConnectionsMaxTotal(String connectionsMaxTotal) {
+        this.connectionsMaxTotal = connectionsMaxTotal;
     }
 
     public void setKeepAlive(String keepAlive) {

@@ -56,8 +56,8 @@ public class RequestConfigBuilder {
             }
         }
         return RequestConfig.custom()
-                .setConnectTimeout(Integer.parseInt(connectionTimeout))
-                .setSocketTimeout(Integer.parseInt(socketTimeout))
+                .setConnectTimeout(Integer.parseInt(connectionTimeout) * 1000)
+                .setSocketTimeout(Integer.parseInt(socketTimeout) * 1000)
                 .setProxy(proxy)
                 .setRedirectsEnabled(Boolean.parseBoolean(followRedirects)).build();
     }

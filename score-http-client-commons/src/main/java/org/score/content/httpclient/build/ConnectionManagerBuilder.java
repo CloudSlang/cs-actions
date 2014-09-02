@@ -1,11 +1,13 @@
 package org.score.content.httpclient.build;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.score.content.httpclient.HttpClientInputs;
 import org.score.content.httpclient.SessionObjectHolder;
 
 import java.util.HashMap;
@@ -15,6 +17,8 @@ public class ConnectionManagerBuilder {
     private SessionObjectHolder connectionPoolHolder;
     private SSLConnectionSocketFactory sslsf;
     private String connectionManagerMapKey;
+    private String defaultMaxPerRoute = "2";
+    private String totalMax = "20";
 
     public ConnectionManagerBuilder setConnectionPoolHolder(SessionObjectHolder connectionPoolHolder) {
         this.connectionPoolHolder = connectionPoolHolder;
@@ -23,6 +27,20 @@ public class ConnectionManagerBuilder {
 
     public ConnectionManagerBuilder setSslsf(SSLConnectionSocketFactory sslsf) {
         this.sslsf = sslsf;
+        return this;
+    }
+
+    public ConnectionManagerBuilder setTotalMax(String totalMax) {
+        if (!StringUtils.isEmpty(totalMax)) {
+            this.totalMax = totalMax;
+        }
+        return this;
+    }
+
+    public ConnectionManagerBuilder setDefaultMaxPerRoute(String defaultMaxPerRoute) {
+        if (!StringUtils.isEmpty(defaultMaxPerRoute)) {
+            this.defaultMaxPerRoute = defaultMaxPerRoute;
+        }
         return this;
     }
 
@@ -57,7 +75,18 @@ public class ConnectionManagerBuilder {
                         .build();
                 connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
                 //the DefaultMaxPerRoute default is 2
-                //connManager.setDefaultMaxPerRoute(1);
+                try {
+                    connManager.setDefaultMaxPerRoute(Integer.parseInt(defaultMaxPerRoute));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("the '"+ HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE
+                            +"' input should be integer" +e.getMessage(), e);
+                }
+                try {
+                    connManager.setMaxTotal(Integer.parseInt(totalMax));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("the '"+ HttpClientInputs.CONNECTIONS_MAX_TOTAL
+                            +"' input should be integer" +e.getMessage(), e);
+                }
                 connectionManagerMap.put(connectionManagerMapKey, connManager);
             }
             return connManager;

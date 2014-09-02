@@ -23,7 +23,6 @@ import org.score.content.httpclient.execute.HttpClientExecutor;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,6 +139,8 @@ public class ScoreHttpClient {
                         httpClientInputs.getTrustKeystore())
                 .setConnectionPoolHolder(httpClientInputs.getConnectionPoolHolder())
                 .setSslsf(sslConnectionSocketFactory)
+                .setDefaultMaxPerRoute(httpClientInputs.getConnectionsMaxPerRoute())
+                .setTotalMax(httpClientInputs.getConnectionsMaxTotal())
                 .buildConnectionManager();
 
         httpClientBuilder.setConnectionManager(connManager);
