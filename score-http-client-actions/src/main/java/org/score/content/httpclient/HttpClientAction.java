@@ -54,6 +54,8 @@ public class HttpClientAction {
             @Param(HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
             @Param(HttpClientInputs.USE_COOKIES) String useCookies,
             @Param(HttpClientInputs.KEEP_ALIVE) String keepAlive,
+            @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoot,
+            @Param(HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(HttpClientInputs.HEADERS) String headers,
             @Param(HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
             @Param(HttpClientInputs.DESTINATION_FILE) String destinationFile,
@@ -88,6 +90,8 @@ public class HttpClientAction {
         httpClientInputs.setSocketTimeout(socketTimeout);
         httpClientInputs.setUseCookies(useCookies);
         httpClientInputs.setKeepAlive(keepAlive);
+        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
+        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
         httpClientInputs.setHeaders(headers);
         httpClientInputs.setResponseCharacterSet(responseCharacterSet);
         httpClientInputs.setDestinationFile(destinationFile);
