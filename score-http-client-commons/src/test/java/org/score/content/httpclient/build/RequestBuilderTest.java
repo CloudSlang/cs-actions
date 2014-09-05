@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -18,6 +19,11 @@ import static org.junit.Assert.assertEquals;
  * Date: 8/28/14
  */
 public class RequestBuilderTest {
+    @Test(expected = IllegalArgumentException.class)
+    public void testNoMethod() throws URISyntaxException {
+        new RequestBuilder().setUri(new URI("/")).build();
+    }
+
     @Test
     public void testMethods() throws URISyntaxException {
         HttpRequestBase httpRequestBase = new RequestBuilder().setUri(new URI("/")).setMethod("GET").build();

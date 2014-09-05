@@ -51,7 +51,7 @@ public class EntityBuilderTest {
     public void buildEntityWithFile() {
         ContentType parsedContentType = ContentType.parse(CONTENT_TYPE);
         HttpEntity httpEntity = entityBuilder
-                .setFilePath("C:/testfile.txt")
+                .setFilePath(getClass().getResource("testfile.txt").getPath() )
                 .setContentType(parsedContentType)
                 .buildEntity();
         assertThat(httpEntity, instanceOf(FileEntity.class));

@@ -35,9 +35,8 @@ public class FinalLocationConsumer {
             location = URIUtils.resolve(uri, targetHost, redirectLocations);
         } catch (URISyntaxException e) {
             //this is not a fatal error
-            returnResult.put(ScoreHttpClient.FINAL_LOCATION, "could not determine '"+ScoreHttpClient.FINAL_LOCATION
-                    +"': " + e.getMessage());
-            return;
+            throw new IllegalArgumentException("could not determine '"+ScoreHttpClient.FINAL_LOCATION
+                    +"': " + e.getMessage(), e);
         }
         returnResult.put(ScoreHttpClient.FINAL_LOCATION, location.toASCIIString());
     }

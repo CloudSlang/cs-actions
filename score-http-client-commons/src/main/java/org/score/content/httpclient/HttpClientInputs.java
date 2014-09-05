@@ -1,5 +1,8 @@
 package org.score.content.httpclient;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+
 /**
  * User: davidmih
  * Date: 7/18/14
@@ -38,6 +41,9 @@ public class HttpClientInputs {
     public static final String RESPONSE_CHARACTER_SET = "responseCharacterSet";
     public static final String DESTINATION_FILE = "destinationFile";
 
+    public final static String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
+    public final static String SESSION_COOKIES = "httpClientCookieSession";
+
     private String url;
     private String authType;
     private String username;
@@ -69,8 +75,8 @@ public class HttpClientInputs {
     private String contentType;
     private String requestCharacterSet;
     private String method;
-    private SessionObjectHolder cookieStoreHolder;
-    private SessionObjectHolder connectionPoolHolder;
+    private SerializableSessionObject cookieStoreSessionObject;
+    private GlobalSessionObject connectionPoolSessionObject;
 
     public String getUrl() {
         return url;
@@ -320,19 +326,19 @@ public class HttpClientInputs {
         this.method = method;
     }
 
-    public SessionObjectHolder getCookieStoreHolder() {
-        return cookieStoreHolder;
+    public SerializableSessionObject getCookieStoreSessionObject() {
+        return cookieStoreSessionObject;
     }
 
-    public void setCookieStoreHolder(SessionObjectHolder cookieStoreHolder) {
-        this.cookieStoreHolder = cookieStoreHolder;
+    public void setCookieStoreSessionObject(SerializableSessionObject cookieStoreSessionObject) {
+        this.cookieStoreSessionObject = cookieStoreSessionObject;
     }
 
-    public SessionObjectHolder getConnectionPoolHolder() {
-        return connectionPoolHolder;
+    public GlobalSessionObject getConnectionPoolSessionObject() {
+        return connectionPoolSessionObject;
     }
 
-    public void setConnectionPoolHolder(SessionObjectHolder connectionPoolHolder) {
-        this.connectionPoolHolder = connectionPoolHolder;
+    public void setConnectionPoolSessionObject(GlobalSessionObject connectionPoolSessionObject) {
+        this.connectionPoolSessionObject = connectionPoolSessionObject;
     }
 }

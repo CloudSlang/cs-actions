@@ -38,6 +38,9 @@ public class RequestBuilder {
     }
 
     public HttpRequestBase build() {
+        if (method==null) {
+            throw new IllegalArgumentException("The 'method' input is required. Provide one of " + Arrays.asList(methods).toString());
+        }
         String method = this.method.toUpperCase().trim();
         if (Arrays.binarySearch(methods, method) < 0) {
             throw new IllegalArgumentException("invalid '"+ HttpClientInputs.METHOD+"' input '" + method + "'");

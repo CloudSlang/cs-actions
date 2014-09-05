@@ -1,5 +1,7 @@
 package org.score.content.httpclient.build;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -8,19 +10,18 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.score.content.httpclient.HttpClientInputs;
-import org.score.content.httpclient.SessionObjectHolder;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConnectionManagerBuilder {
-    private SessionObjectHolder connectionPoolHolder;
+    private GlobalSessionObject<Map<String, PoolingHttpClientConnectionManager>> connectionPoolHolder;
     private SSLConnectionSocketFactory sslsf;
     private String connectionManagerMapKey;
     private String defaultMaxPerRoute;
     private String totalMax;
 
-    public ConnectionManagerBuilder setConnectionPoolHolder(SessionObjectHolder connectionPoolHolder) {
+    public ConnectionManagerBuilder setConnectionPoolHolder(GlobalSessionObject connectionPoolHolder) {
         this.connectionPoolHolder = connectionPoolHolder;
         return this;
     }
@@ -52,26 +53,43 @@ public class ConnectionManagerBuilder {
         return this;
     }
 
-    public synchronized PoolingHttpClientConnectionManager buildConnectionManager() {
+    public  PoolingHttpClientConnectionManager buildConnectionManager() {
         if (connectionPoolHolder != null) {
-            @SuppressWarnings("unchecked") Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
-                    = (Map<String, PoolingHttpClientConnectionManager>) connectionPoolHolder.getObject();
-
-            if (connectionManagerMap == null) {
-                connectionManagerMap = new HashMap<>();
-                //noinspection unchecked
-                connectionPoolHolder.setObject(connectionManagerMap);
+            Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
+                    = connectionPoolHolder.get();
+            PoolingHttpClientConnectionManager connManager = null;
+            if (connectionManagerMap != null) {
+                connManager = connectionManagerMap.get(connectionManagerMapKey);
             }
-
-            PoolingHttpClientConnectionManager connManager = connectionManagerMap.get(connectionManagerMapKey);
             if (connManager == null) {
-                Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                        .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                        .register("https", sslsf)
-                        .build();
-                connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+                synchronized(connectionPoolHolder) {
+                    connectionManagerMap = connectionPoolHolder.get();
 
-                connectionManagerMap.put(connectionManagerMapKey, connManager);
+                    if (connectionManagerMap == null) {
+                        final HashMap<String, PoolingHttpClientConnectionManager> connectionManagerMapFinal  = new HashMap<>();
+                        connectionPoolHolder.setResource(new SessionResource<Map<String, PoolingHttpClientConnectionManager>>(){
+                            @Override
+                            public Map<String, PoolingHttpClientConnectionManager> get() {
+                                return connectionManagerMapFinal;
+                            }
+                            @Override
+                            public void release() {
+                            }
+                        });
+                        connectionManagerMap = connectionPoolHolder.get();
+                    }
+
+                    connManager = connectionManagerMap.get(connectionManagerMapKey);
+                    if (connManager == null) {
+                        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                                .register("https", sslsf)
+                                .build();
+                        connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+
+                        connectionManagerMap.put(connectionManagerMapKey, connManager);
+                    }
+                }
             }
             //the DefaultMaxPerRoute default is 2
             if (!StringUtils.isEmpty(defaultMaxPerRoute)) {

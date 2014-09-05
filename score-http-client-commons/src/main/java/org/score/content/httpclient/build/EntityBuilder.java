@@ -37,7 +37,7 @@ public class EntityBuilder {
         if (!StringUtils.isEmpty(filePath)) {
             File file = new File(filePath);
             if (!file.exists()) {
-                throw new IllegalArgumentException("file at '"+ HttpClientInputs.SOURCE_FILE
+                throw new IllegalArgumentException("file set by input '"+ HttpClientInputs.SOURCE_FILE
                         +"' does not exist:" + filePath);
             }
             FileEntity fileEntity = new FileEntity(file, contentType);

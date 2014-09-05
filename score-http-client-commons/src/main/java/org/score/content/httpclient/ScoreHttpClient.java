@@ -117,9 +117,9 @@ public class ScoreHttpClient {
                 .setAuthType(httpClientInputs.getAuthType())
                 .buildAuthSchemeProviderLookup());
 
-        CookieStore cookieStore = httpClientInputs.getCookieStoreHolder() == null ? null : cookieStoreBuilder
+        CookieStore cookieStore = httpClientInputs.getCookieStoreSessionObject() == null ? null : cookieStoreBuilder
                 .setUseCookies(httpClientInputs.getUseCookies())
-                .setCookieStoreHolder(httpClientInputs.getCookieStoreHolder())
+                .setCookieStoreSessionObject(httpClientInputs.getCookieStoreSessionObject())
                 .buildCookieStore();
         if (cookieStore != null) {
             httpClientBuilder.setDefaultCookieStore(cookieStore);
@@ -137,7 +137,7 @@ public class ScoreHttpClient {
                         httpClientInputs.getTrustAllRoots(),
                         httpClientInputs.getKeystore(),
                         httpClientInputs.getTrustKeystore())
-                .setConnectionPoolHolder(httpClientInputs.getConnectionPoolHolder())
+                .setConnectionPoolHolder(httpClientInputs.getConnectionPoolSessionObject())
                 .setSslsf(sslConnectionSocketFactory)
                 .setDefaultMaxPerRoute(httpClientInputs.getConnectionsMaxPerRoute())
                 .setTotalMax(httpClientInputs.getConnectionsMaxTotal())
@@ -176,6 +176,14 @@ public class ScoreHttpClient {
 
         headersConsumer.setHeaders(httpResponse.getAllHeaders()).consume(returnResult);
         statusConsumer.setStatusLine(httpResponse.getStatusLine()).consume(returnResult);
+
+        if (cookieStore != null) {
+            try {
+                httpClientInputs.getCookieStoreSessionObject().setValue(CookieStoreBuilder.serialize(cookieStore));
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
 
         returnResult.put(RETURN_CODE, SUCCESS);
         return returnResult;

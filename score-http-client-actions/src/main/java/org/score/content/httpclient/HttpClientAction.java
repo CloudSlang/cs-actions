@@ -6,6 +6,8 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -67,9 +69,8 @@ public class HttpClientAction {
             @Param(HttpClientInputs.CONTENT_TYPE) String contentType,
             @Param(HttpClientInputs.REQUEST_CHARACTER_SET) String requestCharacterSet,
             @Param(HttpClientInputs.METHOD) String method,
-            //todo adopt new sdk for sessions
-            SessionObjectHolder cookieStoreHolder,
-            SessionObjectHolder connectionPoolHolder) {
+            @Param(HttpClientInputs.SESSION_COOKIES) SerializableSessionObject cookieStoreHolder,
+            @Param(HttpClientInputs.SESSION_CONNECTION_POOL) GlobalSessionObject connectionPoolHolder) {
 
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(url);
@@ -103,8 +104,8 @@ public class HttpClientAction {
         httpClientInputs.setContentType(contentType);
         httpClientInputs.setRequestCharacterSet(requestCharacterSet);
         httpClientInputs.setMethod(method);
-        httpClientInputs.setCookieStoreHolder(cookieStoreHolder);
-        httpClientInputs.setConnectionPoolHolder(connectionPoolHolder);
+        httpClientInputs.setCookieStoreSessionObject(cookieStoreHolder);
+        httpClientInputs.setConnectionPoolSessionObject(connectionPoolHolder);
 
         try {
             return new ScoreHttpClient().execute(httpClientInputs);

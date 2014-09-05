@@ -1,13 +1,15 @@
 package org.score.content.httpclient.build;
 
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.score.content.httpclient.SessionObjectHolder;
+
+import java.io.*;
 
 public class CookieStoreBuilder {
     private String useCookies = "true";
-    private SessionObjectHolder cookieStoreHolder;
+    private SerializableSessionObject cookieStoreSessionObject;
 
     public CookieStoreBuilder setUseCookies(String useCookies) {
         if (!StringUtils.isEmpty(useCookies)) {
@@ -16,24 +18,39 @@ public class CookieStoreBuilder {
         return this;
     }
 
-    public CookieStoreBuilder setCookieStoreHolder(SessionObjectHolder cookieStoreHolder) {
-        this.cookieStoreHolder = cookieStoreHolder;
+    public CookieStoreBuilder setCookieStoreSessionObject(SerializableSessionObject cookieStoreSessionObject) {
+        this.cookieStoreSessionObject = cookieStoreSessionObject;
         return this;
     }
 
     public CookieStore buildCookieStore() {
-        if (Boolean.parseBoolean(useCookies) && cookieStoreHolder != null) {
-            CookieStore cookieStore;
-            synchronized (this.getClass()) {
-                if (cookieStoreHolder.getObject() == null) {
-                    cookieStore = new BasicCookieStore();
-                    //noinspection unchecked
-                    cookieStoreHolder.setObject(cookieStore);
+        if (Boolean.parseBoolean(useCookies) && cookieStoreSessionObject != null) {
+            BasicCookieStore cookieStore;
+            if (cookieStoreSessionObject.getValue() == null) {
+                cookieStore = new BasicCookieStore();
+            } else {
+                try {
+                    cookieStore = (BasicCookieStore) deserialize((byte[]) cookieStoreSessionObject.getValue());
+                } catch (IOException | ClassNotFoundException  e) {
+                    throw new RuntimeException(e.getMessage(), e);
                 }
             }
-            cookieStore = (CookieStore) cookieStoreHolder.getObject();
             return cookieStore;
         }
         return null;
     }
+
+    public static byte[] serialize(Object obj) throws IOException {
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(b);
+        o.writeObject(obj);
+        return b.toByteArray();
+    }
+
+    public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream b = new ByteArrayInputStream(bytes);
+        ObjectInputStream o = new ObjectInputStream(b);
+        return o.readObject();
+    }
+
 }

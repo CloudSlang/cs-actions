@@ -1,10 +1,12 @@
 package org.score.content.httpclient.build;
 
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.junit.Before;
 import org.junit.Test;
-import org.score.content.httpclient.SessionObjectHolder;
+
+import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -25,33 +27,33 @@ public class CookieStoreBuilderTest {
 
     @Test
     public void buildCookieStore() {
-        SessionObjectHolder sessionObjectHolder = new SessionObjectHolder();
+        SerializableSessionObject sessionObjectHolder = new SerializableSessionObject();
         CookieStore cookieStore = cookieStoreBuilder
-                .setCookieStoreHolder(sessionObjectHolder)
+                .setCookieStoreSessionObject(sessionObjectHolder)
                 .buildCookieStore();
         assertNotNull(cookieStore);
         assertEquals(0, cookieStore.getCookies().size());
     }
 
     @Test
-    public void buildCookieStoreWithCookies() {
+    public void buildCookieStoreWithCookies() throws IOException {
         BasicCookieStore basicCookieStore = new BasicCookieStore();
-        SessionObjectHolder sessionObjectHolder = new SessionObjectHolder<BasicCookieStore>();
-        sessionObjectHolder.setObject(basicCookieStore);
+        SerializableSessionObject sessionObjectHolder = new SerializableSessionObject();
+        sessionObjectHolder.setValue(CookieStoreBuilder.serialize(basicCookieStore));
         BasicCookieStore cookieStore = (BasicCookieStore) cookieStoreBuilder
-                .setCookieStoreHolder(sessionObjectHolder)
+                .setCookieStoreSessionObject(sessionObjectHolder)
                 .buildCookieStore();
 
         assertNotNull(cookieStore);
         assertEquals(0, cookieStore.getCookies().size());
-        assertEquals(basicCookieStore, cookieStore);
+        assertEquals(basicCookieStore.getCookies(), cookieStore.getCookies());
     }
 
     @Test
-    public void buildCookieStoreWithoutCookies() {
+    public void buildCookieStoreWithoutCookies() throws IOException {
         BasicCookieStore basicCookieStore = new BasicCookieStore();
-        SessionObjectHolder sessionObjectHolder = new SessionObjectHolder<BasicCookieStore>();
-        sessionObjectHolder.setObject(basicCookieStore);
+        SerializableSessionObject sessionObjectHolder = new SerializableSessionObject();
+        sessionObjectHolder.setValue(CookieStoreBuilder.serialize(basicCookieStore));
         BasicCookieStore cookieStore = (BasicCookieStore) cookieStoreBuilder
                 .setUseCookies("false")
                 .buildCookieStore();

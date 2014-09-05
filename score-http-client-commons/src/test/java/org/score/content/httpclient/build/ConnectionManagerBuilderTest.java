@@ -1,12 +1,13 @@
 package org.score.content.httpclient.build;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.score.content.httpclient.SessionObjectHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,17 +42,25 @@ public class ConnectionManagerBuilderTest {
         PoolingHttpClientConnectionManager connectionManager = new ConnectionManagerBuilder()
                 .setConnectionManagerMapKey("key1", "key2")
                 .setSslsf(sslConnectionSocketFactoryMock)
-                .setConnectionPoolHolder(new SessionObjectHolder())
+                .setConnectionPoolHolder(new GlobalSessionObject())
                 .buildConnectionManager();
         assertNotNull(connectionManager);
     }
 
     @Test
     public void buildConnectionManagerNewConnectionManager1() {
-        SessionObjectHolder holder = new SessionObjectHolder();
-        Map<String, PoolingHttpClientConnectionManager> connectionManagerMap = new HashMap<String, PoolingHttpClientConnectionManager>();
+        GlobalSessionObject holder = new GlobalSessionObject();
+        final Map<String, PoolingHttpClientConnectionManager> connectionManagerMap = new HashMap();
         connectionManagerMap.put("key1:key2", connectionManagerMock);
-        holder.setObject(connectionManagerMap);
+        holder.setResource(new SessionResource() {
+            @Override
+            public Object get() {
+                return connectionManagerMap;
+            }
+            @Override
+            public void release() {
+            }
+        });
         PoolingHttpClientConnectionManager connectionManager = new ConnectionManagerBuilder()
                 .setConnectionManagerMapKey("key1", "key2")
                 .setSslsf(sslConnectionSocketFactoryMock)
