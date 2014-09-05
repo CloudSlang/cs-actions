@@ -15,7 +15,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.score.content.httpclient.build.*;
 import com.hp.score.content.httpclient.consume.FinalLocationConsumer;
 import com.hp.score.content.httpclient.consume.HeadersConsumer;
 import com.hp.score.content.httpclient.consume.HttpResponseConsumer;
