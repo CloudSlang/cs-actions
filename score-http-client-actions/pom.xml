@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.hp.score.content</groupId>
             <artifactId>score-http-client-commons</artifactId>
-            <version>0.1.18-SNAPSHOT</version>
+            <version>0.1.18</version>
         </dependency>
         <dependency>
             <groupId>com.hp.oo.sdk</groupId>
