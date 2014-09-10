@@ -14,9 +14,8 @@ import java.nio.charset.UnsupportedCharsetException;
  * Date: 8/12/14
  */
 public class ContentTypeBuilder {
-    private static String DEFAULT_CONTENT_TYPE = "text/plain";
-    private static String DEFAULT_CHARACTER_SET = Consts.ISO_8859_1.name();
 
+    private ContentType defaultContentType = ContentType.TEXT_PLAIN;
     private String contentType;
     private String requestCharacterSet;
 
@@ -31,13 +30,19 @@ public class ContentTypeBuilder {
         }
         return this;
     }
+    public ContentTypeBuilder setDefault(ContentType contentType) {
+        if (contentType != null) {
+            defaultContentType = contentType;
+        }
+        return this;
+    }
 
     public ContentType buildContentType() {
         String contentType = this.contentType;
         String requestCharacterSet = this.requestCharacterSet;
         ContentType parsedContentType;
         if (StringUtils.isEmpty(contentType)) {
-            parsedContentType = ContentType.parse(DEFAULT_CONTENT_TYPE).withCharset(DEFAULT_CHARACTER_SET);
+            parsedContentType = defaultContentType;
         } else {
             try {
                 parsedContentType = ContentType.parse(contentType);

@@ -34,4 +34,15 @@ public class ContentTypeBuilderTest {
         assertEquals(TEXT_PLAIN_CONTENT_TYPE, contentType.getMimeType().toString());
         assertEquals(Consts.ISO_8859_1.name(), contentType.getCharset().name());
     }
+
+    @Test
+    public void buildContentTypeWithRequestCharacterSet() {
+        ContentType contentType = new ContentTypeBuilder()
+                .setContentType("application/json; charset=UTF-8")
+                .setRequestCharacterSet(Consts.ISO_8859_1.name()).buildContentType();
+
+        assertEquals(APPLICATION_JSON_CONTENT_TYPE, contentType.getMimeType().toString());
+        assertEquals(Consts.ISO_8859_1.name(), contentType.getCharset().name());
+    }
+
 }

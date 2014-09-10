@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class RequestBuilder {
     //ordered
     private static String [] methods = new String []{HttpDelete.METHOD_NAME, HttpGet.METHOD_NAME, HttpHead.METHOD_NAME,
-            HttpOptions.METHOD_NAME, HttpPost.METHOD_NAME, HttpPut.METHOD_NAME,  HttpTrace.METHOD_NAME};
+            HttpOptions.METHOD_NAME, HttpPatch.METHOD_NAME, HttpPost.METHOD_NAME, HttpPut.METHOD_NAME,  HttpTrace.METHOD_NAME};
 
     private String method;
     private URI uri;

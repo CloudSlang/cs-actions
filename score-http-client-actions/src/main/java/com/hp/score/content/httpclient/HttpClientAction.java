@@ -64,11 +64,13 @@ public class HttpClientAction {
             @Param(HttpClientInputs.FOLLOW_REDIRECTS) String followRedirects,
             @Param(HttpClientInputs.QUERY_PARAMS) String queryParams,
             @Param(HttpClientInputs.ENCODE_QUERY_PARAMS) String encodeQueryParams,
+            @Param(value = HttpClientInputs.FORM_PARAMS, required = true) String formParams,
+            @Param(value = HttpClientInputs.ENCODE_FORM_PARAMS, required = true) String encodeFormParams,
             @Param(HttpClientInputs.SOURCE_FILE) String sourceFile,
             @Param(HttpClientInputs.BODY) String body,
             @Param(HttpClientInputs.CONTENT_TYPE) String contentType,
             @Param(HttpClientInputs.REQUEST_CHARACTER_SET) String requestCharacterSet,
-            @Param(HttpClientInputs.METHOD) String method,
+            @Param(value = HttpClientInputs.METHOD, required = true) String method,
             @Param(HttpClientInputs.SESSION_COOKIES) SerializableSessionObject httpClientCookieSession,
             @Param(HttpClientInputs.SESSION_CONNECTION_POOL) GlobalSessionObject httpClientPoolingConnectionManager) {
 
@@ -99,6 +101,8 @@ public class HttpClientAction {
         httpClientInputs.setFollowRedirects(followRedirects);
         httpClientInputs.setQueryParams(queryParams);
         httpClientInputs.setEncodeQueryParams(encodeQueryParams);
+        httpClientInputs.setFormParams(formParams);
+        httpClientInputs.setEncodeFormParams(encodeFormParams);
         httpClientInputs.setSourceFile(sourceFile);
         httpClientInputs.setBody(body);
         httpClientInputs.setContentType(contentType);

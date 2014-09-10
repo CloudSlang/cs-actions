@@ -14,6 +14,8 @@ public class HttpClientInputs {
     public static final String FOLLOW_REDIRECTS = "followRedirects";
     public static final String QUERY_PARAMS = "queryParams";
     public static final String ENCODE_QUERY_PARAMS = "encodeQueryParams";
+    public static final String FORM_PARAMS = "formParams";
+    public static final String ENCODE_FORM_PARAMS = "encodeFormParams";
     public static final String SOURCE_FILE = "sourceFile";
     public static final String REQUEST_CHARACTER_SET = "requestCharacterSet";
     public static final String BODY = "body";
@@ -70,6 +72,8 @@ public class HttpClientInputs {
     private String followRedirects;
     private String queryParams;
     private String encodeQueryParams;
+    private String formParams;
+    private String encodeFormParams;
     private String sourceFile;
     private String body;
     private String contentType;
@@ -278,12 +282,28 @@ public class HttpClientInputs {
         this.queryParams = queryParams;
     }
 
+    public String getFormParams() {
+        return formParams;
+    }
+
+    public void setFormParams(String formParams) {
+        this.formParams = formParams;
+    }
+
     public String getEncodeQueryParams() {
         return encodeQueryParams;
     }
 
     public void setEncodeQueryParams(String encodeQueryParams) {
         this.encodeQueryParams = encodeQueryParams;
+    }
+
+    public String getEncodeFormParams() {
+        return encodeFormParams;
+    }
+
+    public void setEncodeFormParams(String encodeFormParams) {
+        this.encodeFormParams = encodeFormParams;
     }
 
     public String getSourceFile() {

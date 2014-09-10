@@ -3,16 +3,23 @@ package com.hp.score.content.httpclient.build;
 import com.hp.score.content.httpclient.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.List;
 
 public class EntityBuilder {
     private String body;
     private String filePath;
     private ContentType contentType;
+    private String formParams;
+    private String encodeFormParams = "true";
 
     public EntityBuilder setBody(String body) {
         this.body = body;
@@ -29,7 +36,33 @@ public class EntityBuilder {
         return this;
     }
 
+    public EntityBuilder setFormParams(String formParams) {
+        this.formParams = formParams;
+        return this;
+    }
+
+    public EntityBuilder setEncodeFormParams(String encodeFormParams) {
+        if (!StringUtils.isEmpty(encodeFormParams)) {
+            this.encodeFormParams = encodeFormParams;
+        }
+        return this;
+    }
+
     public HttpEntity buildEntity() {
+        if (!StringUtils.isEmpty(formParams)) {
+            List<? extends NameValuePair> list;
+            boolean encodeFormParams = Boolean.parseBoolean(this.encodeFormParams);
+            try {
+                list = Utils.urlEncodeMultipleParams(formParams, encodeFormParams);
+            } catch (UrlEncodeException e) {
+                throw new UrlEncodeException(HttpClientInputs.ENCODE_FORM_PARAMS +
+                        " is 'false' but " + HttpClientInputs.FORM_PARAMS + " are not properly encoded. "
+                        + e.getMessage(), e);
+            }
+
+            return new UrlEncodedFormEntity(list, contentType.getCharset());
+        }
+
         if (!StringUtils.isEmpty(body)) {
             return new StringEntity(body, contentType);
         }
