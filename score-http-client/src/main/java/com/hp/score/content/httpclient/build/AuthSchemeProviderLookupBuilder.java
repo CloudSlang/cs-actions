@@ -168,8 +168,7 @@ public class AuthSchemeProviderLookupBuilder {
         lines.add("com.sun.security.jgss.initiate {\n" +
                 "  com.hp.score.content.httpclient.build.KrbHttpLoginModule required\n" +
                 "  doNotPrompt=true\n" +
-                "  useFirstPass=true\n" +
-                "  debug=true ;\n" +
+                "  useFirstPass=true ;\n" +
                 "};");
         FileWriter writer = new FileWriter(tempFile);
         IOUtils.writeLines(lines, System.lineSeparator(), writer);
