@@ -27,7 +27,6 @@
     </distributionManagement>
 
 	<modules>
-		<module>score-http-client-commons</module>
-        <module>score-http-client-actions</module>
+		<module>score-http-client</module>
 	</modules>
 </project>
