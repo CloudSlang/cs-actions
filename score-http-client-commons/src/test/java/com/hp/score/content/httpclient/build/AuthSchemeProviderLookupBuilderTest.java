@@ -36,7 +36,9 @@ public class AuthSchemeProviderLookupBuilderTest {
 
     @Test
     public void buildLookupWithKerberosAuth(){
-        AuthSchemeProvider provider = getAuthSchemeProvider(AuthSchemes.KERBEROS);
+        AuthSchemeProvider provider =  new AuthSchemeProviderLookupBuilder()
+                .setAuthType(AuthSchemes.KERBEROS)
+                .setHost("myweb.contoso.com").buildAuthSchemeProviderLookup().lookup(AuthSchemes.KERBEROS);
         assertThat(provider, instanceOf(KerberosSchemeFactory.class));
     }
 

@@ -9,6 +9,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 
+import java.security.Principal;
 import java.util.Locale;
 
 public class CredentialsProviderBuilder {
@@ -71,18 +72,31 @@ public class CredentialsProviderBuilder {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         if (StringUtils.isEmpty(authType)) {
-            authType = "basic";
+            authType = "BASIC";
         }
+        authType = authType.toUpperCase();
 
         if (!StringUtils.isEmpty(username)) {
             Credentials credentials;
-            if (authType.equalsIgnoreCase(AuthSchemes.NTLM)) {
+            if (authType.contains(AuthSchemes.NTLM) || authType.contains("ANY")) {
                 String[] domainAndUsername = getDomainUsername(username);
                 credentials = new NTCredentials(domainAndUsername[1], password, host, domainAndUsername[0]);
             } else {
                 credentials = new UsernamePasswordCredentials(username, password);
             }
             credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), credentials);
+        } else if (authType.contains(AuthSchemes.KERBEROS) || authType.contains("ANY")) {
+            credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), new Credentials() {
+                @Override
+                public Principal getUserPrincipal() {
+                    return null;
+                }
+
+                @Override
+                public String getPassword() {
+                    return null;
+                }
+            });
         }
 
         if (!StringUtils.isEmpty(proxyUsername)) {

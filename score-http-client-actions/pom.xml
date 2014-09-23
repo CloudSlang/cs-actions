@@ -27,11 +27,11 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>com.hp.score.content</groupId>
-            <artifactId>score-http-client-commons</artifactId>
-            <version>0.1.19</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.hp.score.content</groupId>-->
+            <!--<artifactId>score-http-client-commons</artifactId>-->
+            <!--<version>0.1.19</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.hp.oo.sdk</groupId>
             <artifactId>score-sdk</artifactId>

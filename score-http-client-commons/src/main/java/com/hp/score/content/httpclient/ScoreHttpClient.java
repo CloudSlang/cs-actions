@@ -13,6 +13,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import com.hp.score.content.httpclient.consume.FinalLocationConsumer;
@@ -23,6 +24,7 @@ import com.hp.score.content.httpclient.execute.HttpClientExecutor;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,7 +75,7 @@ public class ScoreHttpClient {
         ContentType theContentType = contentTypeBuilder
                 .setContentType(httpClientInputs.getContentType())
                 .setRequestCharacterSet(httpClientInputs.getRequestCharacterSet())
-                .setDefault(!StringUtils.isEmpty(httpClientInputs.getFormParams())?
+                .setDefault(!StringUtils.isEmpty(httpClientInputs.getFormParams()) ?
                         ContentType.APPLICATION_FORM_URLENCODED : null)
                 .buildContentType();
 
@@ -121,6 +123,12 @@ public class ScoreHttpClient {
 
         httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeProviderLookupBuilder
                 .setAuthType(httpClientInputs.getAuthType())
+                .setHost(uri.getHost())
+                .setSkipPortAtKerberosDatabaseLookup(httpClientInputs.getKerberosSkipPortCheck())
+                .setKerberosConfigFile(httpClientInputs.getKerberosConfFile())
+                .setKerberosLoginConfigFile(httpClientInputs.getKerberosLoginConfFile())
+                .setUsername(httpClientInputs.getUsername())
+                .setPassword(httpClientInputs.getPassword())
                 .buildAuthSchemeProviderLookup());
 
         CookieStore cookieStore = httpClientInputs.getCookieStoreSessionObject() == null ? null : cookieStoreBuilder

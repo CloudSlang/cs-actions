@@ -24,6 +24,8 @@ public class HttpClientInputs {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String KERBEROS_CONFIG_FILE = "kerberosConfFile";
+    public static final String KERBEROS_LOGIN_CONFIG_FILE = "kerberosLoginConfFile";
+    public static final String KERBEROS_SKIP_PORT_CHECK = "kerberosSkipPortForLookup";
     public static final String PROXY_HOST = "proxyHost";
     public static final String PROXY_PORT = "proxyPort";
     public static final String PROXY_USERNAME = "proxyUsername";
@@ -51,6 +53,8 @@ public class HttpClientInputs {
     private String username;
     private String password;
     private String kerberosConfFile;
+    private String kerberosLoginConfFile;
+    private String kerberosSkipPortCheck;
     private String proxyHost;
     private String proxyPort;
     private String proxyUsername;
@@ -79,6 +83,7 @@ public class HttpClientInputs {
     private String contentType;
     private String requestCharacterSet;
     private String method;
+
     private SerializableSessionObject cookieStoreSessionObject;
     private GlobalSessionObject connectionPoolSessionObject;
 
@@ -120,6 +125,22 @@ public class HttpClientInputs {
 
     public void setKerberosConfFile(String kerberosConfFile) {
         this.kerberosConfFile = kerberosConfFile;
+    }
+
+    public String getKerberosLoginConfFile() {
+        return kerberosLoginConfFile;
+    }
+
+    public void setKerberosLoginConfFile(String kerberosLoginConfFile) {
+        this.kerberosLoginConfFile = kerberosLoginConfFile;
+    }
+
+    public String getKerberosSkipPortCheck() {
+        return kerberosSkipPortCheck;
+    }
+
+    public void setKerberosSkipPortCheck(String kerberosSkipPortCheck) {
+        this.kerberosSkipPortCheck = kerberosSkipPortCheck;
     }
 
     public String getProxyHost() {

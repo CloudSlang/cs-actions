@@ -43,6 +43,8 @@ public class HttpClientAction {
             @Param(HttpClientInputs.USERNAME) String username,
             @Param(HttpClientInputs.PASSWORD) String password,
             @Param(HttpClientInputs.KERBEROS_CONFIG_FILE) String kerberosConfFile,
+            @Param(HttpClientInputs.KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
+            @Param(HttpClientInputs.KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
             @Param(HttpClientInputs.PROXY_HOST) String proxyHost,
             @Param(HttpClientInputs.PROXY_PORT) String proxyPort,
             @Param(HttpClientInputs.PROXY_USERNAME) String proxyUsername,
@@ -64,8 +66,8 @@ public class HttpClientAction {
             @Param(HttpClientInputs.FOLLOW_REDIRECTS) String followRedirects,
             @Param(HttpClientInputs.QUERY_PARAMS) String queryParams,
             @Param(HttpClientInputs.ENCODE_QUERY_PARAMS) String encodeQueryParams,
-            @Param(value = HttpClientInputs.FORM_PARAMS, required = true) String formParams,
-            @Param(value = HttpClientInputs.ENCODE_FORM_PARAMS, required = true) String encodeFormParams,
+            @Param(HttpClientInputs.FORM_PARAMS) String formParams,
+            @Param(HttpClientInputs.ENCODE_FORM_PARAMS) String encodeFormParams,
             @Param(HttpClientInputs.SOURCE_FILE) String sourceFile,
             @Param(HttpClientInputs.BODY) String body,
             @Param(HttpClientInputs.CONTENT_TYPE) String contentType,
@@ -80,6 +82,10 @@ public class HttpClientAction {
         httpClientInputs.setUsername(username);
         httpClientInputs.setPassword(password);
         httpClientInputs.setKerberosConfFile(kerberosConfFile);
+        httpClientInputs.setKerberosLoginConfFile(kerberosLoginConfFile);
+//        httpClientInputs.setKerberosDomain(kerberosDomain);
+//        httpClientInputs.setKerberosKdc(kerberosKdc);
+        httpClientInputs.setKerberosSkipPortCheck(kerberosSkipPortForLookup);
         httpClientInputs.setProxyHost(proxyHost);
         httpClientInputs.setProxyPort(proxyPort);
         httpClientInputs.setProxyUsername(proxyUsername);
