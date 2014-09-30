@@ -92,10 +92,12 @@ public class AuthSchemeProviderLookupBuilder {
                     registryBuilder.register(AuthSchemes.DIGEST, new DigestSchemeFactory());
                     break;
                 case "KERBEROS":
-
+                    if (getSettingsKey().equals(System.getProperty("oohttpclient.krb.last.settings"))) {
+                        break;
+                    }
                     if (kerberosConfigFile != null) {
                         System.setProperty("java.security.krb5.conf", kerberosConfigFile);
-                    } else if (StringUtils.isEmpty(System.getProperty("java.security.krb5.conf"))) {
+                    } else {
                         File krb5Config;
                         String domain = host.replaceAll(".*\\.(?=.*\\.)", "");
                         try {
@@ -108,7 +110,7 @@ public class AuthSchemeProviderLookupBuilder {
 
                     if (kerberosLoginConfigFile != null) {
                         System.setProperty("java.security.auth.login.config", kerberosLoginConfigFile);
-                    } else if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) {
+                    } else {
                         File loginConfig;
                         try {
                             loginConfig = createLoginConfig();
@@ -119,44 +121,45 @@ public class AuthSchemeProviderLookupBuilder {
                     }
 
                     //todo fix security issue
-                    if (password != null) {
+                    if (password!=null) {
                         System.setProperty(KrbHttpLoginModule.PAS, password);
                     }
-                    if (username != null) {
+                    if (username!=null) {
                         System.setProperty(KrbHttpLoginModule.USR, username);
                     }
 
-                    System.setProperty("javax.security.auth.useSubjectCredsOnly", "false");
+                    System.setProperty("javax.security.auth.useSubjectCredsOnly","false");
 
                     boolean skipPort = Boolean.parseBoolean(skipPortAtKerberosDatabaseLookup);
                     registryBuilder.register(AuthSchemes.KERBEROS, new KerberosSchemeFactory(skipPort));
                     registryBuilder.register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(skipPort));
+                    System.setProperty("oohttpclient.krb.last.settings",getSettingsKey());
                     break;
                 default:
-                    throw new IllegalStateException("Unsupported '" + HttpClientInputs.AUTH_TYPE
-                            + "'authentication scheme: " + authType);
+                    throw new IllegalStateException("Unsupported '"+ HttpClientInputs.AUTH_TYPE
+                            +"'authentication scheme: " + authType);
             }
         }
         return registryBuilder.build();
     }
+
 
     private static File createKrb5Configuration(String domain) throws IOException {
         File tempFile = File.createTempFile("krb", "kdc");
         tempFile.deleteOnExit();
         ArrayList<String> lines = new ArrayList<>();
         lines.add("[libdefaults]");
-        lines.add("\tdefault_realm = " + domain.toUpperCase());
+        lines.add("\tdefault_realm = "+domain.toUpperCase());
         lines.add("[realms]");
-        lines.add("\t" + domain.toUpperCase() + " = {");
-        lines.add("\t\tkdc = " + domain);
-        lines.add("\t\tadmin_server = " + domain);
+        lines.add("\t"+domain.toUpperCase()+" = {");
+        lines.add("\t\tkdc = "+domain);
+        lines.add("\t\tadmin_server = "+domain);
         lines.add("\t}");
         FileWriter writer = new FileWriter(tempFile);
         IOUtils.writeLines(lines, System.lineSeparator(), writer);
         IOUtils.closeQuietly(writer);
         return tempFile;
     }
-
     private static File createLoginConfig() throws IOException {
         File tempFile = File.createTempFile("krb", "loginConf");
         tempFile.deleteOnExit();
@@ -164,11 +167,21 @@ public class AuthSchemeProviderLookupBuilder {
         lines.add("com.sun.security.jgss.initiate {\n" +
                 "  com.hp.score.content.httpclient.build.KrbHttpLoginModule required\n" +
                 "  doNotPrompt=true\n" +
-                "  useFirstPass=true ;\n" +
+                "  useFirstPass=true\n" +
+                "  debug=true ;\n" +
                 "};");
         FileWriter writer = new FileWriter(tempFile);
         IOUtils.writeLines(lines, System.lineSeparator(), writer);
         IOUtils.closeQuietly(writer);
         return tempFile;
     }
+
+    private String getSettingsKey() {
+        return kerberosConfigFile +
+                kerberosLoginConfigFile +
+                System.getProperty("java.security.krb5.conf") +
+                System.getProperty("java.security.auth.login.config")
+                + username + skipPortAtKerberosDatabaseLookup;
+    }
+
 }
