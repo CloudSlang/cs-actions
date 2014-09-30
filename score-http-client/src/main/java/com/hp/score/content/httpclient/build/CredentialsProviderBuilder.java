@@ -78,14 +78,14 @@ public class CredentialsProviderBuilder {
 
         if (!StringUtils.isEmpty(username)) {
             Credentials credentials;
-            if (authType.contains(AuthSchemes.NTLM) || authType.contains("ANY")) {
+            if (authType.contains("NTLM") || authType.contains("ANY")) {
                 String[] domainAndUsername = getDomainUsername(username);
                 credentials = new NTCredentials(domainAndUsername[1], password, host, domainAndUsername[0]);
             } else {
                 credentials = new UsernamePasswordCredentials(username, password);
             }
             credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), credentials);
-        } else if (authType.contains(AuthSchemes.KERBEROS) || authType.contains("ANY")) {
+        } else if (authType.contains("KERBEROS") || authType.contains("ANY")) {
             credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), new Credentials() {
                 @Override
                 public Principal getUserPrincipal() {

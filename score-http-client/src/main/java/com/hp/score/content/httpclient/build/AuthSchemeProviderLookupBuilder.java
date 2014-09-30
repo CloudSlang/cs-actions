@@ -94,10 +94,8 @@ public class AuthSchemeProviderLookupBuilder {
                 case "KERBEROS":
 
                     if (kerberosConfigFile != null) {
-                        System.setProperty("java.security.krb5.conf", (new File(kerberosConfigFile)).toURI().toString());
-                    }
-                    if (StringUtils.isEmpty(System.getProperty("java.security.krb5.conf")) ||
-                            !new File(System.getProperty("java.security.krb5.conf")).exists()) {
+                        System.setProperty("java.security.krb5.conf", kerberosConfigFile);
+                    } else if (StringUtils.isEmpty(System.getProperty("java.security.krb5.conf"))) {
                         File krb5Config;
                         String domain = host.replaceAll(".*\\.(?=.*\\.)", "");
                         try {
@@ -109,10 +107,8 @@ public class AuthSchemeProviderLookupBuilder {
                     }
 
                     if (kerberosLoginConfigFile != null) {
-                        System.setProperty("java.security.auth.login.config", (new File(kerberosLoginConfigFile)).toURI().toString());
-                    }
-                    if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config")) ||
-                            !new File(System.getProperty("java.security.auth.login.config")).exists()) {
+                        System.setProperty("java.security.auth.login.config", kerberosLoginConfigFile);
+                    } else if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) {
                         File loginConfig;
                         try {
                             loginConfig = createLoginConfig();
