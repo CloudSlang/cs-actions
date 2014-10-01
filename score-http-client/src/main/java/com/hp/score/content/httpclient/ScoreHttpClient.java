@@ -1,5 +1,6 @@
 package com.hp.score.content.httpclient;
 
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import com.hp.score.content.httpclient.build.*;
 import com.hp.score.content.httpclient.build.RequestBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +65,24 @@ public class ScoreHttpClient {
 
     public Map<String, String> execute(HttpClientInputs httpClientInputs) {
 
+        HttpComponents httpComponents = buildHttpComponents(httpClientInputs);
+
+        CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
+                httpComponents.getHttpRequestBase(),
+                httpComponents.getHttpClientContext(),
+                httpComponents.getConnManager(),
+                httpClientInputs.getKeepAlive());
+
+        return parseResponse(httpResponse,
+                httpClientInputs.getResponseCharacterSet(),
+                httpClientInputs.getDestinationFile(),
+                httpComponents.getUri(),
+                httpComponents.getHttpClientContext(),
+                httpComponents.getCookieStore(),
+                httpClientInputs.getCookieStoreSessionObject());
+    }
+
+    public HttpComponents buildHttpComponents(HttpClientInputs httpClientInputs) {
         buildDefaultServices();
 
         URI uri = uriBuilder.setUrl(httpClientInputs.getUrl())
@@ -163,44 +182,71 @@ public class ScoreHttpClient {
         //todo reuse context from session ?
         HttpClientContext context = HttpClientContext.create();
 
+        HttpComponents result = new HttpComponents();
+        result.setCloseableHttpClient(closeableHttpClient);
+        result.setHttpRequestBase(httpRequestBase);
+        result.setHttpClientContext(context);
+        result.setUri(uri);
+        result.setConnManager(connManager);
+        result.setCookieStore(cookieStore);
+        return result;
+    }
+
+
+    public CloseableHttpResponse execute(CloseableHttpClient closeableHttpClient,
+                                         HttpRequestBase httpRequestBase,
+                                         HttpClientContext context,
+                                         PoolingHttpClientConnectionManager connManager,
+                                         String keepAlive) {
         CloseableHttpResponse httpResponse = httpClientExecutor
                 .setCloseableHttpClient(closeableHttpClient)
                 .setHttpRequestBase(httpRequestBase)
                 .setContext(context)
                 .execute();
 
-        checkKeepAlive(httpRequestBase, connManager, httpClientInputs.getKeepAlive());
+        checkKeepAlive(httpRequestBase, connManager, keepAlive);
+        return httpResponse;
+    }
 
-        Map<String, String> returnResult = new HashMap<>();
+    public Map<String, String> parseResponse(CloseableHttpResponse httpResponse,
+                                             String responseCharacterSet,
+                                             String destinationFile,
+                                             URI uri,
+                                             HttpClientContext httpClientContext,
+                                             CookieStore cookieStore,
+                                             SerializableSessionObject cookieStoreSessionObject
+                                             ) {
+        Map<String, String> result = new HashMap<>();
 
         try {
             httpResponseConsumer
                     .setHttpResponse(httpResponse)
-                    .setResponseCharacterSet(httpClientInputs.getResponseCharacterSet())
-                    .setDestinationFile(httpClientInputs.getDestinationFile())
-                    .consume(returnResult);
+                    .setResponseCharacterSet(responseCharacterSet)
+                    .setDestinationFile(destinationFile)
+                    .consume(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         finalLocationConsumer
                 .setUri(uri)
-                .setRedirectLocations(context.getRedirectLocations())
-                .setTargetHost(context.getTargetHost()).consume(returnResult);
+                .setRedirectLocations(httpClientContext.getRedirectLocations())
+                .setTargetHost(httpClientContext.getTargetHost()).consume(result);
 
-        headersConsumer.setHeaders(httpResponse.getAllHeaders()).consume(returnResult);
-        statusConsumer.setStatusLine(httpResponse.getStatusLine()).consume(returnResult);
+        headersConsumer.setHeaders(httpResponse.getAllHeaders()).consume(result);
+        statusConsumer.setStatusLine(httpResponse.getStatusLine()).consume(result);
 
         if (cookieStore != null) {
             try {
-                httpClientInputs.getCookieStoreSessionObject().setValue(CookieStoreBuilder.serialize(cookieStore));
+                cookieStoreSessionObject.setValue(
+                        CookieStoreBuilder.serialize(cookieStore));
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
         }
 
-        returnResult.put(RETURN_CODE, SUCCESS);
-        return returnResult;
+        result.put(RETURN_CODE, SUCCESS);
+        return result;
     }
 
     private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager, String keepAliveInput) {
