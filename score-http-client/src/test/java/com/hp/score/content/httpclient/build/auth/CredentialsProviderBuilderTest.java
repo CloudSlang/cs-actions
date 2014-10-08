@@ -1,5 +1,7 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.auth;
 
+import com.hp.score.content.httpclient.build.auth.AuthTypes;
+import com.hp.score.content.httpclient.build.auth.CredentialsProviderBuilder;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -54,8 +56,9 @@ public class CredentialsProviderBuilderTest {
     }
 
     private CredentialsProvider getCredentialsProvider(String authType) {
+        AuthTypes authTypes = new AuthTypes(authType);
         CredentialsProviderBuilder builder = new CredentialsProviderBuilder()
-                .setAuthType(authType)
+                .setAuthTypes(authTypes)
                 .setUsername("DOMAIN\\username")
                 .setPassword("pass")
                 .setHost("host")

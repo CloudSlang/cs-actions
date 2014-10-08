@@ -1,7 +1,8 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.conn;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;
+import com.hp.score.content.httpclient.build.conn.ConnectionManagerBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Test;

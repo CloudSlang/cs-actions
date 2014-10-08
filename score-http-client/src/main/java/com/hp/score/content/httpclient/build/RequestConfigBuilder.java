@@ -6,8 +6,8 @@ import org.apache.http.client.config.RequestConfig;
 import com.hp.score.content.httpclient.HttpClientInputs;
 
 public class RequestConfigBuilder {
-    private String connectionTimeout = "-1";
-    private String socketTimeout = "-1";
+    private String connectionTimeout = "0";
+    private String socketTimeout = "0";
     private String followRedirects = "true";
     private String proxyHost;
     private String proxyPort = "8080";
@@ -57,6 +57,7 @@ public class RequestConfigBuilder {
         }
         int connectionTimeout = Integer.parseInt(this.connectionTimeout);
         int socketTimeout = Integer.parseInt(this.socketTimeout);
+        //todo should we also allow user to enable redirects prohibited by the HTTP specification (on POST and PUT)? See 'LaxRedirectStrategy'
         return RequestConfig.custom()
                 .setConnectTimeout(connectionTimeout <= 0 ? connectionTimeout : connectionTimeout * 1000)
                 .setSocketTimeout(socketTimeout <= 0 ? socketTimeout : socketTimeout * 1000)

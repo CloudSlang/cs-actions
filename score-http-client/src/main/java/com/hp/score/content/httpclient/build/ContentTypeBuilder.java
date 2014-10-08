@@ -1,7 +1,6 @@
 package com.hp.score.content.httpclient.build;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Consts;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
 import com.hp.score.content.httpclient.HttpClientInputs;

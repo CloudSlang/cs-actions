@@ -1,4 +1,4 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.auth;
 
 import jcifs.ntlmssp.NtlmFlags;
 import jcifs.ntlmssp.Type1Message;

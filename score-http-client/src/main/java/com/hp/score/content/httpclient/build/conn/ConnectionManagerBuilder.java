@@ -1,4 +1,4 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.conn;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;

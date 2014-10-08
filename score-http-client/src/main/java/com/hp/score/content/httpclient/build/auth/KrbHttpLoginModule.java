@@ -1,4 +1,4 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.auth;
 
 import com.sun.security.auth.module.Krb5LoginModule;
 

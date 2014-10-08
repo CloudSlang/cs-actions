@@ -3,18 +3,26 @@ package com.hp.score.content.httpclient;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import com.hp.score.content.httpclient.build.*;
 import com.hp.score.content.httpclient.build.RequestBuilder;
+import com.hp.score.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
+import com.hp.score.content.httpclient.build.auth.AuthTypes;
+import com.hp.score.content.httpclient.build.auth.CredentialsProviderBuilder;
+import com.hp.score.content.httpclient.build.conn.ConnectionManagerBuilder;
+import com.hp.score.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.config.Lookup;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.DefaultConnectionReuseStrategy;
+import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import com.hp.score.content.httpclient.consume.FinalLocationConsumer;
@@ -25,9 +33,7 @@ import com.hp.score.content.httpclient.execute.HttpClientExecutor;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,6 +63,7 @@ public class ScoreHttpClient {
     private CredentialsProviderBuilder credentialsProviderBuilder;
     private SSLConnectionSocketFactoryBuilder sslConnectionSocketFactoryBuilder;
     private ConnectionManagerBuilder poolingHttpClientConnectionManagerBuilder;
+    private ContextBuilder contextBuilder;
     private HttpClientExecutor httpClientExecutor;
     private HttpResponseConsumer httpResponseConsumer;
     private FinalLocationConsumer finalLocationConsumer;
@@ -69,17 +76,22 @@ public class ScoreHttpClient {
 
         CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
                 httpComponents.getHttpRequestBase(),
-                httpComponents.getHttpClientContext(),
-                httpComponents.getConnManager(),
-                httpClientInputs.getKeepAlive());
+                httpComponents.getHttpClientContext());
 
-        return parseResponse(httpResponse,
+        Map<String, String> result = parseResponse(httpResponse,
                 httpClientInputs.getResponseCharacterSet(),
                 httpClientInputs.getDestinationFile(),
                 httpComponents.getUri(),
                 httpComponents.getHttpClientContext(),
                 httpComponents.getCookieStore(),
                 httpClientInputs.getCookieStoreSessionObject());
+
+        checkKeepAlive(httpComponents.getHttpRequestBase(),
+                httpComponents.getConnManager(),
+                httpClientInputs.getKeepAlive(),
+                httpResponse);
+
+        return result;
     }
 
     public HttpComponents buildHttpComponents(HttpClientInputs httpClientInputs) {
@@ -127,8 +139,10 @@ public class ScoreHttpClient {
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
+        AuthTypes authTypes = new AuthTypes(httpClientInputs.getAuthType());
+
         CredentialsProvider credentialsProvider = credentialsProviderBuilder
-                .setAuthType(httpClientInputs.getAuthType())
+                .setAuthTypes(authTypes)
                 .setUsername(httpClientInputs.getUsername())
                 .setPassword(httpClientInputs.getPassword())
                 .setHost(uri.getHost())
@@ -140,15 +154,17 @@ public class ScoreHttpClient {
                 .buildCredentialsProvider();
         httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
-        httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeProviderLookupBuilder
-                .setAuthType(httpClientInputs.getAuthType())
+
+        Lookup<AuthSchemeProvider> authSchemeLookup = authSchemeProviderLookupBuilder
+                .setAuthTypes(authTypes)
                 .setHost(uri.getHost())
                 .setSkipPortAtKerberosDatabaseLookup(httpClientInputs.getKerberosSkipPortCheck())
                 .setKerberosConfigFile(httpClientInputs.getKerberosConfFile())
                 .setKerberosLoginConfigFile(httpClientInputs.getKerberosLoginConfFile())
                 .setUsername(httpClientInputs.getUsername())
                 .setPassword(httpClientInputs.getPassword())
-                .buildAuthSchemeProviderLookup());
+                .buildAuthSchemeProviderLookup();
+        httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeLookup);
 
         CookieStore cookieStore = httpClientInputs.getCookieStoreSessionObject() == null ? null : cookieStoreBuilder
                 .setUseCookies(httpClientInputs.getUseCookies())
@@ -178,9 +194,20 @@ public class ScoreHttpClient {
 
         httpClientBuilder.setConnectionManager(connManager);
 
+        if (StringUtils.isEmpty(httpClientInputs.getKeepAlive()) || Boolean.parseBoolean(httpClientInputs.getKeepAlive()) ) {
+            httpClientBuilder.setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE);
+        } else {
+            httpClientBuilder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
+        }
+
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
-        //todo reuse context from session ?
-        HttpClientContext context = HttpClientContext.create();
+
+        HttpClientContext context = contextBuilder
+                .setAuthSchemeLookup(authSchemeLookup)
+                .setAuthTypes(authTypes)
+                .setCredentialsProvider(credentialsProvider)
+                .setUri(uri)
+                .setPreemptiveAuth(httpClientInputs.getPreemptiveAuth()).build();
 
         HttpComponents result = new HttpComponents();
         result.setCloseableHttpClient(closeableHttpClient);
@@ -195,16 +222,13 @@ public class ScoreHttpClient {
 
     public CloseableHttpResponse execute(CloseableHttpClient closeableHttpClient,
                                          HttpRequestBase httpRequestBase,
-                                         HttpClientContext context,
-                                         PoolingHttpClientConnectionManager connManager,
-                                         String keepAlive) {
+                                         HttpClientContext context) {
         CloseableHttpResponse httpResponse = httpClientExecutor
                 .setCloseableHttpClient(closeableHttpClient)
                 .setHttpRequestBase(httpRequestBase)
                 .setContext(context)
                 .execute();
 
-        checkKeepAlive(httpRequestBase, connManager, keepAlive);
         return httpResponse;
     }
 
@@ -249,9 +273,15 @@ public class ScoreHttpClient {
         return result;
     }
 
-    private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager, String keepAliveInput) {
+    private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager,
+                                String keepAliveInput, CloseableHttpResponse httpResponse) {
         boolean keepAlive = StringUtils.isBlank(keepAliveInput) ? true : Boolean.parseBoolean(keepAliveInput);
         if (!keepAlive) {
+            try {
+                httpResponse.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
             httpRequestBase.releaseConnection();
             connManager.closeExpiredConnections();
         }
@@ -326,6 +356,9 @@ public class ScoreHttpClient {
         }
         if (poolingHttpClientConnectionManagerBuilder == null) {
             poolingHttpClientConnectionManagerBuilder = new ConnectionManagerBuilder();
+        }
+        if (contextBuilder == null) {
+            contextBuilder = new ContextBuilder();
         }
         if (httpClientExecutor == null) {
             httpClientExecutor = new HttpClientExecutor();

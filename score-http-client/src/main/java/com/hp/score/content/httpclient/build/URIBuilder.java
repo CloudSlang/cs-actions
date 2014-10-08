@@ -4,11 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.hp.score.content.httpclient.HttpClientInputs;
 import org.apache.http.NameValuePair;
 
-import java.io.UnsupportedEncodingException;
 import java.net.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class URIBuilder {
     private String url;

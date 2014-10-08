@@ -1,4 +1,4 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.auth;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 public class AuthSchemeProviderLookupBuilder {
-    private String authType;
+    private AuthTypes authTypes;
     private String skipPortAtKerberosDatabaseLookup = "true";
     private String kerberosConfigFile;
     private String kerberosLoginConfigFile;
@@ -26,8 +26,8 @@ public class AuthSchemeProviderLookupBuilder {
     private String username;
     private String password;
 
-    public AuthSchemeProviderLookupBuilder setAuthType(String authType) {
-        this.authType = authType;
+    public AuthSchemeProviderLookupBuilder setAuthTypes(AuthTypes authTypes) {
+        this.authTypes = authTypes;
         return this;
     }
 
@@ -64,17 +64,8 @@ public class AuthSchemeProviderLookupBuilder {
     }
 
     public Lookup<AuthSchemeProvider> buildAuthSchemeProviderLookup() {
-        if (StringUtils.isEmpty(authType)) {
-            this.authType = AuthSchemes.BASIC;
-        }
-        authType = authType.toUpperCase();
-
         RegistryBuilder<AuthSchemeProvider> registryBuilder = RegistryBuilder.create();
 
-        if (authType.equals("ANY")) {
-            authType = "NTLM,BASIC,DIGEST,KERBEROS";
-        }
-        String[] authTypes = authType.split(",");
         for (String type : authTypes) {
             switch (type.trim()) {
                 case "NTLM":
@@ -137,7 +128,7 @@ public class AuthSchemeProviderLookupBuilder {
                     break;
                 default:
                     throw new IllegalStateException("Unsupported '"+ HttpClientInputs.AUTH_TYPE
-                            +"'authentication scheme: " + authType);
+                            +"'authentication scheme: " + type);
             }
         }
         return registryBuilder.build();

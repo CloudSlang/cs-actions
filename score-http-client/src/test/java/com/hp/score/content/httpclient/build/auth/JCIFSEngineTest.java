@@ -1,5 +1,6 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.auth;
 
+import com.hp.score.content.httpclient.build.auth.JCIFSEngine;
 import org.apache.http.impl.auth.NTLMEngineException;
 import org.junit.Test;
 

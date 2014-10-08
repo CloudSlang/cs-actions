@@ -1,4 +1,4 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;

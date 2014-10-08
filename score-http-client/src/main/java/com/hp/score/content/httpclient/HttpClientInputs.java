@@ -21,6 +21,7 @@ public class HttpClientInputs {
     public static final String BODY = "body";
     public static final String CONTENT_TYPE = "contentType";
     public static final String AUTH_TYPE = "authType";
+    public static final String PREEMPTIVE_AUTH = "preemptiveAuth";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String KERBEROS_CONFIG_FILE = "kerberosConfFile";
@@ -50,6 +51,7 @@ public class HttpClientInputs {
 
     private String url;
     private String authType;
+    private String preemptiveAuth;
     private String username;
     private String password;
     private String kerberosConfFile;
@@ -101,6 +103,14 @@ public class HttpClientInputs {
 
     public void setAuthType(String authType) {
         this.authType = authType;
+    }
+
+    public String getPreemptiveAuth() {
+        return preemptiveAuth;
+    }
+
+    public void setPreemptiveAuth(String preemptiveAuth) {
+        this.preemptiveAuth = preemptiveAuth;
     }
 
     public String getUsername() {

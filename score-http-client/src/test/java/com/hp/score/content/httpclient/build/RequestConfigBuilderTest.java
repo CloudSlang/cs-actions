@@ -60,8 +60,8 @@ public class RequestConfigBuilderTest {
 
         assertNotNull(reqConfig);
         assertTrue(reqConfig.isRedirectsEnabled());
-        assertEquals("-1", String.valueOf(reqConfig.getConnectTimeout()));
-        assertEquals("-1", String.valueOf(reqConfig.getSocketTimeout()));
+        assertEquals("0", String.valueOf(reqConfig.getConnectTimeout()));
+        assertEquals("0", String.valueOf(reqConfig.getSocketTimeout()));
         assertNull(reqConfig.getProxy());
     }
 }

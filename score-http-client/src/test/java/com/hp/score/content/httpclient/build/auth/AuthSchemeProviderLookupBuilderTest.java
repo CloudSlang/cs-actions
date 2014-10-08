@@ -1,5 +1,7 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.auth;
 
+import com.hp.score.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
+import com.hp.score.content.httpclient.build.auth.AuthTypes;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.config.Lookup;
@@ -36,8 +38,9 @@ public class AuthSchemeProviderLookupBuilderTest {
 
     @Test
     public void buildLookupWithKerberosAuth(){
+        AuthTypes authTypes = new AuthTypes(AuthSchemes.KERBEROS);
         AuthSchemeProvider provider =  new AuthSchemeProviderLookupBuilder()
-                .setAuthType(AuthSchemes.KERBEROS)
+                .setAuthTypes(authTypes)
                 .setHost("myweb.contoso.com").buildAuthSchemeProviderLookup().lookup(AuthSchemes.KERBEROS);
         assertThat(provider, instanceOf(KerberosSchemeFactory.class));
     }
@@ -50,8 +53,9 @@ public class AuthSchemeProviderLookupBuilderTest {
 
 
     private AuthSchemeProvider getAuthSchemeProvider(String authType) {
+        AuthTypes authTypes = new AuthTypes(authType);
         Lookup<AuthSchemeProvider> lookup =  new AuthSchemeProviderLookupBuilder()
-                .setAuthType(authType).buildAuthSchemeProviderLookup();
+                .setAuthTypes(authTypes).buildAuthSchemeProviderLookup();
         return lookup.lookup(authType);
     }
 }

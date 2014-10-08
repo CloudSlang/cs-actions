@@ -40,6 +40,7 @@ public class HttpClientAction {
     public Map<String, String> execute(
             @Param(value = HttpClientInputs.URL, required = true) String url,
             @Param(HttpClientInputs.AUTH_TYPE) String authType,
+            @Param(HttpClientInputs.PREEMPTIVE_AUTH) String preemptiveAuth,
             @Param(HttpClientInputs.USERNAME) String username,
             @Param(HttpClientInputs.PASSWORD) String password,
             @Param(HttpClientInputs.KERBEROS_CONFIG_FILE) String kerberosConfFile,
@@ -79,6 +80,7 @@ public class HttpClientAction {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(url);
         httpClientInputs.setAuthType(authType);
+        httpClientInputs.setPreemptiveAuth(preemptiveAuth);
         httpClientInputs.setUsername(username);
         httpClientInputs.setPassword(password);
         httpClientInputs.setKerberosConfFile(kerberosConfFile);

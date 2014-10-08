@@ -1,5 +1,6 @@
-package com.hp.score.content.httpclient.build;
+package com.hp.score.content.httpclient.build.conn;
 
+import com.hp.score.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
 import org.apache.http.conn.ssl.*;
 import org.junit.Rule;
 import org.junit.Test;
