@@ -48,6 +48,9 @@ public class SSLConnectionSocketFactoryBuilder {
     }
 
     public SSLConnectionSocketFactory build() {
+        if (!"true".equalsIgnoreCase(trustAllRootsStr) && !"false".equalsIgnoreCase(trustAllRootsStr)) {
+            throw new IllegalArgumentException("'trustAllRoots' can only be 'true' or 'false'");
+        }
         boolean trustAllRoots = Boolean.parseBoolean(trustAllRootsStr);
 
         SSLContextBuilder sslContextBuilder = SSLContexts.custom();
@@ -91,7 +94,9 @@ public class SSLConnectionSocketFactoryBuilder {
         SSLConnectionSocketFactory sslsf;
         try {
             sslsf = new SSLConnectionSocketFactory(
-                    sslContextBuilder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                    sslContextBuilder.build(),
+                    trustAllRoots ? SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+                            :SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage() + ". " +  SSL_CONNECTION_ERROR, e);
         }

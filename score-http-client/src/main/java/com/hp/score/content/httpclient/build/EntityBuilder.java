@@ -8,10 +8,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public class EntityBuilder {
@@ -74,9 +73,16 @@ public class EntityBuilder {
                         +"' does not exist:" + filePath);
             }
             FileEntity fileEntity = new FileEntity(file, contentType);
+            //todo make this optional
             fileEntity.setChunked(true);
             return fileEntity;
         }
+        //todo
+//        MultipartEntityBuilder.create()
+//                .addBinaryBody("name1", new File(filePath1), contentType1, "your1.filename")
+//                .addBinaryBody("name2", new File(filePath2), contentType2, "your2.filename")
+//                .addTextBody("name3","text3",contentType3)
+//                .addTextBody("name4","text4",contentType4).build();
         return null;
     }
 }
