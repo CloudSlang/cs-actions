@@ -45,6 +45,11 @@ public class HttpClientInputs {
     public static final String HEADERS = "headers";
     public static final String RESPONSE_CHARACTER_SET = "responseCharacterSet";
     public static final String DESTINATION_FILE = "destinationFile";
+    public static final String MULTIPART_BODIES = "multipartBodies";
+    public static final String MULTIPART_BODIES_CONTENT_TYPE = "multipartBodiesContentType";
+    public static final String MULTIPART_FILES = "multipartFiles";
+    public static final String MULTIPART_FILES_CONTENT_TYPE = "multipartBodiesContentType";
+    public static final String MULTIPART_VALUES_ARE_URLENCODED = "multipartValuesAreURLEncoded";
 
     public final static String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
     public final static String SESSION_COOKIES = "httpClientCookieSession";
@@ -84,6 +89,11 @@ public class HttpClientInputs {
     private String body;
     private String contentType;
     private String requestCharacterSet;
+    private String multipartBodies;
+    private String multipartFiles;
+    private String multipartValuesAreURLEncoded;
+    private String multipartBodiesContentType;
+    private String multipartFilesContentType;
     private String method;
 
     private SerializableSessionObject cookieStoreSessionObject;
@@ -375,6 +385,46 @@ public class HttpClientInputs {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public String getMultipartFiles() {
+        return multipartFiles;
+    }
+
+    public void setMultipartFiles(String multipartFiles) {
+        this.multipartFiles = multipartFiles;
+    }
+
+    public String getMultipartBodies() {
+        return multipartBodies;
+    }
+
+    public void setMultipartBodies(String multipartBodies) {
+        this.multipartBodies = multipartBodies;
+    }
+
+    public String getMultipartValuesAreURLEncoded() {
+        return multipartValuesAreURLEncoded;
+    }
+
+    public void setMultipartValuesAreURLEncoded(String multipartValuesAreURLEncoded) {
+        this.multipartValuesAreURLEncoded = multipartValuesAreURLEncoded;
+    }
+
+    public String getMultipartBodiesContentType() {
+        return multipartBodiesContentType;
+    }
+
+    public void setMultipartBodiesContentType(String multipartBodiesContentType) {
+        this.multipartBodiesContentType = multipartBodiesContentType;
+    }
+
+    public String getMultipartFilesContentType() {
+        return multipartFilesContentType;
+    }
+
+    public void setMultipartFilesContentType(String multipartFilesContentType) {
+        this.multipartFilesContentType = multipartFilesContentType;
     }
 
     public SerializableSessionObject getCookieStoreSessionObject() {

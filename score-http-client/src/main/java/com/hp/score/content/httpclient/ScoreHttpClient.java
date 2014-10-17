@@ -106,8 +106,6 @@ public class ScoreHttpClient {
         ContentType theContentType = contentTypeBuilder
                 .setContentType(httpClientInputs.getContentType())
                 .setRequestCharacterSet(httpClientInputs.getRequestCharacterSet())
-                .setDefault(!StringUtils.isEmpty(httpClientInputs.getFormParams()) ?
-                        ContentType.APPLICATION_FORM_URLENCODED : null)
                 .buildContentType();
 
         HttpEntity httpEntity = httpEntityBuilder
@@ -115,7 +113,13 @@ public class ScoreHttpClient {
                 .setEncodeFormParams(httpClientInputs.getEncodeFormParams())
                 .setBody(httpClientInputs.getBody())
                 .setFilePath(httpClientInputs.getSourceFile())
-                .setContentType(theContentType).buildEntity();
+                .setContentType(theContentType)
+                .setMultipartValuesAreURLEncoded(httpClientInputs.getMultipartValuesAreURLEncoded())
+                .setMultipartBodies(httpClientInputs.getMultipartBodies())
+                .setMultipartFiles(httpClientInputs.getMultipartFiles())
+                .setMultipartBodiesContentType(httpClientInputs.getMultipartBodiesContentType())
+                .setMultipartFilesContentType(httpClientInputs.getMultipartFilesContentType())
+                .buildEntity();
 
         HttpRequestBase httpRequestBase =  requestBuilder
                 .setMethod(httpClientInputs.getMethod())
@@ -125,6 +129,7 @@ public class ScoreHttpClient {
         Header[] theHeaders = headersBuilder
                 .setHeaders(httpClientInputs.getHeaders())
                 .setContentType(theContentType)
+                .setEntityContentType(httpEntity!=null ? httpEntity.getContentType() : null)
                 .buildHeaders();
         httpRequestBase.setHeaders(theHeaders);
 

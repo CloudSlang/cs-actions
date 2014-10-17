@@ -19,6 +19,11 @@ public class EntityBuilder {
     private ContentType contentType;
     private String formParams;
     private String encodeFormParams = "true";
+    private String multipartBodies;
+    private String multipartFiles;
+    private String multipartValuesAreURLEncoded = "false";
+    private String multipartBodiesContentType = "text/plain; charset=ISO-8859-1";
+    private String multipartFilesContentType = "application/octet-stream";
 
     public EntityBuilder setBody(String body) {
         this.body = body;
@@ -47,18 +52,42 @@ public class EntityBuilder {
         return this;
     }
 
+    public EntityBuilder setMultipartBodies(String multipartBodies) {
+        this.multipartBodies = multipartBodies;
+        return this;
+    }
+
+    public EntityBuilder setMultipartFiles(String multipartFiles) {
+        this.multipartFiles = multipartFiles;
+        return this;
+    }
+
+    public EntityBuilder setMultipartValuesAreURLEncoded(String multipartValuesAreURLEncoded) {
+        if (!StringUtils.isEmpty(multipartValuesAreURLEncoded)) {
+            this.multipartValuesAreURLEncoded = multipartValuesAreURLEncoded;
+        }
+        return this;
+    }
+
+    public EntityBuilder setMultipartBodiesContentType(String multipartBodiesContentType) {
+        if (!StringUtils.isEmpty(multipartBodiesContentType)) {
+            this.multipartBodiesContentType = multipartBodiesContentType;
+        }
+        return this;
+    }
+
+    public EntityBuilder setMultipartFilesContentType(String multipartFilesContentType) {
+        if (!StringUtils.isEmpty(multipartFilesContentType)) {
+            this.multipartFilesContentType = multipartFilesContentType;
+        }
+        return this;
+    }
+
     public HttpEntity buildEntity() {
         if (!StringUtils.isEmpty(formParams)) {
             List<? extends NameValuePair> list;
-            boolean encodeFormParams = Boolean.parseBoolean(this.encodeFormParams);
-            try {
-                list = Utils.urlEncodeMultipleParams(formParams, encodeFormParams);
-            } catch (UrlEncodeException e) {
-                throw new UrlEncodeException(HttpClientInputs.ENCODE_FORM_PARAMS +
-                        " is 'false' but " + HttpClientInputs.FORM_PARAMS + " are not properly encoded. "
-                        + e.getMessage(), e);
-            }
-
+            list = getNameValuePairs(formParams, Boolean.parseBoolean(this.encodeFormParams),
+                    HttpClientInputs.FORM_PARAMS, HttpClientInputs.ENCODE_FORM_PARAMS);
             return new UrlEncodedFormEntity(list, contentType.getCharset());
         }
 
@@ -77,12 +106,44 @@ public class EntityBuilder {
             fileEntity.setChunked(true);
             return fileEntity;
         }
-        //todo
-//        MultipartEntityBuilder.create()
-//                .addBinaryBody("name1", new File(filePath1), contentType1, "your1.filename")
-//                .addBinaryBody("name2", new File(filePath2), contentType2, "your2.filename")
-//                .addTextBody("name3","text3",contentType3)
-//                .addTextBody("name4","text4",contentType4).build();
+
+        if (!StringUtils.isEmpty(multipartBodies) || !StringUtils.isEmpty(multipartFiles)) {
+            MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+            if (!StringUtils.isEmpty(multipartBodies)) {
+                List<? extends NameValuePair> list;
+                list = getNameValuePairs(multipartBodies, !Boolean.parseBoolean(this.multipartValuesAreURLEncoded),
+                        HttpClientInputs.MULTIPART_BODIES, HttpClientInputs.MULTIPART_VALUES_ARE_URLENCODED);
+                ContentType bodiesCT = ContentType.parse(multipartBodiesContentType);
+                for (NameValuePair nameValuePair : list) {
+                    multipartEntityBuilder.addTextBody(nameValuePair.getName(), nameValuePair.getValue(), bodiesCT);
+                }
+            }
+
+            if (!StringUtils.isEmpty(multipartFiles)) {
+                List<? extends NameValuePair> list;
+                list = getNameValuePairs(multipartFiles, !Boolean.parseBoolean(this.multipartValuesAreURLEncoded),
+                        HttpClientInputs.MULTIPART_FILES, HttpClientInputs.MULTIPART_VALUES_ARE_URLENCODED);
+                ContentType filesCT = ContentType.parse(multipartFilesContentType);
+                for (NameValuePair nameValuePair : list) {
+                    File file = new File(nameValuePair.getValue());
+                    multipartEntityBuilder.addBinaryBody(nameValuePair.getName(), file, filesCT, file.getName());
+                }
+            }
+            return multipartEntityBuilder.build();
+        }
+
         return null;
+    }
+
+    private List<? extends NameValuePair> getNameValuePairs(String theInput, boolean encode, String constInput, String constEncode) {
+        List<? extends NameValuePair> list;
+        try {
+            list = Utils.urlEncodeMultipleParams(theInput, encode);
+        } catch (UrlEncodeException e) {
+            throw new UrlEncodeException(constEncode +
+                    " is 'false' but " + constInput + " are not properly encoded. "
+                    + e.getMessage(), e);
+        }
+        return list;
     }
 }

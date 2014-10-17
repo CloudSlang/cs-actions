@@ -66,13 +66,20 @@ public class HttpClientAction {
             @Param(HttpClientInputs.DESTINATION_FILE) String destinationFile,
             @Param(HttpClientInputs.FOLLOW_REDIRECTS) String followRedirects,
             @Param(HttpClientInputs.QUERY_PARAMS) String queryParams,
+            //todo change this to queryParamsAreURLEncoded
             @Param(HttpClientInputs.ENCODE_QUERY_PARAMS) String encodeQueryParams,
             @Param(HttpClientInputs.FORM_PARAMS) String formParams,
+            //todo change this to formParamsAreURLEncoded
             @Param(HttpClientInputs.ENCODE_FORM_PARAMS) String encodeFormParams,
             @Param(HttpClientInputs.SOURCE_FILE) String sourceFile,
             @Param(HttpClientInputs.BODY) String body,
             @Param(HttpClientInputs.CONTENT_TYPE) String contentType,
             @Param(HttpClientInputs.REQUEST_CHARACTER_SET) String requestCharacterSet,
+            @Param(HttpClientInputs.MULTIPART_BODIES) String multipartBodies,
+            @Param(HttpClientInputs.MULTIPART_BODIES_CONTENT_TYPE) String multipartBodiesContentType,
+            @Param(HttpClientInputs.MULTIPART_FILES) String multipartFiles,
+            @Param(HttpClientInputs.MULTIPART_FILES_CONTENT_TYPE) String multipartFilesContentType,
+            @Param(HttpClientInputs.MULTIPART_VALUES_ARE_URLENCODED) String multipartValuesAreURLEncoded,
             @Param(value = HttpClientInputs.METHOD, required = true) String method,
             @Param(HttpClientInputs.SESSION_COOKIES) SerializableSessionObject httpClientCookieSession,
             @Param(HttpClientInputs.SESSION_CONNECTION_POOL) GlobalSessionObject httpClientPoolingConnectionManager) {
@@ -115,6 +122,11 @@ public class HttpClientAction {
         httpClientInputs.setBody(body);
         httpClientInputs.setContentType(contentType);
         httpClientInputs.setRequestCharacterSet(requestCharacterSet);
+        httpClientInputs.setMultipartBodies(multipartBodies);
+        httpClientInputs.setMultipartFiles(multipartFiles);
+        httpClientInputs.setMultipartBodiesContentType(multipartBodiesContentType);
+        httpClientInputs.setMultipartFilesContentType(multipartFilesContentType);
+        httpClientInputs.setMultipartValuesAreURLEncoded(multipartValuesAreURLEncoded);
         httpClientInputs.setMethod(method);
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);

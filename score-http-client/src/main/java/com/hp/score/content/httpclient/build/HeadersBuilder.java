@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class HeadersBuilder {
     private String headers;
     private ContentType contentType;
+    private Header entityContentType;
 
     public HeadersBuilder setHeaders(String headers) {
         this.headers = headers;
@@ -23,6 +24,11 @@ public class HeadersBuilder {
 
     public HeadersBuilder setContentType(ContentType contentType) {
         this.contentType = contentType;
+        return this;
+    }
+
+    public HeadersBuilder setEntityContentType(Header entityContentType) {
+        this.entityContentType = entityContentType;
         return this;
     }
 
@@ -43,7 +49,9 @@ public class HeadersBuilder {
             }
         }
 
-        if (contentType != null && !contentType.toString().isEmpty()) {
+        if (entityContentType !=null) {
+            headersArr.add(entityContentType);
+        } else if (contentType != null && !contentType.toString().isEmpty()) {
             headersArr.add(new BasicHeader("Content-Type", contentType.toString()));
         }
         return headersArr.toArray(new Header[headersArr.size()]);

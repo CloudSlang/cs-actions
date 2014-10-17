@@ -29,12 +29,7 @@ public class ContentTypeBuilder {
         }
         return this;
     }
-    public ContentTypeBuilder setDefault(ContentType contentType) {
-        if (contentType != null) {
-            defaultContentType = contentType;
-        }
-        return this;
-    }
+
 
     public ContentType buildContentType() {
         String contentType = this.contentType;
