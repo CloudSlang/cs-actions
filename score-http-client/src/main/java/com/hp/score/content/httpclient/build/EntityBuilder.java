@@ -18,7 +18,7 @@ public class EntityBuilder {
     private String filePath;
     private ContentType contentType;
     private String formParams;
-    private String encodeFormParams = "true";
+    private String formParamsAreURLEncoded = "false";
     private String multipartBodies;
     private String multipartFiles;
     private String multipartValuesAreURLEncoded = "false";
@@ -45,9 +45,9 @@ public class EntityBuilder {
         return this;
     }
 
-    public EntityBuilder setEncodeFormParams(String encodeFormParams) {
-        if (!StringUtils.isEmpty(encodeFormParams)) {
-            this.encodeFormParams = encodeFormParams;
+    public EntityBuilder setFormParamsAreURLEncoded(String formParamsAreURLEncoded) {
+        if (!StringUtils.isEmpty(formParamsAreURLEncoded)) {
+            this.formParamsAreURLEncoded = formParamsAreURLEncoded;
         }
         return this;
     }
@@ -86,8 +86,8 @@ public class EntityBuilder {
     public HttpEntity buildEntity() {
         if (!StringUtils.isEmpty(formParams)) {
             List<? extends NameValuePair> list;
-            list = getNameValuePairs(formParams, Boolean.parseBoolean(this.encodeFormParams),
-                    HttpClientInputs.FORM_PARAMS, HttpClientInputs.ENCODE_FORM_PARAMS);
+            list = getNameValuePairs(formParams, !Boolean.parseBoolean(this.formParamsAreURLEncoded),
+                    HttpClientInputs.FORM_PARAMS, HttpClientInputs.FORM_PARAMS_ARE_URLENCODED);
             return new UrlEncodedFormEntity(list, contentType.getCharset());
         }
 

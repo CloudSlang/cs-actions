@@ -10,7 +10,7 @@ import java.util.List;
 public class URIBuilder {
     private String url;
     private String queryParams;
-    private String encodeQueryParams = "true";
+    private String queryParamsAreURLEncoded = "false";
 
     public URIBuilder setUrl(String url) {
         this.url = url;
@@ -22,9 +22,9 @@ public class URIBuilder {
         return this;
     }
 
-    public URIBuilder setEncodeQueryParams(String encodeQueryParams) {
-        if (!StringUtils.isEmpty(encodeQueryParams)) {
-            this.encodeQueryParams = encodeQueryParams;
+    public URIBuilder setQueryParamsAreURLEncoded(String queryParamsAreURLEncoded) {
+        if (!StringUtils.isEmpty(queryParamsAreURLEncoded)) {
+            this.queryParamsAreURLEncoded = queryParamsAreURLEncoded;
         }
         return this;
     }
@@ -43,14 +43,14 @@ public class URIBuilder {
             throw new IllegalArgumentException("could not parse " + url + " as a URI", e);
         }
 
-        boolean bEncodeQueryParams = Boolean.parseBoolean(encodeQueryParams);
+        boolean bEncodeQueryParams = !Boolean.parseBoolean(queryParamsAreURLEncoded);
 
         if (!StringUtils.isEmpty(queryParams)) {
             try {
                 uriBuilder.addParameters((List<NameValuePair>) Utils.urlEncodeMultipleParams(queryParams, bEncodeQueryParams));
             } catch (IllegalArgumentException ie) {
                 throw new IllegalArgumentException(
-                        HttpClientInputs.ENCODE_QUERY_PARAMS +
+                        HttpClientInputs.QUERY_PARAMS_ARE_URLENCODED +
                                 " is 'false' but queryParams are not properly encoded. "
                                 + ie.getMessage(), ie);
             }
@@ -61,7 +61,7 @@ public class URIBuilder {
             return uriBuilder.build();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("could not build '"+HttpClientInputs.URL
-                    +"' for " + url + " and queries " + encodeQueryParams, e);
+                    +"' for " + url + " and queries " + queryParamsAreURLEncoded, e);
         }
 
     }

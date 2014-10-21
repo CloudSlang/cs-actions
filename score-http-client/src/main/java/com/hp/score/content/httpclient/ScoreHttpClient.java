@@ -99,7 +99,7 @@ public class ScoreHttpClient {
 
         URI uri = uriBuilder.setUrl(httpClientInputs.getUrl())
                 .setQueryParams(httpClientInputs.getQueryParams())
-                .setEncodeQueryParams(httpClientInputs.getEncodeQueryParams())
+                .setQueryParamsAreURLEncoded(httpClientInputs.getQueryParamsAreURLEncoded())
                 .buildURI();
 
 
@@ -110,7 +110,7 @@ public class ScoreHttpClient {
 
         HttpEntity httpEntity = httpEntityBuilder
                 .setFormParams(httpClientInputs.getFormParams())
-                .setEncodeFormParams(httpClientInputs.getEncodeFormParams())
+                .setFormParamsAreURLEncoded(httpClientInputs.getFormParamsAreURLEncoded())
                 .setBody(httpClientInputs.getBody())
                 .setFilePath(httpClientInputs.getSourceFile())
                 .setContentType(theContentType)
@@ -129,7 +129,7 @@ public class ScoreHttpClient {
         Header[] theHeaders = headersBuilder
                 .setHeaders(httpClientInputs.getHeaders())
                 .setContentType(theContentType)
-                .setEntityContentType(httpEntity!=null ? httpEntity.getContentType() : null)
+                .setEntityContentType(httpEntity != null ? httpEntity.getContentType() : null)
                 .buildHeaders();
         httpRequestBase.setHeaders(theHeaders);
 

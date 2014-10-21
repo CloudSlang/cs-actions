@@ -13,9 +13,9 @@ public class HttpClientInputs {
     public static final String METHOD = "method";
     public static final String FOLLOW_REDIRECTS = "followRedirects";
     public static final String QUERY_PARAMS = "queryParams";
-    public static final String ENCODE_QUERY_PARAMS = "encodeQueryParams";
+    public static final String QUERY_PARAMS_ARE_URLENCODED = "queryParamsAreURLEncoded";
     public static final String FORM_PARAMS = "formParams";
-    public static final String ENCODE_FORM_PARAMS = "encodeFormParams";
+    public static final String FORM_PARAMS_ARE_URLENCODED = "formParamsAreURLEncoded";
     public static final String SOURCE_FILE = "sourceFile";
     public static final String REQUEST_CHARACTER_SET = "requestCharacterSet";
     public static final String BODY = "body";
@@ -82,9 +82,9 @@ public class HttpClientInputs {
     private String destinationFile;
     private String followRedirects;
     private String queryParams;
-    private String encodeQueryParams;
+    private String queryParamsAreURLEncoded;
     private String formParams;
-    private String encodeFormParams;
+    private String formParamsAreURLEncoded;
     private String sourceFile;
     private String body;
     private String contentType;
@@ -331,20 +331,20 @@ public class HttpClientInputs {
         this.formParams = formParams;
     }
 
-    public String getEncodeQueryParams() {
-        return encodeQueryParams;
+    public String getQueryParamsAreURLEncoded() {
+        return queryParamsAreURLEncoded;
     }
 
-    public void setEncodeQueryParams(String encodeQueryParams) {
-        this.encodeQueryParams = encodeQueryParams;
+    public void setQueryParamsAreURLEncoded(String queryParamsAreURLEncoded) {
+        this.queryParamsAreURLEncoded = queryParamsAreURLEncoded;
     }
 
-    public String getEncodeFormParams() {
-        return encodeFormParams;
+    public String getFormParamsAreURLEncoded() {
+        return formParamsAreURLEncoded;
     }
 
-    public void setEncodeFormParams(String encodeFormParams) {
-        this.encodeFormParams = encodeFormParams;
+    public void setFormParamsAreURLEncoded(String formParamsAreURLEncoded) {
+        this.formParamsAreURLEncoded = formParamsAreURLEncoded;
     }
 
     public String getSourceFile() {

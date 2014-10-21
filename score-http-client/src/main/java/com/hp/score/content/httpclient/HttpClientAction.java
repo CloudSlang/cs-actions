@@ -66,11 +66,9 @@ public class HttpClientAction {
             @Param(HttpClientInputs.DESTINATION_FILE) String destinationFile,
             @Param(HttpClientInputs.FOLLOW_REDIRECTS) String followRedirects,
             @Param(HttpClientInputs.QUERY_PARAMS) String queryParams,
-            //todo change this to queryParamsAreURLEncoded
-            @Param(HttpClientInputs.ENCODE_QUERY_PARAMS) String encodeQueryParams,
+            @Param(HttpClientInputs.QUERY_PARAMS_ARE_URLENCODED) String queryParamsAreURLEncoded,
             @Param(HttpClientInputs.FORM_PARAMS) String formParams,
-            //todo change this to formParamsAreURLEncoded
-            @Param(HttpClientInputs.ENCODE_FORM_PARAMS) String encodeFormParams,
+            @Param(HttpClientInputs.FORM_PARAMS_ARE_URLENCODED) String formParamsAreURLEncoded,
             @Param(HttpClientInputs.SOURCE_FILE) String sourceFile,
             @Param(HttpClientInputs.BODY) String body,
             @Param(HttpClientInputs.CONTENT_TYPE) String contentType,
@@ -115,9 +113,9 @@ public class HttpClientAction {
         httpClientInputs.setDestinationFile(destinationFile);
         httpClientInputs.setFollowRedirects(followRedirects);
         httpClientInputs.setQueryParams(queryParams);
-        httpClientInputs.setEncodeQueryParams(encodeQueryParams);
+        httpClientInputs.setQueryParamsAreURLEncoded(queryParamsAreURLEncoded);
         httpClientInputs.setFormParams(formParams);
-        httpClientInputs.setEncodeFormParams(encodeFormParams);
+        httpClientInputs.setFormParamsAreURLEncoded(formParamsAreURLEncoded);
         httpClientInputs.setSourceFile(sourceFile);
         httpClientInputs.setBody(body);
         httpClientInputs.setContentType(contentType);
