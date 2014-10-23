@@ -32,6 +32,7 @@ public class HttpClientInputs {
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
     public static final String TRUST_ALL_ROOTS = "trustAllRoots";
+    public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
     public static final String TRUST_KEYSTORE = "trustKeystore";
     public static final String TRUST_PASSWORD = "trustPassword";
     public static final String KEYSTORE = "keystore";
@@ -67,6 +68,7 @@ public class HttpClientInputs {
     private String proxyUsername;
     private String proxyPassword;
     private String trustAllRoots;
+    private String x509HostnameVerifier;
     private String trustKeystore;
     private String trustPassword;
     private String keystore;
@@ -201,6 +203,14 @@ public class HttpClientInputs {
 
     public void setTrustAllRoots(String trustAllRoots) {
         this.trustAllRoots = trustAllRoots;
+    }
+
+    public String getX509HostnameVerifier() {
+        return x509HostnameVerifier;
+    }
+
+    public void setX509HostnameVerifier(String x509HostnameVerifier) {
+        this.x509HostnameVerifier = x509HostnameVerifier;
     }
 
     public String getTrustKeystore() {

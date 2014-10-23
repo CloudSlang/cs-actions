@@ -184,13 +184,16 @@ public class ScoreHttpClient {
                 .setKeystore(httpClientInputs.getKeystore())
                 .setKeystorePassword(httpClientInputs.getKeystorePassword())
                 .setTrustKeystore(httpClientInputs.getTrustKeystore())
-                .setTrustPassword(httpClientInputs.getTrustPassword()).build();
+                .setTrustPassword(httpClientInputs.getTrustPassword())
+                .setX509HostnameVerifier(httpClientInputs.getX509HostnameVerifier())
+                .build();
 
+        String connectionKey = ConnectionManagerBuilder.buildConnectionManagerMapKey(httpClientInputs.getTrustAllRoots(),
+                httpClientInputs.getX509HostnameVerifier(),
+                httpClientInputs.getKeystore(),
+                httpClientInputs.getTrustKeystore());
         PoolingHttpClientConnectionManager connManager = poolingHttpClientConnectionManagerBuilder
-                .setConnectionManagerMapKey(
-                        httpClientInputs.getTrustAllRoots(),
-                        httpClientInputs.getKeystore(),
-                        httpClientInputs.getTrustKeystore())
+                .setConnectionManagerMapKey(connectionKey)
                 .setConnectionPoolHolder(httpClientInputs.getConnectionPoolSessionObject())
                 .setSslsf(sslConnectionSocketFactory)
                 .setDefaultMaxPerRoute(httpClientInputs.getConnectionsMaxPerRoute())

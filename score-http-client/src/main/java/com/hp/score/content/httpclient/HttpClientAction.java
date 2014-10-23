@@ -51,6 +51,7 @@ public class HttpClientAction {
             @Param(HttpClientInputs.PROXY_USERNAME) String proxyUsername,
             @Param(HttpClientInputs.PROXY_PASSWORD) String proxyPassword,
             @Param(HttpClientInputs.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(HttpClientInputs.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(HttpClientInputs.TRUST_KEYSTORE) String trustKeystore,
             @Param(HttpClientInputs.TRUST_PASSWORD) String trustPassword,
             @Param(HttpClientInputs.KEYSTORE) String keystore,
@@ -98,6 +99,7 @@ public class HttpClientAction {
         httpClientInputs.setProxyUsername(proxyUsername);
         httpClientInputs.setProxyPassword(proxyPassword);
         httpClientInputs.setTrustAllRoots(trustAllRoots);
+        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
         httpClientInputs.setTrustKeystore(trustKeystore);
         httpClientInputs.setTrustPassword(trustPassword);
         httpClientInputs.setKeystore(keystore);

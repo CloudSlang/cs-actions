@@ -42,6 +42,11 @@ public class ConnectionManagerBuilder {
     }
 
     public ConnectionManagerBuilder setConnectionManagerMapKey(String... connectionManagerMapKeys) {
+        this.connectionManagerMapKey = buildConnectionManagerMapKey(connectionManagerMapKeys);
+        return this;
+    }
+
+    public static String buildConnectionManagerMapKey(String... connectionManagerMapKeys) {
         StringBuilder keyBuilder = new StringBuilder();
         for (String token : connectionManagerMapKeys) {
             keyBuilder.append(token).append(":");
@@ -49,8 +54,7 @@ public class ConnectionManagerBuilder {
         if (keyBuilder.length() > 0) {
             keyBuilder.deleteCharAt(keyBuilder.length() - 1);
         }
-        this.connectionManagerMapKey = keyBuilder.toString();
-        return this;
+        return keyBuilder.toString();
     }
 
     public  PoolingHttpClientConnectionManager buildConnectionManager() {

@@ -1,10 +1,7 @@
 package com.hp.score.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +27,7 @@ public class SSLConnectionSocketFactoryBuilder {
     private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
+    private String x509HostnameVerifier = "strict";
 
     protected KeyStore createKeyStore(final URL url, final String password)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
@@ -78,6 +76,7 @@ public class SSLConnectionSocketFactoryBuilder {
                 trustKeystore = "file:" + trustKeystore;
             }
             createTrustKeystore(sslContextBuilder, useTrustCert);
+            //todo client key authentication should not depend on 'trustAllRoots'
             createKeystore(sslContextBuilder, useClientCert);
         } else {
             try {
@@ -90,13 +89,25 @@ public class SSLConnectionSocketFactoryBuilder {
         sslContextBuilder.useSSL();
         sslContextBuilder.useTLS();
 
-        //todo remove ALLOW_ALL_HOSTNAME_VERIFIER
         SSLConnectionSocketFactory sslsf;
         try {
-            sslsf = new SSLConnectionSocketFactory(
-                    sslContextBuilder.build(),
-                    trustAllRoots ? SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
-                            :SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            String x509HostnameVerifierStr = x509HostnameVerifier.toLowerCase();
+            X509HostnameVerifier x509HostnameVerifier = null;
+            switch (x509HostnameVerifierStr){
+                case "strict":
+                    x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+                    break;
+                case "browser_compatible":
+                    x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+                    break;
+                case "allow_all":
+                    x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+                    break;
+                default:
+                    x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+            }
+
+            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), x509HostnameVerifier);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage() + ". " +  SSL_CONNECTION_ERROR, e);
         }
@@ -121,6 +132,7 @@ public class SSLConnectionSocketFactoryBuilder {
         if (useTrustCert) {
             KeyStore trustKeyStore;
             try {
+                //todo should we do this 'create' in each and every step?
                 trustKeyStore = createKeyStore(new URL(trustKeystore), trustPassword);
                 sslContextBuilder.loadTrustMaterial(trustKeyStore);
             } catch (IOException ioe) {
@@ -155,6 +167,13 @@ public class SSLConnectionSocketFactoryBuilder {
 
     public SSLConnectionSocketFactoryBuilder setTrustPassword(String trustPassword) {
         this.trustPassword = trustPassword;
+        return this;
+    }
+
+    public SSLConnectionSocketFactoryBuilder setX509HostnameVerifier(String x509HostnameVerifier) {
+        if (!StringUtils.isEmpty(x509HostnameVerifier)) {
+            this.x509HostnameVerifier = x509HostnameVerifier;
+        }
         return this;
     }
 }
