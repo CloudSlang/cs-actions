@@ -119,6 +119,7 @@ public class ScoreHttpClient {
                 .setMultipartFiles(httpClientInputs.getMultipartFiles())
                 .setMultipartBodiesContentType(httpClientInputs.getMultipartBodiesContentType())
                 .setMultipartFilesContentType(httpClientInputs.getMultipartFilesContentType())
+                .setChunkedRequestEntity(httpClientInputs.getChunkedRequestEntity())
                 .buildEntity();
 
         HttpRequestBase httpRequestBase =  requestBuilder
@@ -231,13 +232,12 @@ public class ScoreHttpClient {
     public CloseableHttpResponse execute(CloseableHttpClient closeableHttpClient,
                                          HttpRequestBase httpRequestBase,
                                          HttpClientContext context) {
-        CloseableHttpResponse httpResponse = httpClientExecutor
+
+        return httpClientExecutor
                 .setCloseableHttpClient(closeableHttpClient)
                 .setHttpRequestBase(httpRequestBase)
                 .setContext(context)
                 .execute();
-
-        return httpResponse;
     }
 
     public Map<String, String> parseResponse(CloseableHttpResponse httpResponse,
@@ -283,7 +283,7 @@ public class ScoreHttpClient {
 
     private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager,
                                 String keepAliveInput, CloseableHttpResponse httpResponse) {
-        boolean keepAlive = StringUtils.isBlank(keepAliveInput) ? true : Boolean.parseBoolean(keepAliveInput);
+        boolean keepAlive = StringUtils.isBlank(keepAliveInput) || Boolean.parseBoolean(keepAliveInput);
         if (!keepAlive) {
             try {
                 httpResponse.close();

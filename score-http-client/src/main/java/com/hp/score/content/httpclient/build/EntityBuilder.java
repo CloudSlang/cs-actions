@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
@@ -24,6 +25,7 @@ public class EntityBuilder {
     private String multipartValuesAreURLEncoded = "false";
     private String multipartBodiesContentType = "text/plain; charset=ISO-8859-1";
     private String multipartFilesContentType = "application/octet-stream";
+    private String chunkedRequestEntity;
 
     public EntityBuilder setBody(String body) {
         this.body = body;
@@ -83,28 +85,33 @@ public class EntityBuilder {
         return this;
     }
 
+    public EntityBuilder setChunkedRequestEntity(String chunkedRequestEntity) {
+        this.chunkedRequestEntity = chunkedRequestEntity;
+        return this;
+    }
+
     public HttpEntity buildEntity() {
+        AbstractHttpEntity httpEntity = null;
         if (!StringUtils.isEmpty(formParams)) {
             List<? extends NameValuePair> list;
             list = getNameValuePairs(formParams, !Boolean.parseBoolean(this.formParamsAreURLEncoded),
                     HttpClientInputs.FORM_PARAMS, HttpClientInputs.FORM_PARAMS_ARE_URLENCODED);
-            return new UrlEncodedFormEntity(list, contentType.getCharset());
-        }
-
-        if (!StringUtils.isEmpty(body)) {
-            return new StringEntity(body, contentType);
-        }
-
-        if (!StringUtils.isEmpty(filePath)) {
+            httpEntity = new UrlEncodedFormEntity(list, contentType.getCharset());
+        } else if (!StringUtils.isEmpty(body)) {
+            httpEntity = new StringEntity(body, contentType);
+        } else if (!StringUtils.isEmpty(filePath)) {
             File file = new File(filePath);
             if (!file.exists()) {
                 throw new IllegalArgumentException("file set by input '"+ HttpClientInputs.SOURCE_FILE
                         +"' does not exist:" + filePath);
             }
-            FileEntity fileEntity = new FileEntity(file, contentType);
-            //todo make this optional
-            fileEntity.setChunked(true);
-            return fileEntity;
+            httpEntity= new FileEntity(file, contentType);
+        }
+        if (httpEntity!=null) {
+            if (!StringUtils.isEmpty(chunkedRequestEntity)) {
+                httpEntity.setChunked(Boolean.parseBoolean(chunkedRequestEntity));
+            }
+            return httpEntity;
         }
 
         if (!StringUtils.isEmpty(multipartBodies) || !StringUtils.isEmpty(multipartFiles)) {

@@ -51,6 +51,7 @@ public class HttpClientInputs {
     public static final String MULTIPART_FILES = "multipartFiles";
     public static final String MULTIPART_FILES_CONTENT_TYPE = "multipartBodiesContentType";
     public static final String MULTIPART_VALUES_ARE_URLENCODED = "multipartValuesAreURLEncoded";
+    public static final String CHUNKED_REQUEST_ENTITY = "chunkedRequestEntity";
 
     public final static String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
     public final static String SESSION_COOKIES = "httpClientCookieSession";
@@ -96,6 +97,7 @@ public class HttpClientInputs {
     private String multipartValuesAreURLEncoded;
     private String multipartBodiesContentType;
     private String multipartFilesContentType;
+    private String chunkedRequestEntity;
     private String method;
 
     private SerializableSessionObject cookieStoreSessionObject;
@@ -435,6 +437,14 @@ public class HttpClientInputs {
 
     public void setMultipartFilesContentType(String multipartFilesContentType) {
         this.multipartFilesContentType = multipartFilesContentType;
+    }
+
+    public String getChunkedRequestEntity() {
+        return chunkedRequestEntity;
+    }
+
+    public void setChunkedRequestEntity(String chunkedRequestEntity) {
+        this.chunkedRequestEntity = chunkedRequestEntity;
     }
 
     public SerializableSessionObject getCookieStoreSessionObject() {

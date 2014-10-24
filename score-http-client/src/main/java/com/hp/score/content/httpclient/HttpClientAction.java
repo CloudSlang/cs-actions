@@ -79,6 +79,7 @@ public class HttpClientAction {
             @Param(HttpClientInputs.MULTIPART_FILES) String multipartFiles,
             @Param(HttpClientInputs.MULTIPART_FILES_CONTENT_TYPE) String multipartFilesContentType,
             @Param(HttpClientInputs.MULTIPART_VALUES_ARE_URLENCODED) String multipartValuesAreURLEncoded,
+            @Param(HttpClientInputs.CHUNKED_REQUEST_ENTITY) String chunkedRequestEntity,
             @Param(value = HttpClientInputs.METHOD, required = true) String method,
             @Param(HttpClientInputs.SESSION_COOKIES) SerializableSessionObject httpClientCookieSession,
             @Param(HttpClientInputs.SESSION_CONNECTION_POOL) GlobalSessionObject httpClientPoolingConnectionManager) {
@@ -127,6 +128,7 @@ public class HttpClientAction {
         httpClientInputs.setMultipartBodiesContentType(multipartBodiesContentType);
         httpClientInputs.setMultipartFilesContentType(multipartFilesContentType);
         httpClientInputs.setMultipartValuesAreURLEncoded(multipartValuesAreURLEncoded);
+        httpClientInputs.setChunkedRequestEntity(chunkedRequestEntity);
         httpClientInputs.setMethod(method);
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
