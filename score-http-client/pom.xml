@@ -22,14 +22,41 @@
     <artifactId>score-http-client</artifactId>
     <version>0.1.35-SNAPSHOT</version>
     <packaging>jar</packaging>
-
+    <name>com.hp.score.content:score-http-client</name>
+    <description>An HTTP client for score</description>
+    <url>https://github.com/HPSoftware/score-content-sdk</url>
+    <licenses>
+      <license>
+        <name>The Apache License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      </license>
+    </licenses>
+    <developers>
+      <developer>
+        <name>Mihai David</name>
+        <email>mihai.david@hp.com</email>
+        <organization>HP Software</organization>
+        <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+      </developer>
+      <developer>
+        <name>Adina Tusa</name>
+        <email>adina.tusa@hp.com</email>
+        <organization>HP Software</organization>
+        <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+      </developer>
+      <developer>
+        <name>Avi Moradi</name>
+        <email>avi.moradi@hp.com</email>
+        <organization>HP Software</organization>
+        <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+      </developer>
+    </developers>
     <scm>
         <connection>scm:git:https://HPSoftware/score-content.git</connection>
         <developerConnection>scm:git:git@github.com:HPSoftware/score-content.git</developerConnection>
         <url>https://github.com/HPSoftware/score-content.git</url>
         <tag>master</tag>
     </scm>
-
     <distributionManagement>
         <repository>
             <id>nexus-repository</id>
@@ -42,7 +69,6 @@
             <url>http://16.60.152.89:8081/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
     <dependencies>
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
@@ -115,18 +141,33 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <properties>
+      <gpg.skip>true</gpg.skip>
+    </properties>
     <build>
-        <plugins>
-
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.5</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.1</version>
+            <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+            </configuration>
+        </plugin>
+      </plugins>
     </build>
 </project>
