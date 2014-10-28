@@ -24,7 +24,7 @@
     <packaging>jar</packaging>
     <name>com.hp.score.content:score-http-client</name>
     <description>An HTTP client for score</description>
-    <url>https://github.com/HPSoftware/score-content-sdk</url>
+    <url>https://github.com/HPSoftware/score-content</url>
     <licenses>
       <license>
         <name>The Apache License, Version 2.0</name>
