@@ -18,19 +18,45 @@
         specific language governing permissions and limitations
         under the License.
     -->
-
 	<groupId>com.hp.score.content</groupId>
 	<artifactId>score-content</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
+    <name>com.hp.score.content:score-content</name>
+    <description>Precompiled flows for score</description>
+    <url>https://github.com/HPSoftware/score-content</url>
+    <licenses>
+      <license>
+        <name>The Apache License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      </license>
+    </licenses>
+    <developers>
+      <developer>
+        <name>Mihai David</name>
+        <email>mihai.david@hp.com</email>
+        <organization>HP Software</organization>
+        <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+      </developer>
+      <developer>
+        <name>Adina Tusa</name>
+        <email>adina.tusa@hp.com</email>
+        <organization>HP Software</organization>
+        <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+      </developer>
+      <developer>
+        <name>Avi Moradi</name>
+        <email>avi.moradi@hp.com</email>
+        <organization>HP Software</organization>
+        <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+      </developer>
+    </developers>
 	<scm>
 		<connection>scm:git:https://HPSoftware/score-content.git</connection>
 		<developerConnection>scm:git:git@github.com:HPSoftware/score-content.git</developerConnection>
 		<url>https://github.com/HPSoftware/score-content.git</url>
 		<tag>master</tag>
 	</scm>
-
     <distributionManagement>
         <repository>
             <id>nexus-repository</id>
@@ -43,7 +69,27 @@
             <url>http://mydphdb0166.hpswlabs.adapps.hp.com:8081/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
+    <properties>
+      <gpg.skip>true</gpg.skip>
+    </properties>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.5</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
 	<modules>
 		<module>score-http-client</module>
 	</modules>
