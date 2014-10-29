@@ -81,6 +81,11 @@
             <version>3.18.1-GA</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+            <version>144</version>
+        </dependency>
         <!-- end of testing dependencies -->
 
     </dependencies>
