@@ -92,5 +92,6 @@
     </build>
 	<modules>
 		<module>score-http-client</module>
+        <module>score-ssh</module>
 	</modules>
 </project>
