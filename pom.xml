@@ -93,5 +93,6 @@
 	<modules>
 		<module>score-http-client</module>
         <module>score-ssh</module>
+        <module>score-utilities</module>
 	</modules>
 </project>
