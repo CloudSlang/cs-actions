@@ -8,6 +8,7 @@ import com.hp.score.content.ssh.utils.Constants;
 import com.hp.score.content.ssh.utils.StringUtils;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Provider;
 import java.security.Security;
@@ -21,11 +22,11 @@ public abstract class SSHShellAbstract {
 
     protected boolean addSecurityProvider() {
         boolean providerAdded = false;
-//        Provider provider = Security.getProvider(); //TODO security
-//        if (provider == null) {
-//            providerAdded = true;
-//            Security.insertProviderAt(, 2);
-//        }
+        Provider provider = Security.getProvider("BC");
+        if (provider == null) {
+            providerAdded = true;
+            Security.insertProviderAt(new BouncyCastleProvider(), 2);
+        }
         return providerAdded;
     }
 
