@@ -34,6 +34,11 @@
         <artifactId>score-content-sdk</artifactId>
         <version>1.4</version>
     </dependency>
+        <dependency>
+            <groupId>com.ibm.websphere</groupId>
+            <artifactId>ws_runtime</artifactId>
+            <version>6.1.0</version>
+        </dependency>
     </dependencies>
 
     <properties>

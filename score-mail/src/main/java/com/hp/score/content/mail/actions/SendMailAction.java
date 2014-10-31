@@ -50,7 +50,7 @@ public class SendMailAction {
     ) throws Exception {
 
         SendMailInputs sendMailInputs = new SendMailInputs();
-        sendMailInputs.setHostname(hostname);
+        sendMailInputs.setSmtpHostname(hostname);
         sendMailInputs.setPort(port);
         sendMailInputs.setHtmlEmail(htmlEmail);
         sendMailInputs.setFrom(from);

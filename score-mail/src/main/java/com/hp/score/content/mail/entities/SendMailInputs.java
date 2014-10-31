@@ -5,7 +5,7 @@ package com.hp.score.content.mail.entities;
  */
 public class SendMailInputs {
 
-    public static final String HOSTNAME = "hostname";
+    public static final String HOSTNAME = "smtpHostname";
     public static final String PORT = "port";
     public static final String HTML_EMAIL = "htmlEmail";
     public static final String FROM = "from";
@@ -22,7 +22,7 @@ public class SendMailInputs {
     public static final String CHARACTERSET = "characterSet";
     public static final String CONTENT_TRANSFER_ENCODING = "contentTransferEncoding";
 
-    private String hostname;
+    private String smtpHostname;
     private String port;
     private String htmlEmail;
     private String from;
@@ -39,12 +39,12 @@ public class SendMailInputs {
     private String characterset;
     private String contentTransferEncoding;
 
-    public String getHostname() {
-        return hostname;
+    public String getSMTPHostname() {
+        return smtpHostname;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public void setSmtpHostname(String smtpHostname) {
+        this.smtpHostname = smtpHostname;
     }
 
     public String getPort() {
