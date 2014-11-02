@@ -20,7 +20,7 @@
     -->
     <groupId>com.hp.score.content</groupId>
     <artifactId>score-http-client</artifactId>
-    <version>10.20.3.1-SNAPSHOT</version>
+    <version>10.20.3.1</version>
     <packaging>jar</packaging>
     <name>com.hp.score.content:score-http-client</name>
     <description>An HTTP client for score</description>
