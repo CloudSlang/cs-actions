@@ -6,7 +6,7 @@
 
     <groupId>com.hp.score.content</groupId>
     <artifactId>score-ssh</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>10.20.3.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -17,7 +17,7 @@
         <connection>scm:git:https://HPSoftware/score-content.git</connection>
         <developerConnection>scm:git:git@github.com:HPSoftware/score-content.git</developerConnection>
         <url>https://github.com/HPSoftware/score-content.git</url>
-        <tag>master</tag>
+        <tag>1020</tag>
     </scm>
     <distributionManagement>
         <repository>
