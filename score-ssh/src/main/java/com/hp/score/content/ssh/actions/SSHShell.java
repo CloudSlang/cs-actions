@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author hasna
- * @since 1.0.163-SNAPSHOT
+ * @author ioanvranauhp
+ * Date: 11/03/14
  */
 public class SSHShell extends SSHShellAbstract {
 
