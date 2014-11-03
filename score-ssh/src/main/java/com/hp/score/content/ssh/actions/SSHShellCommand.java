@@ -120,7 +120,7 @@ public class SSHShellCommand extends SSHShellAbstract {
             populateResult(returnResult, e);
         } finally {
             if (providerAdded) {
-//                Security.removeProvider(); TODO security
+                removeSecurityProvider();
             }
         }
         return returnResult;

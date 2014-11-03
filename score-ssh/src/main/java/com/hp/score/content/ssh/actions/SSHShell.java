@@ -97,7 +97,7 @@ public class SSHShell extends SSHShellAbstract {
             populateResult(returnResult, e);
         } finally {
             if (providerAdded) {
-//                Security.removeProvider(JsafeJCE.BASE_PROVIDER_NAME); // TODO security
+                removeSecurityProvider();
             }
         }
         return returnResult;
