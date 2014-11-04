@@ -36,7 +36,7 @@ public class StringEquals {
 
         try {
             if (ignoreCase) {
-                if (string1.equals(string2)) {
+                if (string1.equalsIgnoreCase(string2)) {
                     result.put(Constants.OutputNames.RESPONSE_TEXT, Constants.SUCCESS);
                     result.put(Constants.OutputNames.RETURN_RESULT, MATCHES);
                 } else {
@@ -44,7 +44,7 @@ public class StringEquals {
                     result.put(Constants.OutputNames.RETURN_RESULT, DO_NOT_MATCH);
                 }
             } else {
-                if (string1.equalsIgnoreCase(string2)) {
+                if (string1.equals(string2)) {
                     result.put(Constants.OutputNames.RESPONSE_TEXT, Constants.SUCCESS);
                     result.put(Constants.OutputNames.RETURN_RESULT, MATCHES);
                 } else {

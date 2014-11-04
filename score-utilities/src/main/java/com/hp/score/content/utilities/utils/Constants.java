@@ -10,6 +10,7 @@ public class Constants {
 
     public static final class OutputNames {
         public static final String RETURN_RESULT = "returnResult";
+        public static final String RETURN_CODE = "returnCode";
         public static final String RESPONSE_TEXT = "response";
         public static final String EXCEPTION = "exception";
 
@@ -20,5 +21,11 @@ public class Constants {
     public static final class ResponseNames {
         public static final String SUCCESS = "success";
         public static final String FAILURE = "failure";
+    }
+
+    public static final class ReturnCodes {
+
+        public static final String RETURN_CODE_FAILURE = "-1";
+        public static final String RETURN_CODE_SUCCESS = "0";
     }
 }

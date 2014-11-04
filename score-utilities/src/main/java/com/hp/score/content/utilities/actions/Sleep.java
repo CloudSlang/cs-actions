@@ -28,7 +28,7 @@ public class Sleep {
             responses = {
                     @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RESULT_TEXT, value = Constants.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
-    public Map<String, String> compareStrings(@Param(SECONDS) String seconds) {
+    public Map<String, String> sleep(@Param(SECONDS) String seconds) {
         Map<String, String> result = new HashMap<>();
 
         try {
