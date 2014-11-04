@@ -1,12 +1,12 @@
 package com.hp.score.content.ssh.services;
 
+import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.hp.score.content.ssh.entities.CommandResult;
 import com.hp.score.content.ssh.entities.ExpectCommandResult;
-import com.hp.oo.sdk.content.plugin.SessionParam;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public interface SSHService extends AutoCloseable {
 

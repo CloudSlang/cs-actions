@@ -1,5 +1,12 @@
 package com.hp.score.content.ssh.actions;
 
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.score.content.ssh.entities.CommandResult;
 import com.hp.score.content.ssh.entities.ConnectionDetails;
 import com.hp.score.content.ssh.entities.KeyFile;
@@ -8,22 +15,13 @@ import com.hp.score.content.ssh.services.SSHService;
 import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
 import com.hp.score.content.ssh.utils.Constants;
 import com.hp.score.content.ssh.utils.StringUtils;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.score.content.ssh.utils.Constants;
 
-import java.security.Security;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public class SSHShellCommand extends SSHShellAbstract {
 
@@ -136,5 +134,34 @@ public class SSHShellCommand extends SSHShellAbstract {
             returnResult.put(Constants.OutputNames.RETURN_RESULT, commandResult.getStandardError());
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
         }
+    }
+
+    public static void main(String[] args) {
+//        String user = "demo";
+        String user = "Administrator";
+//        String host = "16.84.193.91";
+        String host = "16.77.42.143";
+//        String host = "16.77.45.100";
+//        String password = "hpinvent";
+        String password = "B33f34t3r";
+        String strCommand = "show network\n";
+        SSHShellCommand command = new SSHShellCommand();
+        Map<String, String> results = command.runSshShellCommand(
+                host,
+                "",
+                user,
+                password,
+                "",
+                strCommand,
+                "",
+                "utf-8",
+                "",
+                "10000",
+                new GlobalSessionObject<Map<String, SSHConnection>>(),
+                new GlobalSessionObject<Map<String, SSHConnection>>(),
+                "true",
+                "true"
+        );
+        System.out.println(results.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

@@ -1,13 +1,13 @@
 package com.hp.score.content.ssh.actions;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import com.hp.score.content.ssh.entities.KeyFile;
 import com.hp.score.content.ssh.entities.SSHConnection;
 import com.hp.score.content.ssh.services.SSHService;
 import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
 import com.hp.score.content.ssh.utils.Constants;
 import com.hp.score.content.ssh.utils.StringUtils;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SessionResource;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Provider;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public abstract class SSHShellAbstract {
 
@@ -25,10 +25,20 @@ public abstract class SSHShellAbstract {
         Provider provider = Security.getProvider("BC");
         if (provider == null) {
             providerAdded = true;
-            Security.insertProviderAt(new BouncyCastleProvider(), 2);
+//            Security.insertProviderAt(new BouncyCastleProvider(), 2);
         }
         return providerAdded;
     }
+
+//    protected boolean addSecurityProvider() {
+//        boolean providerAdded = false;
+//        Provider provider = Security.getProvider(JsafeJCE.BASE_PROVIDER_NAME);
+//        if (provider == null) {
+//            providerAdded = true;
+//            Security.insertProviderAt(new JsafeJCE(), 2);
+//        }
+//        return providerAdded;
+//    }
 
     protected void removeSecurityProvider() {
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);

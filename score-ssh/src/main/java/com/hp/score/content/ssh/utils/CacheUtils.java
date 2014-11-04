@@ -1,10 +1,9 @@
 package com.hp.score.content.ssh.utils;
 
-import com.hp.score.content.ssh.entities.SSHConnection;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-//import com.hp.oo.sdk.content.plugin.SessionObject;
 import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.hp.oo.sdk.content.plugin.SessionResource;
+import com.hp.score.content.ssh.entities.SSHConnection;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 
@@ -13,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public class CacheUtils {
     /**
@@ -31,7 +30,6 @@ public class CacheUtils {
                 }
             }
         }
-
         return null;
     }
 

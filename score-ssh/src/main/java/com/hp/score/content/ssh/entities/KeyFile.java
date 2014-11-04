@@ -2,7 +2,7 @@ package com.hp.score.content.ssh.entities;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public class KeyFile {
     private String keyFilePath;

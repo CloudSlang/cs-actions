@@ -2,7 +2,7 @@ package com.hp.score.content.ssh.utils;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public class Constants {
     // inputs
@@ -42,15 +42,15 @@ public class Constants {
     //we add this temporary (until platform provide us the constants)
     public static final class OutputNames {
 
-        public static final String RETURN_RESULT = "";
+        public static final String RETURN_RESULT = "returnResult";
         public static final String EXCEPTION = "";
-        public static final String RETURN_CODE = "";
+        public static final String RETURN_CODE = "returnCode";
     }
 
     public static final class ReturnCodes {
 
-        public static final String RETURN_CODE_FAILURE = "";
-        public static final String RETURN_CODE_SUCCESS = "";
+        public static final String RETURN_CODE_FAILURE = "-1";
+        public static final String RETURN_CODE_SUCCESS = "0";
     }
 
     public static final class ResponseNames {

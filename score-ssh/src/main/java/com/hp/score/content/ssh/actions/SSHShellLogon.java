@@ -1,12 +1,5 @@
 package com.hp.score.content.ssh.actions;
 
-import com.hp.score.content.ssh.entities.ConnectionDetails;
-import com.hp.score.content.ssh.entities.KeyFile;
-import com.hp.score.content.ssh.entities.SSHConnection;
-import com.hp.score.content.ssh.services.SSHService;
-import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
-import com.hp.score.content.ssh.utils.Constants;
-import com.hp.score.content.ssh.utils.StringUtils;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -14,15 +7,20 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.score.content.ssh.entities.ConnectionDetails;
+import com.hp.score.content.ssh.entities.KeyFile;
+import com.hp.score.content.ssh.entities.SSHConnection;
+import com.hp.score.content.ssh.services.SSHService;
+import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
 import com.hp.score.content.ssh.utils.Constants;
+import com.hp.score.content.ssh.utils.StringUtils;
 
-import java.security.Security;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author ioanvranauhp
- * Date: 11/03/14
+ *         Date: 11/03/14
  */
 public class SSHShellLogon extends SSHShellAbstract {
 
@@ -62,7 +60,7 @@ public class SSHShellLogon extends SSHShellAbstract {
 
             // get the cached SSH session
             String sessionId = "sshSession:" + host + "-" + portNumber + "-" + username;
-            synchronized (sessionId){
+            synchronized (sessionId) {
                 SSHService service = getFromCache(globalSessionObject, sessionObject, useGlobalContextBoolean, sessionId);
                 boolean saveSSHSession = false;
                 if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {

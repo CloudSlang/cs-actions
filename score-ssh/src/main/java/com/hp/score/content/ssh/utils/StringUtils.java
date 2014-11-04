@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public class StringUtils {
 

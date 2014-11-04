@@ -1,20 +1,10 @@
 package com.hp.score.content.ssh.utils.simulator.visualization;
 
-/**
- * Modified from CharacterWrapper so we can handle multiple bytes chars
- * a wrapper class for byte
- *
- */
 public class ByteWrapper {
     private byte value;
     private boolean isChanged;
     private ScreenEmulator screenEmulator;
 
-    /**
-     * constructor
-     *
-     * @param aEmu
-     */
     ByteWrapper(ScreenEmulator aEmu) {
         char empty = ' ';
         screenEmulator = aEmu;

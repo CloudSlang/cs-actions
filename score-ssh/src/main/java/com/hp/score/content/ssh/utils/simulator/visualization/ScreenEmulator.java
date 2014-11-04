@@ -10,23 +10,16 @@ import org.dom4j.Element;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class ScreenEmulator implements Term, IShellVisualizer {
     public static final String STR_FRAME = "Frame";
-    //QCCR 92359 - make it to deal with byte instead of 
-    //char, since char number is from 0 - 255 while byte is from -128 ~ 127, 
-    // so we can handle JP chars. 
-    //use ByteWrapper instead of CharWrapper
-    //encode string into UTF-8 bytes since UTF-8 encoding is usually used on 
-    //unix and linux
     ByteWrapper[][] buffer;
-    ArrayList<Element> frames;
+    final ArrayList<Element> frames;
 
     public ScreenEmulator() {
         initBuffer();
-        frames = new ArrayList<Element>();
+        frames = new ArrayList<>();
     }
 
     public void run(final InputStream in) {
@@ -41,11 +34,11 @@ public class ScreenEmulator implements Term, IShellVisualizer {
             }
 
             public void requestResize(Term term) {
-                ;
+
             }
 
             public void close() {
-                ;
+
             }
         });
     }
@@ -56,9 +49,7 @@ public class ScreenEmulator implements Term, IShellVisualizer {
         d.setText("\n");
 
         synchronized (frames) {
-            Iterator<Element> iter = frames.iterator();
-            while (iter.hasNext()) {
-                Element curr = iter.next();
+            for (Element curr : frames) {
                 d.add(curr);
                 d.addText("\n");
             }
@@ -142,11 +133,6 @@ public class ScreenEmulator implements Term, IShellVisualizer {
     }
 
     private synchronized void runTask(ScreenTask task, int minrow, int mincol, int maxrow, int maxcol, boolean reverseRowOrder, boolean reverseColOrder) {
-        //minrow = (minrow < 0)?0:minrow;
-        //maxrow = (maxrow < buffer.length)?maxrow:buffer.length;
-        //mincol = (mincol < 0)?0:mincol;
-        //maxcol = (maxcol < buffer[0].length)? maxcol:buffer[0].length;
-
         try {
             int col = (reverseColOrder) ? maxcol - 1 : mincol;
             int row = (reverseRowOrder) ? maxrow - 1 : minrow;
@@ -218,7 +204,7 @@ public class ScreenEmulator implements Term, IShellVisualizer {
 
         runTask
                 (
-                        new linearUpdateTask(length) {
+                        new LinearUpdateTask(length) {
                             public byte process(int col) {
                                 return (byte) (arg0[col + offset]);
                             }
@@ -247,10 +233,8 @@ public class ScreenEmulator implements Term, IShellVisualizer {
         }
         final byte[] argBytesFinal = argBytes;
 
-        //fixed to use bytes array's length , not string length. For one JP char
-        //string length is 1, but bytes length is 3. 
         runTask
-                (new linearUpdateTask(argBytesFinal.length) {
+                (new LinearUpdateTask(argBytesFinal.length) {
                     public byte process(int offset) {
                         return argBytesFinal[offset];
                     }

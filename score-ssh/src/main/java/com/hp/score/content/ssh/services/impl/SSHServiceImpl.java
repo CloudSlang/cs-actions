@@ -1,5 +1,6 @@
 package com.hp.score.content.ssh.services.impl;
 
+import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.hp.score.content.ssh.entities.CommandResult;
 import com.hp.score.content.ssh.entities.ConnectionDetails;
 import com.hp.score.content.ssh.entities.ExpectCommandResult;
@@ -9,14 +10,13 @@ import com.hp.score.content.ssh.utils.CacheUtils;
 import com.hp.score.content.ssh.utils.Constants;
 import com.hp.score.content.ssh.utils.simulator.ShellSimulator;
 import com.hp.score.content.ssh.utils.simulator.visualization.IShellVisualizer;
-import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.jcraft.jsch.*;
 
 import java.io.*;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public class SSHServiceImpl implements SSHService {
     private static final int POLLING_INTERVAL = 1000;
@@ -124,7 +124,6 @@ public class SSHServiceImpl implements SSHService {
                 commandTimeout -= POLLING_INTERVAL;
             } while (!channel.isEOF() && commandTimeout > 0);
 
-//            boolean timedOut = !channel.isEOF() && commandTimeout <= 0;
             // save the response
             CommandResult result = new CommandResult();
             result.setStandardOutput(((ByteArrayOutputStream) out).toString(characterSet));

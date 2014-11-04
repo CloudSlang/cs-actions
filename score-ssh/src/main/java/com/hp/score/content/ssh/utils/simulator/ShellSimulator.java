@@ -10,12 +10,6 @@ import java.io.PipedInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
-/**
- *
- *
- *
- *
- */
 public class ShellSimulator {
     ScriptRunner simulator;
     String exception;
@@ -186,7 +180,6 @@ public class ShellSimulator {
                         try {
                             visualizers.get(curr).close();
                         } catch (IOException e) {
-                            ;
                         }
                     }
                 }
@@ -197,7 +190,6 @@ public class ShellSimulator {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                ;
             }
             long time = System.currentTimeMillis();
             if (time - startTime > timeout) {
@@ -210,7 +202,6 @@ public class ShellSimulator {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                ;
             } finally {
                 visuals = visualizers.keySet().iterator();
                 while (visuals.hasNext()) {
@@ -218,7 +209,6 @@ public class ShellSimulator {
                     try {
                         visualizers.get(curr).close();
                     } catch (IOException e) {
-                        ;
                     }
                 }
             }

@@ -15,7 +15,7 @@ public class SafeMatcher extends Thread {
         match = toTest.matches(regex);
     }
 
-    @SuppressWarnings("deprecation") // Thread.stop() stinks, but have to use it...
+    @SuppressWarnings("deprecation")
     public static boolean match(String toTest, String regex, long timeOut) throws Exception {
         SafeMatcher t = new SafeMatcher(toTest, regex);
         long startTime = System.currentTimeMillis();

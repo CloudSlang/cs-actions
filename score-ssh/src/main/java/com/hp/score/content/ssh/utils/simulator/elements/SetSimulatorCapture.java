@@ -6,7 +6,6 @@ public class SetSimulatorCapture extends SimulatorModificationCommand {
 
     @Override
     public void execute() {
-        // TODO Auto-generated method stu
     }
 
     @Override

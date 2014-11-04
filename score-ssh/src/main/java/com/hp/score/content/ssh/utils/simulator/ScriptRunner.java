@@ -12,11 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ScriptRunner extends Thread implements IScriptRunner {
-    //QCCR 99701, for telnet shell we allow to input characterSet so 
-    //we will know that is the encoding of input stream
-    //for ssh shell, we don't have input characterSet, it still uses default
-    //utf-8
-    private static final String DEFAULT_CHARACTERSET = "UTF-8";
+
+    private static final String DEFAULT_CHARACTER_SET = "UTF-8";
     public InputStream in;
     public OutputStream out;
     ScriptModel parser;
@@ -33,7 +30,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
     private long sleepTime;
     private long characterDelay;
     private boolean closeStreams;
-    private String characterSet = DEFAULT_CHARACTERSET;
+    private String characterSet = DEFAULT_CHARACTER_SET;
 
     /**
      * ScriptRunner Constructor
@@ -60,7 +57,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
         exception = "";
         captureOutput = true;
         closeStreams = true;
-        this.characterSet = DEFAULT_CHARACTERSET;
+        this.characterSet = DEFAULT_CHARACTER_SET;
     }
 
     /**
@@ -158,10 +155,6 @@ class ScriptRunner extends Thread implements IScriptRunner {
         this.exception += "\n" + exception + "\n Instructions left: " + getCommandsLeft() + "\n";
     }
 
-    /**
-     *
-     *
-     */
     private synchronized void clearMatchExceptions() {
         String[] split = exception.split("\n");
         exception = "";
@@ -172,10 +165,6 @@ class ScriptRunner extends Thread implements IScriptRunner {
         this.exception = "";
     }
 
-    /**
-     *
-     *
-     */
     public void terminate() {
         addException(new Exception("timedOut"));
         for (int count = 0; count < 10; count++) {
@@ -183,32 +172,18 @@ class ScriptRunner extends Thread implements IScriptRunner {
         }
     }
 
-    /**
-     *
-     *
-     */
     private synchronized void incrementPostCompleteReads() {
         postCompleteReads++;
     }
 
-    /**
-     *
-     *
-     */
     private synchronized void resetPostCompleteReads() {
         postCompleteReads = 0;
     }
 
-    /**
-     * @return
-     */
     public synchronized long getDeltaT() {
         return System.currentTimeMillis() - lastReadTime;
     }
 
-    /**
-     *
-     */
     public void run() {
         long deltaT = 0;
         setReadTime();
@@ -246,9 +221,6 @@ class ScriptRunner extends Thread implements IScriptRunner {
         current = "";
     }
 
-    /**
-     * @return
-     */
     public boolean checkAlwaysHandlers() {
         try {
             AlwaysOn curr = parser.checkAlwaysHandlers(current, matchTimeout);
@@ -267,10 +239,6 @@ class ScriptRunner extends Thread implements IScriptRunner {
         }
     }
 
-    /**
-     * @return
-     * @throws Exception
-     */
     boolean sendable() throws Exception {
         if (toSend != null && toSend.length > 0)  //there are commands to send.
             return true;
@@ -345,10 +313,6 @@ class ScriptRunner extends Thread implements IScriptRunner {
                 current += cleanString;
 
                 if (captureOutput && cleanString != null) {
-                    //QCCR 92359, we need to make it encoded in UTF-8 before pass
-                    //it to PipedOutputStream which will be used as PipedInputStream
-                    //in SreenEmulator
-                    //for screenEmulator to use VTEmulator100, has to use UTF-8
                     byte[] outPipeToVisualizer = cleanString.getBytes("UTF-8");
                     if (outPipeToVisualizer != null && outPipeToVisualizer.length != 0) {
                         pipe(outPipeToVisualizer, 0, outPipeToVisualizer.length);
@@ -364,7 +328,6 @@ class ScriptRunner extends Thread implements IScriptRunner {
             byte[] bytes = new String(toSend).getBytes(this.characterSet);
             if (characterDelay > 0) {
                 //delay each character write by sleepTime
-                //fix for 91040
                 for (int i = 0; i < toSend.length; i++) {
                     out.write(bytes, i, 1);
                     out.flush();

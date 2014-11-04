@@ -7,11 +7,11 @@ public class ScriptLines {
     int index;
 
     public ScriptLines(String script) {
-        String[] alines = script.trim().split("\n");
-        ArrayList<String> lines = new ArrayList<String>();
-        for (int count = 0; count < alines.length; count++)
-            if (alines[count].trim().length() > 0)
-                lines.add(alines[count].trim());
+        String[] currLines = script.trim().split("\n");
+        ArrayList<String> lines = new ArrayList<>();
+        for (String currLine : currLines)
+            if (currLine.trim().length() > 0)
+                lines.add(currLine.trim());
         this.lines = lines.toArray(new String[lines.size()]);
         index = 0;
     }

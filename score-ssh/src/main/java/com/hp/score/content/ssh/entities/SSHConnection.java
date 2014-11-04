@@ -5,7 +5,7 @@ import com.jcraft.jsch.Session;
 
 /**
  * @author ioanvranauhp
- * Date: 10/29/14
+ *         Date: 10/29/14
  */
 public class SSHConnection {
     private Session session;
