@@ -30,6 +30,10 @@ public abstract class SSHShellAbstract {
         return providerAdded;
     }
 
+    protected void removeSecurityProvider() {
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+    }
+
     protected KeyFile getKeyFile(String privateKeyFile, String privateKeyPassphrase) {
         KeyFile keyFile = null;
         if (privateKeyFile != null && !privateKeyFile.isEmpty()) {
