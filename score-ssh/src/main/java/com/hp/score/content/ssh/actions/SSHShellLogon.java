@@ -7,15 +7,12 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.score.content.ssh.entities.ConnectionDetails;
-import com.hp.score.content.ssh.entities.KeyFile;
+import com.hp.score.content.ssh.services.actions.SSHShellAbstract;
+import com.hp.score.content.ssh.services.actions.ScoreSSHShellLogon;
 import com.hp.score.content.ssh.entities.SSHConnection;
-import com.hp.score.content.ssh.services.SSHService;
-import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
+import com.hp.score.content.ssh.entities.SSHShellInputs;
 import com.hp.score.content.ssh.utils.Constants;
-import com.hp.score.content.ssh.utils.StringUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,48 +43,17 @@ public class SSHShellLogon extends SSHShellAbstract {
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO Session global
             @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext) {
 
-        Map<String, String> returnResult = new HashMap<>();
-        boolean providerAdded = addSecurityProvider();
-
-        try {
-            // default values
-            int portNumber = StringUtils.toInt(port, Constants.DEFAULT_PORT);
-            boolean useGlobalContextBoolean = StringUtils.toBoolean(useGlobalContext, Constants.DEFAULT_USE_GLOBAL_CONTEXT);
-
-            // configure ssh parameters
-            ConnectionDetails connection = new ConnectionDetails(host, portNumber, username, password);
-            KeyFile keyFile = getKeyFile(privateKeyFile, password);
-
-            // get the cached SSH session
-            String sessionId = "sshSession:" + host + "-" + portNumber + "-" + username;
-            synchronized (sessionId) {
-                SSHService service = getFromCache(globalSessionObject, sessionObject, useGlobalContextBoolean, sessionId);
-                boolean saveSSHSession = false;
-                if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {
-                    saveSSHSession = true;
-                    service = new SSHServiceImpl(connection, keyFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);
-                }
-                // save SSH session in the cache
-                if (saveSSHSession) {
-                    saveToCache(globalSessionObject, sessionObject, useGlobalContextBoolean, service, sessionId);
-                }
-            }
-
-            // populate the results
-            populateResult(returnResult, sessionId);
-        } catch (Exception e) {
-            populateResult(returnResult, e);
-        } finally {
-            if (providerAdded) {
-                removeSecurityProvider();
-            }
-        }
-        return returnResult;
+        SSHShellInputs sshShellInputs = new SSHShellInputs();
+        sshShellInputs.setHost(host);
+        sshShellInputs.setPort(port);
+        sshShellInputs.setUsername(username);
+        sshShellInputs.setPassword(password);
+        sshShellInputs.setPrivateKeyFile(privateKeyFile);
+        sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
+        sshShellInputs.setSshSessionObject(sessionObject);
+        sshShellInputs.setUseGlobalContext(useGlobalContext);
+        return new ScoreSSHShellLogon().execute(sshShellInputs);
     }
 
-    private void populateResult(Map<String, String> returnResult, String sessionId) {
-        returnResult.put(Constants.SESSION_ID, sessionId);
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, sessionId);
-        returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-    }
+
 }

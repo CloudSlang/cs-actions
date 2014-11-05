@@ -7,11 +7,12 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.score.content.ssh.services.actions.SSHShellAbstract;
+import com.hp.score.content.ssh.services.actions.ScoreSSHShellLogOff;
 import com.hp.score.content.ssh.entities.SSHConnection;
-import com.hp.score.content.ssh.services.SSHService;
+import com.hp.score.content.ssh.entities.SSHShellInputs;
 import com.hp.score.content.ssh.utils.Constants;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,23 +37,11 @@ public class SSHShellLogoff extends SSHShellAbstract {
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, // TODO Session object
             @Param(value = Constants.SESSION_ID, required = true) String sessionId) {
 
-        Map<String, String> returnResult = new HashMap<>();
-        try {
-            // get the cached SSH session
-            SSHService service = getFromCache(globalSessionObject, sessionObject, sessionId);
-            if (service == null) {
-                throw new RuntimeException("Could not find sessionId in the session context.");
-            }
+        SSHShellInputs sshShellInputs = new SSHShellInputs();
+        sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
+        sshShellInputs.setSshSessionObject(sessionObject);
+        sshShellInputs.setSessionId(sessionId);
 
-            // close the SSH session
-            service.close();
-            service.removeFromCache(globalSessionObject, sessionId);
-            service.removeFromCache(sessionObject, sessionId);
-
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-        } catch (Exception e) {
-            populateResult(returnResult, e);
-        }
-        return returnResult;
+        return new ScoreSSHShellLogOff().execute(sshShellInputs);
     }
 }

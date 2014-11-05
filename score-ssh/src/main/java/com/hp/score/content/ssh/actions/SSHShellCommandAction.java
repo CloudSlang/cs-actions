@@ -7,14 +7,10 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.score.content.ssh.actions.services.ScoreSSHShellCommand;
+import com.hp.score.content.ssh.services.actions.ScoreSSHShellCommand;
 import com.hp.score.content.ssh.entities.*;
-import com.hp.score.content.ssh.services.SSHService;
-import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
 import com.hp.score.content.ssh.utils.Constants;
-import com.hp.score.content.ssh.utils.StringUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

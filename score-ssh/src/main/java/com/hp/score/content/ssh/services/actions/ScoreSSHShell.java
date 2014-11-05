@@ -1,6 +1,5 @@
-package com.hp.score.content.ssh.actions.services;
+package com.hp.score.content.ssh.services.actions;
 
-import com.hp.score.content.ssh.actions.SSHShellAbstract;
 import com.hp.score.content.ssh.entities.ConnectionDetails;
 import com.hp.score.content.ssh.entities.ExpectCommandResult;
 import com.hp.score.content.ssh.entities.KeyFile;

@@ -1,4 +1,4 @@
-package com.hp.score.content.ssh.actions;
+package com.hp.score.content.ssh.services.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;
@@ -25,21 +25,10 @@ public abstract class SSHShellAbstract {
         Provider provider = Security.getProvider("BC");
         if (provider == null) {
             providerAdded = true;
-//            Security.insertProviderAt(new BouncyCastleProvider(), 2);
+            Security.insertProviderAt(new BouncyCastleProvider(), 2);
         }
         return providerAdded;
     }
-
-//    protected boolean addSecurityProvider() {
-//        boolean providerAdded = false;
-//        Provider provider = Security.getProvider(JsafeJCE.BASE_PROVIDER_NAME);
-//        if (provider == null) {
-//            providerAdded = true;
-//            Security.insertProviderAt(new JsafeJCE(), 2);
-//        }
-//        return providerAdded;
-//    }
-
     protected void removeSecurityProvider() {
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
     }
