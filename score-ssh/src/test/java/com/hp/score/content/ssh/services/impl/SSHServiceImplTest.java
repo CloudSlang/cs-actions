@@ -1,9 +1,12 @@
 package com.hp.score.content.ssh.services.impl;
 
+import com.hp.score.content.ssh.actions.SSHShellCommandAction;
 import com.hp.score.content.ssh.entities.CommandResult;
 import com.hp.score.content.ssh.entities.ExpectCommandResult;
+import com.hp.score.content.ssh.entities.SSHConnection;
 import com.hp.score.content.ssh.services.SSHService;
 import com.hp.score.content.ssh.utils.CacheUtils;
+import com.hp.score.content.ssh.utils.Constants;
 import com.hp.score.content.ssh.utils.simulator.ShellSimulator;
 import com.hp.score.content.ssh.utils.simulator.visualization.IShellVisualizer;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
@@ -22,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
@@ -156,5 +160,37 @@ public class SSHServiceImplTest {
     public void testRemoveFromCache() throws Exception {
         sshServiceSpy.removeFromCache(new GlobalSessionObject<>(),"");
         PowerMockito.verifyStatic(times(1));
+    }
+
+    @Test
+    public void testBasic() {
+        String user = "demo";
+//        String user = "root";
+//        String user = "Administrator";
+        String host = "16.84.193.91";
+//        String host = "16.77.58.180";
+//        String host = "16.77.42.143";
+//        String host = "16.77.45.100";
+        String password = "hpinvent";
+//        String password = "B33f34t3r";
+        String strCommand = "show network\n";
+        SSHShellCommandAction command = new SSHShellCommandAction();
+        Map<String, String> results = command.runSshShellCommand(
+                host,
+                "",
+                user,
+                password,
+                "",
+                strCommand,
+                "",
+                "utf-8",
+                "",
+                "10000",
+                new GlobalSessionObject<Map<String, SSHConnection>>(),
+                new GlobalSessionObject<Map<String, SSHConnection>>(),
+                "true",
+                "true"
+        );
+        System.out.println(results.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

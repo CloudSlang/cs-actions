@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.score.content.ssh.actions.services.ScoreSSHShell;
+import com.hp.score.content.ssh.actions.services.ScoreSSHShellCommand;
 import com.hp.score.content.ssh.entities.*;
 import com.hp.score.content.ssh.services.SSHService;
 import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
@@ -19,37 +19,38 @@ import java.util.Map;
 
 /**
  * @author ioanvranauhp
- *         Date: 11/03/14
+ *         Date: 10/29/14
  */
-public class SSHShell extends SSHShellAbstract {
+public class SSHShellCommandAction {
 
-    @Action(name = "SSH Shell",
+    @Action(name = "SSH Command",
             outputs = {
                     @Output(Constants.OutputNames.RETURN_CODE),
                     @Output(Constants.OutputNames.RETURN_RESULT),
                     @Output(Constants.OutputNames.EXCEPTION),
                     @Output(Constants.STDOUT),
-                    @Output(Constants.VISUALIZED)
+                    @Output(Constants.STDERR)
             },
             responses = {
                     @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             }
     )
-    public Map<String, String> runSshExpectCommand(
+    public Map<String, String> runSshShellCommand(
             @Param(value = Constants.InputNames.HOST, required = true) String host,
             @Param(Constants.InputNames.PORT) String port,
             @Param(value = Constants.InputNames.USERNAME, required = true) String username,
             @Param(value = Constants.InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
             @Param(value = Constants.COMMAND, required = true) String command,
+            @Param(value = Constants.ARGS, description = Constants.ARGS_IS_DEPRECATED) String arguments,
             @Param(Constants.InputNames.CHARACTER_SET) String characterSet,
-            @Param(Constants.CHARACTER_DELAY) String characterDelay,
-            @Param(Constants.NEWLINE_SEQUENCE) String newlineCharacters,
+            @Param(value = Constants.PTY) String pty,  //, required = true
             @Param(Constants.InputNames.TIMEOUT) String timeout,
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
-            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, // todo session object global
-            @Param(Constants.SESSION_ID) String sessionId) {
+            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO SessionObject?
+            @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext,
+            @Param(Constants.CLOSE_SESSION) String closeSession) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
         sshShellInputs.setHost(host);
@@ -58,14 +59,15 @@ public class SSHShell extends SSHShellAbstract {
         sshShellInputs.setPassword(password);
         sshShellInputs.setPrivateKeyFile(privateKeyFile);
         sshShellInputs.setCommand(command);
+        sshShellInputs.setArguments(arguments);
         sshShellInputs.setCharacterSet(characterSet);
-        sshShellInputs.setCharacterDelay(characterDelay);
-        sshShellInputs.setNewlineCharacters(newlineCharacters);
+        sshShellInputs.setPty(pty);
         sshShellInputs.setTimeout(timeout);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
         sshShellInputs.setSshSessionObject(sessionObject);
-        sshShellInputs.setSessionId(sessionId);
+        sshShellInputs.setUseGlobalContext(useGlobalContext);
+        sshShellInputs.setCloseSession(closeSession);
 
-        return new ScoreSSHShell().execute(sshShellInputs);
+        return new ScoreSSHShellCommand().execute(sshShellInputs);
     }
 }
