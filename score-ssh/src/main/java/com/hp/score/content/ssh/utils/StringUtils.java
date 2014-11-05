@@ -71,4 +71,8 @@ public class StringUtils {
         pw.close();
         return sw.toString();
     }
+
+    public static boolean isEmpty(String value) {
+        return value == null || value.length() == 0;
+    }
 }

@@ -25,8 +25,8 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         String sessionId = "";
 
         try {
-            if (sshShellInputs.getCommand() == null || sshShellInputs.getCommand().length() == 0) {
-                throw new RuntimeException("Command is not specified.");
+            if (StringUtils.isEmpty(sshShellInputs.getCommand())) {
+                throw new RuntimeException(COMMAND_IS_NOT_SPECIFIED_MESSAGE);
             }
 
             // default values

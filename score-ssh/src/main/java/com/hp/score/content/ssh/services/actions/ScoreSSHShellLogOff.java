@@ -11,13 +11,16 @@ import java.util.Map;
  * Created by vranau on 11/5/2014.
  */
 public class ScoreSSHShellLogOff extends SSHShellAbstract {
+
+    public static final String SESSION_ID_NOT_IN_SESSION_CONTEXT_MESSAGE = "Could not find sessionId in the session context.";
+
     public Map<String, String> execute(SSHShellInputs sshShellInputs) {
         Map<String, String> returnResult = new HashMap<>();
         try {
             // get the cached SSH session
             SSHService service = getFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
             if (service == null) {
-                throw new RuntimeException("Could not find sessionId in the session context.");
+                throw new RuntimeException(SESSION_ID_NOT_IN_SESSION_CONTEXT_MESSAGE);
             }
 
             // close the SSH session

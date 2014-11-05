@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public abstract class SSHShellAbstract {
 
+    public static final String COMMAND_IS_NOT_SPECIFIED_MESSAGE = "Command is not specified.";
+
     protected boolean addSecurityProvider() {
         boolean providerAdded = false;
         Provider provider = Security.getProvider("BC");

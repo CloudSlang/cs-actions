@@ -23,8 +23,8 @@ public class ScoreSSHShell extends SSHShellAbstract {
         boolean providerAdded = addSecurityProvider();
 
         try {
-            if (sshShellInputs.getCommand() == null || sshShellInputs.getCommand().length() == 0) {
-                throw new RuntimeException("Command is not specified.");
+            if (StringUtils.isEmpty(sshShellInputs.getCommand())) {
+                throw new RuntimeException(COMMAND_IS_NOT_SPECIFIED_MESSAGE);
             }
 
             // default values
@@ -67,6 +67,8 @@ public class ScoreSSHShell extends SSHShellAbstract {
         }
         return returnResult;
     }
+
+
 
     private void populateResult(Map<String, String> returnResult, ExpectCommandResult commandResult) {
         returnResult.put(Constants.STDOUT, commandResult.getStandardOutput());
