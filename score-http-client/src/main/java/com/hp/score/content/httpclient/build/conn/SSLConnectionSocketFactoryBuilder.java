@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 /**
  * Created with IntelliJ IDEA.
@@ -98,7 +99,14 @@ public class SSLConnectionSocketFactoryBuilder {
             createKeystore(sslContextBuilder, useClientCert);
         } else {
             try {
-                sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+                //need to override isTrusted() method to accept CA certs because the Apache HTTP Client ver.4.3 will only accepts self-signed certificates
+                sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy() {
+                    @Override
+                    public boolean isTrusted(X509Certificate[] chain, String authType)
+                            throws CertificateException {
+                        return true;
+                    }
+                });
             } catch (Exception e) {
                 throw new IllegalArgumentException(e.getMessage() + ". " + TRUST_ALL_ROOTS_ERROR + trustAllRoots, e);
             }
@@ -111,7 +119,7 @@ public class SSLConnectionSocketFactoryBuilder {
         try {
             String x509HostnameVerifierStr = x509HostnameVerifier.toLowerCase();
             X509HostnameVerifier x509HostnameVerifier = null;
-            switch (x509HostnameVerifierStr){
+            switch (x509HostnameVerifierStr) {
                 case "strict":
                     x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
                     break;
@@ -127,7 +135,7 @@ public class SSLConnectionSocketFactoryBuilder {
 
             sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), x509HostnameVerifier);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage() + ". " +  SSL_CONNECTION_ERROR, e);
+            throw new RuntimeException(e.getMessage() + ". " + SSL_CONNECTION_ERROR, e);
         }
         return sslsf;
     }
@@ -139,9 +147,9 @@ public class SSLConnectionSocketFactoryBuilder {
                 clientKeyStore = createKeyStore(new URL(keystore), keystorePassword);
                 sslContextBuilder.loadKeyMaterial(clientKeyStore, keystorePassword.toCharArray());
             } catch (UnrecoverableKeyException | IOException ue) {
-                throw new IllegalArgumentException(ue.getMessage()  + ". " +  BAD_KEYSTORE_ERROR, ue);
+                throw new IllegalArgumentException(ue.getMessage() + ". " + BAD_KEYSTORE_ERROR, ue);
             } catch (GeneralSecurityException gse) {
-                throw new IllegalArgumentException(gse.getMessage()  + ". " +  INVALID_KEYSTORE_ERROR, gse);
+                throw new IllegalArgumentException(gse.getMessage() + ". " + INVALID_KEYSTORE_ERROR, gse);
             }
         }
     }
@@ -154,9 +162,9 @@ public class SSLConnectionSocketFactoryBuilder {
                 trustKeyStore = createKeyStore(new URL(trustKeystore), trustPassword);
                 sslContextBuilder.loadTrustMaterial(trustKeyStore);
             } catch (IOException ioe) {
-                throw new IllegalArgumentException(ioe.getMessage()  + ". " +  BAD_TRUST_KEYSTORE_ERROR, ioe);
+                throw new IllegalArgumentException(ioe.getMessage() + ". " + BAD_TRUST_KEYSTORE_ERROR, ioe);
             } catch (GeneralSecurityException gse) {
-                throw new IllegalArgumentException(gse.getMessage() + ". " + INVALID_TRUST_KEYSTORE_ERROR , gse);
+                throw new IllegalArgumentException(gse.getMessage() + ". " + INVALID_TRUST_KEYSTORE_ERROR, gse);
             }
         }
     }

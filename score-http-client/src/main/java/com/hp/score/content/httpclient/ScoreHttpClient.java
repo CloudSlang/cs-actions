@@ -18,7 +18,6 @@
 */
 package com.hp.score.content.httpclient;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import com.hp.score.content.httpclient.build.*;
 import com.hp.score.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
