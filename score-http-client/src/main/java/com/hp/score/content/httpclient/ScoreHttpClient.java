@@ -18,14 +18,19 @@
 */
 package com.hp.score.content.httpclient;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import com.hp.score.content.httpclient.build.*;
-import com.hp.score.content.httpclient.build.RequestBuilder;
 import com.hp.score.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
 import com.hp.score.content.httpclient.build.auth.AuthTypes;
 import com.hp.score.content.httpclient.build.auth.CredentialsProviderBuilder;
 import com.hp.score.content.httpclient.build.conn.ConnectionManagerBuilder;
 import com.hp.score.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
+import com.hp.score.content.httpclient.consume.FinalLocationConsumer;
+import com.hp.score.content.httpclient.consume.HeadersConsumer;
+import com.hp.score.content.httpclient.consume.HttpResponseConsumer;
+import com.hp.score.content.httpclient.consume.StatusConsumer;
+import com.hp.score.content.httpclient.execute.HttpClientExecutor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -33,7 +38,8 @@ import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Lookup;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -43,15 +49,12 @@ import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import com.hp.score.content.httpclient.consume.FinalLocationConsumer;
-import com.hp.score.content.httpclient.consume.HeadersConsumer;
-import com.hp.score.content.httpclient.consume.HttpResponseConsumer;
-import com.hp.score.content.httpclient.consume.StatusConsumer;
-import com.hp.score.content.httpclient.execute.HttpClientExecutor;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -140,17 +143,16 @@ public class ScoreHttpClient {
                 .setChunkedRequestEntity(httpClientInputs.getChunkedRequestEntity())
                 .buildEntity();
 
-        HttpRequestBase httpRequestBase =  requestBuilder
+        HttpRequestBase httpRequestBase = requestBuilder
                 .setMethod(httpClientInputs.getMethod())
                 .setUri(uri)
                 .setEntity(httpEntity).build();
 
-        Header[] theHeaders = headersBuilder
+        List<Header> theHeaders = headersBuilder
                 .setHeaders(httpClientInputs.getHeaders())
                 .setContentType(theContentType)
                 .setEntityContentType(httpEntity != null ? httpEntity.getContentType() : null)
                 .buildHeaders();
-        httpRequestBase.setHeaders(theHeaders);
 
         RequestConfig requestConfig = requestConfigBuilder
                 .setConnectionTimeout(httpClientInputs.getConnectTimeout())
@@ -178,10 +180,10 @@ public class ScoreHttpClient {
                 .buildCredentialsProvider();
         httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
-
         Lookup<AuthSchemeProvider> authSchemeLookup = authSchemeProviderLookupBuilder
                 .setAuthTypes(authTypes)
                 .setHost(uri.getHost())
+                .setHeaders(theHeaders)
                 .setSkipPortAtKerberosDatabaseLookup(httpClientInputs.getKerberosSkipPortCheck())
                 .setKerberosConfigFile(httpClientInputs.getKerberosConfFile())
                 .setKerberosLoginConfigFile(httpClientInputs.getKerberosLoginConfFile())
@@ -189,6 +191,8 @@ public class ScoreHttpClient {
                 .setPassword(httpClientInputs.getPassword())
                 .buildAuthSchemeProviderLookup();
         httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeLookup);
+
+        httpRequestBase.setHeaders(theHeaders.toArray(new Header[theHeaders.size()]));
 
         CookieStore cookieStore = httpClientInputs.getCookieStoreSessionObject() == null ? null : cookieStoreBuilder
                 .setUseCookies(httpClientInputs.getUseCookies())
@@ -221,7 +225,7 @@ public class ScoreHttpClient {
 
         httpClientBuilder.setConnectionManager(connManager);
 
-        if (StringUtils.isEmpty(httpClientInputs.getKeepAlive()) || Boolean.parseBoolean(httpClientInputs.getKeepAlive()) ) {
+        if (StringUtils.isEmpty(httpClientInputs.getKeepAlive()) || Boolean.parseBoolean(httpClientInputs.getKeepAlive())) {
             httpClientBuilder.setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE);
         } else {
             httpClientBuilder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
@@ -265,7 +269,7 @@ public class ScoreHttpClient {
                                              HttpClientContext httpClientContext,
                                              CookieStore cookieStore,
                                              SerializableSessionObject cookieStoreSessionObject
-                                             ) {
+    ) {
         Map<String, String> result = new HashMap<>();
 
         try {

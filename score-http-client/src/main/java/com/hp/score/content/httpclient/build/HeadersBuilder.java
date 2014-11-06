@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HeadersBuilder {
     private String headers;
@@ -50,7 +51,7 @@ public class HeadersBuilder {
         return this;
     }
 
-    public Header[] buildHeaders() {
+    public List<Header> buildHeaders() {
         ArrayList<Header> headersArr = new ArrayList<>();
         if (!StringUtils.isEmpty(headers)) {
             BufferedReader in = new BufferedReader(new StringReader(headers));
@@ -72,6 +73,6 @@ public class HeadersBuilder {
         } else if (contentType != null && !contentType.toString().isEmpty()) {
             headersArr.add(new BasicHeader("Content-Type", contentType.toString()));
         }
-        return headersArr.toArray(new Header[headersArr.size()]);
+        return headersArr;
     }
 }

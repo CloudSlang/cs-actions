@@ -18,8 +18,7 @@
 */
 package com.hp.score.content.httpclient.build.auth;
 
-import com.hp.score.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
-import com.hp.score.content.httpclient.build.auth.AuthTypes;
+import org.apache.http.Header;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.config.Lookup;
@@ -28,6 +27,8 @@ import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.auth.DigestSchemeFactory;
 import org.apache.http.impl.auth.KerberosSchemeFactory;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -41,30 +42,30 @@ import static org.junit.Assert.assertThat;
 public class AuthSchemeProviderLookupBuilderTest {
 
     @Test
-    public void buildLookupWithBasicAuth(){
+    public void buildLookupWithBasicAuth() {
         AuthSchemeProvider provider = getAuthSchemeProvider(AuthSchemes.BASIC);
         assertThat(provider, instanceOf(BasicSchemeFactory.class));
-        BasicScheme basicSchema = ((BasicScheme)provider.create(null));
+        BasicScheme basicSchema = ((BasicScheme) provider.create(null));
         assertEquals("UTF-8", basicSchema.getCredentialsCharset().toString());
     }
 
     @Test
-    public void buildLookupWithDigestAuth(){
+    public void buildLookupWithDigestAuth() {
         AuthSchemeProvider provider = getAuthSchemeProvider(AuthSchemes.DIGEST);
         assertThat(provider, instanceOf(DigestSchemeFactory.class));
     }
 
     @Test
-    public void buildLookupWithKerberosAuth(){
+    public void buildLookupWithKerberosAuth() {
         AuthTypes authTypes = new AuthTypes(AuthSchemes.KERBEROS);
-        AuthSchemeProvider provider =  new AuthSchemeProviderLookupBuilder()
+        AuthSchemeProvider provider = new AuthSchemeProviderLookupBuilder()
                 .setAuthTypes(authTypes)
                 .setHost("myweb.contoso.com").buildAuthSchemeProviderLookup().lookup(AuthSchemes.KERBEROS);
         assertThat(provider, instanceOf(KerberosSchemeFactory.class));
     }
 
     @Test
-    public void buildLookupWithNtlmAuth(){
+    public void buildLookupWithNtlmAuth() {
         AuthSchemeProvider provider = getAuthSchemeProvider(AuthSchemes.NTLM);
         assertThat(provider, instanceOf(AuthSchemeProvider.class));
     }
@@ -72,8 +73,10 @@ public class AuthSchemeProviderLookupBuilderTest {
 
     private AuthSchemeProvider getAuthSchemeProvider(String authType) {
         AuthTypes authTypes = new AuthTypes(authType);
-        Lookup<AuthSchemeProvider> lookup =  new AuthSchemeProviderLookupBuilder()
-                .setAuthTypes(authTypes).buildAuthSchemeProviderLookup();
+        Lookup<AuthSchemeProvider> lookup = new AuthSchemeProviderLookupBuilder()
+                .setHeaders(new ArrayList<Header>())
+                .setAuthTypes(authTypes)
+                .buildAuthSchemeProviderLookup();
         return lookup.lookup(authType);
     }
 }

@@ -18,22 +18,27 @@
 */
 package com.hp.score.content.httpclient.build.auth;
 
+import com.hp.score.content.httpclient.HttpClientInputs;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.auth.AuthScheme;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.impl.auth.*;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
-import com.hp.score.content.httpclient.HttpClientInputs;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AuthSchemeProviderLookupBuilder {
     private AuthTypes authTypes;
@@ -43,6 +48,7 @@ public class AuthSchemeProviderLookupBuilder {
     private String host;
     private String username;
     private String password;
+    private List<Header> headers;
 
     public AuthSchemeProviderLookupBuilder setAuthTypes(AuthTypes authTypes) {
         this.authTypes = authTypes;
@@ -79,6 +85,12 @@ public class AuthSchemeProviderLookupBuilder {
     public AuthSchemeProviderLookupBuilder setPassword(String password) {
         this.password = password;
         return this;
+
+    }
+
+    public AuthSchemeProviderLookupBuilder setHeaders(List<Header> headers) {
+        this.headers = headers;
+        return this;
     }
 
     public Lookup<AuthSchemeProvider> buildAuthSchemeProviderLookup() {
@@ -96,6 +108,9 @@ public class AuthSchemeProviderLookupBuilder {
                     break;
                 case "BASIC":
                     registryBuilder.register(AuthSchemes.BASIC, new BasicSchemeFactory(Charset.forName("UTF-8")));
+                    String value = username + ":" + password;
+                    byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
+                    headers.add(new BasicHeader("Authorization", "Basic " + new String(encodedValue)));
                     break;
                 case "DIGEST":
                     registryBuilder.register(AuthSchemes.DIGEST, new DigestSchemeFactory());
@@ -130,23 +145,23 @@ public class AuthSchemeProviderLookupBuilder {
                     }
 
                     //todo fix security issue
-                    if (password!=null) {
+                    if (password != null) {
                         System.setProperty(KrbHttpLoginModule.PAS, password);
                     }
-                    if (username!=null) {
+                    if (username != null) {
                         System.setProperty(KrbHttpLoginModule.USR, username);
                     }
 
-                    System.setProperty("javax.security.auth.useSubjectCredsOnly","false");
+                    System.setProperty("javax.security.auth.useSubjectCredsOnly", "false");
 
                     boolean skipPort = Boolean.parseBoolean(skipPortAtKerberosDatabaseLookup);
                     registryBuilder.register(AuthSchemes.KERBEROS, new KerberosSchemeFactory(skipPort));
                     registryBuilder.register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(skipPort));
-                    System.setProperty("oohttpclient.krb.last.settings",getSettingsKey());
+                    System.setProperty("oohttpclient.krb.last.settings", getSettingsKey());
                     break;
                 default:
-                    throw new IllegalStateException("Unsupported '"+ HttpClientInputs.AUTH_TYPE
-                            +"'authentication scheme: " + type);
+                    throw new IllegalStateException("Unsupported '" + HttpClientInputs.AUTH_TYPE
+                            + "'authentication scheme: " + type);
             }
         }
         return registryBuilder.build();
@@ -158,17 +173,18 @@ public class AuthSchemeProviderLookupBuilder {
         tempFile.deleteOnExit();
         ArrayList<String> lines = new ArrayList<>();
         lines.add("[libdefaults]");
-        lines.add("\tdefault_realm = "+domain.toUpperCase());
+        lines.add("\tdefault_realm = " + domain.toUpperCase());
         lines.add("[realms]");
-        lines.add("\t"+domain.toUpperCase()+" = {");
-        lines.add("\t\tkdc = "+domain);
-        lines.add("\t\tadmin_server = "+domain);
+        lines.add("\t" + domain.toUpperCase() + " = {");
+        lines.add("\t\tkdc = " + domain);
+        lines.add("\t\tadmin_server = " + domain);
         lines.add("\t}");
         FileWriter writer = new FileWriter(tempFile);
         IOUtils.writeLines(lines, System.lineSeparator(), writer);
         IOUtils.closeQuietly(writer);
         return tempFile;
     }
+
     private static File createLoginConfig() throws IOException {
         File tempFile = File.createTempFile("krb", "loginConf");
         tempFile.deleteOnExit();
