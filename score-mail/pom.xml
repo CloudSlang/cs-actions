@@ -29,15 +29,38 @@
     </distributionManagement>
 
     <dependencies>
-    <dependency>
-        <groupId>com.hp.score.sdk</groupId>
-        <artifactId>score-content-sdk</artifactId>
-        <version>1.4</version>
-    </dependency>
         <dependency>
-            <groupId>com.ibm.websphere</groupId>
-            <artifactId>ws_runtime</artifactId>
-            <version>6.1.0</version>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hp.score.content</groupId>
+            <artifactId>score-http-client</artifactId>
+            <version>0.1.34</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -54,11 +54,12 @@ public class SendMailAction {
         sendMailInputs.setPort(port);
         sendMailInputs.setHtmlEmail(htmlEmail);
         sendMailInputs.setFrom(from);
+        sendMailInputs.setTo(to);
         sendMailInputs.setCc(cc);
         sendMailInputs.setBcc(bcc);
         sendMailInputs.setSubject(subject);
         sendMailInputs.setBody(body);
-        sendMailInputs.setRead_receipt(readReceipt);
+        sendMailInputs.setReadReceipt(readReceipt);
         sendMailInputs.setAttachments(attachments);
         sendMailInputs.setUser(user);
         sendMailInputs.setPassword(password);
