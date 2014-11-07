@@ -6,7 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.hp.score.content.mail.actionsinp.GetMailMessageInputs;
+import com.hp.score.content.mail.entities.GetMailMessageInputs;
 import com.hp.score.content.mail.entities.GetMailMessage;
 
 import java.io.PrintWriter;

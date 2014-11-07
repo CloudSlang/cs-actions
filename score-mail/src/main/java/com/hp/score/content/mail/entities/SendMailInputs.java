@@ -1,4 +1,4 @@
-package com.hp.score.content.mail.actionsinp;
+package com.hp.score.content.mail.entities;
 
 /**
  * Created by giloan on 10/30/2014.

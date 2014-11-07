@@ -1,6 +1,5 @@
 package com.hp.score.content.mail.entities;
 
-import com.hp.score.content.mail.actionsinp.GetMailMessageInputs;
 import org.junit.After;
 import org.junit.Before;
 

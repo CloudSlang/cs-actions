@@ -1,6 +1,5 @@
 package com.hp.score.content.mail.entities;
 
-import com.hp.score.content.mail.actionsinp.GetMailMessageInputs;
 import com.hp.score.content.mail.sslconfig.EasyX509TrustManager;
 import com.hp.score.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;

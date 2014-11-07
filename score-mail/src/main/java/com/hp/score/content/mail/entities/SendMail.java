@@ -1,6 +1,5 @@
 package com.hp.score.content.mail.entities;
 
-import com.hp.score.content.mail.actionsinp.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
 
 import javax.activation.DataHandler;
