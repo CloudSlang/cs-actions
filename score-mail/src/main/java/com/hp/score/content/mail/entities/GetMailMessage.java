@@ -126,7 +126,7 @@ public class GetMailMessage {
         return result;
     }
 
-    private Store configureStore() throws Exception {
+    protected Store configureStore() throws Exception {
         Properties props = new Properties();
         Authenticator auth = new SimpleAuthenticator(username, password);
         Store store;
