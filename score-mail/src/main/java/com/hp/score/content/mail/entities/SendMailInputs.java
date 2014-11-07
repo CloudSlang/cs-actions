@@ -111,11 +111,11 @@ public class SendMailInputs {
         this.body = body;
     }
 
-    public String getRead_receipt() {
+    public String getReadReceipt() {
         return read_receipt;
     }
 
-    public void setRead_receipt(String read_receipt) {
+    public void setReadReceipt(String read_receipt) {
         this.read_receipt = read_receipt;
     }
 
