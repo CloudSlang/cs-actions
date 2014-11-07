@@ -1,5 +1,6 @@
 package com.hp.score.content.mail.entities;
 
+import com.hp.score.content.mail.actionsinp.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +13,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
@@ -20,7 +24,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
@@ -242,6 +248,7 @@ public class SendMailTest {
         // 3 invocations, one for html setting and one for each of the attachments
         PowerMockito.verifyNew(MimeBodyPart.class, times(3)).withNoArguments();
         verify(mimeBodyPartMock, times(3)).setHeader(CONTENT_TRANSFER_ENCODING, DEFAULT_CONTENT_TRANSFER_ENCODING);
+
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.hp.score.content.mail.actionsInputs;
+package com.hp.score.content.mail.actionsinp;
 
 /**
  * Created by giloan on 10/30/2014.
@@ -111,11 +111,11 @@ public class SendMailInputs {
         this.body = body;
     }
 
-    public String getRead_receipt() {
+    public String getReadReceipt() {
         return read_receipt;
     }
 
-    public void setRead_receipt(String read_receipt) {
+    public void setReadReceipt(String read_receipt) {
         this.read_receipt = read_receipt;
     }
 

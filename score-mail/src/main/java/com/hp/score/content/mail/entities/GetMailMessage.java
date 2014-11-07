@@ -1,8 +1,8 @@
 package com.hp.score.content.mail.entities;
 
-import com.hp.score.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
-import com.hp.score.content.mail.sslconfiguration.EasyX509TrustManager;
-import com.hp.score.content.mail.sslconfiguration.SSLUtils;
+import com.hp.score.content.mail.actionsinp.GetMailMessageInputs;
+import com.hp.score.content.mail.sslconfig.EasyX509TrustManager;
+import com.hp.score.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;
 
 import javax.mail.*;
@@ -40,8 +40,6 @@ public class GetMailMessage {
     public static final String SUCCESS_RETURN_CODE = "0";
     public static final String FAILURE_RETURN_CODE = "-1";
 
-    public static final String HOSTNAME_VERIFIER_ALLOW_ALL = "allow_all";
-
     //Operation inputs
     private String host;
     private String port;
@@ -62,8 +60,6 @@ public class GetMailMessage {
     private String trustPassword;
     private String characterSet;
     private boolean deleteUponRetrieval;
-
-    private SSLConnectionSocketFactoryBuilder sslConnectionSocketFactoryBuilder;
 
     public Map<String, String> execute(GetMailMessageInputs getMailMessageInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
@@ -199,20 +195,6 @@ public class GetMailMessage {
         SSLContext context = SSLContext.getInstance("SSL");
         TrustManager[] trustManagers = null;
         KeyManager[] keyManagers = null;
-
-        // old code for creating keystore and trust managers
-//        if (trustAllRoots) {
-//            trustManagers = new TrustManager[]{new EasyX509TrustManager(null)};
-//        }
-//
-//        if (useTrustCert) {
-//            KeyStore trustKeyStore = OOHttpClientBuilder.createKeyStore(new URL(trustKeystore), trustPassword);
-//            trustManagers = OOHttpClientBuilder.createAuthTrustManagers(trustKeyStore);
-//        }
-//        if (useClientCert) {
-//            KeyStore clientKeyStore = OOHttpClientBuilder.createKeyStore(new URL(keystore), keystorePassword);
-//            keyManagers = OOHttpClientBuilder.createKeyManagers(clientKeyStore, keystorePassword);
-//        }
 
         if (trustAllRoots) {
             trustManagers = new TrustManager[]{new EasyX509TrustManager(null)};

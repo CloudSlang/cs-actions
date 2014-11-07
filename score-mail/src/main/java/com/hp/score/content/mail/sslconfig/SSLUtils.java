@@ -1,4 +1,4 @@
-package com.hp.score.content.mail.sslconfiguration;
+package com.hp.score.content.mail.sslconfig;
 
 import javax.net.ssl.*;
 import java.io.IOException;
