@@ -3,7 +3,7 @@ package com.hp.score.content.mail.entities;
 /**
  * Created by giloan on 11/5/2014.
  */
-class StringOutputStream extends java.io.OutputStream{
+public class StringOutputStream extends java.io.OutputStream{
     String written;
 
     public StringOutputStream(){

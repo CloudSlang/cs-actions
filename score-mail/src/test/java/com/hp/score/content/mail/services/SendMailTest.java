@@ -1,5 +1,7 @@
-package com.hp.score.content.mail.entities;
+package com.hp.score.content.mail.services;
 
+import com.hp.score.content.mail.entities.SendMailInputs;
+import com.hp.score.content.mail.services.SendMail;
 import com.sun.mail.smtp.SMTPMessage;
 import org.junit.After;
 import org.junit.Before;

@@ -1,5 +1,8 @@
-package com.hp.score.content.mail.entities;
+package com.hp.score.content.mail.services;
 
+import com.hp.score.content.mail.entities.GetMailMessageInputs;
+import com.hp.score.content.mail.entities.SimpleAuthenticator;
+import com.hp.score.content.mail.entities.StringOutputStream;
 import com.hp.score.content.mail.sslconfig.EasyX509TrustManager;
 import com.hp.score.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;
@@ -154,7 +157,7 @@ public class GetMailMessage {
         return store;
     }
 
-    public void addSSLSettings(boolean trustAllRoots, String keystore,
+    protected void addSSLSettings(boolean trustAllRoots, String keystore,
                                String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
         boolean useClientCert = false;
         boolean useTrustCert = false;
@@ -212,7 +215,7 @@ public class GetMailMessage {
         SSLContext.setDefault(context);
     }
 
-    private void processInputs(GetMailMessageInputs getMailMessageInputs) throws Exception {
+    protected void processInputs(GetMailMessageInputs getMailMessageInputs) throws Exception {
         host = getMailMessageInputs.getHostname();
         port = getMailMessageInputs.getPort();
         protocol = getMailMessageInputs.getProtocol();
@@ -268,7 +271,7 @@ public class GetMailMessage {
         }
     }
 
-    public String getMessageContent(Message message, String characterSet) throws Exception {
+    protected String getMessageContent(Message message, String characterSet) throws Exception {
         String cmessage = "";
 
         if (message.isMimeType("text/plain")) {
@@ -314,7 +317,7 @@ public class GetMailMessage {
         return cmessage;
     }
 
-    public String getAttachedFileNames(Part part) throws Exception {
+    protected String getAttachedFileNames(Part part) throws Exception {
         String fileNames = "";
         Object content = part.getContent();
         if (!(content instanceof Multipart)) {
@@ -344,7 +347,7 @@ public class GetMailMessage {
         return fileNames;
     }
 
-    private String decodeAttachedFileNames(String attachedFileNames) throws Exception {
+    protected String decodeAttachedFileNames(String attachedFileNames) throws Exception {
         StringBuilder sb = new StringBuilder();
         String delimiter = "";
         // splits the input into comma-separated chunks and decodes each chunk according to its encoding ...
@@ -356,7 +359,7 @@ public class GetMailMessage {
         return sb.toString();
     }
 
-    public String convertMessage(String msg) throws Exception {
+    protected String convertMessage(String msg) throws Exception {
 
         StringBuffer sb = new StringBuffer();
 
@@ -373,7 +376,7 @@ public class GetMailMessage {
         return returnString;
     }
 
-    private int getFolderOpenMode() {
+    protected int getFolderOpenMode() {
         return Folder.READ_ONLY;
     }
 
