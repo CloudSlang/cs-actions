@@ -1,9 +1,13 @@
-package com.hp.score.content.mail.entities;
+package com.hp.score.content.mail.services;
 
+import com.hp.score.content.mail.entities.SendMailInputs;
+import com.hp.score.content.mail.services.SendMail;
 import com.sun.mail.smtp.SMTPMessage;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -12,10 +16,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
@@ -42,19 +45,16 @@ public class SendMailTest {
             PORT = "25",
             FROM = "from@test.com",
             TO = "to@test.com",
+            TO2 = "to2@test.com",
             CC = "cc@test.com",
             BCC = "bcc@test.com",
             SUBJECT = "test subject",
             BODY = "test body",
             HTML_EMAIL_TRUE = "true",
-            HTML_EMAIL_FALSE = "false",
             READ_RECEIPT_TRUE = "true",
-            READ_RECEIPT_FALSE = "false",
             ATTACHMENTS = "HDD:\\FULL_PATH1;HDD:\\FULL_PATH2",
             USER = "user",
             PASSWORD = "pass",
-            CHARACTERSET = "UTF-16",
-            TRANSFER_ENCODING = "base64",
             DELIMITER = ";";
 
     private static final int
@@ -63,13 +63,11 @@ public class SendMailTest {
     // operation return codes
     private static final String
             RETURN_CODE = "returnCode",
-            SUCCESS_RETURN_CODE = "0",
-            FAILURE_RETURN_CODE = "-1";
+            SUCCESS_RETURN_CODE = "0";
 
     //operation results
     private static final String
             RETURN_RESULT = "returnResult",
-            EXCEPTION = "exception",
             MAIL_WAS_SENT = "SentMailSuccessfully";
 
     private static final String
@@ -84,11 +82,14 @@ public class SendMailTest {
             TEXT_HTML = "text/html",
             TEXT_PLAIN = "text/plain",
             CHARSET_CST = ";charset=",
-            DEFAULT_CHARACTERSET = "UTF-8";
-
+            DEFAULT_CHARACTERSET = "UTF-8",
+            DEFAULT_DELIMITER = ",",
+            CANNOT_ATTACH = "Cannot attach";
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
     private SendMail sendMail;
     private SendMailInputs inputs;
-
+    private Address[] addresses = new Address[1];
     @Mock
     private Session sessionMock;
     @Mock
@@ -103,7 +104,10 @@ public class SendMailTest {
     private InternetAddress recipientMock;
     @Mock
     private MimeBodyPart mimeBodyPartMock;
-    private Address[] addresses = new Address[1];
+    @Mock
+    private FileDataSource fileDataSourceMock;
+    @Mock
+    private DataHandler dataHandlerMock;
 
     /**
      * Initialize tested object and set up the mocks.
@@ -179,6 +183,7 @@ public class SendMailTest {
         verify(transportMock).connect(SMTP_HOSTANME, INT_PORT, USER, PASSWORD);
         verify(transportMock).sendMessage(Matchers.<SMTPMessage>any(), Matchers.<Address[]>any());
         verify(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);
+        verify(transportMock).close();
     }
 
     /**
@@ -189,9 +194,8 @@ public class SendMailTest {
      */
     @Test
     public void testExecuteGoesToSuccessScenario2() throws Exception {
-        PowerMockito.mockStatic(Transport.class);
-        PowerMockito.doNothing().when(Transport.class, "send", smtpMessageMock);
-        Mockito.doNothing().when(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);
+        prepareTransportClassForStaticMock();
+        Mockito.doNothing().when(mimeBodyPartMock).setContent(BODY, TEXT_HTML + CHARSET_CST + DEFAULT_CHARACTERSET);
 
         inputs.setSmtpHostname(SMTP_HOSTANME);
         inputs.setPort(PORT);
@@ -218,17 +222,26 @@ public class SendMailTest {
         verify(mimeBodyPartMock).setContent(BODY, TEXT_HTML + CHARSET_CST + DEFAULT_CHARACTERSET);
     }
 
+    private void prepareTransportClassForStaticMock() throws Exception {
+        PowerMockito.mockStatic(Transport.class);
+        PowerMockito.doNothing().when(Transport.class, "send", smtpMessageMock);
+    }
+
     /**
      * Test Execute method with successful scenario,
-     * (attachments not empty).
+     * (attachments not empty and readReceipt is true).
      *
      * @throws Exception
      */
     @Test
     public void testExecuteGoesToSuccessScenario3() throws Exception {
-        PowerMockito.mockStatic(Transport.class);
-        PowerMockito.doNothing().when(Transport.class, "send", smtpMessageMock);
+        prepareTransportClassForStaticMock();
         Mockito.doNothing().when(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);
+        PowerMockito.whenNew(FileDataSource.class).withArguments(anyString()).thenReturn(fileDataSourceMock);
+        PowerMockito.whenNew(DataHandler.class).withArguments(fileDataSourceMock).thenReturn(dataHandlerMock);
+        doNothing().when(mimeBodyPartMock).setDataHandler(dataHandlerMock);
+        doNothing().when(mimeBodyPartMock).setFileName(anyString());
+        doNothing().when(mimeMultipartMock).addBodyPart(mimeBodyPartMock);
 
         inputs.setSmtpHostname(SMTP_HOSTANME);
         inputs.setPort(PORT);
@@ -240,6 +253,7 @@ public class SendMailTest {
         inputs.setBody(BODY);
         inputs.setAttachments(ATTACHMENTS);
         inputs.setDelimiter(DELIMITER);
+        inputs.setReadReceipt(READ_RECEIPT_TRUE);
 
         Map<String, String> result = sendMail.execute(inputs);
         assertEquals(MAIL_WAS_SENT, result.get(RETURN_RESULT));
@@ -247,7 +261,95 @@ public class SendMailTest {
         // 3 invocations, one for html setting and one for each of the attachments
         PowerMockito.verifyNew(MimeBodyPart.class, times(3)).withNoArguments();
         verify(mimeBodyPartMock, times(3)).setHeader(CONTENT_TRANSFER_ENCODING, DEFAULT_CONTENT_TRANSFER_ENCODING);
+        PowerMockito.verifyNew(FileDataSource.class, times(2)).withArguments(anyString());
+        verify(mimeBodyPartMock, times(2)).setDataHandler(dataHandlerMock);
+        verify(mimeBodyPartMock, times(2)).setFileName(anyString());
+        verify(mimeMultipartMock, times(3)).addBodyPart(mimeBodyPartMock);
+        verify(smtpMessageMock).setNotifyOptions(SMTPMessage.NOTIFY_DELAY + SMTPMessage.NOTIFY_FAILURE + SMTPMessage.NOTIFY_SUCCESS);
+    }
 
+    /**
+     * Test Execute method with successful scenario,
+     * (multiple destination recipients)
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExecuteGoesToSuccessScenario4() throws Exception {
+        prepareTransportClassForStaticMock();
+
+        inputs.setSmtpHostname(SMTP_HOSTANME);
+        inputs.setPort(PORT);
+        inputs.setFrom(FROM);
+        inputs.setTo(TO + DEFAULT_DELIMITER + TO2);
+        inputs.setCc(CC);
+        inputs.setBcc(BCC);
+        inputs.setSubject(SUBJECT);
+        inputs.setBody(BODY);
+
+        Map<String, String> result = sendMail.execute(inputs);
+        assertEquals(MAIL_WAS_SENT, result.get(RETURN_RESULT));
+        assertEquals(SUCCESS_RETURN_CODE, result.get(RETURN_CODE));
+        PowerMockito.verifyNew(InternetAddress.class).withArguments(TO);
+        PowerMockito.verifyNew(InternetAddress.class).withArguments(TO2);
+        verify(smtpMessageMock, times(3)).setRecipients(Matchers.<Message.RecipientType>any(), Matchers.<InternetAddress[]>any());
+    }
+
+    /**
+     * Test Execute method with successful scenario,
+     * (cc and bcc not null)
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExecuteGoesToSuccessScenario5() throws Exception {
+        prepareTransportClassForStaticMock();
+
+        inputs.setSmtpHostname(SMTP_HOSTANME);
+        inputs.setPort(PORT);
+        inputs.setFrom(FROM);
+        inputs.setTo(TO);
+        inputs.setCc(CC);
+        inputs.setBcc(BCC);
+        inputs.setSubject(SUBJECT);
+        inputs.setBody(BODY);
+
+        Map<String, String> result = sendMail.execute(inputs);
+        assertEquals(MAIL_WAS_SENT, result.get(RETURN_RESULT));
+        assertEquals(SUCCESS_RETURN_CODE, result.get(RETURN_CODE));
+        PowerMockito.verifyNew(InternetAddress.class).withArguments(CC);
+        PowerMockito.verifyNew(InternetAddress.class).withArguments(BCC);
+    }
+
+    /**
+     * Test Execute method with exception thrown when attachment files are not found
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExecuteThrowsException() throws Exception {
+        prepareTransportClassForStaticMock();
+
+        Mockito.doNothing().when(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);
+        PowerMockito.whenNew(FileDataSource.class).withArguments(anyString()).thenReturn(fileDataSourceMock);
+        PowerMockito.whenNew(DataHandler.class).withArguments(fileDataSourceMock).thenReturn(dataHandlerMock);
+        doNothing().when(mimeBodyPartMock).setDataHandler(dataHandlerMock);
+
+        doThrow(new MessagingException("IOException")).when(mimeBodyPartMock).setDataHandler(dataHandlerMock);
+
+        inputs.setSmtpHostname(SMTP_HOSTANME);
+        inputs.setPort(PORT);
+        inputs.setFrom(FROM);
+        inputs.setTo(TO + DEFAULT_DELIMITER + TO2);
+        inputs.setCc(CC);
+        inputs.setBcc(BCC);
+        inputs.setSubject(SUBJECT);
+        inputs.setBody(BODY);
+        inputs.setAttachments(ATTACHMENTS);
+
+        exception.expect(Exception.class);
+        exception.expectMessage(CANNOT_ATTACH);
+        sendMail.execute(inputs);
     }
 
     /**

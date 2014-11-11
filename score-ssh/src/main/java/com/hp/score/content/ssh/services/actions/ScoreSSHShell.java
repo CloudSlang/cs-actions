@@ -17,6 +17,14 @@ import java.util.Map;
  */
 public class ScoreSSHShell extends SSHShellAbstract {
 
+    /**
+     * This method executes a ssh shell operations based on the sshShellInputs parameter
+     * You ned to populate sshShellInputs parameter with the following values:
+     host, port, username, password, privateKeyFile, command, characterSet, characterDelay, newlineCharacters, timeout,
+     globalSessionObject, sessionObject, sessionId
+     * @param sshShellInputs
+     * @return
+     */
     public Map<String, String> execute(SSHShellInputs sshShellInputs) {
 
         Map<String, String> returnResult = new HashMap<>();
@@ -31,21 +39,14 @@ public class ScoreSSHShell extends SSHShellAbstract {
             int portNumber = StringUtils.toInt(sshShellInputs.getPort(), Constants.DEFAULT_PORT);
             sshShellInputs.setCharacterSet(StringUtils.toNotEmptyString(sshShellInputs.getCharacterSet(), Constants.DEFAULT_CHARACTER_SET));
             int characterDelayNumber = StringUtils.toInt(sshShellInputs.getCharacterDelay(), Constants.DEFAULT_WRITE_CHARACTER_TIMEOUT);
-            String newline = StringUtils.toNewline(sshShellInputs.getNewlineCharacters(), Constants.DEFAULT_NEWLINE);
+            String newline = StringUtils.toNewline(sshShellInputs.getNewlineCharacters());
             int timeoutNumber = StringUtils.toInt(sshShellInputs.getTimeout(), Constants.DEFAULT_TIMEOUT);
 
             // configure ssh parameters
             ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber, sshShellInputs.getUsername(), sshShellInputs.getPassword());
             KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
 
-            // get the cached SSH session
-            SSHService service = null;
-            if (sshShellInputs.getSessionId() != null) {
-                service = getFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
-            }
-            if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {
-                service = new SSHServiceImpl(connection, keyFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);
-            }
+            SSHService service = getSshService(sshShellInputs, connection, keyFile);
 
             // run the SSH Expect command
             ExpectCommandResult commandResult = service.runExpectCommand(
@@ -68,6 +69,17 @@ public class ScoreSSHShell extends SSHShellAbstract {
         return returnResult;
     }
 
+    private SSHService getSshService(SSHShellInputs sshShellInputs, ConnectionDetails connection, KeyFile keyFile) {
+        SSHService service = null;
+        if (sshShellInputs.getSessionId() != null) {
+            // get the cached SSH session
+            service = getFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
+        }
+        if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {
+            service = new SSHServiceImpl(connection, keyFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);
+        }
+        return service;
+    }
 
 
     private void populateResult(Map<String, String> returnResult, ExpectCommandResult commandResult) {
