@@ -1,5 +1,7 @@
 package com.hp.score.content.ssh.services.impl;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.hp.score.content.ssh.actions.SSHShellCommandAction;
 import com.hp.score.content.ssh.entities.CommandResult;
 import com.hp.score.content.ssh.entities.ExpectCommandResult;
@@ -9,8 +11,6 @@ import com.hp.score.content.ssh.utils.CacheUtils;
 import com.hp.score.content.ssh.utils.Constants;
 import com.hp.score.content.ssh.utils.simulator.ShellSimulator;
 import com.hp.score.content.ssh.utils.simulator.visualization.IShellVisualizer;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.Session;
 import org.junit.After;
@@ -28,7 +28,9 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
@@ -152,13 +154,13 @@ public class SSHServiceImplTest {
 
     @Test
     public void testSaveToCache() throws Exception {
-        sshServiceSpy.saveToCache(new GlobalSessionObject<>(),"" );
+        sshServiceSpy.saveToCache(new GlobalSessionObject<>(), "");
         PowerMockito.verifyStatic(times(1));
     }
 
     @Test
     public void testRemoveFromCache() throws Exception {
-        sshServiceSpy.removeFromCache(new GlobalSessionObject<>(),"");
+        sshServiceSpy.removeFromCache(new GlobalSessionObject<>(), "");
         PowerMockito.verifyStatic(times(1));
     }
 

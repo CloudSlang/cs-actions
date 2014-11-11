@@ -1,5 +1,6 @@
 package com.hp.score.content.ssh.utils;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -8,6 +9,9 @@ import java.io.StringWriter;
  *         Date: 10/29/14
  */
 public class StringUtils {
+
+    public static final String DEFAULT_DELIMITER = ",";
+    public static final String DIGITS_REGEX = "((\\d)|,)*";
 
     public static boolean toBoolean(String value, boolean defaultValue) {
         if (value == null || value.length() == 0) {
@@ -33,18 +37,10 @@ public class StringUtils {
         return value;
     }
 
-    public static String toNotNullString(String value, String defaultValue) {
-        if (value == null) {
-            return defaultValue;
-        }
-
-        return value;
-    }
-
-    public static String toNewline(String value, String defaultValue) {
-        value = toNotNullString(value, defaultValue);
+    public static String toNewline(String value) {
+        value = toNotEmptyString(value, Constants.DEFAULT_NEWLINE);
         char[] chars;
-        if (!value.matches("((\\d)|,)*")) {
+        if (!value.matches(DIGITS_REGEX)) {
             String[] split = value.split("\\\\");
             chars = new char[split.length - 1];
             for (int count = 0; count < split.length; count++)
@@ -56,7 +52,7 @@ public class StringUtils {
                     throw new RuntimeException("Unable to parse sequence of newline characters. Please specify this input as a comma delimited list of base-10 ASCII character codes.");
                 }
         } else {
-            String[] split = value.split(",");
+            String[] split = value.split(DEFAULT_DELIMITER);
             chars = new char[split.length];
             for (int count = 0; count < split.length; count++)
                 chars[count] = (char) Integer.parseInt(split[count]);
@@ -65,11 +61,21 @@ public class StringUtils {
     }
 
     public static String getStackTraceAsString(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        pw.close();
-        return sw.toString();
+        if (t != null) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            t.printStackTrace(pw);
+            final String stackTraceAsString = sw.toString();
+            try {
+                sw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pw.close();
+            return stackTraceAsString;
+        } else {
+            return Constants.EMPTY_STRING;
+        }
     }
 
     public static boolean isEmpty(String value) {

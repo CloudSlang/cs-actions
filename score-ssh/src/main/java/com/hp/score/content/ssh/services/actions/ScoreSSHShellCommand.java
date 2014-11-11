@@ -63,9 +63,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
                     timeoutNumber);
 
             if (closeSessionBoolean) {
-                service.close();
-                service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
-                service.removeFromCache(sshShellInputs.getSshSessionObject(), sessionId);
+                cleanupService(sshShellInputs, service, sessionId);
             } else if (saveSSHSession) {
                 // save SSH session in the cache
                 saveToCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), useGlobalContextBoolean, service, sessionId);
@@ -75,9 +73,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             populateResult(returnResult, commandResult);
         } catch (Exception e) {
             if (service != null) {
-                service.close();
-                service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
-                service.removeFromCache(sshShellInputs.getSshSessionObject(), sessionId);
+                cleanupService(sshShellInputs, service, sessionId);
             }
 
             populateResult(returnResult, e);
@@ -87,6 +83,12 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             }
         }
         return returnResult;
+    }
+
+    private void cleanupService(SSHShellInputs sshShellInputs, SSHService service, String sessionId) {
+        service.close();
+        service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
+        service.removeFromCache(sshShellInputs.getSshSessionObject(), sessionId);
     }
 
     private void populateResult(Map<String, String> returnResult, CommandResult commandResult) {

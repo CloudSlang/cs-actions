@@ -5,6 +5,7 @@ package com.hp.score.content.ssh.utils;
  *         Date: 10/29/14
  */
 public class Constants {
+    public static final String EMPTY_STRING = "";
     // inputs
     public static final String PRIVATE_KEY_FILE = "privateKeyFile";
     public static final String COMMAND = "command";
@@ -43,7 +44,7 @@ public class Constants {
     public static final class OutputNames {
 
         public static final String RETURN_RESULT = "returnResult";
-        public static final String EXCEPTION = "";
+        public static final String EXCEPTION = "exception";
         public static final String RETURN_CODE = "returnCode";
     }
 

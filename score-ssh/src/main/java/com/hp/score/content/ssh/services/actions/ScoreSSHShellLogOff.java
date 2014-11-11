@@ -22,16 +22,20 @@ public class ScoreSSHShellLogOff extends SSHShellAbstract {
             if (service == null) {
                 throw new RuntimeException(SESSION_ID_NOT_IN_SESSION_CONTEXT_MESSAGE);
             }
+            cleanupService(sshShellInputs, service);
 
-            // close the SSH session
-            service.close();
-            service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSessionId());
-            service.removeFromCache(sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
 
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
         } catch (Exception e) {
             populateResult(returnResult, e);
         }
         return returnResult;
+    }
+
+    private void cleanupService(SSHShellInputs sshShellInputs, SSHService service) {
+        // close the SSH session
+        service.close();
+        service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSessionId());
+        service.removeFromCache(sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
     }
 }
