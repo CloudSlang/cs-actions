@@ -4,6 +4,8 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.hp.oo.sdk.content.plugin.SessionResource;
 import com.hp.score.content.ssh.entities.SSHConnection;
+import com.hp.score.content.ssh.services.SSHService;
+import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 
@@ -145,6 +147,22 @@ public class CacheUtils {
 
             }
         }
+    }
+
+    /**
+     * Get an opened SSH session from cache (Operation Orchestration session).
+     *
+     * @param sessionParam Operation Orchestration session.
+     * @return the SSH service
+     */
+    public static SSHService getFromCache(SessionParam sessionParam, String sessionId) {
+        Session savedSession = CacheUtils.getSshSession(sessionParam, sessionId);
+        if (savedSession != null && savedSession.isConnected()) {
+            Channel savedChannel = CacheUtils.getSshChannel(sessionParam, sessionId);
+            return new SSHServiceImpl(savedSession, savedChannel);
+        }
+
+        return null;
     }
 
     private static void decrementSessionsCounter(String sessionId, Map<String, SSHConnection> tempMap) {

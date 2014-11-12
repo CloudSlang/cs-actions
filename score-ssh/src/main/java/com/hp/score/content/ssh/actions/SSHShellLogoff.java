@@ -39,7 +39,7 @@ public class SSHShellLogoff extends SSHShellAbstract {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
-        sshShellInputs.setSshSessionObject(sessionObject);
+//        sshShellInputs.setSshSessionObject(sessionObject); // TODO
         sshShellInputs.setSessionId(sessionId);
 
         return new ScoreSSHShellLogOff().execute(sshShellInputs);

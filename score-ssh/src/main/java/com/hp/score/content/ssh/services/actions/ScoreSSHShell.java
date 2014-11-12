@@ -73,7 +73,7 @@ public class ScoreSSHShell extends SSHShellAbstract {
         SSHService service = null;
         if (sshShellInputs.getSessionId() != null) {
             // get the cached SSH session
-            service = getFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
+            service = getFromCache(sshShellInputs, sshShellInputs.getSessionId()); // TODO SESSION Object
         }
         if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {
             service = new SSHServiceImpl(connection, keyFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);

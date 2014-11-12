@@ -50,8 +50,8 @@ public class SSHShellLogon extends SSHShellAbstract {
         sshShellInputs.setPassword(password);
         sshShellInputs.setPrivateKeyFile(privateKeyFile);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
-        sshShellInputs.setSshSessionObject(sessionObject);
-        sshShellInputs.setUseGlobalContext(useGlobalContext);
+//        sshShellInputs.setSshSessionObject(sessionObject); TODO
+//        sshShellInputs.setUseGlobalContext(useGlobalContext);
         return new ScoreSSHShellLogon().execute(sshShellInputs);
     }
 

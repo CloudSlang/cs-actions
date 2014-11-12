@@ -23,7 +23,6 @@ public class ScoreSSHShellLogon extends SSHShellAbstract {
         try {
             // default values
             int portNumber = StringUtils.toInt(sshShellInputs.getPort(), Constants.DEFAULT_PORT);
-            boolean useGlobalContextBoolean = StringUtils.toBoolean(sshShellInputs.getUseGlobalContext(), Constants.DEFAULT_USE_GLOBAL_CONTEXT);
 
             // configure ssh parameters
             ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber, sshShellInputs.getUsername(), sshShellInputs.getPassword());
@@ -32,7 +31,7 @@ public class ScoreSSHShellLogon extends SSHShellAbstract {
             // get the cached SSH session
             String sessionId = "sshSession:" + sshShellInputs.getHost() + "-" + portNumber + "-" + sshShellInputs.getUsername();
             synchronized (sessionId) {
-                SSHService service = getFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), useGlobalContextBoolean, sessionId);
+                SSHService service = getFromCache(sshShellInputs, sessionId);
                 boolean saveSSHSession = false;
                 if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {
                     saveSSHSession = true;
@@ -40,7 +39,7 @@ public class ScoreSSHShellLogon extends SSHShellAbstract {
                 }
                 // save SSH session in the cache
                 if (saveSSHSession) {
-                    saveToCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), useGlobalContextBoolean, service, sessionId);
+                    saveToCache(sshShellInputs.getSshGlobalSessionObject(), service, sessionId); // TODO
                 }
             }
 

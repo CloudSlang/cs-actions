@@ -60,8 +60,8 @@ public class SSHShellCommandAction {
         sshShellInputs.setPty(pty);
         sshShellInputs.setTimeout(timeout);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
-        sshShellInputs.setSshSessionObject(sessionObject);
-        sshShellInputs.setUseGlobalContext(useGlobalContext);
+//        sshShellInputs.setSshSessionObject(sessionObject);
+//        sshShellInputs.setUseGlobalContext(useGlobalContext); //TODO
         sshShellInputs.setCloseSession(closeSession);
 
         return new ScoreSSHShellCommand().execute(sshShellInputs);

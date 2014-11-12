@@ -25,7 +25,7 @@ public class SSHServiceImpl implements SSHService {
     private Session session;
     private Channel shellChannel;
 
-    private SSHServiceImpl(Session session, Channel channel) {
+    public SSHServiceImpl(Session session, Channel channel) {
         this.session = session;
         this.shellChannel = channel;
     }
@@ -83,21 +83,6 @@ public class SSHServiceImpl implements SSHService {
         }
     }
 
-    /**
-     * Get an opened SSH session from cache (Operation Orchestration session).
-     *
-     * @param sessionParam Operation Orchestration session.
-     * @return the SSH service
-     */
-    public static SSHService getFromCache(SessionParam sessionParam, String sessionId) {
-        Session savedSession = CacheUtils.getSshSession(sessionParam, sessionId);
-        if (savedSession != null && savedSession.isConnected()) {
-            Channel savedChannel = CacheUtils.getSshChannel(sessionParam, sessionId);
-            return new SSHServiceImpl(savedSession, savedChannel);
-        }
-
-        return null;
-    }
 
     @Override
     public CommandResult runShellCommand(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout) {

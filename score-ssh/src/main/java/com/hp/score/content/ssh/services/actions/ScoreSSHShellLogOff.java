@@ -18,7 +18,7 @@ public class ScoreSSHShellLogOff extends SSHShellAbstract {
         Map<String, String> returnResult = new HashMap<>();
         try {
             // get the cached SSH session
-            SSHService service = getFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
+            SSHService service = getFromCache(sshShellInputs, sshShellInputs.getSessionId()); // TODO SESSION OBJECT
             if (service == null) {
                 throw new RuntimeException(SESSION_ID_NOT_IN_SESSION_CONTEXT_MESSAGE);
             }
@@ -32,10 +32,10 @@ public class ScoreSSHShellLogOff extends SSHShellAbstract {
         return returnResult;
     }
 
-    private void cleanupService(SSHShellInputs sshShellInputs, SSHService service) {
+    protected void cleanupService(SSHShellInputs sshShellInputs, SSHService service) {
         // close the SSH session
         service.close();
         service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sshShellInputs.getSessionId());
-        service.removeFromCache(sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId());
+//        service.removeFromCache(sshShellInputs.getSshSessionObject(), sshShellInputs.getSessionId()); TODO
     }
 }

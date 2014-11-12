@@ -1,17 +1,21 @@
 package com.hp.score.content.ssh.services.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.hp.oo.sdk.content.plugin.SessionResource;
 import com.hp.score.content.ssh.entities.KeyFile;
 import com.hp.score.content.ssh.entities.SSHConnection;
+import com.hp.score.content.ssh.entities.SSHShellInputs;
 import com.hp.score.content.ssh.services.SSHService;
 import com.hp.score.content.ssh.services.impl.SSHServiceImpl;
+import com.hp.score.content.ssh.utils.CacheUtils;
 import com.hp.score.content.ssh.utils.Constants;
 import com.hp.score.content.ssh.utils.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Provider;
 import java.security.Security;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,50 +51,48 @@ public abstract class SSHShellAbstract {
         return keyFile;
     }
 
-    protected SSHService getFromCache(GlobalSessionObject<?> globalSessionObject, GlobalSessionObject<?> sessionObject, String sessionId) { //TODO SessionObject?
-        SSHService service = SSHServiceImpl.getFromCache(sessionObject, sessionId);
+    protected SSHService getFromCache(SSHShellInputs sshShellInputs, String sessionId) { //TODO SessionObject?
+//        SSHService service = SSHServiceImpl.getFromCache(sessionObject, sessionId); // TODO
         synchronized (sessionId) {
-            if (service == null) {
-                service = SSHServiceImpl.getFromCache(globalSessionObject, sessionId);
-            }
-            return service;
+                return CacheUtils.getFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
+//                return SSHServiceImpl.getFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
         }
     }
 
-    protected SSHService getFromCache(GlobalSessionObject<?> globalSessionObject, GlobalSessionObject<?> sessionObject, boolean useGlobalContextBoolean, String sessionId) {//TODO SessionObject?
-        if (useGlobalContextBoolean) {
-            return SSHServiceImpl.getFromCache(globalSessionObject, sessionId);
-        }
-        incrementSessionsCounter(globalSessionObject, sessionId);
-        return SSHServiceImpl.getFromCache(sessionObject, sessionId);
-    }
+//    protected SSHService getFromCache(GlobalSessionObject<?> globalSessionObject, GlobalSessionObject<?> sessionObject, boolean useGlobalContextBoolean, String sessionId) {//TODO SessionObject?
+//        if (useGlobalContextBoolean) {
+//            return SSHServiceImpl.getFromCache(globalSessionObject, sessionId);
+//        }
+//        incrementSessionsCounter(globalSessionObject, sessionId);
+//        return SSHServiceImpl.getFromCache(sessionObject, sessionId);
+//    }
+//
+//    private void incrementSessionsCounter(GlobalSessionObject<?> globalSessionObject, String sessionId) {
+//        SessionResource resource = globalSessionObject.getResource();
+//        if (resource != null) {
+//            Map<String, SSHConnection> tempMap = (Map<String, SSHConnection>) resource.get();
+//            if (tempMap != null) {
+//                SSHConnection connection = tempMap.get(sessionId);
+//                synchronized (connection) {
+//                    int oldValue = connection.getSessionsCounter();
+//                    connection.setSessionsCounter(++oldValue);
+//                }
+//            }//TODO SessionObject
+//        }
+//    }
 
-    private void incrementSessionsCounter(GlobalSessionObject<?> globalSessionObject, String sessionId) {
-        SessionResource resource = globalSessionObject.getResource();
-        if (resource != null) {
-            Map<String, SSHConnection> tempMap = (Map<String, SSHConnection>) resource.get();
-            if (tempMap != null) {
-                SSHConnection connection = tempMap.get(sessionId);
-                synchronized (connection) {
-                    int oldValue = connection.getSessionsCounter();
-                    connection.setSessionsCounter(++oldValue);
-                }
-            }
-        }
-    }
-
-    protected void saveToCache(GlobalSessionObject<?> globalSessionObject, GlobalSessionObject<?> sessionObject, boolean useGlobalContextBoolean, SSHService service, String sessionId) {//TODO SessionObject?
-        if (useGlobalContextBoolean) {
-            if (globalSessionObject.getName() == null) {
-                globalSessionObject.setName(Constants.SSH_SESSIONS_DEFAULT_ID);
-            }
-            service.saveToCache(globalSessionObject, sessionId);
-        } else {
+    protected void saveToCache(SessionParam sessionObject, SSHService service, String sessionId) {//TODO SessionObject?
+//        if (useGlobalContextBoolean) {v
             if (sessionObject.getName() == null) {
                 sessionObject.setName(Constants.SSH_SESSIONS_DEFAULT_ID);
             }
             service.saveToCache(sessionObject, sessionId);
-        }
+//        } else {
+//            if (sessionObject.getName() == null) {
+//                sessionObject.setName(Constants.SSH_SESSIONS_DEFAULT_ID);//TODO SessionObject?
+//            }
+//            service.saveToCache(sessionObject, sessionId);
+//        }
     }
 
     protected void populateResult(Map<String, String> returnResult, Throwable e) {

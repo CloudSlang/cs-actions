@@ -1,7 +1,9 @@
 package com.hp.score.content.ssh.entities;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionParam;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,8 +22,6 @@ public class SSHShellInputs {
     private String pty;
     private String timeout;
     private GlobalSessionObject<Map<String, SSHConnection>> sshGlobalSessionObject;
-    private GlobalSessionObject<Map<String, SSHConnection>> sshSessionObject;
-    private String useGlobalContext;
     private String closeSession;
     private String characterDelay;
     private String newlineCharacters;
@@ -113,22 +113,6 @@ public class SSHShellInputs {
 
     public GlobalSessionObject<Map<String, SSHConnection>> getSshGlobalSessionObject() {
         return sshGlobalSessionObject;
-    }
-
-    public void setSshSessionObject(GlobalSessionObject<Map<String, SSHConnection>> sshSessionObject) {
-        this.sshSessionObject = sshSessionObject;
-    }
-
-    public GlobalSessionObject<Map<String, SSHConnection>> getSshSessionObject() {
-        return sshSessionObject;
-    }
-
-    public void setUseGlobalContext(String useGlobalContext) {
-        this.useGlobalContext = useGlobalContext;
-    }
-
-    public String getUseGlobalContext() {
-        return useGlobalContext;
     }
 
     public void setCloseSession(String closeSession) {
