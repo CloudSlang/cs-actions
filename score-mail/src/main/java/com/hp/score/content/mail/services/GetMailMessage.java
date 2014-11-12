@@ -65,7 +65,6 @@ public class GetMailMessage {
     public static final String UNRECOGNIZED_SSL_MESSAGE = "Unrecognized SSL message";
     public static final String UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION = "Unrecognized SSL message, plaintext connection?";
     public static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-    public static final String DEFAULT_CHARACTERSET = "UTF-8";
 
     //Operation inputs
     private String host;
