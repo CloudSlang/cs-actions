@@ -30,7 +30,8 @@ import java.util.Properties;
 public class GetMailMessage {
 
     public static final String RETURN_RESULT = "returnResult";
-    public static final String SUBJECT_RESULT = "Subject";
+    public static final String SUBJECT = "Subject";
+    public static final String SUBJECT_RESULT = SUBJECT;
     public static final String BODY_RESULT = "Body";
     public static final String ATTACHED_FILE_NAMES_RESULT = "AttachedFileNames";
     public static final String RETURN_CODE = "returnCode";
@@ -41,6 +42,30 @@ public class GetMailMessage {
 
     public static final String SUCCESS_RETURN_CODE = "0";
     public static final String FAILURE_RETURN_CODE = "-1";
+    public static final String FILE = "file:";
+    public static final String HTTP = "http";
+    public static final String DEFAULT_PASSWORD_FOR_STORE = "changeit";
+    public static final String POP3 = "pop3";
+    public static final String IMAP = "imap";
+    public static final String IMAP_4 = "imap4";
+    public static final String IMAP_PORT = "143";
+    public static final String POP3_PORT = "110";
+    public static final String PLEASE_SPECIFY_THE_PORT_FOR_THE_INDICATED_PROTOCOL = "Please specify the port for the indicated protocol.";
+    public static final String PLEASE_SPECIFY_THE_PORT_THE_PROTOCOL_OR_BOTH = "Please specify the port, the protocol, or both.";
+    public static final String PLEASE_SPECIFY_THE_PROTOCOL_FOR_THE_INDICATED_PORT = "Please specify the protocol for the indicated port.";
+    public static final String TEXT_PLAIN = "text/plain";
+    public static final String TEXT_HTML = "text/html";
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String SSL = "SSL";
+    public static final String STR_FALSE = "false";
+    public static final String STR_TRUE = "true";
+    public static final String MESSAGES_ARE_NUMBERED_STARTING_AT_1 = "Messages are numbered starting at 1 through the total number of messages in the folder!";
+    public static final String STR_COMMA = ",";
+    public static final String THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER = "The specified folder does not exist on the remote server.";
+    public static final String UNRECOGNIZED_SSL_MESSAGE = "Unrecognized SSL message";
+    public static final String UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION = "Unrecognized SSL message, plaintext connection?";
+    public static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    public static final String DEFAULT_CHARACTERSET = "UTF-8";
 
     //Operation inputs
     private String host;
@@ -67,23 +92,15 @@ public class GetMailMessage {
         Map<String, String> result = new HashMap<>();
         try {
             processInputs(getMailMessageInputs);
-            Store store = configureStore();
-            Folder f = store.getFolder(folder);
-            if (!f.exists()) {
-                throw new Exception("The specified folder does not exist on the remote server.");
-            }
-            f.open(getFolderOpenMode());
-            if (messageNumber > f.getMessageCount())
-                throw new IndexOutOfBoundsException("message value was: " + messageNumber + " there are only " + f.getMessageCount() + " messages in folder");
-            Message message = f.getMessage(messageNumber);
+            Message message = getMessage();
             //delete message
             if (deleteUponRetrieval) {
                 message.setFlag(Flags.Flag.DELETED, true);
             }
             if (subjectOnly) {
-                String subject = "";
+                String subject;
                 if ((characterSet != null) && (characterSet.trim().length() > 0)) { //need to force the decode charset
-                    subject = message.getHeader("Subject")[0];
+                    subject = message.getHeader(SUBJECT)[0];
                     subject = changeHeaderCharset(subject, characterSet);
                     subject = MimeUtility.decodeText(subject);
                 } else {
@@ -97,7 +114,7 @@ public class GetMailMessage {
                 try {
                     // Get subject and attachedFileNames
                     if ((characterSet != null) && (characterSet.trim().length() > 0)) { //need to force the decode charset
-                        String subject = message.getHeader("Subject")[0];
+                        String subject = message.getHeader(SUBJECT)[0];
                         subject = changeHeaderCharset(subject, characterSet);
                         result.put(SUBJECT_RESULT, MimeUtility.decodeText(subject));
                         String attachedFileNames = changeHeaderCharset(getAttachedFileNames(message), characterSet);
@@ -120,8 +137,8 @@ public class GetMailMessage {
             }
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
         } catch (Exception e) {
-            if (e.toString().contains("Unrecognized SSL message")) {
-                throw new Exception("Unrecognized SSL message, plaintext connection?");
+            if (e.toString().contains(UNRECOGNIZED_SSL_MESSAGE)) {
+                throw new Exception(UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION);
             } else {
                 throw e;
             }
@@ -129,32 +146,50 @@ public class GetMailMessage {
         return result;
     }
 
-    protected Store configureStore() throws Exception {
+    protected Message getMessage() throws Exception {
+        Store store = createMessageStore();
+        Folder f = store.getFolder(folder);
+        if (!f.exists()) {
+            throw new Exception(THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
+        }
+        f.open(getFolderOpenMode());
+        if (messageNumber > f.getMessageCount())
+            throw new IndexOutOfBoundsException("message value was: " + messageNumber + " there are only " + f.getMessageCount() + " messages in folder");
+        return f.getMessage(messageNumber);
+    }
+
+    protected Store createMessageStore() throws Exception {
         Properties props = new Properties();
         Authenticator auth = new SimpleAuthenticator(username, password);
         Store store;
         if (!enableSSL) {
-            props.put("mail." + protocol + ".host", host);
-            props.put("mail." + protocol + ".port", port);
-            Session s = Session.getInstance(props, auth);
-            store = s.getStore(protocol);
+            store = configureStoreWithoutSSL(props, auth);
             store.connect();
-
-
         } else {
             addSSLSettings(trustAllRoots, keystore, keystorePassword, trustKeystoreFile, trustPassword);
-
-            String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-            props.setProperty("mail." + protocol + ".socketFactory.class", SSL_FACTORY);
-            props.setProperty("mail." + protocol + ".socketFactory.fallback", "false");
-            props.setProperty("mail." + protocol + ".port", port);
-            props.setProperty("mail." + protocol + ".socketFactory.port", port);
-            URLName url = new URLName(protocol, host, Integer.parseInt(port), "", username, password);
-            Session session = Session.getInstance(props, auth);
-            store = session.getStore(url);
+            store = configureStoreWithSSL(props, auth);
             store.connect();
         }
         return store;
+    }
+
+    protected Store configureStoreWithSSL(Properties props, Authenticator auth) throws NoSuchProviderException {
+        Store store;
+        props.setProperty("mail." + protocol + ".socketFactory.class", SSL_FACTORY);
+        props.setProperty("mail." + protocol + ".socketFactory.fallback", STR_FALSE);
+        props.setProperty("mail." + protocol + ".port", port);
+        props.setProperty("mail." + protocol + ".socketFactory.port", port);
+        URLName url = new URLName(protocol, host, Integer.parseInt(port), "", username, password);
+        Session session = Session.getInstance(props, auth);
+        store = session.getStore(url);
+        return store;
+    }
+
+    protected Store configureStoreWithoutSSL(Properties props, Authenticator auth) throws NoSuchProviderException {
+        props.put("mail." + protocol + ".host", host);
+        props.put("mail." + protocol + ".port", port);
+        Session s = Session.getInstance(props, auth);
+        return s.getStore(protocol);
     }
 
     protected void addSSLSettings(boolean trustAllRoots, String keystore,
@@ -166,35 +201,35 @@ public class GetMailMessage {
         String javaKeystore = System.getProperty("java.home") + separator + "lib" + separator + "security" + separator + "cacerts";
         if (keystore.length() == 0 && !trustAllRoots) {
             boolean storeExists = new File(javaKeystore).exists();
-            keystore = (storeExists) ? "file:" + javaKeystore : null;
+            keystore = (storeExists) ? FILE + javaKeystore : null;
             if (null != keystorePassword) {
                 if (keystorePassword.equals("")) {
-                    keystorePassword = "changeit";
+                    keystorePassword = DEFAULT_PASSWORD_FOR_STORE;
                 }
             }
             useClientCert = storeExists;
         } else {
             if (!trustAllRoots) {
-                if (!keystore.startsWith("http"))
-                    keystore = "file:" + keystore;
+                if (!keystore.startsWith(HTTP))
+                    keystore = FILE + keystore;
                 useClientCert = true;
             }
         }
         if (trustKeystore.length() == 0 && !trustAllRoots) {
             boolean storeExists = new File(javaKeystore).exists();
-            trustKeystore = (storeExists) ? "file:" + javaKeystore : null;
-            trustPassword = (storeExists) ? ((trustPassword.equals("")) ? "changeit" : trustPassword) : null;
+            trustKeystore = (storeExists) ? FILE + javaKeystore : null;
+            trustPassword = (storeExists) ? ((trustPassword.equals("")) ? DEFAULT_PASSWORD_FOR_STORE : trustPassword) : null;
 
             useTrustCert = storeExists;
         } else {
             if (!trustAllRoots) {
-                if (!trustKeystore.startsWith("http"))
-                    trustKeystore = "file:" + trustKeystore;
+                if (!trustKeystore.startsWith(HTTP))
+                    trustKeystore = FILE + trustKeystore;
                 useTrustCert = true;
             }
         }
 
-        SSLContext context = SSLContext.getInstance("SSL");
+        SSLContext context = SSLContext.getInstance(SSL);
         TrustManager[] trustManagers = null;
         KeyManager[] keyManagers = null;
 
@@ -224,14 +259,14 @@ public class GetMailMessage {
         folder = getMailMessageInputs.getFolder();
         String trustAll = getMailMessageInputs.getTrustAllRoots();
         // Default value of trustAllRoots is true
-        trustAllRoots = !(null != trustAll && trustAll.equalsIgnoreCase("false"));
+        trustAllRoots = !(null != trustAll && trustAll.equalsIgnoreCase(STR_FALSE));
         messageNumber = Integer.parseInt(getMailMessageInputs.getMessageNumber());
         String strSubOnly = getMailMessageInputs.getSubjectOnly();
         // Default value of subjectOnly is false
-        subjectOnly = (strSubOnly != null && strSubOnly.equalsIgnoreCase("true"));
+        subjectOnly = (strSubOnly != null && strSubOnly.equalsIgnoreCase(STR_TRUE));
         String strEnableSSL = getMailMessageInputs.getEnableSSL();
         // Default value of enableSSL is false;
-        enableSSL = (null != strEnableSSL && strEnableSSL.equalsIgnoreCase("true"));
+        enableSSL = (null != strEnableSSL && strEnableSSL.equalsIgnoreCase(STR_TRUE));
         keystore = getMailMessageInputs.getKeystore();
         keystorePassword = getMailMessageInputs.getKeystorePassword();
         trustKeystoreFile = getMailMessageInputs.getTrustKeystore();
@@ -239,44 +274,44 @@ public class GetMailMessage {
         characterSet = getMailMessageInputs.getCharacterSet();
         String strDeleteUponRetrieval = getMailMessageInputs.getDeleteUponRetrieval();
         // Default value for deleteUponRetrieval is false
-        deleteUponRetrieval = (null != strDeleteUponRetrieval && strDeleteUponRetrieval.equalsIgnoreCase("true"));
+        deleteUponRetrieval = (null != strDeleteUponRetrieval && strDeleteUponRetrieval.equalsIgnoreCase(STR_TRUE));
 
         if (messageNumber < 1) {
-            throw new Exception("Messages are numbered starting at 1 through the total number of messages in the folder!");
+            throw new Exception(MESSAGES_ARE_NUMBERED_STARTING_AT_1);
         }
         if ((protocol == null || protocol.equals("")) && (port == null || port.equals(""))) {
-            throw new Exception("Please specify the port, the protocol, or both.");
-        } else if ((protocol != null && !protocol.equals("")) && (!protocol.equalsIgnoreCase("imap")) && (!protocol.equalsIgnoreCase("pop3")) && (!protocol.equalsIgnoreCase("imap4"))
+            throw new Exception(PLEASE_SPECIFY_THE_PORT_THE_PROTOCOL_OR_BOTH);
+        } else if ((protocol != null && !protocol.equals("")) && (!protocol.equalsIgnoreCase(IMAP)) && (!protocol.equalsIgnoreCase(POP3)) && (!protocol.equalsIgnoreCase(IMAP_4))
                 && (port == null || port.equals(""))) {
-            throw new Exception("Please specify the port for the indicated protocol.");
+            throw new Exception(PLEASE_SPECIFY_THE_PORT_FOR_THE_INDICATED_PROTOCOL);
         } else if ((protocol == null || protocol.equals("")) && (port != null && !port.equals(""))
-                && (!port.equalsIgnoreCase("143")) && (!port.equalsIgnoreCase("110"))) {
-            throw new Exception("Please specify the protocol for the indicated port.");
-        } else if ((protocol == null || protocol.equals("")) && (port.trim().equalsIgnoreCase("143"))) {
-            protocol = "imap";
-        } else if ((protocol == null || protocol.equals("")) && (port.trim().equalsIgnoreCase("110"))) {
-            protocol = "pop3";
-        } else if ((protocol.trim().equalsIgnoreCase("pop3")) && (port == null || port.equals(""))) {
-            port = "110";
-        } else if ((protocol.trim().equalsIgnoreCase("imap")) && (port == null || port.equals(""))) {
-            port = "143";
-        } else if ((protocol.trim().equalsIgnoreCase("imap4")) && (port == null || port.equals(""))) {
-            port = "143";
+                && (!port.equalsIgnoreCase(IMAP_PORT)) && (!port.equalsIgnoreCase(POP3_PORT))) {
+            throw new Exception(PLEASE_SPECIFY_THE_PROTOCOL_FOR_THE_INDICATED_PORT);
+        } else if ((protocol == null || protocol.equals("")) && (port.trim().equalsIgnoreCase(IMAP_PORT))) {
+            protocol = IMAP;
+        } else if ((protocol == null || protocol.equals("")) && (port.trim().equalsIgnoreCase(POP3_PORT))) {
+            protocol = POP3;
+        } else if ((protocol.trim().equalsIgnoreCase(POP3)) && (port == null || port.equals(""))) {
+            port = POP3_PORT;
+        } else if ((protocol.trim().equalsIgnoreCase(IMAP)) && (port == null || port.equals(""))) {
+            port = IMAP_PORT;
+        } else if ((protocol.trim().equalsIgnoreCase(IMAP_4)) && (port == null || port.equals(""))) {
+            port = IMAP_PORT;
         }
 
         //The protocol should be given in lowercase to be recognised.
         protocol = protocol.toLowerCase();
-        if ((protocol != null) && protocol.trim().equalsIgnoreCase("imap4")) {
-            protocol = "imap";
+        if (protocol.trim().equalsIgnoreCase(IMAP_4)) {
+            protocol = IMAP;
         }
     }
 
     protected String getMessageContent(Message message, String characterSet) throws Exception {
         String cmessage = "";
 
-        if (message.isMimeType("text/plain")) {
+        if (message.isMimeType(TEXT_PLAIN)) {
             cmessage = MimeUtility.decodeText(message.getContent().toString());
-        } else if (message.isMimeType("text/html")) {
+        } else if (message.isMimeType(TEXT_HTML)) {
             cmessage = MimeUtility.decodeText(convertMessage(message.getContent().toString()));
         } else {
             Object obj = message.getContent();
@@ -293,9 +328,9 @@ public class GetMailMessage {
                             if (mm.getBodyPart(j).getContent() instanceof String) {
                                 BodyPart bodyPart = mm.getBodyPart(j);
                                 if ((characterSet != null) && (characterSet.trim().length() > 0)) {
-                                    String contentType = bodyPart.getHeader("Content-Type")[0];
+                                    String contentType = bodyPart.getHeader(CONTENT_TYPE)[0];
                                     contentType = contentType.replace(contentType.substring(contentType.indexOf("=") + 1), characterSet);
-                                    bodyPart.setHeader("Content-Type", contentType);
+                                    bodyPart.setHeader(CONTENT_TYPE, contentType);
                                 }
                                 cmessage += MimeUtility.decodeText(bodyPart.getContent().toString());
                             }
@@ -309,7 +344,7 @@ public class GetMailMessage {
                             count = bis.read(bytes, 0, count);
                             cmessage = MimeUtility.decodeText(new String(bytes, 0, count, characterSet));
                         } else
-                            cmessage = MimeUtility.decodeText((String) part.getContent().toString());
+                            cmessage = MimeUtility.decodeText(part.getContent().toString());
                     }
                 }
             }//for
@@ -339,7 +374,7 @@ public class GetMailMessage {
             // iterate through all the parts in this Multipart ...
             for (int i = 0, n = mpart.getCount(); i < n; i++) {
                 if (!fileNames.equals(""))
-                    fileNames += ",";
+                    fileNames += STR_COMMA;
                 // to the list of attachments built so far append the list of attachments in the current MIME part ...
                 fileNames += getAttachedFileNames(mpart.getBodyPart(i));
             }
@@ -351,9 +386,9 @@ public class GetMailMessage {
         StringBuilder sb = new StringBuilder();
         String delimiter = "";
         // splits the input into comma-separated chunks and decodes each chunk according to its encoding ...
-        for (String fileName : attachedFileNames.split(",")) {
-            sb.append(delimiter + MimeUtility.decodeText(fileName));
-            delimiter = ",";
+        for (String fileName : attachedFileNames.split(STR_COMMA)) {
+            sb.append(delimiter).append(MimeUtility.decodeText(fileName));
+            delimiter = STR_COMMA;
         }
         // return the concatenation of the decoded chunks ...
         return sb.toString();
@@ -361,7 +396,7 @@ public class GetMailMessage {
 
     protected String convertMessage(String msg) throws Exception {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < msg.length(); i++) {
             char c = msg.charAt(i);
@@ -372,8 +407,7 @@ public class GetMailMessage {
             }
 
         }
-        String returnString = sb.toString();
-        return returnString;
+        return sb.toString();
     }
 
     protected int getFolderOpenMode() {
