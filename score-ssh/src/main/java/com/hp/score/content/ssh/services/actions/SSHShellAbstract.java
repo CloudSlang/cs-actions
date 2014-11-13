@@ -52,10 +52,16 @@ public abstract class SSHShellAbstract {
     }
 
     protected SSHService getFromCache(SSHShellInputs sshShellInputs, String sessionId) { //TODO SessionObject?
+        //        if (sessionParam instanceof GlobalSessionObject<?>) {
+//            resource = ((GlobalSessionObject) sessionParam).getResource();
+//        }
+//        else if (sessionParam instanceof GlobalSessionObject<?>) { //TODO sessionObject? take into consideration the resource below
+//            resource = ((GlobalSessionObject) sessionParam).getResource();//TODO sessionObject?
+//        }
 //        SSHService service = SSHServiceImpl.getFromCache(sessionObject, sessionId); // TODO
         synchronized (sessionId) {
-                return CacheUtils.getFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
-//                return SSHServiceImpl.getFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
+                return CacheUtils.getFromCache(sshShellInputs.getSshGlobalSessionObject().getResource(), sessionId);
+//                return SSHServiceImpl.getFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId); // TODO check for map?
         }
     }
 
@@ -63,7 +69,7 @@ public abstract class SSHShellAbstract {
 //        if (useGlobalContextBoolean) {
 //            return SSHServiceImpl.getFromCache(globalSessionObject, sessionId);
 //        }
-//        incrementSessionsCounter(globalSessionObject, sessionId);
+//        incrementSessionsCounter(globalSessionObject, sessionId); // TODO
 //        return SSHServiceImpl.getFromCache(sessionObject, sessionId);
 //    }
 //

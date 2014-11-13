@@ -13,19 +13,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author ioanvranauhp
+ * @author hasna, ioanvranauhp
  *         Date: 10/29/14
  */
 public class CacheUtils {
     /**
-     * @param sessionParam the cache.
+     * @param resource the cache.
      * @return the SSH session from cache
      */
-    public static Session getSshSession(SessionParam sessionParam, String sessionId) {
-        SessionResource resource = getSessionResource(sessionParam);
+    private static Session getSshSession(SessionResource<Map<String, SSHConnection>> resource, String sessionId) {
         if (resource != null) {
             Object obj = resource.get();
-            if (obj != null && obj instanceof Map) {
+            if (obj != null) {
                 SSHConnection sshConnection = (SSHConnection) ((Map) obj).get(sessionId);
                 if (sshConnection != null) {
                     return sshConnection.getSession();
@@ -36,14 +35,13 @@ public class CacheUtils {
     }
 
     /**
-     * @param sessionParam the cache.
+     * @param resource the cache.
      * @return the SSH channel from cache
      */
-    public static Channel getSshChannel(SessionParam sessionParam, String sessionId) {
-        SessionResource resource = getSessionResource(sessionParam);
+    private static Channel getSshChannel(SessionResource<Map<String, SSHConnection>> resource, String sessionId) {
         if (resource != null) {
             Object obj = resource.get();
-            if (obj != null && obj instanceof Map) {
+            if (obj != null) {
                 SSHConnection sshConnection = (SSHConnection) ((Map) obj).get(sessionId);
                 if (sshConnection != null) {
                     return sshConnection.getChannel();
@@ -52,17 +50,6 @@ public class CacheUtils {
         }
 
         return null;
-    }
-
-    private static SessionResource getSessionResource(SessionParam sessionParam) {
-        SessionResource resource = null;
-        if (sessionParam instanceof GlobalSessionObject<?>) {
-            resource = ((GlobalSessionObject) sessionParam).getResource();
-        } else if (sessionParam instanceof GlobalSessionObject<?>) { //TODO sessionObject?
-            resource = ((GlobalSessionObject) sessionParam).getResource();//TODO sessionObject?
-        }
-
-        return resource;
     }
 
     /**
@@ -80,15 +67,17 @@ public class CacheUtils {
             }
             tempMap.put(sessionId, new SSHConnection(session));
             globalSessionObject.setResource(new SSHSessionResource(tempMap));
-        } else if (sessionParam instanceof GlobalSessionObject<?>) {//TODO sessionObject?
-            GlobalSessionObject<Map<String, SSHConnection>> sessionObject = ((GlobalSessionObject) sessionParam);//TODO sessionObject?
-            Map<String, SSHConnection> tempMap = sessionObject.get();
-            if (tempMap == null) {
-                tempMap = new HashMap<String, SSHConnection>();
-            }
-            tempMap.put(sessionId, new SSHConnection(session));
-            sessionObject.setResource(new SSHSessionResource(tempMap));
-        } else {
+        }
+//        else if (sessionParam instanceof GlobalSessionObject<?>) {//TODO sessionObject?
+//            GlobalSessionObject<Map<String, SSHConnection>> sessionObject = ((GlobalSessionObject) sessionParam);//TODO sessionObject?
+//            Map<String, SSHConnection> tempMap = sessionObject.get();
+//            if (tempMap == null) {
+//                tempMap = new HashMap<String, SSHConnection>();
+//            }
+//            tempMap.put(sessionId, new SSHConnection(session));
+//            sessionObject.setResource(new SSHSessionResource(tempMap));
+//        }
+        else {
             throw new RuntimeException("The SSH session could not be saved in the given sessionParam.");
         }
     }
@@ -109,15 +98,17 @@ public class CacheUtils {
             }
             tempMap.put(sessionId, new SSHConnection(session, channel));
             globalSessionObject.setResource(new SSHSessionResource(tempMap));
-        } else if (sessionParam instanceof GlobalSessionObject<?>) {//TODO sessionObject?
-            GlobalSessionObject<Map<String, SSHConnection>> sessionObject = ((GlobalSessionObject) sessionParam);//TODO sessionObject?
-            Map<String, SSHConnection> tempMap = sessionObject.get();
-            if (tempMap == null) {
-                tempMap = new HashMap<>();
-            }
-            tempMap.put(sessionId, new SSHConnection(session, channel));
-            sessionObject.setResource(new SSHSessionResource(tempMap));
-        } else {
+        }
+//        else if (sessionParam instanceof GlobalSessionObject<?>) {//TODO sessionObject?
+//            GlobalSessionObject<Map<String, SSHConnection>> sessionObject = ((GlobalSessionObject) sessionParam);//TODO sessionObject?
+//            Map<String, SSHConnection> tempMap = sessionObject.get();
+//            if (tempMap == null) {
+//                tempMap = new HashMap<>();
+//            }
+//            tempMap.put(sessionId, new SSHConnection(session, channel));
+//            sessionObject.setResource(new SSHSessionResource(tempMap));
+//        }
+        else {
             throw new RuntimeException("The SSH session and SSh channel could not be saved in the given sessionParam.");
         }
     }
@@ -132,18 +123,20 @@ public class CacheUtils {
         SessionResource resource = null;
         if (sessionParam instanceof GlobalSessionObject<?>) {
             resource = ((GlobalSessionObject) sessionParam).getResource();
-        } else {
-            resource = ((GlobalSessionObject) sessionParam).getResource();//TODO sessionObject?
         }
+//        else {
+//            resource = ((GlobalSessionObject) sessionParam).getResource();//TODO sessionObject?
+//        }
 
         if (resource != null) {
             Map<String, SSHConnection> tempMap = (Map<String, SSHConnection>) resource.get();
             if (tempMap != null) {
                 if (sessionParam instanceof GlobalSessionObject<?>) {
                     tempMap.remove(sessionId);
-                } else {
-                    decrementSessionsCounter(sessionId, tempMap);
                 }
+//                else {
+//                    decrementSessionsCounter(sessionId, tempMap); TODO
+//                }
 
             }
         }
@@ -155,7 +148,7 @@ public class CacheUtils {
      * @param sessionParam Operation Orchestration session.
      * @return the SSH service
      */
-    public static SSHService getFromCache(SessionParam sessionParam, String sessionId) {
+    public static SSHService getFromCache(SessionResource<Map<String, SSHConnection>> sessionParam, String sessionId) {
         Session savedSession = CacheUtils.getSshSession(sessionParam, sessionId);
         if (savedSession != null && savedSession.isConnected()) {
             Channel savedChannel = CacheUtils.getSshChannel(sessionParam, sessionId);
@@ -165,17 +158,17 @@ public class CacheUtils {
         return null;
     }
 
-    private static void decrementSessionsCounter(String sessionId, Map<String, SSHConnection> tempMap) {
-        SSHConnection connection = tempMap.get(sessionId);
-        synchronized (connection) {
-            if (connection.getSessionsCounter() == 0) {
-                tempMap.remove(sessionId);
-            } else {
-                int oldValue = connection.getSessionsCounter();
-                connection.setSessionsCounter(--oldValue);
-            }
-        }
-    }
+//    private static void decrementSessionsCounter(String sessionId, Map<String, SSHConnection> tempMap) {
+//        SSHConnection connection = tempMap.get(sessionId);
+//        synchronized (connection) {
+//            if (connection.getSessionsCounter() == 0) {
+//                tempMap.remove(sessionId);
+//            } else {
+//                int oldValue = connection.getSessionsCounter();
+//                connection.setSessionsCounter(--oldValue);
+//            }
+//        } TODO
+//    }
 
     /**
      * Wrapper class on SSH session.

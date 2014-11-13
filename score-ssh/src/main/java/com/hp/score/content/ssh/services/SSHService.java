@@ -77,4 +77,6 @@ public interface SSHService extends AutoCloseable {
      * @param remotePort The remote port.
      */
     void createLocalTunnel(int localPort, String remoteHost, int remotePort);
+
+    boolean hasShellChannel();
 }

@@ -197,15 +197,20 @@ public class SSHServiceImpl implements SSHService {
 
     @Override
     public void saveToCache(SessionParam sessionParam, String sessionId) {
-        if (shellChannel == null) {
-            CacheUtils.saveSshSession(session, sessionParam, sessionId);
-        } else {
+        if (hasShellChannel()) {
             CacheUtils.saveSshSessionAndChannel(session, shellChannel, sessionParam, sessionId);
+        } else {
+            CacheUtils.saveSshSession(session, sessionParam, sessionId);
         }
     }
 
     @Override
     public void removeFromCache(SessionParam sessionParam, String sessionId) {
         CacheUtils.removeSshSession(sessionParam, sessionId);
+    }
+
+    @Override
+    public final boolean hasShellChannel() {
+        return shellChannel != null;
     }
 }
