@@ -87,12 +87,12 @@ public abstract class SSHShellAbstract {
 //        }
 //    }
 
-    protected void saveToCache(SessionParam sessionObject, SSHService service, String sessionId) {//TODO SessionObject?
+    protected void saveToCache(SessionParam sessionParam, SSHService service, String sessionId) {//TODO SessionObject?
 //        if (useGlobalContextBoolean) {v
-            if (sessionObject.getName() == null) {
-                sessionObject.setName(Constants.SSH_SESSIONS_DEFAULT_ID);
+            if (sessionParam.getName() == null) {
+                sessionParam.setName(Constants.SSH_SESSIONS_DEFAULT_ID);
             }
-            service.saveToCache(sessionObject, sessionId);
+            service.saveToCache(sessionParam, sessionId);
 //        } else {
 //            if (sessionObject.getName() == null) {
 //                sessionObject.setName(Constants.SSH_SESSIONS_DEFAULT_ID);//TODO SessionObject?

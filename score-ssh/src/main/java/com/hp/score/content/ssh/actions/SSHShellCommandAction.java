@@ -19,6 +19,38 @@ import java.util.Map;
  */
 public class SSHShellCommandAction {
 
+    public static void main(String[] args) {
+        //         String user = "demo";
+        String user = "root";
+//        String user = "Administrator";
+//        String host = "16.84.193.91";
+        String host = "16.77.58.180";
+//        String host = "16.77.42.143";
+//        String host = "16.77.45.100";
+//        String password = "hpinvent";
+        String password = "B33f34t3r";
+        String strCommand = "ls\n";
+        SSHShellCommandAction command = new SSHShellCommandAction();
+        Map<String, String> results = command.runSshShellCommand(
+                host,
+                "",
+                user,
+                password,
+                "",
+                strCommand,
+                "",
+                "utf-8",
+                "",
+                "10000",
+                new GlobalSessionObject<Map<String, SSHConnection>>(),
+//                new SessionObject<Map<String, SSHConnection>>(),
+//                "true",
+                "true"
+        );
+        System.out.println(results.get("returnResult"));
+        System.out.println(results.get("exception"));
+    }
+
     @Action(name = "SSH Command",
             outputs = {
                     @Output(Constants.OutputNames.RETURN_CODE),

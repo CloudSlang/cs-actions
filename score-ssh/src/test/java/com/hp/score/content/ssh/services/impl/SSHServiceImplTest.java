@@ -172,16 +172,16 @@ public class SSHServiceImplTest {
 
     @Test
     public void testBasic() {
-//        String user = "demo";
+//         String user = "demo";
         String user = "root";
 //        String user = "Administrator";
 //        String host = "16.84.193.91";
-//        String host = "16.77.58.180";
+        String host = "16.77.58.180";
 //        String host = "16.77.42.143";
-        String host = "16.77.45.100";
+//        String host = "16.77.45.100";
 //        String password = "hpinvent";
         String password = "B33f34t3r";
-        String strCommand = "show network\n";
+        String strCommand = "ls\n";
         SSHShellCommandAction command = new SSHShellCommandAction();
         Map<String, String> results = command.runSshShellCommand(
                 host,
@@ -195,8 +195,11 @@ public class SSHServiceImplTest {
                 "",
                 "10000",
                 new GlobalSessionObject<Map<String, SSHConnection>>(),
+//                new SessionObject<Map<String, SSHConnection>>(),
+//                "true",
                 "true"
         );
-        System.out.println(results.get(Constants.OutputNames.RETURN_RESULT));
+        System.out.println(results.get("returnResult"));
+        System.out.println(results.get("exception"));
     }
 }

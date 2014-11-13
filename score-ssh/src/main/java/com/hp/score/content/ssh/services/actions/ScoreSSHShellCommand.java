@@ -40,7 +40,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
 
             // get the cached SSH session
-            service = getSshServiceFromCache(sshShellInputs, service, sessionId);
+            service = getSshServiceFromCache(sshShellInputs, sessionId);
             boolean saveSSHSession = false;
             if (service == null || !service.isConnected()) {
                 saveSSHSession = true;
@@ -61,9 +61,9 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         return returnResult;
     }
 
-    protected SSHService getSshServiceFromCache(SSHShellInputs sshShellInputs, SSHService service, String sessionId) {
+    private SSHService getSshServiceFromCache(SSHShellInputs sshShellInputs, String sessionId) {
 //        boolean useGlobalContextBoolean = StringUtils.toBoolean(sshShellInputs.getUseGlobalContext(), Constants.DEFAULT_USE_GLOBAL_CONTEXT); // TODO use global
-        service = getFromCache(sshShellInputs, sessionId); // TODO SESSION, GLOBAL
+        SSHService service = getFromCache(sshShellInputs, sessionId); // TODO SESSION, GLOBAL
         return service;
     }
 
