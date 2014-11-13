@@ -44,8 +44,8 @@ public class SSHShellCommandAction {
             @Param(value = Constants.PTY) String pty,  //, required = true
             @Param(Constants.InputNames.TIMEOUT) String timeout,
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
-            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO SessionObject?
-            @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext,
+//            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO SessionObject?
+//            @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext,
             @Param(Constants.CLOSE_SESSION) String closeSession) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();

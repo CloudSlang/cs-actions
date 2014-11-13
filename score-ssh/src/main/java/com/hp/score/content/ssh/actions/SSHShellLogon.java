@@ -39,9 +39,10 @@ public class SSHShellLogon extends SSHShellAbstract {
             @Param(value = Constants.InputNames.USERNAME, required = true) String username,
             @Param(value = Constants.InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
-            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
-            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO Session global
-            @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext) {
+            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject)
+//            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO Session global
+//            @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext)
+    {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
         sshShellInputs.setHost(host);

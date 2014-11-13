@@ -34,7 +34,7 @@ public class SSHShellLogoff extends SSHShellAbstract {
     )
     public Map<String, String> sshLogoff(
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
-            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, // TODO Session object
+//            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, // TODO Session object
             @Param(value = Constants.SESSION_ID, required = true) String sessionId) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
