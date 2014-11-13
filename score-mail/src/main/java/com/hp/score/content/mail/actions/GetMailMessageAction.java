@@ -31,22 +31,22 @@ public class GetMailMessageAction {
             }
     )
     public Map<String, String> execute(
-            @Param(GetMailMessageInputs.HOSTNAME) String hostname,
-            @Param(GetMailMessageInputs.PORT) String port,
-            @Param(GetMailMessageInputs.PROTOCOL) String protocol,
-            @Param(GetMailMessageInputs.USERNAME) String username,
-            @Param(GetMailMessageInputs.PASSWORD) String password,
-            @Param(GetMailMessageInputs.FOLDER) String folder,
-            @Param(GetMailMessageInputs.TRUSTALLROOTS) String trustAllRoots,
-            @Param(GetMailMessageInputs.MESSAGE_NUMBER) String messageNumber,
-            @Param(GetMailMessageInputs.SUBJECT_ONLY) String subjectOnly,
-            @Param(GetMailMessageInputs.ENABLESSL) String enableSSL,
-            @Param(GetMailMessageInputs.KEYSTORE) String keystore,
-            @Param(GetMailMessageInputs.KEYSTORE_PASSWORD) String keystorePassword,
-            @Param(GetMailMessageInputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(GetMailMessageInputs.TRUST_PASSWORD) String trustPassword,
-            @Param(GetMailMessageInputs.CHARACTER_SET) String characterSet,
-            @Param(GetMailMessageInputs.DELETE_UPON_RETRIVAL) String deleteUponRetrieval
+            @Param(value = GetMailMessageInputs.HOSTNAME, required = true) String hostname,
+            @Param(value = GetMailMessageInputs.PORT) String port,
+            @Param(value = GetMailMessageInputs.PROTOCOL) String protocol,
+            @Param(value = GetMailMessageInputs.USERNAME, required = true) String username,
+            @Param(value = GetMailMessageInputs.PASSWORD, required = true) String password,
+            @Param(value = GetMailMessageInputs.FOLDER, required = true) String folder,
+            @Param(value = GetMailMessageInputs.TRUSTALLROOTS) String trustAllRoots,
+            @Param(value = GetMailMessageInputs.MESSAGE_NUMBER, required = true) String messageNumber,
+            @Param(value = GetMailMessageInputs.SUBJECT_ONLY) String subjectOnly,
+            @Param(value = GetMailMessageInputs.ENABLESSL) String enableSSL,
+            @Param(value = GetMailMessageInputs.KEYSTORE) String keystore,
+            @Param(value = GetMailMessageInputs.KEYSTORE_PASSWORD) String keystorePassword,
+            @Param(value = GetMailMessageInputs.TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = GetMailMessageInputs.TRUST_PASSWORD) String trustPassword,
+            @Param(value = GetMailMessageInputs.CHARACTER_SET) String characterSet,
+            @Param(value = GetMailMessageInputs.DELETE_UPON_RETRIVAL) String deleteUponRetrieval
     ) {
         GetMailMessageInputs getMailMessageInputs = new GetMailMessageInputs();
         getMailMessageInputs.setHostname(hostname);

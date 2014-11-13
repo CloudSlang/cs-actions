@@ -31,15 +31,15 @@ public class SendMailAction {
             }
     )
 	public Map<String, String> execute(
-            @Param(SendMailInputs.HOSTNAME) String hostname,
-            @Param(SendMailInputs.PORT) String port,
-            @Param(SendMailInputs.HTML_EMAIL) String htmlEmail,
-            @Param(SendMailInputs.FROM) String from,
-            @Param(SendMailInputs.TO) String to,
+            @Param(value = SendMailInputs.HOSTNAME, required = true) String hostname,
+            @Param(value = SendMailInputs.PORT, required = true) String port,
+            @Param(value = SendMailInputs.HTML_EMAIL) String htmlEmail,
+            @Param(value = SendMailInputs.FROM, required = true) String from,
+            @Param(value = SendMailInputs.TO, required = true) String to,
             @Param(SendMailInputs.CC) String cc,
             @Param(SendMailInputs.BCC) String bcc,
-            @Param(SendMailInputs.SUBJECT) String subject,
-            @Param(SendMailInputs.BODY) String body,
+            @Param(value = SendMailInputs.SUBJECT, required = true) String subject,
+            @Param(value = SendMailInputs.BODY, required = true) String body,
             @Param(SendMailInputs.READ_RECEIPT) String readReceipt,
             @Param(SendMailInputs.ATTACHMENTS) String attachments,
             @Param(SendMailInputs.USER) String user,

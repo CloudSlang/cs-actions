@@ -1,23 +1,23 @@
 package com.hp.score.content.mail.services;
 
 import com.hp.score.content.mail.entities.GetMailMessageInputs;
+import com.hp.score.content.mail.entities.SimpleAuthenticator;
 import com.hp.score.content.mail.entities.StringOutputStream;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Store;
+import javax.mail.*;
 import javax.mail.internet.MimeUtility;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
  * Created by giloan on 11/6/2014.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({GetMailMessage.class, MimeUtility.class})
+@PrepareForTest({GetMailMessage.class, MimeUtility.class, URLName.class, Session.class, System.class})
 public class GetMailMessageTest {
 
     public static final int READ_ONLY = 1;
@@ -37,8 +37,8 @@ public class GetMailMessageTest {
     private static final String HOST = "host";
     private static final String POP3_PORT = "110";
     private static final String IMAP_PORT = "143";
-    private static final String POP3_PROTOCOL = "POP3";
-    private static final String IMAP_PROTOCOL = "IMAP";
+    private static final String POP3_PROTOCOL = "pop3";
+    private static final String IMAP_PROTOCOL = "imap";
     private static final String USERNAME = "testUser";
     private static final String PASSWORD = "testPass";
     private static final String FOLDER = "INBOX";
@@ -63,6 +63,9 @@ public class GetMailMessageTest {
     private static final String BODY_RESULT = "Body";
     private static final String ATTACHED_FILE_NAMES_RESULT = "AttachedFileNames";
     private static final String BAD_CHARACTERSET = "badCharSet";
+    private static final String STR_FALSE = "false";
+    private static final String STR_TRUE = "true";
+    public static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
     @Rule
     public ExpectedException exception = ExpectedException.none();
     private GetMailMessage getMailMessage;
@@ -77,16 +80,26 @@ public class GetMailMessageTest {
     private Message messageMock;
     @Mock
     private StringOutputStream stringOutputStreamMock;
+    @Mock
+    private Properties propertiesMock;
+    @Mock
+    private SimpleAuthenticator authenticatorMock;
+    @Mock
+    private URLName urlNameMock;
+    @Mock
+    private Session sessionMock;
+    @Mock
+    private Object objectMock;
 
     @Before
     public void setUp() throws Exception {
-//        getMailMessage = new GetMailMessage();
+        getMailMessage = new GetMailMessage();
         inputs = new GetMailMessageInputs();
     }
 
     @After
     public void tearDown() throws Exception {
-//        getMailMessage = null;
+        getMailMessage = null;
         inputs = null;
     }
 
@@ -122,11 +135,7 @@ public class GetMailMessageTest {
         doNothing().when(folderMock).open(READ_ONLY);
         doReturn(0).when(folderMock).getMessageCount();
 
-        inputs.setHostname(HOST);
-        inputs.setPort(POP3_PORT);
-        inputs.setProtocol(POP3_PROTOCOL);
-        inputs.setMessageNumber(MESSAGE_NUMBER);
-
+        addRequiredInputs();
         getMailMessageSpy.processInputs(inputs);
         exception.expect(Exception.class);
         exception.expectMessage("message value was: " + MESSAGE_NUMBER + " there are only " + 0 + " messages in folder");
@@ -146,12 +155,9 @@ public class GetMailMessageTest {
         String subjectTest = SUBJECT_TEST;
         doReturn(subjectTest).when(messageMock).getSubject();
 
-        inputs.setHostname(HOST);
-        inputs.setPort(POP3_PORT);
-        inputs.setProtocol(POP3_PROTOCOL);
-        inputs.setMessageNumber(MESSAGE_NUMBER);
-        inputs.setSubjectOnly("true");
-        inputs.setDeleteUponRetrieval("true");
+        addRequiredInputs();
+        inputs.setSubjectOnly(STR_TRUE);
+        inputs.setDeleteUponRetrieval(STR_TRUE);
         inputs.setCharacterSet("");
 
         Map<String, String> result = getMailMessageSpy.execute(inputs);
@@ -174,12 +180,9 @@ public class GetMailMessageTest {
         doReturn(new String[]{"1"}).when(messageMock).getHeader(anyString());
         doReturn(SUBJECT_TEST).when(getMailMessageSpy).changeHeaderCharset("1", CHARACTERSET);
 
-        inputs.setHostname(HOST);
-        inputs.setPort(POP3_PORT);
-        inputs.setProtocol(POP3_PROTOCOL);
-        inputs.setMessageNumber(MESSAGE_NUMBER);
-        inputs.setSubjectOnly("true");
-        inputs.setDeleteUponRetrieval("true");
+        addRequiredInputs();
+        inputs.setSubjectOnly(STR_TRUE);
+        inputs.setDeleteUponRetrieval(STR_TRUE);
         inputs.setCharacterSet(CHARACTERSET);
 
         Map<String, String> result = getMailMessageSpy.execute(inputs);
@@ -212,10 +215,7 @@ public class GetMailMessageTest {
         String stringOutputStreamMockToString = "testStream";
         doReturn(stringOutputStreamMockToString).when(stringOutputStreamMock).toString();
 
-        inputs.setHostname(HOST);
-        inputs.setPort(POP3_PORT);
-        inputs.setProtocol(POP3_PROTOCOL);
-        inputs.setMessageNumber(MESSAGE_NUMBER);
+        addRequiredInputs();
         inputs.setSubjectOnly("");
         inputs.setCharacterSet(CHARACTERSET);
 
@@ -257,10 +257,7 @@ public class GetMailMessageTest {
         String fiddledStringOutputStreamMockToString = (char) 0 + stringOutputStreamMockToString + (char) 0;
         doReturn(fiddledStringOutputStreamMockToString).when(stringOutputStreamMock).toString();
 
-        inputs.setHostname(HOST);
-        inputs.setPort(POP3_PORT);
-        inputs.setProtocol(POP3_PROTOCOL);
-        inputs.setMessageNumber(MESSAGE_NUMBER);
+        addRequiredInputs();
         inputs.setSubjectOnly("");
 
         Map<String, String> result = getMailMessageSpy.execute(inputs);
@@ -291,10 +288,7 @@ public class GetMailMessageTest {
         PowerMockito.mockStatic(MimeUtility.class);
         PowerMockito.doThrow(new UnsupportedEncodingException("")).when(MimeUtility.class, "decodeText", anyString());
 
-        inputs.setHostname(HOST);
-        inputs.setPort(POP3_PORT);
-        inputs.setProtocol(POP3_PROTOCOL);
-        inputs.setMessageNumber(MESSAGE_NUMBER);
+        addRequiredInputs();
         inputs.setSubjectOnly("");
         inputs.setCharacterSet(BAD_CHARACTERSET);
 
@@ -304,12 +298,119 @@ public class GetMailMessageTest {
     }
 
     /**
-     * Test createMessageStore method.
+     * Test createMessageStore method with enableSSL input false.
      */
     @Test
-    @Ignore
-    public void testCreateMessageStore() {
+    public void testCreateMessageStoreWithEnableSSLInputFalse() throws Exception {
+        PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
+        PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
+        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithoutSSL(propertiesMock, authenticatorMock);
+        doNothing().when(storeMock).connect();
 
+        addRequiredInputs();
+        inputs.setEnableSSL(STR_FALSE);
+        getMailMessageSpy.processInputs(inputs);
+        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        PowerMockito.verifyNew(Properties.class).withNoArguments();
+        PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
+        verify(getMailMessageSpy).configureStoreWithoutSSL(propertiesMock, authenticatorMock);
+        verify(storeMock).connect();
+    }
+
+    /**
+     * Test createMessageStore method with enableSSL input true.
+     */
+    @Test
+    public void testCreateMessageStoreWithEnableSSLInputTrue() throws Exception {
+        PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
+        PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
+        doNothing().when(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+        doNothing().when(storeMock).connect();
+
+        addRequiredInputs();
+        inputs.setEnableSSL(STR_TRUE);
+        getMailMessageSpy.processInputs(inputs);
+        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        PowerMockito.verifyNew(Properties.class).withNoArguments();
+        PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
+        verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        verify(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+    }
+
+    /**
+     * Test configureStoreWithSSL method.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testConfigureStoreWithSSL() throws Exception {
+        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.class", SSL_FACTORY);
+        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.fallback", STR_FALSE);
+        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
+        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
+        PowerMockito.whenNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString()).thenReturn(urlNameMock);
+        PowerMockito.mockStatic(Session.class);
+        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        doReturn(storeMock).when(sessionMock).getStore(urlNameMock);
+
+        addRequiredInputs();
+        getMailMessageSpy.processInputs(inputs);
+
+        Store store = getMailMessageSpy.configureStoreWithSSL(propertiesMock, authenticatorMock);
+        assertEquals(storeMock, store);
+        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.class", SSL_FACTORY);
+        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.fallback", STR_FALSE);
+        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
+        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
+        PowerMockito.verifyNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
+        PowerMockito.verifyStatic();
+        Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        verify(sessionMock).getStore(urlNameMock);
+    }
+
+    @Test
+    public void testConfigureStoreWithoutSSL() throws Exception {
+        doReturn(objectMock).when(propertiesMock).put("mail." + POP3_PROTOCOL + ".host", HOST);
+        doReturn(objectMock).when(propertiesMock).put("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
+        PowerMockito.mockStatic(Session.class);
+        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        doReturn(storeMock).when(sessionMock).getStore(POP3_PROTOCOL);
+
+        addRequiredInputs();
+        getMailMessageSpy.processInputs(inputs);
+
+        Store store = getMailMessageSpy.configureStoreWithoutSSL(propertiesMock, authenticatorMock);
+        assertEquals(storeMock, store);
+        verify(propertiesMock).put("mail." + POP3_PROTOCOL + ".host", HOST);
+        verify(propertiesMock).put("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
+        PowerMockito.verifyStatic();
+        Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        verify(sessionMock).getStore(POP3_PROTOCOL);
+    }
+
+    @Test
+    @Ignore
+    public void testAddSSLSettings() throws Exception {
+        String testSeparator = "\\";
+        String testJavaHome = "HDD:\\java";
+        doReturn(testSeparator).when(getMailMessageSpy).getSystemFileSeparator();
+        doReturn(testJavaHome).when(getMailMessageSpy).getSystemJavaHome();
+
+        getMailMessageSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_FALSE), KEYSTORE, KEYSTORE_PASSWORD, TRUST_KEYSTORE, TRUST_PASSWORD);
+    }
+
+    /**
+     * Set the required inputs.
+     */
+    private void addRequiredInputs() {
+        inputs.setHostname(HOST);
+        inputs.setPort(POP3_PORT);
+        inputs.setProtocol(POP3_PROTOCOL);
+        inputs.setUsername(USERNAME);
+        inputs.setPassword(PASSWORD);
+        inputs.setFolder(FOLDER);
+        inputs.setMessageNumber(MESSAGE_NUMBER);
     }
 }
 

@@ -65,6 +65,11 @@ public class GetMailMessage {
     public static final String UNRECOGNIZED_SSL_MESSAGE = "Unrecognized SSL message";
     public static final String UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION = "Unrecognized SSL message, plaintext connection?";
     public static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    private static final String HOST_NOT_SPECIFIED = "The required host input is not specified!";
+    private static final String MESSAGE_NUMBER_NOT_SPECIFIED = "The required messageNumber input is not specified!";
+    private static final String USERNAME_NOT_SPECIFIED = "The required username input is not specified!";
+    private static final String PASSWORD_NOT_SPECIFIED = "The required password input is not specified!";
+    private static final String FOLDER_NOT_SPECIFIED = "The required folder input is not specified!";
 
     //Operation inputs
     private String host;
@@ -173,15 +178,13 @@ public class GetMailMessage {
     }
 
     protected Store configureStoreWithSSL(Properties props, Authenticator auth) throws NoSuchProviderException {
-        Store store;
         props.setProperty("mail." + protocol + ".socketFactory.class", SSL_FACTORY);
         props.setProperty("mail." + protocol + ".socketFactory.fallback", STR_FALSE);
         props.setProperty("mail." + protocol + ".port", port);
         props.setProperty("mail." + protocol + ".socketFactory.port", port);
         URLName url = new URLName(protocol, host, Integer.parseInt(port), "", username, password);
         Session session = Session.getInstance(props, auth);
-        store = session.getStore(url);
-        return store;
+        return session.getStore(url);
     }
 
     protected Store configureStoreWithoutSSL(Properties props, Authenticator auth) throws NoSuchProviderException {
@@ -196,8 +199,8 @@ public class GetMailMessage {
         boolean useClientCert = false;
         boolean useTrustCert = false;
 
-        String separator = System.getProperty("file.separator");
-        String javaKeystore = System.getProperty("java.home") + separator + "lib" + separator + "security" + separator + "cacerts";
+        String separator = getSystemFileSeparator();
+        String javaKeystore = getSystemJavaHome() + separator + "lib" + separator + "security" + separator + "cacerts";
         if (keystore.length() == 0 && !trustAllRoots) {
             boolean storeExists = new File(javaKeystore).exists();
             keystore = (storeExists) ? FILE + javaKeystore : null;
@@ -249,17 +252,51 @@ public class GetMailMessage {
         SSLContext.setDefault(context);
     }
 
+    protected String getSystemFileSeparator() {
+        return System.getProperty("file.separator");
+    }
+
+    protected String getSystemJavaHome() {
+        return System.getProperty("java.home");
+    }
+
     protected void processInputs(GetMailMessageInputs getMailMessageInputs) throws Exception {
-        host = getMailMessageInputs.getHostname();
+
+        String strHost = getMailMessageInputs.getHostname();
+        if(null == strHost || strHost.equals("")) {
+            throw new Exception(HOST_NOT_SPECIFIED);
+        } else {
+            host = strHost.trim();
+        }
         port = getMailMessageInputs.getPort();
         protocol = getMailMessageInputs.getProtocol();
-        username = getMailMessageInputs.getUsername();
-        password = getMailMessageInputs.getPassword();
-        folder = getMailMessageInputs.getFolder();
+        String strUsername = getMailMessageInputs.getUsername();
+        if(null == strUsername || strUsername.equals("")) {
+            throw new Exception(USERNAME_NOT_SPECIFIED);
+        } else {
+            username = strUsername.trim();
+        }
+        String strPassword = getMailMessageInputs.getPassword();
+        if(null == strPassword || strPassword.equals("")) {
+            throw new Exception(PASSWORD_NOT_SPECIFIED);
+        } else {
+            password = strPassword.trim();
+        }
+        String strFolder = getMailMessageInputs.getFolder();
+        if(null == strFolder || strFolder.equals("")) {
+            throw new Exception(FOLDER_NOT_SPECIFIED);
+        } else {
+            folder = strFolder.trim();
+        }
         String trustAll = getMailMessageInputs.getTrustAllRoots();
         // Default value of trustAllRoots is true
         trustAllRoots = !(null != trustAll && trustAll.equalsIgnoreCase(STR_FALSE));
-        messageNumber = Integer.parseInt(getMailMessageInputs.getMessageNumber());
+        String strMessageNumber = getMailMessageInputs.getMessageNumber();
+        if(strMessageNumber == null || strMessageNumber.equals("")) {
+            throw new Exception(MESSAGE_NUMBER_NOT_SPECIFIED);
+        } else {
+            messageNumber = Integer.parseInt(strMessageNumber);
+        }
         String strSubOnly = getMailMessageInputs.getSubjectOnly();
         // Default value of subjectOnly is false
         subjectOnly = (strSubOnly != null && strSubOnly.equalsIgnoreCase(STR_TRUE));
