@@ -1,8 +1,14 @@
 package com.hp.score.content.ssh.services;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionParam;
 import com.hp.score.content.ssh.entities.CommandResult;
 import com.hp.score.content.ssh.entities.ExpectCommandResult;
+import com.hp.score.content.ssh.entities.SSHConnection;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.Session;
+
+import java.util.Map;
 
 /**
  * @author ioanvranauhp
@@ -47,7 +53,7 @@ public interface SSHService extends AutoCloseable {
      * @param sessionParam The cache (Operation Orchestration session).
      * @param sessionId    The key of the Operation Orchestration session.
      */
-    void saveToCache(SessionParam sessionParam, String sessionId);
+    boolean saveToCache(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId);
 
     /**
      * Remove SSH session from the cache (Operation Orchestration session).
@@ -55,7 +61,7 @@ public interface SSHService extends AutoCloseable {
      * @param sessionParam The cache (Operation Orchestration session).
      * @param sessionId    The key of the Operation Orchestration session.
      */
-    void removeFromCache(SessionParam sessionParam, String sessionId);
+    void removeFromCache(GlobalSessionObject<Map<String, SSHConnection>>  sessionParam, String sessionId);
 
     /**
      * Run a expect command through SSH protocol.
@@ -78,5 +84,7 @@ public interface SSHService extends AutoCloseable {
      */
     void createLocalTunnel(int localPort, String remoteHost, int remotePort);
 
-    boolean hasShellChannel();
+    Session getSSHSession();
+
+    Channel getShellChannel();
 }

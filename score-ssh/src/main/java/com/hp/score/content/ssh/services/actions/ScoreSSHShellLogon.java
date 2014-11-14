@@ -39,7 +39,10 @@ public class ScoreSSHShellLogon extends SSHShellAbstract {
                 }
                 // save SSH session in the cache
                 if (saveSSHSession) {
-                    saveToCache(sshShellInputs.getSshGlobalSessionObject(), service, sessionId); // TODO
+                    boolean saved = saveToCache(sshShellInputs.getSshGlobalSessionObject(), service, sessionId);
+                    if (!saved) {
+                        throw new RuntimeException("The SSH session could not be saved in the given sessionParam.");
+                    }
                 }
             }
 

@@ -45,7 +45,6 @@ public class SSHShellAction extends SSHShellAbstract {
             @Param(Constants.NEWLINE_SEQUENCE) String newlineCharacters,
             @Param(Constants.InputNames.TIMEOUT) String timeout,
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
-//            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, // todo session object global
             @Param(Constants.SESSION_ID) String sessionId) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();

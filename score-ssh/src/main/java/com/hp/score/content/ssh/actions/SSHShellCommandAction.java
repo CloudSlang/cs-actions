@@ -43,8 +43,6 @@ public class SSHShellCommandAction {
                 "",
                 "10000",
                 new GlobalSessionObject<Map<String, SSHConnection>>(),
-//                new SessionObject<Map<String, SSHConnection>>(),
-//                "true",
                 "true"
         );
         System.out.println(results.get("returnResult"));
@@ -73,11 +71,9 @@ public class SSHShellCommandAction {
             @Param(value = Constants.COMMAND, required = true) String command,
             @Param(value = Constants.ARGS, description = Constants.ARGS_IS_DEPRECATED) String arguments,
             @Param(Constants.InputNames.CHARACTER_SET) String characterSet,
-            @Param(value = Constants.PTY) String pty,  //, required = true
+            @Param(value = Constants.PTY) String pty,
             @Param(Constants.InputNames.TIMEOUT) String timeout,
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
-//            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO SessionObject?
-//            @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext,
             @Param(Constants.CLOSE_SESSION) String closeSession) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
@@ -92,8 +88,6 @@ public class SSHShellCommandAction {
         sshShellInputs.setPty(pty);
         sshShellInputs.setTimeout(timeout);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
-//        sshShellInputs.setSshSessionObject(sessionObject);
-//        sshShellInputs.setUseGlobalContext(useGlobalContext); //TODO
         sshShellInputs.setCloseSession(closeSession);
 
         return new ScoreSSHShellCommand().execute(sshShellInputs);

@@ -1,10 +1,8 @@
 package com.hp.score.content.ssh.services.impl;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionParam;
-import com.hp.score.content.ssh.entities.CommandResult;
-import com.hp.score.content.ssh.entities.ConnectionDetails;
-import com.hp.score.content.ssh.entities.ExpectCommandResult;
-import com.hp.score.content.ssh.entities.KeyFile;
+import com.hp.score.content.ssh.entities.*;
 import com.hp.score.content.ssh.services.SSHService;
 import com.hp.score.content.ssh.utils.CacheUtils;
 import com.hp.score.content.ssh.utils.Constants;
@@ -13,6 +11,7 @@ import com.hp.score.content.ssh.utils.simulator.visualization.IShellVisualizer;
 import com.jcraft.jsch.*;
 
 import java.io.*;
+import java.util.Map;
 
 /**
  * @author ioanvranauhp
@@ -196,21 +195,23 @@ public class SSHServiceImpl implements SSHService {
     }
 
     @Override
-    public void saveToCache(SessionParam sessionParam, String sessionId) {
-        if (hasShellChannel()) {
-            CacheUtils.saveSshSessionAndChannel(session, shellChannel, sessionParam, sessionId);
-        } else {
-            CacheUtils.saveSshSession(session, sessionParam, sessionId);
-        }
+    public boolean saveToCache(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId) {
+        return CacheUtils.saveSshSessionAndChannel(session, shellChannel, sessionParam, sessionId);
+
     }
 
     @Override
-    public void removeFromCache(SessionParam sessionParam, String sessionId) {
+    public void removeFromCache(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId) {
         CacheUtils.removeSshSession(sessionParam, sessionId);
     }
 
     @Override
-    public final boolean hasShellChannel() {
-        return shellChannel != null;
+    public Session getSSHSession() {
+        return session;
+    }
+
+    @Override
+    public Channel getShellChannel() {
+        return shellChannel;
     }
 }

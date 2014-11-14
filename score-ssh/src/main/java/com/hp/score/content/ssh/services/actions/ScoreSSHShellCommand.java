@@ -62,8 +62,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
     }
 
     private SSHService getSshServiceFromCache(SSHShellInputs sshShellInputs, String sessionId) {
-//        boolean useGlobalContextBoolean = StringUtils.toBoolean(sshShellInputs.getUseGlobalContext(), Constants.DEFAULT_USE_GLOBAL_CONTEXT); // TODO use global
-        SSHService service = getFromCache(sshShellInputs, sessionId); // TODO SESSION, GLOBAL
+        SSHService service = getFromCache(sshShellInputs, sessionId);
         return service;
     }
 
@@ -93,7 +92,10 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             cleanupService(sshShellInputs, service, sessionId);
         } else if (saveSSHSession) {
             // save SSH session in the cache
-            saveToCache(sshShellInputs.getSshGlobalSessionObject(), service, sessionId);
+            final boolean saved = saveToCache(sshShellInputs.getSshGlobalSessionObject(), service, sessionId);
+            if (!saved) {
+                throw new RuntimeException("The SSH session could not be saved in the given sessionParam.");
+            }
         }
     }
 

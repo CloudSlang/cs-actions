@@ -40,8 +40,6 @@ public class SSHShellLogon extends SSHShellAbstract {
             @Param(value = Constants.InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject)
-//            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> sessionObject, //TODO Session global
-//            @Param(Constants.USE_GLOBAL_CONTEXT) String useGlobalContext)
     {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
@@ -51,8 +49,6 @@ public class SSHShellLogon extends SSHShellAbstract {
         sshShellInputs.setPassword(password);
         sshShellInputs.setPrivateKeyFile(privateKeyFile);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
-//        sshShellInputs.setSshSessionObject(sessionObject); TODO
-//        sshShellInputs.setUseGlobalContext(useGlobalContext);
         return new ScoreSSHShellLogon().execute(sshShellInputs);
     }
 
