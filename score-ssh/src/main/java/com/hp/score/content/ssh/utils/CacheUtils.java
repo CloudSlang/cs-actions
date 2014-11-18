@@ -87,11 +87,13 @@ public class CacheUtils {
      * @param sessionId    The key to the session in the cache map.
      */
     public static void removeSshSession(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId) {
-        SessionResource<Map<String, SSHConnection>> resource = sessionParam.getResource();
-        if (resource != null) {
-            Map<String, SSHConnection> tempMap = resource.get();
-            if (tempMap != null) {
+        if(sessionParam != null) {
+            SessionResource<Map<String, SSHConnection>> resource = sessionParam.getResource();
+            if (resource != null) {
+                Map<String, SSHConnection> tempMap = resource.get();
+                if (tempMap != null) {
                     tempMap.remove(sessionId);
+                }
             }
         }
     }

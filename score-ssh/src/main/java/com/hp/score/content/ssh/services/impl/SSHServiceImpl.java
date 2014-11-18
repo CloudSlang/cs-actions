@@ -155,7 +155,9 @@ public class SSHServiceImpl implements SSHService {
             // save the response
             ExpectCommandResult result = new ExpectCommandResult();
             result.setStandardOutput(simulator.getOutput());
-            result.setExpectXmlOutputs(visualizer.getXMLSummary());
+            if(visualizer != null) {
+                result.setExpectXmlOutputs(visualizer.getXMLSummary());
+            }
 
             // The exit status is only available after the channel was closed (more exactly, just before the channel is closed).
             result.setExitCode(shellChannel.getExitStatus());
