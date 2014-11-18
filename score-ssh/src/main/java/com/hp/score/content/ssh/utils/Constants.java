@@ -56,18 +56,18 @@ public class Constants {
 
     public static final class ResponseNames {
 
-        public static final String SUCCESS = "";
-        public static final String FAILURE = "";
+        public static final String SUCCESS = "success";
+        public static final String FAILURE = "failure";
     }
 
     public static final class InputNames {
 
-        public static final String HOST = "";
-        public static final String PORT = "";
-        public static final String USERNAME = "";
-        public static final String PASSWORD = "";
-        public static final String CHARACTER_SET = "";
-        public static final String TIMEOUT = "";
+        public static final String HOST = "host";
+        public static final String PORT = "port";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String CHARACTER_SET = "characterSet";
+        public static final String TIMEOUT = "timeout";
     }
 
 
