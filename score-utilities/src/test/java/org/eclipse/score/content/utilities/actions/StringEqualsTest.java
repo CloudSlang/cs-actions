@@ -1,6 +1,6 @@
-package com.hp.score.content.utilities.actions;
+package org.eclipse.score.content.utilities.actions;
 
-import com.hp.score.content.utilities.utils.Constants;
+import org.eclipse.score.content.utilities.utils.Constants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class StringEqualsTest {
     private static final String DO_NOT_MATCH = "Does not Match";
 
     @Test
-     public void testWithEqualsStrings() {
+    public void testWithEqualsStrings() {
         StringEquals toTest = new StringEquals();
         String str1 = "abc";
         String str2 = "abc";

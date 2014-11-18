@@ -1,4 +1,4 @@
-package com.hp.score.content.utilities.utils;
+package org.eclipse.score.content.utilities.utils;
 
 import java.io.StringWriter;
 

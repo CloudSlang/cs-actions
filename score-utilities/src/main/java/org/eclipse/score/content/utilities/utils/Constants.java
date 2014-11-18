@@ -1,4 +1,4 @@
-package com.hp.score.content.utilities.utils;
+package org.eclipse.score.content.utilities.utils;
 
 /**
  * Created by persdana on 10/30/2014.

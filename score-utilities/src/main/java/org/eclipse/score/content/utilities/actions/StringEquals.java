@@ -1,11 +1,11 @@
-package com.hp.score.content.utilities.actions;
+package org.eclipse.score.content.utilities.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.score.content.utilities.utils.Constants;
+import org.eclipse.score.content.utilities.utils.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class StringEquals {
     public static final String STRING2 = "string2";
     public static final String IGNORE_CASE = "ignoreCase";
 
-    @Action(name="String Equals",
+    @Action(name = "String Equals",
             outputs = {
                     @Output(Constants.OutputNames.RETURN_RESULT),
                     @Output(Constants.OutputNames.RESPONSE_TEXT)},

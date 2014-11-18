@@ -1,6 +1,6 @@
-package com.hp.score.content.utilities.actions;
+package org.eclipse.score.content.utilities.actions;
 
-import com.hp.score.content.utilities.utils.Constants;
+import org.eclipse.score.content.utilities.utils.Constants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -67,7 +67,7 @@ public class IfActionTest {
     }
 
     @Test
-     public void testIfActionWithBooleanExpr() {
+    public void testIfActionWithBooleanExpr() {
         IfAction toTest = new IfAction();
         String condition = "true == true";
 
