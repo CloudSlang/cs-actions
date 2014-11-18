@@ -21,8 +21,11 @@ public class GetMailMessageAction {
 
     @Action(name = "Get Mail Message",
             outputs = {
-                    @Output(GetMailMessage.RETURN_RESULT),
                     @Output(GetMailMessage.RETURN_CODE),
+                    @Output(GetMailMessage.RETURN_RESULT),
+                    @Output(GetMailMessage.SUBJECT),
+                    @Output(GetMailMessage.BODY_RESULT),
+                    @Output(GetMailMessage.ATTACHED_FILE_NAMES_RESULT),
                     @Output(GetMailMessage.EXCEPTION)
             },
             responses = {

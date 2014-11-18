@@ -5,7 +5,7 @@ package com.hp.score.content.mail.entities;
  */
 public class SendMailInputs {
 
-    public static final String HOSTNAME = "smtpHostname";
+    public static final String HOSTNAME = "hostname";
     public static final String PORT = "port";
     public static final String HTML_EMAIL = "htmlEmail";
     public static final String FROM = "from";
