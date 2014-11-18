@@ -31,7 +31,6 @@ public class GetMailMessage {
 
     public static final String RETURN_RESULT = "returnResult";
     public static final String SUBJECT = "Subject";
-    public static final String SUBJECT_RESULT = SUBJECT;
     public static final String BODY_RESULT = "Body";
     public static final String ATTACHED_FILE_NAMES_RESULT = "AttachedFileNames";
     public static final String RETURN_CODE = "returnCode";
@@ -120,14 +119,14 @@ public class GetMailMessage {
                     if ((characterSet != null) && (characterSet.trim().length() > 0)) { //need to force the decode charset
                         String subject = message.getHeader(SUBJECT)[0];
                         subject = changeHeaderCharset(subject, characterSet);
-                        result.put(SUBJECT_RESULT, MimeUtility.decodeText(subject));
+                        result.put(SUBJECT, MimeUtility.decodeText(subject));
                         String attachedFileNames = changeHeaderCharset(getAttachedFileNames(message), characterSet);
                         result.put(ATTACHED_FILE_NAMES_RESULT, decodeAttachedFileNames(attachedFileNames));
                     } else { //let everything as the sender intended it to be :)
                         String subject = message.getSubject();
                         if (subject == null)
                             subject = "";
-                        result.put(SUBJECT_RESULT, MimeUtility.decodeText(subject));
+                        result.put(SUBJECT, MimeUtility.decodeText(subject));
                         result.put(ATTACHED_FILE_NAMES_RESULT, decodeAttachedFileNames((getAttachedFileNames(message))));
                     }
                     // Get the message body
