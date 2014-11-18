@@ -1,4 +1,4 @@
-package com.hp.score.content.mail.sslconfig;
+package org.eclipse.score.content.mail.sslconfig;
 
 import junit.framework.Assert;
 import org.junit.Rule;
@@ -18,7 +18,6 @@ import java.net.URL;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 import static org.mockito.Mockito.*;
@@ -107,6 +106,6 @@ public class SSLUtilsTest {
 
         Assert.assertEquals(trustManagers, result);
         verify(trustManagerFactoryMock).init(keystoreMock);
-        Assert.assertTrue(result[1] instanceof  AuthSSLX509TrustManager);
+        Assert.assertTrue(result[1] instanceof AuthSSLX509TrustManager);
     }
 }

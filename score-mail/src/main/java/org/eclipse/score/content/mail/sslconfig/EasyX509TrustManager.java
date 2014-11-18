@@ -1,4 +1,4 @@
-package com.hp.score.content.mail.sslconfig;
+package org.eclipse.score.content.mail.sslconfig;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;

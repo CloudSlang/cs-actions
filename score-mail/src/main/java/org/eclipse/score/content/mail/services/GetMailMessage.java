@@ -1,10 +1,10 @@
-package com.hp.score.content.mail.services;
+package org.eclipse.score.content.mail.services;
 
-import com.hp.score.content.mail.entities.GetMailMessageInputs;
-import com.hp.score.content.mail.entities.SimpleAuthenticator;
-import com.hp.score.content.mail.entities.StringOutputStream;
-import com.hp.score.content.mail.sslconfig.EasyX509TrustManager;
-import com.hp.score.content.mail.sslconfig.SSLUtils;
+import org.eclipse.score.content.mail.entities.GetMailMessageInputs;
+import org.eclipse.score.content.mail.entities.SimpleAuthenticator;
+import org.eclipse.score.content.mail.entities.StringOutputStream;
+import org.eclipse.score.content.mail.sslconfig.EasyX509TrustManager;
+import org.eclipse.score.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;
 
 import javax.mail.*;

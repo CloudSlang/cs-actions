@@ -1,10 +1,10 @@
-package com.hp.score.content.mail.services;
+package org.eclipse.score.content.mail.services;
 
-import com.hp.score.content.mail.entities.GetMailMessageInputs;
-import com.hp.score.content.mail.entities.SimpleAuthenticator;
-import com.hp.score.content.mail.entities.StringOutputStream;
-import com.hp.score.content.mail.sslconfig.EasyX509TrustManager;
-import com.hp.score.content.mail.sslconfig.SSLUtils;
+import org.eclipse.score.content.mail.entities.GetMailMessageInputs;
+import org.eclipse.score.content.mail.entities.SimpleAuthenticator;
+import org.eclipse.score.content.mail.entities.StringOutputStream;
+import org.eclipse.score.content.mail.sslconfig.EasyX509TrustManager;
+import org.eclipse.score.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -18,10 +18,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.mail.*;
 import javax.mail.internet.MimeUtility;
-import javax.net.ssl.KeyManager;
 //import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import java.io.*;
 import java.net.URL;
 import java.security.KeyStore;
