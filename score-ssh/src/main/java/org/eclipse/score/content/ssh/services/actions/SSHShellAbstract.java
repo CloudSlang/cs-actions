@@ -50,8 +50,12 @@ public abstract class SSHShellAbstract {
 
     protected SSHService getFromCache(SSHShellInputs sshShellInputs, String sessionId) {
 
-        synchronized (sessionId) {
-            return CacheUtils.getFromCache(sshShellInputs.getSshGlobalSessionObject().getResource(), sessionId);
+        if(sessionId != null) {
+            synchronized (sessionId) {
+                return CacheUtils.getFromCache(sshShellInputs.getSshGlobalSessionObject().getResource(), sessionId);
+            }
+        } else {
+            return null;
         }
     }
     protected boolean saveToCache(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, SSHService service, String sessionId) {

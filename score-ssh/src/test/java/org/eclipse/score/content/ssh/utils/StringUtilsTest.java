@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class StringUtilsTest {
 
@@ -60,7 +60,7 @@ public class StringUtilsTest {
         assertEquals(result, "default");
     }
 
-    @Test (expected = java.lang.RuntimeException.class)
+    @Test(expected = java.lang.RuntimeException.class)
     public void testToNewlineException() throws Exception {
         String result = StringUtils.toNewline("test");
         assertEquals(result, "");
