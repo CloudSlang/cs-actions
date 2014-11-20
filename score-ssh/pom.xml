@@ -4,7 +4,7 @@
 
     <groupId>org.eclipse.score.content</groupId>
     <artifactId>score-ssh</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
