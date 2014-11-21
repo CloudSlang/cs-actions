@@ -197,7 +197,7 @@ public class AuthSchemeProviderLookupBuilder {
                 "};");
         FileWriter writer = new FileWriter(tempFile);
         IOUtils.writeLines(lines, System.lineSeparator(), writer);
-        IOUtils.closeQuietly(writer);
+        writer.close();
         return tempFile;
     }
 
