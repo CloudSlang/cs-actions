@@ -168,7 +168,7 @@ public class AuthSchemeProviderLookupBuilder {
     }
 
 
-    private static File createKrb5Configuration(String domain) throws IOException {
+    private static File createKrb5Configuration(String domain)  throws IOException {
         File tempFile = File.createTempFile("krb", "kdc");
         tempFile.deleteOnExit();
         ArrayList<String> lines = new ArrayList<>();
@@ -180,8 +180,12 @@ public class AuthSchemeProviderLookupBuilder {
         lines.add("\t\tadmin_server = " + domain);
         lines.add("\t}");
         FileWriter writer = new FileWriter(tempFile);
-        IOUtils.writeLines(lines, System.lineSeparator(), writer);
-        writer.close();
+        try {
+            IOUtils.writeLines(lines, System.lineSeparator(), writer);
+        } finally {
+            IOUtils.closeQuietly(writer);
+        }
+
         return tempFile;
     }
 
@@ -196,8 +200,11 @@ public class AuthSchemeProviderLookupBuilder {
                 "  debug=true ;\n" +
                 "};");
         FileWriter writer = new FileWriter(tempFile);
-        IOUtils.writeLines(lines, System.lineSeparator(), writer);
-        writer.close();
+        try {
+            IOUtils.writeLines(lines, System.lineSeparator(), writer);
+        } finally {
+            IOUtils.closeQuietly(writer);
+        }
         return tempFile;
     }
 
