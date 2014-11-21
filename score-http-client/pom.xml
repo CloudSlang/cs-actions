@@ -18,11 +18,11 @@
         specific language governing permissions and limitations
         under the License.
     -->
-    <groupId>com.hp.score.content</groupId>
+    <groupId>org.eclipse.score.content</groupId>
     <artifactId>score-http-client</artifactId>
     <version>0.1.38-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>com.hp.score.content:score-http-client</name>
+    <name>org.eclipse.score.content:score-http-client</name>
     <description>An HTTP client for score</description>
     <url>https://github.com/HPSoftware/score-content</url>
     <licenses>
