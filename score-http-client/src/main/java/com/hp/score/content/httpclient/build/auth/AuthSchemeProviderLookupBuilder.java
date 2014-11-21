@@ -181,7 +181,7 @@ public class AuthSchemeProviderLookupBuilder {
         lines.add("\t}");
         FileWriter writer = new FileWriter(tempFile);
         IOUtils.writeLines(lines, System.lineSeparator(), writer);
-        IOUtils.closeQuietly(writer);
+        writer.close();
         return tempFile;
     }
 
