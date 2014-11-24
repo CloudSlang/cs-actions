@@ -77,42 +77,37 @@ public class ConnectionManagerBuilder {
 
     public  PoolingHttpClientConnectionManager buildConnectionManager() {
         if (connectionPoolHolder != null) {
-            Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
-                    = connectionPoolHolder.get();
             PoolingHttpClientConnectionManager connManager = null;
-            if (connectionManagerMap != null) {
-                connManager = connectionManagerMap.get(connectionManagerMapKey);
-            }
-            if (connManager == null) {
-                synchronized(connectionPoolHolder) {
+            synchronized(connectionPoolHolder) {
+                Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
+                        = connectionPoolHolder.get();
+
+                if (connectionManagerMap == null) {
+                    final HashMap<String, PoolingHttpClientConnectionManager> connectionManagerMapFinal  = new HashMap<>();
+                    connectionPoolHolder.setResource(new SessionResource<Map<String, PoolingHttpClientConnectionManager>>(){
+                        @Override
+                        public Map<String, PoolingHttpClientConnectionManager> get() {
+                            return connectionManagerMapFinal;
+                        }
+                        @Override
+                        public void release() {
+                        }
+                    });
                     connectionManagerMap = connectionPoolHolder.get();
+                }
 
-                    if (connectionManagerMap == null) {
-                        final HashMap<String, PoolingHttpClientConnectionManager> connectionManagerMapFinal  = new HashMap<>();
-                        connectionPoolHolder.setResource(new SessionResource<Map<String, PoolingHttpClientConnectionManager>>(){
-                            @Override
-                            public Map<String, PoolingHttpClientConnectionManager> get() {
-                                return connectionManagerMapFinal;
-                            }
-                            @Override
-                            public void release() {
-                            }
-                        });
-                        connectionManagerMap = connectionPoolHolder.get();
-                    }
+                connManager = connectionManagerMap.get(connectionManagerMapKey);
+                if (connManager == null) {
+                    Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                            .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                            .register("https", sslsf)
+                            .build();
+                    connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
 
-                    connManager = connectionManagerMap.get(connectionManagerMapKey);
-                    if (connManager == null) {
-                        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                                .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                                .register("https", sslsf)
-                                .build();
-                        connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-
-                        connectionManagerMap.put(connectionManagerMapKey, connManager);
-                    }
+                    connectionManagerMap.put(connectionManagerMapKey, connManager);
                 }
             }
+
             //the DefaultMaxPerRoute default is 2
             if (!StringUtils.isEmpty(defaultMaxPerRoute)) {
                 try {

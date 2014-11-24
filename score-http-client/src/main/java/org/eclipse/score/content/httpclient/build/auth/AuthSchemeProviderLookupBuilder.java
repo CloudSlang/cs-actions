@@ -179,11 +179,14 @@ public class AuthSchemeProviderLookupBuilder {
         lines.add("\t\tkdc = " + domain);
         lines.add("\t\tadmin_server = " + domain);
         lines.add("\t}");
-        FileWriter writer = new FileWriter(tempFile);
+        FileWriter writer = null;
         try {
+            writer = new FileWriter(tempFile);
             IOUtils.writeLines(lines, System.lineSeparator(), writer);
         } finally {
-            IOUtils.closeQuietly(writer);
+            if(writer != null) {
+                IOUtils.closeQuietly(writer);
+            }
         }
 
         return tempFile;
@@ -199,11 +202,14 @@ public class AuthSchemeProviderLookupBuilder {
                 "  useFirstPass=true\n" +
                 "  debug=true ;\n" +
                 "};");
-        FileWriter writer = new FileWriter(tempFile);
+        FileWriter writer = null;
         try {
+            writer = new FileWriter(tempFile);
             IOUtils.writeLines(lines, System.lineSeparator(), writer);
         } finally {
-            IOUtils.closeQuietly(writer);
+            if(writer!=null) {
+                IOUtils.closeQuietly(writer);
+            }
         }
         return tempFile;
     }
