@@ -1,11 +1,11 @@
 package org.eclipse.score.content.ssh.utils.simulator;
 
 public interface IScriptRunner extends Runnable {
-    public String getoutput();
+    public String getOutput();
 
     public int getCommandsLeft();
 
-    public boolean completed();
+    public boolean noMoreCommandsLeft();
 
     public String getException();
 

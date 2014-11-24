@@ -114,7 +114,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
         }
     }
 
-    public String getoutput() {
+    public String getOutput() {
         StringBuilder output = new StringBuilder();
         while (stdout.size() > 0) {
             output.append(stdout.remove(0));
@@ -136,7 +136,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
     /**
      * @return true if no more commands are left for the ScriptModel to process
      */
-    public boolean completed() {
+    public boolean noMoreCommandsLeft() {
         return getCommandsLeft() <= 0;
     }
 
@@ -192,7 +192,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
                 boolean updated;
                 updated = process();
 
-                if (completed()) {
+                if (noMoreCommandsLeft()) {
                     clearMatchExceptions();
                     incrementPostCompleteReads();
                     if (updated)
@@ -214,7 +214,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
         } catch (Exception e) {
             addException(e);
         }
-        if (!completed() && deltaT >= readTimeout)
+        if (!noMoreCommandsLeft() && deltaT >= readTimeout)
             addException(new Exception("readTimedout at: " + deltaT + "ms"));
         if (captureOutput)
             this.stdout.add(current);
@@ -242,7 +242,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
     boolean sendable() throws Exception {
         if (toSend != null && toSend.length > 0)  //there are commands to send.
             return true;
-        if (completed())
+        if (noMoreCommandsLeft())
             return false;
         try {
             Expect e = parser.IsExceptAllowed(current, this, matchTimeout);
@@ -301,7 +301,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
             try {
                 read = in.read(buff);
             } catch (java.net.SocketException e) {//telnet stream throws one on first read after stream is closed remotely.
-                if (completed())
+                if (noMoreCommandsLeft())
                     read = in.read(buff);
                 else
                     throw e;
