@@ -21,7 +21,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created by vranau on 11/25/2014.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ScriptModel.class, AlwaysOn.class})
+@PrepareForTest({ScriptModel.class})
 public class ScriptModelTest {
 
 

@@ -18,7 +18,6 @@ public class ScriptLinesTest {
 
     private ScriptLines scriptLines;
     private String script = "send ls \nexpect ls";
-    private String newLine = "\n";
 
     @Before
     public void setUp() throws Exception {
