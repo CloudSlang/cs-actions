@@ -31,6 +31,7 @@ public class ByteWrapperTest {
     public void testGetValue() {
         assertEquals(32, byteWrapper.getValue());
     }
+
     @Test
     public void testSetValue() {
         byte byteValue = 3;
@@ -40,6 +41,7 @@ public class ByteWrapperTest {
         assertEquals(3, byteWrapper.getValue());
         Mockito.verify(screenEmulator).snapshotBuffer(true);
     }
+
     @Test
     public void testClearChanged() {
         byte byteValue = 3;
@@ -68,6 +70,7 @@ public class ByteWrapperTest {
         byteWrapper.clear();
         assertEquals(32, byteWrapper.getValue());
     }
+
     @Test
     public void t() {
 

@@ -1,6 +1,5 @@
 package org.eclipse.score.content.ssh.utils.simulator;
 
-import junit.framework.Assert;
 import org.eclipse.score.content.ssh.utils.simulator.elements.AlwaysOn;
 import org.eclipse.score.content.ssh.utils.simulator.elements.Expect;
 import org.eclipse.score.content.ssh.utils.simulator.elements.Send;
@@ -8,10 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.powermock.api.mockito.PowerMockito;
+import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.mockito.Mock;
 
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -21,7 +19,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created by vranau on 11/25/2014.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ScriptModel.class})
+@PrepareForTest({ScriptModel.class, AlwaysOn.class})
 public class ScriptModelTest {
 
 
@@ -34,7 +32,6 @@ public class ScriptModelTest {
     private String script = "wait 1000\nexpect 1000\nsend ls \n always";
     private String newLine = "\n";
     private long matchTimeout = 1000L;
-
 
 
     @Before
@@ -53,6 +50,7 @@ public class ScriptModelTest {
         alwaysOn = scriptModel.checkAlwaysHandlers("", matchTimeout);
         assertEquals(this.alwaysOnMock, alwaysOn);
     }
+
     @Test
     public void testIsExceptAllowed() throws Exception {
         Expect expect = scriptModel.IsExceptAllowed("1000", scriptRunnerMock, matchTimeout);

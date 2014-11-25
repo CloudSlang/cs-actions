@@ -14,9 +14,7 @@ import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
@@ -74,7 +72,7 @@ public class ScriptRunnerTest {
     }
 
     @Test
-    public void testSetCaptureOutput(){
+    public void testSetCaptureOutput() {
         scriptRunner.setCaptureOutput(true);
         scriptRunner.setCaptureOutput(false);
         boolean captureOutput = Boolean.parseBoolean(null);
@@ -102,10 +100,11 @@ public class ScriptRunnerTest {
     }
 
     @Test
-    public void testGetDeltaT(){
+    public void testGetDeltaT() {
         final long deltaT = scriptRunner.getDeltaT();
         assertTrue(deltaT > 0);
     }
+
     @Test
     public void testRun() throws Exception {
 

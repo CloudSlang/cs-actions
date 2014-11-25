@@ -8,17 +8,19 @@ public class AlwaysOn {
 
     public static AlwaysOn getInstance(ScriptLines script, char[] newLineCharacter) throws Exception {
         AlwaysOn command = new AlwaysOn();
-        String line = script.getCurrentLine();
-        line = line.substring(line.indexOf(" "));
-        command.setCommand(Send.getInstance(line, newLineCharacter));
+        if(script != null) {
+            String line = script.getCurrentLine();
+            line = line.substring(line.indexOf(" "));
+            command.setCommand(Send.getInstance(line, newLineCharacter));
 
-        if (!script.nextLine())
-            throw new Exception("Always statement started on last line: always statements must have 'on' starting the next line");
-        line = script.getCurrentLine();
-        if (!line.startsWith("on"))
-            throw new Exception("always statements must have 'on' starting the next line");
-        line = line.substring(line.indexOf(" "));
-        command.setExpect(Expect.getInstance(line));
+            if (!script.nextLine())
+                throw new Exception("Always statement started on last line: always statements must have 'on' starting the next line");
+            line = script.getCurrentLine();
+            if (!line.startsWith("on"))
+                throw new Exception("always statements must have 'on' starting the next line");
+            line = line.substring(line.indexOf(" "));
+            command.setExpect(Expect.getInstance(line));
+        }
         return command;
     }
 
@@ -27,11 +29,15 @@ public class AlwaysOn {
     }
 
     public char[] get() {
-        return send.get();
+        if(send != null ) {
+            return send.get();
+        } else {
+            return new char[]{};
+        }
     }
 
     public boolean match(String toMatch, long timeout) throws Exception {
-        return expect.match(toMatch, timeout);
+        return expect != null && expect.match(toMatch, timeout);
     }
 
     public void setExpect(Expect command) {

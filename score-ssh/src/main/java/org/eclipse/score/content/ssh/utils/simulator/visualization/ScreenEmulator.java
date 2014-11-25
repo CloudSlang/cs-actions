@@ -77,7 +77,7 @@ public class ScreenEmulator implements Term, IShellVisualizer {
      * @return a converted string which represents the stream ni a VT100 screen
      * displayable format.
      */
-    public String buffAsString(boolean clearChanges) {
+    public String bufferAsString(boolean clearChanges) {
         String s = null;
         byte[][] byteArray = toByteArray(clearChanges);
         for (byte[] curr : byteArray) {
@@ -95,7 +95,7 @@ public class ScreenEmulator implements Term, IShellVisualizer {
     }
 
     String snapshotBuffer(boolean autoStore) {
-        String s = buffAsString(autoStore);
+        String s = bufferAsString(autoStore);
         if (s.trim().length() == 0)
             return s;
         if (frames.size() > 0 && frames.get(frames.size() - 1).getName().equals(STR_FRAME)) {

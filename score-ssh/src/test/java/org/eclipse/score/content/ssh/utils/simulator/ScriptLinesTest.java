@@ -1,15 +1,9 @@
 package org.eclipse.score.content.ssh.utils.simulator;
 
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by vranau on 11/25/2014.
@@ -35,6 +29,7 @@ public class ScriptLinesTest {
         };
         assertNull(scriptLinesNew.peekNext());
     }
+
     @Test
     public void testToString() {
         assertEquals("Script:currently on line: 1\n" +
