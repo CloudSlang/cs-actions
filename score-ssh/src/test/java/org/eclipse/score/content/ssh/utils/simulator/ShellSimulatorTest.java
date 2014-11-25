@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -36,22 +35,22 @@ public class ShellSimulatorTest {
     ShellSimulator shellSimulator;
 
     @Mock
-    private ScriptRunner simulator;
+    private ScriptRunner simulatorMock;
 
     @Mock
-    private ScreenEmulator screenEmulator;
+    private ScreenEmulator screenEmulatorMock;
 
     @Mock
-    private InputStream inputStream;
+    private InputStream inputStreamMock;
 
     @Mock
-    private OutputStream outputStream;
+    private OutputStream outputStreamMock;
 
     @Before
     public void setUp() throws Exception {
-        whenNew(ScriptRunner.class).withAnyArguments().thenReturn(simulator);
-        when(simulator.getException()).thenReturn("");
-        whenNew(ScreenEmulator.class).withAnyArguments().thenReturn(screenEmulator);
+        whenNew(ScriptRunner.class).withAnyArguments().thenReturn(simulatorMock);
+        when(simulatorMock.getException()).thenReturn("");
+        whenNew(ScreenEmulator.class).withAnyArguments().thenReturn(screenEmulatorMock);
 
 
         shellSimulator = new ShellSimulator(script, matchTimeout, readTimeout, sleepTimeout, characterDelay);
@@ -96,7 +95,7 @@ public class ShellSimulatorTest {
         iShellVisualizer = shellSimulator.addVisualizer("none");
         assertNull(iShellVisualizer);
 
-        shellSimulator.addVisualizer(screenEmulator);
+        shellSimulator.addVisualizer(screenEmulatorMock);
     }
 
     @Test
@@ -114,14 +113,14 @@ public class ShellSimulatorTest {
     @Test
     public void testSetStreams() throws Exception {
 
-        shellSimulator.setStreams(inputStream, outputStream);
-        assertEquals(inputStream, simulator.in);
-        assertEquals(outputStream, simulator.out);
+        shellSimulator.setStreams(inputStreamMock, outputStreamMock);
+        assertEquals(inputStreamMock, simulatorMock.in);
+        assertEquals(outputStreamMock, simulatorMock.out);
     }
 
     @Test
     public void testGetOutput() {
-        when(simulator.getOutput()).thenReturn("output");
+        when(simulatorMock.getOutput()).thenReturn("output");
         final String output = shellSimulator.getOutput();
         assertEquals("output", output);
     }
@@ -129,11 +128,11 @@ public class ShellSimulatorTest {
     @Test
     public void testGetException() throws Exception {
 
-        when(simulator.noMoreCommandsLeft()).thenReturn(true);
+        when(simulatorMock.noMoreCommandsLeft()).thenReturn(true);
         String exception = shellSimulator.getException();
         assertEquals("", exception);
 
-        when(simulator.noMoreCommandsLeft()).thenReturn(false);
+        when(simulatorMock.noMoreCommandsLeft()).thenReturn(false);
         exception = shellSimulator.getException();
         assertEquals(errorMessage, exception);
     }
@@ -141,14 +140,14 @@ public class ShellSimulatorTest {
     @Test
     public void testNoMoreCommandsLeft() {
         assertEquals(false, shellSimulator.noMoreCommandsLeft());
-        when(simulator.noMoreCommandsLeft()).thenReturn(true);
+        when(simulatorMock.noMoreCommandsLeft()).thenReturn(true);
         assertEquals(true, shellSimulator.noMoreCommandsLeft());
     }
 
     @Test
     public void testRun() throws Exception {
 
-        when(simulator.isAlive()).thenReturn(false);
+        when(simulatorMock.isAlive()).thenReturn(false);
         shellSimulator.run(-1L);
     }
 }

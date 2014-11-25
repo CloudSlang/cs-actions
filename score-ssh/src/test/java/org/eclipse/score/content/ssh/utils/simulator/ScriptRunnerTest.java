@@ -34,39 +34,37 @@ public class ScriptRunnerTest {
     private ScriptRunner scriptRunner;
 
     @Mock
-    private PipedInputStream pipedInputStream;
-
+    private PipedInputStream pipedInputStreamMock;
     @Mock
-    private ShellSimulator shellSimulator;
+    private ShellSimulator shellSimulatorMock;
     @Mock
-    private PipedOutputStream pipedOutputStream;
+    private PipedOutputStream pipedOutputStreamMock;
     @Mock
-    private ScriptModel parser;
-
+    private ScriptModel parserMock;
     @Mock
-    private AlwaysOn alwaysOn;
+    private AlwaysOn alwaysOnMock;
     @Mock
-    private Expect expect;
+    private Expect expectMock;
     @Mock
-    private Send send;
+    private Send sendMock;
     @Mock
-    private InputStream inputStream;
+    private InputStream inputStreamMock;
 
     @Before
     public void setUp() throws Exception {
-        whenNew(ScriptModel.class).withAnyArguments().thenReturn(parser);
+        whenNew(ScriptModel.class).withAnyArguments().thenReturn(parserMock);
         scriptRunner = new ScriptRunner(script, matchTimeout, readTimeout, sleepTimeout, characterDelay, newLine.toCharArray());
     }
 
     @Test
     public void testAddPipe() throws Exception {
 
-        whenNew(PipedOutputStream.class).withArguments(pipedInputStream).thenReturn(pipedOutputStream);
-        scriptRunner.addPipe(pipedInputStream);
-        shellSimulator.getException();
-        verifyNew(PipedOutputStream.class).withArguments(pipedInputStream);
+        whenNew(PipedOutputStream.class).withArguments(pipedInputStreamMock).thenReturn(pipedOutputStreamMock);
+        scriptRunner.addPipe(pipedInputStreamMock);
+        shellSimulatorMock.getException();
+        verifyNew(PipedOutputStream.class).withArguments(pipedInputStreamMock);
         scriptRunner.addPipe(null);
-        verifyZeroInteractions(pipedInputStream, pipedOutputStream);
+        verifyZeroInteractions(pipedInputStreamMock, pipedOutputStreamMock);
     }
 
     @Test
@@ -85,16 +83,16 @@ public class ScriptRunnerTest {
 
     @Test
     public void testGetCommandsLeft() {
-        when(parser.getCommandsLeft()).thenReturn(10);
+        when(parserMock.getCommandsLeft()).thenReturn(10);
         assertEquals(10, scriptRunner.getCommandsLeft());
     }
 
     @Test
     public void testNoMoreCommandsLeft() {
-        when(parser.getCommandsLeft()).thenReturn(10);
+        when(parserMock.getCommandsLeft()).thenReturn(10);
         assertEquals(false, scriptRunner.noMoreCommandsLeft());
 
-        when(parser.getCommandsLeft()).thenReturn(0);
+        when(parserMock.getCommandsLeft()).thenReturn(0);
         assertEquals(true, scriptRunner.noMoreCommandsLeft());
     }
 
@@ -112,7 +110,7 @@ public class ScriptRunnerTest {
     public void testRun() throws Exception {
 
         scriptRunner = new ScriptRunner(script, matchTimeout, readTimeout, sleepTimeout, characterDelay, newLine.toCharArray());
-        when(parser.getCommandsLeft()).thenReturn(10);
+        when(parserMock.getCommandsLeft()).thenReturn(10);
         scriptRunner.run();
         final String exception = scriptRunner.getException().toLowerCase();
         assertTrue(exception.contains("readTimeout at:".toLowerCase()));
@@ -123,11 +121,11 @@ public class ScriptRunnerTest {
         boolean checkAlwaysHandlers = scriptRunner.checkAlwaysHandlers();
         assertEquals(false, checkAlwaysHandlers);
 
-        when(parser.checkAlwaysHandlers("", matchTimeout)).thenReturn(alwaysOn);
+        when(parserMock.checkAlwaysHandlers("", matchTimeout)).thenReturn(alwaysOnMock);
         checkAlwaysHandlers = scriptRunner.checkAlwaysHandlers();
         assertEquals(true, checkAlwaysHandlers);
 
-        when(parser.checkAlwaysHandlers("", matchTimeout)).thenThrow(new Exception("test exception"));
+        when(parserMock.checkAlwaysHandlers("", matchTimeout)).thenThrow(new Exception("test exception"));
         checkAlwaysHandlers = scriptRunner.checkAlwaysHandlers();
         assertEquals(false, checkAlwaysHandlers);
         assertTrue(scriptRunner.getException().contains("test exception"));
@@ -138,12 +136,12 @@ public class ScriptRunnerTest {
         boolean sendable = scriptRunner.sendable();
         assertFalse(sendable);
 
-        when(parser.getCommandsLeft()).thenReturn(10);
+        when(parserMock.getCommandsLeft()).thenReturn(10);
         sendable = scriptRunner.sendable();
         assertFalse(sendable);
 
-        when(parser.IsExceptAllowed("", scriptRunner, matchTimeout)).thenReturn(expect);
-        when(parser.IsSendAllowed()).thenReturn(send);
+        when(parserMock.IsExceptAllowed("", scriptRunner, matchTimeout)).thenReturn(expectMock);
+        when(parserMock.IsSendAllowed()).thenReturn(sendMock);
         sendable = scriptRunner.sendable();
         assertTrue(sendable);
     }
@@ -152,7 +150,7 @@ public class ScriptRunnerTest {
     public void testProcess() throws Exception {
         boolean process = scriptRunner.process();
         assertFalse(process);
-        scriptRunner.in = inputStream;
+        scriptRunner.in = inputStreamMock;
         process = scriptRunner.process();
         assertFalse(process);
         scriptRunner.in = null;
