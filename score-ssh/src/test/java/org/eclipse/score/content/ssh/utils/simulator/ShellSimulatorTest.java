@@ -15,12 +15,14 @@ import java.io.OutputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by vranau on 11/24/2014.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ShellSimulator.class, ScriptRunner.class, System.class})
+@PrepareForTest({ShellSimulator.class, ScriptRunner.class})
 public class ShellSimulatorTest {
 
     private String script = "send ls \nexpect ls";
@@ -47,9 +49,9 @@ public class ShellSimulatorTest {
 
     @Before
     public void setUp() throws Exception {
-        PowerMockito.whenNew(ScriptRunner.class).withAnyArguments().thenReturn(simulator);
-        PowerMockito.when(simulator.getException()).thenReturn("");
-        PowerMockito.whenNew(ScreenEmulator.class).withAnyArguments().thenReturn(screenEmulator);
+        whenNew(ScriptRunner.class).withAnyArguments().thenReturn(simulator);
+        when(simulator.getException()).thenReturn("");
+        whenNew(ScreenEmulator.class).withAnyArguments().thenReturn(screenEmulator);
 
 
         shellSimulator = new ShellSimulator(script, matchTimeout, readTimeout, sleepTimeout, characterDelay);
@@ -119,7 +121,7 @@ public class ShellSimulatorTest {
 
     @Test
     public void testGetOutput() {
-        PowerMockito.when(simulator.getOutput()).thenReturn("output");
+        when(simulator.getOutput()).thenReturn("output");
         final String output = shellSimulator.getOutput();
         assertEquals("output", output);
     }
@@ -127,11 +129,11 @@ public class ShellSimulatorTest {
     @Test
     public void testGetException() throws Exception {
 
-        PowerMockito.when(simulator.noMoreCommandsLeft()).thenReturn(true);
+        when(simulator.noMoreCommandsLeft()).thenReturn(true);
         String exception = shellSimulator.getException();
         assertEquals("", exception);
 
-        PowerMockito.when(simulator.noMoreCommandsLeft()).thenReturn(false);
+        when(simulator.noMoreCommandsLeft()).thenReturn(false);
         exception = shellSimulator.getException();
         assertEquals(errorMessage, exception);
     }
@@ -139,14 +141,14 @@ public class ShellSimulatorTest {
     @Test
     public void testNoMoreCommandsLeft() {
         assertEquals(false, shellSimulator.noMoreCommandsLeft());
-        PowerMockito.when(simulator.noMoreCommandsLeft()).thenReturn(true);
+        when(simulator.noMoreCommandsLeft()).thenReturn(true);
         assertEquals(true, shellSimulator.noMoreCommandsLeft());
     }
 
     @Test
     public void testRun() throws Exception {
 
-        PowerMockito.when(simulator.isAlive()).thenReturn(false);
+        when(simulator.isAlive()).thenReturn(false);
         shellSimulator.run(-1L);
     }
 }

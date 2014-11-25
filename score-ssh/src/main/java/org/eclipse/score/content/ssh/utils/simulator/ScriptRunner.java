@@ -105,7 +105,9 @@ class ScriptRunner extends Thread implements IScriptRunner {
     }
 
     public void addPipe(java.io.PipedInputStream in) throws IOException {
-        pipes.add(new PipedOutputStream(in));
+        if( in != null ) {
+            pipes.add(new PipedOutputStream(in));
+        }
     }
 
     private void pipe(byte[] read, int offset, int length) throws IOException {
@@ -208,14 +210,18 @@ class ScriptRunner extends Thread implements IScriptRunner {
             //if this is used for SSH shell ops, closing the output stream will close the SHELL channel
             //This isn't desired if multiple SSH Shell Operations are sharing the same SHELL channel.
             if (closeStreams) {
-                in.close();
-                out.close();
+                if(in != null) {
+                    in.close();
+                }
+                if(out != null) {
+                    out.close();
+                }
             }
         } catch (Exception e) {
             addException(e);
         }
         if (!noMoreCommandsLeft() && deltaT >= readTimeout)
-            addException(new Exception("readTimedout at: " + deltaT + "ms"));
+            addException(new Exception("readTimeout at: " + deltaT + "ms"));
         if (captureOutput)
             this.stdout.add(current);
         current = "";
@@ -294,6 +300,9 @@ class ScriptRunner extends Thread implements IScriptRunner {
      */
     public boolean process() throws Exception {
         boolean wasRead = false;
+        if(in == null) {
+            return false;
+        }
         while (in.available() > 0) {
             wasRead = true;
             byte[] buff = new byte[in.available()]; //this is max size of buffer to avoid boundery condition
