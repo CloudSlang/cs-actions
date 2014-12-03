@@ -22,7 +22,6 @@
 	<artifactId>score-content</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-    <name>org.eclipse.score.content:score-content</name>
     <description>Precompiled flows for score</description>
     <url>https://github.com/HPSoftware/score-content</url>
     <licenses>
