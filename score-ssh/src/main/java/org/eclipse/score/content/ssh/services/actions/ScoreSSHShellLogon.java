@@ -2,12 +2,14 @@ package org.eclipse.score.content.ssh.services.actions;
 
 import org.eclipse.score.content.ssh.entities.ConnectionDetails;
 import org.eclipse.score.content.ssh.entities.KeyFile;
+import org.eclipse.score.content.ssh.entities.KnownHostsFile;
 import org.eclipse.score.content.ssh.entities.SSHShellInputs;
 import org.eclipse.score.content.ssh.services.SSHService;
 import org.eclipse.score.content.ssh.services.impl.SSHServiceImpl;
 import org.eclipse.score.content.ssh.utils.Constants;
 import org.eclipse.score.content.ssh.utils.StringUtils;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,10 +25,13 @@ public class ScoreSSHShellLogon extends SSHShellAbstract {
         try {
             // default values
             int portNumber = StringUtils.toInt(sshShellInputs.getPort(), Constants.DEFAULT_PORT);
+            String knownHostsPolicy = StringUtils.toNotEmptyString(sshShellInputs.getKnownHostsPolicy(), Constants.DEFAULT_KNOWN_HOSTS_POLICY);
+            Path knownHostsPath = StringUtils.toPath(sshShellInputs.getKnownHostsPath(), Constants.DEFAULT_KNOWN_HOSTS_PATH);
 
             // configure ssh parameters
             ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber, sshShellInputs.getUsername(), sshShellInputs.getPassword());
             KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
+            KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
 
             // get the cached SSH session
             String sessionId = "sshSession:" + sshShellInputs.getHost() + "-" + portNumber + "-" + sshShellInputs.getUsername();
@@ -35,7 +40,7 @@ public class ScoreSSHShellLogon extends SSHShellAbstract {
                 boolean saveSSHSession = false;
                 if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {
                     saveSSHSession = true;
-                    service = new SSHServiceImpl(connection, keyFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);
+                    service = new SSHServiceImpl(connection, keyFile, knownHostsFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);
                 }
                 // save SSH session in the cache
                 if (saveSSHSession) {

@@ -1,5 +1,8 @@
 package org.eclipse.score.content.ssh.utils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * @author ioanvranauhp
  *         Date: 10/29/14
@@ -13,13 +16,11 @@ public class Constants {
     public static final String PTY = "pty";
     public static final String CHARACTER_DELAY = "characterDelay";
     public static final String NEWLINE_SEQUENCE = "newlineCharacters";
-    public static final String FORWARD_LOCAL_PORT = "forwardLocalPort";
-    public static final String FORWARD_REMOTE_HOST = "forwardRemoteHost";
-    public static final String FORWARD_REMOTE_PORT = "forwardRemotePort";
     public static final String SESSION_ID = "sessionId";
     public static final String SSH_SESSIONS_DEFAULT_ID = "sshSessions:default-id";
-    public static final String USE_GLOBAL_CONTEXT = "useGlobalContext";
     public static final String CLOSE_SESSION = "closeSession";
+    public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
+    public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
     // outputs
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
@@ -36,7 +37,9 @@ public class Constants {
     public static final String DEFAULT_NEWLINE = "\\n";
     public static final String DEFAULT_CHARACTER_SET = "UTF-8";
     public static final boolean DEFAULT_CLOSE_SESSION = false;
-    public static final boolean DEFAULT_USE_GLOBAL_CONTEXT = false;
+    public static final String DEFAULT_KNOWN_HOSTS_POLICY = "allow";
+    public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
+
     // errors
     public static final String ARGS_IS_DEPRECATED = "This input is deprecated, use the command input to provide arguments.";
 
@@ -69,6 +72,4 @@ public class Constants {
         public static final String CHARACTER_SET = "characterSet";
         public static final String TIMEOUT = "timeout";
     }
-
-
 }

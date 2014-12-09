@@ -9,11 +9,9 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Created by hasna on 11/13/2014.
- */
-
-/**
  * Wrapper class on SSH session.
+ *
+ * @author octavian-h
  */
 public class SSHSessionResource extends SessionResource<Map<String, SSHConnection>> {
     private Map<String, SSHConnection> sshConnectionMap;

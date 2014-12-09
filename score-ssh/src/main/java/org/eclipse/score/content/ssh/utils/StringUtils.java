@@ -3,10 +3,13 @@ package org.eclipse.score.content.ssh.utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author ioanvranauhp
  *         Date: 10/29/14
+ * @author octavian-h
  */
 public class StringUtils {
 
@@ -58,6 +61,14 @@ public class StringUtils {
                 chars[count] = (char) Integer.parseInt(split[count]);
         }
         return new String(chars);
+    }
+
+    public static Path toPath(String value, Path defaultValue) {
+        if (value == null || value.length() == 0) {
+            return defaultValue;
+        }
+
+        return Paths.get(value);
     }
 
     public static String getStackTraceAsString(Throwable t) {
