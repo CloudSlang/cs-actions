@@ -151,18 +151,18 @@ public class ShellSimulator {
     }
 
     public String getOutput() {
-        return simulator.getoutput();
+        return simulator.getOutput();
     }
 
     public String getException() {
         exception += simulator.getException();
-        if (!simulator.completed())
+        if (!simulator.noMoreCommandsLeft())
             exception = "Script did not fully finish, had: " + simulator.getCommandsLeft() + " commands left " + exception;
         return exception;
     }
 
-    public boolean completed() {
-        return simulator.completed();
+    public boolean noMoreCommandsLeft() {
+        return simulator.noMoreCommandsLeft();
     }
 
     public void run(long timeout) {

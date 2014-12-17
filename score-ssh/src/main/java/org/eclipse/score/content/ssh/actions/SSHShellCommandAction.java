@@ -7,10 +7,10 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import org.eclipse.score.content.ssh.services.actions.ScoreSSHShellCommand;
-import org.eclipse.score.content.ssh.utils.Constants;
 import org.eclipse.score.content.ssh.entities.SSHConnection;
 import org.eclipse.score.content.ssh.entities.SSHShellInputs;
+import org.eclipse.score.content.ssh.services.actions.ScoreSSHShellCommand;
+import org.eclipse.score.content.ssh.utils.Constants;
 
 import java.util.Map;
 
@@ -19,36 +19,6 @@ import java.util.Map;
  *         Date: 10/29/14
  */
 public class SSHShellCommandAction {
-
-    public static void main(String[] args) {
-        //         String user = "demo";
-        String user = "root";
-//        String user = "Administrator";
-//        String host = "16.84.193.91";
-        String host = "16.77.58.180";
-//        String host = "16.77.42.143";
-//        String host = "16.77.45.100";
-//        String password = "hpinvent";
-        String password = "B33f34t3r";
-        String strCommand = "ls\n";
-        SSHShellCommandAction command = new SSHShellCommandAction();
-        Map<String, String> results = command.runSshShellCommand(
-                host,
-                "",
-                user,
-                password,
-                "",
-                strCommand,
-                "",
-                "utf-8",
-                "",
-                "10000",
-                new GlobalSessionObject<Map<String, SSHConnection>>(),
-                "true"
-        );
-        System.out.println(results.get("returnResult"));
-        System.out.println(results.get("exception"));
-    }
 
     @Action(name = "SSH Command",
             outputs = {
@@ -69,6 +39,8 @@ public class SSHShellCommandAction {
             @Param(value = Constants.InputNames.USERNAME, required = true) String username,
             @Param(value = Constants.InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
+            @Param(Constants.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
+            @Param(Constants.KNOWN_HOSTS_PATH) String knownHostsPath,
             @Param(value = Constants.COMMAND, required = true) String command,
             @Param(value = Constants.ARGS, description = Constants.ARGS_IS_DEPRECATED) String arguments,
             @Param(Constants.InputNames.CHARACTER_SET) String characterSet,
@@ -90,6 +62,8 @@ public class SSHShellCommandAction {
         sshShellInputs.setTimeout(timeout);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
         sshShellInputs.setCloseSession(closeSession);
+        sshShellInputs.setKnownHostsPolicy(knownHostsPolicy);
+        sshShellInputs.setKnownHostsPath(knownHostsPath);
 
         return new ScoreSSHShellCommand().execute(sshShellInputs);
     }

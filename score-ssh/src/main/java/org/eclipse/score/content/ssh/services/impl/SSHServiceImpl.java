@@ -1,25 +1,43 @@
 package org.eclipse.score.content.ssh.services.impl;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import org.eclipse.score.content.ssh.entities.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import org.eclipse.score.content.ssh.entities.CommandResult;
+import org.eclipse.score.content.ssh.entities.ConnectionDetails;
+import org.eclipse.score.content.ssh.entities.ExpectCommandResult;
+import org.eclipse.score.content.ssh.entities.KeyFile;
+import org.eclipse.score.content.ssh.entities.KnownHostsFile;
+import org.eclipse.score.content.ssh.entities.SSHConnection;
 import org.eclipse.score.content.ssh.services.SSHService;
 import org.eclipse.score.content.ssh.utils.CacheUtils;
 import org.eclipse.score.content.ssh.utils.Constants;
 import org.eclipse.score.content.ssh.utils.simulator.ShellSimulator;
 import org.eclipse.score.content.ssh.utils.simulator.visualization.IShellVisualizer;
-import com.jcraft.jsch.*;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * @author ioanvranauhp
  *         Date: 10/29/14
+ * @author octavian-h
  */
 public class SSHServiceImpl implements SSHService {
     private static final int POLLING_INTERVAL = 1000;
     private static final String SHELL_CHANNEL = "shell";
     private static final String BASIC_VISUALIZER = "basic";
+    private static final String KNOWN_HOSTS_ALLOW = "allow";
+    private static final String KNOWN_HOSTS_STRICT = "strict";
+    private static final String KNOWN_HOSTS_ADD = "add";
     private Session session;
     private Channel shellChannel;
 
@@ -33,10 +51,11 @@ public class SSHServiceImpl implements SSHService {
      *
      * @param details        The connection details.
      * @param keyFile        The private key file.
+     * @param knownHostsFile The known_hosts file and policy.
      * @param connectTimeout The open SSH session timeout.
      */
-    public SSHServiceImpl(ConnectionDetails details, KeyFile keyFile, int connectTimeout) {
-        this(details, keyFile, connectTimeout, false);
+    public SSHServiceImpl(ConnectionDetails details, KeyFile keyFile, KnownHostsFile knownHostsFile, int connectTimeout) {
+        this(details, keyFile, knownHostsFile, connectTimeout, false);
     }
 
     /**
@@ -44,14 +63,31 @@ public class SSHServiceImpl implements SSHService {
      *
      * @param details                     The connection details.
      * @param keyFile                     The private key file.
+     * @param knownHostsFile              The known_hosts file and policy.
      * @param connectTimeout              The open SSH session timeout.
      * @param keepContextForExpectCommand Use the same channel for the expect command.
      */
-    public SSHServiceImpl(ConnectionDetails details, KeyFile keyFile, int connectTimeout, boolean keepContextForExpectCommand) {
+    public SSHServiceImpl(ConnectionDetails details, KeyFile keyFile, KnownHostsFile knownHostsFile, int connectTimeout, boolean keepContextForExpectCommand) {
         try {
             JSch jsch = new JSch();
             session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
-            session.setConfig("StrictHostKeyChecking", "no");
+
+            String policy = knownHostsFile.getPolicy();
+            switch (policy.toLowerCase(Locale.ENGLISH)) {
+                case KNOWN_HOSTS_ALLOW:
+                    session.setConfig("StrictHostKeyChecking", "no");
+                    break;
+                case KNOWN_HOSTS_STRICT:
+                    jsch.setKnownHosts(knownHostsFile.getPath().toString());
+                    session.setConfig("StrictHostKeyChecking", "yes");
+                    break;
+                case KNOWN_HOSTS_ADD:
+                    jsch.setKnownHosts(knownHostsFile.getPath().toString());
+                    session.setConfig("StrictHostKeyChecking", "no");
+                    break;
+                default:
+                    throw new RuntimeException("Unknown known_hosts file policy.");
+            }
 
             if (keyFile == null) {
                 // use the password
@@ -154,7 +190,7 @@ public class SSHServiceImpl implements SSHService {
             // save the response
             ExpectCommandResult result = new ExpectCommandResult();
             result.setStandardOutput(simulator.getOutput());
-            if(visualizer != null) {
+            if (visualizer != null) {
                 result.setExpectXmlOutputs(visualizer.getXMLSummary());
             }
 

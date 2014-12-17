@@ -40,6 +40,8 @@ public class SSHShellAction extends SSHShellAbstract {
             @Param(value = Constants.InputNames.USERNAME, required = true) String username,
             @Param(value = Constants.InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
+            @Param(Constants.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
+            @Param(Constants.KNOWN_HOSTS_PATH) String knownHostsPath,
             @Param(value = Constants.COMMAND, required = true) String command,
             @Param(Constants.InputNames.CHARACTER_SET) String characterSet,
             @Param(Constants.CHARACTER_DELAY) String characterDelay,
@@ -54,6 +56,8 @@ public class SSHShellAction extends SSHShellAbstract {
         sshShellInputs.setUsername(username);
         sshShellInputs.setPassword(password);
         sshShellInputs.setPrivateKeyFile(privateKeyFile);
+        sshShellInputs.setKnownHostsPolicy(knownHostsPolicy);
+        sshShellInputs.setKnownHostsPath(knownHostsPath);
         sshShellInputs.setCommand(command);
         sshShellInputs.setCharacterSet(characterSet);
         sshShellInputs.setCharacterDelay(characterDelay);

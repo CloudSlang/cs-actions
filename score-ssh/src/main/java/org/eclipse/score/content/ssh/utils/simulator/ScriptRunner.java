@@ -105,7 +105,9 @@ class ScriptRunner extends Thread implements IScriptRunner {
     }
 
     public void addPipe(java.io.PipedInputStream in) throws IOException {
-        pipes.add(new PipedOutputStream(in));
+        if( in != null ) {
+            pipes.add(new PipedOutputStream(in));
+        }
     }
 
     private void pipe(byte[] read, int offset, int length) throws IOException {
@@ -114,7 +116,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
         }
     }
 
-    public String getoutput() {
+    public String getOutput() {
         StringBuilder output = new StringBuilder();
         while (stdout.size() > 0) {
             output.append(stdout.remove(0));
@@ -136,7 +138,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
     /**
      * @return true if no more commands are left for the ScriptModel to process
      */
-    public boolean completed() {
+    public boolean noMoreCommandsLeft() {
         return getCommandsLeft() <= 0;
     }
 
@@ -192,7 +194,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
                 boolean updated;
                 updated = process();
 
-                if (completed()) {
+                if (noMoreCommandsLeft()) {
                     clearMatchExceptions();
                     incrementPostCompleteReads();
                     if (updated)
@@ -208,14 +210,18 @@ class ScriptRunner extends Thread implements IScriptRunner {
             //if this is used for SSH shell ops, closing the output stream will close the SHELL channel
             //This isn't desired if multiple SSH Shell Operations are sharing the same SHELL channel.
             if (closeStreams) {
-                in.close();
-                out.close();
+                if(in != null) {
+                    in.close();
+                }
+                if(out != null) {
+                    out.close();
+                }
             }
         } catch (Exception e) {
             addException(e);
         }
-        if (!completed() && deltaT >= readTimeout)
-            addException(new Exception("readTimedout at: " + deltaT + "ms"));
+        if (!noMoreCommandsLeft() && deltaT >= readTimeout)
+            addException(new Exception("readTimeout at: " + deltaT + "ms"));
         if (captureOutput)
             this.stdout.add(current);
         current = "";
@@ -242,7 +248,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
     boolean sendable() throws Exception {
         if (toSend != null && toSend.length > 0)  //there are commands to send.
             return true;
-        if (completed())
+        if (noMoreCommandsLeft())
             return false;
         try {
             Expect e = parser.IsExceptAllowed(current, this, matchTimeout);
@@ -294,6 +300,9 @@ class ScriptRunner extends Thread implements IScriptRunner {
      */
     public boolean process() throws Exception {
         boolean wasRead = false;
+        if(in == null) {
+            return false;
+        }
         while (in.available() > 0) {
             wasRead = true;
             byte[] buff = new byte[in.available()]; //this is max size of buffer to avoid boundery condition
@@ -301,7 +310,7 @@ class ScriptRunner extends Thread implements IScriptRunner {
             try {
                 read = in.read(buff);
             } catch (java.net.SocketException e) {//telnet stream throws one on first read after stream is closed remotely.
-                if (completed())
+                if (noMoreCommandsLeft())
                     read = in.read(buff);
                 else
                     throw e;

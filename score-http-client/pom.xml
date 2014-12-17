@@ -20,9 +20,8 @@
     -->
     <groupId>org.eclipse.score.content</groupId>
     <artifactId>score-http-client</artifactId>
-    <version>0.1.38-SNAPSHOT</version>
+    <version>0.1.39-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>org.eclipse.score.content:score-http-client</name>
     <description>An HTTP client for score</description>
     <url>https://github.com/HPSoftware/score-content</url>
     <licenses>
@@ -73,7 +72,7 @@
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

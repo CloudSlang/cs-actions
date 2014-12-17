@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author hasna
+ * @author octavian-h
  * @author ioanvranauhp
  *         Date: 10/29/14
  */

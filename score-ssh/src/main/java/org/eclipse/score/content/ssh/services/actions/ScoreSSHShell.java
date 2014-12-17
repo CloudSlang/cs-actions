@@ -3,12 +3,14 @@ package org.eclipse.score.content.ssh.services.actions;
 import org.eclipse.score.content.ssh.entities.ConnectionDetails;
 import org.eclipse.score.content.ssh.entities.ExpectCommandResult;
 import org.eclipse.score.content.ssh.entities.KeyFile;
+import org.eclipse.score.content.ssh.entities.KnownHostsFile;
 import org.eclipse.score.content.ssh.entities.SSHShellInputs;
 import org.eclipse.score.content.ssh.services.SSHService;
 import org.eclipse.score.content.ssh.services.impl.SSHServiceImpl;
 import org.eclipse.score.content.ssh.utils.Constants;
 import org.eclipse.score.content.ssh.utils.StringUtils;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +22,10 @@ public class ScoreSSHShell extends SSHShellAbstract {
     /**
      * This method executes a ssh shell operations based on the sshShellInputs parameter
      * You ned to populate sshShellInputs parameter with the following values:
-     host, port, username, password, privateKeyFile, command, characterSet, characterDelay, newlineCharacters, timeout,
-     globalSessionObject, sessionObject, sessionId
+     * host, port, username, password, privateKeyFile, command, characterSet, characterDelay, newlineCharacters, timeout,
+     * globalSessionObject, sessionObject, sessionId
+     *
      * @param sshShellInputs
-     * @return
      */
     public Map<String, String> execute(SSHShellInputs sshShellInputs) {
 
@@ -37,6 +39,8 @@ public class ScoreSSHShell extends SSHShellAbstract {
 
             // default values
             int portNumber = StringUtils.toInt(sshShellInputs.getPort(), Constants.DEFAULT_PORT);
+            String knownHostsPolicy = StringUtils.toNotEmptyString(sshShellInputs.getKnownHostsPolicy(), Constants.DEFAULT_KNOWN_HOSTS_POLICY);
+            Path knownHostsPath = StringUtils.toPath(sshShellInputs.getKnownHostsPath(), Constants.DEFAULT_KNOWN_HOSTS_PATH);
             sshShellInputs.setCharacterSet(StringUtils.toNotEmptyString(sshShellInputs.getCharacterSet(), Constants.DEFAULT_CHARACTER_SET));
             int characterDelayNumber = StringUtils.toInt(sshShellInputs.getCharacterDelay(), Constants.DEFAULT_WRITE_CHARACTER_TIMEOUT);
             String newline = StringUtils.toNewline(sshShellInputs.getNewlineCharacters());
@@ -45,8 +49,9 @@ public class ScoreSSHShell extends SSHShellAbstract {
             // configure ssh parameters
             ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber, sshShellInputs.getUsername(), sshShellInputs.getPassword());
             KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
+            KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
 
-            SSHService service = getSshService(sshShellInputs, connection, keyFile);
+            SSHService service = getSshService(sshShellInputs, connection, keyFile, knownHostsFile);
 
             // run the SSH Expect command
             ExpectCommandResult commandResult = service.runExpectCommand(
@@ -69,14 +74,14 @@ public class ScoreSSHShell extends SSHShellAbstract {
         return returnResult;
     }
 
-    private SSHService getSshService(SSHShellInputs sshShellInputs, ConnectionDetails connection, KeyFile keyFile) {
+    private SSHService getSshService(SSHShellInputs sshShellInputs, ConnectionDetails connection, KeyFile keyFile, KnownHostsFile knownHostsFile) {
         SSHService service = null;
         if (sshShellInputs.getSessionId() != null) {
             // get the cached SSH session
             service = getFromCache(sshShellInputs, sshShellInputs.getSessionId()); // TODO SESSION Object
         }
         if (service == null || !service.isConnected() || !service.isExpectChannelConnected()) {
-            service = new SSHServiceImpl(connection, keyFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);
+            service = new SSHServiceImpl(connection, keyFile, knownHostsFile, Constants.DEFAULT_CONNECT_TIMEOUT, true);
         }
         return service;
     }

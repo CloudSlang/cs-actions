@@ -28,14 +28,14 @@ public class ScriptModel {
         return null;
     }
 
-    public Expect IsExceptAllowed(String current, ScriptRunner s, long matchTimeout) throws Exception {
+    public Expect IsExceptAllowed(String current, ScriptRunner scriptRunner, long matchTimeout) throws Exception {
         if (commands.size() > 0 && commands.get(0) instanceof Expect) {
-            Expect e = (Expect) commands.get(0);
-            if (e.waitIfNeeded())
-                s.setReadTime();
-            if (e.match(current.trim(), matchTimeout)) {
+            Expect expect = (Expect) commands.get(0);
+            if (expect.waitIfNeeded())
+                scriptRunner.setReadTime();
+            if (expect.match(current.trim(), matchTimeout)) {
                 commands.remove(0);
-                return e;
+                return expect;
             }
         }
         return null;

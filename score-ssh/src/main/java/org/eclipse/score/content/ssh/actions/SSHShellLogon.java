@@ -7,10 +7,10 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import org.eclipse.score.content.ssh.services.actions.SSHShellAbstract;
-import org.eclipse.score.content.ssh.services.actions.ScoreSSHShellLogon;
 import org.eclipse.score.content.ssh.entities.SSHConnection;
 import org.eclipse.score.content.ssh.entities.SSHShellInputs;
+import org.eclipse.score.content.ssh.services.actions.SSHShellAbstract;
+import org.eclipse.score.content.ssh.services.actions.ScoreSSHShellLogon;
 import org.eclipse.score.content.ssh.utils.Constants;
 
 import java.util.Map;
@@ -39,8 +39,9 @@ public class SSHShellLogon extends SSHShellAbstract {
             @Param(value = Constants.InputNames.USERNAME, required = true) String username,
             @Param(value = Constants.InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
-            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject)
-    {
+            @Param(Constants.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
+            @Param(Constants.KNOWN_HOSTS_PATH) String knownHostsPath,
+            @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
         sshShellInputs.setHost(host);
@@ -49,6 +50,9 @@ public class SSHShellLogon extends SSHShellAbstract {
         sshShellInputs.setPassword(password);
         sshShellInputs.setPrivateKeyFile(privateKeyFile);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
+        sshShellInputs.setKnownHostsPolicy(knownHostsPolicy);
+        sshShellInputs.setKnownHostsPath(knownHostsPath);
+
         return new ScoreSSHShellLogon().execute(sshShellInputs);
     }
 

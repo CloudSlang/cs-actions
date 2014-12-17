@@ -1,6 +1,7 @@
 package org.eclipse.score.content.ssh.services.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.score.content.ssh.entities.KeyFile;
 import org.eclipse.score.content.ssh.entities.SSHConnection;
 import org.eclipse.score.content.ssh.entities.SSHShellInputs;
@@ -8,7 +9,6 @@ import org.eclipse.score.content.ssh.services.SSHService;
 import org.eclipse.score.content.ssh.utils.CacheUtils;
 import org.eclipse.score.content.ssh.utils.Constants;
 import org.eclipse.score.content.ssh.utils.StringUtils;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Provider;
 import java.security.Security;
@@ -49,8 +49,7 @@ public abstract class SSHShellAbstract {
     }
 
     protected SSHService getFromCache(SSHShellInputs sshShellInputs, String sessionId) {
-
-        if(sessionId != null) {
+        if (sessionId != null) {
             synchronized (sessionId) {
                 return CacheUtils.getFromCache(sshShellInputs.getSshGlobalSessionObject().getResource(), sessionId);
             }
@@ -58,6 +57,7 @@ public abstract class SSHShellAbstract {
             return null;
         }
     }
+
     protected boolean saveToCache(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, SSHService service, String sessionId) {
         if (sessionParam.getName() == null) {
             sessionParam.setName(Constants.SSH_SESSIONS_DEFAULT_ID);

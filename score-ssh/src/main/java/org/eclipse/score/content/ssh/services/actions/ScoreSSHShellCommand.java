@@ -3,18 +3,19 @@ package org.eclipse.score.content.ssh.services.actions;
 import org.eclipse.score.content.ssh.entities.CommandResult;
 import org.eclipse.score.content.ssh.entities.ConnectionDetails;
 import org.eclipse.score.content.ssh.entities.KeyFile;
+import org.eclipse.score.content.ssh.entities.KnownHostsFile;
 import org.eclipse.score.content.ssh.entities.SSHShellInputs;
 import org.eclipse.score.content.ssh.services.SSHService;
 import org.eclipse.score.content.ssh.services.impl.SSHServiceImpl;
 import org.eclipse.score.content.ssh.utils.Constants;
 import org.eclipse.score.content.ssh.utils.StringUtils;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by ioanvranauhp on 11/5/2014.
- *
  */
 public class ScoreSSHShellCommand extends SSHShellAbstract {
 
@@ -33,18 +34,22 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             }
 
             int portNumber = StringUtils.toInt(sshShellInputs.getPort(), Constants.DEFAULT_PORT);
+            String knownHostsPolicy = StringUtils.toNotEmptyString(sshShellInputs.getKnownHostsPolicy(), Constants.DEFAULT_KNOWN_HOSTS_POLICY);
+            Path knownHostsPath = StringUtils.toPath(sshShellInputs.getKnownHostsPath(), Constants.DEFAULT_KNOWN_HOSTS_PATH);
+
             sessionId = "sshSession:" + sshShellInputs.getHost() + "-" + portNumber + "-" + sshShellInputs.getUsername();
 
             // configure ssh parameters
-            ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber,  sshShellInputs.getUsername(),  sshShellInputs.getPassword());
+            ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber, sshShellInputs.getUsername(), sshShellInputs.getPassword());
             KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
+            KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
 
             // get the cached SSH session
             service = getSshServiceFromCache(sshShellInputs, sessionId);
             boolean saveSSHSession = false;
             if (service == null || !service.isConnected()) {
                 saveSSHSession = true;
-                service = new SSHServiceImpl(connection, keyFile, Constants.DEFAULT_CONNECT_TIMEOUT);
+                service = new SSHServiceImpl(connection, keyFile, knownHostsFile, Constants.DEFAULT_CONNECT_TIMEOUT);
             }
 
             runSSHCommand(sshShellInputs, returnResult, service, sessionId, saveSSHSession);

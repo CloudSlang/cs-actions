@@ -10,7 +10,7 @@ public abstract class SimulatorModificationCommand extends ScriptElement {
     public static HashMap<String, Class<? extends SimulatorModificationCommand>> sends = new HashMap<String, Class<? extends SimulatorModificationCommand>>();
 
     static {
-        sends.put(FLAG_CAPTURE, SetSimulatorCapture.class);
+        sends.put(FLAG_CAPTURE.toLowerCase(), SetSimulatorCapture.class);
     }
 
     protected IScriptRunner runner;

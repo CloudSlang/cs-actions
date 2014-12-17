@@ -44,7 +44,11 @@ public class Expect extends ScriptElement {
     }
 
     public void set(String command) {
-        this.command = command.trim();
+        if(command != null) {
+            this.command = command.trim();
+        }else {
+            this.command = "";
+        }
     }
 
     public void setError(Expect error) {

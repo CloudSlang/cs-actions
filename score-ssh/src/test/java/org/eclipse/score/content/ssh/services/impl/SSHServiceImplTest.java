@@ -9,6 +9,7 @@ import org.eclipse.score.content.ssh.entities.CommandResult;
 import org.eclipse.score.content.ssh.entities.ConnectionDetails;
 import org.eclipse.score.content.ssh.entities.ExpectCommandResult;
 import org.eclipse.score.content.ssh.entities.KeyFile;
+import org.eclipse.score.content.ssh.entities.KnownHostsFile;
 import org.eclipse.score.content.ssh.services.SSHService;
 import org.eclipse.score.content.ssh.utils.simulator.ShellSimulator;
 import org.eclipse.score.content.ssh.utils.simulator.visualization.IShellVisualizer;
@@ -20,6 +21,9 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -34,6 +38,8 @@ public class SSHServiceImplTest {
 
     private static final String SHELL_PATH = "path";
     private static final String PASS_PHRASE = "passPhrase";
+    private static final Path KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");;
+    private static final String KNOWN_HOSTS_POLICY = "allow";
     private static final String OUTPUT = "output";
     private static final String HOST = "host";
     private static final int PORT = 0;
@@ -81,23 +87,23 @@ public class SSHServiceImplTest {
         assertEquals(sshService.getShellChannel(), channelShellMock);
         assertEquals(sshService.getSSHSession(), sessionMock);
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, CONNECT_TIMEOUT, false);
+        sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, false);
         assertEquals(null, sshService.getShellChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, CONNECT_TIMEOUT, true);
+        sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
         assertEquals(channelShellMock, sshService.getShellChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH), CONNECT_TIMEOUT, true);
+        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
         assertEquals(channelShellMock, sshService.getShellChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), CONNECT_TIMEOUT, true);
+        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
         assertEquals(channelShellMock, sshService.getShellChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), CONNECT_TIMEOUT);
+        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT);
         assertEquals(null, sshService.getShellChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
     }
