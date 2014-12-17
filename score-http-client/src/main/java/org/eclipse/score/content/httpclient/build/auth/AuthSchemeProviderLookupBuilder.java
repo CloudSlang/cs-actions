@@ -185,7 +185,8 @@ public class AuthSchemeProviderLookupBuilder {
             IOUtils.writeLines(lines, System.lineSeparator(), writer);
         } finally {
             if(writer != null) {
-                IOUtils.closeQuietly(writer);
+//                IOUtils.closeQuietly(writer);
+                safeClose(writer);
             }
         }
 
@@ -208,7 +209,8 @@ public class AuthSchemeProviderLookupBuilder {
             IOUtils.writeLines(lines, System.lineSeparator(), writer);
         } finally {
             if(writer!=null) {
-                IOUtils.closeQuietly(writer);
+//                IOUtils.closeQuietly(writer);
+                safeClose(writer);
             }
         }
         return tempFile;
@@ -220,6 +222,16 @@ public class AuthSchemeProviderLookupBuilder {
                 System.getProperty("java.security.krb5.conf") +
                 System.getProperty("java.security.auth.login.config")
                 + username + skipPortAtKerberosDatabaseLookup;
+    }
+
+    public static void safeClose(FileWriter fis) {
+        if (fis != null) {
+            try {
+                fis.close();
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
     }
 
 }
