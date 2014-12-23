@@ -1,4 +1,4 @@
-package org.eclipse.score.content.mail.sslconfig;
+package org.openscore.content.mail.sslconfig;
 
 import junit.framework.Assert;
 import org.junit.Rule;
@@ -7,6 +7,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.openscore.content.mail.sslconfig.AuthSSLX509TrustManager;
+import org.openscore.content.mail.sslconfig.SSLUtils;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;

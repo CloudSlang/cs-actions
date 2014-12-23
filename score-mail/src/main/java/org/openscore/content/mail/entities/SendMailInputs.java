@@ -1,4 +1,4 @@
-package org.eclipse.score.content.mail.entities;
+package org.openscore.content.mail.entities;
 
 /**
  * Created by giloan on 10/30/2014.

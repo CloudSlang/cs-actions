@@ -1,4 +1,4 @@
-package org.eclipse.score.content.mail.actions;
+package org.openscore.content.mail.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -6,8 +6,8 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import org.eclipse.score.content.mail.entities.GetMailMessageInputs;
-import org.eclipse.score.content.mail.services.GetMailMessage;
+import org.openscore.content.mail.entities.GetMailMessageInputs;
+import org.openscore.content.mail.services.GetMailMessage;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

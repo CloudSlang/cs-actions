@@ -1,4 +1,4 @@
-package org.eclipse.score.content.mail.entities;
+package org.openscore.content.mail.entities;
 
 import javax.mail.PasswordAuthentication;
 import javax.mail.Authenticator;

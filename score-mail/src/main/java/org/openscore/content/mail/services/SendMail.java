@@ -1,6 +1,6 @@
-package org.eclipse.score.content.mail.services;
+package org.openscore.content.mail.services;
 
-import org.eclipse.score.content.mail.entities.SendMailInputs;
+import org.openscore.content.mail.entities.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
 
 import javax.activation.DataHandler;

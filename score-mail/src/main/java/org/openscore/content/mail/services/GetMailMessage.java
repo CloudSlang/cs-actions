@@ -1,10 +1,10 @@
-package org.eclipse.score.content.mail.services;
+package org.openscore.content.mail.services;
 
-import org.eclipse.score.content.mail.entities.GetMailMessageInputs;
-import org.eclipse.score.content.mail.entities.SimpleAuthenticator;
-import org.eclipse.score.content.mail.entities.StringOutputStream;
-import org.eclipse.score.content.mail.sslconfig.EasyX509TrustManager;
-import org.eclipse.score.content.mail.sslconfig.SSLUtils;
+import org.openscore.content.mail.entities.GetMailMessageInputs;
+import org.openscore.content.mail.entities.SimpleAuthenticator;
+import org.openscore.content.mail.entities.StringOutputStream;
+import org.openscore.content.mail.sslconfig.EasyX509TrustManager;
+import org.openscore.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;
 
 import javax.mail.*;

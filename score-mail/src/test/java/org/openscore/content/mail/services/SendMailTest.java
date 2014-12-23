@@ -1,6 +1,6 @@
-package org.eclipse.score.content.mail.services;
+package org.openscore.content.mail.services;
 
-import org.eclipse.score.content.mail.entities.SendMailInputs;
+import org.openscore.content.mail.entities.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
 import org.junit.After;
 import org.junit.Before;
@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.openscore.content.mail.services.SendMail;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;

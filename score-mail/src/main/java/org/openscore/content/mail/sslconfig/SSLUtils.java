@@ -1,4 +1,4 @@
-package org.eclipse.score.content.mail.sslconfig;
+package org.openscore.content.mail.sslconfig;
 
 import javax.net.ssl.*;
 import java.io.IOException;
