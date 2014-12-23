@@ -10,7 +10,7 @@
     -->
     <groupId>org.openscore.content</groupId>
     <artifactId>score-http-client</artifactId>
-    <version>0.1.40</version>
+    <version>0.1.41-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>An HTTP client for score</description>
     <url>https://github.com/HPSoftware/score-content</url>
