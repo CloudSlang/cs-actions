@@ -8,7 +8,7 @@
         The Apache License is available at
         http://www.apache.org/licenses/LICENSE-2.0
     -->
-    <groupId>org.eclipse.score.content</groupId>
+    <groupId>org.openscore.content</groupId>
     <artifactId>score-http-client</artifactId>
     <version>0.1.40-SNAPSHOT</version>
     <packaging>jar</packaging>
