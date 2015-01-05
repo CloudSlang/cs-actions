@@ -20,9 +20,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:https://HPSoftware/score-content.git</connection>
-        <developerConnection>scm:git:git@github.com:HPSoftware/score-content.git</developerConnection>
-        <url>https://github.com/HPSoftware/score-content.git</url>
+        <connection>scm:git:https://openscore/score-content.git</connection>
+        <developerConnection>scm:git:git@github.com:openscore/score-content.git</developerConnection>
+        <url>https://github.com/openscore/score-content.git</url>
         <tag>master</tag>
     </scm>
     <distributionManagement>
