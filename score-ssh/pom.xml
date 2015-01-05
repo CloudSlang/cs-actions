@@ -14,10 +14,41 @@
     <artifactId>score-ssh</artifactId>
     <version>0.0.10-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <name>org.openscore.content:score-ssh</name>
+    <description>SSH java actions</description>
+    <url>https://github.com/openscore/score-content</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <properties>
         <gpg.skip>true</gpg.skip>
     </properties>
+
+    <developers>
+        <developer>
+            <name>Mihai David</name>
+            <email>mihai.david@hp.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Adina Tusa</name>
+            <email>adina.tusa@hp.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Avi Moradi</name>
+            <email>avi.moradi@hp.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+    </developers>
 
     <scm>
         <connection>scm:git:https://openscore/score-content.git</connection>
@@ -25,6 +56,7 @@
         <url>https://github.com/openscore/score-content.git</url>
         <tag>master</tag>
     </scm>
+
     <distributionManagement>
         <repository>
             <id>nexus-repository</id>
