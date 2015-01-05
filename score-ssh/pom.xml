@@ -12,7 +12,7 @@
 
     <groupId>io.openscore.content</groupId>
     <artifactId>score-ssh</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.10</version>
     <packaging>jar</packaging>
     <name>org.openscore.content:score-ssh</name>
     <description>SSH java actions</description>
