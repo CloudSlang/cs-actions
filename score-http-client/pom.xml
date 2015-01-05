@@ -14,6 +14,7 @@
     <packaging>jar</packaging>
     <description>An HTTP client for score</description>
     <url>https://github.com/openscore/score-content</url>
+    <name>org.openscore.content:score-http-client</name>
     <licenses>
       <license>
         <name>The Apache License, Version 2.0</name>
