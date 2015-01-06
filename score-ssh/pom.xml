@@ -81,11 +81,6 @@
             <artifactId>jsch</artifactId>
             <version>0.1.50</version>
         </dependency>
-        <!--<dependency>-->
-        <!--    <groupId>com.jcraft</groupId>-->
-        <!--    <artifactId>jcterm</artifactId>-->
-        <!--    <version>0.0.11</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
