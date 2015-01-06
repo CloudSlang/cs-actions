@@ -70,7 +70,7 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <dependencies>
+    <dependencies> 
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
