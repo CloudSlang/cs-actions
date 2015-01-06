@@ -1,7 +1,7 @@
 package org.openscore.content.ssh.utils.simulator.visualization;
 
-import com.jcraft.jcterm.Connection;
-import com.jcraft.jcterm.EmulatorVT100;
+import org.openscore.content.ssh.utils.simulator.jcterm.Connection;
+import org.openscore.content.ssh.utils.simulator.jcterm.EmulatorVT100;
 import org.dom4j.IllegalAddException;
 import org.junit.Before;
 import org.junit.Test;
