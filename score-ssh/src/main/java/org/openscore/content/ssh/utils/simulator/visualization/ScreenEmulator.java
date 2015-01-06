@@ -1,9 +1,9 @@
 package org.openscore.content.ssh.utils.simulator.visualization;
 
-import com.jcraft.jcterm.Connection;
-import com.jcraft.jcterm.Emulator;
-import com.jcraft.jcterm.EmulatorVT100;
-import com.jcraft.jcterm.Term;
+import org.openscore.content.ssh.utils.simulator.jcterm.Connection;
+import org.openscore.content.ssh.utils.simulator.jcterm.Emulator;
+import org.openscore.content.ssh.utils.simulator.jcterm.EmulatorVT100;
+import org.openscore.content.ssh.utils.simulator.jcterm.Term;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 
