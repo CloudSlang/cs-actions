@@ -2,11 +2,11 @@ package org.openscore.content.ssh.utils;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.Session;
 import org.openscore.content.ssh.entities.SSHConnection;
 import org.openscore.content.ssh.services.SSHService;
 import org.openscore.content.ssh.services.impl.SSHServiceImpl;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class CacheUtils {
      */
     public static boolean saveSshSessionAndChannel(Session session, Channel channel, GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId) {
         final SSHConnection sshConnection;
-        if( channel != null ) {
+        if (channel != null) {
             sshConnection = new SSHConnection(session, channel);
         } else {
             sshConnection = new SSHConnection(session);
@@ -86,7 +86,7 @@ public class CacheUtils {
      * @param sessionId    The key to the session in the cache map.
      */
     public static void removeSshSession(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId) {
-        if(sessionParam != null) {
+        if (sessionParam != null) {
             SessionResource<Map<String, SSHConnection>> resource = sessionParam.getResource();
             if (resource != null) {
                 Map<String, SSHConnection> tempMap = resource.get();

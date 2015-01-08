@@ -1,10 +1,6 @@
 package org.openscore.content.ssh.services.actions;
 
-import org.openscore.content.ssh.entities.CommandResult;
-import org.openscore.content.ssh.entities.ConnectionDetails;
-import org.openscore.content.ssh.entities.KeyFile;
-import org.openscore.content.ssh.entities.KnownHostsFile;
-import org.openscore.content.ssh.entities.SSHShellInputs;
+import org.openscore.content.ssh.entities.*;
 import org.openscore.content.ssh.services.SSHService;
 import org.openscore.content.ssh.services.impl.SSHServiceImpl;
 import org.openscore.content.ssh.utils.Constants;
@@ -107,7 +103,6 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
     protected void cleanupService(SSHShellInputs sshShellInputs, SSHService service, String sessionId) {
         service.close();
         service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
-//        service.removeFromCache(sshShellInputs.getSshSessionObject(), sessionId); //TODO session object
     }
 
     private void populateResult(Map<String, String> returnResult, CommandResult commandResult) {

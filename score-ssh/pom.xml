@@ -31,14 +31,14 @@
 
     <developers>
         <developer>
-            <name>Mihai David</name>
-            <email>mihai.david@hp.com</email>
+            <name>Octavian Hasna</name>
+            <email>octavian-lucian.hasna@hp.com</email>
             <organization>HP Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
         <developer>
-            <name>Adina Tusa</name>
-            <email>adina.tusa@hp.com</email>
+            <name>Ioan Vranau</name>
+            <email>ioan.vranau@hp.com</email>
             <organization>HP Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
@@ -82,11 +82,6 @@
             <version>0.1.50</version>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jcterm</artifactId>
-            <version>0.0.11</version>
-        </dependency>
-        <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6</version>
@@ -94,7 +89,7 @@
         <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk15</artifactId>
-            <version>144</version>
+            <version>140</version>
         </dependency>
 
         <!-- testing dependencies -->

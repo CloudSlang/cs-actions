@@ -1,28 +1,12 @@
 package org.openscore.content.ssh.services.impl;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import org.openscore.content.ssh.entities.CommandResult;
-import org.openscore.content.ssh.entities.ConnectionDetails;
-import org.openscore.content.ssh.entities.ExpectCommandResult;
-import org.openscore.content.ssh.entities.KeyFile;
-import org.openscore.content.ssh.entities.KnownHostsFile;
-import org.openscore.content.ssh.entities.SSHConnection;
+import com.jcraft.jsch.*;
+import org.openscore.content.ssh.entities.*;
 import org.openscore.content.ssh.services.SSHService;
 import org.openscore.content.ssh.utils.CacheUtils;
-import org.openscore.content.ssh.utils.Constants;
-import org.openscore.content.ssh.utils.simulator.ShellSimulator;
-import org.openscore.content.ssh.utils.simulator.visualization.IShellVisualizer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Locale;
 import java.util.Map;
 
@@ -158,51 +142,6 @@ public class SSHServiceImpl implements SSHService {
     }
 
     @Override
-    public ExpectCommandResult runExpectCommand(String commandList, String characterSet, String newline, int writeCharacterTimeout, int connectTimeout, int commandTimeout) {
-        try {
-            if (shellChannel == null || !shellChannel.isConnected()) {
-                // create shell channel
-                shellChannel = session.openChannel(SHELL_CHANNEL);
-
-                // connect to the channel and run the command(s)
-                shellChannel.connect(connectTimeout);
-            }
-
-            ShellSimulator simulator = new ShellSimulator(
-                    commandList,
-                    Constants.DEFAULT_MATCH_TIMEOUT,
-                    Constants.DEFAULT_READ_TIMEOUT,
-                    Constants.DEFAULT_IDLE_TIMEOUT,
-                    writeCharacterTimeout,
-                    newline.toCharArray(),
-                    characterSet,
-                    false);
-            simulator.setStreams(shellChannel.getInputStream(), shellChannel.getOutputStream());
-            IShellVisualizer visualizer = simulator.addVisualizer(BASIC_VISUALIZER);
-
-            simulator.run(commandTimeout);
-
-            String exception = simulator.getException();
-            if (exception != null && exception.length() > 0) {
-                throw new RuntimeException(exception);
-            }
-
-            // save the response
-            ExpectCommandResult result = new ExpectCommandResult();
-            result.setStandardOutput(simulator.getOutput());
-            if (visualizer != null) {
-                result.setExpectXmlOutputs(visualizer.getXMLSummary());
-            }
-
-            // The exit status is only available after the channel was closed (more exactly, just before the channel is closed).
-            result.setExitCode(shellChannel.getExitStatus());
-            return result;
-        } catch (AssertionError | Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void createLocalTunnel(int localPort, String remoteHost, int remotePort) {
         try {
             session.setPortForwardingL(localPort, remoteHost, remotePort);
@@ -214,11 +153,6 @@ public class SSHServiceImpl implements SSHService {
     @Override
     public boolean isConnected() {
         return session.isConnected();
-    }
-
-    @Override
-    public boolean isExpectChannelConnected() {
-        return shellChannel != null && shellChannel.isConnected();
     }
 
     @Override

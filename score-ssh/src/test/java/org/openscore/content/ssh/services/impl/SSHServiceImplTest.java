@@ -5,20 +5,16 @@ import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import org.openscore.content.ssh.entities.CommandResult;
-import org.openscore.content.ssh.entities.ConnectionDetails;
-import org.openscore.content.ssh.entities.ExpectCommandResult;
-import org.openscore.content.ssh.entities.KeyFile;
-import org.openscore.content.ssh.entities.KnownHostsFile;
-import org.openscore.content.ssh.services.SSHService;
-import org.openscore.content.ssh.services.impl.SSHServiceImpl;
-import org.openscore.content.ssh.utils.simulator.ShellSimulator;
-import org.openscore.content.ssh.utils.simulator.visualization.IShellVisualizer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.openscore.content.ssh.entities.CommandResult;
+import org.openscore.content.ssh.entities.ConnectionDetails;
+import org.openscore.content.ssh.entities.KeyFile;
+import org.openscore.content.ssh.entities.KnownHostsFile;
+import org.openscore.content.ssh.services.SSHService;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -39,7 +35,7 @@ public class SSHServiceImplTest {
 
     private static final String SHELL_PATH = "path";
     private static final String PASS_PHRASE = "passPhrase";
-    private static final Path KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");;
+    private static final Path KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
     private static final String KNOWN_HOSTS_POLICY = "allow";
     private static final String OUTPUT = "output";
     private static final String HOST = "host";
@@ -57,12 +53,7 @@ public class SSHServiceImplTest {
     private ChannelShell channelShellMock;
     @Mock
     private CommandResult commandResultMock;
-    @Mock
-    private ExpectCommandResult expectCommandResultMock;
-    @Mock
-    private ShellSimulator simulatorMock;
-    @Mock
-    private IShellVisualizer visualizerMock;
+
 
     @Mock
     private JSch jSchMock;
@@ -74,12 +65,6 @@ public class SSHServiceImplTest {
         Mockito.doNothing().when(jSchMock).addIdentity(SHELL_PATH);
         PowerMockito.when(sessionMock.openChannel("shell")).thenReturn(channelShellMock);
         Mockito.doNothing().when(channelShellMock).connect(CONNECT_TIMEOUT);
-
-        PowerMockito.whenNew(ShellSimulator.class).withAnyArguments().thenReturn(simulatorMock);
-
-        PowerMockito.when(simulatorMock.getOutput()).thenReturn(OUTPUT);
-        PowerMockito.when(simulatorMock.addVisualizer("basic")).thenReturn(visualizerMock);
-        PowerMockito.when(visualizerMock.getXMLSummary()).thenReturn(XML_SUMMARY);
     }
 
     @Test
@@ -135,61 +120,11 @@ public class SSHServiceImplTest {
     }
 
     @Test
-    public void testRunExpectCommand() throws Exception {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        ExpectCommandResult expectCommandResult = sshService.runExpectCommand("ls", "UTF-8", "\\n", 1000, CONNECT_TIMEOUT, COMMAND_TIMEOUT);
-        assertEquals(expectCommandResult.getExitCode(), 0);
-        assertEquals(expectCommandResult.getStandardError(), null);
-        assertEquals(expectCommandResult.getStandardOutput(), OUTPUT);
-        assertEquals(expectCommandResult.getExpectXmlOutputs(), XML_SUMMARY);
-
-        sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        expectCommandResult = sshService.runExpectCommand("ls", "UTF-8", "\\n", 1000, 0, 0);
-        assertEquals(expectCommandResult.getExitCode(), 0);
-        assertEquals(expectCommandResult.getStandardError(), null);
-        assertEquals(expectCommandResult.getStandardOutput(), OUTPUT);
-        assertEquals(expectCommandResult.getExpectXmlOutputs(), XML_SUMMARY);
-
-        sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        expectCommandResult = sshService.runExpectCommand("ls", "UTF-8", "test123!@#", 1000, 0, 0);
-        assertEquals(expectCommandResult.getExitCode(), 0);
-        assertEquals(expectCommandResult.getStandardError(), null);
-        assertEquals(expectCommandResult.getStandardOutput(), OUTPUT);
-        assertEquals(expectCommandResult.getExpectXmlOutputs(), XML_SUMMARY);
-
-        sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        expectCommandResult = sshService.runExpectCommand("", "UTF-8", "\\n", 1000, 0, 0);
-        assertEquals(expectCommandResult.getExitCode(), 0);
-        assertEquals(expectCommandResult.getStandardError(), null);
-        assertEquals(expectCommandResult.getStandardOutput(), OUTPUT);
-        assertEquals(expectCommandResult.getExpectXmlOutputs(), XML_SUMMARY);
-
-    }
-
-    @Test
     public void testCreateLocalTunnel() throws JSchException {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
         sshService.createLocalTunnel(PORT, HOST, PORT);
 
         verify(sessionMock).setPortForwardingL(PORT, HOST, PORT);
-    }
-
-    @Test
-    public void testIsConnected() {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        final boolean connected = sshService.isConnected();
-        assertEquals(false, connected);
-
-        verify(sessionMock).isConnected();
-    }
-
-    @Test
-    public void testIsExpectChannelConnected() {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        final boolean connected = sshService.isExpectChannelConnected();
-        assertEquals(false, connected);
-
-        verify(channelShellMock).isConnected();
     }
 
     @Test
