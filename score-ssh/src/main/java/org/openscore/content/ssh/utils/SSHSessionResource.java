@@ -1,9 +1,9 @@
 package org.openscore.content.ssh.utils;
 
 import com.hp.oo.sdk.content.plugin.SessionResource;
-import org.openscore.content.ssh.entities.SSHConnection;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
+import org.openscore.content.ssh.entities.SSHConnection;
 
 import java.util.Collection;
 import java.util.Map;
