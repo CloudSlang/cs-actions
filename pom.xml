@@ -9,11 +9,11 @@
         http://www.apache.org/licenses/LICENSE-2.0
     -->
 	<groupId>io.openscore.content</groupId>
-	<artifactId>score-content</artifactId>
+	<artifactId>score-actions</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
     <description>Precompiled flows for score</description>
-    <url>https://github.com/openscore/score-content</url>
+    <url>https://github.com/openscore/score-actions</url>
     <licenses>
       <license>
         <name>The Apache License, Version 2.0</name>
@@ -41,9 +41,9 @@
       </developer>
     </developers>
 	<scm>
-		<connection>scm:git:https://openscore/score-content.git</connection>
-		<developerConnection>scm:git:git@github.com:openscore/score-content.git</developerConnection>
-		<url>https://github.com/openscore/score-content.git</url>
+		<connection>scm:git:https://openscore/score-actions.git</connection>
+		<developerConnection>scm:git:git@github.com:openscore/score-actions.git</developerConnection>
+		<url>https://github.com/openscore/score-actions.git</url>
 		<tag>master</tag>
 	</scm>
     <distributionManagement>

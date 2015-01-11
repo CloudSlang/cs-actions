@@ -13,7 +13,7 @@
     <version>0.1.45-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>An HTTP client for score</description>
-    <url>https://github.com/openscore/score-content</url>
+    <url>https://github.com/openscore/score-actions</url>
     <name>org.openscore.content:score-http-client</name>
     <licenses>
       <license>
@@ -42,9 +42,9 @@
       </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://openscore/score-content.git</connection>
-        <developerConnection>scm:git:git@github.com:openscore/score-content.git</developerConnection>
-        <url>https://github.com/openscore/score-content.git</url>
+        <connection>scm:git:https://openscore/score-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:openscore/score-actions.git</developerConnection>
+        <url>https://github.com/openscore/score-actions.git</url>
         <tag>master</tag>
     </scm>
     <distributionManagement>
