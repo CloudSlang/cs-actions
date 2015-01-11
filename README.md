@@ -1,4 +1,4 @@
-score-content
+score-actions
 =============
 
 Java actions to be used by operations
