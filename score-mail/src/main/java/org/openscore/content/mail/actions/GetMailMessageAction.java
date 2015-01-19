@@ -19,6 +19,47 @@ import java.util.Map;
  */
 public class GetMailMessageAction {
 
+    /**
+     * This operation is used to get the contents of a mail message. Inline attachments are not supported by this operation.
+     *
+     * @param hostname The email host.
+     * @param port The port to connect to on host (normally 110 for POP3, 143 for IMAP4).
+     *             This input can be left empty if the "protocol" value is "pop3" or "imap4": for "pop3" this input will
+     *             be completed by default with 110, for "imap4", this input will be completed by default with 143.
+     * @param protocol The protocol to connect with. This input can be left empty if the port value is provided:
+     *                 if the provided port value is 110, the pop3 protocol will be used by default,
+     *                 if the provided port value is 143, the imap4 protocol will be used by default.
+     *                 For other values for the "port" input, the protocol should be also specified. Valid values: pop3, imap4, imap.
+     * @param username The username for the mail host. Use the full email address as username.
+     * @param password The password for the mail host.
+     * @param folder The folder to read the message from (NOTE: POP3 only supports "INBOX").
+     * @param trustAllRoots Specifies whether to trust all SSL certificate authorities. This input is ignored if the
+     *                      enableSSL input is set to false. If false, make sure to have the certificate installed.
+     *                      The steps are explained at the end of inputs description. Valid values: true, false. Default value: true.
+     * @param messageNumber The number (starting at 1) of the message to retrieve.  Email ordering is a server setting
+     *                      that is independent of the client.
+     * @param subjectOnly A boolean value. If true, only subjects are retrieved instead of the entire message.
+     *                    Valid values: true, false. Default value: false.
+     * @param enableSSL Specify if the connection should be SSL enabled or not. Valid values: true, false. Default value: false.
+     * @param keystore The path to the keystore to use for SSL Client Certificates.
+     * @param keystorePassword The password for the keystore.
+     * @param trustKeystore The path to the trustKeystore to use for SSL Server Certificates.
+     * @param trustPassword The password for the trustKeystore.
+     * @param characterSet The character set used to read the email. By default the operation uses the character set
+     *                     with which the email is marked, in order to read its content. Because sometimes this character
+     *                     set isn't accurate you can provide you own value for this property.
+     *                     <br>Valid values: UTF-8, UTF-16, UTF-32, EUC-JP, ISO-2022-JP, Shift_JIS, Windows-31J. Default value: UTF-8.
+     * @param deleteUponRetrieval If true the email which is retrived will be deleted. For any other values it will be just retrieved.
+     *                            Valid values: true, false. Default value: false.
+     * @return a map containing the output of the operation. Keys present in the map are:
+     *      <br><b>returnCode</b> - This is the primary output. It is 0 if the operation succeeded and -1 for failure.
+     *      <br><b>Subject</b> - Subject of the email.
+     *      <br><b>Body</b> - Only the body contents of the email. This will not contain the attachment including inline attachments.
+     *              This is in HTML format, not plain text.
+     *      <br><b>AttachedFileNames</b> - Attached file names to the email.
+     *      <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     *      <br><b>exception</b> - the exception message if the operation goes to failure.
+     */
     @Action(name = "Get Mail Message",
             outputs = {
                     @Output(GetMailMessage.RETURN_CODE),
