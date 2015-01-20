@@ -20,9 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by giloan on 11/3/2014.
@@ -32,6 +30,7 @@ public class GetMailMessage {
     public static final String RETURN_RESULT = "returnResult";
     public static final String SUBJECT = "Subject";
     public static final String BODY_RESULT = "Body";
+    public static final String PLAIN_TEXT_BODY_RESULT = "plainTextBody";
     public static final String ATTACHED_FILE_NAMES_RESULT = "AttachedFileNames";
     public static final String RETURN_CODE = "returnCode";
     public static final String EXCEPTION = "exception";
@@ -130,7 +129,14 @@ public class GetMailMessage {
                         result.put(ATTACHED_FILE_NAMES_RESULT, decodeAttachedFileNames((getAttachedFileNames(message))));
                     }
                     // Get the message body
-                    result.put(BODY_RESULT, MimeUtility.decodeText(getMessageContent(message, characterSet)));
+                    Map<String, String> messageByTypes = getMessageByContentTypes(message, characterSet);
+                    String lastMessageBody = new LinkedList<>(messageByTypes.values()).getLast();
+
+                    result.put(BODY_RESULT, MimeUtility.decodeText(lastMessageBody));
+
+                    String plainTextBody = messageByTypes.containsKey(TEXT_PLAIN) ? messageByTypes.get(TEXT_PLAIN) : "";
+                    result.put(PLAIN_TEXT_BODY_RESULT, MimeUtility.decodeText(plainTextBody));
+
                     StringOutputStream stream = new StringOutputStream();
                     message.writeTo(stream);
                     result.put(RETURN_RESULT, stream.toString().replaceAll("" + (char) 0, ""));
@@ -194,7 +200,7 @@ public class GetMailMessage {
     }
 
     protected void addSSLSettings(boolean trustAllRoots, String keystore,
-                               String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
+                                  String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
         boolean useClientCert = false;
         boolean useTrustCert = false;
 
@@ -341,25 +347,27 @@ public class GetMailMessage {
         }
     }
 
-    protected String getMessageContent(Message message, String characterSet) throws Exception {
-        String cmessage = "";
+    protected Map<String, String> getMessageByContentTypes(Message message, String characterSet) throws Exception {
+
+        Map<String, String> messageMap = new HashMap<>();
 
         if (message.isMimeType(TEXT_PLAIN)) {
-            cmessage = MimeUtility.decodeText(message.getContent().toString());
+            messageMap.put(TEXT_PLAIN, MimeUtility.decodeText(message.getContent().toString()));
         } else if (message.isMimeType(TEXT_HTML)) {
-            cmessage = MimeUtility.decodeText(convertMessage(message.getContent().toString()));
+            messageMap.put(TEXT_HTML, MimeUtility.decodeText(convertMessage(message.getContent().toString())));
         } else {
             Object obj = message.getContent();
             Multipart mpart = (Multipart) obj;
+
             for (int i = 0, n = mpart.getCount(); i < n; i++) {
 
                 Part part = mpart.getBodyPart(i);
                 String disposition = part.getDisposition();
-
+                String partContentType = new String(part.getContentType().substring(0, part.getContentType().indexOf(";")));
                 if (disposition == null) {
                     if (part.getContent() instanceof MimeMultipart) { // multipart with attachment
                         MimeMultipart mm = (MimeMultipart) part.getContent();
-                        for (int j = 0; j < mm.getCount(); j++)
+                        for (int j = 0; j < mm.getCount(); j++) {
                             if (mm.getBodyPart(j).getContent() instanceof String) {
                                 BodyPart bodyPart = mm.getBodyPart(j);
                                 if ((characterSet != null) && (characterSet.trim().length() > 0)) {
@@ -367,8 +375,10 @@ public class GetMailMessage {
                                     contentType = contentType.replace(contentType.substring(contentType.indexOf("=") + 1), characterSet);
                                     bodyPart.setHeader(CONTENT_TYPE, contentType);
                                 }
-                                cmessage += MimeUtility.decodeText(bodyPart.getContent().toString());
+                                String partContentType1 = new String(bodyPart.getContentType().substring(0, bodyPart.getContentType().indexOf(";")));
+                                messageMap.put(partContentType1, MimeUtility.decodeText(bodyPart.getContent().toString()));
                             }
+                        }
                     } else {//multipart - w/o attachment
                         //if the user has specified a certain characterSet we decode his way
                         if ((characterSet != null) && (characterSet.trim().length() > 0)) {
@@ -377,14 +387,16 @@ public class GetMailMessage {
                             int count = bis.available();
                             byte[] bytes = new byte[count];
                             count = bis.read(bytes, 0, count);
-                            cmessage = MimeUtility.decodeText(new String(bytes, 0, count, characterSet));
-                        } else
-                            cmessage = MimeUtility.decodeText(part.getContent().toString());
+                            messageMap.put(partContentType, MimeUtility.decodeText(new String(bytes, 0, count, characterSet)));
+                        } else {
+                            messageMap.put(partContentType, MimeUtility.decodeText(part.getContent().toString()));
+                        }
                     }
                 }
             }//for
         }//else
-        return cmessage;
+
+        return messageMap;
     }
 
     protected String getAttachedFileNames(Part part) throws Exception {
