@@ -1,36 +1,40 @@
 package org.openscore.content.mail.services;
 
-import org.openscore.content.mail.entities.GetMailMessageInputs;
-import org.openscore.content.mail.entities.SimpleAuthenticator;
-import org.openscore.content.mail.entities.StringOutputStream;
-import org.openscore.content.mail.services.GetMailMessage;
-import org.openscore.content.mail.sslconfig.EasyX509TrustManager;
-import org.openscore.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.openscore.content.mail.entities.GetMailMessageInputs;
+import org.openscore.content.mail.entities.SimpleAuthenticator;
+import org.openscore.content.mail.entities.StringOutputStream;
+import org.openscore.content.mail.sslconfig.EasyX509TrustManager;
+import org.openscore.content.mail.sslconfig.SSLUtils;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.mail.*;
 import javax.mail.internet.MimeUtility;
-//import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLContext;
 import java.io.*;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+
+//import javax.net.ssl.SSLContext;
 
 /**
  * Created by giloan on 11/6/2014.
@@ -245,7 +249,9 @@ public class GetMailMessageTest {
         doReturn(attachedFileNames).when(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
         // Get the message body test
         String messageContent = "testMessageContent";
-        doReturn(messageContent).when(getMailMessageSpy).getMessageContent(messageMock, CHARACTERSET);
+        Map<String, String> messageContentByType = new HashMap<>();
+        messageContentByType.put("text/html", messageContent);
+        doReturn(messageContentByType).when(getMailMessageSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
         PowerMockito.whenNew(StringOutputStream.class).withNoArguments().thenReturn(stringOutputStreamMock);
         doNothing().when(messageMock).writeTo(stringOutputStreamMock);
         String stringOutputStreamMockToString = "testStream";
@@ -263,8 +269,10 @@ public class GetMailMessageTest {
         verify(getMailMessageSpy, times(2)).changeHeaderCharset(anyString(), anyString());
         verify(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
         assertEquals(attachedFileNames, result.get(ATTACHED_FILE_NAMES_RESULT));
+
         assertEquals(messageContent, result.get(BODY_RESULT));
-        verify(getMailMessageSpy).getMessageContent(messageMock, CHARACTERSET);
+
+        verify(getMailMessageSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
         PowerMockito.verifyNew(StringOutputStream.class).withNoArguments();
         verify(messageMock).writeTo(stringOutputStreamMock);
         assertEquals(stringOutputStreamMockToString, result.get(RETURN_RESULT));
@@ -285,8 +293,10 @@ public class GetMailMessageTest {
         doReturn(attachedFileNames).when(getMailMessageSpy).getAttachedFileNames(messageMock);
         doReturn(attachedFileNames).when(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
         // Get the message body test
+        Map<String, String> messageContentByType = new HashMap<>();
         String messageContent = "testMessageContent";
-        doReturn(messageContent).when(getMailMessageSpy).getMessageContent(messageMock, null);
+        messageContentByType.put("text/html", messageContent);
+        doReturn(messageContentByType).when(getMailMessageSpy).getMessageByContentTypes(messageMock, null);
         PowerMockito.whenNew(StringOutputStream.class).withNoArguments().thenReturn(stringOutputStreamMock);
         doNothing().when(messageMock).writeTo(stringOutputStreamMock);
         String stringOutputStreamMockToString = "testStream";
@@ -303,7 +313,7 @@ public class GetMailMessageTest {
         verify(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
         assertEquals(attachedFileNames, result.get(ATTACHED_FILE_NAMES_RESULT));
         assertEquals(messageContent, result.get(BODY_RESULT));
-        verify(getMailMessageSpy).getMessageContent(messageMock, null);
+        verify(getMailMessageSpy).getMessageByContentTypes(messageMock, null);
         PowerMockito.verifyNew(StringOutputStream.class).withNoArguments();
         verify(messageMock).writeTo(stringOutputStreamMock);
         assertEquals(stringOutputStreamMockToString, result.get(RETURN_RESULT));
@@ -407,6 +417,7 @@ public class GetMailMessageTest {
 
     /**
      * Test configureStoreWithoutSSL method.
+     *
      * @throws Exception
      */
     @Test
@@ -431,6 +442,7 @@ public class GetMailMessageTest {
 
     /**
      * Test method assSSLSettings with false trustAllRoots.
+     *
      * @throws Exception
      */
     @Test
@@ -454,6 +466,7 @@ public class GetMailMessageTest {
     /**
      * Test method assSSLSettings with default keystore file, keystore password,
      * trustKeyStore and trustPassword.
+     *
      * @throws Exception
      */
     @Test
@@ -474,18 +487,21 @@ public class GetMailMessageTest {
 
     /**
      * Test getMessageContent method with text/plain message.
+     *
      * @throws Exception
      */
     @Test
     public void testGetMessageContentWithTextPlain() throws Exception {
         commonStubbingForGetMessageContentMethod(TEXT_PLAIN);
 
-        String message = getMailMessageSpy.getMessageContent(messageMock, CHARACTERSET);
-        commonVerifiesForGetMessageContentMethod(message, TEXT_PLAIN);
+        Map<String, String> messageByType = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        assertEquals(cmessageMock, messageByType.get(TEXT_PLAIN));
+        commonVerifiesForGetMessageContentMethod(messageByType, TEXT_PLAIN);
     }
 
     /**
      * Test getMessageContent method with text/html message.
+     *
      * @throws Exception
      */
     @Test
@@ -493,8 +509,9 @@ public class GetMailMessageTest {
         commonStubbingForGetMessageContentMethod(TEXT_HTML);
         doReturn(messageMockToString).when(getMailMessageSpy).convertMessage(messageMockToString);
 
-        String message = getMailMessageSpy.getMessageContent(messageMock, CHARACTERSET);
-        commonVerifiesForGetMessageContentMethod(message, TEXT_HTML);
+        Map<String, String> messageByType = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        assertEquals(cmessageMock, messageByType.get(TEXT_HTML));
+        commonVerifiesForGetMessageContentMethod(messageByType, TEXT_HTML);
         verify(getMailMessageSpy).convertMessage(messageMockToString);
     }
 
@@ -511,6 +528,7 @@ public class GetMailMessageTest {
         doReturn(partMock).when(multipartMock).getBodyPart(anyInt());
         // return null disposition
         doReturn(null).when(partMock).getDisposition();
+        doReturn("text/plain; charset=utf-8; format=flowed").when(partMock).getContentType();
         doReturn(inputStreamMock).when(partMock).getInputStream();
         byte[] bytes = {1};
         PowerMockito.mockStatic(ASCIIUtility.class);
@@ -523,8 +541,8 @@ public class GetMailMessageTest {
         PowerMockito.mockStatic(MimeUtility.class);
         PowerMockito.doReturn(testCMessage).when(MimeUtility.class, "decodeText", anyString());
 
-        String cMessage = getMailMessageSpy.getMessageContent(messageMock, CHARACTERSET);
-        assertEquals(testCMessage, cMessage);
+        Map<String, String> cMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        assertEquals(testCMessage, cMessage.get("text/plain"));
         verify(messageMock).isMimeType(TEXT_PLAIN);
         verify(messageMock).isMimeType(TEXT_HTML);
         verify(messageMock).getContent();
@@ -541,8 +559,8 @@ public class GetMailMessageTest {
     }
 
     /**
-    * Test getMessageContent method with null disposition.
-    */
+     * Test getMessageContent method with null disposition.
+     */
     @Test
     public void testGetMessageContentWithoutANullDisposition() throws Exception {
         doReturn(false).when(messageMock).isMimeType(TEXT_PLAIN);
@@ -553,9 +571,10 @@ public class GetMailMessageTest {
         doReturn(partMock).when(multipartMock).getBodyPart(anyInt());
         String testDisposition = "testDisposition";
         doReturn(testDisposition).when(partMock).getDisposition();
+        doReturn("text/plain; charset=utf-8; format=flowed").when(partMock).getContentType();
 
-        String cMessage = getMailMessageSpy.getMessageContent(messageMock, CHARACTERSET);
-        assertEquals("", cMessage);
+        Map<String, String> cMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        assertEquals(0, cMessage.size());
         verify(messageMock).isMimeType(TEXT_PLAIN);
         verify(messageMock).isMimeType(TEXT_HTML);
         verify(messageMock).getContent();
@@ -565,6 +584,7 @@ public class GetMailMessageTest {
 
     /**
      * Test getAttachedFileNames method when content is not multipart.
+     *
      * @throws Exception
      */
     @Test
@@ -574,12 +594,11 @@ public class GetMailMessageTest {
         doReturn(testFileName).when(partMock).getFileName();
         doReturn(inputStreamMock).when(partMock).getInputStream();
 
-        String fileNames= getMailMessageSpy.getAttachedFileNames(partMock);
+        String fileNames = getMailMessageSpy.getAttachedFileNames(partMock);
         assertEquals(testFileName, fileNames);
     }
 
-    private void commonVerifiesForGetMessageContentMethod(String message, String messageType) throws MessagingException, IOException {
-        assertEquals(cmessageMock, message);
+    private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType) throws MessagingException, IOException {
         verify(messageMock).isMimeType(messageType);
         verify(messageMock).getContent();
         PowerMockito.verifyStatic();
