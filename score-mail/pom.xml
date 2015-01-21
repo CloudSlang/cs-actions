@@ -12,7 +12,7 @@
 
     <groupId>io.openscore.content</groupId>
     <artifactId>score-mail</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>org.openscore.content:score-mail</name>
