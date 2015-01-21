@@ -68,7 +68,7 @@ public class GetMailMessageAction {
                     @Output(GetMailMessage.BODY_RESULT),
                     @Output(GetMailMessage.PLAIN_TEXT_BODY_RESULT),
                     @Output(GetMailMessage.ATTACHED_FILE_NAMES_RESULT),
-                    @Output(GetMailMessage.EXCEPTION),
+                    @Output(GetMailMessage.EXCEPTION)
             },
             responses = {
                     @Response(text = GetMailMessage.SUCCESS, field = GetMailMessage.RETURN_CODE, value = GetMailMessage.SUCCESS_RETURN_CODE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
