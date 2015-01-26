@@ -30,6 +30,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -88,14 +89,18 @@ public class SSLConnectionSocketFactoryBuilderTest {
         when(sslContextBuilderMock.useTLS()).thenReturn(null);
         when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
 
-        whenNew(SSLConnectionSocketFactory.class)
-                .withParameterTypes(SSLContext.class, X509HostnameVerifier.class)
-                .withArguments(isA(SSLContext.class), isA(X509HostnameVerifier.class))
-                .thenReturn(sslsfMock);
+        prepareSSLConnectionSocketFactory();
 
         SSLConnectionSocketFactory sslsf = builder.build();
         assertNotNull(sslsf);
         assertEquals(sslsfMock, sslsf);
+    }
+
+    private void prepareSSLConnectionSocketFactory() throws Exception {
+        whenNew(SSLConnectionSocketFactory.class)
+                .withParameterTypes(SSLContext.class, String[].class, String[].class, X509HostnameVerifier.class)
+                .withArguments(isA(SSLContext.class), isA(String[].class), isNull(), isA(X509HostnameVerifier.class))
+                .thenReturn(sslsfMock);
     }
 
     @Test
@@ -112,10 +117,7 @@ public class SSLConnectionSocketFactoryBuilderTest {
 
         when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
 
-        whenNew(SSLConnectionSocketFactory.class)
-                .withParameterTypes(SSLContext.class, X509HostnameVerifier.class)
-                .withArguments(isA(SSLContext.class), isA(X509HostnameVerifier.class))
-                .thenReturn(sslsfMock);
+        prepareSSLConnectionSocketFactory();
 
         SSLConnectionSocketFactory sslsf = builder.build();
         assertNotNull(sslsf);

@@ -125,7 +125,8 @@ public class SSLConnectionSocketFactoryBuilder {
                     x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
             }
 
-            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), x509HostnameVerifier);
+            // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
+            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), new String[] {"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"}, null, x509HostnameVerifier);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage() + ". " + SSL_CONNECTION_ERROR, e);
         }
