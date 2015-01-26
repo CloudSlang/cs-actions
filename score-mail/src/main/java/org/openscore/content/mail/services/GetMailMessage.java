@@ -66,7 +66,6 @@ public class GetMailMessage {
     private static final String HOST_NOT_SPECIFIED = "The required host input is not specified!";
     private static final String MESSAGE_NUMBER_NOT_SPECIFIED = "The required messageNumber input is not specified!";
     private static final String USERNAME_NOT_SPECIFIED = "The required username input is not specified!";
-    private static final String PASSWORD_NOT_SPECIFIED = "The required password input is not specified!";
     private static final String FOLDER_NOT_SPECIFIED = "The required folder input is not specified!";
 
     //Operation inputs
@@ -282,8 +281,8 @@ public class GetMailMessage {
             username = strUsername.trim();
         }
         String strPassword = getMailMessageInputs.getPassword();
-        if(null == strPassword || strPassword.equals("")) {
-            throw new Exception(PASSWORD_NOT_SPECIFIED);
+        if(null == strPassword ) {
+            password = "";
         } else {
             password = strPassword.trim();
         }
