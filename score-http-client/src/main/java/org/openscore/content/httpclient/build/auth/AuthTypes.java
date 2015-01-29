@@ -1,12 +1,12 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package org.openscore.content.httpclient.build.auth;
 
@@ -30,13 +30,17 @@ public class AuthTypes implements Iterable<String> {
 
     public static final String DEFAULT = BASIC;
     public static final String ANY = "ANY";
+    public static final String ANONYMOUS = "ANONYMOUS";
+
     private static Set<String> supportedAuthTypes = new HashSet<>();
+
     static {
         supportedAuthTypes.add(BASIC);
         supportedAuthTypes.add(DIGEST);
         supportedAuthTypes.add(NTLM);
         supportedAuthTypes.add(KERBEROS);
     }
+
     private Set<String> authTypes = new HashSet();
 
     public AuthTypes(String authType) {
@@ -46,6 +50,7 @@ public class AuthTypes implements Iterable<String> {
     public Iterator<String> iterator() {
         return authTypes.iterator();
     }
+
     public void add(String authType) {
         authTypes.add(authType.toUpperCase());
     }
@@ -66,13 +71,15 @@ public class AuthTypes implements Iterable<String> {
 
         if (authType.equalsIgnoreCase(ANY)) {
             authTypes.addAll(supportedAuthTypes);
+        } else if (authType.equalsIgnoreCase(ANONYMOUS)) {
+            add(ANONYMOUS);
         } else {
             String[] toks = authType.split(",");
             for (String tok : toks) {
                 if (supportedAuthTypes.contains(tok.toUpperCase())) {
                     add(tok);
                 } else {
-                    throw new IllegalArgumentException("unsupported authType in \"" + authType +"\"");
+                    throw new IllegalArgumentException("unsupported authType in \"" + authType + "\"");
                 }
             }
         }

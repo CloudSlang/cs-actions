@@ -1,16 +1,15 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package org.openscore.content.httpclient.build.auth;
 
-import org.openscore.content.httpclient.HttpClientInputs;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +22,7 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.impl.auth.*;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
+import org.openscore.content.httpclient.HttpClientInputs;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -151,6 +151,8 @@ public class AuthSchemeProviderLookupBuilder {
                     registryBuilder.register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(skipPort));
                     System.setProperty("oohttpclient.krb.last.settings", getSettingsKey());
                     break;
+                case "ANONYMOUS":
+                    break;
                 default:
                     throw new IllegalStateException("Unsupported '" + HttpClientInputs.AUTH_TYPE
                             + "'authentication scheme: " + type);
@@ -160,7 +162,7 @@ public class AuthSchemeProviderLookupBuilder {
     }
 
 
-    private static File createKrb5Configuration(String domain)  throws IOException {
+    private static File createKrb5Configuration(String domain) throws IOException {
         File tempFile = File.createTempFile("krb", "kdc");
         tempFile.deleteOnExit();
         ArrayList<String> lines = new ArrayList<>();
@@ -176,7 +178,7 @@ public class AuthSchemeProviderLookupBuilder {
             writer = new FileWriter(tempFile);
             IOUtils.writeLines(lines, System.lineSeparator(), writer);
         } finally {
-            if(writer != null) {
+            if (writer != null) {
 //                IOUtils.closeQuietly(writer);
                 safeClose(writer);
             }
@@ -200,7 +202,7 @@ public class AuthSchemeProviderLookupBuilder {
             writer = new FileWriter(tempFile);
             IOUtils.writeLines(lines, System.lineSeparator(), writer);
         } finally {
-            if(writer!=null) {
+            if (writer != null) {
 //                IOUtils.closeQuietly(writer);
                 safeClose(writer);
             }
