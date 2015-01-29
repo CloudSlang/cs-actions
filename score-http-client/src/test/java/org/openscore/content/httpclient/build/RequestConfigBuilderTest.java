@@ -20,8 +20,9 @@ import org.apache.http.HttpException;
 import org.apache.http.client.config.RequestConfig;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.openscore.content.httpclient.build.RequestConfigBuilder;
+import org.junit.rules.ExpectedException;
 
 import java.net.URISyntaxException;
 
@@ -35,6 +36,9 @@ import static junit.framework.Assert.*;
 public class RequestConfigBuilderTest {
 
     private RequestConfigBuilder requestConfigBuilder;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -74,6 +78,18 @@ public class RequestConfigBuilderTest {
         assertEquals("0", String.valueOf(reqConfig.getConnectTimeout()));
         assertEquals("0", String.valueOf(reqConfig.getSocketTimeout()));
         assertNull(reqConfig.getProxy());
+    }
+
+    @Test
+    public void testBuildWithInvalidProxyPort(){
+        final String invalidProxyPort = "invalidProxyPortText";
+        final String expectedExceptionMessage ="Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater then 0";
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage(expectedExceptionMessage);
+        requestConfigBuilder.setProxyHost("myproxy.com")
+                .setProxyPort(invalidProxyPort)
+                .buildRequestConfig();
     }
 }
 

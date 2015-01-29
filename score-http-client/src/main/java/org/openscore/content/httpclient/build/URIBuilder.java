@@ -44,13 +44,13 @@ public class URIBuilder {
             //validate as URL
             new URL(url);
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("could not parse " + url, e);
+            throw new IllegalArgumentException("the value '" + url + "' is not a valid URL", e);
         }
         org.apache.http.client.utils.URIBuilder uriBuilder;
         try {
             uriBuilder = new org.apache.http.client.utils.URIBuilder(url);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("could not parse " + url + " as a URI", e);
+            throw new IllegalArgumentException("the value '" + url + "' is not a valid URI", e);
         }
 
         boolean bEncodeQueryParams = !Boolean.parseBoolean(queryParamsAreURLEncoded);
