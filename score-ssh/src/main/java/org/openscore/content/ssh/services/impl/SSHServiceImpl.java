@@ -7,6 +7,8 @@ import org.openscore.content.ssh.services.SSHService;
 import org.openscore.content.ssh.utils.CacheUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Map;
 
@@ -18,7 +20,6 @@ import java.util.Map;
 public class SSHServiceImpl implements SSHService {
     private static final int POLLING_INTERVAL = 1000;
     private static final String SHELL_CHANNEL = "shell";
-    private static final String BASIC_VISUALIZER = "basic";
     private static final String KNOWN_HOSTS_ALLOW = "allow";
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
@@ -57,16 +58,24 @@ public class SSHServiceImpl implements SSHService {
             session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
 
             String policy = knownHostsFile.getPolicy();
+            Path knownHostsFilePath = knownHostsFile.getPath();
             switch (policy.toLowerCase(Locale.ENGLISH)) {
                 case KNOWN_HOSTS_ALLOW:
                     session.setConfig("StrictHostKeyChecking", "no");
                     break;
                 case KNOWN_HOSTS_STRICT:
-                    jsch.setKnownHosts(knownHostsFile.getPath().toString());
+                    jsch.setKnownHosts(knownHostsFilePath.toString());
                     session.setConfig("StrictHostKeyChecking", "yes");
                     break;
                 case KNOWN_HOSTS_ADD:
-                    jsch.setKnownHosts(knownHostsFile.getPath().toString());
+                    if (!knownHostsFilePath.isAbsolute()){
+                        throw new RuntimeException("The known_hosts file path should be absolute.");
+                    }
+                    if (!Files.exists(knownHostsFilePath)) {
+                        Files.createDirectories(knownHostsFilePath.getParent());
+                        Files.createFile(knownHostsFilePath);
+                    }
+                    jsch.setKnownHosts(knownHostsFilePath.toString());
                     session.setConfig("StrictHostKeyChecking", "no");
                     break;
                 default:
@@ -96,7 +105,7 @@ public class SSHServiceImpl implements SSHService {
                 // connect to the channel and run the command(s)
                 shellChannel.connect(connectTimeout);
             }
-        } catch (JSchException e) {
+        } catch (JSchException | IOException e) {
             throw new RuntimeException(e);
         }
     }

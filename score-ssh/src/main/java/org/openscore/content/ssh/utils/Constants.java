@@ -14,9 +14,6 @@ public class Constants {
     public static final String COMMAND = "command";
     public static final String ARGS = "arguments";
     public static final String PTY = "pty";
-    public static final String CHARACTER_DELAY = "characterDelay";
-    public static final String NEWLINE_SEQUENCE = "newlineCharacters";
-    public static final String SESSION_ID = "sessionId";
     public static final String SSH_SESSIONS_DEFAULT_ID = "sshSessions:default-id";
     public static final String CLOSE_SESSION = "closeSession";
     public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
@@ -24,14 +21,9 @@ public class Constants {
     // outputs
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
-    public static final String VISUALIZED = "visualized";
     // default values
     public static final int DEFAULT_PORT = 22;
     public static final int DEFAULT_TIMEOUT = 90000; //90 seconds
-    public static final int DEFAULT_READ_TIMEOUT = 20000; //20 seconds
-    public static final int DEFAULT_MATCH_TIMEOUT = 1000; //1 second
-    public static final int DEFAULT_IDLE_TIMEOUT = 5;
-    public static final int DEFAULT_WRITE_CHARACTER_TIMEOUT = 0;
     public static final int DEFAULT_CONNECT_TIMEOUT = 10000; //10 seconds
     public static final boolean DEFAULT_USE_PSEUDO_TERMINAL = false;
     public static final String DEFAULT_NEWLINE = "\\n";
