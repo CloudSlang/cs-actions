@@ -64,7 +64,7 @@ public class ContextBuilder {
             preemptiveAuth = "true";
         }
         HttpClientContext context = HttpClientContext.create();
-        if (authTypes.size() == 1 && Boolean.parseBoolean(preemptiveAuth) && !authTypes.contains("ANONYMOUS")) {
+        if (authTypes.size() == 1 && Boolean.parseBoolean(preemptiveAuth) && !authTypes.contains(AuthTypes.ANONYMOUS)) {
             AuthCache authCache = new BasicAuthCache();
             authCache.put(new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()),
                     authSchemeLookup.lookup(authTypes.iterator().next()).create(context));

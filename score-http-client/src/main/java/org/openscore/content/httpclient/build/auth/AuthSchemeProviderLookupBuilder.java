@@ -151,7 +151,7 @@ public class AuthSchemeProviderLookupBuilder {
                     registryBuilder.register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(skipPort));
                     System.setProperty("oohttpclient.krb.last.settings", getSettingsKey());
                     break;
-                case "ANONYMOUS":
+                case AuthTypes.ANONYMOUS:
                     break;
                 default:
                     throw new IllegalStateException("Unsupported '" + HttpClientInputs.AUTH_TYPE
