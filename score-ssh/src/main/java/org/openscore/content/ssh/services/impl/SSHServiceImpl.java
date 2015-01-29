@@ -68,7 +68,11 @@ public class SSHServiceImpl implements SSHService {
                     session.setConfig("StrictHostKeyChecking", "yes");
                     break;
                 case KNOWN_HOSTS_ADD:
+                    if (!knownHostsFilePath.isAbsolute()){
+                        throw new RuntimeException("The known_hosts file path should be absolute.");
+                    }
                     if (!Files.exists(knownHostsFilePath)) {
+                        Files.createDirectories(knownHostsFilePath.getParent());
                         Files.createFile(knownHostsFilePath);
                     }
                     jsch.setKnownHosts(knownHostsFilePath.toString());
