@@ -83,7 +83,7 @@ public class RequestConfigBuilderTest {
     @Test
     public void testBuildWithInvalidProxyPort(){
         final String invalidProxyPort = "invalidProxyPortText";
-        final String expectedExceptionMessage ="Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater then 0";
+        final String expectedExceptionMessage ="Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
 
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage(expectedExceptionMessage);
