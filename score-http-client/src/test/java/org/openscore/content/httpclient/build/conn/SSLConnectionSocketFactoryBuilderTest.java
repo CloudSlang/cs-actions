@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.openscore.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -32,9 +31,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * User: Adina Tusa
@@ -201,5 +198,21 @@ public class SSLConnectionSocketFactoryBuilderTest {
         KeyStore keystore = builder.createKeyStore(urlMock, PASSWORD);
         verify(keyStoreMock).load(inputStreamMock, PASSWORD.toCharArray());
         assertEquals(keystore, keyStoreMock);
+    }
+
+    @Test
+    public void testWithInvalidX509HostnameVerifier() throws Exception{
+        final String invalidX509HostNameVerifier = "InvalidX509HosnameVerifier";
+        final String invalidX509HostNameVerifierErrorMessage = "Invalid value '" + invalidX509HostNameVerifier + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'";
+
+        builder = new SSLConnectionSocketFactoryBuilder();
+        builder.setTrustAllRoots("true");
+        builder.setX509HostnameVerifier(invalidX509HostNameVerifier);
+        mockStatic(SSLContexts.class);
+        when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage(invalidX509HostNameVerifierErrorMessage);
+        builder.build();
     }
 }

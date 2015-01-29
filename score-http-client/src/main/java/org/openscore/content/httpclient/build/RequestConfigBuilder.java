@@ -61,8 +61,8 @@ public class RequestConfigBuilder {
             try {
                 proxy = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Cound not parse '"+ HttpClientInputs.PROXY_PORT
-                        +"' input: " + e.getMessage(), e);
+                throw new IllegalArgumentException("Invalid value '" + proxyPort + "' for input '" + HttpClientInputs.PROXY_PORT
+                        + "'. Valid Values: Integer values greater than 0. " , e);
             }
         }
         int connectionTimeout = Integer.parseInt(this.connectionTimeout);
