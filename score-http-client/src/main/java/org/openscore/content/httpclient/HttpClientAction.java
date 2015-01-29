@@ -51,7 +51,7 @@ public class HttpClientAction {
      *                 the request will work nevertheless. Then client cannot choose the authentication method and there
      *                 is no fallback so you have to know which one you need. If the web application and proxy use
      *                 different authentication types, these must be specified like in the Example model.
-     *                 <br>Default value: basic. Valid values: basic, digest, ntlm, kerberos, any, "" or a list of valid values separated by comma.
+     *                 <br>Default value: basic. Valid values: basic, digest, ntlm, kerberos, any, anonymous, "" or a list of valid values separated by comma.
      * @param preemptiveAuth If this field is 'true' authentication info will be sent in the first request.
      *                       If this is 'false' a request with no authentication info will be made and if server responds
      *                       with 401 and a header like WWW-Authenticate: Basic realm="myRealm" only then the authentication
