@@ -62,7 +62,7 @@ public class URIBuilderTest {
     public void buildURIWithException() throws UnsupportedEncodingException, URISyntaxException {
         String url = "http://[localhost]:8002";
         exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("could not parse");
+        exception.expectMessage("the value 'http://[localhost]:8002' is not a valid URL");
         new URIBuilder().setUrl(url).setQueryParamsAreURLEncoded("true").setQueryParams("").buildURI();
     }
 }

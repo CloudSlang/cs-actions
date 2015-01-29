@@ -38,7 +38,7 @@ public class SSLConnectionSocketFactoryBuilder {
     private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
-    private String x509HostnameVerifier = "strict";
+    private String x509HostnameVerifierInputValue = "strict";
 
     protected KeyStore createKeyStore(final URL url, final String password)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
@@ -109,8 +109,8 @@ public class SSLConnectionSocketFactoryBuilder {
 
         SSLConnectionSocketFactory sslsf;
         try {
-            String x509HostnameVerifierStr = x509HostnameVerifier.toLowerCase();
-            X509HostnameVerifier x509HostnameVerifier = null;
+            String x509HostnameVerifierStr = x509HostnameVerifierInputValue.toLowerCase();
+            X509HostnameVerifier x509HostnameVerifier;
             switch (x509HostnameVerifierStr) {
                 case "strict":
                     x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
@@ -122,11 +122,13 @@ public class SSLConnectionSocketFactoryBuilder {
                     x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
                     break;
                 default:
-                    x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+                    throw new IllegalArgumentException("Invalid value '"+ x509HostnameVerifierInputValue +"' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
             }
-
             sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), x509HostnameVerifier);
         } catch (Exception e) {
+            if(e instanceof IllegalArgumentException){
+                throw new IllegalArgumentException(e.getMessage());
+            }
             throw new RuntimeException(e.getMessage() + ". " + SSL_CONNECTION_ERROR, e);
         }
         return sslsf;
@@ -190,7 +192,7 @@ public class SSLConnectionSocketFactoryBuilder {
 
     public SSLConnectionSocketFactoryBuilder setX509HostnameVerifier(String x509HostnameVerifier) {
         if (!StringUtils.isEmpty(x509HostnameVerifier)) {
-            this.x509HostnameVerifier = x509HostnameVerifier;
+            this.x509HostnameVerifierInputValue = x509HostnameVerifier;
         }
         return this;
     }
