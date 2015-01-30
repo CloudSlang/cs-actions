@@ -10,7 +10,7 @@
     -->
     <groupId>io.openscore.content</groupId>
     <artifactId>score-http-client</artifactId>
-    <version>0.1.46-SNAPSHOT</version>
+    <version>0.1.47-SNAPSHOT</version>
     <packaging>jar</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
     <description>An HTTP client for score</description>

@@ -1,12 +1,12 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package org.openscore.content.httpclient.build;
 
@@ -24,7 +24,6 @@ import java.nio.charset.UnsupportedCharsetException;
  */
 public class ContentTypeBuilder {
 
-    private ContentType defaultContentType = ContentType.TEXT_PLAIN;
     private String contentType;
     private String requestCharacterSet;
 
@@ -40,28 +39,23 @@ public class ContentTypeBuilder {
         return this;
     }
 
-
     public ContentType buildContentType() {
-        String contentType = this.contentType;
-        String requestCharacterSet = this.requestCharacterSet;
-        ContentType parsedContentType;
-        if (StringUtils.isEmpty(contentType)) {
-            parsedContentType = defaultContentType;
-        } else {
+        ContentType parsedContentType = null;
+        if (StringUtils.isNotBlank(contentType)) {
             try {
                 parsedContentType = ContentType.parse(contentType);
             } catch (ParseException | UnsupportedCharsetException e) {
                 throw new IllegalArgumentException("Could not parse input '"
-                        + HttpClientInputs.CONTENT_TYPE+"'. " + e.getMessage(), e);
+                        + HttpClientInputs.CONTENT_TYPE + "'. " + e.getMessage(), e);
             }
-        }
-        //do not override contentType provide by user
-        if (!StringUtils.isEmpty(requestCharacterSet)) {
-            try {
-                parsedContentType = parsedContentType.withCharset(requestCharacterSet);
-            } catch (UnsupportedCharsetException e) {
-                throw new IllegalArgumentException("Could not parse input '"+HttpClientInputs.REQUEST_CHARACTER_SET
-                        +"'. " + e.getMessage(), e);
+
+            if (!StringUtils.isEmpty(requestCharacterSet)) {
+                try {
+                    parsedContentType = parsedContentType.withCharset(requestCharacterSet);
+                } catch (UnsupportedCharsetException e) {
+                    throw new IllegalArgumentException("Could not parse input '" + HttpClientInputs.REQUEST_CHARACTER_SET
+                            + "'. " + e.getMessage(), e);
+                }
             }
         }
         return parsedContentType;

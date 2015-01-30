@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.openscore.content.httpclient.build.ContentTypeBuilder;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +26,6 @@ import static junit.framework.Assert.assertEquals;
 public class ContentTypeBuilderTest {
 
     private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
-    private static final String TEXT_PLAIN_CONTENT_TYPE = "text/plain";
 
     @Test
     public void buildContentType() {
@@ -42,8 +42,7 @@ public class ContentTypeBuilderTest {
         ContentType contentType = new ContentTypeBuilder()
                 .buildContentType();
 
-        assertEquals(TEXT_PLAIN_CONTENT_TYPE, contentType.getMimeType().toString());
-        assertEquals(Consts.ISO_8859_1.name(), contentType.getCharset().name());
+        assertNull(contentType);
     }
 
     @Test
