@@ -1,16 +1,15 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package org.openscore.content.httpclient.build;
 
-import org.openscore.content.httpclient.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -20,8 +19,10 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.openscore.content.httpclient.HttpClientInputs;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.List;
 
 public class EntityBuilder {
@@ -106,18 +107,19 @@ public class EntityBuilder {
             List<? extends NameValuePair> list;
             list = getNameValuePairs(formParams, !Boolean.parseBoolean(this.formParamsAreURLEncoded),
                     HttpClientInputs.FORM_PARAMS, HttpClientInputs.FORM_PARAMS_ARE_URLENCODED);
-            httpEntity = new UrlEncodedFormEntity(list, contentType.getCharset());
+            Charset charset = contentType != null ? contentType.getCharset() : null;
+            httpEntity = new UrlEncodedFormEntity(list, charset);
         } else if (!StringUtils.isEmpty(body)) {
             httpEntity = new StringEntity(body, contentType);
         } else if (!StringUtils.isEmpty(filePath)) {
             File file = new File(filePath);
             if (!file.exists()) {
-                throw new IllegalArgumentException("file set by input '"+ HttpClientInputs.SOURCE_FILE
-                        +"' does not exist:" + filePath);
+                throw new IllegalArgumentException("file set by input '" + HttpClientInputs.SOURCE_FILE
+                        + "' does not exist:" + filePath);
             }
-            httpEntity= new FileEntity(file, contentType);
+            httpEntity = new FileEntity(file, contentType);
         }
-        if (httpEntity!=null) {
+        if (httpEntity != null) {
             if (!StringUtils.isEmpty(chunkedRequestEntity)) {
                 httpEntity.setChunked(Boolean.parseBoolean(chunkedRequestEntity));
             }
