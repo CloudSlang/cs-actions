@@ -112,6 +112,7 @@ public class ScoreHttpClient {
         URI uri = uriBuilder.setUrl(httpClientInputs.getUrl())
                 .setQueryParams(httpClientInputs.getQueryParams())
                 .setQueryParamsAreURLEncoded(httpClientInputs.getQueryParamsAreURLEncoded())
+                .setQueryParamsAreFormEncoded(httpClientInputs.getQueryParamsAreFormEncoded())
                 .buildURI();
 
 

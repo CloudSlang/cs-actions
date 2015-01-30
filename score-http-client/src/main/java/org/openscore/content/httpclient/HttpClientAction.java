@@ -131,8 +131,21 @@ public class HttpClientAction {
      *                    they will be encoded by the HTTP Client. Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;
      * @param queryParamsAreURLEncoded Specifies whether to encode  (according to the url encoding standard) the queryParams.
      *                                 If you set "queryParamsAreURLEncoded"=true and you have invalid characters in 'queryParams'
-     *                                 they will get encoded anyway. If you specify a non-boolean value, the default value is used.
+     *                                 they will get encoded anyway. If "queryParamsAreURLEncoded"=false all characters will be encoded.
+     *                                 But the ' ' (space) character will be encoded as + if queryParamsAreURLEncoded is either true or false.
+     *                                 Also %20 will be encoded as + if "queryParamsAreURLEncoded"=true.
+                                       If you specify a non-boolean value, the default value is used.
      *                                 Default value: false. Valid values: true, false
+     * @param queryParamsAreFormEncoded Specifies whether to encode the queryParams in the form request format or not.
+     *                                  If queryParamsAreFormEncoded=true then all characters will be encoded based on the queryParamsAreURLEncoded
+     *                                  input. If queryParamsAreFormEncoded=false all reserved characters are not encoded indifferent of
+     *                                  queryParamsAreURLEncoded input. The only exceptions are for ' ' (space) character which is encoded as %20 in both
+     *                                  cases of queryParamsAreURLEncoded input and + (plus) which is encoded as %20 if queryParamsAreURLEncoded=true
+     *                                  and not encoded if queryParamsAreURLEncoded=false. If the special characters are already encoded
+     *                                  and queryParamsAreURLEncoded=true then they will be transformed into their original format.
+     *                                  For example: %40 will be @, %2B will be +. But %20 (space) will not be transformed.
+     *                                  The list of reserved chars is: ;/?:@&=+,$
+     *                                  Default value: true. Valid values: true, false
      * @param formParams This input needs to be given in form encoded format and will set the entity to be sent in the request.
      *                   It will also set the content-type to application/x-www-form-urlencoded.
      *                   This should only be used with method=POST. Note that you need to URL encode at
@@ -262,6 +275,7 @@ public class HttpClientAction {
             @Param(HttpClientInputs.FOLLOW_REDIRECTS) String followRedirects,
             @Param(HttpClientInputs.QUERY_PARAMS) String queryParams,
             @Param(HttpClientInputs.QUERY_PARAMS_ARE_URLENCODED) String queryParamsAreURLEncoded,
+            @Param(HttpClientInputs.QUERY_PARAMS_ARE_FORM_ENCODED) String queryParamsAreFormEncoded,
             @Param(HttpClientInputs.FORM_PARAMS) String formParams,
             @Param(HttpClientInputs.FORM_PARAMS_ARE_URLENCODED) String formParamsAreURLEncoded,
             @Param(HttpClientInputs.SOURCE_FILE) String sourceFile,
@@ -311,6 +325,7 @@ public class HttpClientAction {
         httpClientInputs.setFollowRedirects(followRedirects);
         httpClientInputs.setQueryParams(queryParams);
         httpClientInputs.setQueryParamsAreURLEncoded(queryParamsAreURLEncoded);
+        httpClientInputs.setQueryParamsAreFormEncoded(queryParamsAreFormEncoded);
         httpClientInputs.setFormParams(formParams);
         httpClientInputs.setFormParamsAreURLEncoded(formParamsAreURLEncoded);
         httpClientInputs.setSourceFile(sourceFile);
