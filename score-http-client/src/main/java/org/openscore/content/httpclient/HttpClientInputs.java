@@ -24,6 +24,7 @@ public class HttpClientInputs {
     public static final String FOLLOW_REDIRECTS = "followRedirects";
     public static final String QUERY_PARAMS = "queryParams";
     public static final String QUERY_PARAMS_ARE_URLENCODED = "queryParamsAreURLEncoded";
+    public static final String QUERY_PARAMS_ARE_FORM_ENCODED = "queryParamsAreFormEncoded";
     public static final String FORM_PARAMS = "formParams";
     public static final String FORM_PARAMS_ARE_URLENCODED = "formParamsAreURLEncoded";
     public static final String SOURCE_FILE = "sourceFile";
@@ -112,6 +113,7 @@ public class HttpClientInputs {
 
     private SerializableSessionObject cookieStoreSessionObject;
     private GlobalSessionObject connectionPoolSessionObject;
+    private String queryParamsAreFormEncoded;
 
     public String getUrl() {
         return url;
@@ -471,5 +473,13 @@ public class HttpClientInputs {
 
     public void setConnectionPoolSessionObject(GlobalSessionObject connectionPoolSessionObject) {
         this.connectionPoolSessionObject = connectionPoolSessionObject;
+    }
+
+    public void setQueryParamsAreFormEncoded(String queryParamsAreFormEncoded) {
+        this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
+    }
+
+    public String getQueryParamsAreFormEncoded() {
+        return queryParamsAreFormEncoded;
     }
 }

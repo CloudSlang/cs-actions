@@ -17,6 +17,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import org.apache.commons.lang3.StringUtils;
+import org.openscore.content.httpclient.build.Utils;
 
 
 import java.io.PrintWriter;
@@ -66,7 +67,7 @@ public class URLEncoderAction {
 
         try {
             if (StringUtils.isEmpty(characterSet)) {
-                characterSet = "UTF-8";
+                characterSet = Utils.DEFAULT_CHARACTER_SET;
             }
             String returnResult = URLEncoder.encode(text, characterSet);
             Map<String, String> result = new HashMap<>();

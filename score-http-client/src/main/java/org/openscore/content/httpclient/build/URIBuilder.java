@@ -21,6 +21,7 @@ public class URIBuilder {
     private String url;
     private String queryParams;
     private String queryParamsAreURLEncoded = "false";
+    private String queryParamsAreFormEncoded = "true";
 
     public URIBuilder setUrl(String url) {
         this.url = url;
@@ -33,8 +34,14 @@ public class URIBuilder {
     }
 
     public URIBuilder setQueryParamsAreURLEncoded(String queryParamsAreURLEncoded) {
-        if (!StringUtils.isEmpty(queryParamsAreURLEncoded)) {
+        if (!StringUtils.isBlank(queryParamsAreURLEncoded)) {
             this.queryParamsAreURLEncoded = queryParamsAreURLEncoded;
+        }
+        return this;
+    }
+    public URIBuilder setQueryParamsAreFormEncoded(String queryParamsAreFormEncoded) {
+        if (!StringUtils.isBlank(queryParamsAreFormEncoded)) {
+            this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
         }
         return this;
     }
@@ -54,17 +61,21 @@ public class URIBuilder {
         }
 
         boolean bEncodeQueryParams = !Boolean.parseBoolean(queryParamsAreURLEncoded);
+        boolean bEncodeQueryParamsAsForm = Boolean.parseBoolean(queryParamsAreFormEncoded);
 
         if (!StringUtils.isEmpty(queryParams)) {
             try {
-                uriBuilder.addParameters((List<NameValuePair>) Utils.urlEncodeMultipleParams(queryParams, bEncodeQueryParams));
+                if(bEncodeQueryParamsAsForm) {
+                    uriBuilder.addParameters((List<NameValuePair>) Utils.urlEncodeMultipleParams(queryParams, bEncodeQueryParams));
+                } else {
+                    uriBuilder.setCustomQuery(Utils.urlEncodeQueryParams(queryParams, bEncodeQueryParams));
+                }
             } catch (IllegalArgumentException ie) {
                 throw new IllegalArgumentException(
                         HttpClientInputs.QUERY_PARAMS_ARE_URLENCODED +
                                 " is 'false' but queryParams are not properly encoded. "
                                 + ie.getMessage(), ie);
             }
-
         }
 
         try {

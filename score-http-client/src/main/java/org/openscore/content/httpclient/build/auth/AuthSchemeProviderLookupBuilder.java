@@ -23,6 +23,7 @@ import org.apache.http.impl.auth.*;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
 import org.openscore.content.httpclient.HttpClientInputs;
+import org.openscore.content.httpclient.build.Utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -99,7 +100,7 @@ public class AuthSchemeProviderLookupBuilder {
                     });
                     break;
                 case "BASIC":
-                    registryBuilder.register(AuthSchemes.BASIC, new BasicSchemeFactory(Charset.forName("UTF-8")));
+                    registryBuilder.register(AuthSchemes.BASIC, new BasicSchemeFactory(Charset.forName(Utils.DEFAULT_CHARACTER_SET)));
                     String value = username + ":" + password;
                     byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
                     headers.add(new BasicHeader("Authorization", "Basic " + new String(encodedValue)));

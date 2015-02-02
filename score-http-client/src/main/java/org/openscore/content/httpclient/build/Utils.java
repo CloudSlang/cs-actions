@@ -1,12 +1,12 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package org.openscore.content.httpclient.build;
 
@@ -20,10 +20,12 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: davidmih
+ * User: davidmih, ioanvranauhp
  * Date: 9/9/14
  */
 public class Utils {
+
+    public static final String DEFAULT_CHARACTER_SET = "UTF-8";
 
     public static List<? extends NameValuePair> urlEncodeMultipleParams(String params, boolean urlEncode) throws UrlEncodeException {
         List<BasicNameValuePair> list = new ArrayList<>();
@@ -36,9 +38,9 @@ public class Utils {
 
             if (!urlEncode) {
                 try {
-                    name = URLDecoder.decode(name, "UTF-8");
-                    if (value!=null) {
-                        value = URLDecoder.decode(value, "UTF-8");
+                    name = URLDecoder.decode(name, DEFAULT_CHARACTER_SET);
+                    if (value != null) {
+                        value = URLDecoder.decode(value, DEFAULT_CHARACTER_SET);
                     }
                 } catch (UnsupportedEncodingException e) {
                     //never happens
@@ -47,10 +49,24 @@ public class Utils {
                     throw new UrlEncodeException(ie.getMessage(), ie);
                 }
             }
-
             list.add(new BasicNameValuePair(name, value));
         }
         return list;
+    }
+
+    public static String urlEncodeQueryParams(String params, boolean urlEncode) throws UrlEncodeException {
+        String encodedParams = params;
+        if (!urlEncode) {
+            try {
+                encodedParams = URLDecoder.decode(params, DEFAULT_CHARACTER_SET);
+            } catch (UnsupportedEncodingException e) {
+//                never happens
+                throw new RuntimeException(e);
+            } catch (IllegalArgumentException ie) {
+                throw new UrlEncodeException(ie.getMessage(), ie);
+            }
+        }
+        return encodedParams;
     }
 
 }
