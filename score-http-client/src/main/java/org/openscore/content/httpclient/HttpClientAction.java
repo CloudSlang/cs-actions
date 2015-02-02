@@ -147,7 +147,7 @@ public class HttpClientAction {
      *                                  For example: %40 will be @, %2B will be +. But %20 (space) will not be transformed.
      *                                  The list of reserved chars is: ;/?:@&=+,$
      *                                  Default value: true. Valid values: true, false
-     *                                  Example: scheme://domain:port/?query=test te%20@st will be encoded in scheme://domain:port/?query=test%20te%20@st
+     *                                  Example: query=test te%20@st will be encoded in query=test%20te%20@st
      * @param formParams This input needs to be given in form encoded format and will set the entity to be sent in the request.
      *                   It will also set the content-type to application/x-www-form-urlencoded.
      *                   This should only be used with method=POST. Note that you need to URL encode at
