@@ -137,7 +137,6 @@ public class AuthSchemeProviderLookupBuilder {
                         System.setProperty("java.security.auth.login.config", loginConfig.toURI().toString());
                     }
 
-                    //todo fix security issue
                     if (password != null) {
                         System.setProperty(KrbHttpLoginModule.PAS, password);
                     }
