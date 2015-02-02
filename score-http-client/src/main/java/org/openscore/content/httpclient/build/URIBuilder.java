@@ -34,13 +34,13 @@ public class URIBuilder {
     }
 
     public URIBuilder setQueryParamsAreURLEncoded(String queryParamsAreURLEncoded) {
-        if (!StringUtils.isEmpty(queryParamsAreURLEncoded)) {
+        if (!StringUtils.isBlank(queryParamsAreURLEncoded)) {
             this.queryParamsAreURLEncoded = queryParamsAreURLEncoded;
         }
         return this;
     }
     public URIBuilder setQueryParamsAreFormEncoded(String queryParamsAreFormEncoded) {
-        if (!StringUtils.isEmpty(queryParamsAreFormEncoded)) {
+        if (!StringUtils.isBlank(queryParamsAreFormEncoded)) {
             this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
         }
         return this;

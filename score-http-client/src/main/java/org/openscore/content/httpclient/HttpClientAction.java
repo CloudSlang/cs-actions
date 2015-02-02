@@ -137,8 +137,9 @@ public class HttpClientAction {
                                        If you specify a non-boolean value, the default value is used.
      *                                 Default value: false. Valid values: true, false
      * @param queryParamsAreFormEncoded Specifies whether to encode the queryParams in the form request format or not.
+     *                                  This format is the default format used by the apache http client library.
      *                                  If queryParamsAreFormEncoded=true then all characters will be encoded based on the queryParamsAreURLEncoded
-     *                                  input. If queryParamsAreFormEncoded=false all reserved characters are not encoded indifferent of
+     *                                  input. If queryParamsAreFormEncoded=false all reserved characters are not encoded no matter of
      *                                  queryParamsAreURLEncoded input. The only exceptions are for ' ' (space) character which is encoded as %20 in both
      *                                  cases of queryParamsAreURLEncoded input and + (plus) which is encoded as %20 if queryParamsAreURLEncoded=true
      *                                  and not encoded if queryParamsAreURLEncoded=false. If the special characters are already encoded
@@ -146,6 +147,7 @@ public class HttpClientAction {
      *                                  For example: %40 will be @, %2B will be +. But %20 (space) will not be transformed.
      *                                  The list of reserved chars is: ;/?:@&=+,$
      *                                  Default value: true. Valid values: true, false
+     *                                  Example: scheme://domain:port/?query=test te%20@st will be encoded in scheme://domain:port/?query=test%20te%20@st
      * @param formParams This input needs to be given in form encoded format and will set the entity to be sent in the request.
      *                   It will also set the content-type to application/x-www-form-urlencoded.
      *                   This should only be used with method=POST. Note that you need to URL encode at
