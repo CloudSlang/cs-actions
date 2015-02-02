@@ -13,7 +13,11 @@ package org.openscore.content.httpclient.build.auth;
 import com.sun.security.auth.module.Krb5LoginModule;
 
 import javax.security.auth.Subject;
+import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,5 +34,7 @@ public class KrbHttpLoginModule extends Krb5LoginModule {
         Map<String, Object> myss = (Map<String, Object>) sharedState;
         myss.put(USR, System.getProperty(USR));
         myss.put(PAS, System.getProperty(PAS).toCharArray());
+        System.clearProperty(USR);
+        System.clearProperty(PAS);
     }
 }
