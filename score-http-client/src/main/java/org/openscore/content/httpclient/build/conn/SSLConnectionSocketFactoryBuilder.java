@@ -12,7 +12,6 @@ package org.openscore.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.*;
-import org.openscore.content.httpclient.constants.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +33,11 @@ public class SSLConnectionSocketFactoryBuilder {
     public static final String INVALID_KEYSTORE_ERROR = "A keystore could not be found or it does not contain the needed certificate";
     public static final String BAD_TRUST_KEYSTORE_ERROR = "The trust keystore provided in the 'trustKeystore' input is corrupted OR the password (in the 'trustPassword' input) is incorrect";
     public static final String INVALID_TRUST_KEYSTORE_ERROR = "A trust keystore could not be found or it does not contain the needed certificate";
+    public static final String SSLv3 = "SSLv3";
+    public static final String TLSv10 = "TLSv1";
+    public static final String TLSv11 = "TLSv1.1";
+    public static final String TLSv12 = "TLSv1.2";
+    public static final String[] SUPPORTED_PROTOCOLS = new String[] {SSLv3, TLSv10, TLSv11, TLSv12};
     private String trustAllRootsStr = "false";
     private String keystore;
     private String keystorePassword;
@@ -126,7 +130,7 @@ public class SSLConnectionSocketFactoryBuilder {
                     throw new IllegalArgumentException("Invalid value '"+ x509HostnameVerifierInputValue +"' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
             }
             // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
-            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), Constants.HttpsProtocols.SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
         } catch (Exception e) {
             if(e instanceof IllegalArgumentException){
                 throw new IllegalArgumentException(e.getMessage());
