@@ -12,6 +12,7 @@ package org.openscore.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.*;
+import org.openscore.content.httpclient.constants.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -124,7 +125,8 @@ public class SSLConnectionSocketFactoryBuilder {
                 default:
                     throw new IllegalArgumentException("Invalid value '"+ x509HostnameVerifierInputValue +"' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
             }
-            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), x509HostnameVerifier);
+            // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
+            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), Constants.HttpsProtocols.SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
         } catch (Exception e) {
             if(e instanceof IllegalArgumentException){
                 throw new IllegalArgumentException(e.getMessage());
