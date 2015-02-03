@@ -1,12 +1,12 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package org.openscore.content.httpclient.build.conn;
 
@@ -29,9 +29,12 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * User: Adina Tusa
@@ -85,14 +88,18 @@ public class SSLConnectionSocketFactoryBuilderTest {
         when(sslContextBuilderMock.useTLS()).thenReturn(null);
         when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
 
-        whenNew(SSLConnectionSocketFactory.class)
-                .withParameterTypes(SSLContext.class, X509HostnameVerifier.class)
-                .withArguments(isA(SSLContext.class), isA(X509HostnameVerifier.class))
-                .thenReturn(sslsfMock);
+        prepareSSLConnectionSocketFactory();
 
         SSLConnectionSocketFactory sslsf = builder.build();
         assertNotNull(sslsf);
         assertEquals(sslsfMock, sslsf);
+    }
+
+    private void prepareSSLConnectionSocketFactory() throws Exception {
+        whenNew(SSLConnectionSocketFactory.class)
+                .withParameterTypes(SSLContext.class, String[].class, String[].class, X509HostnameVerifier.class)
+                .withArguments(isA(SSLContext.class), isA(String[].class), isNull(), isA(X509HostnameVerifier.class))
+                .thenReturn(sslsfMock);
     }
 
     @Test
@@ -109,10 +116,7 @@ public class SSLConnectionSocketFactoryBuilderTest {
 
         when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
 
-        whenNew(SSLConnectionSocketFactory.class)
-                .withParameterTypes(SSLContext.class, X509HostnameVerifier.class)
-                .withArguments(isA(SSLContext.class), isA(X509HostnameVerifier.class))
-                .thenReturn(sslsfMock);
+        prepareSSLConnectionSocketFactory();
 
         SSLConnectionSocketFactory sslsf = builder.build();
         assertNotNull(sslsf);
@@ -198,21 +202,5 @@ public class SSLConnectionSocketFactoryBuilderTest {
         KeyStore keystore = builder.createKeyStore(urlMock, PASSWORD);
         verify(keyStoreMock).load(inputStreamMock, PASSWORD.toCharArray());
         assertEquals(keystore, keyStoreMock);
-    }
-
-    @Test
-    public void testWithInvalidX509HostnameVerifier() throws Exception{
-        final String invalidX509HostNameVerifier = "InvalidX509HosnameVerifier";
-        final String invalidX509HostNameVerifierErrorMessage = "Invalid value '" + invalidX509HostNameVerifier + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'";
-
-        builder = new SSLConnectionSocketFactoryBuilder();
-        builder.setTrustAllRoots("true");
-        builder.setX509HostnameVerifier(invalidX509HostNameVerifier);
-        mockStatic(SSLContexts.class);
-        when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);
-
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(invalidX509HostNameVerifierErrorMessage);
-        builder.build();
     }
 }
