@@ -83,13 +83,47 @@ public class RequestConfigBuilderTest {
     @Test
     public void testBuildWithInvalidProxyPort(){
         final String invalidProxyPort = "invalidProxyPortText";
-        final String expectedExceptionMessage ="Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
+        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
 
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage(expectedExceptionMessage);
         requestConfigBuilder.setProxyHost("myproxy.com")
                 .setProxyPort(invalidProxyPort)
                 .buildRequestConfig();
+    }
+
+    /*
+       According to network specifications: a port number should be a 16-bit unsigned integer.
+       Therefor negative values are not considered valid and should not be allowed.
+     */
+    @Test
+    public void testBuildWithNegativeProxyPort(){
+        final String invalidProxyPort = "-2";
+        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage(expectedExceptionMessage);
+        requestConfigBuilder.setProxyHost("myproxy.com")
+                .setProxyPort(invalidProxyPort)
+                .buildRequestConfig();
+    }
+
+    /*
+       Tests if a request configuration is created when the value '-1' is provided as a proxy port.
+       The the value '-1' is provided then the proxy port input will be ignored and the default port of the scheme will be used.
+       For example the port 80 will be used if the scheme is http.
+     */
+    @Test
+    public void testBuildWithAcceptedNegativeProxyPort(){
+        final String validProxyPort = "-1";
+
+        RequestConfig reqConfig = requestConfigBuilder
+                .setProxyHost("myproxy.com")
+                .setProxyPort(validProxyPort)
+                .buildRequestConfig();
+        assertNotNull(reqConfig);
+        assertNotNull(reqConfig.getProxy());
+        assertEquals("myproxy.com", reqConfig.getProxy().getHostName());
     }
 }
 

@@ -13,7 +13,6 @@ package org.openscore.content.httpclient.build;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
-import org.openscore.content.httpclient.HttpClientInputs;
 
 public class RequestConfigBuilder {
     private String connectionTimeout = "0";
@@ -57,13 +56,10 @@ public class RequestConfigBuilder {
 
     public RequestConfig buildRequestConfig() {
         HttpHost proxy = null;
+        final int proxyPortNumber;
         if (proxyHost != null && !proxyHost.isEmpty()) {
-            try {
-                proxy = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid value '" + proxyPort + "' for input '" + HttpClientInputs.PROXY_PORT
-                        + "'. Valid Values: Integer values greater than 0. " , e);
-            }
+            proxyPortNumber = Utils.validatePortNumber(proxyPort);
+            proxy = new HttpHost(proxyHost, proxyPortNumber);
         }
         int connectionTimeout = Integer.parseInt(this.connectionTimeout);
         int socketTimeout = Integer.parseInt(this.socketTimeout);

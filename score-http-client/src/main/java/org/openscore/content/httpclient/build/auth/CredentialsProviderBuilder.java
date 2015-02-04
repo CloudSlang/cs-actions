@@ -17,6 +17,7 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.openscore.content.httpclient.build.Utils;
 
 import java.security.Principal;
 import java.util.Locale;
@@ -106,7 +107,7 @@ public class CredentialsProviderBuilder {
         if (!StringUtils.isEmpty(proxyUsername)) {
             int intProxyPort = 8080;
             if (!StringUtils.isEmpty(proxyPort)) {
-                intProxyPort = Integer.parseInt(proxyPort);
+                intProxyPort = Utils.validatePortNumber(proxyPort);
             }
             credentialsProvider.setCredentials(new AuthScope(proxyHost, intProxyPort),
                     new UsernamePasswordCredentials(proxyUsername, proxyPassword));

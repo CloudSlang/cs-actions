@@ -10,15 +10,15 @@
 
 package org.openscore.content.httpclient.build.auth;
 
-import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.AuthSchemes;
+import org.junit.Rule;
 import org.junit.Test;
-import org.openscore.content.httpclient.build.auth.AuthTypes;
-import org.openscore.content.httpclient.build.auth.CredentialsProviderBuilder;
+import org.junit.rules.ExpectedException;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -30,6 +30,9 @@ import static org.junit.Assert.assertThat;
  * Date: 7/2/14
  */
 public class CredentialsProviderBuilderTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void createNtlmCredentialsProvider() {
@@ -63,6 +66,38 @@ public class CredentialsProviderBuilderTest {
         assertThat(credentials, instanceOf(UsernamePasswordCredentials.class));
         UsernamePasswordCredentials userCredentials = (UsernamePasswordCredentials) credentials;
         assertEquals("pass", userCredentials.getPassword());
+    }
+
+    @Test
+    public void createCredentialProviderWithInvalidProxyPort(){
+        final String invalidProxyPort = "invalidProxyPort";
+        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
+        final AuthTypes authTypes = new AuthTypes("");
+
+        CredentialsProviderBuilder builder = new CredentialsProviderBuilder()
+                .setAuthTypes(authTypes)
+                .setProxyPort(invalidProxyPort)
+                .setProxyUsername("proxyUsername");
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage(expectedExceptionMessage);
+        builder.buildCredentialsProvider();
+    }
+
+    @Test
+    public void createCredentialProviderWithNegativeProxyPort(){
+        final String invalidProxyPort = "-2";
+        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
+        final AuthTypes authTypes = new AuthTypes("");
+
+        CredentialsProviderBuilder builder = new CredentialsProviderBuilder()
+                .setAuthTypes(authTypes)
+                .setProxyPort(invalidProxyPort)
+                .setProxyUsername("proxyUsername");
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage(expectedExceptionMessage);
+        builder.buildCredentialsProvider();
     }
 
     private CredentialsProvider getCredentialsProvider(String authType) {
