@@ -68,7 +68,9 @@ public class HttpClientAction {
      *                              Format: http://docs.oracle.com/javase/7/docs/jre/api/security/jaas/spec/com/sun/security/auth/module/Krb5LoginModule.html
      * @param kerberosSkipPortForLookup Do not include port in the key distribution center database lookup. Default value: true. Valid values: true, false
      * @param proxyHost The proxy server used to access the web site.
-     * @param proxyPort The proxy server port. Default value: 8080.
+     * @param proxyPort The proxy server port. Default value: 8080. Valid values: -1 and integer values greater than 0.
+     *                  The value '-1' indicates that the proxy port is not set and the scheme default port will be used.
+     *                  If the scheme is 'http://' and the 'proxyPort' is set to '-1' then port '80' will be used.
      * @param proxyUsername The user name used when connecting to the proxy. The 'authType' input will be used to choose authentication type.
      *                      The 'Basic' and 'Digest' proxy authentication types are supported.
      * @param proxyPassword The proxy server password associated with the proxyUsername input value.
