@@ -71,7 +71,7 @@ public class CredentialsProviderBuilderTest {
     @Test
     public void createCredentialProviderWithInvalidProxyPort(){
         final String invalidProxyPort = "invalidProxyPort";
-        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
+        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
         final AuthTypes authTypes = new AuthTypes("");
 
         CredentialsProviderBuilder builder = new CredentialsProviderBuilder()
@@ -87,7 +87,7 @@ public class CredentialsProviderBuilderTest {
     @Test
     public void createCredentialProviderWithNegativeProxyPort(){
         final String invalidProxyPort = "-2";
-        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: Integer values greater than 0";
+        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
         final AuthTypes authTypes = new AuthTypes("");
 
         CredentialsProviderBuilder builder = new CredentialsProviderBuilder()

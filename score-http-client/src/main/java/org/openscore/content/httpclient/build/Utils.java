@@ -83,7 +83,7 @@ public class Utils {
         final StringBuilder exceptionMessageBuilder = new StringBuilder();
         exceptionMessageBuilder.append("Invalid value '").append(portStringValue)
                 .append("' for input '").append( HttpClientInputs.PROXY_PORT)
-                .append("'. Valid Values: -1, integer values greater than 0. ");
+                .append("'. Valid Values: -1 and integer values greater than 0. ");
 
         try{
             portNumber = Integer.parseInt(portStringValue);
