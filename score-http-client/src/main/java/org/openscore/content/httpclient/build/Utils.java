@@ -12,6 +12,7 @@ package org.openscore.content.httpclient.build;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.openscore.content.httpclient.HttpClientInputs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -69,4 +70,29 @@ public class Utils {
         return encodedParams;
     }
 
+    /**
+     * Checks if a given value represents a valid port number and returns an int value representing that port number otherwise throws an exception when an invalid port value is provided.
+     * Valid port values: -1 and integer numbers greater than 0.
+     * Although network specifications state that port values need to be 16-bit unsigned integers, the value '-1' is considered valid by some party components.
+     * Example: For the Apache HttpHost class, which is used in {@link org.openscore.content.httpclient.build.RequestConfigBuilder#buildRequestConfig()} , the value '-1' indicates the scheme default port.
+     * @param portStringValue String value representing the port number;
+     * @return int value representing a valid port number
+     */
+    public static int validatePortNumber(String portStringValue){
+        final int portNumber;
+        final StringBuilder exceptionMessageBuilder = new StringBuilder();
+        exceptionMessageBuilder.append("Invalid value '").append(portStringValue)
+                .append("' for input '").append( HttpClientInputs.PROXY_PORT)
+                .append("'. Valid Values: -1 and integer values greater than 0. ");
+
+        try{
+            portNumber = Integer.parseInt(portStringValue);
+             if((portNumber < 0) && (portNumber != -1)){
+                    throw new IllegalArgumentException(exceptionMessageBuilder.toString());
+                }
+        } catch (NumberFormatException e) {
+             throw new IllegalArgumentException(exceptionMessageBuilder.toString() , e);
+        }
+        return portNumber;
+    }
 }
