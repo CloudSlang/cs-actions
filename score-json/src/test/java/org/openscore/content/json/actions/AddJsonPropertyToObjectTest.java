@@ -104,4 +104,14 @@ public class AddJsonPropertyToObjectTest {
         final Map<String, String> result = addJsonPropertyToObject.execute(jsonObject, name, value);
         assertEquals("{\"one\":{\"a\":\"a\",\"B\":\"B\"},\"two\":\"two\",\"three\":[1,2,3.4],\"test\":\"a\"}", result.get(RETURN_RESULT));
     }
+
+    @Test
+    public void testExecuteJsonObjectSpecialChars() throws Exception {
+        String jsonObject = "{\"one\":{\"a\":\"a\",\"B\":\"B\"}, \"two\":\"two\", \"three;/?:@&=+,$\":[1,2,3.4]}";
+        String name = "tes;/?:@&=+,$t";
+        String value = "{\"a\":\"b;/?:@&=+,$\"}";
+        final Map<String, String> result = addJsonPropertyToObject.execute(jsonObject, name, value);
+        assertEquals("{\"one\":{\"a\":\"a\",\"B\":\"B\"},\"two\":\"two\",\"three;/?:@&=+,$\":[1,2,3.4],\""+
+                "tes;/?:@&=+,$t\":{\"a\":\"b;/?:@&=+,$\"}}", result.get(RETURN_RESULT));
+    }
 }
