@@ -25,6 +25,8 @@ import org.openscore.content.json.utils.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openscore.content.json.utils.JsonUtils.populateResult;
+
 /**
  * Created by ioanvranauhp
  * Date 1/12/2015.
@@ -88,16 +90,5 @@ public class AddJsonPropertyToObject {
         jsonRoot.add(newPropertyName, jsonElementWrapper);
 
         return populateResult(returnResult, jsonRoot.toString(), null);
-    }
-
-    private Map<String, String> populateResult(Map<String, String> returnResult, String value, Exception exception) {
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, value);
-        if (exception != null) {
-            returnResult.put(Constants.OutputNames.EXCEPTION, exception.getMessage());
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
-        } else {
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-        }
-        return returnResult;
     }
 }
