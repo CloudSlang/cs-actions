@@ -23,8 +23,8 @@ import static junit.framework.Assert.assertEquals;
  */
 public class AddJsonPropertyToObjectTest {
 
-    public static final String RETURN_RESULT = "returnResult";
-    final AddJsonPropertyToObject addJsonPropertyToObject = new AddJsonPropertyToObject();
+    private static final String RETURN_RESULT = "returnResult";
+    private final AddJsonPropertyToObject addJsonPropertyToObject = new AddJsonPropertyToObject();
 
     @Rule
     public ExpectedException exception = ExpectedException.none();

@@ -39,5 +39,7 @@ public class Constants {
         public static final String JSON_OBJECT = "jsonObject";
         public static final String NEW_PROPERTY_NAME = "newPropertyName";
         public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
+        public static final String OBJECT = "object";
+        public static final String KEY = "key";
     }
 }
