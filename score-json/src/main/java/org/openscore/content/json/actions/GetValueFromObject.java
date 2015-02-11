@@ -71,6 +71,10 @@ public class GetValueFromObject {
             final String exceptionValue = "Empty object provided!";
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }
+        if (key == null) {
+            final Exception exception = new Exception("Null key provided!");
+            return populateResult(returnResult, exception.getMessage(), exception);
+        }
 
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement;
@@ -86,9 +90,6 @@ public class GetValueFromObject {
         int startIndex = 0;
         final JsonElement valueFromObject;
         try {
-            if (key == null) {
-                throw new Exception("Null key provided!");
-            }
             valueFromObject = getObject(jsonRoot, key.split(ESCAPED_SLASH + "."), startIndex);
         } catch (Exception exception) {
             return populateResult(returnResult, exception.getMessage(), exception);
