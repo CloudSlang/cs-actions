@@ -15,6 +15,9 @@ package org.openscore.content.json.utils;
  * Date 1/12/2015.
  */
 public class Constants {
+
+    public static final String EMPTY_STRING = "";
+
     public static final class OutputNames {
 
         public static final String RETURN_RESULT = "returnResult";
@@ -41,5 +44,6 @@ public class Constants {
         public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
         public static final String OBJECT = "object";
         public static final String KEY = "key";
+        public static final String ARRAY = "array";
     }
 }

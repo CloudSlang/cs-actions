@@ -9,9 +9,7 @@
  *******************************************************************************/
 package org.openscore.content.json.actions;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
@@ -24,13 +22,12 @@ import static junit.framework.Assert.assertEquals;
 public class AddJsonPropertyToObjectTest {
 
     private static final String RETURN_RESULT = "returnResult";
+    public static final String EXCEPTION = "exception";
+
     private final AddJsonPropertyToObject addJsonPropertyToObject = new AddJsonPropertyToObject();
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
-    public void testExecuteSimpleAll() throws Exception {
+    public void testExecuteSimpleAll() {
         String jsonObject = "{}";
         String name = "test";
         String value = "1";
@@ -51,7 +48,7 @@ public class AddJsonPropertyToObjectTest {
     }
 
     @Test
-    public void testExecuteNameBad() throws Exception {
+    public void testExecuteNameBad() {
         String jsonObject = "{}";
         String name = "test{\"";
         String value = "1";
@@ -60,7 +57,7 @@ public class AddJsonPropertyToObjectTest {
     }
 
     @Test
-    public void testExecutePropertyValueBad() throws Exception {
+    public void testExecutePropertyValueBad() {
         String jsonObject = "{}";
         String name = "test";
         String value = "1\"{";
@@ -70,7 +67,7 @@ public class AddJsonPropertyToObjectTest {
     }
 
     @Test
-    public void testExecutePropertyValueJson() throws Exception {
+    public void testExecutePropertyValueJson() {
         String jsonObject = "{}";
         String name = "test";
         String value = "{\"a\":\"b\"}";
@@ -79,7 +76,7 @@ public class AddJsonPropertyToObjectTest {
     }
 
     @Test
-    public void testExecutePropertyValueArray() throws Exception {
+    public void testExecutePropertyValueArray() {
         String jsonObject = "{}";
         String name = "test";
         String value = "[1,2,3]";
@@ -88,7 +85,7 @@ public class AddJsonPropertyToObjectTest {
     }
 
     @Test
-    public void testExecuteJsonObjectComplex() throws Exception {
+    public void testExecuteJsonObjectComplex() {
         String jsonObject = "{\"one\":{\"a\":\"a\",\"B\":\"B\"}, \"two\":\"two\", \"three\":[1,2,3.4]}";
         String name = "test";
         String value = "{\"a\":\"b\"}";
@@ -97,7 +94,7 @@ public class AddJsonPropertyToObjectTest {
     }
 
     @Test
-    public void testExecuteJsonObjectComplexPropertyString() throws Exception {
+    public void testExecuteJsonObjectComplexPropertyString() {
         String jsonObject = "{\"one\":{\"a\":\"a\",\"B\":\"B\"}, \"two\":\"two\", \"three\":[1,2,3.4]}";
         String name = "test";
         String value = "a";
@@ -106,12 +103,64 @@ public class AddJsonPropertyToObjectTest {
     }
 
     @Test
-    public void testExecuteJsonObjectSpecialChars() throws Exception {
+    public void testExecuteJsonObjectSpecialChars() {
         String jsonObject = "{\"one\":{\"a\":\"a\",\"B\":\"B\"}, \"two\":\"two\", \"three;/?:@&=+,$\":[1,2,3.4]}";
         String name = "tes;/?:@&=+,$t";
         String value = "{\"a\":\"b;/?:@&=+,$\"}";
         final Map<String, String> result = addJsonPropertyToObject.execute(jsonObject, name, value);
-        assertEquals("{\"one\":{\"a\":\"a\",\"B\":\"B\"},\"two\":\"two\",\"three;/?:@&=+,$\":[1,2,3.4],\""+
+        assertEquals("{\"one\":{\"a\":\"a\",\"B\":\"B\"},\"two\":\"two\",\"three;/?:@&=+,$\":[1,2,3.4],\"" +
                 "tes;/?:@&=+,$t\":{\"a\":\"b;/?:@&=+,$\"}}", result.get(RETURN_RESULT));
+    }
+
+    @Test
+    public void testExecuteEmptyJsonObject() {
+        String jsonObject = "";
+        String name = "test";
+        String value = "1";
+        Map<String, String> result = addJsonPropertyToObject.execute(jsonObject, name, value);
+        assertEquals("Empty jsonObject provided!", result.get(RETURN_RESULT));
+        assertEquals("Empty jsonObject provided!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
+
+        name = "test";
+        value = "1";
+        result = addJsonPropertyToObject.execute(null, name, value);
+        assertEquals("Empty jsonObject provided!", result.get(RETURN_RESULT));
+        assertEquals("Empty jsonObject provided!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
+    }
+
+    @Test
+    public void testExecuteEmptyName() {
+        String jsonObject = "{}";
+        String name = "";
+        String value = "1";
+        Map<String, String> result = addJsonPropertyToObject.execute(jsonObject, name, value);
+        assertEquals("{\"\":1}", result.get(RETURN_RESULT));
+        assertEquals("0", result.get("returnCode"));
+
+        jsonObject = "{}";
+        value = "1";
+        result = addJsonPropertyToObject.execute(jsonObject, null, value);
+        assertEquals("Null newPropertyName provided!", result.get(RETURN_RESULT));
+        assertEquals("-1", result.get("returnCode"));
+    }
+
+    @Test
+    public void testExecuteEmptyValue() {
+        String jsonObject = "{}";
+        String name = "test";
+        String value = "";
+        Map<String, String> result = addJsonPropertyToObject.execute(jsonObject, name, value);
+        assertEquals("The value for the property test it is not a valid JSON object!", result.get(RETURN_RESULT));
+        assertEquals("The value for the property test it is not a valid JSON object!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
+
+        jsonObject = "{}";
+        name = "test";
+        result = addJsonPropertyToObject.execute(jsonObject, name, null);
+        assertEquals("The value for the property test it is not a valid JSON object!", result.get(RETURN_RESULT));
+        assertEquals("The value for the property test it is not a valid JSON object!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
     }
 }

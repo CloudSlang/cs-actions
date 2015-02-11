@@ -10,7 +10,10 @@
 
 package org.openscore.content.json.actions;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -60,20 +63,30 @@ public class GetValueFromObject {
             })
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.OBJECT, required = true) String object,
-            @Param(value = Constants.InputNames.KEY, required = true) String key) throws Exception {
+            @Param(value = Constants.InputNames.KEY, required = true) String key) {
 
         Map<String, String> returnResult = new HashMap<>();
+
+        if (object == null || object.trim().equals(Constants.EMPTY_STRING)) {
+            final String exceptionValue = "Empty object provided!";
+            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+        }
+        if (key == null) {
+            final Exception exception = new Exception("Null key provided!");
+            return populateResult(returnResult, exception.getMessage(), exception);
+        }
+
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement;
-
+        JsonObject jsonRoot;
         try {
             jsonElement = jsonParser.parse(object);
-        } catch (JsonSyntaxException exception) {
-            final String value = "Invalid jsonObject provided! " + exception.getMessage();
+            jsonRoot = jsonElement.getAsJsonObject();
+        } catch (Exception exception) {
+            final String value = "Invalid object provided! " + exception.getMessage();
             return populateResult(returnResult, value, exception);
         }
 
-        JsonObject jsonRoot = jsonElement.getAsJsonObject();
         int startIndex = 0;
         final JsonElement valueFromObject;
         try {
@@ -81,7 +94,7 @@ public class GetValueFromObject {
         } catch (Exception exception) {
             return populateResult(returnResult, exception.getMessage(), exception);
         }
-        if(valueFromObject.isJsonPrimitive()) {
+        if (valueFromObject.isJsonPrimitive()) {
             return populateResult(returnResult, valueFromObject.getAsString(), null);
         } else {
             return populateResult(returnResult, valueFromObject.toString(), null);
@@ -90,7 +103,7 @@ public class GetValueFromObject {
     }
 
     private JsonElement getObject(JsonObject jsonObject, String[] keys, int startIndex) throws Exception {
-        if(startIndex >= keys.length) {
+        if (startIndex >= keys.length) {
             return jsonObject;
         }
         String aKey = keys[startIndex];
@@ -110,7 +123,7 @@ public class GetValueFromObject {
                 return getObject(newJsonObject, keys, ++startIndex);
             }
         } else {
-            throw new Exception("The key does not exist in JavaScript object.");
+            throw new Exception("The key does not exist in JavaScript object!");
         }
     }
 
@@ -121,7 +134,7 @@ public class GetValueFromObject {
             if (jsonElement.get(aKey) != null) {
                 return jsonElement.get(aKey);
             } else
-                throw new Exception("The " + aKey + " key does not exist in JavaScript object.");
+                throw new Exception("The " + aKey + " key does not exist in JavaScript object!");
         }
         //JSON array object
         else {
@@ -152,7 +165,7 @@ public class GetValueFromObject {
                     throw new Exception("Invalid json array provided: " + subObject.toString() + " ");
                 }
             } else {
-                throw new Exception("The " + aKey + " key does not exist in JavaScript object.");
+                throw new Exception("The " + aKey + " key does not exist in JavaScript object!");
             }
         }
     }

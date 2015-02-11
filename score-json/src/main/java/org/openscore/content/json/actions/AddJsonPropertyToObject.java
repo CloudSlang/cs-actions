@@ -69,25 +69,41 @@ public class AddJsonPropertyToObject {
             @Param(value = Constants.InputNames.NEW_PROPERTY_VALUE, required = true) String newPropertyValue) {
 
         Map<String, String> returnResult = new HashMap<>();
+        if (jsonObject == null || jsonObject.trim().equals(Constants.EMPTY_STRING)) {
+            final String exceptionValue = "Empty jsonObject provided!";
+            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+        }
+
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement;
+        JsonObject jsonRoot;
+
+        if (newPropertyValue == null || newPropertyValue.trim().equals(Constants.EMPTY_STRING)) {
+            final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
+            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+        }
+
+        if (newPropertyName == null) {
+            final String exceptionValue = "Null newPropertyName provided!";
+            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+        }
 
         try {
             jsonElement = jsonParser.parse(jsonObject);
-        } catch (JsonSyntaxException exception) {
-            final String value = "Invalid jsonObject provided! " + exception.getMessage();
-            return populateResult(returnResult, value, exception);
+            jsonRoot = jsonElement.getAsJsonObject();
+        } catch (Exception exception) {
+            final String exceptionValue = "Invalid jsonObject provided! " + exception.getMessage();
+            return populateResult(returnResult, exceptionValue, exception);
         }
 
-        JsonObject jsonRoot = jsonElement.getAsJsonObject();
         JsonElement jsonElementWrapper;
         try {
             jsonElementWrapper = jsonParser.parse(newPropertyValue);
+            jsonRoot.add(newPropertyName, jsonElementWrapper);
         } catch (JsonSyntaxException exception) {
-            final String value = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
-            return populateResult(returnResult, value, exception);
+            final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
+            return populateResult(returnResult, exceptionValue, exception);
         }
-        jsonRoot.add(newPropertyName, jsonElementWrapper);
 
         return populateResult(returnResult, jsonRoot.toString(), null);
     }
