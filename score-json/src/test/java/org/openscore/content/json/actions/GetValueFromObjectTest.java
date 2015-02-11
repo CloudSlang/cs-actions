@@ -12,11 +12,13 @@ import static junit.framework.Assert.assertEquals;
  */
 public class GetValueFromObjectTest {
 
-    private static GetValueFromObject getValueFromObject = new GetValueFromObject();
+    public static final String EXCEPTION = "exception";
     private static final String RETURN_RESULT = "returnResult";
 
+    private static GetValueFromObject getValueFromObject = new GetValueFromObject();
+
     @Test
-    public void testExecuteSimpleCase() throws Exception {
+    public void testExecuteSimpleCase() {
         String jsonObject = " { \"city\" : \"Palo Alto\", \n" +
                 "     \"state\" : \"CA\" }";
         String key = "city";
@@ -29,7 +31,7 @@ public class GetValueFromObjectTest {
     }
 
     @Test
-    public void testExecuteSimpleCaseEmptyValues() throws Exception {
+    public void testExecuteSimpleCaseEmptyValues() {
         String jsonObject = " { \"city\" : \"\", \n" +
                 "     \"state\" : \"\" }";
         String key = "city";
@@ -42,11 +44,11 @@ public class GetValueFromObjectTest {
     }
 
     @Test
-    public void testExecuteSimpleCaseEmptyKeys() throws Exception {
+    public void testExecuteSimpleCaseEmptyKeys() {
         String jsonObject = " { \"\" : \"test1\", \n" +
                 "     \"\" : \"test2\", " +
                 "     \"value\" : \"test3\" " +
-            "}";
+                "}";
         String key = "";
         Map<String, String> result = getValueFromObject.execute(jsonObject, key);
         assertEquals("test2", result.get(RETURN_RESULT));
@@ -57,7 +59,7 @@ public class GetValueFromObjectTest {
     }
 
     @Test
-    public void testExecuteJsonArrayIndexExisting() throws Exception {
+    public void testExecuteJsonArrayIndexExisting() {
         String jsonObject = "{ \"location\": [\n" +
                 "      {\"city\": \"Roseville\", \"country\": \"United States\"},\n" +
                 "      {\"city\": \"Cluj\", \"country\": \"Romania\"},\n" +
@@ -69,7 +71,7 @@ public class GetValueFromObjectTest {
     }
 
     @Test
-    public void testExecuteJsonArrayIndexExistingSubKey() throws Exception {
+    public void testExecuteJsonArrayIndexExistingSubKey() {
         String jsonObject = "{ \"location\": [\n" +
                 "      {\"city\": \"Roseville\", \"country\": \"United States\"},\n" +
                 "      {\"city\": \"Cluj\", \"country\": \"Romania\"},\n" +
@@ -83,13 +85,14 @@ public class GetValueFromObjectTest {
         result = getValueFromObject.execute(jsonObject, key);
         assertEquals("United States", result.get(RETURN_RESULT));
     }
+
     @Test
-    public void testExecuteJsonArrayIndexExistingSubKey2Levels() throws Exception {
+    public void testExecuteJsonArrayIndexExistingSubKey2Levels() {
         String jsonObject = "{ \"location\": [\n" +
                 "      {\"city\": [\n" +
-                    "      {\"city\": \"Roseville\", \"country\": \"United States\"},\n" +
-                    "      {\"city\": \"Cluj\", \"country\": \"Romania\"},\n" +
-                    "      {\"city\": \"Yehud\", \"country\": \"Israel\"}]    \n" +
+                "      {\"city\": \"Roseville\", \"country\": \"United States\"},\n" +
+                "      {\"city\": \"Cluj\", \"country\": \"Romania\"},\n" +
+                "      {\"city\": \"Yehud\", \"country\": \"Israel\"}]    \n" +
                 "},\n" +
                 "      {\"city\": \"Cluj\", \"country\": \"Romania\"},\n" +
                 "      {\"city\": \"Yehud\", \"country\": \"Israel\"}]    \n" +
@@ -114,7 +117,7 @@ public class GetValueFromObjectTest {
     }
 
     @Test
-    public void testExecuteJsonArrayNoIndex() throws Exception {
+    public void testExecuteJsonArrayNoIndex() {
         String jsonObject = "{ \"location\": [\n" +
                 "      {\"city\": \"Roseville\", \"country\": \"United States\"},\n" +
                 "      {\"city\": \"Cluj\", \"country\": \"Romania\"},\n" +
@@ -127,11 +130,11 @@ public class GetValueFromObjectTest {
 
         key = "location[]";
         result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("The location[] key does not exist in JavaScript object.", result.get(RETURN_RESULT));
+        assertEquals("The location[] key does not exist in JavaScript object!", result.get(RETURN_RESULT));
     }
 
     @Test
-    public void testExecuteJsonArrayBadIndex() throws Exception {
+    public void testExecuteJsonArrayBadIndex() {
         String jsonObject = "{ \"location\": [\n" +
                 "      {\"city\": \"Roseville\", \"country\": \"United States\"},\n" +
                 "      {\"city\": \"Cluj\", \"country\": \"Romania\"},\n" +
@@ -143,48 +146,81 @@ public class GetValueFromObjectTest {
 
         key = "location[a]";
         result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("The location[a] key does not exist in JavaScript object.", result.get(RETURN_RESULT));
+        assertEquals("The location[a] key does not exist in JavaScript object!", result.get(RETURN_RESULT));
 
         key = "location[0].a";
         result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("The a key does not exist in JavaScript object.", result.get(RETURN_RESULT));
+        assertEquals("The a key does not exist in JavaScript object!", result.get(RETURN_RESULT));
 
         key = "location[a].b";
         result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("The location[a] key does not exist in JavaScript object.", result.get(RETURN_RESULT));
+        assertEquals("The location[a] key does not exist in JavaScript object!", result.get(RETURN_RESULT));
     }
+
     @Test
-    public void testExecuteSimpleNotExist() throws Exception {
+    public void testExecuteSimpleNotExist() {
         String jsonObject = "{}";
         String key = "test";
         final Map<String, String> result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("The test key does not exist in JavaScript object.", result.get(RETURN_RESULT));
+        assertEquals("The test key does not exist in JavaScript object!", result.get(RETURN_RESULT));
         assertEquals("-1", result.get("returnCode"));
     }
 
     @Test
-    public void testExecuteJsonObjectBad() throws Exception {
+    public void testExecuteJsonObjectBad() {
         String jsonObject = "{";
         String key = "test";
         final Map<String, String> result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("Invalid jsonObject provided! java.io.EOFException: End of input at line 1 column 2", result.get(RETURN_RESULT));
-        assertEquals("java.io.EOFException: End of input at line 1 column 2", result.get("exception"));
+        assertEquals("Invalid object provided! java.io.EOFException: End of input at line 1 column 2", result.get(RETURN_RESULT));
+        assertEquals("java.io.EOFException: End of input at line 1 column 2", result.get(EXCEPTION));
         assertEquals("-1", result.get("returnCode"));
     }
 
     @Test
-    public void testExecuteNameBad() throws Exception {
+    public void testExecuteNameBad() {
         String jsonObject = "{}";
         String key = "test{\"";
         final Map<String, String> result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("The test{\" key does not exist in JavaScript object.", result.get(RETURN_RESULT));
+        assertEquals("The test{\" key does not exist in JavaScript object!", result.get(RETURN_RESULT));
     }
 
     @Test
-    public void testExecuteJsonObjectSpecialCharsInKey() throws Exception {
+    public void testExecuteJsonObjectSpecialCharsInKey() {
         String jsonObject = "{\"one\":{\"a\":\"a\",\"B\":\"B\"}, \"two\":\"two\", \"three;/?:@&=+,$\":[1,2,3.4]}";
         String key = "tes;/?:@&=+,$t";
         final Map<String, String> result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("The tes;/?:@&=+,$t key does not exist in JavaScript object.", result.get(RETURN_RESULT));
+        assertEquals("The tes;/?:@&=+,$t key does not exist in JavaScript object!", result.get(RETURN_RESULT));
+    }
+
+    @Test
+    public void testExecuteEmptyJsonObject() {
+        String jsonObject = "";
+        String key = "city";
+        Map<String, String> result = getValueFromObject.execute(jsonObject, key);
+        assertEquals("Empty object provided!", result.get(RETURN_RESULT));
+        assertEquals("Empty object provided!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
+
+        key = "city";
+        result = getValueFromObject.execute(null, key);
+        assertEquals("Empty object provided!", result.get(RETURN_RESULT));
+        assertEquals("Empty object provided!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
+    }
+
+    @Test
+    public void testExecuteEmptyKey() {
+        String jsonObject = "{}";
+        String key = "";
+        Map<String, String> result = getValueFromObject.execute(jsonObject, key);
+        assertEquals("The  key does not exist in JavaScript object!", result.get(RETURN_RESULT));
+        assertEquals("The  key does not exist in JavaScript object!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
+
+        jsonObject = "{}";
+        result = getValueFromObject.execute(jsonObject, null);
+        assertEquals("Null key provided!", result.get(RETURN_RESULT));
+        assertEquals("Null key provided!", result.get(EXCEPTION));
+        assertEquals("-1", result.get("returnCode"));
     }
 }
