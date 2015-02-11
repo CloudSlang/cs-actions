@@ -1,16 +1,15 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package org.openscore.content.httpclient.consume;
 
-import org.openscore.content.httpclient.ScoreHttpClient;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
@@ -19,6 +18,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeaderValueParser;
 import org.openscore.content.httpclient.HttpClientInputs;
+import org.openscore.content.httpclient.ScoreHttpClient;
 
 import java.io.*;
 import java.nio.charset.UnsupportedCharsetException;
@@ -81,23 +81,45 @@ public class HttpResponseConsumer {
             }
             result.put(ScoreHttpClient.RETURN_RESULT, document);
         } else {
-            BufferedReader reader;
-            BufferedWriter fileWriter;
+            consumeToDestinationFile();
+        }
+    }
+
+    private void consumeToDestinationFile() throws IOException {
+        BufferedReader reader;
+        BufferedWriter fileWriter = null;
+        FileOutputStream fos = null;
+        try {
             try {
                 reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), responseCharacterSet));
-                fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationFile), responseCharacterSet));
+                fos = new FileOutputStream(destinationFile);
+                fileWriter = new BufferedWriter(new OutputStreamWriter(fos, responseCharacterSet));
             } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("Could not parse '"+ HttpClientInputs.RESPONSE_CHARACTER_SET
-                        +"'. " + e.getMessage(), e);
+                throw new IllegalArgumentException("Could not parse '" + HttpClientInputs.RESPONSE_CHARACTER_SET
+                        + "'. " + e.getMessage(), e);
             }
             char[] buffer = new char[1024];
             int b;
             while ((b = reader.read(buffer, 0, buffer.length)) != -1) {
                 fileWriter.write(buffer, 0, b);
             }
-
             fileWriter.flush();
-            fileWriter.close();
+        } finally {
+            if (fos != null) {
+                safeClose(fos);
+            }
+            if (fileWriter != null) {
+                safeClose(fileWriter);
+            }
+        }
+    }
+
+    private void safeClose(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+            }
         }
     }
 }
