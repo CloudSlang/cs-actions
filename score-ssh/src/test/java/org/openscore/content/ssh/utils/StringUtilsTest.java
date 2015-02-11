@@ -3,6 +3,7 @@ package org.openscore.content.ssh.utils;
 import org.junit.Test;
 import org.openscore.content.ssh.utils.StringUtils;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class StringUtilsTest {
 
     @Test
-    public void testToBoolean() throws Exception {
+    public void testToBoolean() {
         boolean result = StringUtils.toBoolean("true", false);
         assertEquals(result, true);
 
@@ -32,7 +33,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testToInt() throws Exception {
+    public void testToInt() {
         int result = StringUtils.toInt("10", 11);
         assertEquals(result, 10);
 
@@ -44,13 +45,13 @@ public class StringUtilsTest {
     }
 
     @Test(expected = NumberFormatException.class)
-    public void testToIntException() throws Exception {
+    public void testToIntException() {
         int result = StringUtils.toInt("1kuhasd", 11);
         assertEquals(result, 10);
     }
 
     @Test
-    public void testToNotEmptyString() throws Exception {
+    public void testToNotEmptyString() {
         String result = StringUtils.toNotEmptyString("test", "default");
         assertEquals(result, "test");
 
@@ -68,7 +69,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testToNewline() throws Exception {
+    public void testToNewline() {
         String result = StringUtils.toNewline("\\n");
         assertEquals(result, "\n");
 
@@ -92,13 +93,17 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testGetStackTraceAsString() throws Exception {
+    public void testGetStackTraceAsString() {
         Exception exception = new Exception("Test exception");
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         exception.printStackTrace(pw);
         assertEquals(sw.toString(), StringUtils.getStackTraceAsString(exception));
-        sw.close();
+        try {
+            sw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         pw.close();
 
         exception = new Exception();
@@ -106,13 +111,17 @@ public class StringUtilsTest {
         pw = new PrintWriter(sw);
         exception.printStackTrace(pw);
         assertEquals(sw.toString(), StringUtils.getStackTraceAsString(exception));
-        sw.close();
+        try {
+            sw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         pw.close();
         assertEquals("", StringUtils.getStackTraceAsString(null));
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
+    public void testIsEmpty() {
         assertEquals(true, StringUtils.isEmpty(""));
         assertEquals(true, StringUtils.isEmpty(null));
         assertEquals(false, StringUtils.isEmpty(" "));
