@@ -68,7 +68,7 @@ public class SSHServiceImplTest {
     }
 
     @Test
-    public void testConstructors() throws Exception {
+    public void testConstructors() {
         SSHServiceImpl sshService = new SSHServiceImpl(sessionMock, channelShellMock);
         assertEquals(sshService.getShellChannel(), channelShellMock);
         assertEquals(sshService.getSSHSession(), sessionMock);
@@ -95,7 +95,7 @@ public class SSHServiceImplTest {
     }
 
     @Test
-    public void testRunShellCommand() throws Exception {
+    public void testRunShellCommand() {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
         CommandResult commandResult = sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT);
         assertEquals(commandResult.getExitCode(), 0);

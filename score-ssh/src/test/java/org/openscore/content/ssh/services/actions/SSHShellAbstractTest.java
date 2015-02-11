@@ -38,7 +38,7 @@ public class SSHShellAbstractTest {
     private GlobalSessionObject<Map<String, SSHConnection>> sshGlobalSessionObjectMock;
 
     @Test
-    public void testAddSecurityProvider() throws Exception {
+    public void testAddSecurityProvider() {
         SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
         };
         boolean securityProviderAdded = sshShellAbstract.addSecurityProvider();
@@ -50,7 +50,7 @@ public class SSHShellAbstractTest {
     }
 
     @Test
-    public void testRemoveSecurityProvider() throws Exception {
+    public void testRemoveSecurityProvider() {
         SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
         };
         boolean securityProviderAdded = sshShellAbstract.addSecurityProvider();
@@ -62,7 +62,7 @@ public class SSHShellAbstractTest {
     }
 
     @Test
-    public void testGetKeyFile() throws Exception {
+    public void testGetKeyFile() {
         SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
         };
         final String myPrivateKeyFileName = "myPrivateKeyFile";
@@ -80,7 +80,7 @@ public class SSHShellAbstractTest {
     }
 
     @Test
-    public void testGetFromCache() throws Exception {
+    public void testGetFromCache() {
         SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
         };
         mockStatic(CacheUtils.class);
@@ -99,7 +99,7 @@ public class SSHShellAbstractTest {
     }
 
     @Test
-    public void testSaveToCache() throws Exception {
+    public void testSaveToCache() {
         SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
         };
         String sessionId = "sessionId";
@@ -118,7 +118,7 @@ public class SSHShellAbstractTest {
     }
 
     @Test
-    public void testPopulateResult() throws Exception {
+    public void testPopulateResult() {
         SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
         };
         Map<String, String> returnResult = new HashMap<>();
