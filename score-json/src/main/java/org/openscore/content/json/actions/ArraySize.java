@@ -33,6 +33,8 @@ import static org.openscore.content.json.utils.JsonUtils.populateResult;
  */
 public class ArraySize {
 
+    public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array!";
+
     /**
      * This operation determines the number of elements in the given JSON array.  If an element
      * is itself another JSON array, it only counts as 1 element; in other
@@ -65,7 +67,7 @@ public class ArraySize {
         JsonElement parsedArray;
 
         if (array == null || array.trim().equals(Constants.EMPTY_STRING)) {
-            final String exceptionValue = "The input value is not a valid JavaScript array!";
+            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE;
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }
 
@@ -81,11 +83,11 @@ public class ArraySize {
             if (asJsonArray != null) {
                 result = Integer.toString(asJsonArray.size());
             } else {
-                result = "The input value is an invalid JavaScript array!";
+                result = NOT_A_VALID_JSON_ARRAY_MESSAGE;
                 return populateResult(returnResult, result, new Exception(result));
             }
         } else {
-            result = "The input value is not a valid JavaScript array!";
+            result = NOT_A_VALID_JSON_ARRAY_MESSAGE;
             return populateResult(returnResult, result, new Exception(result));
         }
         return populateResult(returnResult, result, null);
