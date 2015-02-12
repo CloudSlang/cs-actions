@@ -25,6 +25,7 @@ import org.openscore.content.json.utils.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openscore.content.json.utils.JsonUtils.isBlank;
 import static org.openscore.content.json.utils.JsonUtils.populateResult;
 
 /**
@@ -65,7 +66,7 @@ public class ArraySize {
         JsonParser jsonParser = new JsonParser();
         JsonElement parsedArray;
 
-        if (array == null || array.trim().equals(Constants.EMPTY_STRING)) {
+        if (isBlank(array)) {
             final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE;
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }
