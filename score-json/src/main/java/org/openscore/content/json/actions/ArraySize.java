@@ -42,7 +42,6 @@ public class ArraySize {
      * considered to be an element.
      *
      * @param array The string representation of a JSON array object.
-     *
      * @return a map containing the output of the operation. Keys present in the map are:
      * <p/>
      * <br><br><b>returnResult</b> - This will contain size of the json array given in the input.
