@@ -25,6 +25,7 @@ import org.openscore.content.json.utils.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openscore.content.json.utils.JsonUtils.isBlank;
 import static org.openscore.content.json.utils.JsonUtils.populateResult;
 
 /**
@@ -78,7 +79,7 @@ public class AddJsonPropertyToObject {
         JsonElement jsonElement;
         JsonObject jsonRoot;
 
-        if (newPropertyValue == null || newPropertyValue.trim().equals(Constants.EMPTY_STRING)) {
+        if (isBlank(newPropertyValue)) {
             final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }

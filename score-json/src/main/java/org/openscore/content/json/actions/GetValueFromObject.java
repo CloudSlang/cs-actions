@@ -25,6 +25,7 @@ import org.openscore.content.json.utils.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openscore.content.json.utils.JsonUtils.isBlank;
 import static org.openscore.content.json.utils.JsonUtils.populateResult;
 
 /**
@@ -67,7 +68,7 @@ public class GetValueFromObject {
 
         Map<String, String> returnResult = new HashMap<>();
 
-        if (object == null || object.trim().equals(Constants.EMPTY_STRING)) {
+        if (isBlank(object)) {
             final String exceptionValue = "Empty object provided!";
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }

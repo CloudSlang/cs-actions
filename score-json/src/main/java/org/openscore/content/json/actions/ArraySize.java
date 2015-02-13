@@ -25,6 +25,7 @@ import org.openscore.content.json.utils.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openscore.content.json.utils.JsonUtils.isBlank;
 import static org.openscore.content.json.utils.JsonUtils.populateResult;
 
 /**
@@ -42,7 +43,6 @@ public class ArraySize {
      * considered to be an element.
      *
      * @param array The string representation of a JSON array object.
-     *
      * @return a map containing the output of the operation. Keys present in the map are:
      * <p/>
      * <br><br><b>returnResult</b> - This will contain size of the json array given in the input.
@@ -66,7 +66,7 @@ public class ArraySize {
         JsonParser jsonParser = new JsonParser();
         JsonElement parsedArray;
 
-        if (array == null || array.trim().equals(Constants.EMPTY_STRING)) {
+        if (isBlank(array)) {
             final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE;
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }

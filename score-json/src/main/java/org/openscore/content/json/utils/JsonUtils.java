@@ -3,7 +3,8 @@ package org.openscore.content.json.utils;
 import java.util.Map;
 
 /**
- * Created by vranau on 2/9/2015.
+ * Created by ioanvranauhp
+ * Date 2/9/2015.
  */
 public class JsonUtils {
 
@@ -16,5 +17,9 @@ public class JsonUtils {
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
         }
         return returnResult;
+    }
+
+    public static boolean isBlank(String value) {
+        return value == null || value.trim().equals(Constants.EMPTY_STRING);
     }
 }
