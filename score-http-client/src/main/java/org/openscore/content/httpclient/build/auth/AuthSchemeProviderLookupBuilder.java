@@ -109,9 +109,6 @@ public class AuthSchemeProviderLookupBuilder {
                     registryBuilder.register(AuthSchemes.DIGEST, new DigestSchemeFactory());
                     break;
                 case "KERBEROS":
-                    if (getSettingsKey().equals(System.getProperty("oohttpclient.krb.last.settings"))) {
-                        break;
-                    }
                     if (kerberosConfigFile != null) {
                         System.setProperty("java.security.krb5.conf", kerberosConfigFile);
                     } else {
@@ -149,7 +146,6 @@ public class AuthSchemeProviderLookupBuilder {
                     boolean skipPort = Boolean.parseBoolean(skipPortAtKerberosDatabaseLookup);
                     registryBuilder.register(AuthSchemes.KERBEROS, new KerberosSchemeFactory(skipPort));
                     registryBuilder.register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(skipPort));
-                    System.setProperty("oohttpclient.krb.last.settings", getSettingsKey());
                     break;
                 case AuthTypes.ANONYMOUS:
                     break;
@@ -208,14 +204,6 @@ public class AuthSchemeProviderLookupBuilder {
             }
         }
         return tempFile;
-    }
-
-    private String getSettingsKey() {
-        return kerberosConfigFile +
-                kerberosLoginConfigFile +
-                System.getProperty("java.security.krb5.conf") +
-                System.getProperty("java.security.auth.login.config")
-                + username + skipPortAtKerberosDatabaseLookup;
     }
 
     public static void safeClose(FileWriter fis) {
