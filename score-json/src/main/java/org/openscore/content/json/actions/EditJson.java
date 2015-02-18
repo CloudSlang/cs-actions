@@ -44,12 +44,12 @@ public class EditJson {
      *               The difference between insert and add action is that add is used for adding data into an array
      *               based on the jsonPath provided and insert action inserts an new property and a new value in the json
      *               based on the jsonPath provided.
-     * @param propertyName The property name used for insert operation
-     * @param propertyValue The property value used for insert, add and update operations.
+     * @param name The property name used for insert operation
+     * @param value The property value used for insert, add and update operations.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <p/>
      * <br><br><b>returnResult</b> - This will contain the edited json based on the action type, jsonPath and
-     * propertyName and propertyValue inputs
+     * name and value inputs
      * <br><b>exception</b> - In case of success response, this result is empty. In case of failure response,
      * this result contains the java stack trace of the runtime exception or just the error message.
      * <br><br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
@@ -67,25 +67,25 @@ public class EditJson {
     public Map<String, String> execute(@Param(value = Constants.InputNames.JSON_OBJECT, required = true) String jsonObject,
                                        @Param(value = Constants.InputNames.JSON_PATH, required = true) String jsonPath,
                                        @Param(value = Constants.InputNames.ACTION, required = true) String action,
-                                       @Param(value = Constants.InputNames.PROPERTY_NAME) String propertyName,
-                                       @Param(value = Constants.InputNames.PROPERTY_VALUE) String propertyValue) {
+                                       @Param(value = Constants.InputNames.NAME) String name,
+                                       @Param(value = Constants.InputNames.VALUE) String value) {
 
         Map<String, String> returnResult = new HashMap<>();
         JsonReader jsonReader;
         try {
-            JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, propertyName, propertyValue);
+            JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
             jsonReader = getJsonReader(jsonObject);
         } catch (Exception e) {
             return populateResult(returnResult, e);
         }
         String result;
         try {
-            Object jsonPropertyValueObject= propertyValue;
-            if (propertyValue != null && !propertyValue.trim().equals(Constants.EMPTY_STRING)) {
-                JsonReader propertyJsonReader = getJsonReader(propertyValue);
-                jsonPropertyValueObject = propertyJsonReader.json();
+            Object valueObject= value;
+            if (value != null && !value.trim().equals(Constants.EMPTY_STRING)) {
+                JsonReader valueJsonReader = getJsonReader(value);
+                valueObject = valueJsonReader.json();
             }
-            Object json = editJson(jsonPath, action, propertyName, jsonPropertyValueObject, jsonReader);
+            Object json = editJson(jsonPath, action, name, valueObject, jsonReader);
             result = json.toString();
         } catch (Exception e) {
             return populateResult(returnResult, e);
@@ -101,7 +101,7 @@ public class EditJson {
         return jsonReader;
     }
 
-    private Object editJson(String jsonPath, String action, String propertyName, Object propertyValue, JsonReader jsonReader) {
+    private Object editJson(String jsonPath, String action, String name, Object value, JsonReader jsonReader) {
         ActionsEnum myAction = ActionsEnum.valueOf(action.toLowerCase());
         Object json = null;
 
@@ -110,13 +110,13 @@ public class EditJson {
                 json = jsonReader.read(jsonPath);
                 break;
             case insert:
-                json = jsonReader.put(jsonPath, propertyName, propertyValue).json();
+                json = jsonReader.put(jsonPath, name, value).json();
                 break;
             case add:
-                json = jsonReader.add(jsonPath, propertyValue).json();
+                json = jsonReader.add(jsonPath, value).json();
                 break;
             case update:
-                json = jsonReader.set(jsonPath, propertyValue).json();
+                json = jsonReader.set(jsonPath, value).json();
                 break;
             case delete:
                 json = jsonReader.delete(jsonPath).json();

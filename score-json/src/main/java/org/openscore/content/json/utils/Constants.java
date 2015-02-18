@@ -47,8 +47,8 @@ public class Constants {
         public static final String ARRAY = "array";
         public static final String ACTION = "action";
         public static final String JSON_PATH = "jsonPath";
-        public static final String PROPERTY_NAME = "propertyName";
-        public static final String PROPERTY_VALUE = "propertyValue";
+        public static final String NAME = "name";
+        public static final String VALUE = "value";
     }
 
     public static final class EditJsonOperations {

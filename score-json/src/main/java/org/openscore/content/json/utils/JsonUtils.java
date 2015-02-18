@@ -31,7 +31,7 @@ public class JsonUtils {
         return value == null || value.trim().equals(Constants.EMPTY_STRING);
     }
 
-    public static void validateEditJsonInputs(String jsonObject, String jsonPath, String action, String propertyName, String propertyValue) throws Exception {
+    public static void validateEditJsonInputs(String jsonObject, String jsonPath, String action, String name, String value) throws Exception {
         if (isBlank(jsonObject)) {
             throw new Exception("Empty jsonObject provided!");
         }
@@ -43,20 +43,20 @@ public class JsonUtils {
         }
 
         final String actionString = action.toLowerCase().trim();
-        checkForNullPropertyValue(actionString, propertyValue, update);
-        checkForNullPropertyValue(actionString, propertyValue, add);
-        checkForNullPropertyValue(actionString, propertyValue, insert);
+        checkForNullValue(actionString, value, update);
+        checkForNullValue(actionString, value, add);
+        checkForNullValue(actionString, value, insert);
 
         if (actionString.equals(insert.getValue())) {
-            if (isBlank(propertyName)) {
-                throw new Exception("Empty propertyName provided for insert action!");
+            if (isBlank(name)) {
+                throw new Exception("Empty name provided for insert action!");
             }
         }
 
         boolean exists = false;
         String actionEnumValues = "";
-        for (ActionsEnum value : ActionsEnum.values()) {
-            final String actionEnumValue = value.getValue();
+        for (ActionsEnum actionsEnum : ActionsEnum.values()) {
+            final String actionEnumValue = actionsEnum.getValue();
             actionEnumValues += actionEnumValue + " ";
             if (actionString.equals(actionEnumValue)) {
                 exists = true;
@@ -67,10 +67,10 @@ public class JsonUtils {
         }
     }
 
-    private static void checkForNullPropertyValue(String actionString, String propertyValue, ActionsEnum actionEnum) throws Exception {
+    private static void checkForNullValue(String actionString, String value, ActionsEnum actionEnum) throws Exception {
         if (actionString.equals(actionEnum.getValue())) {
-            if (propertyValue == null) {
-                throw new Exception("Null propertyValue provided for " + actionEnum.getValue() + " action!");
+            if (value == null) {
+                throw new Exception("Null value provided for " + actionEnum.getValue() + " action!");
             }
         }
     }

@@ -76,7 +76,7 @@ public class EditJsonTest {
     public void testUpdateActionJsonWithNull() throws Exception {
         final String jsonPathQuery = "$.store.bicycle";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "update", "", null);
-        assertEquals("Null propertyValue provided for update action!", result.get(RETURN_RESULT));
+        assertEquals("Null value provided for update action!", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -126,42 +126,42 @@ public class EditJsonTest {
     }
 
     @Test
-    public void testInsertActionJsonNullPropertyValueAndName() throws Exception {
+    public void testInsertActionJsonNullValueAndName() throws Exception {
         final String jsonPathQuery = "$.store.bicycle";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", null, null);
-        assertEquals("Null propertyValue provided for insert action!", result.get(RETURN_RESULT));
+        assertEquals("Null value provided for insert action!", result.get(RETURN_RESULT));
     }
 
     @Test
-    public void testInsertActionJsonNullPropertyName() throws Exception {
+    public void testInsertActionJsonNullName() throws Exception {
         final String jsonPathQuery = "$.store.bicycle";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", null, "");
-        assertEquals("Empty propertyName provided for insert action!", result.get(RETURN_RESULT));
+        assertEquals("Empty name provided for insert action!", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testInsertActionJsonEmptyValue() throws Exception {
         final String jsonPathQuery = "$.store.bicycle";
-        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "newProperty", "");
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "newName", "");
         assertEquals("{\"store\":{\"book\":[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":" +
                 "\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\"," +
                 "\"title\":\"Sword of Honour\",\"price\":12.99}],\"bicycle\":{\"color\":\"red\",\"price\":19.95," +
-                "\"newProperty\":\"\"}},\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
+                "\"newName\":\"\"}},\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testInsertActionArray() throws Exception {
         final String jsonPathQuery = "$.arrayTest[0]";
-        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "newProperty", "1");
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "newName", "1");
         assertEquals("Can only add properties to a map", result.get(RETURN_RESULT));
     }
 
     @Test
-    public void testInsertActionArrayAsNewProperty() throws Exception {
+    public void testInsertActionArrayAsNewItem() throws Exception {
         final String jsonPathQuery = "$.store.book[0]";
-        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "newPropertyArray", "[1,2,3]");
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "newArray", "[1,2,3]");
         assertEquals("{\"store\":{\"book\":[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":" +
-                "\"Sayings of the Century\",\"price\":8.95,\"newPropertyArray\":[1,2,3]},{\"category\":\"fiction\"," +
+                "\"Sayings of the Century\",\"price\":8.95,\"newArray\":[1,2,3]},{\"category\":\"fiction\"," +
                 "\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99}],\"bicycle\":{\"color\":\"red\"," +
                 "\"price\":19.95}},\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
     }
@@ -267,7 +267,7 @@ public class EditJsonTest {
     public void testAddActionJsonNull() throws Exception {
         final String jsonPathQuery = "$.arrayTest";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "add", "", null);
-        assertEquals("Null propertyValue provided for add action!", result.get(RETURN_RESULT));
+        assertEquals("Null value provided for add action!", result.get(RETURN_RESULT));
     }
 
     @Test
