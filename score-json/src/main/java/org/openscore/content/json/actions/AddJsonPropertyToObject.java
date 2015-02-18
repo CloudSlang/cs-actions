@@ -71,8 +71,7 @@ public class AddJsonPropertyToObject {
 
         Map<String, String> returnResult = new HashMap<>();
         if (jsonObject == null || jsonObject.trim().equals(Constants.EMPTY_STRING)) {
-            final String exceptionValue = "Empty jsonObject provided!";
-            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+            return populateResult(returnResult, new Exception("Empty jsonObject provided!"));
         }
 
         JsonParser jsonParser = new JsonParser();
@@ -81,12 +80,11 @@ public class AddJsonPropertyToObject {
 
         if (isBlank(newPropertyValue)) {
             final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
-            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+            return populateResult(returnResult, new Exception(exceptionValue));
         }
 
         if (newPropertyName == null) {
-            final String exceptionValue = "Null newPropertyName provided!";
-            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+            return populateResult(returnResult, new Exception("Null newPropertyName provided!"));
         }
 
         try {

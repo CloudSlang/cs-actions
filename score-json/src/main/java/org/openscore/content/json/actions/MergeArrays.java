@@ -83,7 +83,7 @@ public class MergeArrays {
 
         if (isBlank(array2)) {
             final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY2_MESSAGE.replaceFirst("=", "");
-            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+            return populateResult(returnResult, new Exception(exceptionValue));
         }
 
         try {
@@ -112,7 +112,7 @@ public class MergeArrays {
             result = asJsonArrayResult.toString();
         } else {
             result = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY1_MESSAGE + array1 + ARRAY2_MESSAGE + array2;
-            return populateResult(returnResult, result, new Exception(result));
+            return populateResult(returnResult, new Exception(result));
         }
         return populateResult(returnResult, result, null);
     }

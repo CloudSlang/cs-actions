@@ -45,5 +45,18 @@ public class Constants {
         public static final String OBJECT = "object";
         public static final String KEY = "key";
         public static final String ARRAY = "array";
+        public static final String ACTION = "action";
+        public static final String JSON_PATH = "jsonPath";
+        public static final String PROPERTY_NAME = "propertyName";
+        public static final String PROPERTY_VALUE = "propertyValue";
+    }
+
+    public static final class EditJsonOperations {
+
+        public static final String GET_ACTION = "get";
+        public static final String INSERT_ACTION = "insert";
+        public static final String UPDATE_ACTION = "update";
+        public static final String DELETE_ACTION = "delete";
+        public static final String ADD_ACTION = "add";
     }
 }

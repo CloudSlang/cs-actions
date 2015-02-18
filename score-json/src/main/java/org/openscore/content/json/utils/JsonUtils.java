@@ -2,6 +2,9 @@ package org.openscore.content.json.utils;
 
 import java.util.Map;
 
+import static org.openscore.content.json.utils.ActionsEnum.insert;
+import static org.openscore.content.json.utils.ActionsEnum.update;
+
 /**
  * Created by ioanvranauhp
  * Date 2/9/2015.
@@ -19,7 +22,52 @@ public class JsonUtils {
         return returnResult;
     }
 
+    public static Map<String, String> populateResult(Map<String, String> returnResult, Exception exception) {
+        return populateResult(returnResult, exception.getMessage(), exception);
+    }
+
     public static boolean isBlank(String value) {
         return value == null || value.trim().equals(Constants.EMPTY_STRING);
+    }
+
+    public static void validateEditJsonInputs(String jsonObject, String jsonPath, String action, String propertyName, String propertyValue) throws Exception {
+        if (isBlank(jsonObject)) {
+            throw new Exception("Empty jsonObject provided!");
+        }
+        if (isBlank(jsonPath)) {
+            throw new Exception("Empty jsonPath provided!");
+        }
+        if (isBlank(action)) {
+            throw new Exception("Empty action provided!");
+        }
+
+        final String actionString = action.toLowerCase().trim();
+        if (actionString.equals(update.getValue())) {
+            if (propertyValue == null) {
+                throw new Exception("Null propertyValue provided for update action!");
+            }
+        }
+
+        if (actionString.equals(insert.getValue())) {
+            if (propertyValue == null) {
+                throw new Exception("Null propertyValue provided for insert action!");
+            }
+            if (isBlank(propertyName)) {
+                throw new Exception("Empty propertyName provided for insert action!");
+            }
+        }
+
+        boolean exists = false;
+        String actionEnumValues = "";
+        for (ActionsEnum value : ActionsEnum.values()) {
+            final String actionEnumValue = value.getValue();
+            actionEnumValues += actionEnumValue + " ";
+            if (actionString.equals(actionEnumValue)) {
+                exists = true;
+            }
+        }
+        if (!exists) {
+            throw new Exception("Invalid action provided! Action should be one of the values: " + actionEnumValues);
+        }
     }
 }
