@@ -36,19 +36,25 @@ import static org.openscore.content.json.utils.JsonUtils.populateResult;
 public class EditJson {
 
     /**
-     * This operation determines the number of elements in the given JSON array.  If an element
-     * is itself another JSON array, it only counts as 1 element; in other
-     * words, it will not expand and count embedded arrays.  Null values are also
-     * considered to be an element.
+     * * This operation edits a JSON object given in the form of a string using a jsonPath and returns the edited json
      *
+     * @param jsonObject The JSON object in a form of a string
+     * @param jsonPath The JSON Path query used for editing the json object
+     * @param action The action used for editing the json. Valid values are: get, insert, add, update and delete.
+     *               The difference between insert and add action is that add is used for adding data into an array
+     *               based on the jsonPath provided and insert action inserts an new property and a new value in the json
+     *               based on the jsonPath provided.
+     * @param propertyName The property name used for insert operation
+     * @param propertyValue The property value used for insert, add and update operations.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <p/>
-     * <br><br><b>returnResult</b> - This will contain size of the json array given in the input.
+     * <br><br><b>returnResult</b> - This will contain the edited json based on the action type, jsonPath and
+     * propertyName and propertyValue inputs
      * <br><b>exception</b> - In case of success response, this result is empty. In case of failure response,
-     * this result contains the java stack trace of the runtime exception.
+     * this result contains the java stack trace of the runtime exception or just the error message.
      * <br><br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
      */
-    @Action(name = "Array Size",
+    @Action(name = "Edit Json",
             outputs = {
                     @Output(Constants.OutputNames.RETURN_RESULT),
                     @Output(Constants.OutputNames.RETURN_CODE),
@@ -72,17 +78,10 @@ public class EditJson {
         } catch (Exception e) {
             return populateResult(returnResult, e);
         }
-        if (jsonReader == null) {
-            Exception e = new Exception("Could not parse the jsonPath input!");
-            return populateResult(returnResult, e);
-        }
-
         String result;
         try {
-            final Object jsonPropertyValueObject;
-            if (propertyValue.trim().equals(Constants.EMPTY_STRING)) {
-                jsonPropertyValueObject = propertyValue;
-            } else {
+            Object jsonPropertyValueObject= propertyValue;
+            if (propertyValue != null && !propertyValue.trim().equals(Constants.EMPTY_STRING)) {
                 JsonReader propertyJsonReader = getJsonReader(propertyValue);
                 jsonPropertyValueObject = propertyJsonReader.json();
             }
@@ -103,7 +102,7 @@ public class EditJson {
     }
 
     private Object editJson(String jsonPath, String action, String propertyName, Object propertyValue, JsonReader jsonReader) {
-        ActionsEnum myAction = getAction(action);
+        ActionsEnum myAction = ActionsEnum.valueOf(action.toLowerCase());
         Object json = null;
 
         switch (myAction) {
@@ -124,9 +123,5 @@ public class EditJson {
                 break;
         }
         return json;
-    }
-
-    private ActionsEnum getAction(String action) {
-        return ActionsEnum.valueOf(action.toLowerCase());
     }
 }

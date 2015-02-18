@@ -20,7 +20,7 @@ public class EditJsonTest {
     public void testInvalidAction() throws Exception {
         final String jsonPathQuery = "$.store.bicycle";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "get1", "", "");
-        assertEquals("Invalid action provided! Action should be one of the values: update insert add get delete ", result.get(RETURN_RESULT));
+        assertEquals("Invalid action provided! Action should be one of the values: get insert add update delete ", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -59,10 +59,24 @@ public class EditJsonTest {
     }
 
     @Test
+    public void testGetActionNullValues() throws Exception {
+        final String jsonPathQuery = "$.store.book[0].category";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "get", null, null);
+        assertEquals("\"reference\"", result.get(RETURN_RESULT));
+    }
+
+    @Test
     public void testGetActionMultipleValues() throws Exception {
         final String jsonPathQuery = "$.store.book[*].author";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "get", "", "");
         assertEquals("[\"Nigel Rees\",\"Evelyn Waugh\"]", result.get(RETURN_RESULT));
+    }
+
+    @Test
+    public void testUpdateActionJsonWithNull() throws Exception {
+        final String jsonPathQuery = "$.store.bicycle";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "update", "", null);
+        assertEquals("Null propertyValue provided for update action!", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -109,6 +123,20 @@ public class EditJsonTest {
                 "\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"newAuthor\"," +
                 "\"title\":\"Sword of Honour\",\"price\":12.99}],\"bicycle\":{\"color\":\"red\",\"price\":19.95}}," +
                 "\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
+    }
+
+    @Test
+    public void testInsertActionJsonNullPropertyValueAndName() throws Exception {
+        final String jsonPathQuery = "$.store.bicycle";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", null, null);
+        assertEquals("Null propertyValue provided for insert action!", result.get(RETURN_RESULT));
+    }
+
+    @Test
+    public void testInsertActionJsonNullPropertyName() throws Exception {
+        final String jsonPathQuery = "$.store.bicycle";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", null, "");
+        assertEquals("Empty propertyName provided for insert action!", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -208,12 +236,38 @@ public class EditJsonTest {
     }
 
     @Test
+    public void testDeleteActionNullValue() throws Exception {
+        final String jsonPathQuery = "$.store.book[0].category";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "delete", null, null);
+        assertEquals("{\"store\":{\"book\":[{\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\"," +
+                "\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\"," +
+                "\"price\":12.99}],\"bicycle\":{\"color\":\"red\",\"price\":19.95}},\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
+    }
+
+        @Test
     public void testDeleteActionMultipleValues() throws Exception {
         final String jsonPathQuery = "$.store.book[*].author";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "delete", "", "");
         assertEquals("{\"store\":{\"book\":[{\"category\":\"reference\",\"title\":\"Sayings of the Century\"," +
                 "\"price\":8.95},{\"category\":\"fiction\",\"title\":\"Sword of Honour\",\"price\":12.99}],\"bicycle\":" +
                 "{\"color\":\"red\",\"price\":19.95}},\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
+    }
+
+    @Test
+    public void testAddActionEmpty() throws Exception {
+        final String jsonPathQuery = "$.arrayTest";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "add", "", "");
+        assertEquals("{\"store\":{\"book\":[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":" +
+                "\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\"," +
+                "\"title\":\"Sword of Honour\",\"price\":12.99}],\"bicycle\":{\"color\":\"red\",\"price\":19.95}}," +
+                "\"arrayTest\":[1,2,3,\"\"]}", result.get(RETURN_RESULT));
+    }
+
+    @Test
+    public void testAddActionJsonNull() throws Exception {
+        final String jsonPathQuery = "$.arrayTest";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "add", "", null);
+        assertEquals("Null propertyValue provided for add action!", result.get(RETURN_RESULT));
     }
 
     @Test

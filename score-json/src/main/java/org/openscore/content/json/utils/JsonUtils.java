@@ -2,6 +2,7 @@ package org.openscore.content.json.utils;
 
 import java.util.Map;
 
+import static org.openscore.content.json.utils.ActionsEnum.add;
 import static org.openscore.content.json.utils.ActionsEnum.insert;
 import static org.openscore.content.json.utils.ActionsEnum.update;
 
@@ -42,16 +43,11 @@ public class JsonUtils {
         }
 
         final String actionString = action.toLowerCase().trim();
-        if (actionString.equals(update.getValue())) {
-            if (propertyValue == null) {
-                throw new Exception("Null propertyValue provided for update action!");
-            }
-        }
+        checkForNullPropertyValue(actionString, propertyValue, update);
+        checkForNullPropertyValue(actionString, propertyValue, add);
+        checkForNullPropertyValue(actionString, propertyValue, insert);
 
         if (actionString.equals(insert.getValue())) {
-            if (propertyValue == null) {
-                throw new Exception("Null propertyValue provided for insert action!");
-            }
             if (isBlank(propertyName)) {
                 throw new Exception("Empty propertyName provided for insert action!");
             }
@@ -68,6 +64,14 @@ public class JsonUtils {
         }
         if (!exists) {
             throw new Exception("Invalid action provided! Action should be one of the values: " + actionEnumValues);
+        }
+    }
+
+    private static void checkForNullPropertyValue(String actionString, String propertyValue, ActionsEnum actionEnum) throws Exception {
+        if (actionString.equals(actionEnum.getValue())) {
+            if (propertyValue == null) {
+                throw new Exception("Null propertyValue provided for " + actionEnum.getValue() + " action!");
+            }
         }
     }
 }
