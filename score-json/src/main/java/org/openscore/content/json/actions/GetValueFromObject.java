@@ -69,12 +69,10 @@ public class GetValueFromObject {
         Map<String, String> returnResult = new HashMap<>();
 
         if (isBlank(object)) {
-            final String exceptionValue = "Empty object provided!";
-            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+            return populateResult(returnResult, new Exception("Empty object provided!"));
         }
         if (key == null) {
-            final Exception exception = new Exception("Null key provided!");
-            return populateResult(returnResult, exception.getMessage(), exception);
+            return populateResult(returnResult, new Exception("Null key provided!"));
         }
 
         JsonParser jsonParser = new JsonParser();
@@ -93,7 +91,7 @@ public class GetValueFromObject {
         try {
             valueFromObject = getObject(jsonRoot, key.split(ESCAPED_SLASH + "."), startIndex);
         } catch (Exception exception) {
-            return populateResult(returnResult, exception.getMessage(), exception);
+            return populateResult(returnResult, exception);
         }
         if (valueFromObject.isJsonPrimitive()) {
             return populateResult(returnResult, valueFromObject.getAsString(), null);

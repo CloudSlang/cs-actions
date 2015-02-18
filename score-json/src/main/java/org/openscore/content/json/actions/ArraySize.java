@@ -67,8 +67,7 @@ public class ArraySize {
         JsonElement parsedArray;
 
         if (isBlank(array)) {
-            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE;
-            return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
+            return populateResult(returnResult, new Exception(NOT_A_VALID_JSON_ARRAY_MESSAGE));
         }
 
         try {
@@ -83,12 +82,10 @@ public class ArraySize {
             if (asJsonArray != null) {
                 result = Integer.toString(asJsonArray.size());
             } else {
-                result = NOT_A_VALID_JSON_ARRAY_MESSAGE;
-                return populateResult(returnResult, result, new Exception(result));
+                return populateResult(returnResult, new Exception(NOT_A_VALID_JSON_ARRAY_MESSAGE));
             }
         } else {
-            result = NOT_A_VALID_JSON_ARRAY_MESSAGE;
-            return populateResult(returnResult, result, new Exception(result));
+            return populateResult(returnResult, new Exception(NOT_A_VALID_JSON_ARRAY_MESSAGE));
         }
         return populateResult(returnResult, result, null);
     }
