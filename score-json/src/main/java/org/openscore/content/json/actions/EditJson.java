@@ -16,10 +16,9 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.internal.JsonReader;
 import com.jayway.jsonpath.internal.spi.json.AbstractJsonProvider;
-import com.jayway.jsonpath.internal.spi.json.GsonJsonProvider;
+import com.jayway.jsonpath.internal.spi.json.JacksonJsonNodeJsonProvider;
 import org.openscore.content.json.utils.ActionsEnum;
 import org.openscore.content.json.utils.Constants;
 import org.openscore.content.json.utils.JsonUtils;
@@ -39,13 +38,13 @@ public class EditJson {
      * * This operation edits a JSON object given in the form of a string using a jsonPath and returns the edited json
      *
      * @param jsonObject The JSON object in a form of a string
-     * @param jsonPath The JSON Path query used for editing the json object
-     * @param action The action used for editing the json. Valid values are: get, insert, add, update and delete.
-     *               The difference between insert and add action is that add is used for adding data into an array
-     *               based on the jsonPath provided and insert action inserts an new property and a new value in the json
-     *               based on the jsonPath provided.
-     * @param name The property name used for insert operation
-     * @param value The property value used for insert, add and update operations.
+     * @param jsonPath   The JSON Path query used for editing the json object
+     * @param action     The action used for editing the json. Valid values are: get, insert, add, update and delete.
+     *                   The difference between insert and add action is that add is used for adding data into an array
+     *                   based on the jsonPath provided and insert action inserts an new property and a new value in the json
+     *                   based on the jsonPath provided.
+     * @param name       The property name used for insert operation
+     * @param value      The property value used for insert, add and update operations.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <p/>
      * <br><br><b>returnResult</b> - This will contain the edited json based on the action type, jsonPath and
@@ -68,22 +67,33 @@ public class EditJson {
                                        @Param(value = Constants.InputNames.JSON_PATH, required = true) String jsonPath,
                                        @Param(value = Constants.InputNames.ACTION, required = true) String action,
                                        @Param(value = Constants.InputNames.NAME) String name,
-                                       @Param(value = Constants.InputNames.VALUE) String value) {
+                                       @Param(value = Constants.InputNames.VALUE) String value,
+                                       @Param(value = Constants.InputNames.VALIDATE_VALUE) String validateValue) {
 
         Map<String, String> returnResult = new HashMap<>();
         JsonReader jsonReader;
+        final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider();
+        boolean validateValueBoolean = Boolean.parseBoolean(validateValue);
         try {
-            JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
-            jsonReader = getJsonReader(jsonObject);
+            JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value, validateValue);
+            jsonReader = JsonUtils.getJsonReader(jsonObject, provider);
         } catch (Exception e) {
             return populateResult(returnResult, e);
         }
+        final ActionsEnum actionEnum = ActionsEnum.valueOf(action);
         String result;
         try {
-            Object valueObject= value;
-            if (value != null && !value.trim().equals(Constants.EMPTY_STRING)) {
-                JsonReader valueJsonReader = getJsonReader(value);
+            Object valueObject;
+            JsonReader valueJsonReader;
+            try {
+                valueJsonReader = JsonUtils.getJsonReader(value, provider);
                 valueObject = valueJsonReader.json();
+            } catch (Exception e) {
+                if (!validateValueBoolean || !actionEnum.getNeedValue()) {
+                    valueObject = value;
+                } else {
+                    throw e;
+                }
             }
             Object json = editJson(jsonPath, action, name, valueObject, jsonReader);
             result = json.toString();
@@ -91,14 +101,6 @@ public class EditJson {
             return populateResult(returnResult, e);
         }
         return populateResult(returnResult, result, null);
-    }
-
-    private JsonReader getJsonReader(String jsonObject) {
-        final AbstractJsonProvider provider = new GsonJsonProvider();
-        final Configuration configuration = Configuration.defaultConfiguration().jsonProvider(provider);
-        JsonReader jsonReader = new JsonReader(configuration);
-        jsonReader.parse(jsonObject);
-        return jsonReader;
     }
 
     private Object editJson(String jsonPath, String action, String name, Object value, JsonReader jsonReader) {
