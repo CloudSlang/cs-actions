@@ -463,6 +463,28 @@ public class EditJsonTest {
     }
 
     @Test
+    public void testAddActionJsonBadValueValidateNullValue() throws Exception {
+        final String jsonPathQuery = "$.store.book";
+        String newBook = "{" +
+                "            \"cat\"egory\":\"fi\"ction\",\n" +
+                "            \"author\":\"test1\",\n" +
+                "            \"title\":\"title1\",\n" +
+                "            \"price\":13\n" +
+                "         ";
+        final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "add", "", newBook, null);
+        assertEquals("{\"store\":{\"book\":[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":" +
+                "\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\"," +
+                "\"title\":\"Sword of Honour\",\"price\":12.99},\"" +
+                "{            " +
+                "\\\"cat\\\"egory\\\":\\\"fi\\\"ction\\\",\\n            " +
+                "\\\"author\\\":\\\"test1\\\",\\n            " +
+                "\\\"title\\\":\\\"title1\\\",\\n            " +
+                "\\\"price\\\":13\\n         " +
+                "\"],\"bicycle\":{\"color\":\"red\",\"price\":19.95}}," +
+                "\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
+    }
+
+    @Test
     public void testAddActionJsonBadValueDoNotValidateValue() throws Exception {
         final String jsonPathQuery = "$.store.book";
         String newBook = "{" +
