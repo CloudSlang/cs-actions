@@ -75,7 +75,7 @@ public class EditJson {
         final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider();
         boolean validateValueBoolean = Boolean.parseBoolean(validateValue);
         try {
-            JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value, validateValue);
+            JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
             jsonReader = JsonUtils.getJsonReader(jsonObject, provider);
         } catch (Exception e) {
             return populateResult(returnResult, e);
