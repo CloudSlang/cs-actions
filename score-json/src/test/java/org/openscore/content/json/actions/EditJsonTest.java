@@ -125,7 +125,7 @@ public class EditJsonTest {
     public void testUpdateActionValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.store.book[0].category";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "update", "", "newCategory", VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).startsWith("com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'newCategory'"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception: unrecognized token 'newcategory'"));
     }
 
 
@@ -143,7 +143,7 @@ public class EditJsonTest {
     public void testUpdateActionSpacedValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.arrayTest";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "update", "", "new Author value", VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).startsWith("com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'new'"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception: unrecognized token 'new'"));
     }
 
     @Test
@@ -267,7 +267,7 @@ public class EditJsonTest {
     public void testInsertActionSpacedValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.store";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "new Author", "new A/uthor value", VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).startsWith("com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'new'"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception: unrecognized token 'new'"));
     }
 
     @Test
@@ -437,7 +437,7 @@ public class EditJsonTest {
                 "            \"price\":13\n" +
                 "         ";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "add", "", newBook, VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).startsWith("com.fasterxml.jackson.core.JsonParseException"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception"));
     }
 
     @Test
@@ -472,16 +472,7 @@ public class EditJsonTest {
                 "            \"price\":13\n" +
                 "         ";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "add", "", newBook, null);
-        assertEquals("{\"store\":{\"book\":[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":" +
-                "\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\"," +
-                "\"title\":\"Sword of Honour\",\"price\":12.99},\"" +
-                "{            " +
-                "\\\"cat\\\"egory\\\":\\\"fi\\\"ction\\\",\\n            " +
-                "\\\"author\\\":\\\"test1\\\",\\n            " +
-                "\\\"title\\\":\\\"title1\\\",\\n            " +
-                "\\\"price\\\":13\\n         " +
-                "\"],\"bicycle\":{\"color\":\"red\",\"price\":19.95}}," +
-                "\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().contains("unexpected character ('e'".toLowerCase()));
     }
 
     @Test
@@ -502,7 +493,6 @@ public class EditJsonTest {
                 "\\\"title\\\":\\\"title1\\\",\\n            " +
                 "\\\"price\\\":13\\n         \"]," +
                 "\"bicycle\":{\"color\":\"red\",\"price\":19.95}},\"arrayTest\":[1,2,3]}", result.get(RETURN_RESULT));
-        System.out.println(result.get(RETURN_RESULT));
     }
 
 

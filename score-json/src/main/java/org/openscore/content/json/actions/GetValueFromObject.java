@@ -10,10 +10,10 @@
 
 package org.openscore.content.json.actions;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -75,47 +75,45 @@ public class GetValueFromObject {
             return populateResult(returnResult, new Exception("Null key provided!"));
         }
 
-        JsonParser jsonParser = new JsonParser();
-        JsonElement jsonElement;
-        JsonObject jsonRoot;
+        final JsonNode jsonRoot;
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            jsonElement = jsonParser.parse(object);
-            jsonRoot = jsonElement.getAsJsonObject();
+            jsonRoot = objectMapper.readTree(object);
         } catch (Exception exception) {
             final String value = "Invalid object provided! " + exception.getMessage();
             return populateResult(returnResult, value, exception);
         }
 
         int startIndex = 0;
-        final JsonElement valueFromObject;
+        final JsonNode valueFromObject;
         try {
             valueFromObject = getObject(jsonRoot, key.split(ESCAPED_SLASH + "."), startIndex);
         } catch (Exception exception) {
             return populateResult(returnResult, exception);
         }
-        if (valueFromObject.isJsonPrimitive()) {
-            return populateResult(returnResult, valueFromObject.getAsString(), null);
+        if (valueFromObject.isValueNode()) {
+            return populateResult(returnResult, valueFromObject.asText(), null);
         } else {
             return populateResult(returnResult, valueFromObject.toString(), null);
         }
 
     }
 
-    private JsonElement getObject(JsonObject jsonObject, String[] keys, int startIndex) throws Exception {
+    private JsonNode getObject(JsonNode jsonObject, String[] keys, int startIndex) throws Exception {
         if (startIndex >= keys.length) {
             return jsonObject;
         }
         String aKey = keys[startIndex];
-        if (jsonObject.isJsonObject()) {
+        if (jsonObject instanceof ObjectNode) {
             //base case
             if (keys.length == 0)
                 return getValue(jsonObject, aKey);
                 //recursive call
             else {
-                final JsonObject newJsonObject;
-                final JsonElement valueFromKey = getValue(jsonObject, aKey);
-                if (valueFromKey instanceof JsonObject) {
-                    newJsonObject = (JsonObject) valueFromKey;
+                final ObjectNode newJsonObject;
+                final JsonNode valueFromKey = getValue(jsonObject, aKey);
+                if (valueFromKey instanceof ObjectNode) {
+                    newJsonObject = (ObjectNode) valueFromKey;
                 } else {
                     return valueFromKey;
                 }
@@ -126,7 +124,7 @@ public class GetValueFromObject {
         }
     }
 
-    private JsonElement getValue(JsonObject jsonElement, String aKey) throws Exception {
+    private JsonNode getValue(JsonNode jsonElement, String aKey) throws Exception {
 
         //non JSON array object
         if (!aKey.matches(".*" + ESCAPED_SLASH + "[[0-9]+]$")) {
@@ -146,19 +144,15 @@ public class GetValueFromObject {
             } catch (NumberFormatException e) {
                 throw new Exception("Invalid index provided: " + index);
             }
-            JsonElement subObject;
+            JsonNode subObject;
             subObject = jsonElement.get(oneKey);
             if (jsonElement.get(oneKey) != null) {
-                if (subObject.isJsonArray()) {
-                    final JsonArray asJsonArray = subObject.getAsJsonArray();
-                    if (asJsonArray != null) {
-                        if ((index >= asJsonArray.size()) || (index < 0)) {
-                            throw new Exception("The provided " + index + " index is out of range! Provide a valid index value in the provided JSON!");
-                        } else {
-                            return asJsonArray.get(index);
-                        }
+                if (subObject instanceof ArrayNode) {
+                    final ArrayNode asJsonArray = (ArrayNode) subObject;
+                    if ((index >= asJsonArray.size()) || (index < 0)) {
+                        throw new Exception("The provided " + index + " index is out of range! Provide a valid index value in the provided JSON!");
                     } else {
-                        throw new Exception("Null json array provided!");
+                        return asJsonArray.get(index);
                     }
                 } else {
                     throw new Exception("Invalid json array provided: " + subObject.toString() + " ");

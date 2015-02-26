@@ -86,7 +86,7 @@ public class MergeArraysTest {
         String array2 = "[1,2,3]";
         final Map<String, String> returnResult = mergeArrays.execute(array1, array2);
         assertEquals("Invalid jsonObject provided!  array1=[dfgs][!@##$%^&*", returnResult.get(RETURN_RESULT));
-        assertTrue(returnResult.get(EXCEPTION).startsWith("com.google.gson.stream.MalformedJsonException"));
+        assertTrue(returnResult.get(EXCEPTION).toLowerCase().startsWith("unrecognized token 'dfgs'"));
         assertEquals("-1", returnResult.get(RETURN_CODE));
     }
 
@@ -96,7 +96,7 @@ public class MergeArraysTest {
         String array2 = "[dfgs][!@##$%^&*";
         final Map<String, String> returnResult = mergeArrays.execute(array1, array2);
         assertEquals("Invalid jsonObject provided!  array2=[dfgs][!@##$%^&*", returnResult.get(RETURN_RESULT));
-        assertTrue(returnResult.get(EXCEPTION).startsWith("com.google.gson.stream.MalformedJsonException"));
+        assertTrue(returnResult.get(EXCEPTION).toLowerCase().startsWith("unrecognized token 'dfgs'"));
         assertEquals("-1", returnResult.get(RETURN_CODE));
     }
 

@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by ioanvranauhp
@@ -171,8 +172,8 @@ public class GetValueFromObjectTest {
         String jsonObject = "{";
         String key = "test";
         final Map<String, String> result = getValueFromObject.execute(jsonObject, key);
-        assertEquals("Invalid object provided! java.io.EOFException: End of input at line 1 column 2", result.get(RETURN_RESULT));
-        assertEquals("java.io.EOFException: End of input at line 1 column 2", result.get(EXCEPTION));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().contains("invalid object provided"));
+        assertTrue(result.get(EXCEPTION).toLowerCase().contains("unexpected end-of-input"));
         assertEquals("-1", result.get("returnCode"));
     }
 

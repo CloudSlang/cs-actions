@@ -96,4 +96,12 @@ public class JsonUtils {
         jsonReader.parse(jsonObject);
         return jsonReader;
     }
+
+    public static boolean parseBooleanWithDefault(String booleanValue, boolean defaultValue) {
+        if (isBlank(booleanValue)) {
+            return defaultValue;
+        } else {
+            return Boolean.valueOf(booleanValue);
+        }
+    }
 }

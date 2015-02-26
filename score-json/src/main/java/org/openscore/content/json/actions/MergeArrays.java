@@ -10,10 +10,9 @@
 
 package org.openscore.content.json.actions;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -22,6 +21,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import org.openscore.content.json.utils.Constants;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,10 +72,6 @@ public class MergeArrays {
                                        @Param(value = Constants.InputNames.ARRAY, required = true) String array2) {
 
         Map<String, String> returnResult = new HashMap<>();
-        JsonParser jsonParser = new JsonParser();
-        JsonElement parsedArray1;
-        JsonElement parsedArray2;
-
         if (isBlank(array1)) {
             final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY1_MESSAGE.replaceFirst("=", "");
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
@@ -86,29 +82,30 @@ public class MergeArrays {
             return populateResult(returnResult, new Exception(exceptionValue));
         }
 
+        JsonNode jsonNode1;
+        JsonNode jsonNode2;
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            parsedArray1 = jsonParser.parse(array1);
-        } catch (JsonSyntaxException exception) {
+            jsonNode1 = mapper.readTree(array1);
+        } catch (IOException exception) {
             final String value = INVALID_JSON_OBJECT_PROVIDED_EXCEPTION_MESSAGE + ARRAY1_MESSAGE + array1;
             return populateResult(returnResult, value, exception);
         }
         try {
-            parsedArray2 = jsonParser.parse(array2);
-        } catch (JsonSyntaxException exception) {
+            jsonNode2 = mapper.readTree(array2);
+        } catch (IOException exception) {
             final String value = INVALID_JSON_OBJECT_PROVIDED_EXCEPTION_MESSAGE + ARRAY2_MESSAGE + array2;
             return populateResult(returnResult, value, exception);
         }
 
         final String result;
-        if (parsedArray1.isJsonArray() && parsedArray2.isJsonArray()) {
-            final JsonArray asJsonArray1 = parsedArray1.getAsJsonArray();
-            final JsonArray asJsonArray2 = parsedArray2.getAsJsonArray();
-            final JsonArray asJsonArrayResult = new JsonArray();
+        if (jsonNode1 instanceof ArrayNode && jsonNode2 instanceof ArrayNode) {
+            final ArrayNode asJsonArray1 = (ArrayNode) jsonNode1;
+            final ArrayNode asJsonArray2 = (ArrayNode) jsonNode2;
+            final ArrayNode asJsonArrayResult = new ArrayNode(mapper.getNodeFactory());
 
-            if (asJsonArray1 != null && asJsonArray2 != null) {
-                asJsonArrayResult.addAll(asJsonArray1);
-                asJsonArrayResult.addAll(asJsonArray2);
-            }
+            asJsonArrayResult.addAll(asJsonArray1);
+            asJsonArrayResult.addAll(asJsonArray2);
             result = asJsonArrayResult.toString();
         } else {
             result = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY1_MESSAGE + array1 + ARRAY2_MESSAGE + array2;

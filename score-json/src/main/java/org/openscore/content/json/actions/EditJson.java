@@ -73,7 +73,7 @@ public class EditJson {
         Map<String, String> returnResult = new HashMap<>();
         JsonReader jsonReader;
         final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider();
-        boolean validateValueBoolean = Boolean.parseBoolean(validateValue);
+        boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
         try {
             JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
             jsonReader = JsonUtils.getJsonReader(jsonObject, provider);
