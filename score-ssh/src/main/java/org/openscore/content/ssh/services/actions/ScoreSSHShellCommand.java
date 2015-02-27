@@ -71,6 +71,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
 
         int timeoutNumber = StringUtils.toInt(sshShellInputs.getTimeout(), Constants.DEFAULT_TIMEOUT);
         boolean usePseudoTerminal = StringUtils.toBoolean(sshShellInputs.getPty(), Constants.DEFAULT_USE_PSEUDO_TERMINAL);
+        boolean agentForwarding = StringUtils.toBoolean(sshShellInputs.getAgentForwarding(), Constants.DEFAULT_USE_AGENT_FORWARDING);
         sshShellInputs.setCharacterSet(StringUtils.toNotEmptyString(sshShellInputs.getCharacterSet(), Constants.DEFAULT_CHARACTER_SET));
 
         // run the SSH command
@@ -79,7 +80,8 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
                 sshShellInputs.getCharacterSet(),
                 usePseudoTerminal,
                 Constants.DEFAULT_CONNECT_TIMEOUT,
-                timeoutNumber);
+                timeoutNumber,
+                agentForwarding);
 
         handleSessionClosure(sshShellInputs, service, sessionId, saveSSHSession);
 

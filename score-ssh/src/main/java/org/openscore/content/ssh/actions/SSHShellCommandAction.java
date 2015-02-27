@@ -37,6 +37,8 @@ public class SSHShellCommandAction {
      * @param characterSet The character encoding used for input stream encoding from the target machine.
      *                     Valid values: SJIS, EUC-JP, UTF-8. Default value: UTF-8.
      * @param pty Whether to use a pseudo-terminal (PTY) session. Valid values: false, true. Default value: false
+     * @param agentForwarding Enables or disables the forwarding of the authentication agent connection. 
+     *                        Agent forwarding should be enabled with caution.
      * @param timeout Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
      * @param globalSessionObject the sessionObject that holds the connection if the close session is false.
      * @param closeSession If true it closes the SSH session at completion of this operation.
@@ -76,6 +78,7 @@ public class SSHShellCommandAction {
             @Param(value = Constants.ARGS, description = Constants.ARGS_IS_DEPRECATED) String arguments,
             @Param(Constants.InputNames.CHARACTER_SET) String characterSet,
             @Param(value = Constants.PTY) String pty,
+            @Param(value = Constants.InputNames.AGENT_FORWARDING) String agentForwarding,
             @Param(Constants.InputNames.TIMEOUT) String timeout,
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
             @Param(Constants.CLOSE_SESSION) String closeSession) {
@@ -90,6 +93,7 @@ public class SSHShellCommandAction {
         sshShellInputs.setArguments(arguments);
         sshShellInputs.setCharacterSet(characterSet);
         sshShellInputs.setPty(pty);
+        sshShellInputs.setAgentForwarding(agentForwarding);
         sshShellInputs.setTimeout(timeout);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
         sshShellInputs.setCloseSession(closeSession);

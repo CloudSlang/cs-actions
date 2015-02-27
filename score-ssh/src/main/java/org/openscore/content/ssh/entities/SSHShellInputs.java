@@ -25,6 +25,7 @@ public class SSHShellInputs {
     private String sessionId;
     private String knownHostsPolicy;
     private String knownHostsPath;
+    private String agentForwarding;
 
     public String getHost() {
         return host;
@@ -160,5 +161,13 @@ public class SSHShellInputs {
 
     public void setKnownHostsPath(String knownHostsPath) {
         this.knownHostsPath = knownHostsPath;
+    }
+
+    public String getAgentForwarding() {
+        return agentForwarding;
+    }
+
+    public void setAgentForwarding(String agentForwarding) {
+        this.agentForwarding = agentForwarding;
     }
 }
