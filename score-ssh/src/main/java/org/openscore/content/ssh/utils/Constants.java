@@ -26,6 +26,7 @@ public class Constants {
     public static final int DEFAULT_TIMEOUT = 90000; //90 seconds
     public static final int DEFAULT_CONNECT_TIMEOUT = 10000; //10 seconds
     public static final boolean DEFAULT_USE_PSEUDO_TERMINAL = false;
+    public static final boolean DEFAULT_USE_AGENT_FORWARDING = false;
     public static final String DEFAULT_NEWLINE = "\\n";
     public static final String DEFAULT_CHARACTER_SET = "UTF-8";
     public static final boolean DEFAULT_CLOSE_SESSION = false;
@@ -63,5 +64,6 @@ public class Constants {
         public static final String PASSWORD = "password";
         public static final String CHARACTER_SET = "characterSet";
         public static final String TIMEOUT = "timeout";
+        public static final String AGENT_FORWARDING = "agentForwarding";
     }
 }

@@ -45,6 +45,8 @@ public class SSHServiceImplTest {
     private static final int CONNECT_TIMEOUT = 10000;
     private static final int COMMAND_TIMEOUT = 200;
     private static final ConnectionDetails CONNECTION_DETAILS = new ConnectionDetails(HOST, PORT, USERNAME, PASSWORD);
+    public static final boolean AGENT_FORWARDING_FALSE = false;
+    public static final boolean AGENT_FORWARDING_TRUE = true;
     private static String XML_SUMMARY = "XML_SUMMARY";
 
     @Mock
@@ -97,17 +99,17 @@ public class SSHServiceImplTest {
     @Test
     public void testRunShellCommand() {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        CommandResult commandResult = sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT);
+        CommandResult commandResult = sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_FALSE);
         assertEquals(commandResult.getExitCode(), 0);
         assertEquals(commandResult.getStandardError(), "");
         assertEquals(commandResult.getStandardOutput(), "");
 
-        commandResult = sshService.runShellCommand("ls", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT);
+        commandResult = sshService.runShellCommand("ls", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_TRUE);
         assertEquals(commandResult.getExitCode(), 0);
         assertEquals(commandResult.getStandardError(), "");
         assertEquals(commandResult.getStandardOutput(), "");
 
-        commandResult = sshService.runShellCommand("", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT);
+        commandResult = sshService.runShellCommand("", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_FALSE);
         assertEquals(commandResult.getExitCode(), 0);
         assertEquals(commandResult.getStandardError(), "");
         assertEquals(commandResult.getStandardOutput(), "");
@@ -116,7 +118,7 @@ public class SSHServiceImplTest {
     @Test(expected = RuntimeException.class)
     public void testRunShellCommandInvalidEncoding() throws Exception {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        sshService.runShellCommand("", "test", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT);
+        sshService.runShellCommand("", "test", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT,AGENT_FORWARDING_TRUE);
     }
 
     @Test

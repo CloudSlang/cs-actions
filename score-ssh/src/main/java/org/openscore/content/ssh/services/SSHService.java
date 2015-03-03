@@ -22,9 +22,10 @@ public interface SSHService extends AutoCloseable {
      * @param usePseudoTerminal If true the result will be formatted like in a terminal.
      * @param connectTimeout    The channel connection timeout.
      * @param commandTimeout    The command timeout.
+     * @param agentForwarding   Weathers the agent forwarding is enabled or not.
      * @return the command result.
      */
-    CommandResult runShellCommand(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout);
+    CommandResult runShellCommand(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout, boolean agentForwarding);
 
     /**
      * Checks the SSH session.
