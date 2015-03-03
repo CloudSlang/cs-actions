@@ -49,6 +49,7 @@ public class Constants {
         public static final String JSON_PATH = "jsonPath";
         public static final String NAME = "name";
         public static final String VALUE = "value";
+        public static final String VALIDATE_VALUE = "validateValue";
     }
 
     public static final class EditJsonOperations {

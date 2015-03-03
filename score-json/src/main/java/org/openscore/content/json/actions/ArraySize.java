@@ -10,10 +10,9 @@
 
 package org.openscore.content.json.actions;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -22,6 +21,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import org.openscore.content.json.utils.Constants;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,27 +63,22 @@ public class ArraySize {
     public Map<String, String> execute(@Param(value = Constants.InputNames.ARRAY, required = true) String array) {
 
         Map<String, String> returnResult = new HashMap<>();
-        JsonParser jsonParser = new JsonParser();
-        JsonElement parsedArray;
 
         if (isBlank(array)) {
             return populateResult(returnResult, new Exception(NOT_A_VALID_JSON_ARRAY_MESSAGE));
         }
-
+        JsonNode jsonNode;
         try {
-            parsedArray = jsonParser.parse(array);
-        } catch (JsonSyntaxException exception) {
+            ObjectMapper mapper = new ObjectMapper();
+            jsonNode = mapper.readTree(array);
+        } catch (IOException exception) {
             final String value = "Invalid jsonObject provided! " + exception.getMessage();
             return populateResult(returnResult, value, exception);
         }
         final String result;
-        if (parsedArray.isJsonArray()) {
-            final JsonArray asJsonArray = parsedArray.getAsJsonArray();
-            if (asJsonArray != null) {
-                result = Integer.toString(asJsonArray.size());
-            } else {
-                return populateResult(returnResult, new Exception(NOT_A_VALID_JSON_ARRAY_MESSAGE));
-            }
+        if (jsonNode instanceof ArrayNode) {
+            final ArrayNode asJsonArray = (ArrayNode) jsonNode;
+            result = Integer.toString(asJsonArray.size());
         } else {
             return populateResult(returnResult, new Exception(NOT_A_VALID_JSON_ARRAY_MESSAGE));
         }

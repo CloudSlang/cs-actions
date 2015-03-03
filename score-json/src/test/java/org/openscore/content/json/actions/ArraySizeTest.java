@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by vranau
@@ -47,12 +48,13 @@ public class ArraySizeTest {
     public void testWithBadFormatArray() {
         String array = "[";
         Map<String, String> execute = arraySize.execute(array);
-        assertEquals("Invalid jsonObject provided! java.io.EOFException: End of input at line 1 column 2", execute.get(RETURN_RESULT));
+        assertTrue(execute.get(RETURN_RESULT).toLowerCase().startsWith("invalid jsonobject provided!"));
 
         array = "[,`~!@#$%^&*()_+}{-=[]:|<>?<>]";
         execute = arraySize.execute(array);
-        assertEquals("Invalid jsonObject provided! java.io.EOFException: End of input at line 1 column 31", execute.get(RETURN_RESULT));
-        assertEquals("java.io.EOFException: End of input at line 1 column 31", execute.get("exception"));
+        assertTrue(execute.get(RETURN_RESULT).toLowerCase().startsWith("invalid jsonobject provided!"));
+
+        assertTrue(execute.get("exception").toLowerCase().startsWith("unexpected character (',' "));
         assertEquals("-1", execute.get("returnCode"));
     }
 

@@ -1,10 +1,21 @@
+/*******************************************************************************
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package org.openscore.content.json.utils;
+
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.internal.JsonReader;
+import com.jayway.jsonpath.internal.spi.json.AbstractJsonProvider;
 
 import java.util.Map;
 
-import static org.openscore.content.json.utils.ActionsEnum.add;
 import static org.openscore.content.json.utils.ActionsEnum.insert;
-import static org.openscore.content.json.utils.ActionsEnum.update;
 
 /**
  * Created by ioanvranauhp
@@ -24,7 +35,11 @@ public class JsonUtils {
     }
 
     public static Map<String, String> populateResult(Map<String, String> returnResult, Exception exception) {
-        return populateResult(returnResult, exception.getMessage(), exception);
+        if (exception != null) {
+            return populateResult(returnResult, exception.getMessage(), exception);
+        } else {
+            return populateResult(returnResult, Constants.EMPTY_STRING, null);
+        }
     }
 
     public static boolean isBlank(String value) {
@@ -43,15 +58,6 @@ public class JsonUtils {
         }
 
         final String actionString = action.toLowerCase().trim();
-        checkForNullValue(actionString, value, update);
-        checkForNullValue(actionString, value, add);
-        checkForNullValue(actionString, value, insert);
-
-        if (actionString.equals(insert.getValue())) {
-            if (isBlank(name)) {
-                throw new Exception("Empty name provided for insert action!");
-            }
-        }
 
         boolean exists = false;
         String actionEnumValues = "";
@@ -65,13 +71,37 @@ public class JsonUtils {
         if (!exists) {
             throw new Exception("Invalid action provided! Action should be one of the values: " + actionEnumValues);
         }
+
+        if (actionString.equals(insert.getValue())) {
+            if (isBlank(name)) {
+                throw new Exception("Empty name provided for insert action!");
+            }
+        }
+
+        checkForNullValue(actionString, value);
     }
 
-    private static void checkForNullValue(String actionString, String value, ActionsEnum actionEnum) throws Exception {
-        if (actionString.equals(actionEnum.getValue())) {
+    private static void checkForNullValue(String actionString, String value) throws Exception {
+        final ActionsEnum actionEnum = ActionsEnum.valueOf(actionString);
+        if (actionEnum.getNeedValue()) {
             if (value == null) {
                 throw new Exception("Null value provided for " + actionEnum.getValue() + " action!");
             }
+        }
+    }
+
+    public static JsonReader getJsonReader(String jsonObject, final AbstractJsonProvider provider) {
+        final Configuration configuration = Configuration.defaultConfiguration().jsonProvider(provider);
+        JsonReader jsonReader = new JsonReader(configuration);
+        jsonReader.parse(jsonObject);
+        return jsonReader;
+    }
+
+    public static boolean parseBooleanWithDefault(String booleanValue, boolean defaultValue) {
+        if (isBlank(booleanValue)) {
+            return defaultValue;
+        } else {
+            return Boolean.valueOf(booleanValue);
         }
     }
 }

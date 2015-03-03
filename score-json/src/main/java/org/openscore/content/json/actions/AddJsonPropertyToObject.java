@@ -10,10 +10,11 @@
 
 package org.openscore.content.json.actions;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ContainerNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -21,7 +22,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import org.openscore.content.json.utils.Constants;
+import org.openscore.content.json.utils.JsonUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,16 +70,16 @@ public class AddJsonPropertyToObject {
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.JSON_OBJECT, required = true) String jsonObject,
             @Param(value = Constants.InputNames.NEW_PROPERTY_NAME, required = true) String newPropertyName,
-            @Param(value = Constants.InputNames.NEW_PROPERTY_VALUE, required = true) String newPropertyValue) {
+            @Param(value = Constants.InputNames.NEW_PROPERTY_VALUE, required = true) String newPropertyValue,
+            @Param(value = Constants.InputNames.VALIDATE_VALUE) String validateValue) {
 
         Map<String, String> returnResult = new HashMap<>();
         if (jsonObject == null || jsonObject.trim().equals(Constants.EMPTY_STRING)) {
             return populateResult(returnResult, new Exception("Empty jsonObject provided!"));
         }
 
-        JsonParser jsonParser = new JsonParser();
-        JsonElement jsonElement;
-        JsonObject jsonRoot;
+        ObjectMapper mapper = new ObjectMapper();
+        final boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
 
         if (isBlank(newPropertyValue)) {
             final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
@@ -87,23 +90,36 @@ public class AddJsonPropertyToObject {
             return populateResult(returnResult, new Exception("Null newPropertyName provided!"));
         }
 
+        JsonNode jsonRoot;
         try {
-            jsonElement = jsonParser.parse(jsonObject);
-            jsonRoot = jsonElement.getAsJsonObject();
+            jsonRoot = mapper.readTree(jsonObject);
         } catch (Exception exception) {
             final String exceptionValue = "Invalid jsonObject provided! " + exception.getMessage();
             return populateResult(returnResult, exceptionValue, exception);
         }
 
-        JsonElement jsonElementWrapper;
+        ContainerNode jsonNodes = null;
+        JsonNode jsonNodeValueWrapper;
         try {
-            jsonElementWrapper = jsonParser.parse(newPropertyValue);
-            jsonRoot.add(newPropertyName, jsonElementWrapper);
-        } catch (JsonSyntaxException exception) {
-            final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
-            return populateResult(returnResult, exceptionValue, exception);
+            jsonNodeValueWrapper = mapper.readTree(newPropertyValue);
+        } catch (IOException exception) {
+            if (!validateValueBoolean) {
+                jsonNodeValueWrapper = mapper.valueToTree(newPropertyValue);
+            } else {
+                final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
+                return populateResult(returnResult, exceptionValue, exception);
+            }
+        }
+        if (jsonRoot instanceof ObjectNode) {
+            jsonNodes = ((ObjectNode) jsonRoot).putPOJO(newPropertyName, jsonNodeValueWrapper);
+        }
+        if (jsonRoot instanceof ArrayNode) {
+            jsonNodes = ((ArrayNode) jsonRoot).add(jsonNodeValueWrapper);
         }
 
-        return populateResult(returnResult, jsonRoot.toString(), null);
+        if (jsonNodes == null) {
+            return populateResult(returnResult, new Exception("The value cannot be added!"));
+        }
+        return populateResult(returnResult, jsonNodes.toString(), null);
     }
 }
