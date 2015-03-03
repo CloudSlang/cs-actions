@@ -72,6 +72,11 @@
             </plugin>
         </plugins>
       </pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+        </plugin>
+      </plugins>
     </build>
     <distributionManagement>
         <repository>
