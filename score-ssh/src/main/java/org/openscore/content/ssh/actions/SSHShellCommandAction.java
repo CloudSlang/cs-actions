@@ -70,7 +70,7 @@ public class SSHShellCommandAction {
             @Param(value = Constants.InputNames.HOST, required = true) String host,
             @Param(Constants.InputNames.PORT) String port,
             @Param(value = Constants.InputNames.USERNAME, required = true) String username,
-            @Param(value = Constants.InputNames.PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = Constants.InputNames.PASSWORD, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
             @Param(Constants.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
             @Param(Constants.KNOWN_HOSTS_PATH) String knownHostsPath,
