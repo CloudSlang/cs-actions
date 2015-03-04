@@ -240,7 +240,7 @@ public class GetMailMessage {
         KeyManager[] keyManagers = null;
 
         if (trustAllRoots) {
-            trustManagers = new TrustManager[]{new EasyX509TrustManager(null)};
+            trustManagers = new TrustManager[]{new EasyX509TrustManager()};
         }
 
         if (useTrustCert) {

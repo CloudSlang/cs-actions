@@ -25,13 +25,13 @@ public class UtilsTest {
 
     @Test
     public void testUrlEncodeQueryParamsUrlEncodeFalse() throws Exception {
-        String queryParams = "pa%20ra+m 1=The+string+%C3%BC%40foo-bar";
+        String queryParams = "pa%20ra+m 1=The+string+%40foo-bar";
         String encodeQueryParams = Utils.urlEncodeQueryParams(queryParams, false);
-        assertEquals("pa ra m 1=The string ü@foo-bar", encodeQueryParams);
+        assertEquals("pa ra m 1=The string @foo-bar", encodeQueryParams);
 
-        queryParams = "param1=The%20st+ring %C3%BC%40foo-bar";
+        queryParams = "param1=The%20st+ring %40foo-bar";
         encodeQueryParams = Utils.urlEncodeQueryParams(queryParams, false);
-        assertEquals("param1=The st ring ü@foo-bar", encodeQueryParams);
+        assertEquals("param1=The st ring @foo-bar", encodeQueryParams);
     }
 
     @Test
@@ -49,14 +49,14 @@ public class UtilsTest {
 
     @Test
     public void testNameValueUrlEncodeMultipleParamsUrlEncodeFalse() throws Exception {
-        String queryParams = "p ar%20am+1=The+string+%C3%BC%40foo-bar";
+        String queryParams = "p ar%20am+1=The+string+%40foo-bar";
         List<? extends NameValuePair> encodeQueryParams = Utils.urlEncodeMultipleParams(queryParams, false);
         assertEquals("p ar am 1", encodeQueryParams.get(0).getName());
-        assertEquals("The string ü@foo-bar", encodeQueryParams.get(0).getValue());
+        assertEquals("The string @foo-bar", encodeQueryParams.get(0).getValue());
 
-        queryParams = "p ar%20am+1=The%20st+ring %C3%BC%40foo-bar";
+        queryParams = "p ar%20am+1=The%20st+ring %40foo-bar";
         encodeQueryParams = Utils.urlEncodeMultipleParams(queryParams, false);
         assertEquals("p ar am 1", encodeQueryParams.get(0).getName());
-        assertEquals("The st ring ü@foo-bar", encodeQueryParams.get(0).getValue());
+        assertEquals("The st ring @foo-bar", encodeQueryParams.get(0).getValue());
     }
 }

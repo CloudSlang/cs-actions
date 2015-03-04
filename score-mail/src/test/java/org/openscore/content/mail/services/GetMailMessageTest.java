@@ -130,11 +130,14 @@ public class GetMailMessageTest {
     private InputStream inputStreamMock;
     @Mock
     private ByteArrayInputStream byteArrayInputStreamMock;
-
+    
+    private GetMailMessageInputs mailMessagePopulatedInputs;
+    
     @Before
     public void setUp() throws Exception {
         getMailMessage = new GetMailMessage();
         inputs = new GetMailMessageInputs();
+        mailMessagePopulatedInputs = getGetMailMessagePopulatedInputs();
     }
 
     @After
@@ -474,14 +477,14 @@ public class GetMailMessageTest {
         mockGetSystemFileSeparatorAndGetSystemJavaHomeMethods();
         PowerMockito.mockStatic(SSLContext.class);
         PowerMockito.doReturn(sslContextMock).when(SSLContext.class, "getInstance", anyString());
-        PowerMockito.whenNew(EasyX509TrustManager.class).withArguments(null).thenReturn(easyX509TrustManagerMock);
+        PowerMockito.whenNew(EasyX509TrustManager.class).withNoArguments().thenReturn(easyX509TrustManagerMock);
         commonStubbedMethodsForAddSSLSettings();
 
         getMailMessageSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_TRUE), KEYSTORE, KEYSTORE_PASSWORD, TRUST_KEYSTORE, TRUST_PASSWORD);
         verifyGetSystemFileSeparatorAndGetSystemJavaHomeInvocation();
         PowerMockito.verifyStatic();
         SSLContext.getInstance(anyString());
-        PowerMockito.verifyNew(EasyX509TrustManager.class).withArguments(null);
+        PowerMockito.verifyNew(EasyX509TrustManager.class).withNoArguments();
         verifyCommonStubbedMethodsForAddSSLSettingsMethod();
     }
 
@@ -597,7 +600,233 @@ public class GetMailMessageTest {
         String fileNames = getMailMessageSpy.getAttachedFileNames(partMock);
         assertEquals(testFileName, fileNames);
     }
+    
+    @Test
+    public void testConvertMessageSimple() throws Exception {
+        final String expectedMessage = "message";
+        final String message = getMailMessageSpy.convertMessage(expectedMessage);
+        assertEquals(expectedMessage, message);
+    }
 
+    @Test
+    public void testConvertMessageWithBr() throws Exception {
+        final String expectedMessage = "mes sage<br>";
+        final String message = getMailMessageSpy.convertMessage(expectedMessage);
+        assertEquals(expectedMessage, message);
+    }
+
+    @Test
+    public void testConvertMessageWithEoL() throws Exception {
+        final String expectedMessage = "message\n";
+        final String message = getMailMessageSpy.convertMessage(expectedMessage);
+        assertEquals("message<br>", message);
+    }
+
+    @Test
+    public void testGetFolderOpenMode() throws Exception {
+        final int folderOpenMode = getMailMessageSpy.getFolderOpenMode();
+        assertEquals(1, folderOpenMode);
+    }
+
+    @Test
+    public void testDecodeAttachedFileNameSimple() throws Exception {
+        final String expectedFileName = "fileName";
+        final String message = getMailMessageSpy.decodeAttachedFileNames(expectedFileName);
+        assertEquals(expectedFileName, message);
+    }
+
+    @Test
+    public void testDecodeAttachedFileNameWithSpaces() throws Exception {
+        final String fileName = "file Name";
+        final String message = getMailMessageSpy.decodeAttachedFileNames(fileName);
+        assertEquals("file Name", message);
+    }
+
+    @Test
+    public void testDecodeAttachedFileNames() throws Exception {
+        final String fileNames = "file Name, fileName1, fileName2 ";
+        final String message = getMailMessageSpy.decodeAttachedFileNames(fileNames);
+        assertEquals("file Name, fileName1, fileName2 ", message);
+    }
+    @Test
+    public void testDecodeAttachedFileNamesEncoded() throws Exception {
+        final String fileNames = "?\u009D??\u009D???? ?????????,?\u009D??\u009D????";
+        final String message = getMailMessageSpy.decodeAttachedFileNames(fileNames);
+        assertEquals("?\u009D??\u009D???? ?????????,?\u009D??\u009D????", message);
+    }
+
+    @Test
+    public void testProcessInputHostNull() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("The required host input is not specified!");
+        getMailMessageSpy.processInputs(inputs);
+    }
+
+    @Test
+    public void testProcessInputHostEmpty() throws Exception {        
+        exception.expect(Exception.class);
+        exception.expectMessage("The required host input is not specified!");
+        mailMessagePopulatedInputs.setHostname("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputUsernameNull() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("The required username input is not specified!");
+        mailMessagePopulatedInputs.setUsername(null);
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputUsernameEmpty() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("The required username input is not specified!");
+        mailMessagePopulatedInputs.setUsername("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPasswordEmpty() throws Exception {
+        mailMessagePopulatedInputs.setPassword("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPasswordNull() throws Exception {
+        mailMessagePopulatedInputs.setPassword(null);
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputMessageNumberEmpty() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("The required messageNumber input is not specified!");
+        mailMessagePopulatedInputs.setMessageNumber("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+    
+    @Test
+    public void testProcessInputMessageNumberNull() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("The required messageNumber input is not specified!");
+        mailMessagePopulatedInputs.setMessageNumber(null);
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputMessageNumberZero() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("Messages are numbered starting at 1 through the total number of messages in the folder!");
+        mailMessagePopulatedInputs.setMessageNumber("0");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputProtocolNull() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("Please specify the protocol for the indicated port.");
+        mailMessagePopulatedInputs.setProtocol(null);
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+    
+    @Test
+    public void testProcessInputProtocolEmpty() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("Please specify the protocol for the indicated port.");
+        mailMessagePopulatedInputs.setProtocol("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPortEmpty() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("Please specify the port for the indicated protocol.");
+        mailMessagePopulatedInputs.setPort("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPortNull() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("Please specify the port for the indicated protocol.");
+        mailMessagePopulatedInputs.setPort(null);
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPortProtocolNull() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("Please specify the port, the protocol, or both.");
+        mailMessagePopulatedInputs.setPort(null);
+        mailMessagePopulatedInputs.setProtocol(null);
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPortProtocolEmpty() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage("Please specify the port, the protocol, or both.");
+        mailMessagePopulatedInputs.setPort("");
+        mailMessagePopulatedInputs.setProtocol("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputProtocolNullPortImap() throws Exception {
+        mailMessagePopulatedInputs.setPort("143");
+        mailMessagePopulatedInputs.setProtocol("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputProtocolNullPortPop3() throws Exception {
+        mailMessagePopulatedInputs.setPort("110");
+        mailMessagePopulatedInputs.setProtocol("");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPortEmptyProtocolImap() throws Exception {
+        mailMessagePopulatedInputs.setPort("");
+        mailMessagePopulatedInputs.setProtocol("imap");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPortEmptyProtocolImap4() throws Exception {
+        mailMessagePopulatedInputs.setPort("");
+        mailMessagePopulatedInputs.setProtocol("imap4");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    @Test
+    public void testProcessInputPortEmptyProtocolPop3() throws Exception {
+        mailMessagePopulatedInputs.setPort("");
+        mailMessagePopulatedInputs.setProtocol("pop3");
+        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
+    }
+
+    private GetMailMessageInputs getGetMailMessagePopulatedInputs() {
+        final GetMailMessageInputs getMailMessageInputs = new GetMailMessageInputs();
+        getMailMessageInputs.setHostname("test");
+        getMailMessageInputs.setPort("test");
+        getMailMessageInputs.setProtocol("test");
+        getMailMessageInputs.setUsername("test");
+        getMailMessageInputs.setPassword("test");
+        getMailMessageInputs.setFolder("test");
+        getMailMessageInputs.setTrustAllRoots("test");
+        getMailMessageInputs.setMessageNumber("3");
+        getMailMessageInputs.setSubjectOnly("test");
+        getMailMessageInputs.setEnableSSL("test");
+        getMailMessageInputs.setKeystore("test");
+        getMailMessageInputs.setKeystorePassword("test");
+        getMailMessageInputs.setTrustKeystore("test");
+        getMailMessageInputs.setTrustPassword("test");
+        getMailMessageInputs.setCharacterSet("test");
+        getMailMessageInputs.setDeleteUponRetrieval("test");
+        return getMailMessageInputs;
+    }
     private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType) throws MessagingException, IOException {
         verify(messageMock).isMimeType(messageType);
         verify(messageMock).getContent();
