@@ -11,7 +11,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.openscore.content</groupId>
 	<artifactId>score-http-client</artifactId>
-	<version>0.1.57-SNAPSHOT</version>
+	<version>0.1.57</version>
 	<packaging>jar</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>An HTTP client for score</description>
