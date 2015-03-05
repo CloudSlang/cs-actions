@@ -63,7 +63,7 @@
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
-            <version>1.8</version>
+            <version>1.10.6</version>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
