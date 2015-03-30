@@ -1,5 +1,8 @@
 package org.openscore.content.mail.services;
 
+import net.suberic.crypto.EncryptionKeyManager;
+import net.suberic.crypto.EncryptionManager;
+import net.suberic.crypto.EncryptionUtils;
 import org.openscore.content.mail.entities.GetMailMessageInputs;
 import org.openscore.content.mail.entities.SimpleAuthenticator;
 import org.openscore.content.mail.entities.StringOutputStream;
@@ -8,6 +11,7 @@ import org.openscore.content.mail.sslconfig.SSLUtils;
 import com.sun.mail.util.ASCIIUtility;
 
 import javax.mail.*;
+import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.net.ssl.KeyManager;
@@ -18,6 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.*;
@@ -87,13 +92,22 @@ public class GetMailMessage {
     private String trustKeystoreFile;
     private String trustPassword;
     private String characterSet;
+    private String decryptionKeystore;
+    private String decryptionKeyAlias;
+    private String decryptionKeystorePass;
     private boolean deleteUponRetrieval;
+    private boolean decryptionMessage;
 
     public Map<String, String> execute(GetMailMessageInputs getMailMessageInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
         try {
             processInputs(getMailMessageInputs);
             Message message = getMessage();
+
+            if(decryptionMessage) {
+                message = decryptMessage(message);
+            }
+
             //delete message
             if (deleteUponRetrieval) {
                 message.setFlag(Flags.Flag.DELETED, true);
@@ -164,6 +178,39 @@ public class GetMailMessage {
         if (messageNumber > f.getMessageCount())
             throw new IndexOutOfBoundsException("message value was: " + messageNumber + " there are only " + f.getMessageCount() + " messages in folder");
         return f.getMessage(messageNumber);
+    }
+
+    protected MimeMessage decryptMessage(Message message) throws Exception {
+        MimeMessage pop_message = (MimeMessage)message;
+
+        String cryptotype = EncryptionManager.checkEncryptionType(pop_message);
+        EncryptionUtils cryptoUtils = EncryptionManager.getEncryptionUtils(cryptotype);
+
+        char[] smimePw = new String(decryptionKeystorePass).toCharArray();
+        EncryptionKeyManager keyMgr = cryptoUtils.createKeyManager();
+        keyMgr.loadPrivateKeystore(new URL(decryptionKeystore).openStream(), smimePw);
+        Key privateKey = keyMgr.getPrivateKey(decryptionKeyAlias, smimePw);
+
+        MimeMessage decryptedMsg = null;
+        try
+        {
+            decryptedMsg = cryptoUtils.decryptMessage(null, pop_message, privateKey);
+        }
+        catch (Exception e)
+        {
+            Object o = message.getContent();
+
+            if(o != null) {
+                String exceptionMessage = "";
+                exceptionMessage = "msg.getContent() = " + o + ", a " + o.getClass().getName();
+                exceptionMessage += "\nerror decrypting message with key " + privateKey + ":  " + e;
+                exceptionMessage += "\n";
+                throw new Exception(exceptionMessage, e);
+            }
+            throw e;
+        }
+
+        return decryptedMsg;
     }
 
     protected Store createMessageStore() throws Exception {
@@ -344,18 +391,34 @@ public class GetMailMessage {
         if (protocol.trim().equalsIgnoreCase(IMAP_4)) {
             protocol = IMAP;
         }
+
+        this.decryptionKeystore = getMailMessageInputs.getDecryptionKeystore();
+        if(this.decryptionKeystore != null && !this.decryptionKeystore.equals("")) {
+            if(!decryptionKeystore.startsWith(HTTP)) {
+                decryptionKeystore = FILE + decryptionKeystore;
+            }
+
+            decryptionMessage = true;
+            decryptionKeyAlias = getMailMessageInputs.getDecryptionKeyAlias();
+            if(null == decryptionKeyAlias) {
+                decryptionKeyAlias = "";
+            }
+            decryptionKeystorePass = getMailMessageInputs.getDecryptionKeystorePassword();
+            if(null == decryptionKeystorePass) {
+                decryptionKeystorePass = "";
+            }
+
+        } else {
+            decryptionMessage = false;
+        }
     }
 
     protected Map<String, String> getMessageByContentTypes(Message message, String characterSet) throws Exception {
 
         Map<String, String> messageMap = new HashMap<>();
 
-        if (message.isMimeType(TEXT_PLAIN)) {
-            messageMap.put(TEXT_PLAIN, MimeUtility.decodeText(message.getContent().toString()));
-        } else if (message.isMimeType(TEXT_HTML)) {
-            messageMap.put(TEXT_HTML, MimeUtility.decodeText(convertMessage(message.getContent().toString())));
-        } else {
-            Object obj = message.getContent();
+        Object obj = message.getContent();
+        if(obj instanceof Multipart) {
             Multipart mpart = (Multipart) obj;
 
             for (int i = 0, n = mpart.getCount(); i < n; i++) {
@@ -393,7 +456,11 @@ public class GetMailMessage {
                     }
                 }
             }//for
-        }//else
+        } else if (message.isMimeType(TEXT_PLAIN)) {
+            messageMap.put(TEXT_PLAIN, MimeUtility.decodeText(obj.toString()));
+        } else if (message.isMimeType(TEXT_HTML)) {
+            messageMap.put(TEXT_HTML, MimeUtility.decodeText(convertMessage(obj.toString())));
+        }
 
         return messageMap;
     }

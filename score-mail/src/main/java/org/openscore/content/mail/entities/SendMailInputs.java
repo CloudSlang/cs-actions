@@ -21,6 +21,9 @@ public class SendMailInputs {
     public static final String DELIMITER = "delimiter";
     public static final String CHARACTERSET = "characterSet";
     public static final String CONTENT_TRANSFER_ENCODING = "contentTransferEncoding";
+    public static final String ENCRYPTION_KEYSTORE = "encryptionKeystore";
+    public static final String ENCRYPTION_KEY_ALIAS = "encryptionKeyAlias";
+    public static final String ENCRYPTION_KEYSTORE_PASSWORD = "encryptionKeystorePassword";
 
     private String smtpHostname;
     private String port;
@@ -38,6 +41,9 @@ public class SendMailInputs {
     private String delimiter;
     private String characterset;
     private String contentTransferEncoding;
+    private String encryptionKeystore;
+    private String encryptionKeyAlias;
+    private String encryptionKeystorePassword;
 
     public String getSMTPHostname() {
         return smtpHostname;
@@ -165,5 +171,29 @@ public class SendMailInputs {
 
     public void setContentTransferEncoding(String contentTransferEncoding) {
         this.contentTransferEncoding = contentTransferEncoding;
+    }
+
+    public String getEncryptionKeystore() {
+        return encryptionKeystore;
+    }
+
+    public void setEncryptionKeystore(String encryptionKeystore) {
+        this.encryptionKeystore = encryptionKeystore;
+    }
+
+    public String getEncryptionKeyAlias() {
+        return encryptionKeyAlias;
+    }
+
+    public void setEncryptionKeyAlias(String encryptionKeyAlias) {
+        this.encryptionKeyAlias = encryptionKeyAlias;
+    }
+
+    public String getEncryptionKeystorePassword() {
+        return encryptionKeystorePassword;
+    }
+
+    public void setEncryptionKeystorePassword(String encryptionKeystorePassword) {
+        this.encryptionKeystorePassword = encryptionKeystorePassword;
     }
 }
