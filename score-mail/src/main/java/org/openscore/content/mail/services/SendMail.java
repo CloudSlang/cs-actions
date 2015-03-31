@@ -59,7 +59,7 @@ public class SendMail {
     int smtpPort;
     boolean html;
     boolean readReceipt;
-    boolean encryptMessage;
+    boolean encryptMessage; 
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
