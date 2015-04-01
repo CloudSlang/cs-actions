@@ -16,7 +16,7 @@ http://www.apache.org/licenses/LICENSE-2.0
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Mail java actions</description>
-    <url>https://github.com/openscore/score-actions</url>
+    <url>https://github.com/CloudSlang/score-actions</url>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -24,9 +24,9 @@ http://www.apache.org/licenses/LICENSE-2.0
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:https://openscore/score-actions.git</connection>
-        <developerConnection>scm:git:git@github.com:openscore/score-actions.git</developerConnection>
-        <url>https://github.com/openscore/score-actions.git</url>
+        <connection>scm:git:https://CloudSlang/score-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:CloudSlang/score-actions.git</developerConnection>
+        <url>https://github.com/CloudSlang/score-actions.git</url>
         <tag>master</tag>
     </scm>
     <distributionManagement>
