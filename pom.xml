@@ -14,7 +14,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Precompiled flows for score</description>
+    <description>Precompiled flows for Cloudslang</description>
     <url>https://github.com/CloudSlang/score-actions</url>
     <licenses>
         <license>

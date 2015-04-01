@@ -229,7 +229,7 @@ public class HttpClientAction {
      * Gateway Timeout, Http Version Not Supported, Gone, Length Required, Requested Range Not Satisfiable, Expectation Failed
      * <p/>
      * <br><br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
-     * @see org.cloudslang.content.httpclient
+     * @see io.cloudslang.content.httpclient
      */
     @Action(name = "Http Client",
             outputs = {
