@@ -14,6 +14,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 import java.net.URI;
@@ -30,6 +31,7 @@ public class HttpComponents {
     private PoolingHttpClientConnectionManager connManager;
     private CookieStore cookieStore;
     private URI uri;
+    private HttpClientBuilder httpClientBuilder;
 
     public CloseableHttpClient getCloseableHttpClient() {
         return closeableHttpClient;
@@ -79,4 +81,11 @@ public class HttpComponents {
         this.uri = uri;
     }
 
+    public void setHttpClientBuilder(HttpClientBuilder httpClientBuilder) {
+        this.httpClientBuilder = httpClientBuilder;
+    }
+
+    public HttpClientBuilder getHttpClientBuilder() {
+        return httpClientBuilder;
+    }
 }
