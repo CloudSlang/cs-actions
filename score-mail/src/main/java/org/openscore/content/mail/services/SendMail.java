@@ -1,19 +1,20 @@
 package org.openscore.content.mail.services;
 
+import net.suberic.crypto.EncryptionKeyManager;
+import net.suberic.crypto.EncryptionManager;
+import net.suberic.crypto.EncryptionUtils;
 import org.openscore.content.mail.entities.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -34,6 +35,8 @@ public class SendMail {
     public static final String FAILURE_RETURN_CODE = "-1";
 
     public static final String MAIL_WAS_SENT = "SentMailSuccessfully";
+    public static final String FILE = "file:";
+    public static final String HTTP = "http";
 
     //Operation inputs
     String attachments;
@@ -50,9 +53,13 @@ public class SendMail {
     String charset;
     String transferEncoding;
     String encodingScheme;
+    String keystoreFile;
+    String keyAlias;
+    String keystorePass;
     int smtpPort;
     boolean html;
     boolean readReceipt;
+    boolean encryptMessage; 
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
@@ -136,13 +143,20 @@ public class SendMail {
                 }
             }
 
+            msg.saveChanges();
+
+            MimeMessage mimeMsg = msg;
+            if(encryptMessage) {
+                mimeMsg = encryptMessage(session, msg);
+            }
+
             if (null != user && user.length() > 0) {
                 transport = session.getTransport("smtp");
                 transport.connect(smtpHost, smtpPort, user, password);
-                transport.sendMessage(msg, msg.getAllRecipients());
+                transport.sendMessage(mimeMsg, msg.getAllRecipients());
             }
             else {
-                Transport.send(msg);
+                Transport.send(mimeMsg);
             }
             result.put(RETURN_RESULT, MAIL_WAS_SENT);
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
@@ -156,6 +170,26 @@ public class SendMail {
             if (null != transport) transport.close();
         }
         return result;
+    }
+
+    protected MimeMessage encryptMessage(Session session, SMTPMessage msg) throws IOException, GeneralSecurityException, MessagingException {
+        URL keystoreUrl = new URL(keystoreFile);
+        InputStream publicKeystoreInputStream = keystoreUrl.openStream();
+        char[] smimePw = new String(keystorePass).toCharArray();
+
+        //get the your encryptor (S/MIME EncryptionUtilities)
+        EncryptionUtils smimeUtils = EncryptionManager.getEncryptionUtils(EncryptionManager.SMIME);
+
+        //load the associated store(s) (the S/MIME keystore from the given file)
+        EncryptionKeyManager smimeKeyMgr = smimeUtils.createKeyManager();
+        smimeKeyMgr.loadPublicKeystore(publicKeystoreInputStream, smimePw);
+
+
+        //get the S/MIME public key for encryption
+        java.security.Key smimeKey = smimeKeyMgr.getPublicKey(keyAlias);
+        MimeMessage mimeMsg = smimeUtils.encryptMessage(session, msg, smimeKey);
+
+        return  mimeMsg;
     }
 
     private void processInputs(SendMailInputs sendMailInputs) {
@@ -205,6 +239,24 @@ public class SendMail {
         // Encoding for filename is either Q or B, so if the transferEncoding is not quoted-printable then it will be B encoding.
         if (!transferEncoding.equals("quoted-printable")) {
             encodingScheme = "B";
+        }
+        this.keystoreFile = sendMailInputs.getEncryptionKeystore();
+        if(this.keystoreFile != null && !this.keystoreFile.equals("")) {
+            if (!keystoreFile.startsWith(HTTP)) {
+                keystoreFile = FILE + keystoreFile;
+            }
+
+            encryptMessage = true;
+            keyAlias = sendMailInputs.getEncryptionKeyAlias();
+            if(null == keyAlias) {
+                keyAlias = "";
+            }
+            keystorePass = sendMailInputs.getEncryptionKeystorePassword();
+            if(null == keystorePass) {
+                keystorePass = "";
+            }
+        } else {
+            encryptMessage = false;
         }
     }
 }

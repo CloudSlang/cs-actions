@@ -546,8 +546,6 @@ public class GetMailMessageTest {
 
         Map<String, String> cMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
         assertEquals(testCMessage, cMessage.get("text/plain"));
-        verify(messageMock).isMimeType(TEXT_PLAIN);
-        verify(messageMock).isMimeType(TEXT_HTML);
         verify(messageMock).getContent();
         verify(multipartMock).getCount();
         verify(partMock).getDisposition();
@@ -578,8 +576,6 @@ public class GetMailMessageTest {
 
         Map<String, String> cMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
         assertEquals(0, cMessage.size());
-        verify(messageMock).isMimeType(TEXT_PLAIN);
-        verify(messageMock).isMimeType(TEXT_HTML);
         verify(messageMock).getContent();
         verify(multipartMock).getCount();
         verify(partMock).getDisposition();
