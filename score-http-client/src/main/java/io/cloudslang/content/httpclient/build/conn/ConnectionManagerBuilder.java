@@ -1,17 +1,18 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package io.cloudslang.content.httpclient.build.conn;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;
+import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -19,7 +20,6 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,20 +67,21 @@ public class ConnectionManagerBuilder {
         return keyBuilder.toString();
     }
 
-    public  PoolingHttpClientConnectionManager buildConnectionManager() {
+    public PoolingHttpClientConnectionManager buildConnectionManager() {
         if (connectionPoolHolder != null) {
             PoolingHttpClientConnectionManager connManager = null;
-            synchronized(connectionPoolHolder) {
+            synchronized (connectionPoolHolder) {
                 Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
                         = connectionPoolHolder.get();
 
                 if (connectionManagerMap == null) {
-                    final HashMap<String, PoolingHttpClientConnectionManager> connectionManagerMapFinal  = new HashMap<>();
-                    connectionPoolHolder.setResource(new SessionResource<Map<String, PoolingHttpClientConnectionManager>>(){
+                    final HashMap<String, PoolingHttpClientConnectionManager> connectionManagerMapFinal = new HashMap<>();
+                    connectionPoolHolder.setResource(new SessionResource<Map<String, PoolingHttpClientConnectionManager>>() {
                         @Override
                         public Map<String, PoolingHttpClientConnectionManager> get() {
                             return connectionManagerMapFinal;
                         }
+
                         @Override
                         public void release() {
                         }
@@ -105,8 +106,8 @@ public class ConnectionManagerBuilder {
                 try {
                     connManager.setDefaultMaxPerRoute(Integer.parseInt(defaultMaxPerRoute));
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("the '"+ HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE
-                            +"' input should be integer" +e.getMessage(), e);
+                    throw new IllegalArgumentException("the '" + HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE
+                            + "' input should be integer" + e.getMessage(), e);
                 }
             }
             //the Default totalMax default is 20
@@ -114,8 +115,8 @@ public class ConnectionManagerBuilder {
                 try {
                     connManager.setMaxTotal(Integer.parseInt(totalMax));
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("the '"+ HttpClientInputs.CONNECTIONS_MAX_TOTAL
-                            +"' input should be integer" +e.getMessage(), e);
+                    throw new IllegalArgumentException("the '" + HttpClientInputs.CONNECTIONS_MAX_TOTAL
+                            + "' input should be integer" + e.getMessage(), e);
                 }
             }
             return connManager;

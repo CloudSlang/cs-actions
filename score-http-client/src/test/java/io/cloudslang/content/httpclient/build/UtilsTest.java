@@ -1,6 +1,5 @@
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.httpclient.build.Utils;
 import org.apache.http.NameValuePair;
 import org.junit.Test;
 

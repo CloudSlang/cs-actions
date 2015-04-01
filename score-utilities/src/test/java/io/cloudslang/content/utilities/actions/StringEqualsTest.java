@@ -1,6 +1,5 @@
 package io.cloudslang.content.utilities.actions;
 
-import io.cloudslang.content.utilities.actions.StringEquals;
 import io.cloudslang.content.utilities.utils.Constants;
 import org.junit.Assert;
 import org.junit.Test;

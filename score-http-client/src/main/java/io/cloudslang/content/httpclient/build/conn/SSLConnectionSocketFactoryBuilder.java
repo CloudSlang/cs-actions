@@ -1,12 +1,12 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package io.cloudslang.content.httpclient.build.conn;
 
@@ -37,7 +37,7 @@ public class SSLConnectionSocketFactoryBuilder {
     public static final String TLSv10 = "TLSv1";
     public static final String TLSv11 = "TLSv1.1";
     public static final String TLSv12 = "TLSv1.2";
-    public static final String[] SUPPORTED_PROTOCOLS = new String[] {SSLv3, TLSv10, TLSv11, TLSv12};
+    public static final String[] SUPPORTED_PROTOCOLS = new String[]{SSLv3, TLSv10, TLSv11, TLSv12};
     private String trustAllRootsStr = "false";
     private String keystore;
     private String keystorePassword;
@@ -127,12 +127,12 @@ public class SSLConnectionSocketFactoryBuilder {
                     x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
                     break;
                 default:
-                    throw new IllegalArgumentException("Invalid value '"+ x509HostnameVerifierInputValue +"' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
+                    throw new IllegalArgumentException("Invalid value '" + x509HostnameVerifierInputValue + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
             }
             // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
             sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
         } catch (Exception e) {
-            if(e instanceof IllegalArgumentException){
+            if (e instanceof IllegalArgumentException) {
                 throw new IllegalArgumentException(e.getMessage());
             }
             throw new RuntimeException(e.getMessage() + ". " + SSL_CONNECTION_ERROR, e);

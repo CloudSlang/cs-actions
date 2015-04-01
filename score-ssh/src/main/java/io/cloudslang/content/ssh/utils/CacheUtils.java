@@ -5,8 +5,8 @@ import com.hp.oo.sdk.content.plugin.SessionResource;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.SSHConnection;
-import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 import io.cloudslang.content.ssh.services.SSHService;
+import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;

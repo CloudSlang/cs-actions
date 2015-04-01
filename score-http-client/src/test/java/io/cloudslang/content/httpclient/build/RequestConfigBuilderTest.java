@@ -1,12 +1,12 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package io.cloudslang.content.httpclient.build;
 
@@ -16,7 +16,6 @@ package io.cloudslang.content.httpclient.build;
  * Date: 7/29/14
  */
 
-import io.cloudslang.content.httpclient.build.RequestConfigBuilder;
 import org.apache.http.HttpException;
 import org.apache.http.client.config.RequestConfig;
 import org.junit.After;
@@ -82,9 +81,9 @@ public class RequestConfigBuilderTest {
     }
 
     @Test
-    public void testBuildWithInvalidProxyPort(){
+    public void testBuildWithInvalidProxyPort() {
         final String invalidProxyPort = "invalidProxyPortText";
-        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
+        final String expectedExceptionMessage = "Invalid value '" + invalidProxyPort + "' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
 
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage(expectedExceptionMessage);
@@ -98,9 +97,9 @@ public class RequestConfigBuilderTest {
        Therefor negative values are not considered valid and should not be allowed.
      */
     @Test
-    public void testBuildWithNegativeProxyPort(){
+    public void testBuildWithNegativeProxyPort() {
         final String invalidProxyPort = "-2";
-        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
+        final String expectedExceptionMessage = "Invalid value '" + invalidProxyPort + "' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
 
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage(expectedExceptionMessage);
@@ -115,7 +114,7 @@ public class RequestConfigBuilderTest {
        For example the port 80 will be used if the scheme is http.
      */
     @Test
-    public void testBuildWithAcceptedNegativeProxyPort(){
+    public void testBuildWithAcceptedNegativeProxyPort() {
         final String validProxyPort = "-1";
 
         RequestConfig reqConfig = requestConfigBuilder

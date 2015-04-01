@@ -8,9 +8,9 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.ssh.entities.SSHConnection;
+import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
 import io.cloudslang.content.ssh.utils.Constants;
-import io.cloudslang.content.ssh.entities.SSHShellInputs;
 
 import java.util.Map;
 
@@ -25,32 +25,31 @@ public class SSHShellCommandAction {
     /**
      * Executes a Shell command(s) on the remote machine using the SSH protocol.
      *
-     * @param host The hostname or the ip address of the remote machine.
-     * @param port The port number for running the command. It overwrites the port given inside the host input (in a syntax like host:port), if this exists.
-     * @param username The username of the account on the remote machine.
-     * @param password The password of the user. If using a private key file this will be used as the passphrase for the file.
-     * @param privateKeyFile The path to the private key file (OpenSSH type) on the machine where is the worker.
-     * @param knownHostsPolicy The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
-     * @param knownHostsPath The path to the known hosts file.
-     * @param command The command(s) to execute.
-     * @param arguments The arguments to pass to the command.
-     * @param characterSet The character encoding used for input stream encoding from the target machine.
-     *                     Valid values: SJIS, EUC-JP, UTF-8. Default value: UTF-8.
-     * @param pty Whether to use a pseudo-terminal (PTY) session. Valid values: false, true. Default value: false
-     * @param agentForwarding Enables or disables the forwarding of the authentication agent connection. 
-     *                        Agent forwarding should be enabled with caution.
-     * @param timeout Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
+     * @param host                The hostname or the ip address of the remote machine.
+     * @param port                The port number for running the command. It overwrites the port given inside the host input (in a syntax like host:port), if this exists.
+     * @param username            The username of the account on the remote machine.
+     * @param password            The password of the user. If using a private key file this will be used as the passphrase for the file.
+     * @param privateKeyFile      The path to the private key file (OpenSSH type) on the machine where is the worker.
+     * @param knownHostsPolicy    The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
+     * @param knownHostsPath      The path to the known hosts file.
+     * @param command             The command(s) to execute.
+     * @param arguments           The arguments to pass to the command.
+     * @param characterSet        The character encoding used for input stream encoding from the target machine.
+     *                            Valid values: SJIS, EUC-JP, UTF-8. Default value: UTF-8.
+     * @param pty                 Whether to use a pseudo-terminal (PTY) session. Valid values: false, true. Default value: false
+     * @param agentForwarding     Enables or disables the forwarding of the authentication agent connection.
+     *                            Agent forwarding should be enabled with caution.
+     * @param timeout             Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
      * @param globalSessionObject the sessionObject that holds the connection if the close session is false.
-     * @param closeSession If true it closes the SSH session at completion of this operation.
-     *                     If false the SSH session will be cached for future calls of this operation during the life of the flow.
-     *                     Valid values: false, true. Default value: false
+     * @param closeSession        If true it closes the SSH session at completion of this operation.
+     *                            If false the SSH session will be cached for future calls of this operation during the life of the flow.
+     *                            Valid values: false, true. Default value: false
      * @return - a map containing the output of the operation. Keys present in the map are:
-     *     <br><b>returnResult</b> - The primary output.
-     *     <br><b>STDOUT</b> - The standard output of the command(s).
-     *     <br><b>visualized</b> - The output of the command in XML format.
-     *     <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
-     *     <br><b>exception</b> - the exception message if the operation goes to failure.
-     *
+     * <br><b>returnResult</b> - The primary output.
+     * <br><b>STDOUT</b> - The standard output of the command(s).
+     * <br><b>visualized</b> - The output of the command in XML format.
+     * <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * <br><b>exception</b> - the exception message if the operation goes to failure.
      */
 
     @Action(name = "SSH Command",

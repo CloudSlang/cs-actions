@@ -1,11 +1,11 @@
 package io.cloudslang.content.mail.services;
 
-import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
-import io.cloudslang.content.mail.sslconfig.SSLUtils;
+import com.sun.mail.util.ASCIIUtility;
 import io.cloudslang.content.mail.entities.GetMailMessageInputs;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.entities.StringOutputStream;
-import com.sun.mail.util.ASCIIUtility;
+import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
+import io.cloudslang.content.mail.sslconfig.SSLUtils;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMultipart;
@@ -20,7 +20,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by giloan on 11/3/2014.
@@ -267,7 +270,7 @@ public class GetMailMessage {
     protected void processInputs(GetMailMessageInputs getMailMessageInputs) throws Exception {
 
         String strHost = getMailMessageInputs.getHostname();
-        if(null == strHost || strHost.equals("")) {
+        if (null == strHost || strHost.equals("")) {
             throw new Exception(HOST_NOT_SPECIFIED);
         } else {
             host = strHost.trim();
@@ -275,19 +278,19 @@ public class GetMailMessage {
         port = getMailMessageInputs.getPort();
         protocol = getMailMessageInputs.getProtocol();
         String strUsername = getMailMessageInputs.getUsername();
-        if(null == strUsername || strUsername.equals("")) {
+        if (null == strUsername || strUsername.equals("")) {
             throw new Exception(USERNAME_NOT_SPECIFIED);
         } else {
             username = strUsername.trim();
         }
         String strPassword = getMailMessageInputs.getPassword();
-        if(null == strPassword ) {
+        if (null == strPassword) {
             password = "";
         } else {
             password = strPassword.trim();
         }
         String strFolder = getMailMessageInputs.getFolder();
-        if(null == strFolder || strFolder.equals("")) {
+        if (null == strFolder || strFolder.equals("")) {
             throw new Exception(FOLDER_NOT_SPECIFIED);
         } else {
             folder = strFolder.trim();
@@ -296,7 +299,7 @@ public class GetMailMessage {
         // Default value of trustAllRoots is true
         trustAllRoots = !(null != trustAll && trustAll.equalsIgnoreCase(STR_FALSE));
         String strMessageNumber = getMailMessageInputs.getMessageNumber();
-        if(strMessageNumber == null || strMessageNumber.equals("")) {
+        if (strMessageNumber == null || strMessageNumber.equals("")) {
             throw new Exception(MESSAGE_NUMBER_NOT_SPECIFIED);
         } else {
             messageNumber = Integer.parseInt(strMessageNumber);

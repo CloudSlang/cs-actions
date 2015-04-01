@@ -10,7 +10,6 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.httpclient.build.URIBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -6,7 +6,6 @@ import io.cloudslang.content.ssh.entities.KeyFile;
 import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.SSHService;
-import io.cloudslang.content.ssh.services.actions.SSHShellAbstract;
 import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 import io.cloudslang.content.ssh.utils.CacheUtils;
 import org.junit.Test;

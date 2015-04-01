@@ -1,7 +1,11 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
-import io.cloudslang.content.mail.services.GetMailMessage;
+import io.cloudslang.content.mail.entities.GetMailMessageInputs;
+import io.cloudslang.content.mail.entities.SimpleAuthenticator;
+import io.cloudslang.content.mail.entities.StringOutputStream;
+import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
+import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,11 +15,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import io.cloudslang.content.mail.entities.GetMailMessageInputs;
-import io.cloudslang.content.mail.entities.SimpleAuthenticator;
-import io.cloudslang.content.mail.entities.StringOutputStream;
-import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
-import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -131,9 +130,9 @@ public class GetMailMessageTest {
     private InputStream inputStreamMock;
     @Mock
     private ByteArrayInputStream byteArrayInputStreamMock;
-    
+
     private GetMailMessageInputs mailMessagePopulatedInputs;
-    
+
     @Before
     public void setUp() throws Exception {
         getMailMessage = new GetMailMessage();
@@ -601,7 +600,7 @@ public class GetMailMessageTest {
         String fileNames = getMailMessageSpy.getAttachedFileNames(partMock);
         assertEquals(testFileName, fileNames);
     }
-    
+
     @Test
     public void testConvertMessageSimple() throws Exception {
         final String expectedMessage = "message";
@@ -649,6 +648,7 @@ public class GetMailMessageTest {
         final String message = getMailMessageSpy.decodeAttachedFileNames(fileNames);
         assertEquals("file Name, fileName1, fileName2 ", message);
     }
+
     @Test
     public void testDecodeAttachedFileNamesEncoded() throws Exception {
         final String fileNames = "?\u009D??\u009D???? ?????????,?\u009D??\u009D????";
@@ -664,7 +664,7 @@ public class GetMailMessageTest {
     }
 
     @Test
-    public void testProcessInputHostEmpty() throws Exception {        
+    public void testProcessInputHostEmpty() throws Exception {
         exception.expect(Exception.class);
         exception.expectMessage("The required host input is not specified!");
         mailMessagePopulatedInputs.setHostname("");
@@ -706,7 +706,7 @@ public class GetMailMessageTest {
         mailMessagePopulatedInputs.setMessageNumber("");
         getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
     }
-    
+
     @Test
     public void testProcessInputMessageNumberNull() throws Exception {
         exception.expect(Exception.class);
@@ -730,7 +730,7 @@ public class GetMailMessageTest {
         mailMessagePopulatedInputs.setProtocol(null);
         getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
     }
-    
+
     @Test
     public void testProcessInputProtocolEmpty() throws Exception {
         exception.expect(Exception.class);
@@ -828,6 +828,7 @@ public class GetMailMessageTest {
         getMailMessageInputs.setDeleteUponRetrieval("test");
         return getMailMessageInputs;
     }
+
     private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType) throws MessagingException, IOException {
         verify(messageMock).isMimeType(messageType);
         verify(messageMock).getContent();

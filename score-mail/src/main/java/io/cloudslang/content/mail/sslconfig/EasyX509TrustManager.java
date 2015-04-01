@@ -20,7 +20,7 @@ public class EasyX509TrustManager implements X509TrustManager {
         factory.init((KeyStore) null);
         TrustManager[] trustManagers = factory.getTrustManagers();
         if (trustManagers.length == 0) throw new NoSuchAlgorithmException("SunX509 trust manager not supported");
-        this.standardTrustManager = (X509TrustManager)trustManagers[0];
+        this.standardTrustManager = (X509TrustManager) trustManagers[0];
     }
 
     public void checkClientTrusted(X509Certificate[] chain, String authType) {

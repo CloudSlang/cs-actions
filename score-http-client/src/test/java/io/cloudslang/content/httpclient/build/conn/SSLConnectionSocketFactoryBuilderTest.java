@@ -10,7 +10,6 @@
 
 package io.cloudslang.content.httpclient.build.conn;
 
-import io.cloudslang.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
 import org.apache.http.conn.ssl.*;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,14 +27,10 @@ import java.security.KeyStore;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.isNull;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * User: Adina Tusa

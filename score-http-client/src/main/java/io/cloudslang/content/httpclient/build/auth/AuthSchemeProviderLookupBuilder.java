@@ -10,6 +10,8 @@
 
 package io.cloudslang.content.httpclient.build.auth;
 
+import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.build.Utils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +24,6 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.impl.auth.*;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
-import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.httpclient.build.Utils;
 
 import java.io.File;
 import java.io.FileWriter;

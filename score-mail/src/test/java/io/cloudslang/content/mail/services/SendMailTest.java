@@ -1,8 +1,7 @@
 package io.cloudslang.content.mail.services;
 
-import io.cloudslang.content.mail.entities.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
-import io.cloudslang.content.mail.services.SendMail;
+import io.cloudslang.content.mail.entities.SendMailInputs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

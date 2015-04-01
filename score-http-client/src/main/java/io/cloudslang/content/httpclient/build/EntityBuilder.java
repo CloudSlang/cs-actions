@@ -10,6 +10,7 @@
 
 package io.cloudslang.content.httpclient.build;
 
+import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -19,7 +20,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.io.File;
 import java.nio.charset.Charset;

@@ -6,7 +6,6 @@ import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.services.SSHService;
-import io.cloudslang.content.ssh.utils.CacheUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

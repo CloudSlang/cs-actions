@@ -1,18 +1,18 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.httpclient.build.RequestBuilder;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.junit.Test;
 
@@ -60,7 +60,7 @@ public class RequestBuilderTest {
 
     @Test
     public void testEntity() throws URISyntaxException, IOException {
-        HttpEntityEnclosingRequestBase httpRequestBase = (HttpEntityEnclosingRequestBase)new RequestBuilder().setUri(new URI("https://localhost:443/lalal?dd=3")).setMethod("POST").setEntity(
+        HttpEntityEnclosingRequestBase httpRequestBase = (HttpEntityEnclosingRequestBase) new RequestBuilder().setUri(new URI("https://localhost:443/lalal?dd=3")).setMethod("POST").setEntity(
                 new StringEntity("my custom entity")).build();
         assertEquals(IOUtils.toString(httpRequestBase.getEntity().getContent()), "my custom entity");
     }

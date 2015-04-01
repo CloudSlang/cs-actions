@@ -1,6 +1,5 @@
 package io.cloudslang.content.json.actions;
 
-import io.cloudslang.content.json.actions.EditJson;
 import org.junit.Test;
 
 import java.util.Map;

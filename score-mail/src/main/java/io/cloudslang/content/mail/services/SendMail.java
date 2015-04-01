@@ -1,7 +1,7 @@
 package io.cloudslang.content.mail.services;
 
-import io.cloudslang.content.mail.entities.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
+import io.cloudslang.content.mail.entities.SendMailInputs;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -140,13 +140,12 @@ public class SendMail {
                 transport = session.getTransport("smtp");
                 transport.connect(smtpHost, smtpPort, user, password);
                 transport.sendMessage(msg, msg.getAllRecipients());
-            }
-            else {
+            } else {
                 Transport.send(msg);
             }
             result.put(RETURN_RESULT, MAIL_WAS_SENT);
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             if (e.getMessage() != null && e.getMessage().contains("IOException")) {
                 throw new Exception("Cannot attach '" + attachments + "' Check if the location exists and is accessible.");
             } else {

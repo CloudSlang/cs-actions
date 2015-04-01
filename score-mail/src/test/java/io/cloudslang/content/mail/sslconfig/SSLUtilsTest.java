@@ -1,7 +1,5 @@
 package io.cloudslang.content.mail.sslconfig;
 
-import io.cloudslang.content.mail.sslconfig.AuthSSLX509TrustManager;
-import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import junit.framework.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -99,7 +97,7 @@ public class SSLUtilsTest {
         TrustManager[] trustManagers = new TrustManager[3];
         X509TrustManager tm = Mockito.mock(X509TrustManager.class);
         trustManagers[1] = tm;
-        
+
         PowerMockito.mockStatic(TrustManagerFactory.class);
         PowerMockito.doReturn(trustManagerFactoryMock).when(TrustManagerFactory.class, "getInstance", anyObject());
         Mockito.doReturn(trustManagers).when(trustManagerFactoryMock).getTrustManagers();

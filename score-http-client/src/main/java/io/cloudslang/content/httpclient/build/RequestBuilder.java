@@ -1,18 +1,18 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package io.cloudslang.content.httpclient.build;
 
+import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.*;
-import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -24,8 +24,8 @@ import java.util.Arrays;
  */
 public class RequestBuilder {
     //ordered
-    private static String [] methods = new String []{HttpDelete.METHOD_NAME, HttpGet.METHOD_NAME, HttpHead.METHOD_NAME,
-            HttpOptions.METHOD_NAME, HttpPatch.METHOD_NAME, HttpPost.METHOD_NAME, HttpPut.METHOD_NAME,  HttpTrace.METHOD_NAME};
+    private static String[] methods = new String[]{HttpDelete.METHOD_NAME, HttpGet.METHOD_NAME, HttpHead.METHOD_NAME,
+            HttpOptions.METHOD_NAME, HttpPatch.METHOD_NAME, HttpPost.METHOD_NAME, HttpPut.METHOD_NAME, HttpTrace.METHOD_NAME};
 
     private String method;
     private URI uri;
@@ -47,12 +47,12 @@ public class RequestBuilder {
     }
 
     public HttpRequestBase build() {
-        if (method==null) {
+        if (method == null) {
             throw new IllegalArgumentException("The 'method' input is required. Provide one of " + Arrays.asList(methods).toString());
         }
         String method = this.method.toUpperCase().trim();
         if (Arrays.binarySearch(methods, method) < 0) {
-            throw new IllegalArgumentException("invalid '"+ HttpClientInputs.METHOD+"' input '" + method + "'");
+            throw new IllegalArgumentException("invalid '" + HttpClientInputs.METHOD + "' input '" + method + "'");
         }
 
         org.apache.http.client.methods.RequestBuilder requestBuilder

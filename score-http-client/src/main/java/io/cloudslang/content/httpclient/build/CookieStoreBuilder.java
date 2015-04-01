@@ -1,12 +1,12 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package io.cloudslang.content.httpclient.build;
 
@@ -41,7 +41,7 @@ public class CookieStoreBuilder {
             } else {
                 try {
                     cookieStore = (BasicCookieStore) deserialize((byte[]) cookieStoreSessionObject.getValue());
-                } catch (IOException | ClassNotFoundException  e) {
+                } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
             }

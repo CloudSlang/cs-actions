@@ -10,6 +10,8 @@
 
 package io.cloudslang.content.httpclient.consume;
 
+import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.ScoreHttpClient;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
@@ -17,8 +19,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeaderValueParser;
-import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.httpclient.ScoreHttpClient;
 
 import java.io.*;
 import java.nio.charset.UnsupportedCharsetException;

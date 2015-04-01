@@ -1,17 +1,15 @@
 /*******************************************************************************
-* (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Apache License v2.0 which accompany this distribution.
-*
-* The Apache License is available at
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*******************************************************************************/
+ * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 
 package io.cloudslang.content.httpclient.build.auth;
 
-import io.cloudslang.content.httpclient.build.auth.AuthTypes;
-import io.cloudslang.content.httpclient.build.auth.CredentialsProviderBuilder;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
@@ -71,9 +69,9 @@ public class CredentialsProviderBuilderTest {
     }
 
     @Test
-    public void createCredentialProviderWithInvalidProxyPort(){
+    public void createCredentialProviderWithInvalidProxyPort() {
         final String invalidProxyPort = "invalidProxyPort";
-        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
+        final String expectedExceptionMessage = "Invalid value '" + invalidProxyPort + "' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
         final AuthTypes authTypes = new AuthTypes("");
 
         CredentialsProviderBuilder builder = new CredentialsProviderBuilder()
@@ -87,9 +85,9 @@ public class CredentialsProviderBuilderTest {
     }
 
     @Test
-    public void createCredentialProviderWithNegativeProxyPort(){
+    public void createCredentialProviderWithNegativeProxyPort() {
         final String invalidProxyPort = "-2";
-        final String expectedExceptionMessage = "Invalid value '"+ invalidProxyPort +"' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
+        final String expectedExceptionMessage = "Invalid value '" + invalidProxyPort + "' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
         final AuthTypes authTypes = new AuthTypes("");
 
         CredentialsProviderBuilder builder = new CredentialsProviderBuilder()

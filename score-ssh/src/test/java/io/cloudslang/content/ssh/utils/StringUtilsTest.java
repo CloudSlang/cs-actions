@@ -1,6 +1,5 @@
 package io.cloudslang.content.ssh.utils;
 
-import io.cloudslang.content.ssh.utils.StringUtils;
 import org.junit.Test;
 
 import java.io.IOException;

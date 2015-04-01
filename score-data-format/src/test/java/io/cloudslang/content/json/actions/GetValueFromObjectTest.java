@@ -1,6 +1,5 @@
 package io.cloudslang.content.json.actions;
 
-import io.cloudslang.content.json.actions.GetValueFromObject;
 import org.junit.Test;
 
 import java.util.Map;
