@@ -239,6 +239,7 @@ public class ScoreHttpClient {
         result.setUri(uri);
         result.setConnManager(connManager);
         result.setCookieStore(cookieStore);
+        result.setHttpClientBuilder(httpClientBuilder);
         return result;
     }
 
