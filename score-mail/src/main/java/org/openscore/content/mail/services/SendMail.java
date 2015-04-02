@@ -1,8 +1,7 @@
 package org.openscore.content.mail.services;
 
-import net.suberic.crypto.EncryptionKeyManager;
-import net.suberic.crypto.EncryptionManager;
-import net.suberic.crypto.EncryptionUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.openscore.content.mail.entities.SendMailInputs;
 import com.sun.mail.smtp.SMTPMessage;
 
@@ -11,10 +10,13 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.Security;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -38,6 +40,9 @@ public class SendMail {
     public static final String FILE = "file:";
     public static final String HTTP = "http";
 
+    public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
+    public static final String BOUNCY_CASTLE_PROVIDER = "BC";
+
     //Operation inputs
     String attachments;
     String smtpHost;
@@ -59,7 +64,8 @@ public class SendMail {
     int smtpPort;
     boolean html;
     boolean readReceipt;
-    boolean encryptMessage; 
+    boolean encryptMessage;
+    SMIMEEnvelopedGenerator gen;
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
@@ -80,33 +86,55 @@ public class SendMail {
                 props.put("mail.smtp.auth", "true");
             }
 
+
+            if(false) {
+                String protocol="smtp";
+                String port = "" + smtpPort;
+                String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+                String STR_FALSE = "false";
+                props.setProperty("mail." + protocol + ".socketFactory.class", SSL_FACTORY);
+                props.setProperty("mail." + protocol + ".socketFactory.fallback", STR_FALSE);
+                props.setProperty("mail." + protocol + ".port", port);
+                props.setProperty("mail." + protocol + ".socketFactory.port", port);
+            }
+
             Session session = Session.getInstance(props, null);
+
+            //construct encryption SMIMEEnvelopedGenerator
+            if(encryptMessage) {
+                addEncryptionSettings();
+            }
 
             // Construct the message
             SMTPMessage msg = new SMTPMessage(session);
             MimeMultipart multipart = new MimeMultipart();
 
-            BodyPart mimeBodyPart = new MimeBodyPart();
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
             if (html) {
                 mimeBodyPart.setContent(body, "text/html" + ";charset=" + charset);
             } else {
                 mimeBodyPart.setContent(body, "text/plain" + ";charset=" + charset);
             }
             mimeBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
+            if(encryptMessage) {
+                mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
+            }
             multipart.addBodyPart(mimeBodyPart);
 
             if (null != attachments && attachments.length() > 0) {
                 for (String attachment : attachments.split(Pattern.quote(delimiter))) {
-                    BodyPart messageBodyPart = new MimeBodyPart();
+                    MimeBodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
                     DataSource source = new FileDataSource(attachment);
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName((MimeUtility.encodeText(attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1), charset,
                             encodingScheme)));
+                    if(encryptMessage) {
+                        mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
+                    }
                     multipart.addBodyPart(messageBodyPart);
                 }
             }
-
             msg.setContent(multipart);
             msg.setFrom(new InternetAddress(from));
             msg.setSubject(MimeUtility.encodeText(subject.replaceAll("[\\n\\r]", " "), charset, encodingScheme));
@@ -145,18 +173,13 @@ public class SendMail {
 
             msg.saveChanges();
 
-            MimeMessage mimeMsg = msg;
-            if(encryptMessage) {
-                mimeMsg = encryptMessage(session, msg);
-            }
-
             if (null != user && user.length() > 0) {
                 transport = session.getTransport("smtp");
                 transport.connect(smtpHost, smtpPort, user, password);
-                transport.sendMessage(mimeMsg, msg.getAllRecipients());
+                transport.sendMessage(msg, msg.getAllRecipients());
             }
             else {
-                Transport.send(mimeMsg);
+                Transport.send(msg);
             }
             result.put(RETURN_RESULT, MAIL_WAS_SENT);
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
@@ -172,24 +195,41 @@ public class SendMail {
         return result;
     }
 
-    protected MimeMessage encryptMessage(Session session, SMTPMessage msg) throws IOException, GeneralSecurityException, MessagingException {
+    private void addEncryptionSettings() throws  Exception{
         URL keystoreUrl = new URL(keystoreFile);
         InputStream publicKeystoreInputStream = keystoreUrl.openStream();
         char[] smimePw = new String(keystorePass).toCharArray();
 
-        //get the your encryptor (S/MIME EncryptionUtilities)
-        EncryptionUtils smimeUtils = EncryptionManager.getEncryptionUtils(EncryptionManager.SMIME);
 
-        //load the associated store(s) (the S/MIME keystore from the given file)
-        EncryptionKeyManager smimeKeyMgr = smimeUtils.createKeyManager();
-        smimeKeyMgr.loadPublicKeystore(publicKeystoreInputStream, smimePw);
+        gen = new SMIMEEnvelopedGenerator();
+        Security.addProvider(new BouncyCastleProvider());
+        KeyStore    ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
+        ks.load(publicKeystoreInputStream, smimePw);
+
+        Enumeration e = ks.aliases();
 
 
-        //get the S/MIME public key for encryption
-        java.security.Key smimeKey = smimeKeyMgr.getPublicKey(keyAlias);
-        MimeMessage mimeMsg = smimeUtils.encryptMessage(session, msg, smimeKey);
+        if(keyAlias.equals("")) {
+            while (e.hasMoreElements()) {
+                String alias = (String) e.nextElement();
 
-        return  mimeMsg;
+                if (ks.isKeyEntry(alias)) {
+                    keyAlias = alias;
+                }
+            }
+        }
+
+        if (keyAlias.equals(""))
+        {
+            throw new Exception("can't find a private key!");
+        }
+
+        Certificate[]   chain = ks.getCertificateChain(keyAlias);
+
+        //
+        // create the generator for creating an smime/encrypted message
+        //
+        gen.addKeyTransRecipient((X509Certificate)chain[0]);
     }
 
     private void processInputs(SendMailInputs sendMailInputs) {

@@ -214,15 +214,5 @@ http://www.apache.org/licenses/LICENSE-2.0
             <artifactId>bcmail-jdk16</artifactId>
             <version>1.43</version>
         </dependency>
-        <dependency>
-            <groupId>javamail.crypto.bouncycastle</groupId>
-            <artifactId>smime</artifactId>
-            <version>060622</version>
-        </dependency>
-        <dependency>
-            <groupId>javamail</groupId>
-            <artifactId>crypto</artifactId>
-            <version>060622</version>
-        </dependency>
 	</dependencies>
 </project>
