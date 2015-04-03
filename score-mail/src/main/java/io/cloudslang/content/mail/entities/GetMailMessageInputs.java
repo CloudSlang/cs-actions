@@ -21,6 +21,9 @@ public class GetMailMessageInputs {
     public static final String TRUST_PASSWORD = "trustPassword";
     public static final String CHARACTER_SET = "characterSet";
     public static final String DELETE_UPON_RETRIVAL = "deleteUponRetrieval";
+    public static final String DECRYPTION_KEYSTORE = "decryptionKeystore";
+    public static final String DECRYPTION_KEY_ALIAS = "decryptionKeyAlias";
+    public static final String DECRYPTION_KEYSTORE_PASSWORD = "decryptionKeystorePassword";
 
     private String hostname;
     private String port;
@@ -38,6 +41,9 @@ public class GetMailMessageInputs {
     private String trustPassword;
     private String characterSet;
     private String deleteUponRetrieval;
+    private String decryptionKeystore;
+    private String decryptionKeyAlias;
+    private String decryptionKeystorePassword;
 
     public String getHostname() {
         return hostname;
@@ -165,5 +171,29 @@ public class GetMailMessageInputs {
 
     public void setDeleteUponRetrieval(String deleteUponRetrieval) {
         this.deleteUponRetrieval = deleteUponRetrieval;
+    }
+
+    public String getDecryptionKeystore() {
+        return decryptionKeystore;
+    }
+
+    public void setDecryptionKeystore(String decryptionKeystore) {
+        this.decryptionKeystore = decryptionKeystore;
+    }
+
+    public String getDecryptionKeyAlias() {
+        return decryptionKeyAlias;
+    }
+
+    public void setDecryptionKeyAlias(String decryptionKeyAlias) {
+        this.decryptionKeyAlias = decryptionKeyAlias;
+    }
+
+    public String getDecryptionKeystorePassword() {
+        return decryptionKeystorePassword;
+    }
+
+    public void setDecryptionKeystorePassword(String decryptionKeystorePassword) {
+        this.decryptionKeystorePassword = decryptionKeystorePassword;
     }
 }

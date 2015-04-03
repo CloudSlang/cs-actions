@@ -9,6 +9,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.mail.entities.GetMailMessageInputs;
 import io.cloudslang.content.mail.services.GetMailMessage;
 
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -51,6 +52,9 @@ public class GetMailMessageAction {
      *                            <br>Valid values: UTF-8, UTF-16, UTF-32, EUC-JP, ISO-2022-JP, Shift_JIS, Windows-31J. Default value: UTF-8.
      * @param deleteUponRetrieval If true the email which is retrived will be deleted. For any other values it will be just retrieved.
      *                            Valid values: true, false. Default value: false.
+     * @param decryptionKeystore  The path to the pks12 format keystore to use to decrypt the mail.
+     * @param decryptionKeyAlias  The alias of the key from the decryptionKeystore to use to decrypt the mail.
+     * @param decryptionKeystorePassword The password for the decryptionKeystore.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <br><b>returnCode</b> - This is the primary output. It is 0 if the operation succeeded and -1 for failure.
      * <br><b>Subject</b> - Subject of the email.
@@ -91,7 +95,10 @@ public class GetMailMessageAction {
             @Param(value = GetMailMessageInputs.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = GetMailMessageInputs.TRUST_PASSWORD) String trustPassword,
             @Param(value = GetMailMessageInputs.CHARACTER_SET) String characterSet,
-            @Param(value = GetMailMessageInputs.DELETE_UPON_RETRIVAL) String deleteUponRetrieval
+            @Param(value = GetMailMessageInputs.DELETE_UPON_RETRIVAL) String deleteUponRetrieval,
+            @Param(value = GetMailMessageInputs.DECRYPTION_KEYSTORE) String decryptionKeystore,
+            @Param(value = GetMailMessageInputs.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
+            @Param(value = GetMailMessageInputs.DECRYPTION_KEYSTORE_PASSWORD) String decryptionKeystorePassword
     ) {
         GetMailMessageInputs getMailMessageInputs = new GetMailMessageInputs();
         getMailMessageInputs.setHostname(hostname);
@@ -110,6 +117,9 @@ public class GetMailMessageAction {
         getMailMessageInputs.setTrustPassword(trustPassword);
         getMailMessageInputs.setCharacterSet(characterSet);
         getMailMessageInputs.setDeleteUponRetrieval(deleteUponRetrieval);
+        getMailMessageInputs.setDecryptionKeystore(decryptionKeystore);
+        getMailMessageInputs.setDecryptionKeyAlias(decryptionKeyAlias);
+        getMailMessageInputs.setDecryptionKeystorePassword(decryptionKeystorePassword);
 
         try {
             return new GetMailMessage().execute(getMailMessageInputs);
