@@ -154,7 +154,10 @@ public class GetMailMessage {
                     }
                     // Get the message body
                     Map<String, String> messageByTypes = getMessageByContentTypes(message, characterSet);
-                    String lastMessageBody = new LinkedList<>(messageByTypes.values()).getLast();
+                    String lastMessageBody = "";
+                    if(!messageByTypes.isEmpty()) {
+                        lastMessageBody = new LinkedList<>(messageByTypes.values()).getLast();
+                    }
 
                     result.put(BODY_RESULT, MimeUtility.decodeText(lastMessageBody));
 
@@ -475,6 +478,13 @@ public class GetMailMessage {
                             messageMap.put(partContentType, MimeUtility.decodeText(part.getContent().toString()));
                         }
                     }
+                } else if(partContentType.equals("application/pkcs7-mime")) {
+                    InputStream istream = part.getInputStream();
+                    ByteArrayInputStream bis = new ByteArrayInputStream(ASCIIUtility.getBytes(istream));
+                    int count = bis.available();
+                    byte[] bytes = new byte[count];
+                    count = bis.read(bytes, 0, count);
+                    messageMap.put(partContentType, MimeUtility.decodeText(new String(bytes, 0, count)));
                 }
             }//for
         }//else
@@ -588,9 +598,9 @@ public class GetMailMessage {
         gmmi.setEnableSSL("false");
         gmmi.setDeleteUponRetrieval("false");
 
-        gmmi.setDecryptionKeystore("c:\\Temp\\sendMailEncryption\\keystore\\demo\\demo");
-        gmmi.setDecryptionKeyAlias("cc");
-        gmmi.setDecryptionKeystorePassword("demo");
+//        gmmi.setDecryptionKeystore("c:\\Temp\\sendMailEncryption\\keystore\\demo\\demo");
+//        gmmi.setDecryptionKeyAlias("cc");
+//        gmmi.setDecryptionKeystorePassword("demo");
 
         GetMailMessage toTest =new GetMailMessage();
         try {
