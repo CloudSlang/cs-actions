@@ -86,18 +86,6 @@ public class SendMail {
                 props.put("mail.smtp.auth", "true");
             }
 
-
-            if(false) {
-                String protocol="smtp";
-                String port = "" + smtpPort;
-                String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-                String STR_FALSE = "false";
-                props.setProperty("mail." + protocol + ".socketFactory.class", SSL_FACTORY);
-                props.setProperty("mail." + protocol + ".socketFactory.fallback", STR_FALSE);
-                props.setProperty("mail." + protocol + ".port", port);
-                props.setProperty("mail." + protocol + ".socketFactory.port", port);
-            }
-
             Session session = Session.getInstance(props, null);
 
             //construct encryption SMIMEEnvelopedGenerator
@@ -195,7 +183,7 @@ public class SendMail {
         return result;
     }
 
-    private void addEncryptionSettings() throws  Exception{
+    protected void addEncryptionSettings() throws  Exception{
         URL keystoreUrl = new URL(keystoreFile);
         InputStream publicKeystoreInputStream = keystoreUrl.openStream();
         char[] smimePw = new String(keystorePass).toCharArray();
@@ -206,10 +194,8 @@ public class SendMail {
         KeyStore ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
         ks.load(publicKeystoreInputStream, smimePw);
 
-        Enumeration e = ks.aliases();
-
-
         if(keyAlias.equals("")) {
+            Enumeration e = ks.aliases();
             while (e.hasMoreElements()) {
                 String alias = (String) e.nextElement();
 
@@ -221,7 +207,7 @@ public class SendMail {
 
         if (keyAlias.equals(""))
         {
-            throw new Exception("can't find a private key!");
+            throw new Exception("Can't find a public key!");
         }
 
         Certificate[]   chain = ks.getCertificateChain(keyAlias);

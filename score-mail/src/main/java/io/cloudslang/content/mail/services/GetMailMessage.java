@@ -104,7 +104,7 @@ public class GetMailMessage {
     private String decryptionKeyAlias;
     private String decryptionKeystorePass;
     private boolean deleteUponRetrieval;
-    private boolean decryptionMessage;
+    private boolean decryptMessage;
 
     private RecipientId recId = null;
     private KeyStore ks = null;
@@ -115,7 +115,7 @@ public class GetMailMessage {
             processInputs(getMailMessageInputs);
             Message message = getMessage();
 
-            if (decryptionMessage) {
+            if (decryptMessage) {
                 addDecryptionSettings();
             }
 
@@ -284,7 +284,7 @@ public class GetMailMessage {
         SSLContext.setDefault(context);
     }
 
-    private void addDecryptionSettings() throws Exception {
+    protected void addDecryptionSettings() throws Exception {
         char[] smimePw = new String(decryptionKeystorePass).toCharArray();
 
         Security.addProvider(new BouncyCastleProvider());
@@ -303,7 +303,7 @@ public class GetMailMessage {
 
             if (decryptionKeyAlias.equals(""))
             {
-                throw new Exception("can't find a private key!");
+                throw new Exception("Can't find a private key!");
             }
         }
 
@@ -413,7 +413,7 @@ public class GetMailMessage {
                 decryptionKeystore = FILE + decryptionKeystore;
             }
 
-            decryptionMessage = true;
+            decryptMessage = true;
             decryptionKeyAlias = getMailMessageInputs.getDecryptionKeyAlias();
             if(null == decryptionKeyAlias) {
                 decryptionKeyAlias = "";
@@ -424,7 +424,7 @@ public class GetMailMessage {
             }
 
         } else {
-            decryptionMessage = false;
+            decryptMessage = false;
         }
     }
 
@@ -444,7 +444,7 @@ public class GetMailMessage {
 
                 Part part = mpart.getBodyPart(i);
 
-                if(decryptionMessage && part.getContentType() != null && part.getContentType().equals("application/pkcs7-mime; name=\"smime.p7m\"; smime-type=enveloped-data")) {
+                if(decryptMessage && part.getContentType() != null && part.getContentType().equals("application/pkcs7-mime; name=\"smime.p7m\"; smime-type=enveloped-data")) {
                     part = decryptPart((MimeBodyPart)part);
                 }
 
@@ -505,7 +505,7 @@ public class GetMailMessage {
         String fileNames = "";
         Object content = part.getContent();
         if (!(content instanceof Multipart)) {
-            if(decryptionMessage && part.getContentType() != null && part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
+            if(decryptMessage && part.getContentType() != null && part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
                 part = decryptPart((MimeBodyPart) part);
             }
             // non-Multipart MIME part ...
@@ -583,34 +583,4 @@ public class GetMailMessage {
     public String changeHeaderCharset(String header, String newCharset) {
         return header.replaceAll("=\\?[^\\(\\)<>@,;:/\\[\\]\\?\\.= ]+\\?", "=?" + newCharset + "?"); //match for =?charset?
     }
-
-    public static void main(String[] args) {
-        GetMailMessageInputs gmmi = new GetMailMessageInputs();
-        gmmi.setHostname("16.77.58.223");
-        gmmi.setPort("110");
-        gmmi.setProtocol("pop3");
-        gmmi.setUsername("ipv6@hpcluj.com");
-        gmmi.setPassword("B33f34t3r");
-        gmmi.setFolder("INBOX");
-        gmmi.setTrustAllRoots("true");
-        gmmi.setMessageNumber("17");
-        gmmi.setSubjectOnly("false");
-        gmmi.setEnableSSL("false");
-        gmmi.setDeleteUponRetrieval("false");
-
-//        gmmi.setDecryptionKeystore("c:\\Temp\\sendMailEncryption\\keystore\\demo\\demo");
-//        gmmi.setDecryptionKeyAlias("cc");
-//        gmmi.setDecryptionKeystorePassword("demo");
-
-        GetMailMessage toTest =new GetMailMessage();
-        try {
-            Map<String, String> res = toTest.execute(gmmi);
-
-            System.out.println(res.get("returnResult"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
 }
