@@ -1,6 +1,14 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.RecipientId;
+import org.bouncycastle.cms.RecipientInformation;
+import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.mail.smime.SMIMEEnveloped;
+import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.mail.smime.SMIMEUtil;
 import io.cloudslang.content.mail.entities.GetMailMessageInputs;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.entities.StringOutputStream;
@@ -8,6 +16,8 @@ import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
 
 import javax.mail.*;
+import javax.mail.NoSuchProviderException;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.net.ssl.KeyManager;
@@ -18,12 +28,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Properties;
+import java.security.*;
+import java.security.cert.X509Certificate;
+import java.util.*;
 
 /**
  * Created by giloan on 11/3/2014.
@@ -70,6 +77,9 @@ public class GetMailMessage {
     private static final String MESSAGE_NUMBER_NOT_SPECIFIED = "The required messageNumber input is not specified!";
     private static final String USERNAME_NOT_SPECIFIED = "The required username input is not specified!";
     private static final String FOLDER_NOT_SPECIFIED = "The required folder input is not specified!";
+    public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
+    public static final String BOUNCY_CASTLE_PROVIDER = "BC";
+    public static final String ENCRYPTED_CONTENT_TYPE = "application/pkcs7-mime; name=\"smime.p7m\"; smime-type=enveloped-data";
 
     //Operation inputs
     private String host;
@@ -90,13 +100,25 @@ public class GetMailMessage {
     private String trustKeystoreFile;
     private String trustPassword;
     private String characterSet;
+    private String decryptionKeystore;
+    private String decryptionKeyAlias;
+    private String decryptionKeystorePass;
     private boolean deleteUponRetrieval;
+    private boolean decryptMessage;
+
+    private RecipientId recId = null;
+    private KeyStore ks = null;
 
     public Map<String, String> execute(GetMailMessageInputs getMailMessageInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
         try {
             processInputs(getMailMessageInputs);
             Message message = getMessage();
+
+            if (decryptMessage) {
+                addDecryptionSettings();
+            }
+
             //delete message
             if (deleteUponRetrieval) {
                 message.setFlag(Flags.Flag.DELETED, true);
@@ -132,7 +154,10 @@ public class GetMailMessage {
                     }
                     // Get the message body
                     Map<String, String> messageByTypes = getMessageByContentTypes(message, characterSet);
-                    String lastMessageBody = new LinkedList<>(messageByTypes.values()).getLast();
+                    String lastMessageBody = "";
+                    if(!messageByTypes.isEmpty()) {
+                        lastMessageBody = new LinkedList<>(messageByTypes.values()).getLast();
+                    }
 
                     result.put(BODY_RESULT, MimeUtility.decodeText(lastMessageBody));
 
@@ -259,6 +284,40 @@ public class GetMailMessage {
         SSLContext.setDefault(context);
     }
 
+    protected void addDecryptionSettings() throws Exception {
+        char[] smimePw = new String(decryptionKeystorePass).toCharArray();
+
+        Security.addProvider(new BouncyCastleProvider());
+        ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
+        ks.load(new URL(decryptionKeystore).openStream(), smimePw);
+
+        if (decryptionKeyAlias.equals("")) {
+            Enumeration e = ks.aliases();
+            while (e.hasMoreElements()) {
+                String alias = (String) e.nextElement();
+
+                if (ks.isKeyEntry(alias)) {
+                    decryptionKeyAlias = alias;
+                }
+            }
+
+            if (decryptionKeyAlias.equals(""))
+            {
+                throw new Exception("Can't find a private key!");
+            }
+        }
+
+        //
+        // find the certificate for the private key and generate a
+        // suitable recipient identifier.
+        //
+        X509Certificate cert = (X509Certificate)ks.getCertificate(decryptionKeyAlias);
+
+        recId = new RecipientId();
+        recId.setSerialNumber(cert.getSerialNumber());
+        recId.setIssuer(cert.getIssuerX500Principal().getEncoded());
+    }
+
     protected String getSystemFileSeparator() {
         return System.getProperty("file.separator");
     }
@@ -347,6 +406,26 @@ public class GetMailMessage {
         if (protocol.trim().equalsIgnoreCase(IMAP_4)) {
             protocol = IMAP;
         }
+
+        this.decryptionKeystore = getMailMessageInputs.getDecryptionKeystore();
+        if(this.decryptionKeystore != null && !this.decryptionKeystore.equals("")) {
+            if(!decryptionKeystore.startsWith(HTTP)) {
+                decryptionKeystore = FILE + decryptionKeystore;
+            }
+
+            decryptMessage = true;
+            decryptionKeyAlias = getMailMessageInputs.getDecryptionKeyAlias();
+            if(null == decryptionKeyAlias) {
+                decryptionKeyAlias = "";
+            }
+            decryptionKeystorePass = getMailMessageInputs.getDecryptionKeystorePassword();
+            if(null == decryptionKeystorePass) {
+                decryptionKeystorePass = "";
+            }
+
+        } else {
+            decryptMessage = false;
+        }
     }
 
     protected Map<String, String> getMessageByContentTypes(Message message, String characterSet) throws Exception {
@@ -364,6 +443,11 @@ public class GetMailMessage {
             for (int i = 0, n = mpart.getCount(); i < n; i++) {
 
                 Part part = mpart.getBodyPart(i);
+
+                if(decryptMessage && part.getContentType() != null && part.getContentType().equals("application/pkcs7-mime; name=\"smime.p7m\"; smime-type=enveloped-data")) {
+                    part = decryptPart((MimeBodyPart)part);
+                }
+
                 String disposition = part.getDisposition();
                 String partContentType = new String(part.getContentType().substring(0, part.getContentType().indexOf(";")));
                 if (disposition == null) {
@@ -394,6 +478,13 @@ public class GetMailMessage {
                             messageMap.put(partContentType, MimeUtility.decodeText(part.getContent().toString()));
                         }
                     }
+                } else if(partContentType.equals("application/pkcs7-mime")) {
+                    InputStream istream = part.getInputStream();
+                    ByteArrayInputStream bis = new ByteArrayInputStream(ASCIIUtility.getBytes(istream));
+                    int count = bis.available();
+                    byte[] bytes = new byte[count];
+                    count = bis.read(bytes, 0, count);
+                    messageMap.put(partContentType, MimeUtility.decodeText(new String(bytes, 0, count)));
                 }
             }//for
         }//else
@@ -401,10 +492,22 @@ public class GetMailMessage {
         return messageMap;
     }
 
+    private MimeBodyPart decryptPart(MimeBodyPart part) throws CMSException, MessagingException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, java.security.NoSuchProviderException, SMIMEException {
+
+        SMIMEEnveloped m = new SMIMEEnveloped(part);
+        RecipientInformationStore recipients = m.getRecipientInfos();
+        RecipientInformation recipient = recipients.get(recId);
+
+        return SMIMEUtil.toMimeBodyPart(recipient.getContent(ks.getKey(decryptionKeyAlias, null), BOUNCY_CASTLE_PROVIDER));
+    }
+
     protected String getAttachedFileNames(Part part) throws Exception {
         String fileNames = "";
         Object content = part.getContent();
         if (!(content instanceof Multipart)) {
+            if(decryptMessage && part.getContentType() != null && part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
+                part = decryptPart((MimeBodyPart) part);
+            }
             // non-Multipart MIME part ...
             // is the file name set for this MIME part? (i.e. is it an attachment?)
             if (part.getFileName() != null && !part.getFileName().equals("") && part.getInputStream() != null) {
