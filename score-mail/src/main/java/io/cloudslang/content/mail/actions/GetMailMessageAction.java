@@ -139,5 +139,4 @@ public class GetMailMessageAction {
         returnResult.put(GetMailMessage.EXCEPTION, eStr);
         return returnResult;
     }
-
 }

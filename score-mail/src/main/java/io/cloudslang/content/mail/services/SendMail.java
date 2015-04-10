@@ -183,7 +183,7 @@ public class SendMail {
         return result;
     }
 
-    protected void addEncryptionSettings() throws  Exception{
+    private void addEncryptionSettings() throws  Exception{
         URL keystoreUrl = new URL(keystoreFile);
         InputStream publicKeystoreInputStream = keystoreUrl.openStream();
         char[] smimePw = new String(keystorePass).toCharArray();
@@ -192,7 +192,11 @@ public class SendMail {
         gen = new SMIMEEnvelopedGenerator();
         Security.addProvider(new BouncyCastleProvider());
         KeyStore ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
-        ks.load(publicKeystoreInputStream, smimePw);
+        try {
+            ks.load(publicKeystoreInputStream, smimePw);
+        } finally {
+            publicKeystoreInputStream.close();
+        }
 
         if(keyAlias.equals("")) {
             Enumeration e = ks.aliases();

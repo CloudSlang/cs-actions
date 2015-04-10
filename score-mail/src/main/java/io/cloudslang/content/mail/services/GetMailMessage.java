@@ -1,13 +1,11 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
-import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
-import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 import io.cloudslang.content.mail.entities.GetMailMessageInputs;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
@@ -284,12 +282,18 @@ public class GetMailMessage {
         SSLContext.setDefault(context);
     }
 
-    protected void addDecryptionSettings() throws Exception {
+    private void addDecryptionSettings() throws Exception {
         char[] smimePw = new String(decryptionKeystorePass).toCharArray();
 
         Security.addProvider(new BouncyCastleProvider());
         ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
-        ks.load(new URL(decryptionKeystore).openStream(), smimePw);
+
+        InputStream decryptionStream  = new URL(decryptionKeystore).openStream();
+        try {
+            ks.load(decryptionStream, smimePw);
+        } finally {
+            decryptionStream.close();
+        }
 
         if (decryptionKeyAlias.equals("")) {
             Enumeration e = ks.aliases();
@@ -312,6 +316,9 @@ public class GetMailMessage {
         // suitable recipient identifier.
         //
         X509Certificate cert = (X509Certificate)ks.getCertificate(decryptionKeyAlias);
+        if(null == cert) {
+            throw new Exception("Can't find a key pair with alias \"" + decryptionKeyAlias + "\" in the given keystore");
+        }
 
         recId = new RecipientId();
         recId.setSerialNumber(cert.getSerialNumber());
@@ -478,13 +485,6 @@ public class GetMailMessage {
                             messageMap.put(partContentType, MimeUtility.decodeText(part.getContent().toString()));
                         }
                     }
-                } else if(partContentType.equals("application/pkcs7-mime")) {
-                    InputStream istream = part.getInputStream();
-                    ByteArrayInputStream bis = new ByteArrayInputStream(ASCIIUtility.getBytes(istream));
-                    int count = bis.available();
-                    byte[] bytes = new byte[count];
-                    count = bis.read(bytes, 0, count);
-                    messageMap.put(partContentType, MimeUtility.decodeText(new String(bytes, 0, count)));
                 }
             }//for
         }//else
@@ -492,11 +492,25 @@ public class GetMailMessage {
         return messageMap;
     }
 
-    private MimeBodyPart decryptPart(MimeBodyPart part) throws CMSException, MessagingException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, java.security.NoSuchProviderException, SMIMEException {
+    private MimeBodyPart decryptPart(MimeBodyPart part) throws Exception {
 
         SMIMEEnveloped m = new SMIMEEnveloped(part);
         RecipientInformationStore recipients = m.getRecipientInfos();
         RecipientInformation recipient = recipients.get(recId);
+
+        if(null == recipient) {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("This email wasn't encrypted with \"" + recId.toString() + "\".\n");
+            errorMessage.append("The encryption recId is: ");
+
+            for(Object rec : recipients.getRecipients()) {
+                if(rec instanceof RecipientInformation) {
+                    RecipientId recipientId = ((RecipientInformation) rec).getRID();
+                    errorMessage.append("\"" + recipientId.toString() + "\"\n");
+                }
+            }
+            throw new Exception(errorMessage.toString());
+        }
 
         return SMIMEUtil.toMimeBodyPart(recipient.getContent(ks.getKey(decryptionKeyAlias, null), BOUNCY_CASTLE_PROVIDER));
     }
