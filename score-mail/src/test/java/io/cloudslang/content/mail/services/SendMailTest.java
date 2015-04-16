@@ -21,6 +21,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
+import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 
@@ -107,6 +108,8 @@ public class SendMailTest {
     private FileDataSource fileDataSourceMock;
     @Mock
     private DataHandler dataHandlerMock;
+    @Mock
+    private File fileMock;
 
     /**
      * Initialize tested object and set up the mocks.
@@ -237,6 +240,8 @@ public class SendMailTest {
         prepareTransportClassForStaticMock();
         Mockito.doNothing().when(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);
         PowerMockito.whenNew(FileDataSource.class).withArguments(anyString()).thenReturn(fileDataSourceMock);
+        Mockito.doReturn(fileMock).when(fileDataSourceMock).getFile();
+        Mockito.doReturn(true).when(fileMock).exists();
         PowerMockito.whenNew(DataHandler.class).withArguments(fileDataSourceMock).thenReturn(dataHandlerMock);
         doNothing().when(mimeBodyPartMock).setDataHandler(dataHandlerMock);
         doNothing().when(mimeBodyPartMock).setFileName(anyString());
@@ -331,6 +336,8 @@ public class SendMailTest {
 
         Mockito.doNothing().when(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);
         PowerMockito.whenNew(FileDataSource.class).withArguments(anyString()).thenReturn(fileDataSourceMock);
+        Mockito.doReturn(fileMock).when(fileDataSourceMock).getFile();
+        Mockito.doReturn(false).when(fileMock).exists();
         PowerMockito.whenNew(DataHandler.class).withArguments(fileDataSourceMock).thenReturn(dataHandlerMock);
         doNothing().when(mimeBodyPartMock).setDataHandler(dataHandlerMock);
 

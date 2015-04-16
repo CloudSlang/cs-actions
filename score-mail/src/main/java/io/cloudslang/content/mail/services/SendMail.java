@@ -114,7 +114,7 @@ public class SendMail {
                 for (String attachment : attachments.split(Pattern.quote(delimiter))) {
                     FileDataSource source = new FileDataSource(attachment);
                     if(!source.getFile().exists()) {
-                        throw new FileNotFoundException(attachment + " can't be found");
+                        throw new FileNotFoundException("Cannot attach " + attachment);
                     }
 
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
