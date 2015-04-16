@@ -70,6 +70,7 @@ public class SendMail {
             if (null != user && user.length() > 0) {
                 props.put("mail.smtp.user", user);
                 props.put("mail.smtp.password", password);
+                props.put("mail.smtp.starttls.enable", "true");
                 props.put("mail.smtp.auth", "true");
             }
 
