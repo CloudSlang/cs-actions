@@ -10,6 +10,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
@@ -111,14 +112,18 @@ public class SendMail {
 
             if (null != attachments && attachments.length() > 0) {
                 for (String attachment : attachments.split(Pattern.quote(delimiter))) {
+                    FileDataSource source = new FileDataSource(attachment);
+                    if(!source.getFile().exists()) {
+                        throw new FileNotFoundException(attachment + " can't be found");
+                    }
+
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
-                    DataSource source = new FileDataSource(attachment);
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName((MimeUtility.encodeText(attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1), charset,
                             encodingScheme)));
                     if(encryptMessage) {
-                        mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
+                        messageBodyPart = gen.generate(messageBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
                     }
                     multipart.addBodyPart(messageBodyPart);
                 }
@@ -215,6 +220,10 @@ public class SendMail {
         }
 
         Certificate[]   chain = ks.getCertificateChain(keyAlias);
+
+        if(chain == null) {
+            throw new Exception("The key with alias \"" + keyAlias + "\" can't be fount in given keystore.");
+        }
 
         //
         // create the generator for creating an smime/encrypted message
