@@ -6,7 +6,6 @@ import com.sun.mail.smtp.SMTPMessage;
 import io.cloudslang.content.mail.entities.SendMailInputs;
 
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -66,6 +65,7 @@ public class SendMail {
     boolean html;
     boolean readReceipt;
     boolean encryptMessage;
+    boolean enableTsl;
     SMIMEEnvelopedGenerator gen;
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
@@ -85,6 +85,9 @@ public class SendMail {
                 props.put("mail.smtp.user", user);
                 props.put("mail.smtp.password", password);
                 props.put("mail.smtp.auth", "true");
+            }
+            if(enableTsl) {
+                props.put("mail.smtp.starttls.enable", "true");
             }
 
             Session session = Session.getInstance(props, null);
@@ -296,6 +299,12 @@ public class SendMail {
             }
         } else {
             encryptMessage = false;
+        }
+
+        try {
+            enableTsl = Boolean.parseBoolean(sendMailInputs.getEnableTsl());
+        } catch (Exception e) {
+            enableTsl = false;
         }
     }
 }
