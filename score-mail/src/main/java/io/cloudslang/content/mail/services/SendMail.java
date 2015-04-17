@@ -65,7 +65,7 @@ public class SendMail {
     boolean html;
     boolean readReceipt;
     boolean encryptMessage;
-    boolean enableTsl;
+    boolean enableTLS;
     SMIMEEnvelopedGenerator gen;
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
@@ -86,7 +86,7 @@ public class SendMail {
                 props.put("mail.smtp.password", password);
                 props.put("mail.smtp.auth", "true");
             }
-            if(enableTsl) {
+            if(enableTLS) {
                 props.put("mail.smtp.starttls.enable", "true");
             }
 
@@ -302,9 +302,9 @@ public class SendMail {
         }
 
         try {
-            enableTsl = Boolean.parseBoolean(sendMailInputs.getEnableTsl());
+            enableTLS = Boolean.parseBoolean(sendMailInputs.getEnableTLS());
         } catch (Exception e) {
-            enableTsl = false;
+            enableTLS = false;
         }
     }
 }

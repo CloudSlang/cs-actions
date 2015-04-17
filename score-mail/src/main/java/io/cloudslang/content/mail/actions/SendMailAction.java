@@ -84,7 +84,7 @@ public class SendMailAction {
             @Param(SendMailInputs.ENCRYPTION_KEYSTORE) String encryptionKeystore,
             @Param(SendMailInputs.ENCRYPTION_KEY_ALIAS) String encryptionKeyAlias,
             @Param(SendMailInputs.ENCRYPTION_KEYSTORE_PASSWORD) String encryptionKeystorePassword,
-            @Param(SendMailInputs.ENABLE_TSL) String enableTsl
+            @Param(SendMailInputs.ENABLE_TLS) String enableTLS
     ) throws Exception {
 
         SendMailInputs sendMailInputs = new SendMailInputs();
@@ -107,7 +107,7 @@ public class SendMailAction {
         sendMailInputs.setEncryptionKeystore(encryptionKeystore);
         sendMailInputs.setEncryptionKeyAlias(encryptionKeyAlias);
         sendMailInputs.setEncryptionKeystorePassword(encryptionKeystorePassword);
-        sendMailInputs.setEnableTsl(enableTsl);
+        sendMailInputs.setEnableTLS(enableTLS);
 
         try {
             return new SendMail().execute(sendMailInputs);
