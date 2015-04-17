@@ -24,6 +24,7 @@ public class SendMailInputs {
     public static final String ENCRYPTION_KEYSTORE = "encryptionKeystore";
     public static final String ENCRYPTION_KEY_ALIAS = "encryptionKeyAlias";
     public static final String ENCRYPTION_KEYSTORE_PASSWORD = "encryptionKeystorePassword";
+    public static final String ENABLE_TLS = "enableTLS";
 
     private String smtpHostname;
     private String port;
@@ -44,6 +45,7 @@ public class SendMailInputs {
     private String encryptionKeystore;
     private String encryptionKeyAlias;
     private String encryptionKeystorePassword;
+    private String enableTLS;
 
     public String getSMTPHostname() {
         return smtpHostname;
@@ -195,5 +197,13 @@ public class SendMailInputs {
 
     public void setEncryptionKeystorePassword(String encryptionKeystorePassword) {
         this.encryptionKeystorePassword = encryptionKeystorePassword;
+    }
+
+    public String getEnableTLS() {
+        return enableTLS;
+    }
+
+    public void setEnableTLS(String enableTLS) {
+        this.enableTLS = enableTLS;
     }
 }

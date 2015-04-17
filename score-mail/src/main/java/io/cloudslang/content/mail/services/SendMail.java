@@ -6,10 +6,10 @@ import com.sun.mail.smtp.SMTPMessage;
 import io.cloudslang.content.mail.entities.SendMailInputs;
 
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
@@ -65,6 +65,7 @@ public class SendMail {
     boolean html;
     boolean readReceipt;
     boolean encryptMessage;
+    boolean enableTLS;
     SMIMEEnvelopedGenerator gen;
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
@@ -84,6 +85,9 @@ public class SendMail {
                 props.put("mail.smtp.user", user);
                 props.put("mail.smtp.password", password);
                 props.put("mail.smtp.auth", "true");
+            }
+            if(enableTLS) {
+                props.put("mail.smtp.starttls.enable", "true");
             }
 
             Session session = Session.getInstance(props, null);
@@ -111,14 +115,18 @@ public class SendMail {
 
             if (null != attachments && attachments.length() > 0) {
                 for (String attachment : attachments.split(Pattern.quote(delimiter))) {
+                    FileDataSource source = new FileDataSource(attachment);
+                    if(!source.getFile().exists()) {
+                        throw new FileNotFoundException("Cannot attach " + attachment);
+                    }
+
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
-                    DataSource source = new FileDataSource(attachment);
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName((MimeUtility.encodeText(attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1), charset,
                             encodingScheme)));
                     if(encryptMessage) {
-                        mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
+                        messageBodyPart = gen.generate(messageBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
                     }
                     multipart.addBodyPart(messageBodyPart);
                 }
@@ -183,7 +191,7 @@ public class SendMail {
         return result;
     }
 
-    protected void addEncryptionSettings() throws  Exception{
+    private void addEncryptionSettings() throws  Exception{
         URL keystoreUrl = new URL(keystoreFile);
         InputStream publicKeystoreInputStream = keystoreUrl.openStream();
         char[] smimePw = new String(keystorePass).toCharArray();
@@ -192,7 +200,11 @@ public class SendMail {
         gen = new SMIMEEnvelopedGenerator();
         Security.addProvider(new BouncyCastleProvider());
         KeyStore ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
-        ks.load(publicKeystoreInputStream, smimePw);
+        try {
+            ks.load(publicKeystoreInputStream, smimePw);
+        } finally {
+            publicKeystoreInputStream.close();
+        }
 
         if(keyAlias.equals("")) {
             Enumeration e = ks.aliases();
@@ -211,6 +223,10 @@ public class SendMail {
         }
 
         Certificate[]   chain = ks.getCertificateChain(keyAlias);
+
+        if(chain == null) {
+            throw new Exception("The key with alias \"" + keyAlias + "\" can't be fount in given keystore.");
+        }
 
         //
         // create the generator for creating an smime/encrypted message
@@ -283,6 +299,12 @@ public class SendMail {
             }
         } else {
             encryptMessage = false;
+        }
+
+        try {
+            enableTLS = Boolean.parseBoolean(sendMailInputs.getEnableTLS());
+        } catch (Exception e) {
+            enableTLS = false;
         }
     }
 }
