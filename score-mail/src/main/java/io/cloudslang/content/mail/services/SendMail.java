@@ -1,18 +1,32 @@
 package io.cloudslang.content.mail.services;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import com.sun.mail.smtp.SMTPMessage;
 import io.cloudslang.content.mail.entities.SendMailInputs;
+import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
+import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.util.encoders.Base64;
+import org.htmlparser.Parser;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -99,14 +113,13 @@ public class SendMail {
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             if (html) {
+                processHTMLBodyWithBASE64Images(multipart);
                 mimeBodyPart.setContent(body, "text/html" + ";charset=" + charset);
             } else {
                 mimeBodyPart.setContent(body, "text/plain" + ";charset=" + charset);
             }
             mimeBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
-            if(encryptMessage) {
-                mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
-            }
+            mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
             multipart.addBodyPart(mimeBodyPart);
 
             if (null != attachments && attachments.length() > 0) {
@@ -117,9 +130,7 @@ public class SendMail {
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName((MimeUtility.encodeText(attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1), charset,
                             encodingScheme)));
-                    if(encryptMessage) {
-                        mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
-                    }
+                    mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
                     multipart.addBodyPart(messageBodyPart);
                 }
             }
@@ -181,6 +192,44 @@ public class SendMail {
             if (null != transport) transport.close();
         }
         return result;
+    }
+
+    private void processHTMLBodyWithBASE64Images(MimeMultipart multipart) throws ParserException,
+            MessagingException, NoSuchAlgorithmException, SMIMEException, java.security.NoSuchProviderException {
+        if (null != body && body.contains("base64")) {
+            Parser parser = new Parser(body);
+            NodeList nodeList = parser.parse(null);
+            HtmlImageNodeVisitor htmlImageNodeVisitor = new HtmlImageNodeVisitor();
+            nodeList.visitAllNodesWith(htmlImageNodeVisitor);
+            body = nodeList.toHtml();
+
+            addAllBase64ImagesToMimeMultipart(multipart, htmlImageNodeVisitor.getBase64Images());
+        }
+    }
+
+    private void addAllBase64ImagesToMimeMultipart(MimeMultipart multipart, Map<String, String> base64ImagesMap)
+            throws MessagingException, NoSuchAlgorithmException, NoSuchProviderException, SMIMEException {
+        for (String contentId : base64ImagesMap.keySet()) {
+            MimeBodyPart imagePart = getImageMimeBodyPart(base64ImagesMap, contentId);
+            imagePart = encryptMimeBodyPart(imagePart);
+            multipart.addBodyPart(imagePart);
+        }
+    }
+
+    private MimeBodyPart getImageMimeBodyPart(Map<String, String> base64ImagesMap, String contentId) throws MessagingException {
+        MimeBodyPart imagePart = new MimeBodyPart();
+        imagePart.setContentID(contentId);
+        imagePart.setHeader("Content-Transfer-Encoding", "base64");
+        imagePart.setDataHandler(new DataHandler(Base64.decode(base64ImagesMap.get(contentId)), "image/png;"));
+        return imagePart;
+    }
+
+    private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws NoSuchAlgorithmException,
+            NoSuchProviderException, SMIMEException {
+        if(encryptMessage) {
+            mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
+        }
+        return mimeBodyPart;
     }
 
     protected void addEncryptionSettings() throws  Exception{
