@@ -167,5 +167,6 @@
         <module>score-mail</module>
         <module>score-json</module>
         <module>score-utilities</module>
-	</modules>
+        <module>score-rft</module>
+    </modules>
 </project>
