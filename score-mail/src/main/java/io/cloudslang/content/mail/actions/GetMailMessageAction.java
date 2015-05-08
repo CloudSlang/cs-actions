@@ -89,6 +89,7 @@ public class GetMailMessageAction {
             @Param(value = GetMailMessageInputs.TRUSTALLROOTS) String trustAllRoots,
             @Param(value = GetMailMessageInputs.MESSAGE_NUMBER, required = true) String messageNumber,
             @Param(value = GetMailMessageInputs.SUBJECT_ONLY) String subjectOnly,
+            @Param(value = GetMailMessageInputs.ENABLETLS) String enableTLS,
             @Param(value = GetMailMessageInputs.ENABLESSL) String enableSSL,
             @Param(value = GetMailMessageInputs.KEYSTORE) String keystore,
             @Param(value = GetMailMessageInputs.KEYSTORE_PASSWORD) String keystorePassword,
@@ -110,6 +111,7 @@ public class GetMailMessageAction {
         getMailMessageInputs.setTrustAllRoots(trustAllRoots);
         getMailMessageInputs.setMessageNumber(messageNumber);
         getMailMessageInputs.setSubjectOnly(subjectOnly);
+        getMailMessageInputs.setEnableSSL(enableTLS);
         getMailMessageInputs.setEnableSSL(enableSSL);
         getMailMessageInputs.setKeystore(keystore);
         getMailMessageInputs.setKeystorePassword(keystorePassword);
