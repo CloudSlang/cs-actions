@@ -223,9 +223,7 @@ public class GetMailMessage {
     }
 
     protected Store configureStoreWithTLS(Properties props, Authenticator auth) throws NoSuchProviderException {
-        props.setProperty("mail." + protocol + ".socketFactory.class", SSL_FACTORY);
         props.setProperty("mail." + protocol + ".port", port);
-        props.setProperty("mail." + protocol + ".socketFactory.port", port);
         props.setProperty("mail." + protocol + ".ssl.enable", STR_FALSE);
         props.setProperty("mail." + protocol + ".starttls.enable", STR_TRUE);
         props.setProperty("mail." + protocol + ".starttls.required", STR_TRUE);

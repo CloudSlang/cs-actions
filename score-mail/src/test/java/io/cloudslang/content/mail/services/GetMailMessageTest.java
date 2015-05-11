@@ -439,9 +439,7 @@ public class GetMailMessageTest {
 
     @Test
     public void testConfigureStoreWithTLS() throws Exception {
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.class", SSL_FACTORY);
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
@@ -456,9 +454,7 @@ public class GetMailMessageTest {
 
         Store store = getMailMessageSpy.configureStoreWithTLS(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.class", SSL_FACTORY);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
