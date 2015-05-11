@@ -367,7 +367,7 @@ public class GetMailMessageTest {
     }
 
     /**
-     * Test createMessageStore method with enableSSL input true.
+     * Test createMessageStore method with enableSSL input true and enableTLS input false.
      */
     @Test
     public void testCreateMessageStoreWithEnableSSLInputTrue() throws Exception {
@@ -379,12 +379,31 @@ public class GetMailMessageTest {
 
         addRequiredInputs();
         inputs.setEnableSSL(STR_TRUE);
+        inputs.setEnableTLS(STR_FALSE);
         getMailMessageSpy.processInputs(inputs);
         assertEquals(storeMock, getMailMessageSpy.createMessageStore());
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
         verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
         verify(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+    }
+
+    @Test
+    public void testCreateMessageStoreWithEnableTLSInputTrue() throws Exception {
+        PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
+        PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
+        doNothing().when(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+        doNothing().when(storeMock).connect();
+
+        addRequiredInputs();
+        inputs.setEnableTLS(STR_TRUE);
+        getMailMessageSpy.processInputs(inputs);
+        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        PowerMockito.verifyNew(Properties.class).withNoArguments();
+        PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
+        verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        verify(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
     }
 
     /**
@@ -412,6 +431,31 @@ public class GetMailMessageTest {
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.fallback", STR_FALSE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
+        PowerMockito.verifyNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
+        PowerMockito.verifyStatic();
+        Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        verify(sessionMock).getStore(urlNameMock);
+    }
+
+    @Test
+    public void testConfigureStoreWithTLS() throws Exception {
+        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
+        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
+        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
+
+        PowerMockito.whenNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString()).thenReturn(urlNameMock);
+        PowerMockito.mockStatic(Session.class);
+        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        doReturn(storeMock).when(sessionMock).getStore(urlNameMock);
+
+        addRequiredInputs();
+        getMailMessageSpy.processInputs(inputs);
+
+        Store store = getMailMessageSpy.configureStoreWithTLS(propertiesMock, authenticatorMock);
+        assertEquals(storeMock, store);
+        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
+        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
+        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
         PowerMockito.verifyNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());

@@ -15,6 +15,7 @@ public class GetMailMessageInputs {
     public static final String MESSAGE_NUMBER = "messageNumber";
     public static final String SUBJECT_ONLY = "subjectOnly";
     public static final String ENABLESSL = "enableSSL";
+    public static final String ENABLETLS = "enableTLS";
     public static final String KEYSTORE = "keystore";
     public static final String KEYSTORE_PASSWORD = "keystorePassword";
     public static final String TRUST_KEYSTORE = "trustKeystore";
@@ -35,6 +36,7 @@ public class GetMailMessageInputs {
     private String messageNumber;
     private String subjectOnly;
     private String enableSSL;
+    private String enableTLS;
     private String keystore;
     private String keystorePassword;
     private String trustKeystore;
@@ -44,6 +46,14 @@ public class GetMailMessageInputs {
     private String decryptionKeystore;
     private String decryptionKeyAlias;
     private String decryptionKeystorePassword;
+
+    public String getEnableTLS() {
+        return enableTLS;
+    }
+
+    public void setEnableTLS(String enableTLS) {
+        this.enableTLS = enableTLS;
+    }
 
     public String getHostname() {
         return hostname;

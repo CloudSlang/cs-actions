@@ -93,6 +93,7 @@ public class GetMailMessage {
     private int messageNumber;
     private boolean subjectOnly = true;
     private boolean enableSSL;
+    private boolean enableTLS;
     private String keystore;
     private String keystorePassword;
     private String trustKeystoreFile;
@@ -196,12 +197,16 @@ public class GetMailMessage {
         Properties props = new Properties();
         Authenticator auth = new SimpleAuthenticator(username, password);
         Store store;
-        if (!enableSSL) {
-            store = configureStoreWithoutSSL(props, auth);
+        if (enableTLS) {
+            addSSLSettings(trustAllRoots, keystore, keystorePassword, trustKeystoreFile, trustPassword);
+            store = configureStoreWithTLS(props, auth);
             store.connect();
-        } else {
+        } else if (enableSSL) {
             addSSLSettings(trustAllRoots, keystore, keystorePassword, trustKeystoreFile, trustPassword);
             store = configureStoreWithSSL(props, auth);
+            store.connect();
+        } else {
+            store = configureStoreWithoutSSL(props, auth);
             store.connect();
         }
         return store;
@@ -212,6 +217,15 @@ public class GetMailMessage {
         props.setProperty("mail." + protocol + ".socketFactory.fallback", STR_FALSE);
         props.setProperty("mail." + protocol + ".port", port);
         props.setProperty("mail." + protocol + ".socketFactory.port", port);
+        URLName url = new URLName(protocol, host, Integer.parseInt(port), "", username, password);
+        Session session = Session.getInstance(props, auth);
+        return session.getStore(url);
+    }
+
+    protected Store configureStoreWithTLS(Properties props, Authenticator auth) throws NoSuchProviderException {
+        props.setProperty("mail." + protocol + ".ssl.enable", STR_FALSE);
+        props.setProperty("mail." + protocol + ".starttls.enable", STR_TRUE);
+        props.setProperty("mail." + protocol + ".starttls.required", STR_TRUE);
         URLName url = new URLName(protocol, host, Integer.parseInt(port), "", username, password);
         Session session = Session.getInstance(props, auth);
         return session.getStore(url);
@@ -376,6 +390,8 @@ public class GetMailMessage {
         String strEnableSSL = getMailMessageInputs.getEnableSSL();
         // Default value of enableSSL is false;
         enableSSL = (null != strEnableSSL && strEnableSSL.equalsIgnoreCase(STR_TRUE));
+        String strEnableTLS = getMailMessageInputs.getEnableTLS();
+        enableTLS = (null != strEnableTLS && strEnableTLS.equalsIgnoreCase(STR_TRUE));
         keystore = getMailMessageInputs.getKeystore();
         keystorePassword = getMailMessageInputs.getKeystorePassword();
         trustKeystoreFile = getMailMessageInputs.getTrustKeystore();
