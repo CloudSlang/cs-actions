@@ -76,6 +76,9 @@ public class SendMailAction {
             @Param(value = SendMailInputs.BODY, required = true) String body,
             @Param(SendMailInputs.READ_RECEIPT) String readReceipt,
             @Param(SendMailInputs.ATTACHMENTS) String attachments,
+            @Param(SendMailInputs.HEADERS) String headers,
+            @Param(SendMailInputs.HEADERS_ROW_DELIMITER) String rowDelimiter,
+            @Param(SendMailInputs.HEADERS_COLUMN_DELIMITER) String columnDelimiter,
             @Param(SendMailInputs.USER) String user,
             @Param(SendMailInputs.PASSWORD) String password,
             @Param(SendMailInputs.DELIMITER) String delimiter,
@@ -99,6 +102,9 @@ public class SendMailAction {
         sendMailInputs.setBody(body);
         sendMailInputs.setReadReceipt(readReceipt);
         sendMailInputs.setAttachments(attachments);
+        sendMailInputs.setHeaders(headers);
+        sendMailInputs.setRowDelimiter(rowDelimiter);
+        sendMailInputs.setColumnDelimiter(columnDelimiter);
         sendMailInputs.setUser(user);
         sendMailInputs.setPassword(password);
         sendMailInputs.setDelimiter(delimiter);

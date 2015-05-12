@@ -30,10 +30,9 @@ import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by giloan on 10/30/2014.
@@ -75,6 +74,10 @@ public class SendMail {
     String keystoreFile;
     String keyAlias;
     String keystorePass;
+    List<String> headerNames;
+    List<String> headerValues;
+    String rowDelimiter;
+    String columnDelimiter;
     int smtpPort;
     boolean html;
     boolean readReceipt;
@@ -144,6 +147,9 @@ public class SendMail {
                 }
             }
             msg.setContent(multipart);
+            if (headerNames != null && !headerNames.isEmpty()) {
+                msg = addHeadersToSMTPMessage(msg, headerNames, headerValues);
+            }
             msg.setFrom(new InternetAddress(from));
             msg.setSubject(MimeUtility.encodeText(subject.replaceAll("[\\n\\r]", " "), charset, encodingScheme));
 
@@ -284,7 +290,7 @@ public class SendMail {
         gen.addKeyTransRecipient((X509Certificate)chain[0]);
     }
 
-    private void processInputs(SendMailInputs sendMailInputs) {
+    private void processInputs(SendMailInputs sendMailInputs) throws Exception {
         try {
             html = Boolean.parseBoolean(sendMailInputs.getHtmlEmail());
         } catch (Exception e) {
@@ -356,5 +362,116 @@ public class SendMail {
         } catch (Exception e) {
             enableTLS = false;
         }
+
+        String rowDelimiterInput = sendMailInputs.getRowDelimiter();
+        if(StringUtils.isEmpty(rowDelimiterInput)) {
+            rowDelimiter = "\\n";
+        } else {
+           rowDelimiter = escapeDelimiterIfVerticalBar(rowDelimiter);
+        }
+        String columnDelimiterInput = sendMailInputs.getColumnDelimiter();
+        if(StringUtils.isEmpty(columnDelimiterInput)) {
+            columnDelimiter = ":";
+        } else {
+            columnDelimiter = escapeDelimiterIfVerticalBar(columnDelimiter);
+        }
+        String headersMap = sendMailInputs.getHeaders();
+        if(!StringUtils.isEmpty(headersMap)) {
+            Object[] headers = extractHeaderNamesAndValues(headersMap, rowDelimiter, columnDelimiter);
+            headerNames = (ArrayList<String>) headers[0];
+            headerValues = (ArrayList<String>) headers[1];
+        }
+    }
+
+    /**
+     * Within String.split() function, vertical bar | is special regex character and needs to be escaped.
+     * @param delimiter The String that needs to be escaped in case its the vertical bar |.
+     * @return The escaped delimiter if it's the case.
+     */
+    protected String escapeDelimiterIfVerticalBar(String delimiter) {
+        if (delimiter.equals("|")) {
+            return "\\|";
+        }
+        return delimiter;
+    }
+
+    /**
+     * This method extracts and returns an object containing two Lists. A list with the header names and a list with the header values.
+     * Values found on same position in the two lists correspond to each other.
+     * @param headersMap
+     * @param rowDelimiter
+     * @param columnDelimiter
+     * @return
+     * @throws Exception
+     */
+    protected Object[] extractHeaderNamesAndValues(String headersMap, String rowDelimiter, String columnDelimiter) throws Exception {
+        String[] rows = headersMap.split(rowDelimiter);
+        ArrayList<String> headerNames = new ArrayList<>();
+        ArrayList<String> headerValues = new ArrayList<>();
+        for (int i = 0; i < rows.length; i++) {
+            if (StringUtils.isEmpty(rows[i])) {
+                continue;
+            }
+            else {
+                if (validateRow(rows[i], columnDelimiter, i)) {
+                    String[] headerNameAndValue = rows[i].split(columnDelimiter);
+                    headerNames.add(i, headerNameAndValue[0].trim());
+                    headerValues.add(i, headerNameAndValue[1].trim());
+                }
+            }
+        }
+        return new Object[]{headerNames, headerValues};
+    }
+
+    /**
+     * This method validates a row contained in the 'headers' input of the operation.
+     * @param row The value of the row to be validated.
+     * @param columnDelimiter The delimiter that separates the header name from the header value.
+     * @param rowNumber The row number inside the 'headers' input.
+     * @return This method returns true if the row contains a header name and a header value.
+     * @throws Exception
+     */
+    protected boolean validateRow(String row, String columnDelimiter, int rowNumber) throws Exception {
+        if (row.contains(columnDelimiter)) {
+            if (row.equals(columnDelimiter)) {
+                throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input does not contain any values.");
+            } else {
+                String[] headerNameAndValue = row.split(columnDelimiter);
+                if (StringUtils.countMatches(row, columnDelimiter) > 1) {
+                    throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input has more than one column delimiter.");
+                } else {
+                    if (headerNameAndValue.length == 1) {
+                        throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input is missing one of the header values.");
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        } else {
+            throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input has no column delimiter.");
+        }
+    }
+
+    /**
+     * The method adds headers to a SMTPMessage object. If the header is already present in the message then its values list will be updated with the given header value.
+     * @param message The SMTPMessage object to which the headers are added or updated.
+     * @param headerNames A list of strings containing the header names that need to be added or updated.
+     * @param headerValues A list of strings containing the header values that need to be added.
+     * @return The method returns the message with the headers added.
+     * @throws MessagingException
+     */
+    protected SMTPMessage addHeadersToSMTPMessage(SMTPMessage message, List<String> headerNames, List<String> headerValues) throws MessagingException {
+        Iterator namesIter = headerNames.iterator();
+        Iterator valuesIter = headerValues.iterator();
+        while (namesIter.hasNext() && valuesIter.hasNext()) {
+            String headerName = (String) namesIter.next();
+            String headerValue = (String) valuesIter.next();
+            if (message.getHeader(headerName) != null) { // then a header with this name already exists, add the headerValue to the existing values list.
+                message.addHeader(headerName, headerValue);
+            } else {
+                message.setHeader(headerName, headerValue);
+            }
+        }
+        return message;
     }
 }

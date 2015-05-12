@@ -8,10 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -20,12 +17,13 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import java.io.File;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -105,6 +103,37 @@ public class SendMailTest {
             DEFAULT_CHARACTERSET = "UTF-8",
             DEFAULT_DELIMITER = ",",
             CANNOT_ATTACH = "Cannot attach";
+    private static final String HEADERS_WITH_DEFAULT_DELIMIETRS = "Sensitivity:Company-Confidential\n" +
+            "message-type:Multiple Part\n" +
+            "Sensitivity:Personal";
+    private static final String HEADERS_WITH_DIFFERENT_DELIMITERS = "Sensitivity;Company-Confidential|" +
+            "message-type;Multiple Part|" +
+            "Sensitivity;Personal";
+    private static final String HEADERS_WITH_MISSING_COLUMNDELIMITER = "Sensitivity:Company-Confidential" +
+            "message-type:Multiple Part\n" +
+            "Sensitivity:Personal";
+    private static final String VALID_ROW = "Sensitivity:Company-Confidential";
+    private static final String EMPTY_ROW = ":";
+    private static final String ROW_MISSING_HEADERNAME = "Sensitivity:";
+    private static final String ROW_WITH_MORE_THAN_ONE_DELIMITER = "Sensitivity:Company:Confidential";
+    private static final String ROW_WITH_NO_DELIMITER = "Sensitivity Company-Confidential";
+    private static final String HEADER1 = "Sensitivity";
+    private static final String HEADER1v = "Company-Confidential";
+    private static final String HEADER2 = "message-type";
+    private static final String HEADER2v = "Multiple Part";
+    private static final String HEADER3 = "Sensitivity";
+    private static final String HEADER3v = "Personal";
+    private static final String ESCAPED_VERTICAL_BAR = "\\|";
+    private static final String VERTICAL_BAR = "|";
+    private static final String DEFAULT_ROW_DELIMITER = "\n";
+    private static final String DEFAULT_COLUMN_DELIMITER = ":";
+    private static final String COLUMN_DELIMITER = ";";
+
+    private static final String HEADERS_INPUT_DOES_NOT_CONTAIN_ANY_VALUES = "'headers' input does not contain any values";
+    private static final String HEADERS_INPUT_HAS_MORE_THAN_ONE_DELIMITER = "'headers' input has more than one column delimiter";
+    private static final String HEADERS_INPUT_IS_MISSING_ONE_OF_THE_VALUES = "'headers' input is missing one of the header values";
+    private static final String HEADERS_INPUT_HAS_NO_DELIMITER = "'headers' input has no column delimiter";
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
     private SendMail sendMail;
@@ -130,6 +159,8 @@ public class SendMailTest {
     private DataHandler dataHandlerMock;
     @Mock
     private File fileMock;
+    @Spy
+    private SendMail sendMailSpy = new SendMail();
 
     /**
      * Initialize tested object and set up the mocks.
@@ -167,6 +198,174 @@ public class SendMailTest {
     public void tearDown() throws Exception {
         sendMail = null;
         inputs = null;
+    }
+
+    /**
+     * Test if the method addHeadersToSMTPMessage is called if headers are supplied to be added to the mail.
+     * @throws Exception
+     */
+    @Test
+    public void testExecuteWithHeaders() throws Exception {
+        Mockito.doReturn(transportMock).when(sessionMock).getTransport(SMTP_PROTOCOL);
+
+        inputs.setSmtpHostname(SMTP_HOSTANME);
+        inputs.setPort(PORT);
+        inputs.setFrom(FROM);
+        inputs.setTo(TO);
+        inputs.setCc(CC);
+        inputs.setBcc(BCC);
+        inputs.setSubject(SUBJECT);
+        inputs.setBody(BODY);
+        inputs.setUser(USER);
+        inputs.setPassword(PASSWORD);
+        inputs.setHeaders(HEADERS_WITH_DEFAULT_DELIMIETRS);
+
+        sendMailSpy.execute(inputs);
+        verify(sendMailSpy).addHeadersToSMTPMessage(Matchers.<SMTPMessage>any(), anyList(), anyList());
+    }
+
+    /**
+     * Test extractHeaderNamesAndValues method for valid inputs.
+     * @throws Exception
+     */
+    @Test
+    public void testExtractHeaderNamesAndValues() throws Exception {
+        Object[] headerNamesAndValues = sendMailSpy.extractHeaderNamesAndValues(HEADERS_WITH_DIFFERENT_DELIMITERS, ESCAPED_VERTICAL_BAR, COLUMN_DELIMITER);
+        ArrayList<String> headerNames = (ArrayList<String>) headerNamesAndValues[0];
+        ArrayList<String> headerValues = (ArrayList<String>) headerNamesAndValues[1];
+
+        Iterator namesIter = headerNames.iterator();
+        Iterator valuesIter = headerValues.iterator();
+        while (namesIter.hasNext() && valuesIter.hasNext()) {
+            assertEquals(HEADER1, namesIter.next());
+            assertEquals(HEADER1v, valuesIter.next());
+            assertEquals(HEADER2, namesIter.next());
+            assertEquals(HEADER2v, valuesIter.next());
+            assertEquals(HEADER3, namesIter.next());
+            assertEquals(HEADER3v, valuesIter.next());
+        }
+    }
+
+    /**
+     * Test extractHeaderNamesAndValues method for invalid inputs.
+     * @throws Exception
+     */
+    @Test
+    public void testExtractHeaderNamesAndValueForInvalidValues() throws Exception {
+        exception.expect(Exception.class);
+        sendMailSpy.extractHeaderNamesAndValues(HEADERS_WITH_MISSING_COLUMNDELIMITER, DEFAULT_ROW_DELIMITER, DEFAULT_COLUMN_DELIMITER);
+        verify(sendMailSpy).validateRow(Matchers.<String>any(), Matchers.<String>any(), Matchers.anyInt());
+    }
+
+    /**
+     * Test escapeDelimiterIfVerticalBar with vertical bar input.
+     */
+    @Test
+    public void testEscapeDelimiterIfVerticalBarWithVerticalBarInput() {
+        assertEquals(ESCAPED_VERTICAL_BAR, sendMail.escapeDelimiterIfVerticalBar(VERTICAL_BAR));
+    }
+
+    /**
+     * Test escapeDelimiterIfVerticalBar without vertical bar input.
+     */
+    @Test
+    public void testEscapeDelimiterIfVerticalBar() {
+        assertEquals(COLUMN_DELIMITER, sendMail.escapeDelimiterIfVerticalBar(COLUMN_DELIMITER));
+    }
+
+    /**
+     * Test validateRow method with valid row value.
+     * @throws Exception
+     */
+    @Test
+    public void testValidateRowWithValidInput() throws Exception {
+        assertTrue(sendMail.validateRow(VALID_ROW, DEFAULT_COLUMN_DELIMITER, 0));
+    }
+
+    /**
+     * Test validateRow method with empty values in the row.
+     * @throws Exception
+     */
+    @Test
+    public void testValidateRowWithEmptyValues() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage(HEADERS_INPUT_DOES_NOT_CONTAIN_ANY_VALUES);
+
+        sendMail.validateRow(EMPTY_ROW, DEFAULT_COLUMN_DELIMITER, 0);
+    }
+
+    /**
+     * Test validateRow method with more than one column delimiter found in the row.
+     * @throws Exception
+     */
+    @Test
+    public void testValidateRowWithMoreThanOneColumnDelimiter() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage(HEADERS_INPUT_HAS_MORE_THAN_ONE_DELIMITER);
+
+        sendMail.validateRow(ROW_WITH_MORE_THAN_ONE_DELIMITER, DEFAULT_COLUMN_DELIMITER, 0);
+    }
+
+    /**
+     * Test validateRow method when one of the header values is missing.
+     * @throws Exception
+     */
+    @Test
+    public void testValidateRowWithOneOfTheHeaderValuesMissing() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage(HEADERS_INPUT_IS_MISSING_ONE_OF_THE_VALUES);
+
+        sendMail.validateRow(ROW_MISSING_HEADERNAME, DEFAULT_COLUMN_DELIMITER, 0);
+    }
+
+    /**
+     * Test validateRow method when the delimiter is missing.
+     * @throws Exception
+     */
+    @Test
+    public void testValidateRowWithMissingDelimiter() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage(HEADERS_INPUT_HAS_NO_DELIMITER);
+
+        sendMail.validateRow(ROW_WITH_NO_DELIMITER, DEFAULT_COLUMN_DELIMITER, 0);
+    }
+
+    /**
+     * Test addHeadersToSMTPMessage method when adding 3 headers and two of them have the same name but different values, so the method should add the second value to the same header.
+     * @throws MessagingException
+     */
+    @Test
+    public void testAddHeadersToSMTPMessage() throws MessagingException {
+        ArrayList<String> headerNames = new ArrayList<>();
+        headerNames.add(0, "Sensitivity");
+        headerNames.add(1, "message-type");
+        headerNames.add(2, "Sensitivity");
+        ArrayList<String> headerValues = new ArrayList<>();
+        headerValues.add(0, "Company-Confidential");
+        headerValues.add(1, "Multiple Part");
+        headerValues.add(2, "Personal");
+
+        doReturn(null).doReturn(new String[] {"Company-Confidential"}).when(smtpMessageMock).getHeader("Sensitivity");
+        sendMail.addHeadersToSMTPMessage(smtpMessageMock, headerNames, headerValues);
+        verify(smtpMessageMock, times(1)).addHeader(Matchers.anyString(), Matchers.anyString());
+        verify(smtpMessageMock, times(2)).setHeader(Matchers.anyString(), Matchers.anyString());
+        verify(smtpMessageMock, times(3)).getHeader(Matchers.anyString());
+    }
+
+    /**
+     * Test addHeadersToSMTPMessage method when it throws a MessagingException.
+     * @throws MessagingException
+     */
+    @Test
+    public void testAddHeadersToSMTPMessageThrowsException() throws MessagingException {
+        ArrayList<String> headerNames = new ArrayList<>();
+        headerNames.add(0, "Sensitivity");
+        ArrayList<String> headerValues = new ArrayList<>();
+        headerValues.add(0, "Company-Confidential");
+        doThrow(new MessagingException()).when(smtpMessageMock).getHeader(Matchers.anyString());
+        exception.expect(MessagingException.class);
+
+        sendMail.addHeadersToSMTPMessage(smtpMessageMock, headerNames, headerValues);
     }
 
     /**
