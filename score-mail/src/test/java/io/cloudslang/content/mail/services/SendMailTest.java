@@ -148,6 +148,8 @@ public class SendMailTest {
     @Mock
     private SMTPMessage smtpMessageMock;
     @Mock
+    private SMTPMessage msgMock;
+    @Mock
     private MimeMultipart mimeMultipartMock;
     @Mock
     private InternetAddress recipientMock;
@@ -219,6 +221,7 @@ public class SendMailTest {
         inputs.setUser(USER);
         inputs.setPassword(PASSWORD);
         inputs.setHeaders(HEADERS_WITH_DEFAULT_DELIMIETRS);
+        doReturn(msgMock).when(sendMailSpy).addHeadersToSMTPMessage(Matchers.<SMTPMessage>any(), anyList(), anyList());
 
         sendMailSpy.execute(inputs);
         verify(sendMailSpy).addHeadersToSMTPMessage(Matchers.<SMTPMessage>any(), anyList(), anyList());
@@ -345,11 +348,12 @@ public class SendMailTest {
         headerValues.add(1, "Multiple Part");
         headerValues.add(2, "Personal");
 
-        doReturn(null).doReturn(new String[] {"Company-Confidential"}).when(smtpMessageMock).getHeader("Sensitivity");
+        doReturn(null).doReturn(new String[] {"Company-Confidential"}).when(msgMock).getHeader("Sensitivity");
+        Mockito.when(new SMTPMessage(smtpMessageMock)).thenReturn(msgMock);
         sendMail.addHeadersToSMTPMessage(smtpMessageMock, headerNames, headerValues);
-        verify(smtpMessageMock, times(1)).addHeader(Matchers.anyString(), Matchers.anyString());
-        verify(smtpMessageMock, times(2)).setHeader(Matchers.anyString(), Matchers.anyString());
-        verify(smtpMessageMock, times(3)).getHeader(Matchers.anyString());
+        verify(msgMock, times(1)).addHeader(Matchers.anyString(), Matchers.anyString());
+        verify(msgMock, times(2)).setHeader(Matchers.anyString(), Matchers.anyString());
+        verify(msgMock, times(3)).getHeader(Matchers.anyString());
     }
 
     /**
@@ -362,7 +366,8 @@ public class SendMailTest {
         headerNames.add(0, "Sensitivity");
         ArrayList<String> headerValues = new ArrayList<>();
         headerValues.add(0, "Company-Confidential");
-        doThrow(new MessagingException()).when(smtpMessageMock).getHeader(Matchers.anyString());
+        Mockito.when(new SMTPMessage(smtpMessageMock)).thenReturn(msgMock);
+        doThrow(new MessagingException()).when(msgMock).getHeader(Matchers.anyString());
         exception.expect(MessagingException.class);
 
         sendMail.addHeadersToSMTPMessage(smtpMessageMock, headerNames, headerValues);

@@ -453,7 +453,7 @@ public class SendMail {
     }
 
     /**
-     * The method adds headers to a SMTPMessage object. If the header is already present in the message then its values list will be updated with the given header value.
+     * The method creates a copy of the SMTPMessage object passed through the arguments list and adds the headers to the copied object then returns it. If the header is already present in the message then its values list will be updated with the given header value.
      * @param message The SMTPMessage object to which the headers are added or updated.
      * @param headerNames A list of strings containing the header names that need to be added or updated.
      * @param headerValues A list of strings containing the header values that need to be added.
@@ -461,17 +461,18 @@ public class SendMail {
      * @throws MessagingException
      */
     protected SMTPMessage addHeadersToSMTPMessage(SMTPMessage message, List<String> headerNames, List<String> headerValues) throws MessagingException {
+        SMTPMessage msg = new SMTPMessage(message);
         Iterator namesIter = headerNames.iterator();
         Iterator valuesIter = headerValues.iterator();
         while (namesIter.hasNext() && valuesIter.hasNext()) {
             String headerName = (String) namesIter.next();
             String headerValue = (String) valuesIter.next();
-            if (message.getHeader(headerName) != null) { // then a header with this name already exists, add the headerValue to the existing values list.
-                message.addHeader(headerName, headerValue);
+            if (msg.getHeader(headerName) != null) { // then a header with this name already exists, add the headerValue to the existing values list.
+                msg.addHeader(headerName, headerValue);
             } else {
-                message.setHeader(headerName, headerValue);
+                msg.setHeader(headerName, headerValue);
             }
         }
-        return message;
+        return msg;
     }
 }
