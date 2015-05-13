@@ -16,6 +16,9 @@ public class SendMailInputs {
     public static final String BODY = "body";
     public static final String READ_RECEIPT = "readReceipt";
     public static final String ATTACHMENTS = "attachments";
+    public static final String HEADERS = "headers";
+    public static final String HEADERS_ROW_DELIMITER = "rowDelimiter";
+    public static final String HEADERS_COLUMN_DELIMITER = "columnDelimiter";
     public static final String USER = "username";
     public static final String PASSWORD = "password";
     public static final String DELIMITER = "delimiter";
@@ -37,7 +40,9 @@ public class SendMailInputs {
     private String body;
     private String read_receipt;
     private String attachments;
-    private String user;
+    private String headers;
+    private String rowDelimiter;
+    private String columnDelimiter;
     private String password;
     private String delimiter;
     private String characterset;
@@ -46,6 +51,31 @@ public class SendMailInputs {
     private String encryptionKeyAlias;
     private String encryptionKeystorePassword;
     private String enableTLS;
+    private String user;
+
+    public String getRowDelimiter() {
+        return rowDelimiter;
+    }
+
+    public void setRowDelimiter(String rowDelimiter) {
+        this.rowDelimiter = rowDelimiter;
+    }
+
+    public String getColumnDelimiter() {
+        return columnDelimiter;
+    }
+
+    public void setColumnDelimiter(String columnDelimiter) {
+        this.columnDelimiter = columnDelimiter;
+    }
+
+    public String getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(String headers) {
+        this.headers = headers;
+    }
 
     public String getSMTPHostname() {
         return smtpHostname;
