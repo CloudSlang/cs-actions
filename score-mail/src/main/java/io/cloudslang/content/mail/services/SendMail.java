@@ -147,9 +147,6 @@ public class SendMail {
                 }
             }
             msg.setContent(multipart);
-            if (headerNames != null && !headerNames.isEmpty()) {
-                msg = addHeadersToSMTPMessage(msg, headerNames, headerValues);
-            }
             msg.setFrom(new InternetAddress(from));
             msg.setSubject(MimeUtility.encodeText(subject.replaceAll("[\\n\\r]", " "), charset, encodingScheme));
 
@@ -183,6 +180,10 @@ public class SendMail {
                     }
                     msg.setRecipients(Message.RecipientType.BCC, bccRecipients);
                 }
+            }
+
+            if (headerNames != null && !headerNames.isEmpty()) {
+                msg = addHeadersToSMTPMessage(msg, headerNames, headerValues);
             }
 
             msg.saveChanges();
@@ -367,13 +368,13 @@ public class SendMail {
         if(StringUtils.isEmpty(rowDelimiterInput)) {
             rowDelimiter = "\\n";
         } else {
-           rowDelimiter = escapeDelimiterIfVerticalBar(rowDelimiter);
+           rowDelimiter = escapeDelimiterIfVerticalBar(rowDelimiterInput);
         }
         String columnDelimiterInput = sendMailInputs.getColumnDelimiter();
         if(StringUtils.isEmpty(columnDelimiterInput)) {
             columnDelimiter = ":";
         } else {
-            columnDelimiter = escapeDelimiterIfVerticalBar(columnDelimiter);
+            columnDelimiter = escapeDelimiterIfVerticalBar(columnDelimiterInput);
         }
         String headersMap = sendMailInputs.getHeaders();
         if(!StringUtils.isEmpty(headersMap)) {
