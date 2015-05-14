@@ -111,7 +111,7 @@ public class GetMailMessageAction {
         getMailMessageInputs.setTrustAllRoots(trustAllRoots);
         getMailMessageInputs.setMessageNumber(messageNumber);
         getMailMessageInputs.setSubjectOnly(subjectOnly);
-        getMailMessageInputs.setEnableSSL(enableTLS);
+        getMailMessageInputs.setEnableTLS(enableTLS);
         getMailMessageInputs.setEnableSSL(enableSSL);
         getMailMessageInputs.setKeystore(keystore);
         getMailMessageInputs.setKeystorePassword(keystorePassword);
