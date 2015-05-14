@@ -21,10 +21,7 @@ import javax.mail.internet.MimeUtility;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URL;
 import java.security.*;
 import java.security.cert.X509Certificate;
@@ -61,6 +58,10 @@ public class GetMailMessage {
     public static final String PLEASE_SPECIFY_THE_PROTOCOL_FOR_THE_INDICATED_PORT = "Please specify the protocol for the indicated port.";
     public static final String TEXT_PLAIN = "text/plain";
     public static final String TEXT_HTML = "text/html";
+
+    private static final String MULTIPART_MIXED = "multipart/mixed";
+    private static final String MULTIPART_RELATED = "multipart/related";
+
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String SSL = "SSL";
     public static final String STR_FALSE = "false";
@@ -459,7 +460,9 @@ public class GetMailMessage {
             messageMap.put(TEXT_PLAIN, MimeUtility.decodeText(message.getContent().toString()));
         } else if (message.isMimeType(TEXT_HTML)) {
             messageMap.put(TEXT_HTML, MimeUtility.decodeText(convertMessage(message.getContent().toString())));
-        } else {
+        }else if (message.isMimeType(MULTIPART_MIXED) || message.isMimeType(MULTIPART_RELATED)) {
+            messageMap.put(MULTIPART_MIXED, extractMultipartMixedMessage(message, characterSet));
+        }else {
             Object obj = message.getContent();
             Multipart mpart = (Multipart) obj;
 
@@ -506,6 +509,76 @@ public class GetMailMessage {
         }//else
 
         return messageMap;
+    }
+
+    private String extractMultipartMixedMessage(Message message,    String characterSet) throws IOException, MessagingException {
+
+        Object obj = message.getContent();
+        Multipart mpart = (Multipart) obj;
+
+        for (int i = 0, n = mpart.getCount(); i < n; i++) {
+
+            Part part = mpart.getBodyPart(i);
+            String disposition = part.getDisposition();
+
+            if (disposition != null)  // this means the part is not an inline image or attached file.
+                continue;
+
+            if (part.isMimeType("multipart/related")) { // if related content then check it's parts
+
+                String content = processMultipart(part);
+
+                if (content != null)
+                    return content;
+
+            }
+
+            if (part.isMimeType("multipart/alternative")) {
+                return extractAlternativeContent(part);
+            }
+
+            if (part.isMimeType("text/plain") || part.isMimeType("text/html")) {
+                return part.getContent().toString();
+            }
+
+        }
+
+        return null;
+    }
+
+    private String processMultipart(Part part) throws IOException,
+            MessagingException {
+        Multipart relatedparts = (Multipart)part.getContent();
+
+        for(int j=0; j < relatedparts.getCount(); j++){
+
+            Part rel = relatedparts.getBodyPart(j);
+
+            if (rel.getDisposition() == null) { // again, if it's not an image or attachment(only those have disposition not null)
+
+                if (rel.isMimeType("multipart/alternative")) { // last crawl through the alternative formats.
+                    return extractAlternativeContent(rel);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private String extractAlternativeContent(Part part) throws IOException,
+            MessagingException {
+        Multipart alternatives = (Multipart)part.getContent();
+
+        Object content="";
+
+        for (int k = 0; k< alternatives.getCount(); k++) {
+            Part alternative = alternatives.getBodyPart(k);
+            if (alternative.getDisposition() == null) {
+                content = alternative.getContent();
+            }
+        }
+
+        return content.toString();
     }
 
     private MimeBodyPart decryptPart(MimeBodyPart part) throws Exception {
