@@ -17,7 +17,6 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import java.io.File;
@@ -123,7 +122,6 @@ public class SendMailTest {
     private static final String HEADER2v = "Multiple Part";
     private static final String HEADER3 = "Sensitivity";
     private static final String HEADER3v = "Personal";
-    private static final String ESCAPED_VERTICAL_BAR = "\\|";
     private static final String VERTICAL_BAR = "|";
     private static final String DEFAULT_ROW_DELIMITER = "\n";
     private static final String DEFAULT_COLUMN_DELIMITER = ":";
@@ -133,6 +131,9 @@ public class SendMailTest {
     private static final String HEADERS_INPUT_HAS_MORE_THAN_ONE_DELIMITER = "'headers' input has more than one column delimiter";
     private static final String HEADERS_INPUT_IS_MISSING_ONE_OF_THE_VALUES = "'headers' input is missing one of the header values";
     private static final String HEADERS_INPUT_HAS_NO_DELIMITER = "'headers' input has no column delimiter";
+
+    private static final String THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
+    private static final String THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -233,7 +234,7 @@ public class SendMailTest {
      */
     @Test
     public void testExtractHeaderNamesAndValues() throws Exception {
-        Object[] headerNamesAndValues = sendMailSpy.extractHeaderNamesAndValues(HEADERS_WITH_DIFFERENT_DELIMITERS, ESCAPED_VERTICAL_BAR, COLUMN_DELIMITER);
+        Object[] headerNamesAndValues = sendMailSpy.extractHeaderNamesAndValues(HEADERS_WITH_DIFFERENT_DELIMITERS, VERTICAL_BAR, COLUMN_DELIMITER);
         ArrayList<String> headerNames = (ArrayList<String>) headerNamesAndValues[0];
         ArrayList<String> headerValues = (ArrayList<String>) headerNamesAndValues[1];
 
@@ -260,20 +261,23 @@ public class SendMailTest {
         verify(sendMailSpy).validateRow(Matchers.<String>any(), Matchers.<String>any(), Matchers.anyInt());
     }
 
-    /**
-     * Test escapeDelimiterIfVerticalBar with vertical bar input.
-     */
     @Test
-    public void testEscapeDelimiterIfVerticalBarWithVerticalBarInput() {
-        assertEquals(ESCAPED_VERTICAL_BAR, sendMail.escapeDelimiterIfVerticalBar(VERTICAL_BAR));
+    public void testValidateDelimitersForValidValues() throws Exception {
+        sendMail.validateDelimiters(DEFAULT_ROW_DELIMITER, COLUMN_DELIMITER);
     }
 
-    /**
-     * Test escapeDelimiterIfVerticalBar without vertical bar input.
-     */
     @Test
-    public void testEscapeDelimiterIfVerticalBar() {
-        assertEquals(COLUMN_DELIMITER, sendMail.escapeDelimiterIfVerticalBar(COLUMN_DELIMITER));
+    public void testValidateDelimitersWhenRowDelimiterIsASubstringOfColumnDelimiter() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage(THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER);
+        sendMail.validateDelimiters(COLUMN_DELIMITER.substring(0, COLUMN_DELIMITER.length()-1), COLUMN_DELIMITER);
+    }
+
+    @Test
+    public void testValidateDelimitersWhenTheyAreEqual() throws Exception {
+        exception.expect(Exception.class);
+        exception.expectMessage(THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE);
+        sendMail.validateDelimiters(DEFAULT_ROW_DELIMITER, DEFAULT_ROW_DELIMITER);
     }
 
     /**
