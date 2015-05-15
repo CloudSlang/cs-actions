@@ -55,6 +55,8 @@ public class SendMail {
 
     public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
     public static final String BOUNCY_CASTLE_PROVIDER = "BC";
+    public static final String THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
+    public static final String THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
 
     //Operation inputs
     String attachments;
@@ -366,16 +368,19 @@ public class SendMail {
 
         String rowDelimiterInput = sendMailInputs.getRowDelimiter();
         if(StringUtils.isEmpty(rowDelimiterInput)) {
-            rowDelimiter = "\\n";
+            rowDelimiter = "\n";
         } else {
-           rowDelimiter = escapeDelimiterIfVerticalBar(rowDelimiterInput);
+            rowDelimiter = rowDelimiterInput;
         }
         String columnDelimiterInput = sendMailInputs.getColumnDelimiter();
         if(StringUtils.isEmpty(columnDelimiterInput)) {
             columnDelimiter = ":";
         } else {
-            columnDelimiter = escapeDelimiterIfVerticalBar(columnDelimiterInput);
+            columnDelimiter = columnDelimiterInput;
         }
+
+        validateDelimiters(rowDelimiter, columnDelimiter);
+
         String headersMap = sendMailInputs.getHeaders();
         if(!StringUtils.isEmpty(headersMap)) {
             Object[] headers = extractHeaderNamesAndValues(headersMap, rowDelimiter, columnDelimiter);
@@ -385,15 +390,18 @@ public class SendMail {
     }
 
     /**
-     * Within String.split() function, vertical bar | is special regex character and needs to be escaped.
-     * @param delimiter The String that needs to be escaped in case its the vertical bar |.
-     * @return The escaped delimiter if it's the case.
+     * This method checks if the delimiters are equal and if the row delimiter is a substring of the column delimiter and throws an exception with the apropriate message.
+     * @param rowDelimiter
+     * @param columnDelimiter
+     * @throws Exception
      */
-    protected String escapeDelimiterIfVerticalBar(String delimiter) {
-        if (delimiter.equals("|")) {
-            return "\\|";
+    protected void validateDelimiters(String rowDelimiter, String columnDelimiter) throws Exception {
+        if(rowDelimiter.equals(columnDelimiter)) {
+            throw new Exception(THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE);
         }
-        return delimiter;
+        if(StringUtils.contains(columnDelimiter, rowDelimiter)) {
+            throw new Exception(THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER);
+        }
     }
 
     /**
@@ -406,7 +414,7 @@ public class SendMail {
      * @throws Exception
      */
     protected Object[] extractHeaderNamesAndValues(String headersMap, String rowDelimiter, String columnDelimiter) throws Exception {
-        String[] rows = headersMap.split(rowDelimiter);
+        String[] rows = headersMap.split(Pattern.quote(rowDelimiter));
         ArrayList<String> headerNames = new ArrayList<>();
         ArrayList<String> headerValues = new ArrayList<>();
         for (int i = 0; i < rows.length; i++) {
@@ -415,7 +423,7 @@ public class SendMail {
             }
             else {
                 if (validateRow(rows[i], columnDelimiter, i)) {
-                    String[] headerNameAndValue = rows[i].split(columnDelimiter);
+                    String[] headerNameAndValue = rows[i].split(Pattern.quote(columnDelimiter));
                     headerNames.add(i, headerNameAndValue[0].trim());
                     headerValues.add(i, headerNameAndValue[1].trim());
                 }
@@ -437,7 +445,7 @@ public class SendMail {
             if (row.equals(columnDelimiter)) {
                 throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input does not contain any values.");
             } else {
-                String[] headerNameAndValue = row.split(columnDelimiter);
+                String[] headerNameAndValue = row.split(Pattern.quote(columnDelimiter));
                 if (StringUtils.countMatches(row, columnDelimiter) > 1) {
                     throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input has more than one column delimiter.");
                 } else {
