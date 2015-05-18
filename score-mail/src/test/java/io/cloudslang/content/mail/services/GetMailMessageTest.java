@@ -446,7 +446,7 @@ public class GetMailMessageTest {
         PowerMockito.whenNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString()).thenReturn(urlNameMock);
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        doReturn(storeMock).when(sessionMock).getStore(urlNameMock);
+        doReturn(storeMock).when(sessionMock).getStore(any(String.class));
 
         addRequiredInputs();
         getMailMessageSpy.processInputs(inputs);
@@ -456,10 +456,9 @@ public class GetMailMessageTest {
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
-        PowerMockito.verifyNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(urlNameMock);
+        verify(sessionMock).getStore(POP3_PROTOCOL + "s");
     }
 
     /**
