@@ -79,6 +79,7 @@ public class GetMailMessageTest {
     private static final String STR_FALSE = "false";
     private static final String STR_TRUE = "true";
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    public static final String SECURE_SUFFIX_FOR_POP3_AND_IMAP = "s";
     private String testSeparator = "\\";
     private String testJavaHome = "HDD:\\java";
     private static final String TEXT_PLAIN = "text/plain";
@@ -458,7 +459,7 @@ public class GetMailMessageTest {
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(POP3_PROTOCOL + "s");
+        verify(sessionMock).getStore(POP3_PROTOCOL + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
     }
 
     /**
