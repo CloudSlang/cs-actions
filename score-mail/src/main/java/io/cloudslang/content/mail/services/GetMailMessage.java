@@ -210,23 +210,17 @@ public class GetMailMessage {
         return store;
     }
 
-    private Store tryTLSOtherwiseTrySSL(Properties props, Authenticator auth) throws Exception {
+    private Store tryTLSOtherwiseTrySSL(Properties props, Authenticator auth) throws MessagingException {
         Store store = configureStoreWithTLS(props, auth);
         try {
             store.connect(host, username, password);
         } catch (Exception e) {
-            store = connectUsingSSLIfEnabled(props, auth, e);
-        }
-        return store;
-    }
-
-    private Store connectUsingSSLIfEnabled(Properties props, Authenticator auth, Exception e) throws Exception {
-        Store store;
-        if (enableSSL) {
-            clearTLSProperties(props);
-            store = connectUsingSSL(props, auth);
-        } else {
-            throw e;
+            if (enableSSL) {
+                clearTLSProperties(props);
+                store = connectUsingSSL(props, auth);
+            } else {
+                throw e;
+            }
         }
         return store;
     }
