@@ -390,14 +390,15 @@ public class GetMailMessageTest {
     }
 
     @Test
-    public void testCreateMessageStoreWithEnableTLSInputTrue() throws Exception {
+    public void testCreateMessageStoreWithEnableTLSInputTrueAndEnableSSLInputFalse() throws Exception {
         PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
         doNothing().when(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
         doReturn(storeMock).when(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
-        doNothing().when(storeMock).connect();
+        doNothing().when(storeMock).connect(HOST, USERNAME, PASSWORD);
 
         addRequiredInputs();
+        inputs.setEnableSSL(STR_FALSE);
         inputs.setEnableTLS(STR_TRUE);
         getMailMessageSpy.processInputs(inputs);
         assertEquals(storeMock, getMailMessageSpy.createMessageStore());
@@ -405,6 +406,28 @@ public class GetMailMessageTest {
         PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
         verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
         verify(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+    }
+
+    @Test
+    public void testCreateMessageStoreWithEnableTLSInputTrueExceptionAndEnableSSLInputTrue() throws Exception {
+        PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
+        PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
+        doNothing().when(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+        doThrow(AuthenticationFailedException.class).when(storeMock).connect(HOST, USERNAME, PASSWORD);
+        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+        doNothing().when(storeMock).connect();
+
+        addRequiredInputs();
+        inputs.setEnableSSL(STR_TRUE);
+        inputs.setEnableTLS(STR_TRUE);
+        getMailMessageSpy.processInputs(inputs);
+        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        PowerMockito.verifyNew(Properties.class).withNoArguments();
+        PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
+        verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        verify(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+        verify(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
     }
 
     /**

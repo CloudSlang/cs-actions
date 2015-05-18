@@ -198,12 +198,10 @@ public class GetMailMessage {
         Properties props = new Properties();
         Authenticator auth = new SimpleAuthenticator(username, password);
         Store store;
+        if (enableTLS || enableSSL) addSSLSettings(trustAllRoots, keystore, keystorePassword, trustKeystoreFile, trustPassword);
         if (enableTLS) {
-            addSSLSettings(trustAllRoots, keystore, keystorePassword, trustKeystoreFile, trustPassword);
-            store = configureStoreWithTLS(props, auth);
-            store.connect(host, username, password);
+            store = tryTLSOtherwiseTrySSL(props, auth);
         } else if (enableSSL) {
-            addSSLSettings(trustAllRoots, keystore, keystorePassword, trustKeystoreFile, trustPassword);
             store = configureStoreWithSSL(props, auth);
             store.connect();
         } else {
@@ -211,6 +209,28 @@ public class GetMailMessage {
             store.connect();
         }
         return store;
+    }
+
+    private Store tryTLSOtherwiseTrySSL(Properties props, Authenticator auth) throws MessagingException {
+        Store store = configureStoreWithTLS(props, auth);
+        try {
+            store.connect(host, username, password);
+        } catch (Exception e) {
+            if (enableSSL) {
+                clearTLSProperties(props);
+                store = configureStoreWithSSL(props, auth);
+                store.connect();
+            } else {
+                throw e;
+            }
+        }
+        return store;
+    }
+
+    private void clearTLSProperties(Properties props) {
+        props.remove("mail." + protocol + ".ssl.enable");
+        props.remove("mail." + protocol + ".starttls.enable");
+        props.remove("mail." + protocol + ".starttls.required");
     }
 
     protected Store configureStoreWithSSL(Properties props, Authenticator auth) throws NoSuchProviderException {
