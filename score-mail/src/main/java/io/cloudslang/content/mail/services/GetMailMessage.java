@@ -78,6 +78,7 @@ public class GetMailMessage {
     public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
     public static final String BOUNCY_CASTLE_PROVIDER = "BC";
     public static final String ENCRYPTED_CONTENT_TYPE = "application/pkcs7-mime; name=\"smime.p7m\"; smime-type=enveloped-data";
+    public static final String SECURE_SUFFIX_FOR_POP3_AND_IMAP = "s";
 
     //Operation inputs
     private String host;
@@ -227,7 +228,7 @@ public class GetMailMessage {
         props.setProperty("mail." + protocol + ".starttls.enable", STR_TRUE);
         props.setProperty("mail." + protocol + ".starttls.required", STR_TRUE);
         Session session = Session.getInstance(props, auth);
-        return session.getStore(protocol + "s");
+        return session.getStore(protocol + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
     }
 
     protected Store configureStoreWithoutSSL(Properties props, Authenticator auth) throws NoSuchProviderException {
