@@ -79,6 +79,7 @@ public class GetMailMessageTest {
     private static final String STR_FALSE = "false";
     private static final String STR_TRUE = "true";
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    public static final String SECURE_SUFFIX_FOR_POP3_AND_IMAP = "s";
     private String testSeparator = "\\";
     private String testJavaHome = "HDD:\\java";
     private static final String TEXT_PLAIN = "text/plain";
@@ -446,7 +447,7 @@ public class GetMailMessageTest {
         PowerMockito.whenNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString()).thenReturn(urlNameMock);
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        doReturn(storeMock).when(sessionMock).getStore(urlNameMock);
+        doReturn(storeMock).when(sessionMock).getStore(any(String.class));
 
         addRequiredInputs();
         getMailMessageSpy.processInputs(inputs);
@@ -456,10 +457,9 @@ public class GetMailMessageTest {
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
-        PowerMockito.verifyNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(urlNameMock);
+        verify(sessionMock).getStore(POP3_PROTOCOL + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
     }
 
     /**
