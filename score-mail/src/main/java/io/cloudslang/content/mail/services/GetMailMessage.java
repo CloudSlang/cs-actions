@@ -159,6 +159,9 @@ public class GetMailMessage {
                     if(!messageByTypes.isEmpty()) {
                         lastMessageBody = new LinkedList<>(messageByTypes.values()).getLast();
                     }
+                    if(lastMessageBody == null) {
+                        lastMessageBody = "";
+                    }
 
                     result.put(BODY_RESULT, MimeUtility.decodeText(lastMessageBody));
 
@@ -535,7 +538,7 @@ public class GetMailMessage {
         return messageMap;
     }
 
-    private String extractMultipartMixedMessage(Message message,    String characterSet) throws IOException, MessagingException {
+    private String extractMultipartMixedMessage(Message message,    String characterSet) throws Exception {
 
         Object obj = message.getContent();
         Multipart mpart = (Multipart) obj;
@@ -543,6 +546,9 @@ public class GetMailMessage {
         for (int i = 0, n = mpart.getCount(); i < n; i++) {
 
             Part part = mpart.getBodyPart(i);
+            if(decryptMessage && part.getContentType() != null && part.getContentType().equals("application/pkcs7-mime; name=\"smime.p7m\"; smime-type=enveloped-data")) {
+                part = decryptPart((MimeBodyPart)part);
+            }
             String disposition = part.getDisposition();
 
             if (disposition != null)  // this means the part is not an inline image or attached file.
