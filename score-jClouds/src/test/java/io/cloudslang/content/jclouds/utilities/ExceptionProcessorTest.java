@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertTrue;
  * Created by persdana on 7/13/2015.
  */
 public class ExceptionProcessorTest {
-    private static final String STACK_TRACE = "java.lang.Exception: abc\r\n\tat io.cloudslang.content.jclouds";
+    private static final String STACK_TRACE = "java.lang.Exception: abc";
 
     @Test
     public void testGetExceptionResult() {
