@@ -2,10 +2,8 @@ package io.cloudslang.content.jclouds.services.impl;
 
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import org.jclouds.Constants;
+import io.cloudslang.content.jclouds.services.JcloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Image;
@@ -15,55 +13,26 @@ import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.features.AMIApi;
 import org.jclouds.ec2.features.InstanceApi;
 import org.jclouds.ec2.options.RunInstancesOptions;
-import org.jclouds.location.reference.LocationConstants;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
 /**
  * Created by persdana on 5/27/2015.
  */
-public class AmazonComputeService implements ComputeService {
+public class AmazonComputeService extends JcloudsComputeService implements ComputeService {
     private static final String AMAZON_PROVIDER = "ec2";
 
     protected EC2Api ec2Api = null;
-
-    private String endpoint;
-    private String identity;
-    private String credential;
-    private String proxyHost;
-    private String proxyPort;
     protected String region;
 
     public AmazonComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
-        this.endpoint = endpoint;
-        this.identity = identity;
-        this.credential = credential;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
+        super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
     protected void init() {
-        Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
-
-        Properties overrides = new Properties();
-        if (proxyHost != null && !proxyHost.isEmpty()) {
-            overrides.setProperty(Constants.PROPERTY_PROXY_HOST, proxyHost);
-            overrides.setProperty(Constants.PROPERTY_PROXY_PORT, proxyPort);
-        }
-        if(region != null && !region.isEmpty()) {
-            overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
-        }
-
-        ContextBuilder contextBuilder = ContextBuilder.newBuilder(AMAZON_PROVIDER)
-                .endpoint(endpoint)
-                .credentials(identity, credential)
-                .overrides(overrides)
-                .modules(modules);
+        ContextBuilder contextBuilder = super.init(region, AMAZON_PROVIDER);
         ec2Api = contextBuilder.buildApi(EC2Api.class);
-
     }
 
     protected void lazyInit() {

@@ -10,16 +10,27 @@ import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ServerIdentificationInputs;
 import io.cloudslang.content.jclouds.entities.outputs.Outputs;
 import io.cloudslang.content.jclouds.execute.HardRebootExecutor;
+import io.cloudslang.content.jclouds.utilities.ExceptionProcessor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by persdana on 6/22/2015.
  */
 public class HardRebootAction {
+    /**
+     * Perform a hard reboot of a server.  A hard reboot (HARD) is equivalent to power cycling the server.
+     *
+     * @param provider         The cloud provider on which you have the instance. Supported values: "amazon" or "openstack".
+     * @param identityEndpoint The endpoint to which first request is sent. Example: "https://ec2.amazonaws.com" or "http://hostOrIp:5000/v2.0"
+     * @param identity         The username of your account. For openstack provider the username must be after a authTokenAlias which will be create ex: "demo:admin"
+     * @param credential
+     * @param region
+     * @param serverId
+     * @param proxyHost
+     * @param proxyPort
+     * @return
+     */
     @Action(name = "Hard Reboot",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
@@ -42,33 +53,13 @@ public class HardRebootAction {
             @Param(value = CommonInputs.PROXY_PORT) String proxyPort
     ) {
 
-        ServerIdentificationInputs serverIdentificationInputs = new ServerIdentificationInputs();
-        serverIdentificationInputs.setProvider(provider);
-        serverIdentificationInputs.setEndpoint(identityEndpoint);
-        serverIdentificationInputs.setIdentity(identity);
-        serverIdentificationInputs.setCredential(credential);
-        serverIdentificationInputs.setServerId(serverId);
-        serverIdentificationInputs.setRegion(region);
-        serverIdentificationInputs.setProxyHost(proxyHost);
-        serverIdentificationInputs.setProxyPort(proxyPort);
+        ServerIdentificationInputs serverIdentificationInputs = new ServerIdentificationInputs(provider, identity, credential, identityEndpoint, proxyHost, proxyPort, region, serverId);
 
         try {
             return new HardRebootExecutor().execute(serverIdentificationInputs);
-
         } catch (Exception e) {
-            return exceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
         }
     }
 
-    private Map<String, String> exceptionResult(String message, Exception e) {
-        StringWriter writer = new StringWriter();
-        e.printStackTrace(new PrintWriter(writer));
-        String eStr = writer.toString().replace("" + (char) 0x00, "");
-
-        Map<String, String> returnResult = new HashMap<>();
-        returnResult.put(Outputs.RETURN_RESULT, message);
-        returnResult.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
-        returnResult.put(Outputs.EXCEPTION, eStr);
-        return returnResult;
-    }
 }

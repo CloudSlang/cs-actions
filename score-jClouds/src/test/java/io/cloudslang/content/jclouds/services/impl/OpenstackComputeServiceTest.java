@@ -61,7 +61,8 @@ public class OpenstackComputeServiceTest {
 
     private static final String SERVER_STOP_SUCCESS_MESSAGE = "The server is stopping";
     private static final String SERVER_START_SUCCESS_MESSAGE = "Server is Starting";
-    private static final String SUSPEND_SERVER_SUCCESS_MESSAGE = "Openstack instance is suspending";
+    private static final String SUSPEND_SERVER_SUCCESS_MESSAGE = "OpenStack instance is suspending";
+    private static final String SUSPEND_SERVER_FAIL_MESSAGE = "Can't suspend instance";
 
     private static final String INVALID_REGION_EXCEPTION_MESSAGE = "requested location RegionOneTwo, which is not a configured region: {RegionOne=Suppliers.ofInstance(http://11.11.11.11:8774/v2/462822a54b064729b26d41a5027002cd)}";
     private static final String CONNECTION_REFUSE_EXCEPTION_MESSAGE = "org.jclouds.http.HttpResponseException: Connection refused: connect connecting to POST http://11.11.11.11:5000/v2.0/tokens HTTP/1.1";
@@ -173,7 +174,7 @@ public class OpenstackComputeServiceTest {
         Mockito.doReturn(PROXY_PORT).when(propertiesMock).put(PROPERTY_PROXY_PORT, PROXY_PORT);
         Mockito.doReturn(REGION).when(propertiesMock).put(PROPERTY_REGIONS, REGION);
 
-        toTest.region = REGION; //this may be or may not be setted before init is called by lazyInit
+        toTest.setRegion(REGION);  //this may be or may not be setted before init is called by lazyInit
         toTest.init();
 
         commonVerifiersFirInitMethod();
@@ -193,7 +194,7 @@ public class OpenstackComputeServiceTest {
         addCommonMocksForInitMethod();
         Mockito.doReturn(REGION).when(propertiesMock).put(PROPERTY_REGIONS, REGION);
 
-        toTest.region = REGION; //this may be or may not be setted before init is called by lazyInit
+        toTest.setRegion(REGION); //this may be or may not be setted before init is called by lazyInit
         toTest.init();
 
         PowerMockito.verifyNew(Properties.class).withNoArguments();
@@ -255,11 +256,12 @@ public class OpenstackComputeServiceTest {
     @Test
     public void testLazyInitWithSameRegion() {
         openstackComputeServiceSpy.novaApi = novaApiMock;
-        openstackComputeServiceSpy.region = REGION;
+        openstackComputeServiceSpy.setRegion(REGION);
 
         openstackComputeServiceSpy.lazyInit(REGION);
 
         verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceSpy).setRegion(REGION);
         verifyNoMoreInteractions(openstackComputeServiceSpy);
     }
 
@@ -270,12 +272,13 @@ public class OpenstackComputeServiceTest {
     @Test
     public void testLazyInitWithSameRegionAndNullNovaApi() {
         doNothing().when(openstackComputeServiceSpy).init();
-        openstackComputeServiceSpy.region = REGION;
+        openstackComputeServiceSpy.setRegion(REGION);
 
         openstackComputeServiceSpy.lazyInit(REGION);
 
         verify(openstackComputeServiceSpy).lazyInit(REGION);
         verify(openstackComputeServiceSpy).init();
+        verify(openstackComputeServiceSpy).setRegion(REGION);
         verifyNoMoreInteractions(openstackComputeServiceSpy);
     }
 
@@ -286,11 +289,12 @@ public class OpenstackComputeServiceTest {
     @Test
     public void testLazyInitWithDifferentRegion() {
         doNothing().when(openstackComputeServiceSpy).init();
-        openstackComputeServiceSpy.region = REGION + " dasda";
+        openstackComputeServiceSpy.setRegion(REGION + " dasda");
 
         openstackComputeServiceSpy.lazyInit(REGION);
 
         verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceSpy).setRegion(REGION + " dasda");
         verify(openstackComputeServiceSpy).init();
         verifyNoMoreInteractions(openstackComputeServiceSpy);
     }
@@ -461,6 +465,29 @@ public class OpenstackComputeServiceTest {
         String result = openstackComputeServiceSpy.suspend(REGION, SERVER_ID);
 
         assertEquals(SUSPEND_SERVER_SUCCESS_MESSAGE, result);
+        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(novaApiMock).getServerAdminApi(REGION);
+        verifyNoMoreInteractions(novaApiMock);
+        verify(optionalServerAdminApiMock).get();
+        verifyNoMoreInteractions(optionalServerAdminApiMock);
+        verify(serverAdminApiMock).suspend(SERVER_ID);
+        verifyNoMoreInteractions(serverApiMock);
+    }
+
+    /**
+     * Test suspend server method. Negative scenario (api call fails).
+     */
+    @Test
+    public void testSuspendNegativeScenario() {
+        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
+        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        Mockito.doReturn(optionalServerAdminApiMock).when(novaApiMock).getServerAdminApi(REGION);
+        Mockito.doReturn(serverAdminApiMock).when(optionalServerAdminApiMock).get();
+        Mockito.doReturn(false).when(serverAdminApiMock).suspend(SERVER_ID);
+
+        String result = openstackComputeServiceSpy.suspend(REGION, SERVER_ID);
+
+        assertEquals(SUSPEND_SERVER_FAIL_MESSAGE, result);
         verify(openstackComputeServiceSpy).lazyInit(REGION);
         verify(novaApiMock).getServerAdminApi(REGION);
         verifyNoMoreInteractions(novaApiMock);

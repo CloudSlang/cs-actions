@@ -7,13 +7,11 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.outputs.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.ServerIdentificationInputs;
+import io.cloudslang.content.jclouds.entities.outputs.Outputs;
 import io.cloudslang.content.jclouds.execute.StopServerExecutor;
+import io.cloudslang.content.jclouds.utilities.ExceptionProcessor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,34 +40,12 @@ public class StopServerAction {
             @Param(value = CommonInputs.PROXY_PORT) String proxyPort
     ) {
 
-        ServerIdentificationInputs stopServerInputs = new ServerIdentificationInputs();
-        stopServerInputs.setProvider(provider);
-        stopServerInputs.setEndpoint(identityEndpoint);
-        stopServerInputs.setIdentity(identity);
-        stopServerInputs.setCredential(credential);
-        stopServerInputs.setServerId(serverId);
-        stopServerInputs.setRegion(region);
-        stopServerInputs.setProxyHost(proxyHost);
-        stopServerInputs.setProxyPort(proxyPort);
+        ServerIdentificationInputs serverIdentificationInputs = new ServerIdentificationInputs(provider, identity, credential, identityEndpoint, proxyHost, proxyPort, region, serverId);
 
         try {
-            return new StopServerExecutor().execute(stopServerInputs);
-
+            return new StopServerExecutor().execute(serverIdentificationInputs);
         } catch (Exception e) {
-            return exceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
         }
     }
-
-    private Map<String, String> exceptionResult(String message, Exception e) {
-        StringWriter writer = new StringWriter();
-        e.printStackTrace(new PrintWriter(writer));
-        String eStr = writer.toString().replace("" + (char) 0x00, "");
-
-        Map<String, String> returnResult = new HashMap<>();
-        returnResult.put(Outputs.RETURN_RESULT, message);
-        returnResult.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
-        returnResult.put(Outputs.EXCEPTION, eStr);
-        return returnResult;
-    }
-
 }

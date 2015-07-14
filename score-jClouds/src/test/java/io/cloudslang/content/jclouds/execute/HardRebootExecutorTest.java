@@ -19,8 +19,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Map;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 /**
  * Created by persdana on 7/7/2015.
@@ -28,7 +28,6 @@ import static org.mockito.Mockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({HardRebootExecutor.class, ComputeFactory.class})
 public class HardRebootExecutorTest {
-    public static final String SERVER_ID_NOT_SPECIFIED = "The required serverId input is not specified!";
     private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "{\"itemNotFound\": {\"message\": \"Instance not found\", \"code\": 404}}";
     private static final String REGION = "us-east-1";
     private static final String SERVER_ID = "i-578dde87";
@@ -42,29 +41,13 @@ public class HardRebootExecutorTest {
     @Mock
     ComputeService computeServiceMock;
 
-    private ServerIdentificationInputs getInputsForAmazon() {
-        ServerIdentificationInputs serverIdentificationInputs = new ServerIdentificationInputs();
-        serverIdentificationInputs.setProvider("ec2");
-        serverIdentificationInputs.setEndpoint("https://ec2.amazonaws.com");
-        serverIdentificationInputs.setIdentity("AKIAIQHVQ4UM7SOXXXXXX");
-        serverIdentificationInputs.setCredential("R1ZRPK4HPXU6cyBi1XY/IkYqQ+qXXXXXXX");
-        serverIdentificationInputs.setRegion(REGION);
-        serverIdentificationInputs.setServerId(SERVER_ID);
-        serverIdentificationInputs.setProxyHost("proxy.abcde.com");
-        serverIdentificationInputs.setProxyPort("8080");
-        return serverIdentificationInputs;
-    }
-
     /**
      * Tests the execute method. Positive scenario.
      * @throws Exception
      */
     @Test
     public void testExecute() throws Exception {
-        ServerIdentificationInputs intputs = getInputsForAmazon();
-        doNothing().when(toTest).processInputs(intputs);
-        toTest.region = REGION;
-        toTest.serverId = SERVER_ID;
+        ServerIdentificationInputs intputs = Inputs.getServerIdentificationInputsForAmazon();
         PowerMockito.mockStatic(ComputeFactory.class);
         PowerMockito.doReturn(computeServiceMock).when(ComputeFactory.class, "getComputeService", intputs);
         Mockito.doNothing().when(computeServiceMock).hardReboot(REGION, SERVER_ID);
@@ -73,7 +56,6 @@ public class HardRebootExecutorTest {
 
         Assert.assertEquals(result.get(Outputs.RETURN_CODE), "0");
         Assert.assertEquals(result.get(Outputs.RETURN_RESULT), "Hard Reboot started successfully");
-        verify(toTest).processInputs(intputs);
         verify(computeServiceMock).hardReboot(REGION, SERVER_ID);
         verifyNoMoreInteractions(computeServiceMock);
     }
@@ -83,42 +65,15 @@ public class HardRebootExecutorTest {
         exception.expect(ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
-        ServerIdentificationInputs intputs = getInputsForAmazon();
-        doNothing().when(toTest).processInputs(intputs);
-        toTest.region = REGION;
-        toTest.serverId = SERVER_ID;
+        ServerIdentificationInputs intputs = Inputs.getServerIdentificationInputsForAmazon();
+//        doNothing().when(toTest).processInputs(intputs);
+//        toTest.region = REGION;
+//        toTest.serverId = SERVER_ID;
         PowerMockito.mockStatic(ComputeFactory.class);
         PowerMockito.doReturn(computeServiceMock).when(ComputeFactory.class, "getComputeService", intputs);
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(computeServiceMock).hardReboot(REGION, SERVER_ID);
 
         toTest.execute(intputs);
-    }
-
-    /**
-     * Test processInputs method. Positive scenario.
-     * @throws Exception
-     */
-    @Test
-    public void testProcessInputs() throws Exception {
-        ServerIdentificationInputs inputs = getInputsForAmazon();
-        toTest.processInputs(inputs);
-
-        assertEquals(REGION, toTest.region);
-        assertEquals(SERVER_ID, toTest.serverId);
-    }
-
-    /**
-     * Test process inputs with null server id.
-     * @throws Exception
-     */
-    @Test
-    public void testProcessInputsWithNullServerId() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(SERVER_ID_NOT_SPECIFIED);
-
-        ServerIdentificationInputs inputs = getInputsForAmazon();
-        inputs.setServerId(null);
-        toTest.processInputs(inputs);
     }
 }

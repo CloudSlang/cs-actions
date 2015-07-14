@@ -7,13 +7,11 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.ListServersInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ListRegionsInputs;
 import io.cloudslang.content.jclouds.entities.outputs.Outputs;
 import io.cloudslang.content.jclouds.execute.ListRegionsExecutor;
+import io.cloudslang.content.jclouds.utilities.ExceptionProcessor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,36 +36,15 @@ public class ListRegionsAction {
             @Param(value = CommonInputs.CREDENTIAL) String credential,
             @Param(value = CommonInputs.PROXY_HOST) String proxyHost,
             @Param(value = CommonInputs.PROXY_PORT) String proxyPort,
-            @Param(value = ListServersInputs.DELIMITER) String delimiter
+            @Param(value = ListRegionsInputs.DELIMITER) String delimiter
     ) {
 
-        ListServersInputs listServerInputs = new ListServersInputs();
-        listServerInputs.setProvider(provider);
-        listServerInputs.setEndpoint(identityEndpoint);
-        listServerInputs.setIdentity(identity);
-        listServerInputs.setCredential(credential);
-        listServerInputs.setProxyHost(proxyHost);
-        listServerInputs.setProxyPort(proxyPort);
-        listServerInputs.setDelimiter(delimiter);
+        ListRegionsInputs listRegionsInputs = new ListRegionsInputs(provider, identity, credential, identityEndpoint, proxyHost, proxyPort, delimiter);
 
         try {
-            return new ListRegionsExecutor().execute(listServerInputs);
-
+            return new ListRegionsExecutor().execute(listRegionsInputs);
         } catch (Exception e) {
-            return exceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
         }
     }
-
-    private Map<String, String> exceptionResult(String message, Exception e) {
-        StringWriter writer = new StringWriter();
-        e.printStackTrace(new PrintWriter(writer));
-        String eStr = writer.toString().replace("" + (char) 0x00, "");
-
-        Map<String, String> returnResult = new HashMap<>();
-        returnResult.put(Outputs.RETURN_RESULT, message);
-        returnResult.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
-        returnResult.put(Outputs.EXCEPTION, eStr);
-        return returnResult;
-    }
-
 }

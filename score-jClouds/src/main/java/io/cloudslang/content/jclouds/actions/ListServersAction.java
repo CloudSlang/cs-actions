@@ -11,10 +11,8 @@ import io.cloudslang.content.jclouds.entities.inputs.ListServersInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ServerIdentificationInputs;
 import io.cloudslang.content.jclouds.entities.outputs.Outputs;
 import io.cloudslang.content.jclouds.execute.ListServersExecutor;
+import io.cloudslang.content.jclouds.utilities.ExceptionProcessor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,34 +41,12 @@ public class ListServersAction {
             @Param(value = ListServersInputs.DELIMITER) String delimiter
     ) {
 
-        ListServersInputs listServerInputs = new ListServersInputs();
-        listServerInputs.setProvider(provider);
-        listServerInputs.setEndpoint(identityEndpoint);
-        listServerInputs.setIdentity(identity);
-        listServerInputs.setCredential(credential);
-        listServerInputs.setRegion(region);
-        listServerInputs.setProxyHost(proxyHost);
-        listServerInputs.setProxyPort(proxyPort);
-        listServerInputs.setDelimiter(delimiter);
+        ListServersInputs listServersInputs = new ListServersInputs(provider, identity, credential, identityEndpoint, proxyHost, proxyPort, region, delimiter);
 
         try {
-            return new ListServersExecutor().execute(listServerInputs);
-
+            return new ListServersExecutor().execute(listServersInputs);
         } catch (Exception e) {
-            return exceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
         }
     }
-
-    private Map<String, String> exceptionResult(String message, Exception e) {
-        StringWriter writer = new StringWriter();
-        e.printStackTrace(new PrintWriter(writer));
-        String eStr = writer.toString().replace("" + (char) 0x00, "");
-
-        Map<String, String> returnResult = new HashMap<>();
-        returnResult.put(Outputs.RETURN_RESULT, message);
-        returnResult.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
-        returnResult.put(Outputs.EXCEPTION, eStr);
-        return returnResult;
-    }
-
 }

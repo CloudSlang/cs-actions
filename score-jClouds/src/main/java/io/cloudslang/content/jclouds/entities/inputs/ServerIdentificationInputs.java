@@ -10,6 +10,19 @@ public class ServerIdentificationInputs extends CommonInputs {
     private String region;
     private String serverId;
 
+    public ServerIdentificationInputs(String provider,
+                                      String identity,
+                                      String credential,
+                                      String endpoint,
+                                      String proxyHost,
+                                      String proxyPort,
+                                      String region,
+                                      String serverId) {
+        super(provider, identity, credential, endpoint, proxyHost, proxyPort);
+        this.region = region;
+        this.serverId = serverId;
+    }
+
     public String getRegion() {
         return region;
     }

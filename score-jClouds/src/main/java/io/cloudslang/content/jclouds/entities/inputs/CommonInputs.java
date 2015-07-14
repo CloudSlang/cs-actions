@@ -12,12 +12,21 @@ public class CommonInputs {
     public static final String PROXY_HOST = "proxyHost";
     public static final String PROXY_PORT = "proxyPort";
 
-    private String provider;
+    private ProvidersEnum provider;
     private String identity;
     private String credential;
     private String endpoint;
     private String proxyHost;
     private String proxyPort;
+
+    public CommonInputs(String provider, String identity, String credential, String endpoint, String proxyHost, String proxyPort) {
+        this.provider = ProvidersEnum.getProvider(provider);
+        this.identity = identity;
+        this.credential = credential;
+        this.endpoint = endpoint;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+    }
 
     public String getEndpoint() {
         return endpoint;
@@ -27,11 +36,11 @@ public class CommonInputs {
         this.endpoint = endpoint;
     }
 
-    public String getProvider() {
+    public ProvidersEnum getProvider() {
         return provider;
     }
 
-    public void setProvider(String provider) {
+    public void setProvider(ProvidersEnum provider) {
         this.provider = provider;
     }
 

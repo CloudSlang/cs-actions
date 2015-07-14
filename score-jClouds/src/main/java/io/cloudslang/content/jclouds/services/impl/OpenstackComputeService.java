@@ -1,15 +1,11 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import org.jclouds.Constants;
+import io.cloudslang.content.jclouds.services.JcloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.location.reference.LocationConstants;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
@@ -18,51 +14,27 @@ import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
 /**
  * Created by persdana on 5/27/2015.
  */
-public class OpenstackComputeService implements ComputeService {
+public class OpenstackComputeService extends JcloudsComputeService implements ComputeService {
     private static final String OPENSTACK_PROVIDER = "openstack-nova";
 
     protected NovaApi novaApi = null;
+    private String region;
 
-    private String endpoint;
-    private String identity;
-    private String credential;
-    private String proxyHost;
-    private String proxyPort;
-    protected String region;
-    private SLF4JLoggingModule loggingModule;
+    public void setRegion(String region) {
+        this.region = region;
+    }
 
     public OpenstackComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
-        this.endpoint = endpoint;
-        this.identity = identity;
-        this.credential = credential;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
+        super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
     protected void init() {
-        loggingModule =  new SLF4JLoggingModule();
-        Iterable<Module> modules = ImmutableSet.<Module>of(loggingModule);
-
-        Properties overrides = new Properties();
-        if (proxyHost != null && !proxyHost.isEmpty()) {
-            overrides.setProperty(Constants.PROPERTY_PROXY_HOST, proxyHost);
-            overrides.setProperty(Constants.PROPERTY_PROXY_PORT, proxyPort);
-        }
-        if(region != null && !region.isEmpty()) {
-            overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
-        }
-
-        ContextBuilder contextBuilder = ContextBuilder.newBuilder(OPENSTACK_PROVIDER)
-                .endpoint(endpoint)
-                .credentials(identity, credential)
-                .overrides(overrides)
-                .modules(modules);
+        ContextBuilder contextBuilder = super.init(region, OPENSTACK_PROVIDER);
 
         novaApi = contextBuilder
                 .buildApi(NovaApi.class);
@@ -122,12 +94,12 @@ public class OpenstackComputeService implements ComputeService {
         lazyInit(region);
         Optional<ServerAdminApi> optionalServerAdminApi = novaApi.getServerAdminApi(region);
         ServerAdminApi serverAdminApi = optionalServerAdminApi.get();
-        Boolean b = serverAdminApi.suspend(serverId);
+        boolean isSuspended = serverAdminApi.suspend(serverId);
 
-        if(b)
-            return "Openstack instance is suspending";
-        else
-            return "Something went wrong";
+        if (isSuspended) {
+            return "OpenStack instance is suspending";
+        }
+        return "Can't suspend instance";
     }
 
     @Override
