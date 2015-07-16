@@ -186,7 +186,7 @@ public class ScoreHttpClient {
 
         httpRequestBase.setHeaders(theHeaders.toArray(new Header[theHeaders.size()]));
 
-        CookieStore cookieStore = httpClientInputs.getCookieStoreSessionObject() == null ? null : cookieStoreBuilder
+        CookieStore cookieStore = cookieStoreBuilder
                 .setUseCookies(httpClientInputs.getUseCookies())
                 .setCookieStoreSessionObject(httpClientInputs.getCookieStoreSessionObject())
                 .buildCookieStore();

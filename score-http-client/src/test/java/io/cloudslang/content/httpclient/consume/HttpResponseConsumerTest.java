@@ -23,10 +23,8 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -112,6 +110,9 @@ public class HttpResponseConsumerTest {
                 .setDestinationFile("test.txt")
                 .setResponseCharacterSet(null)
                 .consume(result);
+
+        File file = new File("test.txt");
+        file.delete();
         assertNull(result.get(RETURN_RESULT));
     }
 
