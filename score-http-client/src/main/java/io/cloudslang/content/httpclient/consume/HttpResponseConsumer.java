@@ -93,7 +93,8 @@ public class HttpResponseConsumer {
             try {
                 reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), responseCharacterSet));
                 fos = new FileOutputStream(new File(destinationFile));
-git             } catch (UnsupportedEncodingException e) {
+                fileWriter = new BufferedWriter(new OutputStreamWriter(fos, responseCharacterSet));
+            } catch (UnsupportedEncodingException e) {
                 throw new IllegalArgumentException("Could not parse '" + HttpClientInputs.RESPONSE_CHARACTER_SET
                         + "'. " + e.getMessage(), e);
             }
