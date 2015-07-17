@@ -21,14 +21,14 @@ public class HardRebootAction {
     /**
      * Perform a hard reboot of a server.  A hard reboot (HARD) is equivalent to power cycling the server.
      *
-     * @param provider         The cloud provider on which you have the instance. Supported values: "amazon" or "openstack".
-     * @param identityEndpoint The endpoint to which first request is sent. Example: "https://ec2.amazonaws.com" or "http://hostOrIp:5000/v2.0"
-     * @param identity         The username of your account. For openstack provider the username must be after a authTokenAlias which will be create ex: "demo:admin"
-     * @param credential
-     * @param region
-     * @param serverId
-     * @param proxyHost
-     * @param proxyPort
+     * @param provider          The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
+     * @param identityEndpoint  The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon or "http://hostOrIp:5000/v2.0" for openstack.
+     * @param identity          The username of your account or the Access Key ID. For openstack provider the required format is 'alias:username'.
+     * @param credential        The password of the user or the Secret Access Key that correspond to the identity input.
+     * @param region            The region where the server to reboot can be find. Ex: "RegionOne", "us-east-1". ListRegionAction can be used in order to get all regions.
+     * @param serverId          The ID of the instance you want to reboot.
+     * @param proxyHost         The proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort         The proxy server port.
      * @return
      */
     @Action(name = "Hard Reboot",
