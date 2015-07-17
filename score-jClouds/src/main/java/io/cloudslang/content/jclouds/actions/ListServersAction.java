@@ -46,7 +46,7 @@ public class ListServersAction {
         try {
             return new ListServersExecutor().execute(listServersInputs);
         } catch (Exception e) {
-            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e);
         }
     }
 }

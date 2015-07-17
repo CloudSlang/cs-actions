@@ -45,7 +45,7 @@ public class RemoveServerAction {
         try {
             return new RemoveServerExecutor().execute(serverIdentificationInputs);
         } catch (Exception e) {
-            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e);
         }
     }
 }

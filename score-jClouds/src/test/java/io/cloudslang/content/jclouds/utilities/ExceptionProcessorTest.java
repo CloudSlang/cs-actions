@@ -17,8 +17,8 @@ public class ExceptionProcessorTest {
     public void testGetExceptionResult() {
 
         Map<String, String> result =
-                ExceptionProcessor.getExceptionResult("message", new Exception("abc"));
-        assertEquals("message", result.get("returnResult"));
+                ExceptionProcessor.getExceptionResult(new Exception("abc"));
+        assertEquals("abc", result.get("returnResult"));
         assertEquals("-1", result.get("returnCode"));
         String exception = result.get("exception");
         assertTrue(exception.contains(STACK_TRACE));

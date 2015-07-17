@@ -58,7 +58,7 @@ public class HardRebootAction {
         try {
             return new HardRebootExecutor().execute(serverIdentificationInputs);
         } catch (Exception e) {
-            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e);
         }
     }
 

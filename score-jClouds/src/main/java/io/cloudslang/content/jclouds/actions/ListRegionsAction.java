@@ -44,7 +44,7 @@ public class ListRegionsAction {
         try {
             return new ListRegionsExecutor().execute(listRegionsInputs);
         } catch (Exception e) {
-            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e);
         }
     }
 }

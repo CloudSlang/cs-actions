@@ -46,7 +46,7 @@ public class StartServerAction {
             return new StartServerExecutor().execute(serverIdentificationInputs);
 
         } catch (Exception e) {
-            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e);
         }
     }
 }

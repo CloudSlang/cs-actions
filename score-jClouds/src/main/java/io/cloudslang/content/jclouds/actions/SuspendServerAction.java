@@ -45,7 +45,7 @@ public class SuspendServerAction {
         try {
             return new SuspendServerExecutor().execute(serverIdentificationInputs);
         } catch (Exception e) {
-            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e);
         }
     }
 }

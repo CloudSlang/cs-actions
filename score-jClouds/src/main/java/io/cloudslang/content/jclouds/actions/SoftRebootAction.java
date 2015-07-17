@@ -45,7 +45,7 @@ public class SoftRebootAction {
         try {
             return new SoftRebootExecutor().execute(serverIdentificationInputs);
         } catch (Exception e) {
-            return ExceptionProcessor.getExceptionResult(e.getMessage(), e);
+            return ExceptionProcessor.getExceptionResult(e);
         }
     }
 }
