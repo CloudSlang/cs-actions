@@ -117,6 +117,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             returnResult.put(Constants.OutputNames.RETURN_RESULT, commandResult.getStandardError());
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
         }
+        returnResult.put(Constants.EXIT_STATUS, String.valueOf(commandResult.getExitCode()));
     }
 
 }

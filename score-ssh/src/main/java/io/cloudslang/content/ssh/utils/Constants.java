@@ -21,6 +21,7 @@ public class Constants {
     // outputs
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
+    public static final String EXIT_STATUS = "exitStatus";
     // default values
     public static final int DEFAULT_PORT = 22;
     public static final int DEFAULT_TIMEOUT = 90000; //90 seconds
