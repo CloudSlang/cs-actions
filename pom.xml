@@ -168,5 +168,6 @@
         <module>score-mail</module>
         <module>score-data-format</module>
         <module>score-utilities</module>
+        <module>score-jClouds</module>
     </modules>
 </project>

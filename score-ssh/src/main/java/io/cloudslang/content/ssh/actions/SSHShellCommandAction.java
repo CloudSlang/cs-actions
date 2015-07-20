@@ -58,7 +58,8 @@ public class SSHShellCommandAction {
                     @Output(Constants.OutputNames.RETURN_RESULT),
                     @Output(Constants.OutputNames.EXCEPTION),
                     @Output(Constants.STDOUT),
-                    @Output(Constants.STDERR)
+                    @Output(Constants.STDERR),
+                    @Output(Constants.EXIT_STATUS)
             },
             responses = {
                     @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
