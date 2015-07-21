@@ -97,11 +97,6 @@ public class RemoteSecureCopyAction {
         remoteSecureCopyInputs.setDestinationUsername(destinationUsername);
         remoteSecureCopyInputs.setDestinationPassword(destinationPassword);
 
-        System.out.println("rscAction: " + destinationUsername);
-        System.out.println("rscAction: " + destinationPassword);
-
-
-
         return new ScoreRemoteSecureCopyTo().execute(remoteSecureCopyInputs);
 
     }

@@ -52,7 +52,6 @@ public class ScoreRemoteSecureCopyTo {
                     jsch.addIdentity(remoteSecureCopyInputs.getDestinationPrivateKeyFile());
                 }
             }
-            System.out.println("Session: " + session.getUserName() + remoteSecureCopyInputs.getDestinationPassword());
 
             session.setConfig("StrictHostKeyChecking", "no");
             //jsch.setKnownHosts(<knownhosts>) - better
