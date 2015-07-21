@@ -48,11 +48,12 @@ public class RemoteSecureCopyAction {
      * @param destinationUsername The username of the account on the destination remote machine.
      * @param destinationPassword The password of the user for the destination remote machine.
      * @param destinationPrivateKeyFile The path to the private key file (OpenSSH type) on the destination machine.
+     * @param knownHostsPolicy The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
+     * @param knownHostsPath The path to the known hosts file.
+     * @param timeout Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
      *
      * @return - a map containing the output of the operation. Keys present in the map are:
      *     <br><b>returnResult</b> - The primary output.
-     *     <br><b>STDOUT</b> - The standard output of the command(s).
-     *     <br><b>visualized</b> - The output of the command in XML format.
      *     <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      *     <br><b>exception</b> - the exception message if the operation goes to failure.
      *
@@ -81,7 +82,10 @@ public class RemoteSecureCopyAction {
             @Param(Constants.InputNames.DESTINATION_PORT) String destinationPort,
             @Param(value = Constants.InputNames.DESTINATION_USERNAME, required = true) String destinationUsername,
             @Param(value = Constants.InputNames.DESTINATION_PASSWORD, encrypted = true) String destinationPassword,
-            @Param(Constants.InputNames.DESTINATION_PRIVATE_KEY_FILE) String destinationPrivateKeyFile) {
+            @Param(Constants.InputNames.DESTINATION_PRIVATE_KEY_FILE) String destinationPrivateKeyFile,
+            @Param(Constants.InputNames.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
+            @Param(Constants.InputNames.KNOWN_HOSTS_PATH) String knownHostsPath,
+            @Param(Constants.InputNames.TIMEOUT) String timeout) {
 
         RemoteSecureCopyInputs remoteSecureCopyInputs = new RemoteSecureCopyInputs();
         remoteSecureCopyInputs.setSourceHost(sourceHost);
@@ -96,6 +100,9 @@ public class RemoteSecureCopyAction {
         remoteSecureCopyInputs.setDestinationPrivateKeyFile(destinationPrivateKeyFile);
         remoteSecureCopyInputs.setDestinationUsername(destinationUsername);
         remoteSecureCopyInputs.setDestinationPassword(destinationPassword);
+        remoteSecureCopyInputs.setKnownHostsPolicy(knownHostsPolicy);
+        remoteSecureCopyInputs.setKnownHostsPath(knownHostsPath);
+        remoteSecureCopyInputs.setTimeout(timeout);
 
         return new ScoreRemoteSecureCopyTo().execute(remoteSecureCopyInputs);
 

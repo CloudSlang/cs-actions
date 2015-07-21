@@ -33,6 +33,9 @@ public class RemoteSecureCopyInputs {
     private String destinationUsername;
     private String destinationPassword;
     private String destinationPrivateKeyFile;
+    private String knownHostsPolicy;
+    private String knownHostsPath;
+    private String timeout;
 
     public String getDestinationUsername() {
         return destinationUsername;
@@ -128,6 +131,30 @@ public class RemoteSecureCopyInputs {
 
     public void setDestinationPassword(String destinationPassword) {
         this.destinationPassword = destinationPassword;
+    }
+
+    public String getKnownHostsPath() {
+        return knownHostsPath;
+    }
+
+    public void setKnownHostsPath(String knownHostsPath) {
+        this.knownHostsPath = knownHostsPath;
+    }
+
+    public String getKnownHostsPolicy() {
+        return knownHostsPolicy;
+    }
+
+    public void setKnownHostsPolicy(String knownHostsPolicy) {
+        this.knownHostsPolicy = knownHostsPolicy;
+    }
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
     }
 
 }

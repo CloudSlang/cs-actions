@@ -10,6 +10,9 @@
 
 package io.cloudslang.content.rft.utils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * Date: 7/21/2015
  *
@@ -18,9 +21,14 @@ package io.cloudslang.content.rft.utils;
 public class Constants {
     public static final String EMPTY_STRING = "";
     public static final String NO_ACK_RECEIVED = "No ack received";
+    public static final String STDOUT = "STDOUT";
+    public static final String STDERR = "STDERR";
+
     // default values
     public static final int DEFAULT_PORT = 22;
-
+    public static final int DEFAULT_TIMEOUT = 90000;
+    public static final String DEFAULT_KNOWN_HOSTS_POLICY = "allow";
+    public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
 
     public static final class InputNames {
         public static final String SOURCE_HOST = "sourceHost";
@@ -35,6 +43,10 @@ public class Constants {
         public static final String DESTINATION_PRIVATE_KEY_FILE = "destinationPrivateKeyFile";
         public static final String DESTINATION_USERNAME = "destinationUsername";
         public static final String DESTINATION_PASSWORD = "destinationPassword";
+        public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
+        public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
+        public static final String TIMEOUT = "timeout";
+
     }
 
     public static final class OutputNames {

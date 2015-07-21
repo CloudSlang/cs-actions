@@ -10,16 +10,13 @@
 
 package io.cloudslang.content.rft.services.actions;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import io.cloudslang.content.rft.entities.RemoteSecureCopyInputs;
+import io.cloudslang.content.rft.entities.*;
+import io.cloudslang.content.rft.services.SCPService;
+import io.cloudslang.content.rft.services.impl.SCPServiceImpl;
 import io.cloudslang.content.rft.utils.Constants;
 import io.cloudslang.content.rft.utils.StringUtils;
 
-import java.io.*;
-import java.util.Arrays;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,163 +26,68 @@ import java.util.Map;
  * @author lesant
  */
 public class ScoreRemoteSecureCopyTo {
+
     public Map<String, String> execute(RemoteSecureCopyInputs remoteSecureCopyInputs){
         Map<String, String> returnResult = new HashMap<>();
+        SCPService service;
 
-        FileInputStream fileInputStream = null;
-        try{
+        try {
+            int destinationPortNumber = StringUtils.toInt(remoteSecureCopyInputs.getDestinatinPort(), Constants.DEFAULT_PORT);
+            String knownHostsPolicy = StringUtils.toNotEmptyString(remoteSecureCopyInputs.getKnownHostsPath(), Constants.DEFAULT_KNOWN_HOSTS_POLICY);
+            Path knownHostsPath = StringUtils.toPath(remoteSecureCopyInputs.getKnownHostsPath(), Constants.DEFAULT_KNOWN_HOSTS_PATH);
 
-            JSch jsch=new JSch();
-
-            int portNumber = StringUtils.toInt(remoteSecureCopyInputs.getDestinatinPort(), Constants.DEFAULT_PORT);
-
-            Session session=jsch.getSession(remoteSecureCopyInputs.getDestinationUsername(), remoteSecureCopyInputs.getDestinationHost(), portNumber);
+            ConnectionDetails connection = new ConnectionDetails(remoteSecureCopyInputs.getDestinationHost(), destinationPortNumber, remoteSecureCopyInputs.getDestinationUsername(), remoteSecureCopyInputs.getDestinationPassword());
+            KeyFile keyFile = getKeyFile(remoteSecureCopyInputs.getDestinationPrivateKeyFile(), remoteSecureCopyInputs.getDestinationPassword());
+            KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
 
 
-            if (StringUtils.isEmpty(remoteSecureCopyInputs.getDestinationPrivateKeyFile())) {
-                // use the destinationPassword
-                session.setPassword(remoteSecureCopyInputs.getDestinationPassword());
+            int timeout = StringUtils.toInt(remoteSecureCopyInputs.getTimeout(), Constants.DEFAULT_TIMEOUT);
+
+            service = new SCPServiceImpl(connection, keyFile, knownHostsFile, timeout);
+
+            Boolean successfullyCopied = service.copy(remoteSecureCopyInputs.getSourcePath(), remoteSecureCopyInputs.getDestinationPath());
+
+            if(successfullyCopied){
+                populateResult(returnResult, remoteSecureCopyInputs);
+            }else{
+                populateResult(returnResult, Constants.NO_ACK_RECEIVED);
+            }
+
+        } catch (Exception e) {
+            populateResult(returnResult, e);
+        }
+        return returnResult;
+    }
+
+    private KeyFile getKeyFile(String privateKeyFile, String privateKeyPassPhrase) {
+        KeyFile keyFile = null;
+        if (privateKeyFile != null && !privateKeyFile.isEmpty()) {
+            if (privateKeyPassPhrase != null && !privateKeyPassPhrase.isEmpty()) {
+                keyFile = new KeyFile(privateKeyFile, privateKeyPassPhrase);
             } else {
-                if (remoteSecureCopyInputs.getDestinationPassword() != null) {
-                    jsch.addIdentity(remoteSecureCopyInputs.getDestinationPrivateKeyFile(), remoteSecureCopyInputs.getDestinationPassword());
-                } else {
-                    jsch.addIdentity(remoteSecureCopyInputs.getDestinationPrivateKeyFile());
-                }
+                keyFile = new KeyFile(privateKeyFile);
             }
-
-            session.setConfig("StrictHostKeyChecking", "no");
-            //jsch.setKnownHosts(<knownhosts>) - better
-            session.connect();
-
-            boolean ptimestamp = true;
-
-            // exec 'scp -t destinationPath' remotely
-            String command = "scp " + (ptimestamp ? "-p" :"") +" -t "+ remoteSecureCopyInputs.getDestinationPath();
-            Channel channel=session.openChannel("exec");
-            ((ChannelExec)channel).setCommand(command);
-
-            // get I/O streams for remote scp
-            OutputStream out = channel.getOutputStream();
-            InputStream in = channel.getInputStream();
-
-            channel.connect();
-
-            if(checkAck(in) != 0){
-                return failWithReason(returnResult);
-            }
-            String sourcePath = remoteSecureCopyInputs.getSourcePath();
-            File sourcePathFile = new File(sourcePath);
-
-            if(ptimestamp){
-                command = "T " + (sourcePathFile.lastModified()/1000)+ " 0";
-                // The access time should be sent here,
-                // but it is not accessible with JavaAPI ;-<
-                command += (" " +(sourcePathFile.lastModified()/1000)+ " 0\n");
-                out.write(command.getBytes());
-                out.flush();
-                if(checkAck(in) != 0){
-                    return failWithReason(returnResult);
-                }
-            }
-
-            // send "C0644 filesize filename", where filename should not include '/'
-            long filesize = sourcePathFile.length();
-            command = "C0644 " + filesize + " ";
-
-            if(sourcePath.lastIndexOf('/')>0){
-                command += sourcePath.substring(sourcePath.lastIndexOf('/') + 1);
-            }
-            else{
-                command += sourcePath;
-            }
-            command += "\n";
-            out.write(command.getBytes());
-            out.flush();
-            if(checkAck(in) != 0){
-                return failWithReason(returnResult);
-            }
-
-            // send a content of sourcePath
-            fileInputStream = new FileInputStream(sourcePath);
-            byte[] buf = new byte[1024];
-            while (true){
-                int len = fileInputStream.read(buf, 0, buf.length);
-                if (len <= 0)
-                    break;
-                out.write(buf, 0, len);
-                out.flush();
-            }
-            fileInputStream.close();
-            fileInputStream = null;
-            // send '\0'
-            buf[0]=0;
-            out.write(buf, 0, 1);
-            out.flush();
-            if(checkAck(in) != 0){
-                return failWithReason(returnResult);
-            }
-            out.close();
-
-            channel.disconnect();
-            session.disconnect();
-
         }
-        catch(Exception e){
+        return keyFile;
+    }
 
-            try{
-                if(fileInputStream != null)
-                    fileInputStream.close();
-            }catch(Exception ignored){
+    private void populateResult(Map<String, String> returnResult, Throwable e) {
+        returnResult.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
+        returnResult.put(Constants.OutputNames.EXCEPTION, StringUtils.getStackTraceAsString(e));
+        returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+    }
 
-            }
-            return failWithException(returnResult, e);
-        }
-
+    private void populateResult(Map<String, String> returnResult, RemoteSecureCopyInputs remoteSecureCopyInputs){
         returnResult.put(Constants.OutputNames.RETURN_RESULT, "File " + remoteSecureCopyInputs.getSourcePath() + " successfully copied to path " +
-                remoteSecureCopyInputs.getDestinationPath() + " on " + remoteSecureCopyInputs.getDestinationHost() );
+        remoteSecureCopyInputs.getDestinationPath() + " on " + remoteSecureCopyInputs.getDestinationHost() );
         returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
         returnResult.put(Constants.OutputNames.EXCEPTION, Constants.EMPTY_STRING);
-
-        return returnResult;
     }
-    private Map<String, String> failWithReason(Map<String, String> returnResult) {
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, Constants.NO_ACK_RECEIVED);
+
+    private void populateResult(Map<String, String> returnResult, String errorMessage) {
+        returnResult.put(Constants.OutputNames.RETURN_RESULT, errorMessage);
         returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
-        returnResult.put(Constants.OutputNames.EXCEPTION, Constants.NO_ACK_RECEIVED);
-        return returnResult;
+        returnResult.put(Constants.OutputNames.EXCEPTION, errorMessage);
     }
 
-    private Map<String, String> failWithException(Map<String, String> returnResult, Exception e) {
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
-        returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
-        returnResult.put(Constants.OutputNames.EXCEPTION, Arrays.toString(e.getStackTrace()));
-        return returnResult;
-    }
-
-    static int checkAck(InputStream in) throws IOException {
-        int b = in.read();
-        // b may be 0 for success,
-        //          1 for error,
-        //          2 for fatal error,
-        //          -1
-        if(b == 0) return b;
-        if(b == -1) return b;
-
-        if(b==1 || b==2){
-            StringBuffer sb = new StringBuffer();
-            int c;
-            do {
-                c=in.read();
-                sb.append((char)c);
-            }
-            while(c!='\n');
-            if(b==1){ // error
-                System.out.print(sb.toString());
-            }
-            if(b==2){ // fatal error
-                System.out.print(sb.toString());
-            }
-        }
-        return b;
-    }
 }
