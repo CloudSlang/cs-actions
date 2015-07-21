@@ -202,7 +202,7 @@ public class GetMailMessage {
     protected Store createMessageStore() throws Exception {
         Properties props = new Properties();
         if(timeout > 0) {
-            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.timeout",timeout);
         }
         Authenticator auth = new SimpleAuthenticator(username, password);
         Store store;
