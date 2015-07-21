@@ -169,5 +169,7 @@
         <module>score-data-format</module>
         <module>score-utilities</module>
         <module>score-rft</module>
+        <module>score-jClouds</module>
+        
     </modules>
 </project>

@@ -33,9 +33,6 @@ public class ConnectionManagerBuilder {
 
     public ConnectionManagerBuilder setConnectionPoolHolder(GlobalSessionObject connectionPoolHolder) {
         this.connectionPoolHolder = connectionPoolHolder;
-        if (connectionPoolHolder == null) {
-            this.connectionPoolHolder = new GlobalSessionObject<>();
-        }
         return this;
     }
 
