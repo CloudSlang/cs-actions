@@ -47,6 +47,7 @@ public class SendMailAction {
      * @param encryptionKeystore The path to the pks12 format keystore to use to encrypt the mail.
      * @param encryptionKeyAlias The alias of the key from the encryptionKeystore to use to encrypt the mail.
      * @param encryptionKeystorePassword The password for the encryptionKeystore.
+     * @param timeout The timeout (milliseconds) for sending the mail messages.
      * @return a map containing the output of the operation. The keys present in the map are
      *      <br><b>returnResult</b> - that will contain the SentMailSuccessfully if the mail was sent successfully.
      *      <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -87,7 +88,8 @@ public class SendMailAction {
             @Param(SendMailInputs.ENCRYPTION_KEYSTORE) String encryptionKeystore,
             @Param(SendMailInputs.ENCRYPTION_KEY_ALIAS) String encryptionKeyAlias,
             @Param(SendMailInputs.ENCRYPTION_KEYSTORE_PASSWORD) String encryptionKeystorePassword,
-            @Param(SendMailInputs.ENABLE_TLS) String enableTLS
+            @Param(SendMailInputs.ENABLE_TLS) String enableTLS,
+            @Param(SendMailInputs.TIMEOUT) String timeout
     ) throws Exception {
 
         SendMailInputs sendMailInputs = new SendMailInputs();
@@ -114,6 +116,7 @@ public class SendMailAction {
         sendMailInputs.setEncryptionKeyAlias(encryptionKeyAlias);
         sendMailInputs.setEncryptionKeystorePassword(encryptionKeystorePassword);
         sendMailInputs.setEnableTLS(enableTLS);
+        sendMailInputs.setTimeout(timeout);
 
         try {
             return new SendMail().execute(sendMailInputs);

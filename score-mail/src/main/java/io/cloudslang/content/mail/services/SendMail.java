@@ -81,6 +81,7 @@ public class SendMail {
     String rowDelimiter;
     String columnDelimiter;
     int smtpPort;
+    int timeout = -1;
     boolean html;
     boolean readReceipt;
     boolean encryptMessage;
@@ -108,6 +109,10 @@ public class SendMail {
             if(enableTLS) {
                 props.put("mail.smtp.starttls.enable", "true");
             }
+            if(timeout > 0) {
+                props.put("mail.smtp.timeout",timeout);
+            }
+
 
             Session session = Session.getInstance(props, null);
 
@@ -387,6 +392,14 @@ public class SendMail {
             headerNames = (ArrayList<String>) headers[0];
             headerValues = (ArrayList<String>) headers[1];
         }
+
+        String timeout = sendMailInputs.getTimeout();
+        if(timeout != null && !timeout.isEmpty()) {
+            this.timeout = Integer.parseInt(timeout);
+        } else {
+            this.timeout = -1;
+        }
+
     }
 
     /**

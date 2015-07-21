@@ -106,6 +106,7 @@ public class GetMailMessage {
     private String decryptionKeystorePass;
     private boolean deleteUponRetrieval;
     private boolean decryptMessage;
+    private int timeout = -1;
 
     private RecipientId recId = null;
     private KeyStore ks = null;
@@ -200,6 +201,9 @@ public class GetMailMessage {
 
     protected Store createMessageStore() throws Exception {
         Properties props = new Properties();
+        if(timeout > 0) {
+            props.put("mail.smtp.starttls.enable", "true");
+        }
         Authenticator auth = new SimpleAuthenticator(username, password);
         Store store;
         if (enableTLS || enableSSL) addSSLSettings(trustAllRoots, keystore, keystorePassword, trustKeystoreFile, trustPassword);
@@ -476,6 +480,13 @@ public class GetMailMessage {
 
         } else {
             decryptMessage = false;
+        }
+
+        String timeout = getMailMessageInputs.getTimeout();
+        if(timeout != null && !timeout.isEmpty()) {
+            this.timeout = Integer.parseInt(timeout);
+        } else {
+            this.timeout = -1;
         }
     }
 
