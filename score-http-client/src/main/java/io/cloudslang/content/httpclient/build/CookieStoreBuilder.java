@@ -30,9 +30,6 @@ public class CookieStoreBuilder {
 
     public CookieStoreBuilder setCookieStoreSessionObject(SerializableSessionObject cookieStoreSessionObject) {
         this.cookieStoreSessionObject = cookieStoreSessionObject;
-        if(cookieStoreSessionObject == null){
-            this.cookieStoreSessionObject = new SerializableSessionObject();
-        }
         return this;
     }
 
