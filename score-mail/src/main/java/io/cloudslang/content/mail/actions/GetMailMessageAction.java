@@ -55,7 +55,7 @@ public class GetMailMessageAction {
      * @param decryptionKeystore  The path to the pks12 format keystore to use to decrypt the mail.
      * @param decryptionKeyAlias  The alias of the key from the decryptionKeystore to use to decrypt the mail.
      * @param decryptionKeystorePassword The password for the decryptionKeystore.
-     * @param timeout The timeout (milliseconds) for sending the mail messages.
+     * @param timeout The timeout (seconds) for sending the mail messages.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <br><b>returnCode</b> - This is the primary output. It is 0 if the operation succeeded and -1 for failure.
      * <br><b>Subject</b> - Subject of the email.
