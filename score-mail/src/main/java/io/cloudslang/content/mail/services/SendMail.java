@@ -396,7 +396,10 @@ public class SendMail {
         String timeout = sendMailInputs.getTimeout();
         if(timeout != null && !timeout.isEmpty()) {
             this.timeout = Integer.parseInt(timeout);
-            this.timeout *= 1000;
+            if(this.timeout <= 0) {
+                throw new Exception("timeout value must a positive number");
+            }
+            this.timeout *= 1000; //timeouts in seconds
         } else {
             this.timeout = -1;
         }
