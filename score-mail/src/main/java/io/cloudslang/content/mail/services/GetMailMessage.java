@@ -486,7 +486,7 @@ public class GetMailMessage {
         if(timeout != null && !timeout.isEmpty()) {
             this.timeout = Integer.parseInt(timeout);
             if(this.timeout <= 0) {
-                throw new Exception("timeout value must a positive number");
+                throw new Exception("timeout value must be a positive number");
             }
             this.timeout *= 1000; //timeouts in seconds
         } else {
