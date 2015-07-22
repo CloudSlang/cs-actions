@@ -25,6 +25,7 @@ public class GetMailMessageInputs {
     public static final String DECRYPTION_KEYSTORE = "decryptionKeystore";
     public static final String DECRYPTION_KEY_ALIAS = "decryptionKeyAlias";
     public static final String DECRYPTION_KEYSTORE_PASSWORD = "decryptionKeystorePassword";
+    public static final String TIMEOUT = "timeout";
 
     private String hostname;
     private String port;
@@ -46,6 +47,15 @@ public class GetMailMessageInputs {
     private String decryptionKeystore;
     private String decryptionKeyAlias;
     private String decryptionKeystorePassword;
+    private String timeout;
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
+    }
 
     public String getEnableTLS() {
         return enableTLS;

@@ -28,6 +28,7 @@ public class SendMailInputs {
     public static final String ENCRYPTION_KEY_ALIAS = "encryptionKeyAlias";
     public static final String ENCRYPTION_KEYSTORE_PASSWORD = "encryptionKeystorePassword";
     public static final String ENABLE_TLS = "enableTLS";
+    public static final String TIMEOUT = "timeout";
 
     private String smtpHostname;
     private String port;
@@ -52,6 +53,15 @@ public class SendMailInputs {
     private String encryptionKeystorePassword;
     private String enableTLS;
     private String user;
+    private String timeout;
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
+    }
 
     public String getRowDelimiter() {
         return rowDelimiter;
