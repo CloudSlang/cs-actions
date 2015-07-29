@@ -32,20 +32,32 @@ public class ScoreRemoteSecureCopyTo {
         SCPService service;
 
         try {
-            int destinationPortNumber = StringUtils.toInt(remoteSecureCopyInputs.getDestinatinPort(), Constants.DEFAULT_PORT);
+            int srcPortNumber = StringUtils.toInt(remoteSecureCopyInputs.getSrcPort(), Constants.DEFAULT_PORT);
+            int destPortNumber = StringUtils.toInt(remoteSecureCopyInputs.getDestPort(), Constants.DEFAULT_PORT);
+
             String knownHostsPolicy = StringUtils.toNotEmptyString(remoteSecureCopyInputs.getKnownHostsPath(), Constants.DEFAULT_KNOWN_HOSTS_POLICY);
             Path knownHostsPath = StringUtils.toPath(remoteSecureCopyInputs.getKnownHostsPath(), Constants.DEFAULT_KNOWN_HOSTS_PATH);
 
-            ConnectionDetails connection = new ConnectionDetails(remoteSecureCopyInputs.getDestinationHost(), destinationPortNumber, remoteSecureCopyInputs.getDestinationUsername(), remoteSecureCopyInputs.getDestinationPassword());
-            KeyFile keyFile = getKeyFile(remoteSecureCopyInputs.getDestinationPrivateKeyFile(), remoteSecureCopyInputs.getDestinationPassword());
-            KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
-
+            ConnectionDetails connection;
+            KeyFile srcKeyFile = getKeyFile(remoteSecureCopyInputs.getSrcPrivateKeyFile(), remoteSecureCopyInputs.getSrcPassword());
+            KeyFile destKeyFile = getKeyFile(remoteSecureCopyInputs.getDestPrivateKeyFile(), remoteSecureCopyInputs.getDestPassword());
 
             int timeout = StringUtils.toInt(remoteSecureCopyInputs.getTimeout(), Constants.DEFAULT_TIMEOUT);
 
-            service = new SCPServiceImpl(connection, keyFile, knownHostsFile, timeout);
+            KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
 
-            Boolean successfullyCopied = service.copy(remoteSecureCopyInputs.getSourcePath(), remoteSecureCopyInputs.getDestinationPath());
+            if (StringUtils.isEmpty(remoteSecureCopyInputs.getSrcHost())) { //srcHost = localhost
+                // local to remote
+                connection = new ConnectionDetails(remoteSecureCopyInputs.getDestHost(), destPortNumber, remoteSecureCopyInputs.getDestUsername(), remoteSecureCopyInputs.getDestPassword());
+            }
+            else{
+                //remote to remote
+                connection = new ConnectionDetails(remoteSecureCopyInputs.getSrcHost(), srcPortNumber, remoteSecureCopyInputs.getSrcUsername(), remoteSecureCopyInputs.getSrcPassword(), remoteSecureCopyInputs.getDestHost(), destPortNumber, remoteSecureCopyInputs.getDestUsername(), remoteSecureCopyInputs.getDestPassword());
+            }
+
+            service = new SCPServiceImpl(connection, srcKeyFile, destKeyFile, knownHostsFile, timeout);
+
+            Boolean successfullyCopied = service.copy(remoteSecureCopyInputs.getSrcPath(), remoteSecureCopyInputs.getDestPath());
 
             if(successfullyCopied){
                 populateResult(returnResult, remoteSecureCopyInputs);
@@ -78,8 +90,8 @@ public class ScoreRemoteSecureCopyTo {
     }
 
     private void populateResult(Map<String, String> returnResult, RemoteSecureCopyInputs remoteSecureCopyInputs){
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, "File " + remoteSecureCopyInputs.getSourcePath() + " successfully copied to path " +
-        remoteSecureCopyInputs.getDestinationPath() + " on " + remoteSecureCopyInputs.getDestinationHost() );
+        returnResult.put(Constants.OutputNames.RETURN_RESULT, "File " + remoteSecureCopyInputs.getSrcPath() + " successfully copied to path " +
+        remoteSecureCopyInputs.getDestPath() + " on " + remoteSecureCopyInputs.getDestHost() );
         returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
         returnResult.put(Constants.OutputNames.EXCEPTION, Constants.EMPTY_STRING);
     }

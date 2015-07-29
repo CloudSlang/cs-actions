@@ -16,32 +16,71 @@ package io.cloudslang.content.rft.entities;
  * @author lesant
  */
 public class ConnectionDetails {
-    private String destinationHost;
-    private int destinationPort;
-    private String destinationUsername;
-    private String destinationPassword;
+    private String srcHost;
+    private int srcPort;
+    private String srcUsername;
+    private String srcPassword;
+    private String destHost;
+    private int destPort;
+    private String destUsername;
+    private String destPassword;
+    private boolean remoteToRemote;
 
-    public ConnectionDetails(String destinationHost, int destinationPort, String destinationUsername, String destinationPassword) {
-        this.destinationHost = destinationHost;
-        this.destinationPort = destinationPort;
-        this.destinationUsername = destinationUsername;
-        this.destinationPassword = destinationPassword;
+    public ConnectionDetails(String destHost, int destPort, String destUsername, String destPassword) {
+        this.destHost = destHost;
+        this.destPort = destPort;
+        this.destUsername = destUsername;
+        this.destPassword = destPassword;
+        this.remoteToRemote = false;
     }
 
-    public String getDestinationHost() {
-        return destinationHost;
+    public ConnectionDetails(String srcHost, int srcPort, String srcUsername, String srcPassword, String destHost, int destPort, String destUsername, String destPassword) {
+        this.destHost = destHost;
+        this.destPort = destPort;
+        this.destUsername = destUsername;
+        this.destPassword = destPassword;
+        this.srcHost = srcHost;
+        this.srcPort = srcPort;
+        this.srcUsername = srcUsername;
+        this.srcPassword = srcPassword;
+        this.remoteToRemote = true;
     }
 
-    public int getDestinationPort() {
-        return destinationPort;
+    public String getSrcPassword() {
+        return srcPassword;
     }
 
-    public String getDestinationUsername() {
-        return destinationUsername;
+    public String getSrcUsername() {
+        return srcUsername;
     }
 
-    public String getDestinationPassword() {
-        return destinationPassword;
+    public int getSrcPort() {
+        return srcPort;
     }
+
+    public String getSrcHost() {
+        return srcHost;
+    }
+
+    public String getDestHost() {
+        return destHost;
+    }
+
+    public int getDestPort() {
+        return destPort;
+    }
+
+    public String getDestUsername() {
+        return destUsername;
+    }
+
+    public String getDestPassword() {
+        return destPassword;
+    }
+
+    public boolean isRemoteToRemote() {
+        return remoteToRemote;
+    }
+
 
 }

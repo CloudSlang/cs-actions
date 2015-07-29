@@ -10,10 +10,6 @@
 
 package io.cloudslang.content.rft.entities;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-
-import java.util.Map;
-
 /**
  * Date: 4/10/2015
  *
@@ -21,116 +17,116 @@ import java.util.Map;
  */
 
 public class RemoteSecureCopyInputs {
-    private String sourceHost;
-    private String sourcePath;
-    private String sourcePort;
-    private String sourceUsername;
-    private String sourcePassword;
-    private String sourcePrivateKeyFile;
-    private String destinationHost;
-    private String destinationPath;
-    private String destinatinPort;
-    private String destinationUsername;
-    private String destinationPassword;
-    private String destinationPrivateKeyFile;
+    private String srcHost;
+    private String srcPath;
+    private String srcPort;
+    private String srcUsername;
+    private String srcPassword;
+    private String srcPrivateKeyFile;
+    private String destHost;
+    private String destPath;
+    private String destPort;
+    private String destUsername;
+    private String destPassword;
+    private String destPrivateKeyFile;
     private String knownHostsPolicy;
     private String knownHostsPath;
     private String timeout;
 
-    public String getDestinationUsername() {
-        return destinationUsername;
+    public String getDestUsername() {
+        return destUsername;
     }
 
-    public void setDestinationUsername(String destinationUsername) {
-        this.destinationUsername = destinationUsername;
+    public void setDestUsername(String destUsername) {
+        this.destUsername = destUsername;
     }
 
-    public String getDestinationPrivateKeyFile() {
-        return destinationPrivateKeyFile;
+    public String getDestPrivateKeyFile() {
+        return destPrivateKeyFile;
     }
 
-    public void setDestinationPrivateKeyFile(String destinationPrivateKeyFile) {
-        this.destinationPrivateKeyFile = destinationPrivateKeyFile;
+    public void setDestPrivateKeyFile(String destPrivateKeyFile) {
+        this.destPrivateKeyFile = destPrivateKeyFile;
     }
 
-    public String getSourceHost() {
-        return sourceHost;
+    public String getSrcHost() {
+        return srcHost;
     }
 
-    public void setSourceHost(String sourceHost) {
-        this.sourceHost = sourceHost;
+    public void setSrcHost(String srcHost) {
+        this.srcHost = srcHost;
     }
 
-    public String getSourcePath() {
-        return sourcePath;
+    public String getSrcPath() {
+        return srcPath;
     }
 
-    public void setSourcePath(String sourcePath) {
-        this.sourcePath = sourcePath;
+    public void setSrcPath(String srcPath) {
+        this.srcPath = srcPath;
     }
 
-    public String getSourcePort() {
-        return sourcePort;
+    public String getSrcPort() {
+        return srcPort;
     }
 
-    public void setSourcePort(String sourcePort) {
-        this.sourcePort = sourcePort;
+    public void setSrcPort(String srcPort) {
+        this.srcPort = srcPort;
     }
 
-    public String getSourceUsername() {
-        return sourceUsername;
+    public String getSrcUsername() {
+        return srcUsername;
     }
 
-    public void setSourceUsername(String sourceUsername) {
-        this.sourceUsername = sourceUsername;
+    public void setSrcUsername(String srcUsername) {
+        this.srcUsername = srcUsername;
     }
 
-    public String getSourcePassword() {
-        return sourcePassword;
+    public String getSrcPassword() {
+        return srcPassword;
     }
 
-    public void setSourcePassword(String sourcePassword) {
-        this.sourcePassword = sourcePassword;
+    public void setSrcPassword(String srcPassword) {
+        this.srcPassword = srcPassword;
     }
 
-    public String getSourcePrivateKeyFile() {
-        return sourcePrivateKeyFile;
+    public String getSrcPrivateKeyFile() {
+        return srcPrivateKeyFile;
     }
 
-    public void setSourcePrivateKeyFile(String sourcePrivateKeyFile) {
-        this.sourcePrivateKeyFile = sourcePrivateKeyFile;
+    public void setSrcPrivateKeyFile(String srcPrivateKeyFile) {
+        this.srcPrivateKeyFile = srcPrivateKeyFile;
     }
 
-    public String getDestinationHost() {
-        return destinationHost;
+    public String getDestHost() {
+        return destHost;
     }
 
-    public void setDestinationHost(String destinationHost) {
-        this.destinationHost = destinationHost;
+    public void setDestHost(String destHost) {
+        this.destHost = destHost;
     }
 
-    public String getDestinationPath() {
-        return destinationPath;
+    public String getDestPath() {
+        return destPath;
     }
 
-    public void setDestinationPath(String destinationPath) {
-        this.destinationPath = destinationPath;
+    public void setDestPath(String destPath) {
+        this.destPath = destPath;
     }
 
-    public String getDestinatinPort() {
-        return destinatinPort;
+    public String getDestPort() {
+        return destPort;
     }
 
-    public void setDestinatinPort(String destinatinPort) {
-        this.destinatinPort = destinatinPort;
+    public void setDestPort(String destPort) {
+        this.destPort = destPort;
     }
 
-    public String getDestinationPassword() {
-        return destinationPassword;
+    public String getDestPassword() {
+        return destPassword;
     }
 
-    public void setDestinationPassword(String destinationPassword) {
-        this.destinationPassword = destinationPassword;
+    public void setDestPassword(String destPassword) {
+        this.destPassword = destPassword;
     }
 
     public String getKnownHostsPath() {
