@@ -59,33 +59,34 @@ public class SendMail {
     public static final String THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
 
     //Operation inputs
-    String attachments;
-    String smtpHost;
-    String from;
-    String to;
-    String cc;
-    String bcc;
-    String subject;
-    String body;
-    String delimiter;
-    String user;
-    String password;
-    String charset;
-    String transferEncoding;
-    String encodingScheme;
-    String keystoreFile;
-    String keyAlias;
-    String keystorePass;
-    List<String> headerNames;
-    List<String> headerValues;
-    String rowDelimiter;
-    String columnDelimiter;
-    int smtpPort;
-    boolean html;
-    boolean readReceipt;
-    boolean encryptMessage;
-    boolean enableTLS;
-    SMIMEEnvelopedGenerator gen;
+    private String attachments;
+    private String smtpHost;
+    private String from;
+    private String to;
+    private String cc;
+    private String bcc;
+    private String subject;
+    private String body;
+    private String delimiter;
+    private String user;
+    private String password;
+    private String charset;
+    private String transferEncoding;
+    private String encodingScheme;
+    private String keystoreFile;
+    private String keyAlias;
+    private String keystorePass;
+    private List<String> headerNames;
+    private List<String> headerValues;
+    private String rowDelimiter;
+    private String columnDelimiter;
+    private int smtpPort;
+    private int timeout = -1;
+    private boolean html;
+    private boolean readReceipt;
+    private boolean encryptMessage;
+    private boolean enableTLS;
+    private SMIMEEnvelopedGenerator gen;
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
@@ -108,6 +109,10 @@ public class SendMail {
             if(enableTLS) {
                 props.put("mail.smtp.starttls.enable", "true");
             }
+            if(timeout > 0) {
+                props.put("mail.smtp.timeout",timeout);
+            }
+
 
             Session session = Session.getInstance(props, null);
 
@@ -386,6 +391,15 @@ public class SendMail {
             Object[] headers = extractHeaderNamesAndValues(headersMap, rowDelimiter, columnDelimiter);
             headerNames = (ArrayList<String>) headers[0];
             headerValues = (ArrayList<String>) headers[1];
+        }
+
+        String timeout = sendMailInputs.getTimeout();
+        if(timeout != null && !timeout.isEmpty()) {
+            this.timeout = Integer.parseInt(timeout);
+            if(this.timeout <= 0) {
+                throw new Exception("timeout value must be a positive number");
+            }
+            this.timeout *= 1000; //timeouts in seconds
         }
     }
 
