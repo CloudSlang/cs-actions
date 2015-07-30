@@ -31,18 +31,18 @@ public class Constants {
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
 
     public static final class InputNames {
-        public static final String SRC_HOST = "srcHost";
-        public static final String SRC_PATH = "srcPath";
-        public static final String SRC_PORT = "srcPort";
-        public static final String SRC_PRIVATE_KEY_FILE = "srcPrivateKeyFile";
-        public static final String SRC_USERNAME = "srcUsername";
-        public static final String SRC_PASSWORD = "srcPassword";
-        public static final String DEST_HOST = "destHost";
-        public static final String DEST_PATH = "destPath";
-        public static final String DEST_PORT = "destPort";
-        public static final String DEST_PRIVATE_KEY_FILE = "destPrivateKeyFile";
-        public static final String DEST_USERNAME = "destUsername";
-        public static final String DEST_PASSWORD = "destPassword";
+        public static final String SOURCE_HOST = "sourceHost";
+        public static final String SOURCE_PATH = "sourcePath";
+        public static final String SOURCE_PORT = "sourcePort";
+        public static final String SOURCE_PRIVATE_KEY_FILE = "sourcePrivateKeyFile";
+        public static final String SOURCE_USERNAME = "sourceUsername";
+        public static final String SOURCE_PASSWORD = "sourcePassword";
+        public static final String DESTINATION_HOST = "destinationHost";
+        public static final String DESTINATION_PATH = "destinationPath";
+        public static final String DESTINATION_PORT = "destinationPort";
+        public static final String DESTINATION_PRIVATE_KEY_FILE = "destinationPrivateKeyFile";
+        public static final String DESTINATION_USERNAME = "destinationUsername";
+        public static final String DESTINATION_PASSWORD = "destinationPassword";
         public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
         public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
         public static final String TIMEOUT = "timeout";

@@ -36,18 +36,18 @@ public class RemoteSecureCopyAction {
     /**
      * Executes a Shell command(s) on the remote machine using the SSH protocol.
      *
-     * @param srcHost The hostname or ip address of the source remote machine.
-     * @param srcPath The path to the file that needs to be copied from the source remote machine.
-     * @param srcPort The port number for running the command on the source remote machine.
-     * @param srcUsername The username of the account on the source remote machine.
-     * @param srcPassword The password of the user for the source remote machine.
-     * @param srcPrivateKeyFile The path to the private key file (OpenSSH type) on the source machine.
-     * @param destHost The hostname or ip address of the destination remote machine.
-     * @param destPath The path to the location where the file will be copied on the destination remote machine.
-     * @param destPort The port number for running the command on the destination remote machine.
-     * @param destUsername The username of the account on the destination remote machine.
-     * @param destPassword The password of the user for the destination remote machine.
-     * @param destPrivateKeyFile The path to the private key file (OpenSSH type) on the destination machine.
+     * @param sourceHost The hostname or ip address of the source remote machine.
+     * @param sourcePath The path to the file that needs to be copied from the source remote machine.
+     * @param sourcePort The port number for running the command on the source remote machine.
+     * @param sourceUsername The username of the account on the source remote machine.
+     * @param sourcePassword The password of the user for the source remote machine.
+     * @param sourcePrivateKeyFile The path to the private key file (OpenSSH type) on the source machine.
+     * @param destinationHost The hostname or ip address of the destination remote machine.
+     * @param destinationPath The path to the location where the file will be copied on the destination remote machine.
+     * @param destinationPort The port number for running the command on the destination remote machine.
+     * @param destinationUsername The username of the account on the destination remote machine.
+     * @param destinationPassword The password of the user for the destination remote machine.
+     * @param destinationPrivateKeyFile The path to the private key file (OpenSSH type) on the destination machine.
      * @param knownHostsPolicy The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
      * @param knownHostsPath The path to the known hosts file.
      * @param timeout Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
@@ -59,7 +59,7 @@ public class RemoteSecureCopyAction {
      *
      */
 
-    @Action(name = "SCP Command",
+    @Action(name = "Remote Secure Copy",
             outputs = {
                     @Output(Constants.OutputNames.RETURN_CODE),
                     @Output(Constants.OutputNames.RETURN_RESULT),
@@ -71,35 +71,35 @@ public class RemoteSecureCopyAction {
             }
     )
     public Map<String, String> copyTo(
-            @Param(value = Constants.InputNames.SRC_HOST) String srcHost,
-            @Param(value = Constants.InputNames.SRC_PATH, required = true) String srcPath,
-            @Param(Constants.InputNames.SRC_PORT) String srcPort,
-            @Param(Constants.InputNames.SRC_USERNAME) String srcUsername,
-            @Param(value = Constants.InputNames.SRC_PASSWORD, encrypted = true) String srcPassword,
-            @Param(Constants.InputNames.SRC_PRIVATE_KEY_FILE) String srcPrivateKeyFile,
-            @Param(value = Constants.InputNames.DEST_HOST, required = true) String destHost,
-            @Param(value = Constants.InputNames.DEST_PATH, required = true) String destPath,
-            @Param(Constants.InputNames.DEST_PORT) String destPort,
-            @Param(value = Constants.InputNames.DEST_USERNAME, required = true) String destUsername,
-            @Param(value = Constants.InputNames.DEST_PASSWORD, encrypted = true) String destPassword,
-            @Param(Constants.InputNames.DEST_PRIVATE_KEY_FILE) String destPrivateKeyFile,
+            @Param(value = Constants.InputNames.SOURCE_HOST) String sourceHost,
+            @Param(value = Constants.InputNames.SOURCE_PATH, required = true) String sourcePath,
+            @Param(Constants.InputNames.SOURCE_PORT) String sourcePort,
+            @Param(Constants.InputNames.SOURCE_USERNAME) String sourceUsername,
+            @Param(value = Constants.InputNames.SOURCE_PASSWORD, encrypted = true) String sourcePassword,
+            @Param(Constants.InputNames.SOURCE_PRIVATE_KEY_FILE) String sourcePrivateKeyFile,
+            @Param(value = Constants.InputNames.DESTINATION_HOST, required = true) String destinationHost,
+            @Param(value = Constants.InputNames.DESTINATION_PATH, required = true) String destinationPath,
+            @Param(Constants.InputNames.DESTINATION_PORT) String destinationPort,
+            @Param(value = Constants.InputNames.DESTINATION_USERNAME, required = true) String destinationUsername,
+            @Param(value = Constants.InputNames.DESTINATION_PASSWORD, encrypted = true) String destinationPassword,
+            @Param(Constants.InputNames.DESTINATION_PRIVATE_KEY_FILE) String destinationPrivateKeyFile,
             @Param(Constants.InputNames.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
             @Param(Constants.InputNames.KNOWN_HOSTS_PATH) String knownHostsPath,
             @Param(Constants.InputNames.TIMEOUT) String timeout) {
 
         RemoteSecureCopyInputs remoteSecureCopyInputs = new RemoteSecureCopyInputs();
-        remoteSecureCopyInputs.setSrcHost(srcHost);
-        remoteSecureCopyInputs.setSrcPath(srcPath);
-        remoteSecureCopyInputs.setSrcPort(srcPort);
-        remoteSecureCopyInputs.setSrcPrivateKeyFile(srcPrivateKeyFile);
-        remoteSecureCopyInputs.setSrcUsername(srcUsername);
-        remoteSecureCopyInputs.setSrcPassword(srcPassword);
-        remoteSecureCopyInputs.setDestHost(destHost);
-        remoteSecureCopyInputs.setDestPath(destPath);
-        remoteSecureCopyInputs.setDestPort(destPort);
-        remoteSecureCopyInputs.setDestPrivateKeyFile(destPrivateKeyFile);
-        remoteSecureCopyInputs.setDestUsername(destUsername);
-        remoteSecureCopyInputs.setDestPassword(destPassword);
+        remoteSecureCopyInputs.setSrcHost(sourceHost);
+        remoteSecureCopyInputs.setSrcPath(sourcePath);
+        remoteSecureCopyInputs.setSrcPort(sourcePort);
+        remoteSecureCopyInputs.setSrcPrivateKeyFile(sourcePrivateKeyFile);
+        remoteSecureCopyInputs.setSrcUsername(sourceUsername);
+        remoteSecureCopyInputs.setSrcPassword(sourcePassword);
+        remoteSecureCopyInputs.setDestHost(destinationHost);
+        remoteSecureCopyInputs.setDestPath(destinationPath);
+        remoteSecureCopyInputs.setDestPort(destinationPort);
+        remoteSecureCopyInputs.setDestPrivateKeyFile(destinationPrivateKeyFile);
+        remoteSecureCopyInputs.setDestUsername(destinationUsername);
+        remoteSecureCopyInputs.setDestPassword(destinationPassword);
         remoteSecureCopyInputs.setKnownHostsPolicy(knownHostsPolicy);
         remoteSecureCopyInputs.setKnownHostsPath(knownHostsPath);
         remoteSecureCopyInputs.setTimeout(timeout);
