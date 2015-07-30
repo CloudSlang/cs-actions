@@ -29,20 +29,8 @@
     </scm>
     <developers>
         <developer>
-            <name>Octavian Hasna</name>
-            <email>octavian-lucian.hasna@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Ioan Vranau</name>
-            <email>ioan.vranau@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Avi Moradi</name>
-            <email>avi.moradi@hp.com</email>
+            <name>Tudor Lesan</name>
+            <email>tudor-andrei.lesan@hp.com</email>
             <organization>HP Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
@@ -70,48 +58,8 @@
             <artifactId>jsch</artifactId>
             <version>0.1.52</version>
         </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>140</version>
-        </dependency>
 
         <!-- testing dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.18.1-GA</version>
-            <scope>test</scope>
-        </dependency>
         <!-- end of testing dependencies -->
     </dependencies>
     <build>
