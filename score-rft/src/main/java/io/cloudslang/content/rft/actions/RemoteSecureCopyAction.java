@@ -18,7 +18,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 
 import io.cloudslang.content.rft.entities.RemoteSecureCopyInputs;
-import io.cloudslang.content.rft.services.actions.ScoreRemoteSecureCopyTo;
+import io.cloudslang.content.rft.services.RemoteSecureCopyService;
 import io.cloudslang.content.rft.utils.Constants;
 
 
@@ -48,7 +48,7 @@ public class RemoteSecureCopyAction {
      * @param destinationUsername The username of the account on the destination remote machine.
      * @param destinationPassword The password of the user for the destination remote machine.
      * @param destinationPrivateKeyFile The path to the private key file (OpenSSH type) on the destination machine.
-     * @param knownHostsPolicy The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
+     * @param knownHostsPolicy The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: strict
      * @param knownHostsPath The path to the known hosts file.
      * @param timeout Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
      *
@@ -87,24 +87,20 @@ public class RemoteSecureCopyAction {
             @Param(Constants.InputNames.KNOWN_HOSTS_PATH) String knownHostsPath,
             @Param(Constants.InputNames.TIMEOUT) String timeout) {
 
-        RemoteSecureCopyInputs remoteSecureCopyInputs = new RemoteSecureCopyInputs();
+        RemoteSecureCopyInputs remoteSecureCopyInputs = new RemoteSecureCopyInputs(sourcePath, destinationHost, destinationPath, destinationUsername);
         remoteSecureCopyInputs.setSrcHost(sourceHost);
-        remoteSecureCopyInputs.setSrcPath(sourcePath);
         remoteSecureCopyInputs.setSrcPort(sourcePort);
         remoteSecureCopyInputs.setSrcPrivateKeyFile(sourcePrivateKeyFile);
         remoteSecureCopyInputs.setSrcUsername(sourceUsername);
         remoteSecureCopyInputs.setSrcPassword(sourcePassword);
-        remoteSecureCopyInputs.setDestHost(destinationHost);
-        remoteSecureCopyInputs.setDestPath(destinationPath);
         remoteSecureCopyInputs.setDestPort(destinationPort);
         remoteSecureCopyInputs.setDestPrivateKeyFile(destinationPrivateKeyFile);
-        remoteSecureCopyInputs.setDestUsername(destinationUsername);
         remoteSecureCopyInputs.setDestPassword(destinationPassword);
         remoteSecureCopyInputs.setKnownHostsPolicy(knownHostsPolicy);
         remoteSecureCopyInputs.setKnownHostsPath(knownHostsPath);
         remoteSecureCopyInputs.setTimeout(timeout);
 
-        return new ScoreRemoteSecureCopyTo().execute(remoteSecureCopyInputs);
+        return new RemoteSecureCopyService().execute(remoteSecureCopyInputs);
 
     }
 

@@ -27,7 +27,7 @@ public class Constants {
     // default values
     public static final int DEFAULT_PORT = 22;
     public static final int DEFAULT_TIMEOUT = 90000;
-    public static final String DEFAULT_KNOWN_HOSTS_POLICY = "allow";
+    public static final String DEFAULT_KNOWN_HOSTS_POLICY = "strict";
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
 
     public static final class InputNames {

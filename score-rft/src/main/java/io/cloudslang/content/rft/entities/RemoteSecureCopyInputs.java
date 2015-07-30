@@ -33,6 +33,13 @@ public class RemoteSecureCopyInputs {
     private String knownHostsPath;
     private String timeout;
 
+    public RemoteSecureCopyInputs(String srcPath, String destHost, String destPath, String destUsername) {
+        this.srcPath = srcPath;
+        this.destHost = destHost;
+        this.destPath = destPath;
+        this.destUsername = destUsername;
+    }
+
     public String getDestUsername() {
         return destUsername;
     }
