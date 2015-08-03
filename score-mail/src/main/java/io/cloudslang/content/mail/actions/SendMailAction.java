@@ -8,6 +8,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.mail.entities.SendMailInputs;
 import io.cloudslang.content.mail.services.SendMail;
+import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -89,7 +90,8 @@ public class SendMailAction {
             @Param(SendMailInputs.ENCRYPTION_KEY_ALIAS) String encryptionKeyAlias,
             @Param(SendMailInputs.ENCRYPTION_KEYSTORE_PASSWORD) String encryptionKeystorePassword,
             @Param(SendMailInputs.ENABLE_TLS) String enableTLS,
-            @Param(SendMailInputs.TIMEOUT) String timeout
+            @Param(SendMailInputs.TIMEOUT) String timeout,
+            @Param(SendMailInputs.ENCRYPTION_ALGORITHM) String encryptionAlgorithm
     ) throws Exception {
 
         SendMailInputs sendMailInputs = new SendMailInputs();
@@ -117,6 +119,7 @@ public class SendMailAction {
         sendMailInputs.setEncryptionKeystorePassword(encryptionKeystorePassword);
         sendMailInputs.setEnableTLS(enableTLS);
         sendMailInputs.setTimeout(timeout);
+        sendMailInputs.setEncryptionAlgorithm(encryptionAlgorithm);
 
         try {
             return new SendMail().execute(sendMailInputs);
