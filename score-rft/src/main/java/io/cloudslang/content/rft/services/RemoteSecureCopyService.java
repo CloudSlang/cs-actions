@@ -34,8 +34,7 @@ public class RemoteSecureCopyService {
 
             SCPCopier copier = new SCPCopier(remoteSecureCopyInputs);
 
-            boolean successfullyCopied = false;
-            successfullyCopied = copier.copyFromRemoteToRemote();
+            boolean successfullyCopied = copier.copyFromRemoteToRemote();
 
             if(successfullyCopied){
                 resultMessage = "File " + remoteSecureCopyInputs.getSrcPath() + " successfully copied to path " +
