@@ -56,8 +56,8 @@ public class SendMail {
 
     private static final String PKCS_KEYSTORE_TYPE = "PKCS12";
     private static final String BOUNCY_CASTLE_PROVIDER = "BC";
-    private static final String THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
-    private static final String THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
+    private static final String INVALID_DELIMITERS = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
+    private static final String INVALID_ROW_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
 
     //Operation inputs
     private String attachments;
@@ -419,10 +419,10 @@ public class SendMail {
      */
     protected void validateDelimiters(String rowDelimiter, String columnDelimiter) throws Exception {
         if(rowDelimiter.equals(columnDelimiter)) {
-            throw new Exception(THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE);
+            throw new Exception(INVALID_DELIMITERS);
         }
         if(StringUtils.contains(columnDelimiter, rowDelimiter)) {
-            throw new Exception(THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER);
+            throw new Exception(INVALID_ROW_DELIMITER);
         }
     }
 
