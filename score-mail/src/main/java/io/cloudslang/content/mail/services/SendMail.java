@@ -50,15 +50,14 @@ public class SendMail {
     public static final String SUCCESS_RETURN_CODE = "0";
     public static final String FAILURE_RETURN_CODE = "-1";
 
-    public static final String MAIL_WAS_SENT = "SentMailSuccessfully";
-    public static final String FILE = "file:";
-    public static final String HTTP = "http";
+    private static final String MAIL_WAS_SENT = "SentMailSuccessfully";
+    private static final String FILE = "file:";
+    private static final String HTTP = "http";
 
-    public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
-    public static final String BOUNCY_CASTLE_PROVIDER = "BC";
-    public static final String THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
-    public static final String THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
-    public static final String SUPPORTED_ENCRYPTION_ALGORITHMS = "DES_EDE3_CBC,RC2_CBC,IDEA_CBC,CAST5_CBC,AES128_CBC,AES192_CBC,AES256_CBC,CAMELLIA128_CBC,CAMELLIA192_CBC,CAMELLIA256_CBC,SEED_CBC,DES_EDE3_WRAP,AES128_WRAP,AES256_WRAP,CAMELLIA128_WRAP,CAMELLIA192_WRAP,CAMELLIA256_WRAP,SEED_WRAP";
+    private static final String PKCS_KEYSTORE_TYPE = "PKCS12";
+    private static final String BOUNCY_CASTLE_PROVIDER = "BC";
+    private static final String THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
+    private static final String THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
 
     //Operation inputs
     private String attachments;
@@ -94,7 +93,6 @@ public class SendMail {
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
         Transport transport = null;
-
         try {
             processInputs(sendMailInputs);
 
@@ -408,48 +406,9 @@ public class SendMail {
         encryptionOID = encryptionAlgorithmToEncryptionOID(sendMailInputs.getEncryptionAlgorithm());
     }
 
-    private String encryptionAlgorithmToEncryptionOID(String encryptionAlgorithm) throws Exception {
-        switch (EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm)) {
-            case DES_EDE3_CBC:
-                return SMIMEEnvelopedGenerator.DES_EDE3_CBC;
-            case RC2_CBC:
-                return SMIMEEnvelopedGenerator.RC2_CBC;
-            case IDEA_CBC:
-                return SMIMEEnvelopedGenerator.IDEA_CBC;
-            case CAST5_CBC:
-                return SMIMEEnvelopedGenerator.CAST5_CBC;
-            case AES128_CBC:
-                return SMIMEEnvelopedGenerator.AES128_CBC;
-            case AES192_CBC:
-                return SMIMEEnvelopedGenerator.AES192_CBC;
-            case AES256_CBC:
-                return SMIMEEnvelopedGenerator.AES256_CBC;
-            case CAMELLIA128_CBC:
-                return SMIMEEnvelopedGenerator.CAMELLIA128_CBC;
-            case CAMELLIA192_CBC:
-                return SMIMEEnvelopedGenerator.CAMELLIA192_CBC;
-            case CAMELLIA256_CBC:
-                return SMIMEEnvelopedGenerator.CAMELLIA256_CBC;
-            case SEED_CBC:
-                return SMIMEEnvelopedGenerator.SEED_CBC;
-            case DES_EDE3_WRAP:
-                return SMIMEEnvelopedGenerator.DES_EDE3_WRAP;
-            case AES128_WRAP:
-                return SMIMEEnvelopedGenerator.AES128_WRAP;
-            case AES256_WRAP:
-                return SMIMEEnvelopedGenerator.AES256_WRAP;
-            case CAMELLIA128_WRAP:
-                return SMIMEEnvelopedGenerator.CAMELLIA128_WRAP;
-            case CAMELLIA192_WRAP:
-                return SMIMEEnvelopedGenerator.CAMELLIA192_WRAP;
-            case CAMELLIA256_WRAP:
-                return SMIMEEnvelopedGenerator.CAMELLIA256_WRAP;
-            case SEED_WRAP:
-                return SMIMEEnvelopedGenerator.SEED_WRAP;
-            case OTHER:
-            default:
-                throw new Exception("Invalid encryption algorithm \"" + encryptionAlgorithm + "\". Supported values:" + SUPPORTED_ENCRYPTION_ALGORITHMS);
-        }
+    private String encryptionAlgorithmToEncryptionOID(String encryptionAlgorithmStr) throws Exception {
+        EncryptionAlgorithmsEnum encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithmStr);
+        return encryptionAlgorithm.getEncryptionOID();
     }
 
     /**
