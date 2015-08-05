@@ -29,6 +29,7 @@ public class SendMailInputs {
     public static final String ENCRYPTION_KEYSTORE_PASSWORD = "encryptionKeystorePassword";
     public static final String ENABLE_TLS = "enableTLS";
     public static final String TIMEOUT = "timeout";
+    public static final String ENCRYPTION_ALGORITHM = "encryptionAlgorithm";
 
     private String smtpHostname;
     private String port;
@@ -54,6 +55,15 @@ public class SendMailInputs {
     private String enableTLS;
     private String user;
     private String timeout;
+    private String encryptionAlgorithm;
+
+    public String getEncryptionAlgorithm() {
+        return encryptionAlgorithm;
+    }
+
+    public void setEncryptionAlgorithm(String encryptionAlgorithm) {
+        this.encryptionAlgorithm = encryptionAlgorithm;
+    }
 
     public String getTimeout() {
         return timeout;

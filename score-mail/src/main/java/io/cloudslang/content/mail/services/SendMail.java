@@ -1,6 +1,7 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.smtp.SMTPMessage;
+import io.cloudslang.content.mail.entities.EncryptionAlgorithmsEnum;
 import io.cloudslang.content.mail.entities.SendMailInputs;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -49,14 +50,14 @@ public class SendMail {
     public static final String SUCCESS_RETURN_CODE = "0";
     public static final String FAILURE_RETURN_CODE = "-1";
 
-    public static final String MAIL_WAS_SENT = "SentMailSuccessfully";
-    public static final String FILE = "file:";
-    public static final String HTTP = "http";
+    private static final String MAIL_WAS_SENT = "SentMailSuccessfully";
+    private static final String FILE = "file:";
+    private static final String HTTP = "http";
 
-    public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
-    public static final String BOUNCY_CASTLE_PROVIDER = "BC";
-    public static final String THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
-    public static final String THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
+    private static final String PKCS_KEYSTORE_TYPE = "PKCS12";
+    private static final String BOUNCY_CASTLE_PROVIDER = "BC";
+    private static final String INVALID_DELIMITERS = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
+    private static final String INVALID_ROW_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
 
     //Operation inputs
     private String attachments;
@@ -87,11 +88,11 @@ public class SendMail {
     private boolean encryptMessage;
     private boolean enableTLS;
     private SMIMEEnvelopedGenerator gen;
+    private String encryptionOID;
 
     public Map<String, String> execute(SendMailInputs sendMailInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
         Transport transport = null;
-
         try {
             processInputs(sendMailInputs);
 
@@ -250,7 +251,7 @@ public class SendMail {
     private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws NoSuchAlgorithmException,
             NoSuchProviderException, SMIMEException {
         if(encryptMessage) {
-            mimeBodyPart = gen.generate(mimeBodyPart, SMIMEEnvelopedGenerator.RC2_CBC, BOUNCY_CASTLE_PROVIDER);
+            mimeBodyPart = gen.generate(mimeBodyPart, encryptionOID, BOUNCY_CASTLE_PROVIDER);
         }
         return mimeBodyPart;
     }
@@ -401,6 +402,13 @@ public class SendMail {
             }
             this.timeout *= 1000; //timeouts in seconds
         }
+
+        encryptionOID = encryptionAlgorithmToEncryptionOID(sendMailInputs.getEncryptionAlgorithm());
+    }
+
+    private String encryptionAlgorithmToEncryptionOID(String encryptionAlgorithmStr) throws Exception {
+        EncryptionAlgorithmsEnum encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithmStr);
+        return encryptionAlgorithm.getEncryptionOID();
     }
 
     /**
@@ -411,10 +419,10 @@ public class SendMail {
      */
     protected void validateDelimiters(String rowDelimiter, String columnDelimiter) throws Exception {
         if(rowDelimiter.equals(columnDelimiter)) {
-            throw new Exception(THE_COLUMN_DELIMITER_AND_ROW_DELIMITER_INPUTS_HAVE_THE_SAME_VALUE);
+            throw new Exception(INVALID_DELIMITERS);
         }
         if(StringUtils.contains(columnDelimiter, rowDelimiter)) {
-            throw new Exception(THE_ROW_DELIMITER_CAN_T_BE_A_SUBSTRING_OF_THE_COLUMN_DELIMITER);
+            throw new Exception(INVALID_ROW_DELIMITER);
         }
     }
 
