@@ -26,9 +26,6 @@ public enum EncryptionAlgorithmsEnum {
     CAMELLIA256_WRAP(SMIMEEnvelopedGenerator.CAMELLIA256_WRAP),
     SEED_WRAP(SMIMEEnvelopedGenerator.SEED_WRAP);
 
-    private static final String SUPPORTED_ENCRYPTION_ALGORITHMS = "DES_EDE3_CBC,RC2_CBC,IDEA_CBC,CAST5_CBC,AES128_CBC," +
-            "AES192_CBC,AES256_CBC,CAMELLIA128_CBC,CAMELLIA192_CBC,CAMELLIA256_CBC,SEED_CBC,DES_EDE3_WRAP,AES128_WRAP," +
-            "AES256_WRAP,CAMELLIA128_WRAP,CAMELLIA192_WRAP,CAMELLIA256_WRAP,SEED_WRAP";
     private String encryptionOID;
     private EncryptionAlgorithmsEnum(String encryptionOID) {
         this.encryptionOID = encryptionOID;
@@ -42,11 +39,22 @@ public enum EncryptionAlgorithmsEnum {
             return EncryptionAlgorithmsEnum.valueOf(encryptionAlgorithm.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid encryption algorithm \"" + encryptionAlgorithm + "\". Supported values:" +
-                    SUPPORTED_ENCRYPTION_ALGORITHMS);
+                    getSupportedEncryptionAlgorithms());
         }
     }
 
     public String getEncryptionOID() {
         return this.encryptionOID;
     }
+
+    private static String getSupportedEncryptionAlgorithms() {
+        String result = "";
+        EncryptionAlgorithmsEnum[] algorithms = EncryptionAlgorithmsEnum.values();
+        for(EncryptionAlgorithmsEnum alg : algorithms) {
+            result += alg.name();
+            result += ", ";
+        }
+        return result.substring(0, result.length() - 2);
+    }
+
 }
