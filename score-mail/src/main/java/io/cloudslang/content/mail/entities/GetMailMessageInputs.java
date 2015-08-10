@@ -26,6 +26,7 @@ public class GetMailMessageInputs {
     public static final String DECRYPTION_KEY_ALIAS = "decryptionKeyAlias";
     public static final String DECRYPTION_KEYSTORE_PASSWORD = "decryptionKeystorePassword";
     public static final String TIMEOUT = "timeout";
+    public static final String VERIFY_CERTIFICATE = "verifyCertificate";
 
     private String hostname;
     private String port;
@@ -48,6 +49,15 @@ public class GetMailMessageInputs {
     private String decryptionKeyAlias;
     private String decryptionKeystorePassword;
     private String timeout;
+    private String verifyCertificate;
+
+    public String getVerifyCertificate() {
+        return verifyCertificate;
+    }
+
+    public void setVerifyCertificate(String verifyCertificate) {
+        this.verifyCertificate = verifyCertificate;
+    }
 
     public String getTimeout() {
         return timeout;
