@@ -588,14 +588,15 @@ public class SendMailTest {
             public boolean matches(Object o) {
                 if (o instanceof String) {
                     String body = (String) o;
-                    String contentId = body.substring(body.indexOf("cid:") + 4, (body.indexOf("cid:") + 22));
+                    int indexOfCID = body.indexOf("cid:") + 4;
+                    String contentId = body.substring(indexOfCID, (body.indexOf("\">", indexOfCID)));
                     String partBeforeContentId = HTML_BODY_BASE64_IMAGES_AFTER_PROCESSING.substring(0,
                             HTML_BODY_BASE64_IMAGES_AFTER_PROCESSING.indexOf("cid:") + 3);
                     String partAfterContentID = HTML_BODY_BASE64_IMAGES_AFTER_PROCESSING.substring(
                             HTML_BODY_BASE64_IMAGES_AFTER_PROCESSING.indexOf("cid:") + 23,
                             HTML_BODY_BASE64_IMAGES_AFTER_PROCESSING.length());
                     if (body.contains(partBeforeContentId) && body.contains(partAfterContentID) &&
-                            contentId.matches("\\d{1,5}\\.\\d{12}")) {
+                            contentId.matches("\\d{1,5}\\.\\d{12,13}")) {
                         return true;
                     }
                 }
