@@ -365,7 +365,7 @@ public class GetMailMessage {
         if(null == cert) {
             throw new Exception("Can't find a key pair with alias \"" + decryptionKeyAlias + "\" in the given keystore");
         }
-
+        cert.checkValidity();
         recId = new RecipientId();
         recId.setSerialNumber(cert.getSerialNumber());
         recId.setIssuer(cert.getIssuerX500Principal().getEncoded());
