@@ -1,6 +1,7 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
@@ -107,6 +108,7 @@ public class GetMailMessage {
     private boolean deleteUponRetrieval;
     private boolean decryptMessage;
     private int timeout = -1;
+    private boolean verifyCertificate = false;
 
     private RecipientId recId = null;
     private KeyStore ks = null;
@@ -365,7 +367,10 @@ public class GetMailMessage {
         if(null == cert) {
             throw new Exception("Can't find a key pair with alias \"" + decryptionKeyAlias + "\" in the given keystore");
         }
-        cert.checkValidity();
+        if(verifyCertificate) {
+            cert.checkValidity();
+        }
+
         recId = new RecipientId();
         recId.setSerialNumber(cert.getSerialNumber());
         recId.setIssuer(cert.getIssuerX500Principal().getEncoded());
@@ -489,6 +494,11 @@ public class GetMailMessage {
                 throw new Exception("timeout value must be a positive number");
             }
             this.timeout *= 1000; //timeouts in seconds
+        }
+
+        String verifyCertStr = getMailMessageInputs.getVerifyCertificate();
+        if(!StringUtils.isEmpty(verifyCertStr)) {
+            verifyCertificate = Boolean.parseBoolean(verifyCertStr);
         }
     }
 

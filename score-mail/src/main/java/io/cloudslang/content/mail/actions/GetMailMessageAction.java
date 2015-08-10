@@ -101,7 +101,8 @@ public class GetMailMessageAction {
             @Param(value = GetMailMessageInputs.DECRYPTION_KEYSTORE) String decryptionKeystore,
             @Param(value = GetMailMessageInputs.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
             @Param(value = GetMailMessageInputs.DECRYPTION_KEYSTORE_PASSWORD) String decryptionKeystorePassword,
-            @Param(value = GetMailMessageInputs.TIMEOUT) String timeout
+            @Param(value = GetMailMessageInputs.TIMEOUT) String timeout,
+            @Param(value = GetMailMessageInputs.VERIFY_CERTIFICATE) String verifyCertificate
     ) {
         GetMailMessageInputs getMailMessageInputs = new GetMailMessageInputs();
         getMailMessageInputs.setHostname(hostname);
@@ -125,6 +126,7 @@ public class GetMailMessageAction {
         getMailMessageInputs.setDecryptionKeyAlias(decryptionKeyAlias);
         getMailMessageInputs.setDecryptionKeystorePassword(decryptionKeystorePassword);
         getMailMessageInputs.setTimeout(timeout);
+        getMailMessageInputs.setVerifyCertificate(verifyCertificate);
 
         try {
             return new GetMailMessage().execute(getMailMessageInputs);
