@@ -144,6 +144,7 @@ public class SendMail {
                     if(!source.getFile().exists()) {
                         throw new FileNotFoundException("Cannot attach " + attachment);
                     }
+                    source.getInputStream(); //checks read access permission.
 
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
@@ -206,12 +207,6 @@ public class SendMail {
             }
             result.put(RETURN_RESULT, MAIL_WAS_SENT);
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
-        }  catch (Exception e) {
-            if (e.getMessage() != null && e.getMessage().contains("IOException")) {
-                throw new Exception("Cannot attach '" + attachments + "' Check if the location exists and is accessible.");
-            } else {
-                throw e;
-            }
         } finally {
             if (null != transport) transport.close();
         }
