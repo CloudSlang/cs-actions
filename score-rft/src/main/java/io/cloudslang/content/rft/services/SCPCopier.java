@@ -50,7 +50,11 @@ public class SCPCopier {
         return result;
     }
 
-    public boolean copyFromLocalToRemote(String srcPath, String destPath){
+    public boolean copyFromLocalToRemote(){
+        return copyFromLocalToRemote(remoteSecureCopyInputs.getSrcPath(), remoteSecureCopyInputs.getDestPath());
+    }
+
+    private boolean copyFromLocalToRemote(String srcPath, String destPath){
         FileInputStream fileInputStream = null;
 
         try {
@@ -137,7 +141,7 @@ public class SCPCopier {
         }
     }
 
-    public boolean copyFromRemoteToLocal(String srcPath, String destPath){
+    private boolean copyFromRemoteToLocal(String srcPath, String destPath){
         FileOutputStream fileOutputStream = null;
 
         try {
