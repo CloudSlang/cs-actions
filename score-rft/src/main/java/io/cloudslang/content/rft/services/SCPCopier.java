@@ -40,11 +40,10 @@ public class SCPCopier {
     }
 
     public boolean copyFromRemoteToRemote() throws IOException {
-        boolean result;
         File temporaryDestFile = File.createTempFile("SCPCopy", ".tmp");
         String temporaryDestFilePath = temporaryDestFile.getCanonicalPath().replace("\\", "\\\\");
 
-        result = copyFromRemoteToLocal(remoteSecureCopyInputs.getSrcPath(), temporaryDestFilePath) && copyFromLocalToRemote(temporaryDestFilePath, remoteSecureCopyInputs.getDestPath());
+        boolean result = copyFromRemoteToLocal(remoteSecureCopyInputs.getSrcPath(), temporaryDestFilePath) && copyFromLocalToRemote(temporaryDestFilePath, remoteSecureCopyInputs.getDestPath());
         temporaryDestFile.delete();
 
         return result;
@@ -54,7 +53,11 @@ public class SCPCopier {
         return copyFromLocalToRemote(remoteSecureCopyInputs.getSrcPath(), remoteSecureCopyInputs.getDestPath());
     }
 
-    private boolean copyFromLocalToRemote(String srcPath, String destPath){
+    public boolean copyFromRemoteToLocal(){
+        return copyFromRemoteToLocal(remoteSecureCopyInputs.getSrcPath(), remoteSecureCopyInputs.getDestPath());
+    }
+
+    protected boolean copyFromLocalToRemote(String srcPath, String destPath){
         FileInputStream fileInputStream = null;
 
         try {
@@ -141,7 +144,7 @@ public class SCPCopier {
         }
     }
 
-    private boolean copyFromRemoteToLocal(String srcPath, String destPath){
+    protected boolean copyFromRemoteToLocal(String srcPath, String destPath){
         FileOutputStream fileOutputStream = null;
 
         try {
@@ -246,7 +249,7 @@ public class SCPCopier {
         }
     }
 
-    private void establishKnownHostsConfiguration(KnownHostsFile knownHostsFile, JSch jsch, Session session) throws JSchException, IOException {
+    protected void establishKnownHostsConfiguration(KnownHostsFile knownHostsFile, JSch jsch, Session session) throws JSchException, IOException {
         String policy =  knownHostsFile.getPolicy();
         Path knownHostsFilePath = knownHostsFile.getPath();
         switch (policy.toLowerCase(Locale.ENGLISH)){
@@ -272,7 +275,7 @@ public class SCPCopier {
                 throw new RuntimeException("Unknown known_hosts file policy.");
         }
     }
-    private void establishPrivateKeyFile(KeyFile keyFile, JSch jsch, Session session, boolean usesSrcPrivateKeyFile) throws JSchException {
+    protected void establishPrivateKeyFile(KeyFile keyFile, JSch jsch, Session session, boolean usesSrcPrivateKeyFile) throws JSchException {
         if (keyFile == null) {
             if (usesSrcPrivateKeyFile){
                 session.setPassword(remoteSecureCopyInputs.getSrcPassword());
