@@ -114,9 +114,6 @@ public class SSHServiceImpl implements SSHService {
     @Override
     public CommandResult runShellCommand(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout, boolean agentForwarding) {
         try {
-            if (!isConnected()) {
-                session.connect(connectTimeout);
-            }
             // create shell channel
             Channel channel = session.openChannel(SHELL_CHANNEL);
             ((ChannelShell) channel).setPty(usePseudoTerminal);
