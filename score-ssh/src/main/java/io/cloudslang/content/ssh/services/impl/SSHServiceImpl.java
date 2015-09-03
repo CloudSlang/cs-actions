@@ -18,7 +18,7 @@ import java.util.Map;
  * @author octavian-h
  */
 public class SSHServiceImpl implements SSHService {
-    private static final int POLLING_INTERVAL = 1000;
+    private static final int POLLING_INTERVAL = 10;
     private static final String SHELL_CHANNEL = "shell";
     private static final String KNOWN_HOSTS_ALLOW = "allow";
     private static final String KNOWN_HOSTS_STRICT = "strict";
@@ -132,13 +132,13 @@ public class SSHServiceImpl implements SSHService {
             channel.connect(connectTimeout);
 
             // wait for response
-            do {
+            while (!channel.isEOF() && commandTimeout > 0) {
                 try {
                     Thread.sleep(POLLING_INTERVAL);
                 } catch (InterruptedException ignore) {
                 }
                 commandTimeout -= POLLING_INTERVAL;
-            } while (!channel.isEOF() && commandTimeout > 0);
+            }
 
             // save the response
             CommandResult result = new CommandResult();
