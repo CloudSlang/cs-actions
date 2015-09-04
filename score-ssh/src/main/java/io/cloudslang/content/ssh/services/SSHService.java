@@ -5,6 +5,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.CommandResult;
 import io.cloudslang.content.ssh.entities.SSHConnection;
+import io.cloudslang.content.ssh.exceptions.TimeoutException;
 
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public interface SSHService extends AutoCloseable {
      * @param agentForwarding   Weathers the agent forwarding is enabled or not.
      * @return the command result.
      */
-    CommandResult runShellCommand(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout, boolean agentForwarding);
+    CommandResult runShellCommand(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout, boolean agentForwarding) throws TimeoutException;
 
     /**
      * Checks the SSH session.
