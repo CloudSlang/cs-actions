@@ -9,6 +9,7 @@ import io.cloudslang.content.ssh.entities.CommandResult;
 import io.cloudslang.content.ssh.entities.ConnectionDetails;
 import io.cloudslang.content.ssh.entities.KeyFile;
 import io.cloudslang.content.ssh.entities.KnownHostsFile;
+import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +68,7 @@ public class SSHServiceImplTest {
         Mockito.doNothing().when(jSchMock).addIdentity(SHELL_PATH);
         PowerMockito.when(sessionMock.openChannel("shell")).thenReturn(channelShellMock);
         Mockito.doNothing().when(channelShellMock).connect(CONNECT_TIMEOUT);
+        PowerMockito.when(channelShellMock.isEOF()).thenReturn(true);
     }
 
     @Test
@@ -97,7 +99,7 @@ public class SSHServiceImplTest {
     }
 
     @Test
-    public void testRunShellCommand() {
+    public void testRunShellCommand() throws Exception {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
         CommandResult commandResult = sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_FALSE);
         assertEquals(commandResult.getExitCode(), 0);
@@ -160,4 +162,12 @@ public class SSHServiceImplTest {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
         sshService.removeFromCache(Mockito.any(GlobalSessionObject.class), "sessionId");
     }
+
+    @Test(expected = TimeoutException.class)
+    public void testTimeoutExceptionIsThrown() throws Exception {
+        PowerMockito.when(channelShellMock.isEOF()).thenReturn(false);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, 0, AGENT_FORWARDING_FALSE);
+    }
+
 }

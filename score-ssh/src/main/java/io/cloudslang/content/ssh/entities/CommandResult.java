@@ -35,4 +35,14 @@ public class CommandResult {
     public void setExitCode(int exitCode) {
         this.exitCode = exitCode;
     }
+
+    @Override
+    public String toString() {
+        return "CommandResult{" +
+                "standardOutput='" + standardOutput + '\'' +
+                ", standardError='" + standardError + '\'' +
+                ", exitCode=" + exitCode +
+                '}';
+    }
+
 }
