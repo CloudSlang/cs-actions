@@ -3,6 +3,7 @@ package io.cloudslang.content.ssh.services.impl;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.jcraft.jsch.*;
 import io.cloudslang.content.ssh.entities.*;
+import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.utils.CacheUtils;
 
@@ -18,7 +19,7 @@ import java.util.Map;
  * @author octavian-h
  */
 public class SSHServiceImpl implements SSHService {
-    private static final int POLLING_INTERVAL = 1000;
+    private static final int POLLING_INTERVAL = 10;
     private static final String SHELL_CHANNEL = "shell";
     private static final String KNOWN_HOSTS_ALLOW = "allow";
     private static final String KNOWN_HOSTS_STRICT = "strict";
@@ -112,7 +113,14 @@ public class SSHServiceImpl implements SSHService {
 
 
     @Override
-    public CommandResult runShellCommand(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout, boolean agentForwarding) {
+    public CommandResult runShellCommand(
+            String command,
+            String characterSet,
+            boolean usePseudoTerminal,
+            int connectTimeout,
+            int commandTimeout,
+            boolean agentForwarding
+    ) throws TimeoutException {
         try {
             if (!isConnected()) {
                 session.connect(connectTimeout);
@@ -132,13 +140,16 @@ public class SSHServiceImpl implements SSHService {
             channel.connect(connectTimeout);
 
             // wait for response
-            do {
+            long currentTime = System.currentTimeMillis();
+            long timeLimit = currentTime + commandTimeout;
+            while (!channel.isEOF() && currentTime < timeLimit) {
                 try {
                     Thread.sleep(POLLING_INTERVAL);
                 } catch (InterruptedException ignore) {
                 }
-                commandTimeout -= POLLING_INTERVAL;
-            } while (!channel.isEOF() && commandTimeout > 0);
+                currentTime = System.currentTimeMillis();
+            }
+            boolean timedOut = !channel.isEOF();
 
             // save the response
             CommandResult result = new CommandResult();
@@ -148,6 +159,11 @@ public class SSHServiceImpl implements SSHService {
             channel.disconnect();
             // The exit status is only available after the channel was closed (more exactly, just before the channel is closed).
             result.setExitCode(channel.getExitStatus());
+
+            if (timedOut) {
+                throw new TimeoutException(String.valueOf(result));
+            }
+
             return result;
         } catch (JSchException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
