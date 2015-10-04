@@ -68,7 +68,7 @@ public class SSHServiceImplTest {
         Mockito.doNothing().when(jSchMock).addIdentity(SHELL_PATH);
         PowerMockito.when(sessionMock.openChannel("shell")).thenReturn(channelShellMock);
         Mockito.doNothing().when(channelShellMock).connect(CONNECT_TIMEOUT);
-        PowerMockito.when(channelShellMock.isEOF()).thenReturn(true);
+        PowerMockito.when(channelShellMock.isClosed()).thenReturn(true);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class SSHServiceImplTest {
 
     @Test(expected = TimeoutException.class)
     public void testTimeoutExceptionIsThrown() throws Exception {
-        PowerMockito.when(channelShellMock.isEOF()).thenReturn(false);
+        PowerMockito.when(channelShellMock.isClosed()).thenReturn(false);
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
         sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, 0, AGENT_FORWARDING_FALSE);
     }
