@@ -9,10 +9,11 @@ import io.cloudslang.content.ssh.entities.CommandResult;
 import io.cloudslang.content.ssh.entities.ConnectionDetails;
 import io.cloudslang.content.ssh.entities.KeyFile;
 import io.cloudslang.content.ssh.entities.KnownHostsFile;
-import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -52,14 +53,18 @@ public class SSHServiceImplTest {
 
     @Mock
     private Session sessionMock;
+
     @Mock
     private ChannelShell channelShellMock;
+
     @Mock
     private CommandResult commandResultMock;
 
-
     @Mock
     private JSch jSchMock;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -117,9 +122,12 @@ public class SSHServiceImplTest {
         assertEquals(commandResult.getStandardOutput(), "");
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testRunShellCommandInvalidEncoding() throws Exception {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+
+        exception.expect(RuntimeException.class);
+
         sshService.runShellCommand("", "test", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_TRUE);
     }
 
@@ -163,10 +171,14 @@ public class SSHServiceImplTest {
         sshService.removeFromCache(Mockito.any(GlobalSessionObject.class), "sessionId");
     }
 
-    @Test(expected = TimeoutException.class)
+    @Test
     public void testTimeoutExceptionIsThrown() throws Exception {
         PowerMockito.when(channelShellMock.isClosed()).thenReturn(false);
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Timeout");
+
         sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, 0, AGENT_FORWARDING_FALSE);
     }
 

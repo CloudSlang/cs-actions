@@ -1,7 +1,6 @@
 package io.cloudslang.content.ssh.services.actions;
 
 import io.cloudslang.content.ssh.entities.*;
-import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 import io.cloudslang.content.ssh.utils.Constants;
@@ -72,8 +71,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             SSHShellInputs sshShellInputs,
             Map<String, String> returnResult,
             SSHService service, String sessionId,
-            boolean saveSSHSession
-    ) throws TimeoutException {
+            boolean saveSSHSession) {
 
         int timeoutNumber = StringUtils.toInt(sshShellInputs.getTimeout(), Constants.DEFAULT_TIMEOUT);
         boolean usePseudoTerminal = StringUtils.toBoolean(sshShellInputs.getPty(), Constants.DEFAULT_USE_PSEUDO_TERMINAL);
