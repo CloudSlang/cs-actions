@@ -142,14 +142,14 @@ public class SSHServiceImpl implements SSHService {
             // wait for response
             long currentTime = System.currentTimeMillis();
             long timeLimit = currentTime + commandTimeout;
-            while (!channel.isEOF() && currentTime < timeLimit) {
+            while (!channel.isClosed() && currentTime < timeLimit) {
                 try {
                     Thread.sleep(POLLING_INTERVAL);
                 } catch (InterruptedException ignore) {
                 }
                 currentTime = System.currentTimeMillis();
             }
-            boolean timedOut = !channel.isEOF();
+            boolean timedOut = !channel.isClosed();
 
             // save the response
             CommandResult result = new CommandResult();
