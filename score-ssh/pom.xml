@@ -10,7 +10,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>score-ssh</artifactId>
-    <version>0.0.32-SNAPSHOT</version>
+    <version>0.0.32</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>SSH java actions</description>
