@@ -119,8 +119,7 @@ public class SSHServiceImpl implements SSHService {
             boolean usePseudoTerminal,
             int connectTimeout,
             int commandTimeout,
-            boolean agentForwarding
-    ) throws TimeoutException {
+            boolean agentForwarding) {
         try {
             if (!isConnected()) {
                 session.connect(connectTimeout);
@@ -142,14 +141,14 @@ public class SSHServiceImpl implements SSHService {
             // wait for response
             long currentTime = System.currentTimeMillis();
             long timeLimit = currentTime + commandTimeout;
-            while (!channel.isEOF() && currentTime < timeLimit) {
+            while (!channel.isClosed() && currentTime < timeLimit) {
                 try {
                     Thread.sleep(POLLING_INTERVAL);
                 } catch (InterruptedException ignore) {
                 }
                 currentTime = System.currentTimeMillis();
             }
-            boolean timedOut = !channel.isEOF();
+            boolean timedOut = !channel.isClosed();
 
             // save the response
             CommandResult result = new CommandResult();
@@ -165,7 +164,7 @@ public class SSHServiceImpl implements SSHService {
             }
 
             return result;
-        } catch (JSchException | UnsupportedEncodingException e) {
+        } catch (JSchException | UnsupportedEncodingException | TimeoutException e) {
             throw new RuntimeException(e);
         }
     }
