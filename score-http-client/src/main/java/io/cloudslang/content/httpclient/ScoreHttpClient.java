@@ -320,6 +320,8 @@ public class ScoreHttpClient {
             }
             httpRequestBase.releaseConnection();
             connManager.closeExpiredConnections();
+        } else {
+            httpRequestBase.releaseConnection();
         }
     }
 
