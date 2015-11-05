@@ -6,7 +6,7 @@ import com.xebialabs.overthere.Overthere;
 import com.xebialabs.overthere.OverthereConnection;
 import com.xebialabs.overthere.util.CapturingOverthereExecutionOutputHandler;
 import io.cloudslang.content.entities.PowerShellInputs;
-import io.cloudslang.content.utilities.utils.StringUtils;
+//import io.cloudslang.content.utilities.utils.StringUtils;
 import io.cloudslang.content.utils.Constants;
 import org.apache.commons.codec.binary.Base64;
 
@@ -52,7 +52,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
             errString = readInputStream(new ByteArrayInputStream(errHandler.getOutput().getBytes(StandardCharsets.UTF_8)));
         } catch (IOException e) {
             returnResult.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
-            returnResult.put(Constants.OutputNames.EXCEPTION, StringUtils.toString(e));
+//            returnResult.put(Constants.OutputNames.EXCEPTION, StringUtils.toString(e));
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
         }
 
