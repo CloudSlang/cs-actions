@@ -89,12 +89,6 @@
             <version>1.5</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.18.1-GA</version>
-            <scope>test</scope>
-        </dependency>
         <!-- end of testing dependencies -->
     </dependencies>
     <build>
