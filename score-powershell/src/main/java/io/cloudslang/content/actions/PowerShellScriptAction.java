@@ -25,7 +25,7 @@ public class PowerShellScriptAction {
      * @param userName The username used to connect to the the remote machine.
      * @param password The password used to connect to the remote machine.
      * @param script The PowerShell script that will run on the remote machine.
-     *
+     * @param enableHTTPS True if HTTPS connections is chosen.
      */
     @Action(name = "PowerShell Script Action",
             outputs = {
@@ -42,13 +42,15 @@ public class PowerShellScriptAction {
             @Param(value = Constants.InputNames.INPUT_HOST) String host,
             @Param(value = Constants.InputNames.INPUT_USERNAME) String userName,
             @Param(value = Constants.InputNames.INPUT_PASSWORD) String password,
-            @Param(value = Constants.InputNames.INPUT_SCRIPT) String script) {
+            @Param(value = Constants.InputNames.INPUT_SCRIPT) String script,
+            @Param(value = Constants.InputNames.ENABLE_HTTPS) String enableHTTPS) {
 
         PowerShellInputs inputs = new PowerShellInputs();
         inputs.setHost(host);
         inputs.setUsername(userName);
         inputs.setPassword(password);
         inputs.setScript(script);
+        inputs.setEnableHTTPS(enableHTTPS);
         PowerShellScriptService service = new PowerShellScriptServiceImpl();
         return service.execute(inputs);
     }

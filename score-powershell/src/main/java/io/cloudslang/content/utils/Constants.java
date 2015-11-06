@@ -11,6 +11,7 @@ public class Constants {
         public static final String INPUT_USERNAME = "username";
         public static final String INPUT_PASSWORD = "password";
         public static final String INPUT_SCRIPT = "script";
+        public static final String ENABLE_HTTPS = "enableHTTPS";
     }
 
     public static final class OutputNames {

@@ -15,9 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import static com.xebialabs.overthere.ConnectionOptions.*;
 import static com.xebialabs.overthere.OperatingSystemFamily.WINDOWS;
 import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.CONNECTION_TYPE;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_ENABLE_HTTPS;
 import static com.xebialabs.overthere.cifs.CifsConnectionType.WINRM_NATIVE;
 import static com.xebialabs.overthere.util.CapturingOverthereExecutionOutputHandler.capturingHandler;
 
@@ -74,6 +76,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
         options.set(PASSWORD, inputs.getPassword());
         options.set(OPERATING_SYSTEM, WINDOWS);
         options.set(CONNECTION_TYPE, WINRM_NATIVE);
+        options.set(WINRM_ENABLE_HTTPS, inputs.getEnableHTTPS());
         return Overthere.getConnection("cifs", options);
     }
 

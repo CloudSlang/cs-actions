@@ -9,6 +9,7 @@ public class PowerShellInputs {
     private String username;
     private String password;
     private String script;
+    private String enableHTTPS;
 
     public String getHost() {
         return host;
@@ -40,5 +41,13 @@ public class PowerShellInputs {
 
     public void setScript(String script) {
         this.script = script;
+    }
+
+    public String getEnableHTTPS() {
+        return enableHTTPS;
+    }
+
+    public void setEnableHTTPS(String enableHTTPS) {
+        this.enableHTTPS = enableHTTPS;
     }
 }
