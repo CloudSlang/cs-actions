@@ -19,6 +19,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -70,24 +71,33 @@ public class PowerShellScriptServiceImplTest {
         PowerMockito.when(powerShellInputs.getWinrmLocale()).thenReturn("en-US");
         PowerMockito.when(powerShellInputs.getWinrmTimeout()).thenReturn("PT60.000S");
         Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
-        assertEquals("0", result1.get(Constants.OutputNames.RETURN_CODE));
+        assertEquals(Constants.ReturnCodes.RETURN_CODE_SUCCESS, result1.get(Constants.OutputNames.RETURN_CODE));
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void executeOptionalInputInteger() {
         PowerMockito.when(powerShellInputs.getWinrmEnvelopSize()).thenReturn("num");
-        powerShellScriptService.execute(powerShellInputs);
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
+        assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
+        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(NumberFormatException.class.getName()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void executeOptionalInputWinrmHttpsCertificateTrustStrategy() {
         PowerMockito.when(powerShellInputs.getWinrmHttpsCertificateTrustStrategy()).thenReturn("2");
-        powerShellScriptService.execute(powerShellInputs);
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
+        assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
+        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void executeOptionalInputWinrmHttpsHostnameVerificationStrategy() {
         PowerMockito.when(powerShellInputs.getWinrmHttpsHostnameVerificationStrategy()).thenReturn("2");
-        powerShellScriptService.execute(powerShellInputs);
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
+        assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
+        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
     }
 }

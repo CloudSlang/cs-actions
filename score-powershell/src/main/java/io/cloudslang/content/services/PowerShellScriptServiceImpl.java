@@ -13,6 +13,7 @@ import io.cloudslang.content.entities.PowerShellInputs;
 import io.cloudslang.content.utils.Constants;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -31,7 +32,14 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
 
     @Override
     public Map<String, String> execute(PowerShellInputs inputs) {
+        try {
+            return executePowerShellScript(inputs);
+        } catch (IllegalArgumentException e) {
+            return getExceptionReturnResult(e);
+        }
+    }
 
+    private Map<String, String> executePowerShellScript(PowerShellInputs inputs) {
         OverthereConnection connection = createOverthereConnection(inputs);
         String encodeBase64 = getBase64EncodedScript(inputs.getScript());
 
@@ -42,6 +50,14 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
         connection.execute(outHandler, errHandler, cmdLine);
 
         return getReturnResult(outHandler, errHandler);
+    }
+
+    private Map<String, String> getExceptionReturnResult(IllegalArgumentException e) {
+        Map<String, String> returnResult = new HashMap<>();
+        returnResult.put(Constants.OutputNames.RETURN_RESULT, Constants.INCORRECT_INPUT);
+        returnResult.put(Constants.OutputNames.EXCEPTION, ExceptionUtils.getFullStackTrace(e));
+        returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+        return returnResult;
     }
 
     private Map<String, String> getReturnResult(CapturingOverthereExecutionOutputHandler outHandler,
