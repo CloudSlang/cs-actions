@@ -12,6 +12,7 @@ import com.xebialabs.overthere.util.CapturingOverthereExecutionOutputHandler;
 import io.cloudslang.content.entities.PowerShellInputs;
 import io.cloudslang.content.utils.Constants;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -21,8 +22,6 @@ import static com.xebialabs.overthere.ConnectionOptions.*;
 import static com.xebialabs.overthere.OperatingSystemFamily.WINDOWS;
 import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.*;
 import static com.xebialabs.overthere.util.CapturingOverthereExecutionOutputHandler.capturingHandler;
-
-//import io.cloudslang.content.utilities.utils.StringUtils;
 
 /**
  * User: bancl
@@ -86,7 +85,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
     }
 
     private void setOptionalInput(ConnectionOptions options, String key, String value) {
-        if (value != null && !value.isEmpty())
+        if (StringUtils.isNotBlank(value))
             switch (key) {
                 case WINRM_ENVELOP_SIZE:
                     options.set(key, Integer.parseInt(value));

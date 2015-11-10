@@ -58,11 +58,11 @@
             <artifactId>overthere</artifactId>
             <version>4.1.1</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>com.hp.score.content</groupId>-->
-        <!--<artifactId>score-utilities</artifactId>-->
-        <!--<version>0.0.1</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.2</version>
+        </dependency>
 
         <!-- testing dependencies -->
         <dependency>
