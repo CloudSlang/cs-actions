@@ -16,8 +16,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
  * Date: 11/9/2015
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({PowerShellScriptServiceImpl.class, Overthere.class, CmdLine.class, BufferedReader.class})
+@PrepareForTest({PowerShellScriptServiceImpl.class, Overthere.class, CmdLine.class})
 public class PowerShellScriptServiceImplTest {
     private PowerShellScriptServiceImpl powerShellScriptService;
     @Mock
@@ -41,8 +39,6 @@ public class PowerShellScriptServiceImplTest {
     private OverthereConnection overthereConnection;
     @Mock
     private CmdLine cmdLine;
-    @Mock
-    private BufferedReader bufferedReader;
 
     @Before
     public void setUp() throws Exception {
@@ -56,12 +52,6 @@ public class PowerShellScriptServiceImplTest {
                 eq("-EncodedCommand"), any(String.class))).thenReturn(cmdLine);
         PowerMockito.when(overthereConnection.execute(any(CapturingOverthereExecutionOutputHandler.class),
                 any(CapturingOverthereExecutionOutputHandler.class), any(CmdLine.class))).thenReturn(0);
-
-        PowerMockito.whenNew(BufferedReader.class)
-                .withArguments(any(InputStreamReader.class)).thenReturn(bufferedReader);
-        PowerMockito.when(bufferedReader.readLine()).thenReturn("first line")
-                .thenReturn(" second line").thenReturn(null).thenReturn("first line exception")
-                .thenReturn(" second line exception").thenReturn(null);
 
         PowerMockito.when(powerShellInputs.getHost()).thenReturn("host");
         PowerMockito.when(powerShellInputs.getUsername()).thenReturn("username");
@@ -81,8 +71,6 @@ public class PowerShellScriptServiceImplTest {
         PowerMockito.when(powerShellInputs.getWinrmTimeout()).thenReturn("PT60.000S");
         Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
         assertEquals("0", result1.get(Constants.OutputNames.RETURN_CODE));
-        assertEquals("first line second line", result1.get(Constants.OutputNames.RETURN_RESULT));
-        assertEquals("first line exception second line exception", result1.get(Constants.OutputNames.EXCEPTION));
     }
 
     @Test(expected = NumberFormatException.class)

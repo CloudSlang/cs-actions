@@ -13,7 +13,6 @@ import io.cloudslang.content.entities.PowerShellInputs;
 import io.cloudslang.content.utils.Constants;
 import org.apache.commons.codec.binary.Base64;
 
-import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,12 +34,13 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
     public Map<String, String> execute(PowerShellInputs inputs) {
 
         OverthereConnection connection = getOverthereConnection(inputs);
-        String encodeBase64 = getBase64EncodedScript(inputs);
+        String encodeBase64 = getBase64EncodedScript(inputs.getScript());
 
-        CapturingOverthereExecutionOutputHandler outHandler;
-        CapturingOverthereExecutionOutputHandler errHandler;
-        connection.execute(outHandler = capturingHandler(), errHandler = capturingHandler(), CmdLine.build("powershell",
-                "-NoProfile", "-NonInteractive", "-EncodedCommand", encodeBase64));
+        CapturingOverthereExecutionOutputHandler outHandler = capturingHandler();
+        CapturingOverthereExecutionOutputHandler errHandler = capturingHandler();
+        CmdLine cmdLine = CmdLine.build("powershell",
+                "-NoProfile", "-NonInteractive", "-EncodedCommand", encodeBase64);
+        connection.execute(outHandler, errHandler, cmdLine);
 
         return getReturnResult(outHandler, errHandler);
     }
@@ -49,24 +49,15 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
                                                 CapturingOverthereExecutionOutputHandler errHandler) {
         Map<String, String> returnResult = new HashMap<>();
 
-        String outString = "", errString = "";
-        try {
-            outString = readInputStream(new ByteArrayInputStream(outHandler.getOutput().getBytes(StandardCharsets.UTF_8)));
-            errString = readInputStream(new ByteArrayInputStream(errHandler.getOutput().getBytes(StandardCharsets.UTF_8)));
-        } catch (IOException e) {
-            returnResult.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
-//            returnResult.put(Constants.OutputNames.EXCEPTION, StringUtils.toString(e));
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
-        }
-
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, outString);
-        returnResult.put(Constants.OutputNames.EXCEPTION, errString);
+        returnResult.put(Constants.OutputNames.RETURN_RESULT, outHandler.getOutput());
+        returnResult.put(Constants.OutputNames.EXCEPTION, errHandler.getOutput());
         returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+
         return returnResult;
     }
 
-    private String getBase64EncodedScript(PowerShellInputs inputs) {
-        byte[] utf8Bytes = inputs.getScript().getBytes(StandardCharsets.UTF_16LE);
+    private String getBase64EncodedScript(String script) {
+        byte[] utf8Bytes = script.getBytes(StandardCharsets.UTF_16LE);
         return Base64.encodeBase64String(utf8Bytes);
     }
 
@@ -115,18 +106,5 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
                 default:
                     options.set(key, value);
             }
-    }
-
-    private static String readInputStream(InputStream inputStream) throws IOException {
-        StringBuilder sb = new StringBuilder();
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-        }
-
-        return sb.toString();
     }
 }
