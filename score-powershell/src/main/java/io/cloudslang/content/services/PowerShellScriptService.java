@@ -1,6 +1,6 @@
 package io.cloudslang.content.services;
 
-import io.cloudslang.content.entities.PowerShellInputs;
+import io.cloudslang.content.entities.PowerShellActionInputs;
 
 import java.util.Map;
 
@@ -9,5 +9,5 @@ import java.util.Map;
  * Date: 10/9/2015
  */
 public interface PowerShellScriptService {
-    Map<String, String> execute(PowerShellInputs inputs);
+    Map<String, String> execute(PowerShellActionInputs inputs);
 }

@@ -6,7 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.entities.PowerShellInputs;
+import io.cloudslang.content.entities.PowerShellActionInputs;
 import io.cloudslang.content.services.PowerShellScriptService;
 import io.cloudslang.content.services.PowerShellScriptServiceImpl;
 import io.cloudslang.content.utils.Constants;
@@ -105,7 +105,7 @@ public class PowerShellScriptAction {
             @Param(value = Constants.InputNames.WINRM_LOCALE) String winrmLocale,
             @Param(value = Constants.InputNames.WINRM_TIMEMOUT) String winrmTimeout) {
 
-        PowerShellInputs inputs = new PowerShellInputs();
+        PowerShellActionInputs inputs = new PowerShellActionInputs();
         inputs.setHost(host);
         inputs.setUsername(userName);
         inputs.setPassword(password);

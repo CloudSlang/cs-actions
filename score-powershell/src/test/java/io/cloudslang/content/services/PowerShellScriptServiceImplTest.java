@@ -6,7 +6,7 @@ import com.xebialabs.overthere.Overthere;
 import com.xebialabs.overthere.OverthereConnection;
 import com.xebialabs.overthere.cifs.CifsConnectionBuilder;
 import com.xebialabs.overthere.util.CapturingOverthereExecutionOutputHandler;
-import io.cloudslang.content.entities.PowerShellInputs;
+import io.cloudslang.content.entities.PowerShellActionInputs;
 import io.cloudslang.content.utils.Constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 public class PowerShellScriptServiceImplTest {
     private PowerShellScriptServiceImpl powerShellScriptService;
     @Mock
-    private PowerShellInputs powerShellInputs;
+    private PowerShellActionInputs powerShellActionInputs;
     @Mock
     private Map<String, String> result;
     @Mock
@@ -54,30 +54,30 @@ public class PowerShellScriptServiceImplTest {
         PowerMockito.when(overthereConnection.execute(any(CapturingOverthereExecutionOutputHandler.class),
                 any(CapturingOverthereExecutionOutputHandler.class), any(CmdLine.class))).thenReturn(0);
 
-        PowerMockito.when(powerShellInputs.getHost()).thenReturn("host");
-        PowerMockito.when(powerShellInputs.getUsername()).thenReturn("username");
-        PowerMockito.when(powerShellInputs.getPassword()).thenReturn("password");
-        PowerMockito.when(powerShellInputs.getScript()).thenReturn("script");
-        PowerMockito.when(powerShellInputs.getConnectionType()).thenReturn("WINRM_NATIVE");
+        PowerMockito.when(powerShellActionInputs.getHost()).thenReturn("host");
+        PowerMockito.when(powerShellActionInputs.getUsername()).thenReturn("username");
+        PowerMockito.when(powerShellActionInputs.getPassword()).thenReturn("password");
+        PowerMockito.when(powerShellActionInputs.getScript()).thenReturn("script");
+        PowerMockito.when(powerShellActionInputs.getConnectionType()).thenReturn("WINRM_NATIVE");
     }
 
     @Test
     public void execute() {
-        PowerMockito.when(powerShellInputs.getWinrmContext()).thenReturn("ctx");
-        PowerMockito.when(powerShellInputs.getWinrmEnableHTTPS()).thenReturn("true");
-        PowerMockito.when(powerShellInputs.getWinrmKerberosAddPortToSpn()).thenReturn("true");
-        PowerMockito.when(powerShellInputs.getWinrmKerberosTicketCache()).thenReturn("true");
-        PowerMockito.when(powerShellInputs.getWinrmKerberosUseHttpSpn()).thenReturn("true");
-        PowerMockito.when(powerShellInputs.getWinrmLocale()).thenReturn("en-US");
-        PowerMockito.when(powerShellInputs.getWinrmTimeout()).thenReturn("PT60.000S");
-        Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
+        PowerMockito.when(powerShellActionInputs.getWinrmContext()).thenReturn("ctx");
+        PowerMockito.when(powerShellActionInputs.getWinrmEnableHTTPS()).thenReturn("true");
+        PowerMockito.when(powerShellActionInputs.getWinrmKerberosAddPortToSpn()).thenReturn("true");
+        PowerMockito.when(powerShellActionInputs.getWinrmKerberosTicketCache()).thenReturn("true");
+        PowerMockito.when(powerShellActionInputs.getWinrmKerberosUseHttpSpn()).thenReturn("true");
+        PowerMockito.when(powerShellActionInputs.getWinrmLocale()).thenReturn("en-US");
+        PowerMockito.when(powerShellActionInputs.getWinrmTimeout()).thenReturn("PT60.000S");
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
         assertEquals(Constants.ReturnCodes.RETURN_CODE_SUCCESS, result1.get(Constants.OutputNames.RETURN_CODE));
     }
 
     @Test
     public void executeOptionalInputInteger() {
-        PowerMockito.when(powerShellInputs.getWinrmEnvelopSize()).thenReturn("num");
-        Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
+        PowerMockito.when(powerShellActionInputs.getWinrmEnvelopSize()).thenReturn("num");
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
         assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
         assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
         assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(NumberFormatException.class.getName()));
@@ -85,8 +85,8 @@ public class PowerShellScriptServiceImplTest {
 
     @Test
     public void executeOptionalInputWinrmHttpsCertificateTrustStrategy() {
-        PowerMockito.when(powerShellInputs.getWinrmHttpsCertificateTrustStrategy()).thenReturn("2");
-        Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
+        PowerMockito.when(powerShellActionInputs.getWinrmHttpsCertificateTrustStrategy()).thenReturn("2");
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
         assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
         assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
         assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
@@ -94,8 +94,17 @@ public class PowerShellScriptServiceImplTest {
 
     @Test
     public void executeOptionalInputWinrmHttpsHostnameVerificationStrategy() {
-        PowerMockito.when(powerShellInputs.getWinrmHttpsHostnameVerificationStrategy()).thenReturn("2");
-        Map<String, String> result1 = powerShellScriptService.execute(powerShellInputs);
+        PowerMockito.when(powerShellActionInputs.getWinrmHttpsHostnameVerificationStrategy()).thenReturn("2");
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
+        assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
+        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
+    }
+
+    @Test
+    public void executeIncorrectConnectionType() {
+        PowerMockito.when(powerShellActionInputs.getConnectionType()).thenReturn("2");
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
         assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
         assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
         assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));

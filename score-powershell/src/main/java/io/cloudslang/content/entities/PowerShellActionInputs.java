@@ -4,7 +4,7 @@ package io.cloudslang.content.entities;
  * User: bancl
  * Date: 10/12/2015
  */
-public class PowerShellInputs {
+public class PowerShellActionInputs {
     private String host;
     private String username;
     private String password;
