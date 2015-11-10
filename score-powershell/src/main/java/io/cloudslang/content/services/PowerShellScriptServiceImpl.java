@@ -32,7 +32,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
     @Override
     public Map<String, String> execute(PowerShellInputs inputs) {
 
-        OverthereConnection connection = getOverthereConnection(inputs);
+        OverthereConnection connection = createOverthereConnection(inputs);
         String encodeBase64 = getBase64EncodedScript(inputs.getScript());
 
         CapturingOverthereExecutionOutputHandler outHandler = capturingHandler();
@@ -60,7 +60,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
         return Base64.encodeBase64String(utf8Bytes);
     }
 
-    private OverthereConnection getOverthereConnection(PowerShellInputs inputs) {
+    private OverthereConnection createOverthereConnection(PowerShellInputs inputs) {
         ConnectionOptions options = new ConnectionOptions();
         options.set(ADDRESS, inputs.getHost());
         options.set(USERNAME, inputs.getUsername());
