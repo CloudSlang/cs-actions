@@ -34,7 +34,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
     public Map<String, String> execute(PowerShellActionInputs inputs) {
         try {
             return executePowerShellScript(inputs);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return getExceptionReturnResult(e);
         }
     }
@@ -53,9 +53,9 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
         return getReturnResult(outHandler, errHandler);
     }
 
-    private Map<String, String> getExceptionReturnResult(IllegalArgumentException e) {
+    private Map<String, String> getExceptionReturnResult(Exception e) {
         Map<String, String> returnResult = new HashMap<>();
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, Constants.INCORRECT_INPUT);
+        returnResult.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
         returnResult.put(Constants.OutputNames.EXCEPTION, ExceptionUtils.getFullStackTrace(e));
         returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
         return returnResult;

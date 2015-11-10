@@ -79,8 +79,18 @@ public class PowerShellScriptServiceImplTest {
         PowerMockito.when(powerShellActionInputs.getWinrmEnvelopSize()).thenReturn("num");
         Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
         assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
-        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertEquals("For input string: \"num\"", result1.get(Constants.OutputNames.RETURN_RESULT));
         assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(NumberFormatException.class.getName()));
+    }
+
+    @Test
+    public void executeIncorrectConnectionType() {
+        PowerMockito.when(powerShellActionInputs.getConnectionType()).thenReturn("2");
+        Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
+        assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
+        assertEquals("No enum constant com.xebialabs.overthere.cifs.CifsConnectionType.2",
+                result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
     }
 
     @Test
@@ -88,7 +98,8 @@ public class PowerShellScriptServiceImplTest {
         PowerMockito.when(powerShellActionInputs.getWinrmHttpsCertificateTrustStrategy()).thenReturn("2");
         Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
         assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
-        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertEquals("No enum constant com.xebialabs.overthere.cifs.WinrmHttpsCertificateTrustStrategy.2",
+                result1.get(Constants.OutputNames.RETURN_RESULT));
         assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
     }
 
@@ -97,16 +108,8 @@ public class PowerShellScriptServiceImplTest {
         PowerMockito.when(powerShellActionInputs.getWinrmHttpsHostnameVerificationStrategy()).thenReturn("2");
         Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
         assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
-        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
-        assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
-    }
-
-    @Test
-    public void executeIncorrectConnectionType() {
-        PowerMockito.when(powerShellActionInputs.getConnectionType()).thenReturn("2");
-        Map<String, String> result1 = powerShellScriptService.execute(powerShellActionInputs);
-        assertEquals(Constants.ReturnCodes.RETURN_CODE_FAILURE, result1.get(Constants.OutputNames.RETURN_CODE));
-        assertEquals(Constants.INCORRECT_INPUT, result1.get(Constants.OutputNames.RETURN_RESULT));
+        assertEquals("No enum constant com.xebialabs.overthere.cifs.WinrmHttpsHostnameVerificationStrategy.2",
+                result1.get(Constants.OutputNames.RETURN_RESULT));
         assertTrue(result1.get(Constants.OutputNames.EXCEPTION).contains(IllegalArgumentException.class.getName()));
     }
 }

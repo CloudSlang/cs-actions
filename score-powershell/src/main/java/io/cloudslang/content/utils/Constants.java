@@ -6,8 +6,6 @@ package io.cloudslang.content.utils;
  */
 public class Constants {
 
-    public static final String INCORRECT_INPUT = "Incorrect input";
-
     public static final class InputNames {
         public static final String INPUT_HOST = "host";
         public static final String INPUT_USERNAME = "username";
