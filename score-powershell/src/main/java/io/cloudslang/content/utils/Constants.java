@@ -11,7 +11,17 @@ public class Constants {
         public static final String INPUT_USERNAME = "username";
         public static final String INPUT_PASSWORD = "password";
         public static final String INPUT_SCRIPT = "script";
-        public static final String ENABLE_HTTPS = "enableHTTPS";
+        public static final String CONNECTION_TYPE = "connectionType";
+        public static final String WINRM_CONTEXT = "winrmContext";
+        public static final String WINRM_ENABLE_HTTPS = "enableHTTPS";
+        public static final String WINRM_ENVELOP_SIZE = "winrmEnvelopSize";
+        public static final String WINRM_HTTPS_CERTIFICATE_TRUST_STRATEGY = "winrmHttpsCertificateTrustStrategy";
+        public static final String WINRM_HTTPS_HOSTNAME_VERIFICATION_STRATEGY = "winrmHttpsHostnameVerificationStrategy";
+        public static final String WINRM_KERBEROS_ADD_PORT_TO_SPN = "winrmKerberosAddPortToSpn";
+        public static final String WINRM_KERBEROS_TICKET_CACHE = "winrmKerberosTicketCache";
+        public static final String WINRM_KERBEROS_USE_HTTP_SPN = "winrmKerberosUseHttpSpn";
+        public static final String WINRM_LOCALE = "winrmLocale";
+        public static final String WINRM_TIMEMOUT = "winrmTimeout";
     }
 
     public static final class OutputNames {

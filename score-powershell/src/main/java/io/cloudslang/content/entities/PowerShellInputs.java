@@ -9,7 +9,17 @@ public class PowerShellInputs {
     private String username;
     private String password;
     private String script;
-    private String enableHTTPS;
+    private String winrmEnableHTTPS;
+    private String winrmTimeout;
+    private String winrmContext;
+    private String winrmEnvelopSize;
+    private String winrmHttpsCertificateTrustStrategy;
+    private String winrmHttpsHostnameVerificationStrategy;
+    private String winrmKerberosAddPortToSpn;
+    private String winrmKerberosTicketCache;
+    private String winrmKerberosUseHttpSpn;
+    private String winrmLocale;
+    private String connectionType;
 
     public String getHost() {
         return host;
@@ -43,11 +53,91 @@ public class PowerShellInputs {
         this.script = script;
     }
 
-    public String getEnableHTTPS() {
-        return enableHTTPS;
+    public String getWinrmEnableHTTPS() {
+        return winrmEnableHTTPS;
     }
 
-    public void setEnableHTTPS(String enableHTTPS) {
-        this.enableHTTPS = enableHTTPS;
+    public void setWinrmEnableHTTPS(String winrmEnableHTTPS) {
+        this.winrmEnableHTTPS = winrmEnableHTTPS;
+    }
+
+    public void setWinrmTimeout(String winrmTimeout) {
+        this.winrmTimeout = winrmTimeout;
+    }
+
+    public String getWinrmTimeout() {
+        return winrmTimeout;
+    }
+
+    public void setWinrmContext(String winrmContext) {
+        this.winrmContext = winrmContext;
+    }
+
+    public String getWinrmContext() {
+        return winrmContext;
+    }
+
+    public void setWinrmEnvelopSize(String winrmEnvelopSize) {
+        this.winrmEnvelopSize = winrmEnvelopSize;
+    }
+
+    public String getWinrmEnvelopSize() {
+        return winrmEnvelopSize;
+    }
+
+    public void setWinrmHttpsCertificateTrustStrategy(String winrmHttpsCertificateTrustStrategy) {
+        this.winrmHttpsCertificateTrustStrategy = winrmHttpsCertificateTrustStrategy;
+    }
+
+    public String getWinrmHttpsCertificateTrustStrategy() {
+        return winrmHttpsCertificateTrustStrategy;
+    }
+
+    public void setWinrmHttpsHostnameVerificationStrategy(String winrmHttpsHostnameVerificationStrategy) {
+        this.winrmHttpsHostnameVerificationStrategy = winrmHttpsHostnameVerificationStrategy;
+    }
+
+    public String getWinrmHttpsHostnameVerificationStrategy() {
+        return winrmHttpsHostnameVerificationStrategy;
+    }
+
+    public void setWinrmKerberosAddPortToSpn(String winrmKerberosAddPortToSpn) {
+        this.winrmKerberosAddPortToSpn = winrmKerberosAddPortToSpn;
+    }
+
+    public String getWinrmKerberosAddPortToSpn() {
+        return winrmKerberosAddPortToSpn;
+    }
+
+    public void setWinrmKerberosTicketCache(String winrmKerberosTicketCache) {
+        this.winrmKerberosTicketCache = winrmKerberosTicketCache;
+    }
+
+    public String getWinrmKerberosTicketCache() {
+        return winrmKerberosTicketCache;
+    }
+
+    public void setWinrmKerberosUseHttpSpn(String winrmKerberosUseHttpSpn) {
+        this.winrmKerberosUseHttpSpn = winrmKerberosUseHttpSpn;
+    }
+
+    public String getWinrmKerberosUseHttpSpn() {
+        return winrmKerberosUseHttpSpn;
+    }
+
+    public void setWinrmLocale(String winrmLocale) {
+        this.winrmLocale = winrmLocale;
+    }
+
+    public String getWinrmLocale() {
+        return winrmLocale;
+    }
+
+    public void setConnectionType(String connectionType) {
+        this.connectionType = connectionType;
+    }
+
+    public String getConnectionType() {
+        return connectionType;
     }
 }
