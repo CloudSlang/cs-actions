@@ -12,8 +12,8 @@ import com.xebialabs.overthere.util.CapturingOverthereExecutionOutputHandler;
 import io.cloudslang.content.entities.PowerShellActionInputs;
 import io.cloudslang.content.utils.Constants;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
     private Map<String, String> getExceptionReturnResult(Exception e) {
         Map<String, String> returnResult = new HashMap<>();
         returnResult.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
-        returnResult.put(Constants.OutputNames.EXCEPTION, ExceptionUtils.getFullStackTrace(e));
+        returnResult.put(Constants.OutputNames.EXCEPTION, ExceptionUtils.getStackTrace(e));
         returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
         return returnResult;
     }

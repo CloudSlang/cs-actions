@@ -8,7 +8,7 @@ public class Constants {
 
     public static final class InputNames {
         public static final String INPUT_HOST = "host";
-        public static final String INPUT_USERNAME = "username";
+        public static final String INPUT_USERNAME = "userName";
         public static final String INPUT_PASSWORD = "password";
         public static final String INPUT_SCRIPT = "script";
         public static final String CONNECTION_TYPE = "connectionType";
