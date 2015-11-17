@@ -41,16 +41,18 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
 
     private Map<String, String> executePowerShellScript(PowerShellActionInputs inputs) {
         ConnectionOptions options = getConnectionOptions(inputs);
-        OverthereConnection connection = Overthere.getConnection(CifsConnectionBuilder.CIFS_PROTOCOL, options);
-        String encodeBase64 = getBase64EncodedScript(inputs.getScript());
+        try(OverthereConnection connection =
+                    Overthere.getConnection(CifsConnectionBuilder.CIFS_PROTOCOL, options)) {
+            String encodeBase64 = getBase64EncodedScript(inputs.getScript());
 
-        CapturingOverthereExecutionOutputHandler outHandler = capturingHandler();
-        CapturingOverthereExecutionOutputHandler errHandler = capturingHandler();
-        CmdLine cmdLine = CmdLine.build("powershell",
-                "-NoProfile", "-NonInteractive", "-EncodedCommand", encodeBase64);
-        connection.execute(outHandler, errHandler, cmdLine);
+            CapturingOverthereExecutionOutputHandler outHandler = capturingHandler();
+            CapturingOverthereExecutionOutputHandler errHandler = capturingHandler();
+            CmdLine cmdLine = CmdLine.build("powershell",
+                    "-NoProfile", "-NonInteractive", "-EncodedCommand", encodeBase64);
+            connection.execute(outHandler, errHandler, cmdLine);
 
-        return getReturnResult(outHandler, errHandler);
+            return getReturnResult(outHandler, errHandler);
+        }
     }
 
     private Map<String, String> getExceptionReturnResult(Exception e) {
