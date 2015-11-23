@@ -196,6 +196,7 @@ public class GetMailMessageTest {
     public void testExecuteWithTrueSubjectOnlyAndDeleteUponRetrievalAndEmptyCharacterSet() throws Exception {
         doReturn(messageMock).when(getMailMessageSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
+        doReturn(folderMock).when(messageMock).getFolder();
         String subjectTest = SUBJECT_TEST;
         doReturn(subjectTest).when(messageMock).getSubject();
 
@@ -221,6 +222,7 @@ public class GetMailMessageTest {
     public void testExecuteWithGivenCharacterSet() throws Exception {
         doReturn(messageMock).when(getMailMessageSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
+        doReturn(folderMock).when(messageMock).getFolder();
         doReturn(new String[]{"1"}).when(messageMock).getHeader(anyString());
         doReturn(SUBJECT_TEST).when(getMailMessageSpy).changeHeaderCharset("1", CHARACTERSET);
 
@@ -245,6 +247,7 @@ public class GetMailMessageTest {
     public void testExecuteWithFalseSubjectOnly() throws Exception {
         doReturn(messageMock).when(getMailMessageSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
+        doReturn(folderMock).when(messageMock).getFolder();
         doReturn(new String[]{"1"}).when(messageMock).getHeader(anyString());
         doReturn(SUBJECT_TEST).when(getMailMessageSpy).changeHeaderCharset("1", CHARACTERSET);
         String attachedFileNames = "testAttachedFileNames";
@@ -293,6 +296,7 @@ public class GetMailMessageTest {
         doReturn(messageMock).when(getMailMessageSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
         doReturn(SUBJECT_TEST).when(messageMock).getSubject();
+        doReturn(folderMock).when(messageMock).getFolder();
         String attachedFileNames = "testAttachedFileNames";
         doReturn(attachedFileNames).when(getMailMessageSpy).getAttachedFileNames(messageMock);
         doReturn(attachedFileNames).when(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
@@ -692,7 +696,7 @@ public class GetMailMessageTest {
     @Test
     public void testGetFolderOpenMode() throws Exception {
         final int folderOpenMode = getMailMessageSpy.getFolderOpenMode();
-        assertEquals(1, folderOpenMode);
+        assertEquals(2, folderOpenMode);
     }
 
     @Test
