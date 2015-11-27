@@ -75,6 +75,38 @@ To make a pull request you will need a GitHub account. For help, see GitHub's do
 
 Normally, all pull requests must include tests that test your change. Occasionally, a change will be very difficult to test. In those cases, please include a note in your commit message explaining why tests are not included.
 
+## Unit tests for score-actions
+
+JUnit is a program that can be used to perform unit testing of software by writing test cases in Java.
+A common use for JUnit is to create a set of unit tests that can be run automatically when changes are made to software.
+In this way, developers can ensure that changes to the software they are creating do not break things that were
+previously functioning. Some common terms that you may encounter when reading about JUnit include:
+  - Test method: a method in a Java class that contains a single unit test;
+  - Test class: a Java class containing one or more test methods;
+  - Assertion: a statement that you include in a test method to check that the results of a test are as expected;
+  - Test suite: a grouping of test classes that are run together.
+
+In general, unit tests should have the following characteristics:
+  - They test a small bit (or “unit”) of code. If the tests test “too much,” then they become less useful, as it will not
+  be clear which bit of code is causing the test to fail;
+  - They do not depend on external resources such as databases. The reason for this is so that the tests can be run in a
+  variety of environments and so that multiple concurrent executions of the unit tests do not interfere with each other;
+  - They should run quickly. This is to encourage the tests to be run as often as possible, even as often as every
+  compile. If the tests take too long to execute, developers will be less likely to run them often.
+
+Apply the following rules when writing unit tests for the score-actions @Actions:
+  - Create a consistent package structure between the tests and the classes under test
+    > If you want to develop a unit test for the class ExampleClass located in the io.cloudslang.content.some_integration
+    folder, under the test folder it is recommended to create the same package structure like the one the ExampleClass
+    class is located in.
+    > This is the Apache Software Foundation's standard directory structure, and it enables the user to transition more
+    easily from a plugin to another, while also be able to leverage modern IDE features that calculate unit test code
+    coverage.
+
+  - Mock server calls
+    > In your test methods, don't use real calls to servers. If you want to test a method like executeHttpRequest(Url url),
+    don't perform a real HTTP request, instead use one of the industry established mocking frameworks
+    (e.g. Mockito, EasyMock, Powermock ) to mock the request and create isolation unit tests using a framework like JUnit.
 
 ##Conduct
 
