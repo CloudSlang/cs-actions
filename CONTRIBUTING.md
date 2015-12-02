@@ -77,7 +77,7 @@ Normally, all pull requests must include tests that test your change. Occasional
 
 ## Unit tests for score-actions
 
-JUnit is a program that can be used to perform unit testing of software by writing test cases in Java.
+JUnit is a unit testing framework that can be used to perform unit testing of software by writing test cases in Java.
 A common use for JUnit is to create a set of unit tests that can be run automatically when changes are made to software.
 In this way, developers can ensure that changes to the software they are creating do not break things that were
 previously functioning. Some common terms that you may encounter when reading about JUnit include:
