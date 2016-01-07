@@ -1,194 +1,181 @@
 package io.cloudslang.content.services;
 
 import com.vmware.vim25.*;
-import io.cloudslang.content.connection.Connection;
-import io.cloudslang.content.connection.helpers.GetMOREF;
+import io.cloudslang.content.connection.ConnectionResources;
 import io.cloudslang.content.connection.helpers.WaitForValues;
-import io.cloudslang.content.connection.impl.BasicConnection;
 import io.cloudslang.content.constants.Constants;
 import io.cloudslang.content.constants.ErrorMessages;
-import io.cloudslang.content.constants.Inputs;
-import io.cloudslang.content.utils.InputUtils;
+import io.cloudslang.content.constants.Outputs;
+import io.cloudslang.content.entities.VmInputs;
+import io.cloudslang.content.entities.http.HttpInputs;
+import io.cloudslang.content.utils.FindObjects;
 import org.apache.commons.lang3.StringUtils;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 10/20/2015.
+ * 1/6/2016.
  */
 public class VmService {
-    private BasicConnection basicConnection = new BasicConnection();
-    private Connection connection;
-    private VimPortType vimPortType;
-    private GetMOREF getMOREF;
 
-    /**
-     * Creates the virtual machine.
-     *
-     * @throws RemoteException  the remote exception
-     * @throws RemoteException, RuntimeFaultFaultMsg, InvalidPropertyFaultMsg, InvalidCollectorVersionFaultMsg,
-     *                          OutOfBoundsFaultMsg, DuplicateNameFaultMsg, VmConfigFaultFaultMsg,
-     *                          InsufficientResourcesFaultFaultMsg, AlreadyExistsFaultMsg, InvalidDatastoreFaultMsg,
-     *                          FileFaultFaultMsg, InvalidStateFaultMsg, InvalidNameFaultMsg, TaskInProgressFaultMsg
-     */
-    public ManagedObjectReference createVirtualMachine(String host,
-                                                       int port,
-                                                       String protocol,
-                                                       String username,
-                                                       String password,
-                                                       boolean x509HostnameVerifier,
-                                                       String dataCenterName,
-                                                       String hostname,
-                                                       String virtualMachineName,
-                                                       String description,
-                                                       String dataStore,
-                                                       String resourcePool,
-                                                       int numCPUs,
-                                                       long vmDiskSize,
-                                                       long vmMemorySize,
-                                                       String guestOsId) throws Exception {
+    private Map<String, String> results = new HashMap<>();
 
-        String url = InputUtils.getUrlString(host, String.valueOf(port), protocol);
+    public Map<String, String> createVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        connection = basicConnection.connect(url, username, password, x509HostnameVerifier);
+        ManagedObjectReference vmFolderMor = connectionResources.getVmFolderMor();
+        VirtualMachineConfigSpec vmConfigSpec = getVmConfigSpec(vmInputs, connectionResources);
+        ManagedObjectReference resourcePoolMor = connectionResources.getResourcePoolMor();
+        ManagedObjectReference hostMor = connectionResources.getHostMor();
+        VimPortType vimPort = connectionResources.getVimPortType();
 
-        vimPortType = connection.getVimPort();
-        getMOREF = new GetMOREF(connection);
+        ManagedObjectReference taskMor = vimPort.createVMTask(vmFolderMor, vmConfigSpec, resourcePoolMor, hostMor);
 
-        ManagedObjectReference managedObjectReference = basicConnection.getServiceContent().getRootFolder();
+        if (getTaskResultAfterDone(connectionResources, taskMor)) {
+            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
+            results.put(Outputs.RETURN_RESULT, "Success: Created [" + vmInputs.getVirtualMachineName()
+                    + "] VM. The taskId is: " + taskMor.getValue());
 
-        ManagedObjectReference dataCenterMor = getdataCenterMor(dataCenterName, managedObjectReference, getMOREF);
-        ManagedObjectReference hostMor = getHostMor(hostname, getMOREF, dataCenterMor);
-        ManagedObjectReference computeResourceMor = getComputeResourceMor(getMOREF, hostMor);
-
-        ManagedObjectReference resourcePoolMor = (ManagedObjectReference) getMOREF
-                .entityProps(computeResourceMor, new String[]{Constants.RESOURCE_POOL})
-                .get(Constants.RESOURCE_POOL);
-
-        ManagedObjectReference vmFolderMor = (ManagedObjectReference) getMOREF
-                .entityProps(dataCenterMor, new String[]{Inputs.VM_FOLDER})
-                .get(Inputs.VM_FOLDER);
-
-        VirtualMachineConfigSpec vmConfigSpec = getVmConfigSpec(virtualMachineName,
-                description,
-                dataStore,
-                numCPUs,
-                vmDiskSize,
-                vmMemorySize,
-                guestOsId,
-                hostMor,
-                computeResourceMor);
-
-        ManagedObjectReference taskMor = vimPortType.createVMTask(vmFolderMor, vmConfigSpec, resourcePoolMor, hostMor);
-
-        if (getTaskResultAfterDone(taskMor)) {
-
-            ManagedObjectReference virtualMachineMor = (ManagedObjectReference) getMOREF
-                    .entityProps(taskMor, new String[]{Constants.INFO_RESULT})
-                    .get(Constants.INFO_RESULT);
-
-            powerOnVM(virtualMachineMor);
-            basicConnection.disconnect();
-
-            return taskMor;
         } else {
-            basicConnection.disconnect();
-            throw new RuntimeException("Failure: Creating [ " + virtualMachineName + "] VM");
-        }
-    }
-
-    private ManagedObjectReference getdataCenterMor(String dataCenterName,
-                                                    ManagedObjectReference mor,
-                                                    GetMOREF getMOREF)
-            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-
-        ManagedObjectReference dataCenterMor = getMOREF.inContainerByType(mor, Constants.DATA_CENTER).get(dataCenterName);
-        if (dataCenterMor == null) {
-            throw new RuntimeException("Datacenter " + dataCenterName + " not found.");
+            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+            results.put(Outputs.RETURN_RESULT, "Failure: Creating [" + vmInputs.getVirtualMachineName() + "] VM");
         }
 
-        return dataCenterMor;
+        connectionResources.getConnection().disconnect();
+
+        return results;
     }
 
-    private ManagedObjectReference getHostMor(String hostname,
-                                              GetMOREF getMOREF,
-                                              ManagedObjectReference dataCenterMor)
-            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+    public Map<String, String> deleteVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        ManagedObjectReference hostMor = getMOREF.inContainerByType(dataCenterMor, Constants.HOST_SYSTEM).get(hostname);
-        if (hostMor == null) {
-            throw new RuntimeException("Host " + hostname + " not found");
+        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
+        VimPortType vimPort = connectionResources.getVimPortType();
+        ServiceContent serviceContent = vimPort.retrieveServiceContent(serviceInstance);
+
+        ManagedObjectReference vmMor = FindObjects.findObject(vimPort,
+                serviceContent,
+                Constants.VIRTUAL_MACHINE,
+                vmInputs.getVirtualMachineName());
+
+        if (vmMor != null) {
+            ManagedObjectReference taskMor = vimPort.destroyTask(vmMor);
+
+            if (getTaskResultAfterDone(connectionResources, taskMor)) {
+                results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
+                results.put(Outputs.RETURN_RESULT, "Success: The [" + vmInputs.getVirtualMachineName()
+                        + "] VM was deleted. The taskId is: " + taskMor.getValue());
+            } else {
+                results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+                results.put(Outputs.RETURN_RESULT, "Failure: The [" + vmInputs.getVirtualMachineName()
+                        + "] VM could not be deleted.");
+            }
+
+        } else {
+            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+            results.put(Outputs.RETURN_RESULT, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.");
         }
+        connectionResources.getConnection().disconnect();
 
-        return hostMor;
+        return results;
     }
 
-    private ManagedObjectReference getComputeResourceMor(GetMOREF getMOREF,
-                                                         ManagedObjectReference hostMor)
-            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+    public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        ManagedObjectReference computeResourceMor = (ManagedObjectReference) getMOREF
-                .entityProps(hostMor, new String[]{Constants.PARENT})
-                .get(Constants.PARENT);
+        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
+        VimPortType vimPort = connectionResources.getVimPortType();
+        ServiceContent serviceContent = vimPort.retrieveServiceContent(serviceInstance);
 
-        if (computeResourceMor == null) {
-            throw new RuntimeException(ErrorMessages.COMPUTE_RESOURCE_NOT_FOUND_ON_HOST);
+        ManagedObjectReference vmMor = FindObjects.findObject(vimPort,
+                serviceContent,
+                Constants.VIRTUAL_MACHINE,
+                vmInputs.getVirtualMachineName());
+
+        if (vmMor != null) {
+            ManagedObjectReference taskMor = vimPort.powerOnVMTask(vmMor, null);
+
+            if (getTaskResultAfterDone(connectionResources, taskMor)) {
+                results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
+                results.put(Outputs.RETURN_RESULT, "Success: The [" + vmInputs.getVirtualMachineName()
+                        + "] VM was successfully powered on. The taskId is: " + taskMor.getValue());
+            } else {
+                results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+                results.put(Outputs.RETURN_RESULT, "Failure: The [" + vmInputs.getVirtualMachineName()
+                        + "] VM could not be powered on.");
+            }
+        } else {
+            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+            results.put(Outputs.RETURN_RESULT, "Could not find the [ " + vmInputs.getVirtualMachineName() + "] VM.");
         }
+        connectionResources.getConnection().disconnect();
 
-        return computeResourceMor;
+        return results;
     }
 
-    private VirtualMachineConfigSpec getVmConfigSpec(String virtualMachineName,
-                                                     String description,
-                                                     String dataStore,
-                                                     int numCPUs,
-                                                     long vmDiskSize,
-                                                     long vmMemorySize,
-                                                     String guestOsId,
-                                                     ManagedObjectReference hostMor,
-                                                     ManagedObjectReference computeResourceMor)
+    public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+
+        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
+        VimPortType vimPort = connectionResources.getVimPortType();
+        ServiceContent serviceContent = vimPort.retrieveServiceContent(serviceInstance);
+
+        ManagedObjectReference vmMor = FindObjects.findObject(vimPort,
+                serviceContent,
+                Constants.VIRTUAL_MACHINE,
+                vmInputs.getVirtualMachineName());
+
+        if (vmMor != null) {
+            ManagedObjectReference taskMor = vimPort.powerOffVMTask(vmMor);
+
+            if (getTaskResultAfterDone(connectionResources, taskMor)) {
+                results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
+                results.put(Outputs.RETURN_RESULT, "Success: The [" + vmInputs.getVirtualMachineName()
+                        + "] VM was successfully powered off. The taskId is: " + taskMor.getValue());
+            } else {
+                results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+                results.put(Outputs.RETURN_RESULT, "Failure: The [" + vmInputs.getVirtualMachineName()
+                        + "] VM could not be powered off.");
+            }
+        } else {
+            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+            results.put(Outputs.RETURN_RESULT, "Could not find the [ " + vmInputs.getVirtualMachineName() + "] VM.");
+        }
+        connectionResources.getConnection().disconnect();
+
+        return results;
+    }
+
+    private VirtualMachineConfigSpec getVmConfigSpec(VmInputs vmInputs, ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
 
-        VirtualMachineConfigSpec vmConfigSpec = createVmConfigSpec(dataStore,
-                vmDiskSize,
-                computeResourceMor,
-                hostMor);
+        VirtualMachineConfigSpec vmConfigSpec = createVmConfigSpec(vmInputs, connectionResources);
 
-        vmConfigSpec.setName(virtualMachineName);
-        vmConfigSpec.setAnnotation(description);
-        vmConfigSpec.setMemoryMB(vmMemorySize);
-        vmConfigSpec.setNumCPUs(numCPUs);
-        vmConfigSpec.setGuestId(guestOsId);
+        vmConfigSpec.setName(vmInputs.getVirtualMachineName());
+        vmConfigSpec.setAnnotation(vmInputs.getDescription());
+        vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
+        vmConfigSpec.setNumCPUs(vmInputs.getIntNumCPUs());
+        vmConfigSpec.setGuestId(vmInputs.getGuestOsId());
 
         return vmConfigSpec;
     }
 
-    /**
-     * Creates the vm config spec object.
-     *
-     * @param datastoreName      the datastore name
-     * @param diskSizeMB         the disk size in mb
-     * @param computeResourceMor the compute res moref
-     * @param hostMor            the host mor
-     * @return the virtual machine config spec object
-     * @throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg
-     */
-    private VirtualMachineConfigSpec createVmConfigSpec(String datastoreName,
-                                                        long diskSizeMB,
-                                                        ManagedObjectReference computeResourceMor,
-                                                        ManagedObjectReference hostMor)
+    private VirtualMachineConfigSpec createVmConfigSpec(VmInputs vmInputs, ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
 
-        ConfigTarget configTarget = getConfigTargetForHost(computeResourceMor, hostMor);
+        ConfigTarget configTarget = getConfigTargetForHost(connectionResources);
 
         ManagedObjectReference datastoreRef = null;
-        boolean flag = false;
+        boolean dataStoreFound = Boolean.FALSE;
         List<VirtualMachineDatastoreInfo> datastoresList = configTarget.getDatastore();
 
-        if (StringUtils.isNotBlank(datastoreName)) {
+        String datastoreName = vmInputs.getDataStore();
+
+        if (StringUtils.isNotBlank(vmInputs.getDataStore())) {
             datastoreRef = getDatastoreRef(datastoreName, datastoresList);
         } else {
             for (VirtualMachineDatastoreInfo datastore : datastoresList) {
@@ -196,12 +183,12 @@ public class VmService {
                 if (dsSummary.isAccessible()) {
                     datastoreName = dsSummary.getName();
                     datastoreRef = dsSummary.getDatastore();
-                    flag = true;
+                    dataStoreFound = Boolean.TRUE;
                     break;
                 }
             }
 
-            if (!flag) {
+            if (!dataStoreFound) {
                 throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND_ON_HOST);
             }
         }
@@ -217,7 +204,7 @@ public class VmService {
 
         // Add a CD-ROM based on a physical device
         VirtualDeviceConfigSpec cdSpec = null;
-        VirtualDevice ideController = getIdeController(computeResourceMor, hostMor);
+        VirtualDevice ideController = getIdeController(connectionResources);
         if (ideController != null) {
             cdSpec = getCdromConfigSpec(datastoreRef, datastoreVolume, ideController);
         }
@@ -225,7 +212,7 @@ public class VmService {
         // Create a new file based disk for the VM
         VirtualDeviceConfigSpec diskSpec = createVirtualDisk(datastoreName,
                 Constants.DEFAULT_DISK_CONTROLLER_KEY,
-                diskSizeMB);
+                vmInputs.getLongVmDiskSize());
 
         // Add a NIC. The network name must be set as the device name to create the NIC.
         String networkName = getNetworkName(configTarget);
@@ -238,94 +225,15 @@ public class VmService {
         return addDeviceConfigSpecs(configSpec, scsiCtrlSpec, floppySpec, cdSpec, ideController, diskSpec, nicSpec);
     }
 
-    private VirtualMachineConfigSpec addDeviceConfigSpecs(VirtualMachineConfigSpec configSpec,
-                                                          VirtualDeviceConfigSpec scsiCtrlSpec,
-                                                          VirtualDeviceConfigSpec floppySpec,
-                                                          VirtualDeviceConfigSpec cdSpec,
-                                                          VirtualDevice ideController,
-                                                          VirtualDeviceConfigSpec diskSpec,
-                                                          VirtualDeviceConfigSpec nicSpec) {
-
-        List<VirtualDeviceConfigSpec> deviceConfigSpec = new ArrayList<>();
-        deviceConfigSpec.add(scsiCtrlSpec);
-        deviceConfigSpec.add(floppySpec);
-        deviceConfigSpec.add(diskSpec);
-        deviceConfigSpec.add(nicSpec);
-
-        if (ideController != null) {
-            deviceConfigSpec.add(cdSpec);
-        }
-
-        configSpec.getDeviceChange().addAll(deviceConfigSpec);
-
-        return configSpec;
-    }
-
-    private String getNetworkName(ConfigTarget configTarget) {
-        if (configTarget.getNetwork() == null) {
-            return null;
-        }
-
-        String networkName = null;
-        for (VirtualMachineNetworkInfo network : configTarget.getNetwork()) {
-            NetworkSummary netSummary = network.getNetwork();
-            if (netSummary.isAccessible()) {
-                networkName = netSummary.getName();
-                break;
-            }
-        }
-
-        return networkName;
-    }
-
-    /**
-     * Creates the virtual disk.
-     *
-     * @param volName     the vol name
-     * @param diskCtlrKey the disk controller key
-     * @param vmDiskSize  the disk size in mb
-     * @return the virtual device config spec object
-     */
-    VirtualDeviceConfigSpec createVirtualDisk(String volName, int diskCtlrKey, long vmDiskSize) {
-        VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
-
-        diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.CREATE);
-        diskSpec.setOperation(VirtualDeviceConfigSpecOperation.ADD);
-
-        VirtualDisk disk = new VirtualDisk();
-        VirtualDiskFlatVer2BackingInfo diskfileBacking = new VirtualDiskFlatVer2BackingInfo();
-
-        diskfileBacking.setFileName(getVolumeName(volName));
-        diskfileBacking.setDiskMode(Constants.PERSISTENT);
-
-        disk.setKey(Constants.DEFAULT_DISK_KEY);
-        disk.setControllerKey(diskCtlrKey);
-        disk.setUnitNumber(Constants.DEFAULT_DISK_UNIT_NUMBER);
-        disk.setBacking(diskfileBacking);
-        disk.setCapacityInKB(vmDiskSize * Constants.THOUSAND_MULTIPLIER);
-
-        diskSpec.setDevice(disk);
-
-        return diskSpec;
-    }
-
-    /**
-     * This method returns the ConfigTarget for a HostSystem.
-     *
-     * @param computeResMor A MoRef to the ComputeResource used by the HostSystem
-     * @param hostMor       A MoRef to the HostSystem
-     * @return Instance of ConfigTarget for the supplied HostSystem/ComputeResource
-     * @throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg when no ConfigTarget can be found
-     */
-    private ConfigTarget getConfigTargetForHost(ManagedObjectReference computeResMor,
-                                                ManagedObjectReference hostMor)
+    private ConfigTarget getConfigTargetForHost(ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
 
-        ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) getMOREF
-                .entityProps(computeResMor, new String[]{Constants.ENVIRONMENT_BROWSER})
+        ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
+                .entityProps(connectionResources.getComputeResourceMor(), new String[]{Constants.ENVIRONMENT_BROWSER})
                 .get(Constants.ENVIRONMENT_BROWSER);
 
-        ConfigTarget configTarget = vimPortType.queryConfigTarget(environmentBrowserMor, hostMor);
+        ConfigTarget configTarget = connectionResources.getVimPortType()
+                .queryConfigTarget(environmentBrowserMor, connectionResources.getHostMor());
 
         if (configTarget == null) {
             throw new RuntimeException(ErrorMessages.CONFIG_TARGET_NOT_FOUND_IN_COMPUTE_RESOURCE);
@@ -334,8 +242,7 @@ public class VmService {
         return configTarget;
     }
 
-    private ManagedObjectReference getDatastoreRef(String datastoreName,
-                                                   List<VirtualMachineDatastoreInfo> datastoresList) {
+    private ManagedObjectReference getDatastoreRef(String datastoreName, List<VirtualMachineDatastoreInfo> datastoresList) {
 
         for (VirtualMachineDatastoreInfo datastore : datastoresList) {
             DatastoreSummary dsSummary = datastore.getDatastore();
@@ -360,50 +267,13 @@ public class VmService {
         return configSpec;
     }
 
-    private VirtualDevice getIdeController(ManagedObjectReference computeResMor,
-                                           ManagedObjectReference hostMor)
-            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-
-        List<VirtualDevice> defaultDevices = getDefaultDevicesList(computeResMor, hostMor);
-        VirtualDevice ideController = null;
-        for (VirtualDevice device : defaultDevices) {
-            if (device instanceof VirtualIDEController) {
-                ideController = device;
-                break;
-            }
+    private String getVolumeName(String volName) {
+        String volumeName = Constants.DEFAULT_VOLUME_NAME;
+        if (StringUtils.isNotBlank(volName)) {
+            volumeName = Constants.LEFT_SQUARE_BRACKET + volName + Constants.RIGHT_SQUARE_BRACKET;
         }
 
-        return ideController;
-    }
-
-    /**
-     * The method returns the default devices from the HostSystem.
-     *
-     * @param computeResMor A MoRef to the ComputeResource used by the HostSystem
-     * @param hostMor       A MoRef to the HostSystem
-     * @return Array of VirtualDevice containing the default devices for the
-     * HostSystem
-     * @throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg
-     */
-    private List<VirtualDevice> getDefaultDevicesList(ManagedObjectReference computeResMor,
-                                                      ManagedObjectReference hostMor)
-            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-
-        ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) getMOREF
-                .entityProps(computeResMor, new String[]{Constants.ENVIRONMENT_BROWSER})
-                .get(Constants.ENVIRONMENT_BROWSER);
-
-        VirtualMachineConfigOption configOptions = vimPortType.queryConfigOption(environmentBrowserMor, null, hostMor);
-        if (configOptions == null) {
-            throw new RuntimeException(ErrorMessages.VIRTUAL_HARDWARE_INFO_NOT_FOUND_IN_COMPUTE_RESOURCE);
-        }
-
-        List<VirtualDevice> listVirtualDevices = configOptions.getDefaultDevice();
-        if (listVirtualDevices == null) {
-            throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND_IN_COMPUTE_RESOURCE);
-        }
-
-        return listVirtualDevices;
+        return volumeName;
     }
 
     private VirtualDeviceConfigSpec addScsiController(int diskCtlrKey) {
@@ -435,6 +305,42 @@ public class VmService {
         return floppySpec;
     }
 
+    private VirtualDevice getIdeController(ConnectionResources connectionResources)
+            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+
+        List<VirtualDevice> defaultDevices = getDefaultDevicesList(connectionResources);
+        VirtualDevice ideController = null;
+        for (VirtualDevice device : defaultDevices) {
+            if (device instanceof VirtualIDEController) {
+                ideController = device;
+                break;
+            }
+        }
+
+        return ideController;
+    }
+
+    private List<VirtualDevice> getDefaultDevicesList(ConnectionResources connectionResources)
+            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+
+        ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
+                .entityProps(connectionResources.getComputeResourceMor(), new String[]{Constants.ENVIRONMENT_BROWSER})
+                .get(Constants.ENVIRONMENT_BROWSER);
+
+        VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
+                .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
+        if (configOptions == null) {
+            throw new RuntimeException(ErrorMessages.VIRTUAL_HARDWARE_INFO_NOT_FOUND_IN_COMPUTE_RESOURCE);
+        }
+
+        List<VirtualDevice> listVirtualDevices = configOptions.getDefaultDevice();
+        if (listVirtualDevices == null) {
+            throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND_IN_COMPUTE_RESOURCE);
+        }
+
+        return listVirtualDevices;
+    }
+
     private VirtualDeviceConfigSpec getCdromConfigSpec(ManagedObjectReference datastoreRef,
                                                        String datastoreVolume,
                                                        VirtualDevice ideController) {
@@ -458,6 +364,46 @@ public class VmService {
         return cdRomSpec;
     }
 
+    private VirtualDeviceConfigSpec createVirtualDisk(String volName, int diskCtlrKey, long vmDiskSize) {
+        VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
+
+        diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.CREATE);
+        diskSpec.setOperation(VirtualDeviceConfigSpecOperation.ADD);
+
+        VirtualDisk disk = new VirtualDisk();
+        VirtualDiskFlatVer2BackingInfo diskfileBacking = new VirtualDiskFlatVer2BackingInfo();
+
+        diskfileBacking.setFileName(getVolumeName(volName));
+        diskfileBacking.setDiskMode(Constants.PERSISTENT);
+
+        disk.setKey(Constants.DEFAULT_DISK_KEY);
+        disk.setControllerKey(diskCtlrKey);
+        disk.setUnitNumber(Constants.DEFAULT_DISK_UNIT_NUMBER);
+        disk.setBacking(diskfileBacking);
+        disk.setCapacityInKB(vmDiskSize * Constants.THOUSAND_MULTIPLIER);
+
+        diskSpec.setDevice(disk);
+
+        return diskSpec;
+    }
+
+    private String getNetworkName(ConfigTarget configTarget) {
+        if (configTarget.getNetwork() == null) {
+            return null;
+        }
+
+        String networkName = null;
+        for (VirtualMachineNetworkInfo network : configTarget.getNetwork()) {
+            NetworkSummary netSummary = network.getNetwork();
+            if (netSummary.isAccessible()) {
+                networkName = netSummary.getName();
+                break;
+            }
+        }
+
+        return networkName;
+    }
+
     private void setNicSpec(VirtualDeviceConfigSpec nicSpec, String networkName) {
         nicSpec.setOperation(VirtualDeviceConfigSpecOperation.ADD);
 
@@ -472,67 +418,46 @@ public class VmService {
         nicSpec.setDevice(nic);
     }
 
-    private String getVolumeName(String volName) {
-        String volumeName = Constants.DEFAULT_VOLUME_NAME;
-        if (StringUtils.isNotBlank(volName)) {
-            volumeName = Constants.LEFT_SQUARE_BRACKET + volName + Constants.RIGHT_SQUARE_BRACKET;
+    private VirtualMachineConfigSpec addDeviceConfigSpecs(VirtualMachineConfigSpec configSpec,
+                                                          VirtualDeviceConfigSpec scsiCtrlSpec,
+                                                          VirtualDeviceConfigSpec floppySpec,
+                                                          VirtualDeviceConfigSpec cdSpec,
+                                                          VirtualDevice ideController,
+                                                          VirtualDeviceConfigSpec diskSpec,
+                                                          VirtualDeviceConfigSpec nicSpec) {
+
+        List<VirtualDeviceConfigSpec> deviceConfigSpec = new ArrayList<>();
+        deviceConfigSpec.add(scsiCtrlSpec);
+        deviceConfigSpec.add(floppySpec);
+        deviceConfigSpec.add(diskSpec);
+        deviceConfigSpec.add(nicSpec);
+
+        if (ideController != null) {
+            deviceConfigSpec.add(cdSpec);
         }
 
-        return volumeName;
+        configSpec.getDeviceChange().addAll(deviceConfigSpec);
+
+        return configSpec;
     }
 
-    /**
-     * This method returns a boolean value specifying whether the Task is succeeded or failed.
-     *
-     * @param task ManagedObjectReference representing the Task.
-     * @return boolean value representing the Task result.
-     * @throws InvalidCollectorVersionFaultMsg
-     * @throws RuntimeFaultFaultMsg
-     * @throws InvalidPropertyFaultMsg
-     */
-    private boolean getTaskResultAfterDone(ManagedObjectReference task)
-            throws InvalidPropertyFaultMsg,
-            RuntimeFaultFaultMsg,
-            InvalidCollectorVersionFaultMsg {
+    private boolean getTaskResultAfterDone(ConnectionResources connectionResources, ManagedObjectReference task)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
 
-        boolean retVal = false;
+        boolean retVal = Boolean.FALSE;
 
-        WaitForValues wfv = new WaitForValues(connection);
+        WaitForValues wfv = new WaitForValues(connectionResources.getConnection());
         Object[] result = wfv.wait(task,
                 new String[]{Constants.INFO_STATE, Constants.INFO_ERROR},
                 new String[]{Constants.STATE},
                 new Object[][]{new Object[]{TaskInfoState.SUCCESS, TaskInfoState.ERROR}});
 
         if (result[0].equals(TaskInfoState.SUCCESS)) {
-            retVal = true;
+            retVal = Boolean.TRUE;
         }
         if (result[1] instanceof LocalizedMethodFault) {
             throw new RuntimeException(((LocalizedMethodFault) result[1]).getLocalizedMessage());
         }
         return retVal;
-    }
-
-    /**
-     * Power on vm.
-     *
-     * @param vmMor the vm moref
-     * @throws RemoteException  the remote exception
-     * @throws RemoteException, RuntimeFaultFaultMsg, InvalidPropertyFaultMsg, InvalidCollectorVersionFaultMsg,
-     *                          TaskInProgressFaultMsg, VmConfigFaultFaultMsg, InsufficientResourcesFaultFaultMsg,
-     *                          FileFaultFaultMsg, InvalidStateFaultMsg
-     */
-    void powerOnVM(ManagedObjectReference vmMor) throws RemoteException,
-            RuntimeFaultFaultMsg,
-            InvalidPropertyFaultMsg,
-            InvalidCollectorVersionFaultMsg,
-            TaskInProgressFaultMsg,
-            VmConfigFaultFaultMsg,
-            InsufficientResourcesFaultFaultMsg,
-            FileFaultFaultMsg,
-            InvalidStateFaultMsg {
-        ManagedObjectReference cssTask = vimPortType.powerOnVMTask(vmMor, null);
-        if (!getTaskResultAfterDone(cssTask)) {
-            throw new RuntimeException("Failure: starting [ " + vmMor.getValue() + "] VM");
-        }
     }
 }

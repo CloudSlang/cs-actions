@@ -6,6 +6,7 @@ package io.cloudslang.content.constants;
  */
 public class Constants {
 
+    // VMware specific constants
     public static final String SERVICE_INSTANCE = "ServiceInstance";
     public static final String HOST_SYSTEM = "HostSystem";
     public static final String DATA_CENTER = "Datacenter";
@@ -22,12 +23,18 @@ public class Constants {
     public static final String VIEW = "view";
     public static final String INFO_STATE = "info.state";
     public static final String INFO_ERROR = "info.error";
-    public static final String INFO_RESULT = "info.result";
     public static final String TEST_CD_ISO = "testcd.iso";
     public static final String DEFAULT_FLOPPY_DEVICE_NAME = "/dev/fd0";
     public static final String FILTER_VALUES = "filtervals";
     public static final String DEFAULT_VOLUME_NAME = "[Local]";
+    public static final String KEY_VALUE_NULL_STRING = "val: null";
+    public static final String SSL = "SSL";
+    public static final String URI_PATH = "/sdk";
+    public static final String VM_FOLDER = "vmFolder";
+    public static final String VIRTUAL_MACHINE = "VirtualMachine";
+    public static final String TRAVERSE_ENTITIES = "traverseEntities";
 
+    public static final int DEFAULT_HTTPS_PORT = 443;
     public static final int DEFAULT_CPU_COUNT = 1;
     public static final int DEFAULT_FLOPPY_DEVICE_KEY = 3;
     public static final int DEFAULT_DISK_KEY = 0;
@@ -45,12 +52,8 @@ public class Constants {
     public static final long DEFAULT_VM_DISK_SIZE_MB = 1024;
     public static final long DEFAULT_VM_MEMORY_SIZE_MB = 1024;
 
-    // Miscellaneous
-    public static final String COLON = ":";
-    public static final String URL_SLASHES = "//";
-    public static final String KEY_VALUE_NULL_STRING = "val: null";
+    // Generic constants
+    public static final String EMPTY = "";
     public static final String LEFT_SQUARE_BRACKET = "[";
     public static final String RIGHT_SQUARE_BRACKET = "]";
-    public static final String BLANK_SPACE = " ";
-    public static final String EMPTY_SPACE = "";
 }

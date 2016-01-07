@@ -1,4 +1,4 @@
-package io.cloudslang.content.entities;
+package io.cloudslang.content.entities.http;
 
 import io.cloudslang.content.constants.ErrorMessages;
 import org.apache.commons.lang3.StringUtils;

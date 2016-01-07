@@ -2,8 +2,8 @@ package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.Constants;
 import io.cloudslang.content.constants.ErrorMessages;
-import io.cloudslang.content.constants.Inputs;
-import io.cloudslang.content.entities.Protocol;
+import io.cloudslang.content.entities.http.HttpInputs;
+import io.cloudslang.content.entities.http.Protocol;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -29,16 +29,9 @@ public class InputUtils {
         return getLongFromStringInput(input);
     }
 
-    public static boolean getBooleanInput(String input) {
-        if (StringUtils.isBlank(input)) {
-            return Boolean.FALSE;
-        }
-        return Boolean.parseBoolean(input.toLowerCase());
-    }
-
-    public static String getUrlString(String host, String port, String protocol) throws Exception {
-        String protocolString = Protocol.getValue(protocol);
-        String urlString = protocolString + Constants.COLON + Constants.URL_SLASHES + host + Constants.COLON + port + Inputs.URI_PATH;
+    public static String getUrlString(HttpInputs httpInputs) throws Exception {
+        String protocolString = Protocol.getValue(httpInputs.getProtocol());
+        String urlString = protocolString + "://" + httpInputs.getHost() + ":" + httpInputs.getPort() + Constants.URI_PATH;
         URL url = new URL(urlString.toLowerCase());
 
         return url.toString();

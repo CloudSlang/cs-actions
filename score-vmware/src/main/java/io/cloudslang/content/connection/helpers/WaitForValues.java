@@ -47,7 +47,7 @@ public class WaitForValues {
             InvalidCollectorVersionFaultMsg {
 
         ManagedObjectReference filterSpecRef;
-        String version = Constants.EMPTY_SPACE;
+        String version = Constants.EMPTY;
         String stateVal = null;
 
         Object[] endVals = new Object[endWaitProps.length];
@@ -158,7 +158,7 @@ public class WaitForValues {
     void updateValues(String[] props, Object[] vals, PropertyChange propchg) {
         for (int findi = 0; findi < props.length; findi++) {
             if (propchg.getName().lastIndexOf(props[findi]) >= 0) {
-                vals[findi] = propchg.getOp() == PropertyChangeOp.REMOVE ? Constants.EMPTY_SPACE : propchg.getVal();
+                vals[findi] = propchg.getOp() == PropertyChangeOp.REMOVE ? Constants.EMPTY : propchg.getVal();
             }
         }
     }

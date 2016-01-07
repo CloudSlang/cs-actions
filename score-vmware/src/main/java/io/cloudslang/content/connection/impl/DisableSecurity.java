@@ -1,6 +1,6 @@
 package io.cloudslang.content.connection.impl;
 
-import io.cloudslang.content.constants.Inputs;
+import io.cloudslang.content.constants.Constants;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -16,10 +16,8 @@ import javax.net.ssl.*;
 public class DisableSecurity {
 
     /*
-     * Authentication is handled by using a TrustManager and supplying a host
-     * name verifier method. (The host name verifier is declared in the main function.)
-     *
-     * Do not use this in production code!  It is only for samples.
+     * Authentication is handled by using a TrustManager and supplying a hostname verifier method.
+     * (The host name verifier is declared in the main function.)
      */
     private static class TrustAllTrustManager implements TrustManager, X509TrustManager {
 
@@ -38,13 +36,14 @@ public class DisableSecurity {
                 return true;
             }
         };
+
         // Create the trust manager.
         TrustManager[] trustAllCerts = new TrustManager[1];
         TrustManager trustManager = new TrustAllTrustManager();
         trustAllCerts[0] = trustManager;
 
         // Create the SSL context
-        SSLContext sc = SSLContext.getInstance(Inputs.SSL);
+        SSLContext sc = SSLContext.getInstance(Constants.SSL);
 
         // Create the session context
         SSLSessionContext sslsc = sc.getServerSessionContext();
@@ -55,6 +54,7 @@ public class DisableSecurity {
 
         // Use the default socket factory to create the socket for the secure connection
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
         // Set the default host name verifier to enable the connection.
         HttpsURLConnection.setDefaultHostnameVerifier(verifier);
     }

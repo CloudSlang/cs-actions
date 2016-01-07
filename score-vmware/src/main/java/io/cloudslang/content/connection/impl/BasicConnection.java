@@ -45,10 +45,7 @@ public class BasicConnection implements Connection {
                 makeConnection(url, username, password, x509HostnameVerifier);
             } catch (Exception e) {
                 Throwable cause = (e.getCause() != null) ? e.getCause() : e;
-                throw new BasicConnectionException("failed to connect: "
-                        + e.getMessage()
-                        + Constants.BLANK_SPACE + Constants.COLON + Constants.BLANK_SPACE
-                        + cause.getMessage(), cause);
+                throw new BasicConnectionException("failed to connect: " + e.getMessage() + " : " + cause.getMessage(), cause);
             }
         }
 
@@ -82,10 +79,7 @@ public class BasicConnection implements Connection {
                 vimPort.logout(serviceContent.getSessionManager());
             } catch (Exception e) {
                 Throwable cause = e.getCause();
-                throw new BasicConnectionException("failed to disconnect properly: "
-                        + e.getMessage()
-                        + Constants.BLANK_SPACE + Constants.COLON + Constants.BLANK_SPACE
-                        + cause.getMessage(), cause);
+                throw new BasicConnectionException("failed to disconnect properly: " + e.getMessage() + " : " + cause.getMessage(), cause);
             } finally {
                 userSession = null;
                 serviceContent = null;

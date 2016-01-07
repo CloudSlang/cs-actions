@@ -20,11 +20,10 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 10/18/2015.
+ * 1/7/2016.
  */
-public class CreateVM {
-
-    @Action(name = "Create Virtual Machine",
+public class PowerOnVM {
+    @Action(name = "Power On Virtual Machine",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -36,40 +35,23 @@ public class CreateVM {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> createVM(@Param(value = Inputs.HOST, required = true) String host,
+    public Map<String, String> powerOnVM(@Param(value = Inputs.HOST, required = true) String host,
                                         @Param(Inputs.PORT) String port,
                                         @Param(Inputs.PROTOCOL) String protocol,
                                         @Param(Inputs.USERNAME) String username,
                                         @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                         @Param(Inputs.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
 
-                                        @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
-                                        @Param(Inputs.HOSTNAME) String hostname,
-                                        @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName,
-                                        @Param(Inputs.VIRTUAL_MACHINE_DESCRIPTION) String description,
-                                        @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
-                                        @Param(Inputs.CPU_COUNT) String numCPUs,
-                                        @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
-                                        @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize,
-                                        @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId) {
+                                        @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
 
         Map<String, String> resultMap = new HashMap<>();
 
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, x509HostnameVerifier);
-
-            VmInputs vmInputs = getVmInputs(dataCenterName,
-                    hostname,
-                    virtualMachineName,
-                    description,
-                    dataStore,
-                    numCPUs,
-                    vmDiskSize,
-                    vmMemorySize,
-                    guestOsId);
+            VmInputs vmInputs = getVmInputs(virtualMachineName);
 
             VmService vmService = new VmService();
-            resultMap = vmService.createVirtualMachine(httpInputs, vmInputs);
+            resultMap = vmService.powerOnVM(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
@@ -80,28 +62,8 @@ public class CreateVM {
         return resultMap;
     }
 
-    private VmInputs getVmInputs(String dataCenterName,
-                                 String hostname,
-                                 String virtualMachineName,
-                                 String description,
-                                 String dataStore,
-                                 String numCPUs,
-                                 String vmDiskSize,
-                                 String vmMemorySize,
-                                 String guestOsId) {
-        int intNumCPUs = InputUtils.getIntInput(numCPUs, Constants.DEFAULT_CPU_COUNT);
-        long longVmDiskSize = InputUtils.getLongInput(vmDiskSize, Constants.DEFAULT_VM_DISK_SIZE_MB);
-        long longVmMemorySize = InputUtils.getLongInput(vmMemorySize, Constants.DEFAULT_VM_MEMORY_SIZE_MB);
-
-        return new VmInputs(dataCenterName,
-                hostname,
-                virtualMachineName,
-                description,
-                dataStore,
-                intNumCPUs,
-                longVmDiskSize,
-                longVmMemorySize,
-                guestOsId);
+    private VmInputs getVmInputs(String virtualMachineName) {
+        return new VmInputs(virtualMachineName);
     }
 
     private HttpInputs getHttpInputs(String host,
