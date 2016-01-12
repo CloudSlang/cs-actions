@@ -312,7 +312,9 @@ public class ScoreHttpClient {
     private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager,
                                 String keepAliveInput, CloseableHttpResponse httpResponse) {
         boolean keepAlive = StringUtils.isBlank(keepAliveInput) || Boolean.parseBoolean(keepAliveInput);
-        if (!keepAlive) {
+        if (keepAlive) {
+            httpRequestBase.releaseConnection();
+        } else {
             try {
                 httpResponse.close();
             } catch (IOException e) {

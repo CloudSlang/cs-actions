@@ -1,20 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-(c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-All rights reserved. This program and the accompanying materials
-are made available under the terms of the Apache License v2.0 which accompany this distribution.
-
-The Apache License is available at
-http://www.apache.org/licenses/LICENSE-2.0
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <!--
+        (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+        All rights reserved. This program and the accompanying materials
+        are made available under the terms of the Apache License v2.0 which accompany this distribution.
+
+        The Apache License is available at
+        http://www.apache.org/licenses/LICENSE-2.0
+    -->
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>score-mail</artifactId>
-    <version>0.0.31-SNAPSHOT</version>
+    <artifactId>score-powershell</artifactId>
+    <version>0.1.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Mail java actions</description>
+    <description>PowerShell java actions</description>
     <url>https://github.com/CloudSlang/score-actions</url>
     <licenses>
         <license>
@@ -28,6 +27,14 @@ http://www.apache.org/licenses/LICENSE-2.0
         <url>https://github.com/CloudSlang/score-actions.git</url>
         <tag>master</tag>
     </scm>
+    <developers>
+        <developer>
+            <name>Claudiu Ban</name>
+            <email>claudiu-laurian.ban@hpe.com</email>
+            <organization>Hewlett Packard Enterprise</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+    </developers>
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -40,26 +47,56 @@ http://www.apache.org/licenses/LICENSE-2.0
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-    <developers>
-        <developer>
-            <name>Mihai David</name>
-            <email>mihai.david@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Adina Tusa</name>
-            <email>adina.tusa@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Avi Moradi</name>
-            <email>avi.moradi@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-    </developers>
+    <dependencies>
+        <dependency>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+            <version>1.10.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.xebialabs.overthere</groupId>
+            <artifactId>overthere</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
+        <!-- testing dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.20.0-GA</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- end of testing dependencies -->
+    </dependencies>
     <build>
         <pluginManagement>
             <plugins>
@@ -170,59 +207,4 @@ http://www.apache.org/licenses/LICENSE-2.0
             </build>
         </profile>
     </profiles>
-    <dependencies>
-        <dependency>
-            <groupId>com.hp.score.sdk</groupId>
-            <artifactId>score-content-sdk</artifactId>
-            <version>1.10.6</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.5</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>1.43</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcmail-jdk16</artifactId>
-            <version>1.43</version>
-        </dependency>
-        <dependency>
-            <groupId>org.htmlparser</groupId>
-            <artifactId>htmlparser</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
-        </dependency>
-    </dependencies>
 </project>

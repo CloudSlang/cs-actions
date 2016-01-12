@@ -178,6 +178,9 @@ public class GetMailMessage {
                     throw new UnsupportedEncodingException("The given encoding (" + characterSet + ") is invalid or not supported.");
                 }
             }
+
+            message.getFolder().close(true);
+
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
         } catch (Exception e) {
             if (e.toString().contains(UNRECOGNIZED_SSL_MESSAGE)) {
@@ -719,7 +722,7 @@ public class GetMailMessage {
     }
 
     protected int getFolderOpenMode() {
-        return Folder.READ_ONLY;
+        return Folder.READ_WRITE;
     }
 
     /**
