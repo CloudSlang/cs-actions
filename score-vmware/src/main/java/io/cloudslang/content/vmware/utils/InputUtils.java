@@ -1,9 +1,9 @@
 package io.cloudslang.content.vmware.utils;
 
 import io.cloudslang.content.vmware.constants.Constants;
-import io.cloudslang.content.vmware.entities.http.Protocol;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.entities.http.Protocol;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -14,19 +14,25 @@ import java.net.URL;
  */
 public class InputUtils {
     public static int getIntInput(String input, int defaultValue) {
-        if (StringUtils.isBlank(input)) {
-            return defaultValue;
+        int intInput;
+        try {
+            intInput = StringUtils.isBlank(input) ? defaultValue : Integer.parseInt(input);
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException(ErrorMessages.NOT_INTEGER);
         }
 
-        return getIntFromStringInput(input);
+        return intInput;
     }
 
     public static long getLongInput(String input, long defaultValue) {
-        if (StringUtils.isBlank(input)) {
-            return defaultValue;
+        long longInput;
+        try {
+            longInput = StringUtils.isBlank(input) ? defaultValue : Long.parseLong(input);
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException(ErrorMessages.NOT_LONG);
         }
 
-        return getLongFromStringInput(input);
+        return longInput;
     }
 
     public static String getUrlString(HttpInputs httpInputs) throws Exception {
@@ -35,27 +41,5 @@ public class InputUtils {
         URL url = new URL(urlString.toLowerCase());
 
         return url.toString();
-    }
-
-    private static int getIntFromStringInput(String input) {
-        int intInput;
-        try {
-            intInput = Integer.parseInt(input);
-        } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_INTEGER);
-        }
-
-        return intInput;
-    }
-
-    private static long getLongFromStringInput(String input) {
-        long longInput;
-        try {
-            longInput = Long.parseLong(input);
-        } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_LONG);
-        }
-
-        return longInput;
     }
 }

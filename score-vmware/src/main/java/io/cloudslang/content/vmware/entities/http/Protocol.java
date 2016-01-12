@@ -13,10 +13,10 @@ public enum Protocol {
 
     public static String getValue(String input) throws Exception {
         if (StringUtils.isBlank(input)) {
-            return Protocol.HTTPS.toString();
+            return HTTPS.toString();
         }
         try {
-            return Protocol.valueOf(input.toUpperCase()).toString();
+            return valueOf(input.toUpperCase()).toString();
         } catch (IllegalArgumentException iae) {
             throw new Exception(ErrorMessages.UNSUPPORTED_PROTOCOL);
         }

@@ -125,40 +125,12 @@ public class ConnectionResources {
         morRootFolder = basicConnection.getServiceContent().getRootFolder();
         serviceInstance = basicConnection.getServiceInstanceReference();
 
-        ManagedObjectReference dataCenterMor = null;
-        if(StringUtils.isNotBlank(vmInputs.getDataCenterName())){
-            dataCenterMor = getdataCenterMor(vmInputs.getDataCenterName(), morRootFolder, getMOREF);
-        }
+        setDataCenterMor(vmInputs);
+        setHostMor(vmInputs);
+        setComputeResourceMor();
+        setResourcePoolMor();
+        setVmFolderMor();
 
-        ManagedObjectReference hostMor = null;
-        if(dataCenterMor != null){
-            hostMor = getHostMor(vmInputs.getHostname(), getMOREF, dataCenterMor);
-        }
-
-        ManagedObjectReference computeResourceMor = null;
-        if(hostMor != null){
-            computeResourceMor = getComputeResourceMor(getMOREF, hostMor);
-        }
-
-        ManagedObjectReference resourcePoolMor = null;
-        if(computeResourceMor != null){
-            resourcePoolMor = (ManagedObjectReference) getMOREF
-                    .entityProps(computeResourceMor, new String[]{Constants.RESOURCE_POOL})
-                    .get(Constants.RESOURCE_POOL);
-        }
-
-        ManagedObjectReference vmFolderMor = null;
-        if(dataCenterMor != null){
-            vmFolderMor = (ManagedObjectReference) getMOREF
-                    .entityProps(dataCenterMor, new String[]{Constants.VM_FOLDER})
-                    .get(Constants.VM_FOLDER);
-        }
-
-        this.setDataCenterMor(dataCenterMor);
-        this.setHostMor(hostMor);
-        this.setComputeResourceMor(computeResourceMor);
-        this.setResourcePoolMor(resourcePoolMor);
-        this.setVmFolderMor(vmFolderMor);
         this.setVimPortType(connection.getVimPort());
         this.setGetMOREF(getMOREF);
         this.setConnection(connection);
@@ -166,12 +138,56 @@ public class ConnectionResources {
         this.setServiceInstance(serviceInstance);
     }
 
+    private void setVmFolderMor() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference vmFolderMor = null;
+        if(dataCenterMor != null){
+            vmFolderMor = (ManagedObjectReference) getMOREF
+                    .entityProps(dataCenterMor, new String[]{Constants.VM_FOLDER})
+                    .get(Constants.VM_FOLDER);
+        }
+        this.setVmFolderMor(vmFolderMor);
+    }
+
+    private void setResourcePoolMor() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference resourcePoolMor = null;
+        if(computeResourceMor != null){
+            resourcePoolMor = (ManagedObjectReference) getMOREF
+                    .entityProps(computeResourceMor, new String[]{Constants.RESOURCE_POOL})
+                    .get(Constants.RESOURCE_POOL);
+        }
+        this.setResourcePoolMor(resourcePoolMor);
+    }
+
+    private void setComputeResourceMor() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference computeResourceMor = null;
+        if(hostMor != null){
+            computeResourceMor = getComputeResourceMor(getMOREF, hostMor);
+        }
+        this.setComputeResourceMor(computeResourceMor);
+    }
+
+    private void setHostMor(VmInputs vmInputs) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference hostMor = null;
+        if(dataCenterMor != null){
+            hostMor = getHostMor(vmInputs.getHostname(), getMOREF, dataCenterMor);
+        }
+        this.setHostMor(hostMor);
+    }
+
+    private void setDataCenterMor(VmInputs vmInputs) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference dataCenterMor = null;
+        if(StringUtils.isNotBlank(vmInputs.getDataCenterName())){
+            dataCenterMor = getdataCenterMor(vmInputs.getDataCenterName(), morRootFolder, getMOREF);
+        }
+        this.setDataCenterMor(dataCenterMor);
+    }
+
     private ManagedObjectReference getdataCenterMor(String dataCenterName, ManagedObjectReference mor, GetMOREF getMOREF)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
         ManagedObjectReference dataCenterMor = getMOREF.inContainerByType(mor, Constants.DATA_CENTER).get(dataCenterName);
         if (dataCenterMor == null) {
-            throw new RuntimeException("Datacenter " + dataCenterName + " not found.");
+            throw new RuntimeException("Datacenter [" + dataCenterName + "] not found.");
         }
 
         return dataCenterMor;
@@ -182,7 +198,7 @@ public class ConnectionResources {
 
         ManagedObjectReference hostMor = getMOREF.inContainerByType(dataCenterMor, Constants.HOST_SYSTEM).get(hostname);
         if (hostMor == null) {
-            throw new RuntimeException("Host " + hostname + " not found");
+            throw new RuntimeException("Host [" + hostname + "] not found.");
         }
 
         return hostMor;

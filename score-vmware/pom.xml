@@ -53,6 +53,7 @@
             <artifactId>score-http-client</artifactId>
             <version>0.1.64-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>com.vmware</groupId>
             <artifactId>vim25</artifactId>
@@ -60,7 +61,43 @@
             <scope>system</scope>
             <systemPath>C:/CPS/vim25.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5-rc1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.18.0-GA</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>
