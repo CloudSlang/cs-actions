@@ -10,7 +10,9 @@ import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.VmConfigSpecs;
 import io.cloudslang.content.vmware.utils.FindObjects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +38,7 @@ public class VmService {
                 taskMor.getValue();
         String failureMessage = "Failure: Creating [" + vmInputs.getVirtualMachineName() + "] VM";
 
-        setResults(results, connectionResources, taskMor, successMessage, failureMessage);
+        setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
         connectionResources.getConnection().disconnect();
 
         return results;
@@ -63,9 +65,9 @@ public class VmService {
             String failureMessage = "Failure: The [" + vmInputs.getVirtualMachineName() +
                     "] VM could not be deleted.";
 
-            setResults(results, connectionResources, taskMor, successMessage, failureMessage);
+            setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
         } else {
-            setNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
+            setTaskNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
@@ -93,9 +95,9 @@ public class VmService {
             String failureMessage = "Failure: The [" + vmInputs.getVirtualMachineName() +
                     "] VM could not be powered on.";
 
-            setResults(results, connectionResources, taskMor, successMessage, failureMessage);
+            setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
         } else {
-            setNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
+            setTaskNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
@@ -123,20 +125,45 @@ public class VmService {
             String failureMessage = "Failure: The [" + vmInputs.getVirtualMachineName() +
                     "] VM could not be powered off.";
 
-            setResults(results, connectionResources, taskMor, successMessage, failureMessage);
+            setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
         } else {
-            setNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
+            setTaskNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
         return results;
     }
 
-    private void setResults(Map<String, String> results,
-                            ConnectionResources connectionResources,
-                            ManagedObjectReference taskMor,
-                            String successMessage,
-                            String failureMessage)
+    public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        Map<String, String> results = new HashMap<>();
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+
+        ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
+                .entityProps(connectionResources.getComputeResourceMor(), new String[]{Constants.ENVIRONMENT_BROWSER})
+                .get(Constants.ENVIRONMENT_BROWSER);
+
+        VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
+                .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
+        List<GuestOsDescriptor> guestOSDescriptors = configOptions.getGuestOSDescriptor();
+
+        List<String> guestOsIds = new ArrayList<>();
+        for (GuestOsDescriptor descriptor : guestOSDescriptors) {
+            guestOsIds.add(descriptor.getId());
+        }
+
+        results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
+        results.put(Outputs.RETURN_RESULT, guestOsIds.toString());
+
+        connectionResources.getConnection().disconnect();
+
+        return results;
+    }
+
+    private void setTaskResults(Map<String, String> results,
+                                ConnectionResources connectionResources,
+                                ManagedObjectReference taskMor,
+                                String successMessage,
+                                String failureMessage)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
 
         if (getTaskResultAfterDone(connectionResources, taskMor)) {
@@ -148,7 +175,7 @@ public class VmService {
         }
     }
 
-    private void setNotFoundResults(Map<String, String> results, VmInputs vmInputs, String returnCodeFailure) {
+    private void setTaskNotFoundResults(Map<String, String> results, VmInputs vmInputs, String returnCodeFailure) {
         results.put(Outputs.RETURN_CODE, returnCodeFailure);
         results.put(Outputs.RETURN_RESULT, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.");
     }

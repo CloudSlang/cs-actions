@@ -44,7 +44,7 @@ public class CreateVM {
                                         @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
                                         @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
-                                        @Param(Inputs.HOSTNAME) String hostname,
+                                        @Param(value = Inputs.HOSTNAME, required = true) String hostname,
                                         @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName,
                                         @Param(Inputs.VIRTUAL_MACHINE_DESCRIPTION) String description,
                                         @Param(value = Inputs.DATA_STORE, required = true) String dataStore,

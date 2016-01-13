@@ -48,7 +48,7 @@ public class PowerOnVM {
 
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
-            VmInputs vmInputs = getVmInputs(virtualMachineName);
+            VmInputs vmInputs = new VmInputs(virtualMachineName);
 
             VmService vmService = new VmService();
             resultMap = vmService.powerOnVM(httpInputs, vmInputs);
@@ -60,10 +60,6 @@ public class PowerOnVM {
         }
 
         return resultMap;
-    }
-
-    private VmInputs getVmInputs(String virtualMachineName) {
-        return new VmInputs(virtualMachineName);
     }
 
     private HttpInputs getHttpInputs(String host,

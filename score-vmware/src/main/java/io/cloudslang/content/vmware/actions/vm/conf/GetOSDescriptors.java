@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.vm;
+package io.cloudslang.content.vmware.actions.vm.conf;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -10,20 +10,20 @@ import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.http.Protocol;
-import io.cloudslang.content.vmware.utils.InputUtils;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.entities.http.Protocol;
 import io.cloudslang.content.vmware.services.VmService;
+import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 1/7/2016.
+ * 1/12/2016.
  */
-public class PowerOffVM {
-    @Action(name = "Power Off Virtual Machine",
+public class GetOSDescriptors {
+    @Action(name = "Get OS Descriptors",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -35,23 +35,25 @@ public class PowerOffVM {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> powerOffVM(@Param(value = Inputs.HOST, required = true) String host,
-                                         @Param(Inputs.PORT) String port,
-                                         @Param(Inputs.PROTOCOL) String protocol,
-                                         @Param(Inputs.USERNAME) String username,
-                                         @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                         @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+    public Map<String, String> getOsDescriptors(@Param(value = Inputs.HOST, required = true) String host,
+                                                @Param(Inputs.PORT) String port,
+                                                @Param(Inputs.PROTOCOL) String protocol,
+                                                @Param(Inputs.USERNAME) String username,
+                                                @Param(value = Inputs.PASSWORD, encrypted = true) String password,
+                                                @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                         @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
+                                                @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
+                                                @Param(value = Inputs.HOSTNAME, required = true) String hostname) {
 
         Map<String, String> resultMap = new HashMap<>();
 
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
-            VmInputs vmInputs = new VmInputs(virtualMachineName);
+
+            VmInputs vmInputs = new VmInputs(dataCenterName, hostname);
 
             VmService vmService = new VmService();
-            resultMap = vmService.powerOffVM(httpInputs, vmInputs);
+            resultMap = vmService.getOsDescriptors(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

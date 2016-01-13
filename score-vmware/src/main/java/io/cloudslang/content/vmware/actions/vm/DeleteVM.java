@@ -48,7 +48,7 @@ public class DeleteVM {
 
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
-            VmInputs vmInputs = getVmInputs(virtualMachineName);
+            VmInputs vmInputs = new VmInputs(virtualMachineName);
 
             VmService vmService = new VmService();
             resultMap = vmService.deleteVirtualMachine(httpInputs, vmInputs);
@@ -60,10 +60,6 @@ public class DeleteVM {
         }
 
         return resultMap;
-    }
-
-    private VmInputs getVmInputs(String virtualMachineName) {
-        return new VmInputs(virtualMachineName);
     }
 
     private HttpInputs getHttpInputs(String host,

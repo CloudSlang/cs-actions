@@ -20,6 +20,11 @@ public class VmInputs {
         this.virtualMachineName = virtualMachineName;
     }
 
+    public VmInputs(String dataCenterName, String hostname) {
+        this.dataCenterName = dataCenterName;
+        this.hostname = hostname;
+    }
+
     public VmInputs(String dataCenterName,
                     String hostname,
                     String virtualMachineName,
