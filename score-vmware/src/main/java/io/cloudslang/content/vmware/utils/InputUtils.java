@@ -35,6 +35,10 @@ public class InputUtils {
         return longInput;
     }
 
+    public static String getDefaultDelimiter(String input, String defaultValue) {
+        return StringUtils.isBlank(input) ? defaultValue : input;
+    }
+
     public static String getUrlString(HttpInputs httpInputs) throws Exception {
         String protocolString = Protocol.getValue(httpInputs.getProtocol());
         String urlString = protocolString + "://" + httpInputs.getHost() + ":" + httpInputs.getPort() + Constants.URI_PATH;

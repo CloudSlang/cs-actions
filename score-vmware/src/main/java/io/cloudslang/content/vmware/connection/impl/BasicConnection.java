@@ -65,7 +65,7 @@ public class BasicConnection implements Connection {
 
         populateContextMap(url, username, password);
 
-        if (Boolean.FALSE.equals(trustEveryone)) {
+        if (Boolean.TRUE.equals(trustEveryone)) {
             DisableSecurity.trustEveryone();
         }
 

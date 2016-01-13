@@ -43,7 +43,9 @@ public class GetOSDescriptors {
                                                 @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
                                                 @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
-                                                @Param(value = Inputs.HOSTNAME, required = true) String hostname) {
+                                                @Param(value = Inputs.HOSTNAME, required = true) String hostname,
+
+                                                @Param(Inputs.DELIMITER) String delimiter) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -53,7 +55,7 @@ public class GetOSDescriptors {
             VmInputs vmInputs = new VmInputs(dataCenterName, hostname);
 
             VmService vmService = new VmService();
-            resultMap = vmService.getOsDescriptors(httpInputs, vmInputs);
+            resultMap = vmService.getOsDescriptors(httpInputs, vmInputs, delimiter);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

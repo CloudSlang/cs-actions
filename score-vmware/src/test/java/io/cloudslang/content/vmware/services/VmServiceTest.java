@@ -367,16 +367,15 @@ public class VmServiceTest {
                 .thenReturn(configOptionsMock);
 
         List<GuestOsDescriptor> guestOSDescriptors = new ArrayList<>();
-        GuestOsDescriptor guestOsDescriptor = new GuestOsDescriptor();
-        guestOsDescriptor.setId("somethingToBeTested");
-        guestOSDescriptors.add(guestOsDescriptor);
+        populateOsDescriptorsList(guestOSDescriptors, "firstDescriptorToBeTested");
+        populateOsDescriptorsList(guestOSDescriptors, "secondDescriptorToBeTested");
         when(configOptionsMock.getGuestOSDescriptor()).thenReturn(guestOSDescriptors);
 
-        Map<String, String> results = vmService.getOsDescriptors(httpInputsMock, new VmInputs("datacenter", "hostname"));
+        Map<String, String> results = vmService.getOsDescriptors(httpInputsMock, new VmInputs("datacenter", "hostname"), "");
 
         assertNotNull(results);
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
-        assertEquals("[somethingToBeTested]", results.get("returnResult"));
+        assertEquals("firstDescriptorToBeTested,secondDescriptorToBeTested", results.get("returnResult"));
     }
 
     private VmService getVmServiceWithTaskResult(final boolean isDone) {
@@ -394,5 +393,11 @@ public class VmServiceTest {
         verify(taskMorMock).getValue();
         verify(connectionResourcesMock).getConnection();
         verify(connectionMock).disconnect();
+    }
+
+    private void populateOsDescriptorsList(List<GuestOsDescriptor> guestOSDescriptorsList, String guestOsId) {
+        GuestOsDescriptor guestOsDescriptor = new GuestOsDescriptor();
+        guestOsDescriptor.setId(guestOsId);
+        guestOSDescriptorsList.add(guestOsDescriptor);
     }
 }

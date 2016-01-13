@@ -23,4 +23,7 @@ public class Inputs {
     public static final String VM_DISK_SIZE = "vmDiskSize";
     public static final String VM_MEMORY_SIZE = "vmMemorySize";
     public static final String GUEST_OS_ID = "guestOsId";
+
+    // Miscellaneous
+    public static final String DELIMITER = "delimiter";
 }

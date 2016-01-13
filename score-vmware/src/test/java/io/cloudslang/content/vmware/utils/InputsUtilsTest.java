@@ -71,4 +71,11 @@ public class InputsUtilsTest {
         HttpInputs httpInputs = new HttpInputs("", 8080, "myProtocol", "", "", true);
         InputUtils.getUrlString(httpInputs);
     }
+
+    @Test
+    public void getSuccessfullyDefaultDelimiter() {
+        String testDelimiter = InputUtils.getDefaultDelimiter("", ",");
+
+        assertEquals(",", testDelimiter);
+    }
 }

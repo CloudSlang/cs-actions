@@ -9,8 +9,8 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.VmConfigSpecs;
 import io.cloudslang.content.vmware.utils.FindObjects;
+import io.cloudslang.content.vmware.utils.InputUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +134,7 @@ public class VmService {
         return results;
     }
 
-    public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+    public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
@@ -146,13 +146,10 @@ public class VmService {
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
         List<GuestOsDescriptor> guestOSDescriptors = configOptions.getGuestOSDescriptor();
 
-        List<String> guestOsIds = new ArrayList<>();
-        for (GuestOsDescriptor descriptor : guestOSDescriptors) {
-            guestOsIds.add(descriptor.getId());
-        }
+        String osDescriptorIdsString = getOsDescriptorIdsString(guestOSDescriptors, delimiter);
 
         results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
-        results.put(Outputs.RETURN_RESULT, guestOsIds.toString());
+        results.put(Outputs.RETURN_RESULT, osDescriptorIdsString);
 
         connectionResources.getConnection().disconnect();
 
@@ -199,5 +196,19 @@ public class VmService {
         }
 
         return retVal;
+    }
+
+    private String getOsDescriptorIdsString(List<GuestOsDescriptor> guestOSDescriptors, String delimiter) {
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        for (GuestOsDescriptor descriptor : guestOSDescriptors) {
+            sb.append(descriptor.getId());
+            if (index < guestOSDescriptors.size() - 1) {
+                sb.append(InputUtils.getDefaultDelimiter(delimiter, Constants.COMMA_DELIMITER));
+            }
+            index++;
+        }
+
+        return sb.toString();
     }
 }
