@@ -3,6 +3,7 @@ package io.cloudslang.content.vmware.services;
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
+import io.cloudslang.content.vmware.connection.helpers.GetMOREF;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.VmConfigSpecs;
@@ -14,6 +15,8 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -60,6 +63,18 @@ public class VmServiceTest {
 
     @Mock
     private ManagedObjectReference vmMorMock;
+
+    @Mock
+    private GetMOREF getMOREFMock;
+
+    @Mock
+    private Map<String, Object> entityPropsMock;
+
+    @Mock
+    private ManagedObjectReference environmentBrowserMorMock;
+
+    @Mock
+    private VirtualMachineConfigOption configOptionsMock;
 
     @Before
     public void init() throws Exception {
@@ -338,6 +353,30 @@ public class VmServiceTest {
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
         assertEquals("Could not find the [powerOffNameToBeTested] VM.", results.get("returnResult"));
+    }
+
+    @Test
+    public void testSuccessfullyGetsOSDescriptors() throws Exception {
+        VmService vmService = getVmServiceWithTaskResult(true);
+
+        when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
+        when(getMOREFMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
+        when(entityPropsMock.get(anyString())).thenReturn(environmentBrowserMorMock);
+        when(vimPortMock
+                .queryConfigOption(any(ManagedObjectReference.class), anyString(), any(ManagedObjectReference.class)))
+                .thenReturn(configOptionsMock);
+
+        List<GuestOsDescriptor> guestOSDescriptors = new ArrayList<>();
+        GuestOsDescriptor guestOsDescriptor = new GuestOsDescriptor();
+        guestOsDescriptor.setId("somethingToBeTested");
+        guestOSDescriptors.add(guestOsDescriptor);
+        when(configOptionsMock.getGuestOSDescriptor()).thenReturn(guestOSDescriptors);
+
+        Map<String, String> results = vmService.getOsDescriptors(httpInputsMock, new VmInputs("datacenter", "hostname"));
+
+        assertNotNull(results);
+        assertEquals(0, Integer.parseInt(results.get("returnCode")));
+        assertEquals("[somethingToBeTested]", results.get("returnResult"));
     }
 
     private VmService getVmServiceWithTaskResult(final boolean isDone) {
