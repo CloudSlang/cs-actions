@@ -10,10 +10,10 @@ import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.http.Protocol;
-import io.cloudslang.content.vmware.utils.InputUtils;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.entities.http.Protocol;
 import io.cloudslang.content.vmware.services.VmService;
+import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,22 +36,23 @@ public class PowerOffVM {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> powerOffVM(@Param(value = Inputs.HOST, required = true) String host,
-                                         @Param(Inputs.PORT) String port,
-                                         @Param(Inputs.PROTOCOL) String protocol,
-                                         @Param(Inputs.USERNAME) String username,
-                                         @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                         @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+                                          @Param(Inputs.PORT) String port,
+                                          @Param(Inputs.PROTOCOL) String protocol,
+                                          @Param(Inputs.USERNAME) String username,
+                                          @Param(value = Inputs.PASSWORD, encrypted = true) String password,
+                                          @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                         @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
+                                          @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
 
         Map<String, String> resultMap = new HashMap<>();
 
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
-            VmInputs vmInputs = new VmInputs(virtualMachineName);
+            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                    .withVirtualMachineName(virtualMachineName)
+                    .build();
 
-            VmService vmService = new VmService();
-            resultMap = vmService.powerOffVM(httpInputs, vmInputs);
+            resultMap = new VmService().powerOffVM(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

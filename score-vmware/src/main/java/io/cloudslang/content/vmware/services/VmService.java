@@ -11,15 +11,15 @@ import io.cloudslang.content.vmware.services.helpers.VmConfigSpecs;
 import io.cloudslang.content.vmware.utils.FindObjects;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Mihai Tusa.
  * 1/6/2016.
  */
 public class VmService {
+
+    // Creates Virtual Machine
     public Map<String, String> createVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -44,6 +44,7 @@ public class VmService {
         return results;
     }
 
+    // Deletes specified Virtual Machine
     public Map<String, String> deleteVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -74,6 +75,7 @@ public class VmService {
         return results;
     }
 
+    // Powers-On specified Virtual Machine
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -104,6 +106,7 @@ public class VmService {
         return results;
     }
 
+    // Powers-Off specified Virtual Machine
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -134,6 +137,7 @@ public class VmService {
         return results;
     }
 
+    // Gets all OS descriptors that are available
     public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -146,7 +150,7 @@ public class VmService {
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
         List<GuestOsDescriptor> guestOSDescriptors = configOptions.getGuestOSDescriptor();
 
-        String osDescriptorIdsString = getOsDescriptorIdsString(guestOSDescriptors, delimiter);
+        String osDescriptorIdsString = getResponseStringFromCollection(guestOSDescriptors, delimiter);
 
         results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
         results.put(Outputs.RETURN_RESULT, osDescriptorIdsString);
@@ -155,6 +159,31 @@ public class VmService {
 
         return results;
     }
+
+    // Gets all existing VMs or templates within specified datacenter
+    public Map<String, String> listVirtualMachinesAndTemplates(HttpInputs httpInputs,
+                                                               VmInputs vmInputs,
+                                                               String delimiter) throws Exception {
+        Map<String, String> results = new HashMap<>();
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+
+        Set<String> virtualMachineNamesList = connectionResources.getGetMOREF()
+                .inContainerByType(connectionResources.getMorRootFolder(), Constants.VIRTUAL_MACHINE).keySet();
+
+        if (virtualMachineNamesList.size() > 0) {
+            String virtualMachineNamesString = getResponseStringFromCollection(virtualMachineNamesList, delimiter);
+
+            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
+            results.put(Outputs.RETURN_RESULT, virtualMachineNamesString);
+        } else {
+            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
+            results.put(Outputs.RETURN_RESULT, "No VM found in: [" + vmInputs.getDataCenterName() + "] datacenter.");
+        }
+        connectionResources.getConnection().disconnect();
+
+        return results;
+    }
+
 
     private void setTaskResults(Map<String, String> results,
                                 ConnectionResources connectionResources,
@@ -177,6 +206,21 @@ public class VmService {
         results.put(Outputs.RETURN_RESULT, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.");
     }
 
+    private <T> String getResponseStringFromCollection(Collection<T> collectionItems, String delimiter) {
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        for (T item : collectionItems) {
+            String itemName = item instanceof GuestOsDescriptor ? ((GuestOsDescriptor) item).getId() : (String) item;
+            sb.append(itemName);
+            if (index < collectionItems.size() - 1) {
+                sb.append(InputUtils.getDefaultDelimiter(delimiter, Constants.COMMA_DELIMITER));
+            }
+            index++;
+        }
+
+        return sb.toString();
+    }
+
     protected boolean getTaskResultAfterDone(ConnectionResources connectionResources, ManagedObjectReference task)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
 
@@ -196,19 +240,5 @@ public class VmService {
         }
 
         return retVal;
-    }
-
-    private String getOsDescriptorIdsString(List<GuestOsDescriptor> guestOSDescriptors, String delimiter) {
-        StringBuilder sb = new StringBuilder();
-        int index = 0;
-        for (GuestOsDescriptor descriptor : guestOSDescriptors) {
-            sb.append(descriptor.getId());
-            if (index < guestOSDescriptors.size() - 1) {
-                sb.append(InputUtils.getDefaultDelimiter(delimiter, Constants.COMMA_DELIMITER));
-            }
-            index++;
-        }
-
-        return sb.toString();
     }
 }

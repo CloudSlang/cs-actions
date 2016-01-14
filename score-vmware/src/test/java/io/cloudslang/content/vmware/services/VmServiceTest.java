@@ -15,9 +15,7 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -76,6 +74,9 @@ public class VmServiceTest {
     @Mock
     private VirtualMachineConfigOption configOptionsMock;
 
+    @Mock
+    private Map<String, ManagedObjectReference> inContainerByTypeMock;
+
     @Before
     public void init() throws Exception {
         mockStatic(FindObjects.class);
@@ -101,7 +102,8 @@ public class VmServiceTest {
                 any(ManagedObjectReference.class),
                 any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.createVirtualMachine(httpInputsMock, new VmInputs("nameToBeTested"));
+        Map<String, String> results = vmService.createVirtualMachine(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("nameToBeTested").build());
 
         verifyConnection();
         verify(connectionResourcesMock).getVmFolderMor();
@@ -130,7 +132,8 @@ public class VmServiceTest {
                 any(ManagedObjectReference.class),
                 any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.createVirtualMachine(httpInputsMock, new VmInputs("anotherNameToBeTested"));
+        Map<String, String> results = vmService.createVirtualMachine(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("anotherNameToBeTested").build());
 
         verifyConnection();
         verify(connectionResourcesMock).getVmFolderMor();
@@ -157,7 +160,8 @@ public class VmServiceTest {
                 anyString())).thenReturn(vmMorMock);
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock, new VmInputs("deletedNameToBeTested"));
+        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("deletedNameToBeTested").build());
 
         verifyConnection();
         verify(vimPortMock).retrieveServiceContent(any(ManagedObjectReference.class));
@@ -179,7 +183,8 @@ public class VmServiceTest {
                 anyString())).thenReturn(vmMorMock);
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock, new VmInputs("deletedNameToBeTested"));
+        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("deletedNameToBeTested").build());
 
         verifyConnection();
         verify(connectionResourcesMock).getServiceInstance();
@@ -201,7 +206,8 @@ public class VmServiceTest {
                 anyString())).thenReturn(null);
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock, new VmInputs("deletedNameToBeTested"));
+        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("deletedNameToBeTested").build());
 
         verify(connectionResourcesMock).getServiceInstance();
         verify(vimPortMock).retrieveServiceContent(any(ManagedObjectReference.class));
@@ -226,7 +232,8 @@ public class VmServiceTest {
         when(vimPortMock.powerOnVMTask(any(ManagedObjectReference.class),
                 any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.powerOnVM(httpInputsMock, new VmInputs("powerOnNameToBeTested"));
+        Map<String, String> results = vmService.powerOnVM(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOnNameToBeTested").build());
 
         verifyConnection();
         verify(connectionResourcesMock).getServiceInstance();
@@ -250,7 +257,8 @@ public class VmServiceTest {
         when(vimPortMock.powerOnVMTask(any(ManagedObjectReference.class),
                 any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.powerOnVM(httpInputsMock, new VmInputs("powerOnNameToBeTested"));
+        Map<String, String> results = vmService.powerOnVM(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOnNameToBeTested").build());
 
         verifyConnection();
         verify(vimPortMock).retrieveServiceContent(any(ManagedObjectReference.class));
@@ -272,7 +280,8 @@ public class VmServiceTest {
         when(vimPortMock.powerOnVMTask(any(ManagedObjectReference.class),
                 any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.powerOnVM(httpInputsMock, new VmInputs("powerOnNameToBeTested"));
+        Map<String, String> results = vmService.powerOnVM(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOnNameToBeTested").build());
 
         verify(connectionResourcesMock).getServiceInstance();
         verify(connectionResourcesMock).getVimPortType();
@@ -297,7 +306,8 @@ public class VmServiceTest {
                 anyString())).thenReturn(vmMorMock);
         when(vimPortMock.powerOffVMTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.powerOffVM(httpInputsMock, new VmInputs("powerOffNameToBeTested"));
+        Map<String, String> results = vmService.powerOffVM(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOffNameToBeTested").build());
 
         verifyConnection();
         verify(vimPortMock).retrieveServiceContent(any(ManagedObjectReference.class));
@@ -319,7 +329,8 @@ public class VmServiceTest {
                 anyString())).thenReturn(vmMorMock);
         when(vimPortMock.powerOffVMTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.powerOffVM(httpInputsMock, new VmInputs("powerOffNameToBeTested"));
+        Map<String, String> results = vmService.powerOffVM(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOffNameToBeTested").build());
 
         verifyConnection();
         verify(vimPortMock).retrieveServiceContent(any(ManagedObjectReference.class));
@@ -340,7 +351,8 @@ public class VmServiceTest {
                 anyString())).thenReturn(null);
         when(vimPortMock.powerOffVMTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.powerOffVM(httpInputsMock, new VmInputs("powerOffNameToBeTested"));
+        Map<String, String> results = vmService.powerOffVM(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOffNameToBeTested").build());
 
         verify(connectionResourcesMock).getServiceInstance();
         verify(connectionResourcesMock).getVimPortType();
@@ -371,11 +383,48 @@ public class VmServiceTest {
         populateOsDescriptorsList(guestOSDescriptors, "secondDescriptorToBeTested");
         when(configOptionsMock.getGuestOSDescriptor()).thenReturn(guestOSDescriptors);
 
-        Map<String, String> results = vmService.getOsDescriptors(httpInputsMock, new VmInputs("datacenter", "hostname"), "");
+        Map<String, String> results = vmService.getOsDescriptors(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withDataCenterName("datacenter").withHostname("hostname").build(), "");
 
         assertNotNull(results);
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
         assertEquals("firstDescriptorToBeTested,secondDescriptorToBeTested", results.get("returnResult"));
+    }
+
+    @Test
+    public void testSuccessfullyListVMsAndTemplates() throws Exception {
+        VmService vmService = getVmServiceWithTaskResult(true);
+        Set<String> virtualMachineNamesList = new HashSet<>();
+        virtualMachineNamesList.add("firstVM");
+        virtualMachineNamesList.add("secondVM");
+
+        when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
+        when(getMOREFMock.inContainerByType(any(ManagedObjectReference.class), anyString())).thenReturn(inContainerByTypeMock);
+        when(inContainerByTypeMock.keySet()).thenReturn(virtualMachineNamesList);
+
+        Map<String, String> results = vmService.listVirtualMachinesAndTemplates(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withDataCenterName("datacenter").withHostname("hostname").build(), "");
+
+        assertNotNull(results);
+        assertEquals(0, Integer.parseInt(results.get("returnCode")));
+        assertEquals("firstVM,secondVM", results.get("returnResult"));
+    }
+
+    @Test
+    public void testEmptyListVMsAndTemplates() throws Exception {
+        VmService vmService = getVmServiceWithTaskResult(true);
+        Set<String> virtualMachineNamesList = new HashSet<>();
+
+        when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
+        when(getMOREFMock.inContainerByType(any(ManagedObjectReference.class), anyString())).thenReturn(inContainerByTypeMock);
+        when(inContainerByTypeMock.keySet()).thenReturn(virtualMachineNamesList);
+
+        Map<String, String> results = vmService.listVirtualMachinesAndTemplates(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withDataCenterName("testedDataCenter").withHostname("hostname").build(), "");
+
+        assertNotNull(results);
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("No VM found in: [testedDataCenter] datacenter.", results.get("returnResult"));
     }
 
     private VmService getVmServiceWithTaskResult(final boolean isDone) {

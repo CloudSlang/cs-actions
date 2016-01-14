@@ -23,6 +23,9 @@ public class Inputs {
     public static final String VM_DISK_SIZE = "vmDiskSize";
     public static final String VM_MEMORY_SIZE = "vmMemorySize";
     public static final String GUEST_OS_ID = "guestOsId";
+    public static final String POWERED_ON = "poweredOn";
+    public static final String POWERED_OFF = "poweredOff";
+    public static final String SUSPENDED = "suspended";
 
     // Miscellaneous
     public static final String DELIMITER = "delimiter";

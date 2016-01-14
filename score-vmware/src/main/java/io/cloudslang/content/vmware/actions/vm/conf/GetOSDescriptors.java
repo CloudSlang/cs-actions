@@ -52,10 +52,12 @@ public class GetOSDescriptors {
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
 
-            VmInputs vmInputs = new VmInputs(dataCenterName, hostname);
+            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                    .withDataCenterName(dataCenterName)
+                    .withHostname(hostname)
+                    .build();
 
-            VmService vmService = new VmService();
-            resultMap = vmService.getOsDescriptors(httpInputs, vmInputs, delimiter);
+            resultMap = new VmService().getOsDescriptors(httpInputs, vmInputs, delimiter);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

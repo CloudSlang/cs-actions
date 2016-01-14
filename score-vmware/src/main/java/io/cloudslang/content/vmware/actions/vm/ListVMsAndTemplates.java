@@ -20,10 +20,10 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 1/7/2016.
+ * 1/13/2016.
  */
-public class DeleteVM {
-    @Action(name = "Delete Virtual Machine",
+public class ListVMsAndTemplates {
+    @Action(name = "List VMs and Templates",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -35,24 +35,29 @@ public class DeleteVM {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> deleteVM(@Param(value = Inputs.HOST, required = true) String host,
-                                        @Param(Inputs.PORT) String port,
-                                        @Param(Inputs.PROTOCOL) String protocol,
-                                        @Param(Inputs.USERNAME) String username,
-                                        @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                        @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+    public Map<String, String> listVMsAndTemplates(@Param(value = Inputs.HOST, required = true) String host,
+                                                   @Param(Inputs.PORT) String port,
+                                                   @Param(Inputs.PROTOCOL) String protocol,
+                                                   @Param(Inputs.USERNAME) String username,
+                                                   @Param(value = Inputs.PASSWORD, encrypted = true) String password,
+                                                   @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                        @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
+                                                   @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
+                                                   @Param(value = Inputs.HOSTNAME, required = true) String hostname,
+
+                                                   @Param(Inputs.DELIMITER) String delimiter) {
 
         Map<String, String> resultMap = new HashMap<>();
 
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
+
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                    .withVirtualMachineName(virtualMachineName)
+                    .withDataCenterName(dataCenterName)
+                    .withHostname(hostname)
                     .build();
 
-            resultMap = new VmService().deleteVirtualMachine(httpInputs, vmInputs);
+            resultMap = new VmService().listVirtualMachinesAndTemplates(httpInputs, vmInputs, delimiter);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

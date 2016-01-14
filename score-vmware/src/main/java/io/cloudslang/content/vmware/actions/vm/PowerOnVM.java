@@ -7,11 +7,11 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.vmware.constants.Constants;
+import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.http.Protocol;
-import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.entities.http.Protocol;
 import io.cloudslang.content.vmware.services.VmService;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
@@ -36,22 +36,23 @@ public class PowerOnVM {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> powerOnVM(@Param(value = Inputs.HOST, required = true) String host,
-                                        @Param(Inputs.PORT) String port,
-                                        @Param(Inputs.PROTOCOL) String protocol,
-                                        @Param(Inputs.USERNAME) String username,
-                                        @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                        @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+                                         @Param(Inputs.PORT) String port,
+                                         @Param(Inputs.PROTOCOL) String protocol,
+                                         @Param(Inputs.USERNAME) String username,
+                                         @Param(value = Inputs.PASSWORD, encrypted = true) String password,
+                                         @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                        @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
+                                         @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
 
         Map<String, String> resultMap = new HashMap<>();
 
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
-            VmInputs vmInputs = new VmInputs(virtualMachineName);
+            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                    .withVirtualMachineName(virtualMachineName)
+                    .build();
 
-            VmService vmService = new VmService();
-            resultMap = vmService.powerOnVM(httpInputs, vmInputs);
+            resultMap = new VmService().powerOnVM(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

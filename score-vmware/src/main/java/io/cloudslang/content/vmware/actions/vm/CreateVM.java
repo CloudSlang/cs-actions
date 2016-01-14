@@ -12,8 +12,8 @@ import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.entities.http.Protocol;
-import io.cloudslang.content.vmware.utils.InputUtils;
 import io.cloudslang.content.vmware.services.VmService;
+import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,18 +58,19 @@ public class CreateVM {
         try {
             HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
 
-            VmInputs vmInputs = getVmInputs(dataCenterName,
-                    hostname,
-                    virtualMachineName,
-                    description,
-                    dataStore,
-                    numCPUs,
-                    vmDiskSize,
-                    vmMemorySize,
-                    guestOsId);
+            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                    .withDataCenterName(dataCenterName)
+                    .withHostname(hostname)
+                    .withVirtualMachineName(virtualMachineName)
+                    .withDescription(description)
+                    .withDataStore(dataStore)
+                    .withIntNumCPUs(numCPUs)
+                    .withLongVmDiskSize(vmDiskSize)
+                    .withLongVmMemorySize(vmMemorySize)
+                    .withGuestOsId(guestOsId)
+                    .build();
 
-            VmService vmService = new VmService();
-            resultMap = vmService.createVirtualMachine(httpInputs, vmInputs);
+            resultMap = new VmService().createVirtualMachine(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
@@ -78,30 +79,6 @@ public class CreateVM {
         }
 
         return resultMap;
-    }
-
-    private VmInputs getVmInputs(String dataCenterName,
-                                 String hostname,
-                                 String virtualMachineName,
-                                 String description,
-                                 String dataStore,
-                                 String numCPUs,
-                                 String vmDiskSize,
-                                 String vmMemorySize,
-                                 String guestOsId) {
-        int intNumCPUs = InputUtils.getIntInput(numCPUs, Constants.DEFAULT_CPU_COUNT);
-        long longVmDiskSize = InputUtils.getLongInput(vmDiskSize, Constants.DEFAULT_VM_DISK_SIZE_MB);
-        long longVmMemorySize = InputUtils.getLongInput(vmMemorySize, Constants.DEFAULT_VM_MEMORY_SIZE_MB);
-
-        return new VmInputs(dataCenterName,
-                hostname,
-                virtualMachineName,
-                description,
-                dataStore,
-                intNumCPUs,
-                longVmDiskSize,
-                longVmMemorySize,
-                guestOsId);
     }
 
     private HttpInputs getHttpInputs(String host,
