@@ -57,7 +57,13 @@ public class InputsUtilsTest {
 
     @Test
     public void getUrlStringSuccess() throws Exception {
-        HttpInputs httpInputs = new HttpInputs("vc6.subdomain.example.com", 443, "", "", "", false);
+        HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+                .withHost("vc6.subdomain.example.com")
+                .withPort("443")
+                .withProtocol("")
+                .withUsername("")
+                .withPassword("")
+                .withTrustEveryone("false").build();
         String testUrl = InputUtils.getUrlString(httpInputs);
 
         assertEquals("https://vc6.subdomain.example.com:443/sdk", testUrl);
@@ -68,7 +74,13 @@ public class InputsUtilsTest {
         exception.expect(Exception.class);
         exception.expectMessage("Unsupported protocol. Valid values: https, http.");
 
-        HttpInputs httpInputs = new HttpInputs("", 8080, "myProtocol", "", "", true);
+        HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+                .withHost("")
+                .withPort("8080")
+                .withProtocol("myProtocol")
+                .withUsername("")
+                .withPassword("")
+                .withTrustEveryone("true").build();
         InputUtils.getUrlString(httpInputs);
     }
 

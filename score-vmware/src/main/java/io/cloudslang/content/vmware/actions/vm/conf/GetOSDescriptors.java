@@ -6,14 +6,11 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
-import io.cloudslang.content.vmware.entities.http.Protocol;
 import io.cloudslang.content.vmware.services.VmService;
-import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +47,14 @@ public class GetOSDescriptors {
         Map<String, String> resultMap = new HashMap<>();
 
         try {
-            HttpInputs httpInputs = getHttpInputs(host, port, protocol, username, password, trustEveryone);
+            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+                    .withHost(host)
+                    .withPort(port)
+                    .withProtocol(protocol)
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withTrustEveryone(trustEveryone)
+                    .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withDataCenterName(dataCenterName)
@@ -66,18 +70,5 @@ public class GetOSDescriptors {
         }
 
         return resultMap;
-    }
-
-    private HttpInputs getHttpInputs(String host,
-                                     String port,
-                                     String protocol,
-                                     String username,
-                                     String password,
-                                     String trustEveryone) throws Exception {
-        int intPort = InputUtils.getIntInput(port, Constants.DEFAULT_HTTPS_PORT);
-        String protocolString = Protocol.getValue(protocol);
-        boolean booleanTrustEveryone = Boolean.parseBoolean(trustEveryone);
-
-        return new HttpInputs(host, intPort, protocolString, username, password, booleanTrustEveryone);
     }
 }
