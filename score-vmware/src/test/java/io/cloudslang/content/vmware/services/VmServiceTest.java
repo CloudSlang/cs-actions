@@ -410,7 +410,7 @@ public class VmServiceTest {
         when(inContainerByTypeMock.keySet()).thenReturn(virtualMachineNamesList);
 
         Map<String, String> results = vmService.listVirtualMachinesAndTemplates(httpInputsMock,
-                new VmInputs.VmInputsBuilder().withDataCenterName("datacenter").withHostname("hostname").build(), "");
+                new VmInputs.VmInputsBuilder().build(), "");
 
         assertNotNull(results);
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
@@ -427,11 +427,11 @@ public class VmServiceTest {
         when(inContainerByTypeMock.keySet()).thenReturn(virtualMachineNamesList);
 
         Map<String, String> results = vmService.listVirtualMachinesAndTemplates(httpInputsMock,
-                new VmInputs.VmInputsBuilder().withDataCenterName("testedDataCenter").withHostname("hostname").build(), "");
+                new VmInputs.VmInputsBuilder().build(), "");
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
-        assertEquals("No VM found in: [testedDataCenter] datacenter.", results.get("returnResult"));
+        assertEquals("No VM found in datacenter.", results.get("returnResult"));
     }
 
     @Test

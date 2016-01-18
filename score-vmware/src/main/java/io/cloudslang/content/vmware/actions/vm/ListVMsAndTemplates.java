@@ -39,8 +39,6 @@ public class ListVMsAndTemplates {
                                                    @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                                    @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                                   @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-
                                                    @Param(Inputs.DELIMITER) String delimiter) {
 
         Map<String, String> resultMap = new HashMap<>();
@@ -55,9 +53,7 @@ public class ListVMsAndTemplates {
                     .withTrustEveryone(trustEveryone)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                    .withHostname(hostname)
-                    .build();
+            VmInputs vmInputs = new VmInputs.VmInputsBuilder().build();
 
             resultMap = new VmService().listVirtualMachinesAndTemplates(httpInputs, vmInputs, delimiter);
 

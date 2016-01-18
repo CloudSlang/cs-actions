@@ -156,7 +156,7 @@ public class VmService {
                     getResponseStringFromCollection(virtualMachineNamesList, delimiter), Outputs.RETURN_CODE_SUCCESS);
         } else {
             setResults(results,
-                    "No VM found in: [" + vmInputs.getDataCenterName() + "] datacenter.", Outputs.RETURN_CODE_FAILURE);
+                    "No VM found in datacenter.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 

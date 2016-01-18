@@ -5,6 +5,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -89,5 +93,17 @@ public class InputsUtilsTest {
         String testDelimiter = InputUtils.getDefaultDelimiter("", ",");
 
         assertEquals(",", testDelimiter);
+    }
+
+    @Test
+    public void getResultsMap() {
+        Map<String, String> inputMap = new LinkedHashMap<>();
+        inputMap.put("keyOne", "valueOne");
+        inputMap.put("keyTwo", "valueTwo");
+        inputMap.put("keyThree", "valueThree");
+
+        String testString = InputUtils.getResultsMap(inputMap, "|");
+
+        assertEquals("keyOne=valueOne|keyTwo=valueTwo|keyThree=valueThree", testString);
     }
 }
