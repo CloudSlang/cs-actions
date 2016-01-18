@@ -49,5 +49,6 @@ public class PowerOnVMTest {
         assertNotNull(resultMap);
         verify(vmServiceMock, never()).powerOnVM(any(HttpInputs.class), any(VmInputs.class));
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
+        assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }
 }

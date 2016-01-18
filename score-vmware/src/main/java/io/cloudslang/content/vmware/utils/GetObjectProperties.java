@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class GetObjectProperties {
 
+    private GetObjectProperties() {}
+
     /**
      * Retrieve contents for a single object based on the property collector
      * registered with the service.

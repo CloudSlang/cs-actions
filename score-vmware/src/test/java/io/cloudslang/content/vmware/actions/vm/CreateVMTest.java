@@ -49,7 +49,7 @@ public class CreateVMTest {
         assertNotNull(resultMap);
         verify(vmServiceMock, never()).createVirtualMachine(any(HttpInputs.class), any(VmInputs.class));
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
-        assertEquals("Unsupported protocol. Valid values: https, http.", resultMap.get("returnResult"));
+        assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }
 
     @Test

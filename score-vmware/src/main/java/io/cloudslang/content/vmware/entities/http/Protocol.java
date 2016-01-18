@@ -1,6 +1,5 @@
 package io.cloudslang.content.vmware.entities.http;
 
-import io.cloudslang.content.vmware.constants.ErrorMessages;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -18,7 +17,7 @@ public enum Protocol {
         try {
             return valueOf(input.toUpperCase()).toString();
         } catch (IllegalArgumentException iae) {
-            throw new Exception(ErrorMessages.UNSUPPORTED_PROTOCOL);
+            throw new RuntimeException("Unsupported protocol value: [" + input + "]. Valid values are: https, http.");
         }
     }
 }

@@ -9,7 +9,6 @@ public class ErrorMessages {
     // Inputs validation errors
     public static final String NOT_INTEGER = "The input value must be a int number.";
     public static final String NOT_LONG = "The input value must be a long number.";
-    public static final String UNSUPPORTED_PROTOCOL = "Unsupported protocol. Valid values: https, http.";
 
     // VMware specific errors
     public static final String SPECIFIED_DATA_STORE_IS_NOT_FOUND = "The specified Datastore was not found.";

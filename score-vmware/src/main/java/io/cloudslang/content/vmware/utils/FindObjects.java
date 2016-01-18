@@ -45,6 +45,8 @@ import java.util.List;
 
 public class FindObjects {
 
+    private FindObjects() {}
+
     /**
      * Returns all ObjectContent objects of the specified type and with each one include the properties specified.
      *
