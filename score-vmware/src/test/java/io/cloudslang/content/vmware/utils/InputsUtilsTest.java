@@ -5,7 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -76,7 +75,7 @@ public class InputsUtilsTest {
     @Test
     public void getUrlStringException() throws Exception {
         exception.expect(Exception.class);
-        exception.expectMessage("Unsupported protocol. Valid values: https, http.");
+        exception.expectMessage("Unsupported protocol value: [myProtocol]. Valid values are: https, http.");
 
         HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                 .withHost("")

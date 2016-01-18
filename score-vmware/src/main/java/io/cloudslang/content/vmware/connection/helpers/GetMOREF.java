@@ -2,11 +2,11 @@ package io.cloudslang.content.vmware.connection.helpers;
 
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.connection.Connection;
+import io.cloudslang.content.vmware.connection.helpers.build.ObjectSpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.PropertyFilterSpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.PropertySpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.TraversalSpecBuilder;
 import io.cloudslang.content.vmware.constants.Constants;
-import io.cloudslang.content.vmware.connection.helpers.build.ObjectSpecBuilder;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class GetMOREF {
 
         PropertyFilterSpec[] propertyFilterSpecs = propertyFilterSpecs(container, morefType, morefProperties);
 
-        return containerViewByType(container, morefType, morefProperties, retrieveOptions, propertyFilterSpecs);
+        return containerViewByType(retrieveOptions, propertyFilterSpecs);
     }
 
     public PropertyFilterSpec[] propertyFilterSpecs(
@@ -97,10 +97,7 @@ public class GetMOREF {
         };
     }
 
-    public RetrieveResult containerViewByType(final ManagedObjectReference container,
-                                              final String morefType,
-                                              final String[] morefProperties,
-                                              final RetrieveOptions retrieveOptions,
+    public RetrieveResult containerViewByType(final RetrieveOptions retrieveOptions,
                                               final PropertyFilterSpec... propertyFilterSpecs)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
 
