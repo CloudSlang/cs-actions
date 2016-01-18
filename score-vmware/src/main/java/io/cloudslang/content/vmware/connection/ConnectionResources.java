@@ -153,12 +153,12 @@ public class ConnectionResources {
     private void setDataCenterMor(VmInputs vmInputs) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference dataCenterMor = null;
         if (StringUtils.isNotBlank(vmInputs.getDataCenterName())) {
-            dataCenterMor = getdataCenterMor(vmInputs.getDataCenterName(), morRootFolder, getMOREF);
+            dataCenterMor = getDataCenterMor(vmInputs.getDataCenterName(), morRootFolder, getMOREF);
         }
         this.setDataCenterMor(dataCenterMor);
     }
 
-    private ManagedObjectReference getdataCenterMor(String dataCenterName, ManagedObjectReference mor, GetMOREF getMOREF)
+    private ManagedObjectReference getDataCenterMor(String dataCenterName, ManagedObjectReference mor, GetMOREF getMOREF)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
         ManagedObjectReference dataCenterMor = getMOREF.inContainerByType(mor, Constants.DATA_CENTER).get(dataCenterName);
