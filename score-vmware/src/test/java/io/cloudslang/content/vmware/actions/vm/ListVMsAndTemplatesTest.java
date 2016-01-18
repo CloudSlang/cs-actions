@@ -44,7 +44,7 @@ public class ListVMsAndTemplatesTest {
                 anyString()))
                 .thenReturn(resultMap);
 
-        resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "", "", "");
+        resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "", "");
 
         assertNotNull(resultMap);
         verify(vmServiceMock).listVirtualMachinesAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
@@ -52,7 +52,7 @@ public class ListVMsAndTemplatesTest {
 
     @Test
     public void testListVMsAndTemplatesProtocolException() throws Exception {
-        Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "", "", "");
+        Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "", "");
 
         assertNotNull(resultMap);
         verify(vmServiceMock, never()).listVirtualMachinesAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());

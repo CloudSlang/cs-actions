@@ -4,11 +4,13 @@ import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.connection.helpers.WaitForValues;
 import io.cloudslang.content.vmware.constants.Constants;
+import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.VmConfigSpecs;
 import io.cloudslang.content.vmware.utils.FindObjects;
+import io.cloudslang.content.vmware.utils.GetObjectProperties;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.*;
@@ -34,11 +36,9 @@ public class VmService {
 
         ManagedObjectReference taskMor = vimPort.createVMTask(vmFolderMor, vmConfigSpec, resourcePoolMor, hostMor);
 
-        String successMessage = "Success: Created [" + vmInputs.getVirtualMachineName() + "] VM. The taskId is: " +
-                taskMor.getValue();
-        String failureMessage = "Failure: Creating [" + vmInputs.getVirtualMachineName() + "] VM";
-
-        setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
+        setTaskResults(results, connectionResources, taskMor, "Success: Created [" + vmInputs.getVirtualMachineName() +
+                "] VM. The taskId is: " + taskMor.getValue(), "Failure: Creating [" + vmInputs.getVirtualMachineName() +
+                "] VM");
         connectionResources.getConnection().disconnect();
 
         return results;
@@ -48,27 +48,21 @@ public class VmService {
     public Map<String, String> deleteVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ServiceContent serviceContent = getServiceContent(connectionResources);
 
-        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
-        VimPortType vimPort = connectionResources.getVimPortType();
-        ServiceContent serviceContent = vimPort.retrieveServiceContent(serviceInstance);
-
-        ManagedObjectReference vmMor = FindObjects.findObject(vimPort,
-                serviceContent,
-                Constants.VIRTUAL_MACHINE,
-                vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = FindObjects.findObject(connectionResources.getVimPortType(),
+                serviceContent, Constants.VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         if (vmMor != null) {
-            ManagedObjectReference taskMor = vimPort.destroyTask(vmMor);
+            ManagedObjectReference taskMor = connectionResources.getVimPortType().destroyTask(vmMor);
 
-            String successMessage = "Success: The [" + vmInputs.getVirtualMachineName() +
-                    "] VM was deleted. The taskId is: " + taskMor.getValue();
-            String failureMessage = "Failure: The [" + vmInputs.getVirtualMachineName() +
-                    "] VM could not be deleted.";
-
-            setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
+            setTaskResults(results, connectionResources, taskMor, "Success: The [" + vmInputs.getVirtualMachineName() +
+                    "] VM was deleted. The taskId is: " + taskMor.getValue(), "Failure: The [" +
+                    vmInputs.getVirtualMachineName() + "] VM could not be deleted.");
         } else {
-            setTaskNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
+            setResults(results,
+                    "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.",
+                    Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
@@ -79,27 +73,21 @@ public class VmService {
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ServiceContent serviceContent = getServiceContent(connectionResources);
 
-        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
-        VimPortType vimPort = connectionResources.getVimPortType();
-        ServiceContent serviceContent = vimPort.retrieveServiceContent(serviceInstance);
-
-        ManagedObjectReference vmMor = FindObjects.findObject(vimPort,
-                serviceContent,
-                Constants.VIRTUAL_MACHINE,
-                vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = FindObjects.findObject(connectionResources.getVimPortType(),
+                serviceContent, Constants.VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         if (vmMor != null) {
-            ManagedObjectReference taskMor = vimPort.powerOnVMTask(vmMor, null);
+            ManagedObjectReference taskMor = connectionResources.getVimPortType().powerOnVMTask(vmMor, null);
 
-            String successMessage = "Success: The [" + vmInputs.getVirtualMachineName() +
-                    "] VM was successfully powered on. The taskId is: " + taskMor.getValue();
-            String failureMessage = "Failure: The [" + vmInputs.getVirtualMachineName() +
-                    "] VM could not be powered on.";
-
-            setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
+            setTaskResults(results, connectionResources, taskMor, "Success: The [" + vmInputs.getVirtualMachineName() +
+                    "] VM was successfully powered on. The taskId is: " + taskMor.getValue(), "Failure: The [" +
+                    vmInputs.getVirtualMachineName() + "] VM could not be powered on.");
         } else {
-            setTaskNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
+            setResults(results,
+                    "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.",
+                    Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
@@ -110,27 +98,20 @@ public class VmService {
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ServiceContent serviceContent = getServiceContent(connectionResources);
 
-        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
-        VimPortType vimPort = connectionResources.getVimPortType();
-        ServiceContent serviceContent = vimPort.retrieveServiceContent(serviceInstance);
-
-        ManagedObjectReference vmMor = FindObjects.findObject(vimPort,
-                serviceContent,
-                Constants.VIRTUAL_MACHINE,
-                vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = FindObjects.findObject(connectionResources.getVimPortType(),
+                serviceContent, Constants.VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         if (vmMor != null) {
-            ManagedObjectReference taskMor = vimPort.powerOffVMTask(vmMor);
+            ManagedObjectReference taskMor = connectionResources.getVimPortType().powerOffVMTask(vmMor);
 
-            String successMessage = "Success: The [" + vmInputs.getVirtualMachineName() +
-                    "] VM was successfully powered off. The taskId is: " + taskMor.getValue();
-            String failureMessage = "Failure: The [" + vmInputs.getVirtualMachineName() +
-                    "] VM could not be powered off.";
-
-            setTaskResults(results, connectionResources, taskMor, successMessage, failureMessage);
+            setTaskResults(results, connectionResources, taskMor, "Success: The [" + vmInputs.getVirtualMachineName() +
+                            "] VM was successfully powered off. The taskId is: " + taskMor.getValue(),
+                    "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be powered off.");
         } else {
-            setTaskNotFoundResults(results, vmInputs, Outputs.RETURN_CODE_FAILURE);
+            setResults(results,
+                    "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
@@ -138,7 +119,10 @@ public class VmService {
     }
 
     // Gets all OS descriptors that are available
-    public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
+    public Map<String, String> getOsDescriptors(HttpInputs httpInputs,
+                                                VmInputs vmInputs,
+                                                String delimiter) throws Exception {
+
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
@@ -148,13 +132,10 @@ public class VmService {
 
         VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
+
         List<GuestOsDescriptor> guestOSDescriptors = configOptions.getGuestOSDescriptor();
 
-        String osDescriptorIdsString = getResponseStringFromCollection(guestOSDescriptors, delimiter);
-
-        results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
-        results.put(Outputs.RETURN_RESULT, osDescriptorIdsString);
-
+        setResults(results, getResponseStringFromCollection(guestOSDescriptors, delimiter), Outputs.RETURN_CODE_SUCCESS);
         connectionResources.getConnection().disconnect();
 
         return results;
@@ -171,19 +152,56 @@ public class VmService {
                 .inContainerByType(connectionResources.getMorRootFolder(), Constants.VIRTUAL_MACHINE).keySet();
 
         if (virtualMachineNamesList.size() > 0) {
-            String virtualMachineNamesString = getResponseStringFromCollection(virtualMachineNamesList, delimiter);
-
-            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
-            results.put(Outputs.RETURN_RESULT, virtualMachineNamesString);
+            setResults(results,
+                    getResponseStringFromCollection(virtualMachineNamesList, delimiter), Outputs.RETURN_CODE_SUCCESS);
         } else {
-            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            results.put(Outputs.RETURN_RESULT, "No VM found in: [" + vmInputs.getDataCenterName() + "] datacenter.");
+            setResults(results,
+                    "No VM found in: [" + vmInputs.getDataCenterName() + "] datacenter.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
         return results;
     }
 
+    // Gets details of a specified Virtual Machine
+    public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
+        Map<String, String> results = new HashMap<>();
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ServiceContent serviceContent = getServiceContent(connectionResources);
+
+        ManagedObjectReference vmMor = FindObjects.findObject(connectionResources.getVimPortType(),
+                serviceContent, Constants.VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
+
+        ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
+                new String[]{Constants.SUMMARY});
+
+        if (objectContents != null) {
+            Map<String, String> vmDetails = new HashMap<>();
+            for (ObjectContent objectItem : objectContents) {
+                List<DynamicProperty> vmProperties = objectItem.getPropSet();
+                for (DynamicProperty propertyItem : vmProperties) {
+                    VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
+                    VirtualMachineConfigSummary virtualMachineConfigSummary = virtualMachineSummary.getConfig();
+
+                    vmDetails = getVmDetailedMap(vmDetails, virtualMachineSummary, virtualMachineConfigSummary);
+                }
+            }
+
+            setResults(results, InputUtils.getResultsMap(vmDetails, delimiter), Outputs.RETURN_CODE_SUCCESS);
+        } else {
+            setResults(results,
+                    "Could not retrieve the details for: [" + vmInputs.getVirtualMachineName() + "] VM.",
+                    Outputs.RETURN_CODE_FAILURE);
+        }
+        connectionResources.getConnection().disconnect();
+
+        return results;
+    }
+
+    private void setResults(Map<String, String> results, String returnResultMessage, String returnCodeMessage) {
+        results.put(Outputs.RETURN_RESULT, returnResultMessage);
+        results.put(Outputs.RETURN_CODE, returnCodeMessage);
+    }
 
     private void setTaskResults(Map<String, String> results,
                                 ConnectionResources connectionResources,
@@ -193,17 +211,35 @@ public class VmService {
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
 
         if (getTaskResultAfterDone(connectionResources, taskMor)) {
-            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
-            results.put(Outputs.RETURN_RESULT, successMessage);
+            setResults(results, successMessage, Outputs.RETURN_CODE_SUCCESS);
         } else {
-            results.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            results.put(Outputs.RETURN_RESULT, failureMessage);
+            setResults(results, failureMessage, Outputs.RETURN_CODE_FAILURE);
         }
     }
 
-    private void setTaskNotFoundResults(Map<String, String> results, VmInputs vmInputs, String returnCodeFailure) {
-        results.put(Outputs.RETURN_CODE, returnCodeFailure);
-        results.put(Outputs.RETURN_RESULT, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.");
+    private ServiceContent getServiceContent(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg {
+        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
+        VimPortType vimPort = connectionResources.getVimPortType();
+
+        return vimPort.retrieveServiceContent(serviceInstance);
+    }
+
+    private Map<String, String> getVmDetailedMap(Map<String, String> inputMap,
+                                                 VirtualMachineSummary virtualMachineSummary,
+                                                 VirtualMachineConfigSummary virtualMachineConfigSummary) {
+        inputMap.put(Inputs.VM_ID, virtualMachineSummary.getVm().getValue());
+        inputMap.put(Inputs.VM_FULL_NAME, virtualMachineConfigSummary.getGuestFullName());
+        inputMap.put(Inputs.VM_UUID, virtualMachineConfigSummary.getUuid());
+        inputMap.put(Inputs.VM_CPU_COUNT, virtualMachineConfigSummary.getNumCpu().toString());
+        inputMap.put(Inputs.VM_MEMORY_SIZE, virtualMachineConfigSummary.getMemorySizeMB().toString());
+        inputMap.put(Inputs.VM_ETH_COUNT, virtualMachineConfigSummary.getNumEthernetCards().toString());
+        inputMap.put(Inputs.VM_DISK_COUNT, virtualMachineConfigSummary.getNumVirtualDisks().toString());
+        inputMap.put(Inputs.DATA_STORE, virtualMachineConfigSummary.getVmPathName()
+                .substring(1, virtualMachineConfigSummary.getVmPathName().indexOf(Constants.RIGHT_SQUARE_BRACKET)));
+        inputMap.put(Inputs.VM_PATH_NAME, virtualMachineConfigSummary.getVmPathName());
+        inputMap.put(Inputs.VM_IS_TEMPLATE, Boolean.toString(virtualMachineConfigSummary.isTemplate()));
+
+        return inputMap;
     }
 
     private <T> String getResponseStringFromCollection(Collection<T> collectionItems, String delimiter) {

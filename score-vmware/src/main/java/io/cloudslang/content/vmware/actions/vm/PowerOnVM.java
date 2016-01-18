@@ -39,7 +39,7 @@ public class PowerOnVM {
                                          @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                          @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                         @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName) {
+                                         @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName) {
 
         Map<String, String> resultMap = new HashMap<>();
 

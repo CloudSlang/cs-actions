@@ -39,7 +39,6 @@ public class ListVMsAndTemplates {
                                                    @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                                    @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                                   @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
                                                    @Param(value = Inputs.HOSTNAME, required = true) String hostname,
 
                                                    @Param(Inputs.DELIMITER) String delimiter) {
@@ -57,7 +56,6 @@ public class ListVMsAndTemplates {
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                    .withDataCenterName(dataCenterName)
                     .withHostname(hostname)
                     .build();
 

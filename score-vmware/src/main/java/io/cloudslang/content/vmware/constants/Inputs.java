@@ -16,16 +16,20 @@ public class Inputs {
     // VM specific inputs
     public static final String DATA_CENTER_NAME = "dataCenterName";
     public static final String HOSTNAME = "hostname";
-    public static final String VIRTUAL_MACHINE_NAME = "virtualMachineName";
-    public static final String VIRTUAL_MACHINE_DESCRIPTION = "description";
     public static final String DATA_STORE = "dataStore";
-    public static final String CPU_COUNT = "numCPUs";
+    public static final String GUEST_OS_ID = "guestOsId";
+    public static final String VM_NAME = "virtualMachineName";
+    public static final String VM_FULL_NAME = "virtualMachineFullName";
+    public static final String VM_ID = "vmId";
+    public static final String VM_UUID = "vmUuid";
+    public static final String VM_DESCRIPTION = "description";
+    public static final String VM_CPU_COUNT = "numCPUs";
+    public static final String VM_ETH_COUNT = "numEths";
+    public static final String VM_DISK_COUNT = "numEths";
     public static final String VM_DISK_SIZE = "vmDiskSize";
     public static final String VM_MEMORY_SIZE = "vmMemorySize";
-    public static final String GUEST_OS_ID = "guestOsId";
-    public static final String POWERED_ON = "poweredOn";
-    public static final String POWERED_OFF = "poweredOff";
-    public static final String SUSPENDED = "suspended";
+    public static final String VM_PATH_NAME = "vmPathName";
+    public static final String VM_IS_TEMPLATE = "isTemplate";
 
     // Miscellaneous
     public static final String DELIMITER = "delimiter";

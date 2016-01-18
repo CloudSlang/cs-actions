@@ -42,10 +42,10 @@ public class CreateVM {
 
                                         @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
                                         @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-                                        @Param(value = Inputs.VIRTUAL_MACHINE_NAME, required = true) String virtualMachineName,
-                                        @Param(Inputs.VIRTUAL_MACHINE_DESCRIPTION) String description,
+                                        @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
+                                        @Param(Inputs.VM_DESCRIPTION) String description,
                                         @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
-                                        @Param(Inputs.CPU_COUNT) String numCPUs,
+                                        @Param(Inputs.VM_CPU_COUNT) String numCPUs,
                                         @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
                                         @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize,
                                         @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId) {

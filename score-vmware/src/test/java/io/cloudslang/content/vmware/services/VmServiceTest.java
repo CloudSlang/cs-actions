@@ -8,6 +8,7 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.VmConfigSpecs;
 import io.cloudslang.content.vmware.utils.FindObjects;
+import io.cloudslang.content.vmware.utils.GetObjectProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,17 +20,19 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by Mihai Tusa.
  * 1/08/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({VmService.class, FindObjects.class})
+@PrepareForTest({VmService.class, FindObjects.class, GetObjectProperties.class})
 public class VmServiceTest {
 
     @Mock
@@ -77,9 +80,13 @@ public class VmServiceTest {
     @Mock
     private Map<String, ManagedObjectReference> inContainerByTypeMock;
 
+    @Mock
+    private ObjectContent objectItemMock;
+
     @Before
     public void init() throws Exception {
         mockStatic(FindObjects.class);
+        mockStatic(GetObjectProperties.class);
 
         whenNew(ConnectionResources.class).withArguments(anyObject(), anyObject()).thenReturn(connectionResourcesMock);
         when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
@@ -284,7 +291,7 @@ public class VmServiceTest {
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOnNameToBeTested").build());
 
         verify(connectionResourcesMock).getServiceInstance();
-        verify(connectionResourcesMock).getVimPortType();
+        verify(connectionResourcesMock, atMost(2)).getVimPortType();
         verify(vimPortMock).retrieveServiceContent(any(ManagedObjectReference.class));
         verify(vimPortMock, never()).powerOnVMTask(any(ManagedObjectReference.class), any(ManagedObjectReference.class));
         verify(taskMorMock, never()).getValue();
@@ -355,7 +362,7 @@ public class VmServiceTest {
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOffNameToBeTested").build());
 
         verify(connectionResourcesMock).getServiceInstance();
-        verify(connectionResourcesMock).getVimPortType();
+        verify(connectionResourcesMock, atMost(2)).getVimPortType();
         verify(vimPortMock).retrieveServiceContent(any(ManagedObjectReference.class));
         verify(vimPortMock, never()).powerOffVMTask(any(ManagedObjectReference.class));
         verify(taskMorMock, never()).getValue();
@@ -427,6 +434,50 @@ public class VmServiceTest {
         assertEquals("No VM found in: [testedDataCenter] datacenter.", results.get("returnResult"));
     }
 
+    @Test
+    public void testSuccessfullyGetsVMDetails() throws Exception {
+        VmService vmService = getVmServiceWithTaskResult(true);
+        ObjectContent[] objectContents = getObjectContents();
+
+        when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
+                .thenReturn(vmMorMock);
+        when(GetObjectProperties.getObjectProperties(any(ConnectionResources.class), any(ManagedObjectReference.class), any(String[].class)))
+                .thenReturn(objectContents);
+
+        Map<String, String> results = vmService.getVMDetails(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withHostname("hostname").build(), "");
+
+        assertNotNull(results);
+        assertEquals(0, Integer.parseInt(results.get("returnCode")));
+        assertEquals("vmId=vm-123," +
+                        "numCPUs=3," +
+                        "numEths=2," +
+                        "vmUuid=a3e76177-5020-41a3-ac2a-59c6303c8415," +
+                        "isTemplate=true," +
+                        "virtualMachineFullName=Ubuntu Linux (64-bit)," +
+                        "dataStore=AbCdEf123-vc6-2," +
+                        "vmMemorySize=8192," +
+                        "vmPathName=[AbCdEf123-vc6-2] Ubuntu64/Ubuntu64.vmx",
+                results.get("returnResult"));
+    }
+
+    @Test
+    public void testGetVMDetailsEmpty() throws Exception {
+        VmService vmService = getVmServiceWithTaskResult(true);
+
+        when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
+                .thenReturn(vmMorMock);
+        when(GetObjectProperties.getObjectProperties(any(ConnectionResources.class), any(ManagedObjectReference.class),
+                any(String[].class))).thenReturn(null);
+
+        Map<String, String> results = vmService.getVMDetails(httpInputsMock,
+                new VmInputs.VmInputsBuilder().withHostname("hostname").withVirtualMachineName("Ubuntu64").build(), "");
+
+        assertNotNull(results);
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Could not retrieve the details for: [Ubuntu64] VM.", results.get("returnResult"));
+    }
+
     private VmService getVmServiceWithTaskResult(final boolean isDone) {
         return new VmService() {
             public boolean getTaskResultAfterDone(ConnectionResources connectionResources,
@@ -438,7 +489,7 @@ public class VmServiceTest {
     }
 
     private void verifyConnection() {
-        verify(connectionResourcesMock).getVimPortType();
+        verify(connectionResourcesMock, atMost(3)).getVimPortType();
         verify(taskMorMock).getValue();
         verify(connectionResourcesMock).getConnection();
         verify(connectionMock).disconnect();
@@ -448,5 +499,44 @@ public class VmServiceTest {
         GuestOsDescriptor guestOsDescriptor = new GuestOsDescriptor();
         guestOsDescriptor.setId(guestOsId);
         guestOSDescriptorsList.add(guestOsDescriptor);
+    }
+
+    private VirtualMachineConfigSummary getVirtualmachineConfigSummary() {
+        VirtualMachineConfigSummary virtualMachineConfigSummary = new VirtualMachineConfigSummary();
+        virtualMachineConfigSummary.setGuestId("Ubuntu64");
+        virtualMachineConfigSummary.setGuestFullName("Ubuntu Linux (64-bit)");
+        virtualMachineConfigSummary.setUuid("a3e76177-5020-41a3-ac2a-59c6303c8415");
+        virtualMachineConfigSummary.setNumCpu(3);
+        virtualMachineConfigSummary.setMemorySizeMB(8192);
+        virtualMachineConfigSummary.setNumEthernetCards(4);
+        virtualMachineConfigSummary.setNumVirtualDisks(2);
+        virtualMachineConfigSummary.setVmPathName("[AbCdEf123-vc6-2] Ubuntu64/Ubuntu64.vmx");
+        virtualMachineConfigSummary.setTemplate(true);
+        return virtualMachineConfigSummary;
+    }
+
+    private ObjectContent[] getObjectContents() {
+        ObjectContent[] objectContents = new ObjectContent[2];
+        ObjectContent objectContent0 = new ObjectContent();
+        objectContents[0] = objectContent0;
+        objectContents[1] = objectItemMock;
+
+        List<DynamicProperty> vmProperties = new ArrayList<>();
+        DynamicProperty dynamicProperty = new DynamicProperty();
+        vmProperties.add(dynamicProperty);
+
+        VirtualMachineConfigSummary virtualMachineConfigSummary = getVirtualmachineConfigSummary();
+        VirtualMachineSummary virtualMachineSummary = new VirtualMachineSummary();
+        virtualMachineSummary.setConfig(virtualMachineConfigSummary);
+
+        ManagedObjectReference mor = new ManagedObjectReference();
+        mor.setValue("vm-123");
+        virtualMachineSummary.setVm(mor);
+
+        dynamicProperty.setVal(virtualMachineSummary);
+
+        when(objectItemMock.getPropSet()).thenReturn(vmProperties);
+
+        return objectContents;
     }
 }

@@ -33,6 +33,7 @@ public class Constants {
     public static final String VM_FOLDER = "vmFolder";
     public static final String VIRTUAL_MACHINE = "VirtualMachine";
     public static final String TRAVERSE_ENTITIES = "traverseEntities";
+    public static final String SUMMARY = "summary";
 
     public static final int DEFAULT_HTTPS_PORT = 443;
     public static final int DEFAULT_CPU_COUNT = 1;
@@ -57,4 +58,5 @@ public class Constants {
     public static final String LEFT_SQUARE_BRACKET = "[";
     public static final String RIGHT_SQUARE_BRACKET = "]";
     public static final String COMMA_DELIMITER = ",";
+    public static final String EQUALS = "=";
 }
