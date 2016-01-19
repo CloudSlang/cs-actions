@@ -119,9 +119,7 @@ public class VmService {
     }
 
     // Gets all OS descriptors that are available
-    public Map<String, String> getOsDescriptors(HttpInputs httpInputs,
-                                                VmInputs vmInputs,
-                                                String delimiter) throws Exception {
+    public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
 
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -164,7 +162,7 @@ public class VmService {
     }
 
     // Gets details of a specified Virtual Machine
-    public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
+    public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         ServiceContent serviceContent = getServiceContent(connectionResources);
@@ -187,7 +185,7 @@ public class VmService {
                 }
             }
 
-            setResults(results, InputUtils.getResultsMap(vmDetails, delimiter), Outputs.RETURN_CODE_SUCCESS);
+            setResults(results, InputUtils.getJsonString(vmDetails), Outputs.RETURN_CODE_SUCCESS);
         } else {
             setResults(results,
                     "Could not retrieve the details for: [" + vmInputs.getVirtualMachineName() + "] VM.",
@@ -196,6 +194,13 @@ public class VmService {
         connectionResources.getConnection().disconnect();
 
         return results;
+    }
+
+    private ServiceContent getServiceContent(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg {
+        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
+        VimPortType vimPort = connectionResources.getVimPortType();
+
+        return vimPort.retrieveServiceContent(serviceInstance);
     }
 
     private void setResults(Map<String, String> results, String returnResultMessage, String returnCodeMessage) {
@@ -215,13 +220,6 @@ public class VmService {
         } else {
             setResults(results, failureMessage, Outputs.RETURN_CODE_FAILURE);
         }
-    }
-
-    private ServiceContent getServiceContent(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg {
-        ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
-        VimPortType vimPort = connectionResources.getVimPortType();
-
-        return vimPort.retrieveServiceContent(serviceInstance);
     }
 
     private Map<String, String> getVmDetailedMap(Map<String, String> inputMap,

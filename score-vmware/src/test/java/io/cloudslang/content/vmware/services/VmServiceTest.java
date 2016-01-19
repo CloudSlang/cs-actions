@@ -445,19 +445,11 @@ public class VmServiceTest {
                 .thenReturn(objectContents);
 
         Map<String, String> results = vmService.getVMDetails(httpInputsMock,
-                new VmInputs.VmInputsBuilder().withHostname("hostname").build(), "");
+                new VmInputs.VmInputsBuilder().withHostname("hostname").build());
 
         assertNotNull(results);
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
-        assertEquals("vmId=vm-123," +
-                        "numCPUs=3," +
-                        "numEths=2," +
-                        "vmUuid=a3e76177-5020-41a3-ac2a-59c6303c8415," +
-                        "isTemplate=true," +
-                        "virtualMachineFullName=Ubuntu Linux (64-bit)," +
-                        "dataStore=AbCdEf123-vc6-2," +
-                        "vmMemorySize=8192," +
-                        "vmPathName=[AbCdEf123-vc6-2] Ubuntu64/Ubuntu64.vmx",
+        assertEquals("{\"vmId\":\"vm-123\",\"numCPUs\":\"3\",\"numEths\":\"2\",\"vmUuid\":\"a3e76177-5020-41a3-ac2a-59c6303c8415\",\"isTemplate\":\"true\",\"virtualMachineFullName\":\"Ubuntu Linux (64-bit)\",\"dataStore\":\"AbCdEf123-vc6-2\",\"vmMemorySize\":\"8192\",\"vmPathName\":\"[AbCdEf123-vc6-2] Ubuntu64/Ubuntu64.vmx\"}",
                 results.get("returnResult"));
     }
 
@@ -471,7 +463,7 @@ public class VmServiceTest {
                 any(String[].class))).thenReturn(null);
 
         Map<String, String> results = vmService.getVMDetails(httpInputsMock,
-                new VmInputs.VmInputsBuilder().withHostname("hostname").withVirtualMachineName("Ubuntu64").build(), "");
+                new VmInputs.VmInputsBuilder().withHostname("hostname").withVirtualMachineName("Ubuntu64").build());
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));

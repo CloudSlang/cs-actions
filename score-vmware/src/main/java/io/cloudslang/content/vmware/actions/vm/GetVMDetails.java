@@ -40,9 +40,7 @@ public class GetVMDetails {
                                             @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
                                             @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-                                            @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-
-                                            @Param(Inputs.DELIMITER) String delimiter) {
+                                            @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -61,7 +59,7 @@ public class GetVMDetails {
                     .withVirtualMachineName(virtualMachineName)
                     .build();
 
-            resultMap = new VmService().getVMDetails(httpInputs, vmInputs, delimiter);
+            resultMap = new VmService().getVMDetails(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

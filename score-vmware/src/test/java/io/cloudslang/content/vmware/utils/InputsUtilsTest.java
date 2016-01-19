@@ -1,5 +1,6 @@
 package io.cloudslang.content.vmware.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import org.junit.Rule;
 import org.junit.Test;
@@ -95,14 +96,14 @@ public class InputsUtilsTest {
     }
 
     @Test
-    public void getResultsMap() {
+    public void getResultsMap() throws JsonProcessingException {
         Map<String, String> inputMap = new LinkedHashMap<>();
         inputMap.put("keyOne", "valueOne");
         inputMap.put("keyTwo", "valueTwo");
         inputMap.put("keyThree", "valueThree");
 
-        String testString = InputUtils.getResultsMap(inputMap, "|");
+        String testString = InputUtils.getJsonString(inputMap);
 
-        assertEquals("keyOne=valueOne|keyTwo=valueTwo|keyThree=valueThree", testString);
+        assertEquals("{\"keyOne\":\"valueOne\",\"keyTwo\":\"valueTwo\",\"keyThree\":\"valueThree\"}", testString);
     }
 }

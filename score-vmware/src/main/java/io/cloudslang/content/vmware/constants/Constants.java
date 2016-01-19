@@ -58,5 +58,4 @@ public class Constants {
     public static final String LEFT_SQUARE_BRACKET = "[";
     public static final String RIGHT_SQUARE_BRACKET = "]";
     public static final String COMMA_DELIMITER = ",";
-    public static final String EQUALS = "=";
 }

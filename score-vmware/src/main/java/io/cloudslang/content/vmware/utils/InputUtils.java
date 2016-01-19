@@ -1,5 +1,7 @@
 package io.cloudslang.content.vmware.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -48,18 +50,7 @@ public class InputUtils {
         return url.toString();
     }
 
-    public static String getResultsMap(Map<String, String> inputMap, String delimiter) {
-        StringBuilder sb = new StringBuilder();
-        int index = 0;
-        for (Map.Entry<String, String> entry : inputMap.entrySet()) {
-            sb.append(entry.getKey());
-            sb.append(Constants.EQUALS);
-            sb.append(entry.getValue());
-            if (index < inputMap.size() - 1) {
-                sb.append(getDefaultDelimiter(delimiter, Constants.COMMA_DELIMITER));
-            }
-            index++;
-        }
-        return sb.toString();
+    public static String getJsonString(Map<String, String> inputMap) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(inputMap);
     }
 }
