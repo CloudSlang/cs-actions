@@ -24,7 +24,15 @@ import java.util.Set;
  */
 public class VmService {
 
-    // Creates Virtual Machine
+    /**
+     * Method used to connect to a specified data center and creates a virtual machine using the inputs provided.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to create a new virtual machine
+     * @return Map with String as key and value that contains returnCode of the operation, success message with task id
+     * of the execution or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> createVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -47,7 +55,15 @@ public class VmService {
         return results;
     }
 
-    // Deletes specified Virtual Machine
+    /**
+     * Method used to connect to a specified data center and deletes the virtual machine identified by the inputs provided.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
+     * @return Map with String as key and value that contains returnCode of the operation, success message with task id
+     * of the execution or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> deleteVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -63,16 +79,22 @@ public class VmService {
                     "] VM was deleted. The taskId is: " + taskMor.getValue(), "Failure: The [" +
                     vmInputs.getVirtualMachineName() + "] VM could not be deleted.");
         } else {
-            setResults(results,
-                    "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.",
-                    Outputs.RETURN_CODE_FAILURE);
+            setResults(results, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
         return results;
     }
 
-    // Powers-On specified Virtual Machine
+    /**
+     * Method used to connect to a specified data center and powers-on the virtual machine identified by the inputs provided.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
+     * @return Map with String as key and value that contains returnCode of the operation, success message with task id
+     * of the execution or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -88,16 +110,22 @@ public class VmService {
                     "] VM was successfully powered on. The taskId is: " + taskMor.getValue(), "Failure: The [" +
                     vmInputs.getVirtualMachineName() + "] VM could not be powered on.");
         } else {
-            setResults(results,
-                    "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.",
-                    Outputs.RETURN_CODE_FAILURE);
+            setResults(results, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
         return results;
     }
 
-    // Powers-Off specified Virtual Machine
+    /**
+     * Method used to connect to a specified data center and powers-off the virtual machine identified by the inputs provided.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
+     * @return Map with String as key and value that contains returnCode of the operation, success message with task id
+     * of the execution or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -113,15 +141,24 @@ public class VmService {
                             "] VM was successfully powered off. The taskId is: " + taskMor.getValue(),
                     "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be powered off.");
         } else {
-            setResults(results,
-                    "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.", Outputs.RETURN_CODE_FAILURE);
+            setResults(results, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
         return results;
     }
 
-    // Gets all OS descriptors that are available
+    /**
+     * Method used to connect to a data center to retrieve a list with all the guest operating system descriptors
+     * supported by the host system.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted host system
+     * @param delimiter  String that represents the delimiter needed in the result list
+     * @return Map with String as key and value that contains returnCode of the operation, a list that contains all the
+     * guest operating system descriptors supported by the host system or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
 
         Map<String, String> results = new HashMap<>();
@@ -142,7 +179,16 @@ public class VmService {
         return results;
     }
 
-    // Gets all existing VMs or templates within specified datacenter
+    /**
+     * Method used to connect to a data center to retrieve a list with all the virtual machines and templates within.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted data center
+     * @param delimiter  String that represents the delimiter needed in the result list
+     * @return Map with String as key and value that contains returnCode of the operation, a list that contains all the
+     * virtual machines and templates within the data center or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> listVirtualMachinesAndTemplates(HttpInputs httpInputs,
                                                                VmInputs vmInputs,
                                                                String delimiter) throws Exception {
@@ -153,17 +199,25 @@ public class VmService {
                 .inContainerByType(connectionResources.getMorRootFolder(), Constants.VIRTUAL_MACHINE).keySet();
 
         if (virtualMachineNamesList.size() > 0) {
-            setResults(results, VmUtils.getResponseStringFromCollection(virtualMachineNamesList, delimiter), Outputs.RETURN_CODE_SUCCESS);
+            setResults(results, VmUtils.getResponseStringFromCollection(virtualMachineNamesList, delimiter),
+                    Outputs.RETURN_CODE_SUCCESS);
         } else {
-            setResults(results,
-                    "No VM found in datacenter.", Outputs.RETURN_CODE_FAILURE);
+            setResults(results, "No VM found in datacenter.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
         return results;
     }
 
-    // Gets details of a specified Virtual Machine
+    /**
+     * Method used to connect to a data center to retrieve details of a specified virtual machine.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
+     * @return Map with String as key and value that contains returnCode of the operation, a JSON formatted string that
+     * contains details of the virtual machine or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);

@@ -20,6 +20,20 @@ import java.util.Map;
  * 1/15/2016.
  */
 public class GetVMDetails {
+    /**
+     * Connects to a specified data center and to retrieve details of a virtual machine identified by the inputs provided.
+     *
+     * @param host               VMware host or IP - Example: "vc6.subdomain.example.com"
+     * @param port               optional - the port to connect through - Examples: "443", "80" - Default: "443"
+     * @param protocol           optional - the connection protocol - Valid: "http", "https" - Default: "https"
+     * @param username           the VMware username use to connect
+     * @param password           the password associated with "username" input
+     * @param trustEveryone      optional - if "true" will allow connections from any host, if "false" the connection will
+     *                           be allowed only using a valid vCenter certificate - Default: "true"
+     * @param virtualMachineName the name of the targeted virtual machine to retrieve the details for
+     * @return resultMap with String as key and value that contains returnCode of the operation, a JSON formatted string
+     * that contains details of the virtual machine or failure message and the exception if there is one
+     */
     @Action(name = "Get VM Details",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

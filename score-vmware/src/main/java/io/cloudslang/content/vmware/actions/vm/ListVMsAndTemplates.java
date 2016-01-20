@@ -20,6 +20,22 @@ import java.util.Map;
  * 1/13/2016.
  */
 public class ListVMsAndTemplates {
+    /**
+     * Connects to a specified data center and to retrieve retrieve a list with all the virtual machines and templates
+     * within.
+     *
+     * @param host          VMware host or IP - Example: "vc6.subdomain.example.com"
+     * @param port          optional - the port to connect through - Examples: "443", "80" - Default: "443"
+     * @param protocol      optional - the connection protocol - Valid: "http", "https" - Default: "https"
+     * @param username      the VMware username use to connect
+     * @param password      the password associated with "username" input
+     * @param trustEveryone optional - if "true" will allow connections from any host, if "false" the connection will
+     *                      be allowed only using a valid vCenter certificate - Default: "true"
+     * @param delimiter     the delimiter that will be used in response list - Default: ","
+     * @return resultMap with String as key and value that contains returnCode of the operation, a list that contains
+     * all the virtual machines and templates within the data center  or failure message and the exception if there is
+     * one
+     */
     @Action(name = "List VMs and Templates",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

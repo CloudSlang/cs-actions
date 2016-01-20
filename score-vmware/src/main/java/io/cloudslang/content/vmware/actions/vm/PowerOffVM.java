@@ -20,6 +20,20 @@ import java.util.Map;
  * 1/7/2016.
  */
 public class PowerOffVM {
+    /**
+     * Connects to a specified data center and powers off the virtual machine identified by the inputs provided.
+     *
+     * @param host               VMware host or IP - Example: "vc6.subdomain.example.com"
+     * @param port               optional - the port to connect through - Examples: "443", "80" - Default: "443"
+     * @param protocol           optional - the connection protocol - Valid: "http", "https" - Default: "https"
+     * @param username           the VMware username use to connect
+     * @param password           the password associated with "username" input
+     * @param trustEveryone      optional - if "true" will allow connections from any host, if "false" the connection will
+     *                           be allowed only using a valid vCenter certificate - Default: "true"
+     * @param virtualMachineName the name of the virtual machine that will be powered off
+     * @return resultMap with String as key and value that contains returnCode of the operation, success message with
+     * task id of the execution or failure message and the exception if there is one
+     */
     @Action(name = "Power Off Virtual Machine",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

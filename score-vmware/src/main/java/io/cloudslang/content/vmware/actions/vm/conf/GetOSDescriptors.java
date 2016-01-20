@@ -19,7 +19,26 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 1/12/2016.
  */
+
 public class GetOSDescriptors {
+    /**
+     * Connects to a data center to retrieve a list with all the guest operating system descriptors supported by the
+     * host system.
+     *
+     * @param host           VMware host or IP - Example: "vc6.subdomain.example.com"
+     * @param port           optional - the port to connect through - Examples: "443", "80" - Default: "443"
+     * @param protocol       optional - the connection protocol - Valid: "http", "https" - Default: "https"
+     * @param username       the VMware username use to connect
+     * @param password       the password associated with "username" input
+     * @param trustEveryone  optional - if "true" will allow connections from any host, if "false" the connection will be
+     *                       allowed only using a valid vCenter certificate - Default: "true"
+     * @param dataCenterName the data center name where the host system is - Example: 'DataCenter2'
+     * @param hostname       the name of the target host to be queried to retrieve the supported guest OSes
+     *                       - Example: 'host123.subdomain.example.com'
+     * @param delimiter      the delimiter that will be used in response list - Default: ","
+     * @return resultMap with String as key and value that contains returnCode of the operation, a list that contains all the
+     * guest operating system descriptors supported by the host system or failure message and the exception if there is one
+     */
     @Action(name = "Get OS Descriptors",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
@@ -35,7 +54,7 @@ public class GetOSDescriptors {
     public Map<String, String> getOsDescriptors(@Param(value = Inputs.HOST, required = true) String host,
                                                 @Param(Inputs.PORT) String port,
                                                 @Param(Inputs.PROTOCOL) String protocol,
-                                                @Param(Inputs.USERNAME) String username,
+                                                @Param(value = Inputs.USERNAME, required = true) String username,
                                                 @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                                 @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 

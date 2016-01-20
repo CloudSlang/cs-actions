@@ -58,8 +58,6 @@
             <groupId>com.vmware</groupId>
             <artifactId>vim25</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>C:/CPS/vim25.jar</systemPath>
         </dependency>
 
         <dependency>

@@ -1,8 +1,8 @@
 package io.cloudslang.content.vmware.connection.helpers;
 
 import com.vmware.vim25.*;
-import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.connection.Connection;
+import io.cloudslang.content.vmware.constants.Constants;
 import org.w3c.dom.Element;
 
 import java.util.Arrays;
