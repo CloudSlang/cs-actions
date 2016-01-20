@@ -51,7 +51,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>score-http-client</artifactId>
-            <version>0.1.64-SNAPSHOT</version>
+            <version>0.1.65</version>
         </dependency>
 
         <dependency>
