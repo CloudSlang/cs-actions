@@ -18,6 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.*;
 
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -449,8 +450,15 @@ public class VmServiceTest {
 
         assertNotNull(results);
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
-        assertEquals("{\"vmId\":\"vm-123\",\"numCPUs\":\"3\",\"numEths\":\"2\",\"vmUuid\":\"a3e76177-5020-41a3-ac2a-59c6303c8415\",\"isTemplate\":\"true\",\"virtualMachineFullName\":\"Ubuntu Linux (64-bit)\",\"dataStore\":\"AbCdEf123-vc6-2\",\"vmMemorySize\":\"8192\",\"vmPathName\":\"[AbCdEf123-vc6-2] Ubuntu64/Ubuntu64.vmx\"}",
-                results.get("returnResult"));
+        assertTrue(results.get("returnResult").contains("\"vmId\":\"vm-123\""));
+        assertTrue(results.get("returnResult").contains("\"numCPUs\":\"3\""));
+        assertTrue(results.get("returnResult").contains("\"numEths\":\"2\""));
+        assertTrue(results.get("returnResult").contains("\"vmUuid\":\"a3e76177-5020-41a3-ac2a-59c6303c8415\""));
+        assertTrue(results.get("returnResult").contains("\"isTemplate\":\"true\""));
+        assertTrue(results.get("returnResult").contains("\"virtualMachineFullName\":\"Ubuntu Linux (64-bit)\""));
+        assertTrue(results.get("returnResult").contains("\"dataStore\":\"AbCdEf123-vc6-2\""));
+        assertTrue(results.get("returnResult").contains("\"vmMemorySize\":\"8192\""));
+        assertTrue(results.get("returnResult").contains("\"vmPathName\":\"[AbCdEf123-vc6-2] Ubuntu64/Ubuntu64.vmx\""));
     }
 
     @Test
