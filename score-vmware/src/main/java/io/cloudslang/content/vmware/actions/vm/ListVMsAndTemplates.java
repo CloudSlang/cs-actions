@@ -51,7 +51,7 @@ public class ListVMsAndTemplates {
     public Map<String, String> listVMsAndTemplates(@Param(value = Inputs.HOST, required = true) String host,
                                                    @Param(Inputs.PORT) String port,
                                                    @Param(Inputs.PROTOCOL) String protocol,
-                                                   @Param(Inputs.USERNAME) String username,
+                                                   @Param(value = Inputs.USERNAME, required = true) String username,
                                                    @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                                    @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 

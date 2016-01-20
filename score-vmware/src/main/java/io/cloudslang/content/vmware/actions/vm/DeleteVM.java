@@ -49,7 +49,7 @@ public class DeleteVM {
     public Map<String, String> deleteVM(@Param(value = Inputs.HOST, required = true) String host,
                                         @Param(Inputs.PORT) String port,
                                         @Param(Inputs.PROTOCOL) String protocol,
-                                        @Param(Inputs.USERNAME) String username,
+                                        @Param(value = Inputs.USERNAME, required = true) String username,
                                         @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                         @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
