@@ -7,13 +7,13 @@ import org.w3c.dom.Element;
 
 import java.util.Arrays;
 
-
-/**
- * Created by Mihai Tusa.
- * 10/19/2015.
- */
-
 public class WaitForValues {
+    private static final String FILTER_VALUES = "filtervals";
+    private static final String KEY_VALUE_NULL_STRING = "val: null";
+    private static final String ERROR = "error";
+    private static final String READY = "ready";
+    private static final int MAX_TRIED_WAIT_FOR_UPDATE_COUNTER = 100;
+
     Connection connection;
     ServiceContent serviceContent;
     VimPortType vimPort;
@@ -28,37 +28,29 @@ public class WaitForValues {
      * Handle Updates for a single object. waits till expected values of
      * properties to check are reached Destroys the ObjectFilter when done.
      *
-     * @param objmor       MOR of the Object to wait for</param>
-     * @param filterProps  Properties list to filter
-     * @param endWaitProps Properties list to check for expected values these be properties
-     *                     of a property in the filter properties list
-     * @param expectedVals values for properties to end the wait
+     * @param objMor         MOR of the Object to wait for</param>
+     * @param filterProps    Properties list to filter
+     * @param endWaitProps   Properties list to check for expected values these be properties
+     *                       of a property in the filter properties list
+     * @param expectedValues values for properties to end the wait
      * @return true indicating expected values were met, and false otherwise
      * @throws RuntimeFaultFaultMsg
      * @throws InvalidPropertyFaultMsg
      * @throws InvalidCollectorVersionFaultMsg
      */
-    public Object[] wait(ManagedObjectReference objmor,
-                         String[] filterProps,
-                         String[] endWaitProps,
-                         Object[][] expectedVals)
-            throws InvalidPropertyFaultMsg,
-            RuntimeFaultFaultMsg,
-            InvalidCollectorVersionFaultMsg {
+    public Object[] wait(ManagedObjectReference objMor, String[] filterProps, String[] endWaitProps, Object[][] expectedValues)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
 
-        ManagedObjectReference filterSpecRef;
         String version = Constants.EMPTY;
         String stateVal = null;
 
-        Object[] endVals = new Object[endWaitProps.length];
-        Object[] filterVals = new Object[filterProps.length];
+        Object[] endValues = new Object[endWaitProps.length];
+        Object[] filterValues = new Object[filterProps.length];
 
-
-        PropertyFilterSpec spec = propertyFilterSpec(objmor, filterProps);
-        filterSpecRef = vimPort.createFilter(serviceContent.getPropertyCollector(), spec, true);
+        PropertyFilterSpec spec = propertyFilterSpec(objMor, filterProps);
+        ManagedObjectReference filterSpecRef = vimPort.createFilter(serviceContent.getPropertyCollector(), spec, true);
 
         boolean reached = false;
-
         UpdateSet updateset;
         while (!reached) {
             updateset = vimPort.waitForUpdatesEx(serviceContent.getPropertyCollector(), version, new WaitOptions());
@@ -66,90 +58,80 @@ public class WaitForValues {
             int waitForUpdateCounter = 0;
             if (updateset == null || updateset.getFilterSet() == null) {
                 waitForUpdateCounter++;
-                if (waitForUpdateCounter <= Constants.MAX_TRIED_WAIT_FOR_UPDATE_COUNTER) {
+                if (waitForUpdateCounter <= MAX_TRIED_WAIT_FOR_UPDATE_COUNTER) {
                     continue;
                 }
                 break;
             }
 
             version = updateset.getVersion();
-
             for (PropertyFilterUpdate filtup : updateset.getFilterSet()) {
                 for (ObjectUpdate objup : filtup.getObjectSet()) {
-                    if (objup.getKind() == ObjectUpdateKind.MODIFY
-                            || objup.getKind() == ObjectUpdateKind.ENTER
+                    if (objup.getKind() == ObjectUpdateKind.MODIFY || objup.getKind() == ObjectUpdateKind.ENTER
                             || objup.getKind() == ObjectUpdateKind.LEAVE) {
-
                         for (PropertyChange propchg : objup.getChangeSet()) {
-                            updateValues(endWaitProps, endVals, propchg);
-                            updateValues(filterProps, filterVals, propchg);
+                            updateValues(endWaitProps, endValues, propchg);
+                            updateValues(filterProps, filterValues, propchg);
                         }
                     }
                 }
             }
-
             // Check if the expected values have been reached and exit the loop if done.
             // Also exit the WaitForUpdates loop if this is the case.
-            for (int chgi = 0; chgi < endVals.length && !reached; chgi++) {
-                for (int vali = 0; vali < expectedVals[chgi].length && !reached; vali++) {
-                    Object expctdval = expectedVals[chgi][vali];
-                    if (endVals[chgi].toString().contains(Constants.KEY_VALUE_NULL_STRING)) {
-                        Element stateElement = (Element) endVals[chgi];
+            for (int chgi = 0; chgi < endValues.length && !reached; chgi++) {
+                for (int vali = 0; vali < expectedValues[chgi].length && !reached; vali++) {
+                    Object expctdval = expectedValues[chgi][vali];
+                    if (endValues[chgi].toString().contains(KEY_VALUE_NULL_STRING)) {
+                        Element stateElement = (Element) endValues[chgi];
                         if (stateElement != null && stateElement.getFirstChild() != null) {
                             stateVal = stateElement.getFirstChild().getTextContent();
                             reached = expctdval.toString().equalsIgnoreCase(stateVal);
                         }
                     } else {
-                        expctdval = expectedVals[chgi][vali];
-                        reached = expctdval.equals(endVals[chgi]);
-                        stateVal = Constants.FILTER_VALUES;
+                        expctdval = expectedValues[chgi][vali];
+                        reached = expctdval.equals(endValues[chgi]);
+                        stateVal = FILTER_VALUES;
                     }
                 }
             }
         }
-
         try {
             vimPort.destroyPropertyFilter(filterSpecRef);
         } catch (RuntimeFaultFaultMsg e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        return getObjectState(stateVal, filterVals);
+        return getObjectState(stateVal, filterValues);
     }
 
-    private Object[] getObjectState(String stateVal, Object[] filterVals) {
-        Object[] retVal = null;
-        if (stateVal != null) {
-            if (Constants.READY.equalsIgnoreCase(stateVal)) {
-                retVal = new Object[]{HttpNfcLeaseState.READY};
-            }
-
-            if (Constants.ERROR.equalsIgnoreCase(stateVal)) {
-                retVal = new Object[]{HttpNfcLeaseState.ERROR};
-            }
-
-            if (Constants.FILTER_VALUES.equals(stateVal)) {
-                retVal = filterVals;
-            }
+    private Object[] getObjectState(String stateVal, Object[] filterValues) {
+        if (stateVal == null) {
+            return new Object[]{HttpNfcLeaseState.ERROR};
         } else {
-            retVal = new Object[]{HttpNfcLeaseState.ERROR};
+            switch (stateVal) {
+                case READY:
+                    return new Object[]{HttpNfcLeaseState.READY};
+                case ERROR:
+                    return new Object[]{HttpNfcLeaseState.ERROR};
+                case FILTER_VALUES:
+                    return filterValues;
+                default:
+                    return null;
+            }
         }
-        return retVal;
     }
 
     public PropertyFilterSpec propertyFilterSpec(ManagedObjectReference objmor, String[] filterProps) {
-        PropertyFilterSpec spec = new PropertyFilterSpec();
-
         ObjectSpec oSpec = new ObjectSpec();
         oSpec.setObj(objmor);
-        oSpec.setSkip(Boolean.FALSE);
-
-        spec.getObjectSet().add(oSpec);
+        oSpec.setSkip(false);
 
         PropertySpec pSpec = new PropertySpec();
         pSpec.getPathSet().addAll(Arrays.asList(filterProps));
         pSpec.setType(objmor.getType());
 
+        PropertyFilterSpec spec = new PropertyFilterSpec();
+        spec.getObjectSet().add(oSpec);
         spec.getPropSet().add(pSpec);
 
         return spec;

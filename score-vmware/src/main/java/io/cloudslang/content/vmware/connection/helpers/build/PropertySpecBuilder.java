@@ -4,12 +4,7 @@ import com.vmware.vim25.PropertySpec;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
-/**
- * Created by Mihai Tusa.
- * 10/20/2015.
- */
 public class PropertySpecBuilder extends PropertySpec {
     private void init() {
         if (pathSet == null) {
@@ -30,12 +25,6 @@ public class PropertySpecBuilder extends PropertySpec {
     public PropertySpecBuilder pathSet(final String... paths) {
         init();
         this.pathSet.addAll(Arrays.asList(paths));
-        return this;
-    }
-
-    public PropertySpecBuilder addToPathSet(final Collection<String> paths) {
-        init();
-        this.pathSet.addAll(paths);
         return this;
     }
 }

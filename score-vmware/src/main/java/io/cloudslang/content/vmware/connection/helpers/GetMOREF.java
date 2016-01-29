@@ -13,11 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-/**
- * Created by Mihai Tusa.
- * 10/19/2015.
- */
 public class GetMOREF {
     Connection connection;
     VimPortType vimPort;
@@ -34,12 +29,10 @@ public class GetMOREF {
      * since the connection may not be ready yet.
      */
 
-    public RetrieveResult containerViewByType(
-            final ManagedObjectReference container,
-            final String morefType,
-            final RetrieveOptions retrieveOptions
+    public RetrieveResult containerViewByType(final ManagedObjectReference container,
+                                              final String morefType,
+                                              final RetrieveOptions retrieveOptions
     ) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-
         return this.containerViewByType(container, morefType, retrieveOptions, Constants.NAME);
     }
 
@@ -53,58 +46,39 @@ public class GetMOREF {
      * @throws RuntimeFaultFaultMsg
      * @throws InvalidPropertyFaultMsg
      */
-    public RetrieveResult containerViewByType(
-            final ManagedObjectReference container,
-            final String morefType,
-            final RetrieveOptions retrieveOptions,
-            final String... morefProperties
+    public RetrieveResult containerViewByType(final ManagedObjectReference container,
+                                              final String morefType,
+                                              final RetrieveOptions retrieveOptions,
+                                              final String... morefProperties
     ) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-
         PropertyFilterSpec[] propertyFilterSpecs = propertyFilterSpecs(container, morefType, morefProperties);
 
         return containerViewByType(retrieveOptions, propertyFilterSpecs);
     }
 
-    public PropertyFilterSpec[] propertyFilterSpecs(
-            ManagedObjectReference container,
-            String morefType,
-            String... morefProperties
+    public PropertyFilterSpec[] propertyFilterSpecs(ManagedObjectReference container,
+                                                    String morefType,
+                                                    String... morefProperties
     ) throws RuntimeFaultFaultMsg {
-
         ManagedObjectReference viewManager = serviceContent.getViewManager();
-        ManagedObjectReference containerView = vimPort.createContainerView(viewManager,
-                container,
-                Arrays.asList(morefType),
-                Boolean.TRUE);
+        ManagedObjectReference containerView = vimPort.createContainerView(viewManager, container,
+                Arrays.asList(morefType), true);
 
         return new PropertyFilterSpec[]{
-                new PropertyFilterSpecBuilder()
-                        .propSet(new PropertySpecBuilder()
-                                        .all(Boolean.FALSE)
-                                        .type(morefType)
-                                        .pathSet(morefProperties)
-                        )
-                        .objectSet(new ObjectSpecBuilder()
-                                        .obj(containerView)
-                                        .skip(Boolean.TRUE)
-                                        .selectSet(new TraversalSpecBuilder()
-                                                        .name(Constants.VIEW)
-                                                        .path(Constants.VIEW)
-                                                        .skip(Boolean.FALSE)
-                                                        .type(Constants.CONTAINER_VIEW)
-                                        )
-                        )
-        };
+                new PropertyFilterSpecBuilder().propSet(new PropertySpecBuilder().all(false)
+                        .type(morefType).pathSet(morefProperties)).objectSet(new ObjectSpecBuilder()
+                        .obj(containerView).skip(true).selectSet(new TraversalSpecBuilder()
+                                .name(Constants.VIEW)
+                                .path(Constants.VIEW)
+                                .skip(false)
+                                .type(Constants.CONTAINER_VIEW)))};
     }
 
     public RetrieveResult containerViewByType(final RetrieveOptions retrieveOptions,
                                               final PropertyFilterSpec... propertyFilterSpecs)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-
-        return vimPort.retrievePropertiesEx(serviceContent.getPropertyCollector(),
-                Arrays.asList(propertyFilterSpecs),
-                retrieveOptions
-        );
+        return vimPort.retrievePropertiesEx(serviceContent.getPropertyCollector(), Arrays.asList(propertyFilterSpecs),
+                retrieveOptions);
     }
 
     /**
@@ -122,25 +96,21 @@ public class GetMOREF {
     public Map<String, ManagedObjectReference> inContainerByType(ManagedObjectReference folder,
                                                                  String morefType,
                                                                  RetrieveOptions retrieveOptions)
-            throws InvalidPropertyFaultMsg,
-            RuntimeFaultFaultMsg {
-
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         RetrieveResult results = containerViewByType(folder, morefType, retrieveOptions);
 
         return toMap(results);
     }
 
-    public Map<String, ManagedObjectReference> toMap(RetrieveResult rslts)
+    public Map<String, ManagedObjectReference> toMap(RetrieveResult result)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-
         final Map<String, ManagedObjectReference> tgtMoref = new HashMap<>();
-        String token;
-        token = populate(rslts, tgtMoref);
 
+        String token = populate(result, tgtMoref);
         while (token != null && !token.isEmpty()) {
             // fetch results based on new token
-            rslts = vimPort.continueRetrievePropertiesEx(serviceContent.getPropertyCollector(), token);
-            token = populate(rslts, tgtMoref);
+            result = vimPort.continueRetrievePropertiesEx(serviceContent.getPropertyCollector(), token);
+            token = populate(result, tgtMoref);
         }
 
         return tgtMoref;
@@ -177,29 +147,17 @@ public class GetMOREF {
      */
     public Map<String, Object> entityProps(ManagedObjectReference entityMor, String[] props)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-
         final HashMap<String, Object> retVal = new HashMap<>();
-
         // Create PropertyFilterSpec using the PropertySpec and ObjectPec
-        PropertyFilterSpec[] propertyFilterSpecs = {
-                new PropertyFilterSpecBuilder()
-                        .propSet(
-                                // Create Property Spec
-                                new PropertySpecBuilder()
-                                        .all(Boolean.FALSE)
-                                        .type(entityMor.getType())
-                                        .pathSet(props)
-                        )
-                        .objectSet(
-                                // Now create Object Spec
-                                new ObjectSpecBuilder()
-                                        .obj(entityMor)
-                        )
-        };
+        PropertyFilterSpec[] propertyFilterSpecs = {new PropertyFilterSpecBuilder().propSet(
+                // Create Property Spec
+                new PropertySpecBuilder().all(false).type(entityMor.getType()).pathSet(props))
+                .objectSet(
+                        // Now create Object Spec
+                        new ObjectSpecBuilder().obj(entityMor))};
 
-        List<ObjectContent> oCont =
-                vimPort.retrievePropertiesEx(serviceContent.getPropertyCollector(),
-                        Arrays.asList(propertyFilterSpecs), new RetrieveOptions()).getObjects();
+        List<ObjectContent> oCont = vimPort.retrievePropertiesEx(serviceContent.getPropertyCollector(),
+                Arrays.asList(propertyFilterSpecs), new RetrieveOptions()).getObjects();
 
         if (oCont != null) {
             for (ObjectContent oc : oCont) {
@@ -209,14 +167,13 @@ public class GetMOREF {
                 }
             }
         }
+
         return retVal;
     }
 
     public Map<String, ManagedObjectReference> inContainerByType(ManagedObjectReference container,
                                                                  String morefType)
-            throws InvalidPropertyFaultMsg,
-            RuntimeFaultFaultMsg {
-
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         return inContainerByType(container, morefType, new RetrieveOptions());
     }
 }

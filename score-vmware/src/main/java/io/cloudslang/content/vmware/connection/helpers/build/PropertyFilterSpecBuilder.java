@@ -7,16 +7,12 @@ import com.vmware.vim25.PropertySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Mihai Tusa.
- * 10/20/2015.
- */
 public class PropertyFilterSpecBuilder extends PropertyFilterSpec {
     private void init() {
         if (propSet == null) {
             propSet = new ArrayList<>();
         }
-        if(objectSet == null) {
+        if (objectSet == null) {
             objectSet = new ArrayList<>();
         }
     }

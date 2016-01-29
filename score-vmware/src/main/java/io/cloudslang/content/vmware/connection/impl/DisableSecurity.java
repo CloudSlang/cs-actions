@@ -1,30 +1,28 @@
 package io.cloudslang.content.vmware.connection.impl;
 
-import io.cloudslang.content.vmware.constants.Constants;
-
+import javax.net.ssl.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.*;
-
-/**
- * Created by Mihai Tusa.
- * 10/27/2015.
- */
 public class DisableSecurity {
+    private static final String SSL = "SSL";
 
     /*
      * Authentication is handled by using a TrustManager and supplying a hostname verifier method.
      */
     private static class TrustAllTrustManager implements TrustManager, X509TrustManager {
 
-        public X509Certificate[] getAcceptedIssuers() {return null;}
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
 
-        public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {}
+        public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+        }
 
-        public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {}
+        public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+        }
     }
 
     public static void trustEveryone() throws NoSuchAlgorithmException, KeyManagementException {
@@ -42,7 +40,7 @@ public class DisableSecurity {
         trustAllCerts[0] = trustManager;
 
         // Create the SSL context
-        SSLContext sc = SSLContext.getInstance(Constants.SSL);
+        SSLContext sc = SSLContext.getInstance(SSL);
 
         // Create the session context
         SSLSessionContext sslsc = sc.getServerSessionContext();

@@ -1,6 +1,5 @@
 package io.cloudslang.content.vmware.entities;
 
-import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
 /**
@@ -9,6 +8,10 @@ import io.cloudslang.content.vmware.utils.InputUtils;
  */
 
 public class VmInputs {
+    private static final int DEFAULT_CPU_COUNT = 1;
+    private static final long DEFAULT_VM_DISK_SIZE_MB = 1024;
+    private static final long DEFAULT_VM_MEMORY_SIZE_MB = 1024;
+
     private String dataCenterName;
     private String hostname;
     private String virtualMachineName;
@@ -18,6 +21,13 @@ public class VmInputs {
     private long longVmDiskSize;
     private long longVmMemorySize;
     private String guestOsId;
+    private String operation;
+    private String device;
+    private String updateValue;
+    private String vmDiskMode;
+    private String diskSharing;
+    private boolean isThinProvisioned;
+    private boolean isWriteThrough;
 
     public VmInputs(VmInputsBuilder builder) {
         this.dataCenterName = builder.dataCenterName;
@@ -29,6 +39,13 @@ public class VmInputs {
         this.longVmDiskSize = builder.longVmDiskSize;
         this.longVmMemorySize = builder.longVmMemorySize;
         this.guestOsId = builder.guestOsId;
+        this.operation = builder.operation;
+        this.device = builder.device;
+        this.updateValue = builder.updateValue;
+        this.vmDiskMode = builder.vmDiskMode;
+        this.diskSharing = builder.diskSharing;
+        this.isThinProvisioned = builder.isThinProvisioned;
+        this.isWriteThrough = builder.isWriteThrough;
     }
 
     public String getDataCenterName() {
@@ -67,7 +84,35 @@ public class VmInputs {
         return guestOsId;
     }
 
-    public static class VmInputsBuilder{
+    public String getOperation() {
+        return operation;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public String getUpdateValue() {
+        return updateValue;
+    }
+
+    public String getVmDiskMode() {
+        return vmDiskMode;
+    }
+
+    public String getDiskSharing() {
+        return diskSharing;
+    }
+
+    public boolean isThinProvisioned() {
+        return isThinProvisioned;
+    }
+
+    public boolean isWriteThrough() {
+        return isWriteThrough;
+    }
+
+    public static class VmInputsBuilder {
         private String dataCenterName;
         private String hostname;
         private String virtualMachineName;
@@ -77,6 +122,13 @@ public class VmInputs {
         private long longVmDiskSize;
         private long longVmMemorySize;
         private String guestOsId;
+        private String operation;
+        private String device;
+        private String updateValue;
+        private String vmDiskMode;
+        private String diskSharing;
+        private boolean isThinProvisioned;
+        private boolean isWriteThrough;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -108,22 +160,57 @@ public class VmInputs {
         }
 
         public VmInputsBuilder withIntNumCPUs(String inputValue) {
-            intNumCPUs = InputUtils.getIntInput(inputValue, Constants.DEFAULT_CPU_COUNT);
+            intNumCPUs = InputUtils.getIntInput(inputValue, DEFAULT_CPU_COUNT);
             return this;
         }
 
         public VmInputsBuilder withLongVmDiskSize(String inputValue) {
-            longVmDiskSize = InputUtils.getLongInput(inputValue, Constants.DEFAULT_VM_DISK_SIZE_MB);
+            longVmDiskSize = InputUtils.getLongInput(inputValue, DEFAULT_VM_DISK_SIZE_MB);
             return this;
         }
 
         public VmInputsBuilder withLongVmMemorySize(String inputValue) {
-            longVmMemorySize = InputUtils.getLongInput(inputValue, Constants.DEFAULT_VM_MEMORY_SIZE_MB);
+            longVmMemorySize = InputUtils.getLongInput(inputValue, DEFAULT_VM_MEMORY_SIZE_MB);
             return this;
         }
 
         public VmInputsBuilder withGuestOsId(String inputValue) {
             guestOsId = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withOperation(String inputValue) throws Exception {
+            operation = Operation.getValue(inputValue);
+            return this;
+        }
+
+        public VmInputsBuilder withDevice(String inputValue) throws Exception {
+            device = Device.getValue(inputValue);
+            return this;
+        }
+
+        public VmInputsBuilder withUpdateValue(String inputValue) throws Exception {
+            updateValue = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withDiskMode(String inputValue) throws Exception {
+            vmDiskMode = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withDiskSharing(String inputValue) throws Exception {
+            diskSharing = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withThinProvisioned(String inputValue) throws Exception {
+            isThinProvisioned = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public VmInputsBuilder withWriteThrough(String inputValue) throws Exception {
+            isWriteThrough = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

@@ -1,20 +1,21 @@
 package io.cloudslang.content.vmware.connection.impl;
 
 import com.vmware.vim25.*;
-import io.cloudslang.content.vmware.connection.exceptions.ConnectionException;
-import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.connection.Connection;
+import io.cloudslang.content.vmware.connection.exceptions.ConnectionException;
 
 import javax.xml.ws.BindingProvider;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-/**
- * Created by Mihai Tusa.
- * 10/19/2015.
- */
 public class BasicConnection implements Connection {
+    private static final String SERVICE_INSTANCE = "ServiceInstance";
+
+    private static final int THIRTY = 30;
+    private static final int SIXTY = 60;
+    private static final int THOUSAND = 1000;
+
     private VimService vimService;
     private VimPortType vimPort;
     private ServiceContent serviceContent;
@@ -32,8 +33,8 @@ public class BasicConnection implements Connection {
     public ManagedObjectReference getServiceInstanceReference() {
         if (serviceInstanceReference == null) {
             ManagedObjectReference morRef = new ManagedObjectReference();
-            morRef.setType(Constants.SERVICE_INSTANCE);
-            morRef.setValue(Constants.SERVICE_INSTANCE);
+            morRef.setType(SERVICE_INSTANCE);
+            morRef.setValue(SERVICE_INSTANCE);
             serviceInstanceReference = morRef;
         }
         return serviceInstanceReference;
@@ -45,7 +46,8 @@ public class BasicConnection implements Connection {
                 makeConnection(url, username, password, trustEveryone);
             } catch (Exception e) {
                 Throwable cause = (e.getCause() != null) ? e.getCause() : e;
-                throw new BasicConnectionException("failed to connect: " + e.getMessage() + " : " + cause.getMessage(), cause);
+                throw new BasicConnectionException("failed to connect: " +
+                        e.getMessage() + " : " + cause.getMessage(), cause);
             }
         }
 
@@ -79,7 +81,8 @@ public class BasicConnection implements Connection {
                 vimPort.logout(serviceContent.getSessionManager());
             } catch (Exception e) {
                 Throwable cause = e.getCause();
-                throw new BasicConnectionException("failed to disconnect properly: " + e.getMessage() + " : " + cause.getMessage(), cause);
+                throw new BasicConnectionException("Failed to disconnect properly: " +
+                        e.getMessage() + " : " + cause.getMessage(), cause);
             } finally {
                 userSession = null;
                 serviceContent = null;
@@ -98,7 +101,7 @@ public class BasicConnection implements Connection {
         long startTime = userSession.getLastActiveTime().toGregorianCalendar().getTime().getTime();
 
         // verifying the equivalent of 30 minutes
-        return System.currentTimeMillis() < startTime + Constants.THIRTY * Constants.SIXTY * Constants.THOUSAND_MULTIPLIER;
+        return System.currentTimeMillis() < startTime + THIRTY * SIXTY * THOUSAND;
     }
 
     private void populateContextMap(String url, String username, String password) {

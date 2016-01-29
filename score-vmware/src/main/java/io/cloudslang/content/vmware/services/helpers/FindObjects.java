@@ -17,7 +17,7 @@
  *
  */
 
-package io.cloudslang.content.vmware.utils;
+package io.cloudslang.content.vmware.services.helpers;
 
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.constants.Constants;
@@ -44,6 +44,7 @@ import java.util.List;
  */
 
 public class FindObjects {
+    private static final String TRAVERSE_ENTITIES = "traverseEntities";
 
     private FindObjects() {}
 
@@ -79,7 +80,7 @@ public class FindObjects {
 
         // create a traversal spec to select all objects in the view
         TraversalSpec tSpec = new TraversalSpec();
-        tSpec.setName(Constants.TRAVERSE_ENTITIES);
+        tSpec.setName(TRAVERSE_ENTITIES);
         tSpec.setPath(Constants.VIEW);
         tSpec.setSkip(Boolean.FALSE);
         tSpec.setType(Constants.CONTAINER_VIEW);
@@ -164,7 +165,7 @@ public class FindObjects {
 
         // create a traversal spec to select all objects in the view
         TraversalSpec tSpec = new TraversalSpec();
-        tSpec.setName(Constants.TRAVERSE_ENTITIES);
+        tSpec.setName(TRAVERSE_ENTITIES);
         tSpec.setPath(Constants.VIEW);
         tSpec.setSkip(Boolean.FALSE);
         tSpec.setType(Constants.CONTAINER_VIEW);
@@ -259,7 +260,7 @@ public class FindObjects {
 
         // create a traversal spec to select all objects in the view
         TraversalSpec tSpec = new TraversalSpec();
-        tSpec.setName(Constants.TRAVERSE_ENTITIES);
+        tSpec.setName(TRAVERSE_ENTITIES);
         tSpec.setPath(Constants.VIEW);
         tSpec.setSkip(Boolean.FALSE);
         tSpec.setType(Constants.CONTAINER_VIEW);

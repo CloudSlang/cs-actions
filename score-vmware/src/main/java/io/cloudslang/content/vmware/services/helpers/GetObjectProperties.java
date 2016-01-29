@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.utils;
+package io.cloudslang.content.vmware.services.helpers;
 
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.connection.ConnectionResources;

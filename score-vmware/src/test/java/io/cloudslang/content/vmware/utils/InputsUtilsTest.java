@@ -94,16 +94,4 @@ public class InputsUtilsTest {
 
         assertEquals(",", testDelimiter);
     }
-
-    @Test
-    public void getResultsMap() throws JsonProcessingException {
-        Map<String, String> inputMap = new LinkedHashMap<>();
-        inputMap.put("keyOne", "valueOne");
-        inputMap.put("keyTwo", "valueTwo");
-        inputMap.put("keyThree", "valueThree");
-
-        String testString = InputUtils.getJsonString(inputMap);
-
-        assertEquals("{\"keyOne\":\"valueOne\",\"keyTwo\":\"valueTwo\",\"keyThree\":\"valueThree\"}", testString);
-    }
 }

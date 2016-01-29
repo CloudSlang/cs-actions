@@ -8,13 +8,14 @@ import io.cloudslang.content.vmware.utils.InputUtils;
  * 1/6/2016.
  */
 public class HttpInputs {
+    private static final int DEFAULT_HTTPS_PORT = 443;
+
     private String host;
     private int port;
     private String protocol;
     private String username;
     private String password;
     private boolean trustEveryone;
-
 
     public HttpInputs(HttpInputsBuilder builder) {
         this.host = builder.host;
@@ -67,7 +68,7 @@ public class HttpInputs {
         }
 
         public HttpInputsBuilder withPort(String inputValue) {
-            port = InputUtils.getIntInput(inputValue, Constants.DEFAULT_HTTPS_PORT);
+            port = InputUtils.getIntInput(inputValue, DEFAULT_HTTPS_PORT);
             return this;
         }
 

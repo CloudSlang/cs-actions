@@ -1,14 +1,12 @@
 package io.cloudslang.content.vmware.connection.helpers.build;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.ObjectSpec;
+import com.vmware.vim25.SelectionSpec;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Mihai Tusa.
- * 10/20/2015.
- */
 public class ObjectSpecBuilder extends ObjectSpec {
     private void init() {
         if (selectSet == null) {
