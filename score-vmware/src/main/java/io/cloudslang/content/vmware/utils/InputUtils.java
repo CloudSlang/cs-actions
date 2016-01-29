@@ -41,11 +41,19 @@ public class InputUtils {
                 || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
     }
 
+    public static void checkValidOperation(VmInputs vmInputs, String device) {
+        if (!InputUtils.isValidUpdateOperation(vmInputs)) {
+            throw new RuntimeException("Invalid operation specified for " + device + " device. " +
+                    "The " + device + " device can be only added or removed.");
+        }
+    }
+
     public static void validateDiskInputs(VmInputs vmInputs) {
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation()) && vmInputs.getLongVmDiskSize() <= 0L) {
             throw new RuntimeException(ErrorMessages.INVALID_VM_DISK_SIZE);
         }
-        if (Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()) && Constants.EMPTY.equals(vmInputs.getUpdateValue())) {
+        if (Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation())
+                && Constants.EMPTY.equals(vmInputs.getUpdateValue())) {
             throw new RuntimeException("The [" + vmInputs.getUpdateValue() + "] is not a valid disk label.");
         }
     }

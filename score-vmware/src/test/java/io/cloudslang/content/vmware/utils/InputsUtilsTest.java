@@ -1,15 +1,12 @@
 package io.cloudslang.content.vmware.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
 
 /**
  * Created by Mihai Tusa.
@@ -93,5 +90,77 @@ public class InputsUtilsTest {
         String testDelimiter = InputUtils.getDefaultDelimiter("", ",");
 
         assertEquals(",", testDelimiter);
+    }
+
+    @Test
+    public void getDiskFileNameString() {
+        String testDiskFileNameString = InputUtils.getDiskFileNameString("someDataStore", "testVM", "Renamed");
+
+        assertEquals("[someDataStore] testVM/Renamed.vmdk", testDiskFileNameString);
+    }
+
+    @Test
+    public void checkValidOperation() throws Exception {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Invalid operation specified for disk device. The disk device can be only added or removed.");
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withDevice("disk")
+                .withOperation("update")
+                .build();
+        InputUtils.checkValidOperation(vmInputs, "disk");
+    }
+
+    @Test
+    public void isUpdateOperation() throws Exception {
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withOperation("add")
+                .build();
+        boolean isUpdate = InputUtils.isUpdateOperation(vmInputs);
+
+        assertFalse(isUpdate);
+    }
+
+    @Test
+    public void isIntFalse() {
+        boolean isUpdate = InputUtils.isInt("2147483648");
+
+        assertFalse(isUpdate);
+    }
+
+    @Test
+    public void isIntTrue() {
+        boolean isUpdate = InputUtils.isInt("2147483647");
+
+        assertTrue(isUpdate);
+    }
+
+    @Test
+    public void validateDiskInputsAdd() throws Exception {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("The disk size must be positive long.");
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withVirtualMachineName("testVM")
+                .withOperation("add")
+                .withDevice("disk")
+                .withLongVmDiskSize("0")
+                .withDiskMode("persistent")
+                .build();
+        InputUtils.validateDiskInputs(vmInputs);
+    }
+
+    @Test
+    public void validateDiskInputsRemove() throws Exception {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("The [] is not a valid disk label.");
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withVirtualMachineName("testVM")
+                .withOperation("remove")
+                .withDevice("disk")
+                .withUpdateValue("")
+                .build();
+        InputUtils.validateDiskInputs(vmInputs);
     }
 }

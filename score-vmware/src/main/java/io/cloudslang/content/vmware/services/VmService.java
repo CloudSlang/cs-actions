@@ -252,6 +252,15 @@ public class VmService {
         return results;
     }
 
+    /**
+     * Method used to connect to a data center to update existing devices of a specified virtual machine.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted device
+     * @return Map with String as key and value that contains returnCode of the operation, success message with task id
+     * of the execution or failure message and the exception if there is one
+     * @throws Exception
+     */
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
@@ -316,16 +325,16 @@ public class VmService {
         VirtualDeviceConfigSpec deviceConfigSpec = new VirtualDeviceConfigSpec();
         switch (device) {
             case DISK:
-                checkValidOperation(vmInputs, device);
+                InputUtils.checkValidOperation(vmInputs, device);
                 InputUtils.validateDiskInputs(vmInputs);
                 deviceConfigSpec = vmConfigSpecs.getDiskDeviceConfigSpec(connectionResources, vmMor, vmInputs);
                 break;
             case CD:
-                checkValidOperation(vmInputs, device);
+                InputUtils.checkValidOperation(vmInputs, device);
                 deviceConfigSpec = vmConfigSpecs.getCDDeviceConfigSpec(connectionResources, vmMor, vmInputs);
                 break;
             case NIC:
-                checkValidOperation(vmInputs, device);
+                InputUtils.checkValidOperation(vmInputs, device);
                 deviceConfigSpec = vmConfigSpecs.getNICDeviceConfigSpec(connectionResources, vmMor, vmInputs);
                 break;
         }
@@ -367,12 +376,5 @@ public class VmService {
         }
 
         return result[0].equals(TaskInfoState.SUCCESS);
-    }
-
-    private void checkValidOperation(VmInputs vmInputs, String device) {
-        if (!InputUtils.isValidUpdateOperation(vmInputs)) {
-            throw new RuntimeException("Invalid operation specified for " + device + " device. " +
-                    "The " + device + " device can be only added or removed.");
-        }
     }
 }

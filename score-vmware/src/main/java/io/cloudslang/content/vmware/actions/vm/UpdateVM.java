@@ -83,24 +83,4 @@ public class UpdateVM {
 
         return resultMap;
     }
-
-    public static void main(String[] args) {
-        UpdateVM updateVM = new UpdateVM();
-        Map<String, String> results = updateVM.updateVM("oovc6.hpswlabs.adapps.hp.com",
-                "",
-                "",
-                "Administrator@vsphere.local",
-                "oovc64testingHP!",
-                "true",
-                "scoreVMwareTestVM",
-                "remove",
-                "nic",
-                "Network adapter 2",
-                "",
-                "",
-                "",
-                "",
-                "");
-        System.out.println(results.get("returnResult"));
-    }
 }
