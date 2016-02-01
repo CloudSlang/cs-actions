@@ -1,6 +1,5 @@
 package io.cloudslang.content.vmware.entities.http;
 
-import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
 /**
