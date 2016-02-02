@@ -20,6 +20,34 @@ import java.util.Map;
  * 1/22/2016.
  */
 public class UpdateVM {
+    /**
+     * Connects to a specified data center and updates a specified virtual machine using the inputs provided.
+     *
+     * @param host               VMware host or IP - Example: "vc6.subdomain.example.com"
+     * @param port               optional - the port to connect through - Examples: "443", "80" - Default: "443"
+     * @param protocol           optional - the connection protocol - Valid: "http", "https" - Default: "https"
+     * @param username           the VMware username use to connect
+     * @param password           the password associated with "username" input
+     * @param trustEveryone      optional - if "true" will allow connections from any host, if "false" the connection
+     *                           will be allowed only using a valid vCenter certificate - Default: "true"
+     * @param virtualMachineName the name of the virtual machine that will be updated
+     * @param operation          the possible operations that can be applied to update a specified attached device
+     *                           ("update" operation is only possible for cpu and memory, "add", "remove" are not allowed
+     *                           for cpu and memory devices)
+     *                           Valid values: "add", "remove", "update"
+     * @param device             the device on which the update operation will be applied - Valid values: "cpu", "memory"
+     *                           "disk", "cd", "nic"
+     * @param updateValue        the value applied on the specified device during the virtual machine update
+     *                           Valid values: "high", "low", "normal", numeric value, label of device when removing
+     * @param vmDiskSize         optional - the disk capacity amount (in Mb) attached to the virtual machine that will
+     *                           be created. This input will be considered only when "add" operation and "disk" device
+     *                           are provided
+     * @param vmDiskMode         optional - the memory amount (in Mb) attached to the virtual machine that will will
+     *                           be created - Valid values: "persistent", "independent_persistent", "independent_nonpersistent"
+     *                           This input will be considered only when "add" operation and "disk" device are provided
+     * @return resultMap with String as key and value that contains returnCode of the operation, success message with
+     * task id of the execution or failure message and the exception if there is one
+     */
     @Action(name = "Update Virtual Machine",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
