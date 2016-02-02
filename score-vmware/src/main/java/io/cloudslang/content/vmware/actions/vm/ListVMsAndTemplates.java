@@ -31,6 +31,10 @@ public class ListVMsAndTemplates {
      * @param password      the password associated with "username" input
      * @param trustEveryone optional - if "true" will allow connections from any host, if "false" the connection will
      *                      be allowed only using a valid vCenter certificate - Default: "true"
+     *                      Check the: https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_java_development.4.3.html
+     *                      to see how to import a certificate into Java Keystore and
+     *                      https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html
+     *                      to see how to obtain a valid vCenter certificate
      * @param delimiter     the delimiter that will be used in response list - Default: ","
      * @return resultMap with String as key and value that contains returnCode of the operation, a list that contains
      * all the virtual machines and templates within the data center  or failure message and the exception if there is

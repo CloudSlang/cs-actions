@@ -30,6 +30,10 @@ public class GetVMDetails {
      * @param password           the password associated with "username" input
      * @param trustEveryone      optional - if "true" will allow connections from any host, if "false" the connection will
      *                           be allowed only using a valid vCenter certificate - Default: "true"
+     *                           Check the: https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_java_development.4.3.html
+     *                           to see how to import a certificate into Java Keystore and
+     *                           https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html
+     *                           to see how to obtain a valid vCenter certificate
      * @param virtualMachineName the name of the targeted virtual machine to retrieve the details for
      * @return resultMap with String as key and value that contains returnCode of the operation, a JSON formatted string
      * that contains details of the virtual machine or failure message and the exception if there is one

@@ -30,6 +30,10 @@ public class CreateVM {
      * @param password           the password associated with "username" input
      * @param trustEveryone      optional - if "true" will allow connections from any host, if "false" the connection will
      *                           be allowed only using a valid vCenter certificate - Default: "true"
+     *                           Check the: https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_java_development.4.3.html
+     *                           to see how to import a certificate into Java Keystore and
+     *                           https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html
+     *                           to see how to obtain a valid vCenter certificate
      * @param dataCenterName     the data center name where the host system is - Example: 'DataCenter2'
      * @param hostname           the name of the target host to be queried to retrieve the supported guest OSes
      *                           - Example: "host123.subdomain.example.com"
