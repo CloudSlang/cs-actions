@@ -82,8 +82,7 @@ public class VmConfigSpecs {
         }
     }
 
-    public VirtualDeviceConfigSpec getCDDeviceConfigSpec(ConnectionResources connectionResources,
-                                                         ManagedObjectReference vmMor,
+    public VirtualDeviceConfigSpec getCDDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                                          VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getGetMOREF()
                 .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE)).getVirtualDevice();
@@ -115,7 +114,7 @@ public class VmConfigSpecs {
                         }
                     }
                     if (isAtapiCtrlAvailable) {
-                        return vmUtils.getPopulatedCDDeviceConfigSpec(Constants.EMPTY, null, null,
+                        return vmUtils.getPopulatedCDSpecs(Constants.EMPTY, null, null,
                                 VirtualDeviceConfigSpecOperation.ADD, controllerKey, unitNumber, SERVER_ASSIGNED,
                                 Operation.ADD.toString(), vmInputs);
                     }
@@ -123,14 +122,13 @@ public class VmConfigSpecs {
             }
             throw new RuntimeException(ErrorMessages.ATAPI_CONTROLLER_CAPACITY_MAXED_OUT);
         } else {
-            return vmUtils.getPopulatedCDDeviceConfigSpec(null, null, virtualDevicesList,
+            return vmUtils.getPopulatedCDSpecs(null, null, virtualDevicesList,
                     VirtualDeviceConfigSpecOperation.REMOVE, null, null, null, Operation.REMOVE.toString(), vmInputs);
         }
     }
 
-    public VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources,
-                                                          ManagedObjectReference vmMor, VmInputs vmInputs)
-            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+    public VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
+                                                          VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         VmUtils vmUtils = new VmUtils();
 
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
@@ -182,12 +180,12 @@ public class VmConfigSpecs {
         VirtualDevice ideController = getFirstFreeIdeController(connectionResources);
         VirtualDeviceConfigSpec cdSpec = new VirtualDeviceConfigSpec();
         if (ideController != null) {
-            cdSpec = vmUtils.getPopulatedCDDeviceConfigSpec(volumeName, dataStoreRef, null,
+            cdSpec = vmUtils.getPopulatedCDSpecs(volumeName, dataStoreRef, null,
                     VirtualDeviceConfigSpecOperation.ADD, ideController.getKey(), DEFAULT_CD_ROM_UNIT_NUMBER,
                     DEFAULT_CD_ROM_KEY, Operation.ADD.toString(), vmInputs);
         }
 
-        String networkName = getNetworkName(configTarget); // The network name must be set as the device name to create the NIC.
+        String networkName = getNetworkName(configTarget);
         VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
         if (configTarget.getNetwork() != null) {
             nicSpec = vmUtils.getNicSpecs(networkName, null, VirtualDeviceConfigSpecOperation.ADD, GENERATED,
@@ -316,12 +314,9 @@ public class VmConfigSpecs {
         return null;
     }
 
-    private VirtualMachineConfigSpec addDeviceConfigSpecs(VirtualMachineConfigSpec configSpec,
-                                                          VirtualDeviceConfigSpec scsiCtrlSpec,
-                                                          VirtualDeviceConfigSpec floppySpec,
-                                                          VirtualDeviceConfigSpec cdSpec,
-                                                          VirtualDevice ideController,
-                                                          VirtualDeviceConfigSpec diskSpec,
+    private VirtualMachineConfigSpec addDeviceConfigSpecs(VirtualMachineConfigSpec configSpec, VirtualDeviceConfigSpec scsiCtrlSpec,
+                                                          VirtualDeviceConfigSpec floppySpec, VirtualDeviceConfigSpec cdSpec,
+                                                          VirtualDevice ideController, VirtualDeviceConfigSpec diskSpec,
                                                           VirtualDeviceConfigSpec nicSpec) {
 
         List<VirtualDeviceConfigSpec> deviceConfigSpec = new ArrayList<>();

@@ -102,7 +102,7 @@ public class CreateVM {
                     .withGuestOsId(guestOsId)
                     .build();
 
-            resultMap = new VmService().createVirtualMachine(httpInputs, vmInputs);
+            resultMap = new VmService().createVM(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

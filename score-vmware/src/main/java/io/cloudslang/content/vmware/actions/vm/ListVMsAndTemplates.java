@@ -71,7 +71,7 @@ public class ListVMsAndTemplates {
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder().build();
 
-            resultMap = new VmService().listVirtualMachinesAndTemplates(httpInputs, vmInputs, delimiter);
+            resultMap = new VmService().listVMsAndTemplates(httpInputs, vmInputs, delimiter);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

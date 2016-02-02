@@ -44,10 +44,7 @@ public class UpdateVM {
                                         @Param(value = Inputs.DEVICE, required = true) String device,
                                         @Param(value = Inputs.UPDATE_VALUE, required = true) String updateValue,
                                         @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
-                                        @Param(Inputs.VM_DISK_MODE) String vmDiskMode,
-                                        @Param(Inputs.VM_DISK_SHARING) String sharing,
-                                        @Param(Inputs.VM_DISK_MODE) String thinProvisioned,
-                                        @Param(Inputs.VM_DISK_MODE) String writeThrough) {
+                                        @Param(Inputs.VM_DISK_MODE) String vmDiskMode) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -68,9 +65,6 @@ public class UpdateVM {
                     .withUpdateValue(updateValue)
                     .withLongVmDiskSize(vmDiskSize)
                     .withDiskMode(vmDiskMode)
-                    .withDiskSharing(sharing)
-                    .withThinProvisioned(thinProvisioned)
-                    .withWriteThrough(writeThrough)
                     .build();
 
             resultMap = new VmService().updateVM(httpInputs, vmInputs);

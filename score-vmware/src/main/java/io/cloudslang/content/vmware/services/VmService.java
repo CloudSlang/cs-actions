@@ -42,8 +42,7 @@ public class VmService {
      * of the execution or failure message and the exception if there is one
      * @throws Exception
      */
-    public Map<String, String> createVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        Map<String, String> results = new HashMap<>();
+    public Map<String, String> createVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
         ManagedObjectReference vmFolderMor = connectionResources.getVmFolderMor();
@@ -56,6 +55,7 @@ public class VmService {
         ManagedObjectReference taskMor = connectionResources.getVimPortType().createVMTask(vmFolderMor, vmConfigSpec,
                 resourcePoolMor, hostMor);
 
+        Map<String, String> results = new HashMap<>();
         setTaskResults(results, connectionResources, taskMor, "Success: Created [" + vmInputs.getVirtualMachineName() +
                 "] VM. The taskId is: " + taskMor.getValue(), "Failure: Creating [" + vmInputs.getVirtualMachineName() +
                 "] VM");
@@ -73,11 +73,11 @@ public class VmService {
      * of the execution or failure message and the exception if there is one
      * @throws Exception
      */
-    public Map<String, String> deleteVirtualMachine(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        Map<String, String> results = new HashMap<>();
+    public Map<String, String> deleteVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
 
+        Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
             ManagedObjectReference taskMor = connectionResources.getVimPortType().destroyTask(vmMor);
 
@@ -103,10 +103,10 @@ public class VmService {
      * @throws Exception
      */
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
 
+        Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
             ManagedObjectReference taskMor = connectionResources.getVimPortType().powerOnVMTask(vmMor, null);
 
@@ -132,10 +132,10 @@ public class VmService {
      * @throws Exception
      */
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
 
+        Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
             ManagedObjectReference taskMor = connectionResources.getVimPortType().powerOffVMTask(vmMor);
 
@@ -163,7 +163,6 @@ public class VmService {
      * @throws Exception
      */
     public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
-        Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
         ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
@@ -175,6 +174,7 @@ public class VmService {
 
         List<GuestOsDescriptor> guestOSDescriptors = configOptions.getGuestOSDescriptor();
 
+        Map<String, String> results = new HashMap<>();
         ResponseUtils.setResults(results, ResponseUtils.getResponseStringFromCollection(guestOSDescriptors, delimiter),
                 Outputs.RETURN_CODE_SUCCESS);
         connectionResources.getConnection().disconnect();
@@ -192,15 +192,14 @@ public class VmService {
      * virtual machines and templates within the data center or failure message and the exception if there is one
      * @throws Exception
      */
-    public Map<String, String> listVirtualMachinesAndTemplates(HttpInputs httpInputs,
-                                                               VmInputs vmInputs,
-                                                               String delimiter) throws Exception {
-        Map<String, String> results = new HashMap<>();
+    public Map<String, String> listVMsAndTemplates(HttpInputs httpInputs, VmInputs vmInputs, String delimiter)
+            throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
         Set<String> virtualMachineNamesList = connectionResources.getGetMOREF()
                 .inContainerByType(connectionResources.getMorRootFolder(), VIRTUAL_MACHINE).keySet();
 
+        Map<String, String> results = new HashMap<>();
         if (virtualMachineNamesList.size() > 0) {
             ResponseUtils.setResults(results, ResponseUtils.getResponseStringFromCollection(virtualMachineNamesList, delimiter),
                     Outputs.RETURN_CODE_SUCCESS);
@@ -222,13 +221,13 @@ public class VmService {
      * @throws Exception
      */
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
 
         ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
                 new String[]{Constants.SUMMARY});
 
+        Map<String, String> results = new HashMap<>();
         if (objectContents != null) {
             Map<String, String> vmDetails = new HashMap<>();
             for (ObjectContent objectItem : objectContents) {
@@ -243,9 +242,8 @@ public class VmService {
             String responseJson = ResponseUtils.getJsonString(vmDetails);
             ResponseUtils.setResults(results, responseJson, Outputs.RETURN_CODE_SUCCESS);
         } else {
-            ResponseUtils.setResults(results,
-                    "Could not retrieve the details for: [" + vmInputs.getVirtualMachineName() + "] VM.",
-                    Outputs.RETURN_CODE_FAILURE);
+            ResponseUtils.setResults(results, "Could not retrieve the details for: [" +
+                    vmInputs.getVirtualMachineName() + "] VM.", Outputs.RETURN_CODE_FAILURE);
         }
         connectionResources.getConnection().disconnect();
 
@@ -262,10 +260,10 @@ public class VmService {
      * @throws Exception
      */
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        Map<String, String> results = new HashMap<>();
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
 
+        Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
             String device = Device.getValue(vmInputs.getDevice()).toLowerCase();
             VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
@@ -291,14 +289,11 @@ public class VmService {
 
     private ServiceContent getServiceContent(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg {
         ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
-        VimPortType vimPort = connectionResources.getVimPortType();
-
-        return vimPort.retrieveServiceContent(serviceInstance);
+        return connectionResources.getVimPortType().retrieveServiceContent(serviceInstance);
     }
 
     private ManagedObjectReference getVmMor(ConnectionResources connectionResources, VmInputs vmInputs) throws Exception {
         ServiceContent serviceContent = getServiceContent(connectionResources);
-
         return FindObjects.findObject(connectionResources.getVimPortType(), serviceContent, VIRTUAL_MACHINE,
                 vmInputs.getVirtualMachineName());
     }
@@ -318,9 +313,9 @@ public class VmService {
         return vmConfigSpec;
     }
 
-    private VirtualMachineConfigSpec getAddOrRemoveSpecs(ConnectionResources connectionResources,
-                                                         ManagedObjectReference vmMor, VmInputs vmInputs,
-                                                         VirtualMachineConfigSpec vmConfigSpec, String device) throws Exception {
+    private VirtualMachineConfigSpec getAddOrRemoveSpecs(ConnectionResources connectionResources, ManagedObjectReference vmMor,
+                                                         VmInputs vmInputs, VirtualMachineConfigSpec vmConfigSpec, String device)
+            throws Exception {
         VmConfigSpecs vmConfigSpecs = new VmConfigSpecs();
         VirtualDeviceConfigSpec deviceConfigSpec = new VirtualDeviceConfigSpec();
         switch (device) {

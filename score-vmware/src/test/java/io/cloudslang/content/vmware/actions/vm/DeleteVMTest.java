@@ -34,12 +34,12 @@ public class DeleteVMTest {
     public void testDeletesVM() throws Exception {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
-        when(vmServiceMock.deleteVirtualMachine(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
+        when(vmServiceMock.deleteVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
         resultMap = deleteVM.deleteVM("", "", "", "", "", "", "");
 
         assertNotNull(resultMap);
-        verify(vmServiceMock).deleteVirtualMachine(any(HttpInputs.class), any(VmInputs.class));
+        verify(vmServiceMock).deleteVM(any(HttpInputs.class), any(VmInputs.class));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class DeleteVMTest {
         Map<String, String> resultMap = deleteVM.deleteVM("", "", "myProtocol", "", "", "", "");
 
         assertNotNull(resultMap);
-        verify(vmServiceMock, never()).deleteVirtualMachine(any(HttpInputs.class), any(VmInputs.class));
+        verify(vmServiceMock, never()).deleteVM(any(HttpInputs.class), any(VmInputs.class));
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }

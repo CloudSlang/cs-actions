@@ -136,7 +136,7 @@ public class VmServiceTest {
                 any(ManagedObjectReference.class),
                 any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.createVirtualMachine(httpInputsMock,
+        Map<String, String> results = vmService.createVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("nameToBeTested").build());
 
         verifyConnection();
@@ -166,7 +166,7 @@ public class VmServiceTest {
                 any(ManagedObjectReference.class),
                 any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.createVirtualMachine(httpInputsMock,
+        Map<String, String> results = vmService.createVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("anotherNameToBeTested").build());
 
         verifyConnection();
@@ -194,7 +194,7 @@ public class VmServiceTest {
                 anyString())).thenReturn(vmMorMock);
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock,
+        Map<String, String> results = vmService.deleteVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("deletedNameToBeTested").build());
 
         verifyConnection();
@@ -217,7 +217,7 @@ public class VmServiceTest {
                 anyString())).thenReturn(vmMorMock);
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock,
+        Map<String, String> results = vmService.deleteVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("deletedNameToBeTested").build());
 
         verifyConnection();
@@ -240,7 +240,7 @@ public class VmServiceTest {
                 anyString())).thenReturn(null);
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
-        Map<String, String> results = vmService.deleteVirtualMachine(httpInputsMock,
+        Map<String, String> results = vmService.deleteVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("deletedNameToBeTested").build());
 
         verify(connectionResourcesMock).getServiceInstance();
@@ -436,7 +436,7 @@ public class VmServiceTest {
         when(getMOREFMock.inContainerByType(any(ManagedObjectReference.class), anyString())).thenReturn(inContainerByTypeMock);
         when(inContainerByTypeMock.keySet()).thenReturn(virtualMachineNamesList);
 
-        Map<String, String> results = vmService.listVirtualMachinesAndTemplates(httpInputsMock,
+        Map<String, String> results = vmService.listVMsAndTemplates(httpInputsMock,
                 new VmInputs.VmInputsBuilder().build(), "");
 
         assertNotNull(results);
@@ -453,7 +453,7 @@ public class VmServiceTest {
         when(getMOREFMock.inContainerByType(any(ManagedObjectReference.class), anyString())).thenReturn(inContainerByTypeMock);
         when(inContainerByTypeMock.keySet()).thenReturn(virtualMachineNamesList);
 
-        Map<String, String> results = vmService.listVirtualMachinesAndTemplates(httpInputsMock,
+        Map<String, String> results = vmService.listVMsAndTemplates(httpInputsMock,
                 new VmInputs.VmInputsBuilder().build(), "");
 
         assertNotNull(results);

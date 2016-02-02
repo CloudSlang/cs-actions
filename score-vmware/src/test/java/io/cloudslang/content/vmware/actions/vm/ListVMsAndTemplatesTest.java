@@ -39,7 +39,7 @@ public class ListVMsAndTemplatesTest {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
 
-        when(vmServiceMock.listVirtualMachinesAndTemplates(any(HttpInputs.class),
+        when(vmServiceMock.listVMsAndTemplates(any(HttpInputs.class),
                 any(VmInputs.class),
                 anyString()))
                 .thenReturn(resultMap);
@@ -47,7 +47,7 @@ public class ListVMsAndTemplatesTest {
         resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "");
 
         assertNotNull(resultMap);
-        verify(vmServiceMock).listVirtualMachinesAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
+        verify(vmServiceMock).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class ListVMsAndTemplatesTest {
         Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "");
 
         assertNotNull(resultMap);
-        verify(vmServiceMock, never()).listVirtualMachinesAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
+        verify(vmServiceMock, never()).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }

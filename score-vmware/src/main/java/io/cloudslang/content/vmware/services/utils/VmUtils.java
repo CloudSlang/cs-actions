@@ -17,8 +17,7 @@ public class VmUtils {
     private static final String TEST_CD_ISO = "testcd.iso";
     private static final int DISK_AMOUNT_MULTIPLIER = 1024;
 
-    public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec,
-                                                             VmInputs vmInputs) {
+    public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs) {
         vmConfigSpec.setName(vmInputs.getVirtualMachineName());
         vmConfigSpec.setAnnotation(vmInputs.getDescription());
         vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
@@ -47,14 +46,13 @@ public class VmUtils {
         throw new RuntimeException("No disk device named: [" + vmInputs.getUpdateValue() + "] can be found.");
     }
 
-    public VirtualDeviceConfigSpec getPopulatedCDDeviceConfigSpec(String fileName, ManagedObjectReference dataStoreRef,
-                                                                  List<VirtualDevice> virtualDevicesList,
-                                                                  VirtualDeviceConfigSpecOperation operation,
-                                                                  Integer controllerKey, Integer unitNumber, Integer key,
-                                                                  String parameter, VmInputs vmInputs) {
+    public VirtualDeviceConfigSpec getPopulatedCDSpecs(String fileName, ManagedObjectReference dataStoreRef,
+                                                       List<VirtualDevice> virtualDevicesList,
+                                                       VirtualDeviceConfigSpecOperation operation,
+                                                       Integer controllerKey, Integer unitNumber, Integer key,
+                                                       String parameter, VmInputs vmInputs) {
 
         VirtualDeviceConfigSpec cdSpecs = new VirtualDeviceConfigSpec();
-
         if (Operation.ADD.toString().equalsIgnoreCase(parameter)) {
             VirtualCdromIsoBackingInfo cdIsoBacking = new VirtualCdromIsoBackingInfo();
             cdIsoBacking.setDatastore(dataStoreRef);
@@ -76,22 +74,18 @@ public class VmUtils {
         throw new RuntimeException("No optical device named: [" + vmInputs.getUpdateValue() + "] can be found.");
     }
 
-    public VirtualDeviceConfigSpec getNicSpecs(String fileName,
-                                               List<VirtualDevice> virtualDevicesList,
-                                               VirtualDeviceConfigSpecOperation operation,
-                                               String addressType,
-                                               Integer key,
-                                               String parameter,
-                                               VmInputs vmInputs) {
+    public VirtualDeviceConfigSpec getNicSpecs(String fileName, List<VirtualDevice> virtualDevicesList,
+                                               VirtualDeviceConfigSpecOperation operation, String addressType,
+                                               Integer key, String parameter, VmInputs vmInputs) {
         VirtualDeviceConfigSpec nicSpecs = new VirtualDeviceConfigSpec();
         VirtualEthernetCard nic;
         if (Operation.ADD.toString().equalsIgnoreCase(parameter)) {
             nic = getEth(fileName, addressType, key);
-            return getNicSpec(nicSpecs, operation, nic);
+            return getNicOpSpec(nicSpecs, operation, nic);
         } else {
             nic = findVirtualDevice(VirtualEthernetCard.class, virtualDevicesList, vmInputs);
             if (nic != null) {
-                return getNicSpec(nicSpecs, operation, nic);
+                return getNicOpSpec(nicSpecs, operation, nic);
             }
         }
         throw new RuntimeException("No nic named: [" + vmInputs.getUpdateValue() + "] can be found.");
@@ -103,13 +97,13 @@ public class VmUtils {
             sharesInfo.setLevel(SharesLevel.CUSTOM);
             sharesInfo.setShares(Integer.parseInt((String) value));
         } else {
-            setSharesInfo((String) value, sharesInfo);
+            setSharesInfoLevel((String) value, sharesInfo);
         }
 
         return sharesInfo;
     }
 
-    private void setSharesInfo(String value, SharesInfo sharesInfo) throws Exception {
+    private void setSharesInfoLevel(String value, SharesInfo sharesInfo) throws Exception {
         String level = Levels.getValue(value);
         if (SharesLevel.HIGH.toString().equalsIgnoreCase(level)) {
             sharesInfo.setLevel(SharesLevel.HIGH);
@@ -169,8 +163,8 @@ public class VmUtils {
         return nic;
     }
 
-    private VirtualDeviceConfigSpec getNicSpec(VirtualDeviceConfigSpec nicSpecs, VirtualDeviceConfigSpecOperation operation,
-                                               VirtualEthernetCard nic) {
+    private VirtualDeviceConfigSpec getNicOpSpec(VirtualDeviceConfigSpec nicSpecs, VirtualDeviceConfigSpecOperation operation,
+                                                 VirtualEthernetCard nic) {
         nicSpecs.setOperation(operation);
         nicSpecs.setDevice(nic);
 

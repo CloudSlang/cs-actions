@@ -71,7 +71,7 @@ public class DeleteVM {
                     .withVirtualMachineName(virtualMachineName)
                     .build();
 
-            resultMap = new VmService().deleteVirtualMachine(httpInputs, vmInputs);
+            resultMap = new VmService().deleteVM(httpInputs, vmInputs);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

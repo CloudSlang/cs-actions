@@ -25,9 +25,6 @@ public class VmInputs {
     private String device;
     private String updateValue;
     private String vmDiskMode;
-    private String diskSharing;
-    private boolean isThinProvisioned;
-    private boolean isWriteThrough;
 
     public VmInputs(VmInputsBuilder builder) {
         this.dataCenterName = builder.dataCenterName;
@@ -43,9 +40,6 @@ public class VmInputs {
         this.device = builder.device;
         this.updateValue = builder.updateValue;
         this.vmDiskMode = builder.vmDiskMode;
-        this.diskSharing = builder.diskSharing;
-        this.isThinProvisioned = builder.isThinProvisioned;
-        this.isWriteThrough = builder.isWriteThrough;
     }
 
     public String getDataCenterName() {
@@ -100,18 +94,6 @@ public class VmInputs {
         return vmDiskMode;
     }
 
-    public String getDiskSharing() {
-        return diskSharing;
-    }
-
-    public boolean isThinProvisioned() {
-        return isThinProvisioned;
-    }
-
-    public boolean isWriteThrough() {
-        return isWriteThrough;
-    }
-
     public static class VmInputsBuilder {
         private String dataCenterName;
         private String hostname;
@@ -126,9 +108,6 @@ public class VmInputs {
         private String device;
         private String updateValue;
         private String vmDiskMode;
-        private String diskSharing;
-        private boolean isThinProvisioned;
-        private boolean isWriteThrough;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -196,21 +175,6 @@ public class VmInputs {
 
         public VmInputsBuilder withDiskMode(String inputValue) throws Exception {
             vmDiskMode = inputValue;
-            return this;
-        }
-
-        public VmInputsBuilder withDiskSharing(String inputValue) throws Exception {
-            diskSharing = inputValue;
-            return this;
-        }
-
-        public VmInputsBuilder withThinProvisioned(String inputValue) throws Exception {
-            isThinProvisioned = Boolean.parseBoolean(inputValue);
-            return this;
-        }
-
-        public VmInputsBuilder withWriteThrough(String inputValue) throws Exception {
-            isWriteThrough = Boolean.parseBoolean(inputValue);
             return this;
         }
     }
