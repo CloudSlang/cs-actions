@@ -478,7 +478,8 @@ public class VmServiceTest {
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
         assertTrue(results.get("returnResult").contains("\"vmId\":\"vm-123\""));
         assertTrue(results.get("returnResult").contains("\"numCPUs\":\"3\""));
-        assertTrue(results.get("returnResult").contains("\"numEths\":\"2\""));
+        assertTrue(results.get("returnResult").contains("\"numEths\":\"4\""));
+        assertTrue(results.get("returnResult").contains("\"numDisks\":\"2\""));
         assertTrue(results.get("returnResult").contains("\"vmUuid\":\"a3e76177-5020-41a3-ac2a-59c6303c8415\""));
         assertTrue(results.get("returnResult").contains("\"isTemplate\":\"true\""));
         assertTrue(results.get("returnResult").contains("\"virtualMachineFullName\":\"Ubuntu Linux (64-bit)\""));
