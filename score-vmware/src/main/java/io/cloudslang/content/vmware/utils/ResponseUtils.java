@@ -21,7 +21,7 @@ public class ResponseUtils {
     private static final String VM_FULL_NAME = "virtualMachineFullName";
     private static final String VM_UUID = "vmUuid";
     private static final String VM_ETH_COUNT = "numEths";
-    private static final String VM_DISK_COUNT = "numEths";
+    private static final String VM_DISK_COUNT = "numDisks";
     private static final String VM_PATH_NAME = "vmPathName";
     private static final String VM_IS_TEMPLATE = "isTemplate";
     private static final String COMMA_DELIMITER = ",";
