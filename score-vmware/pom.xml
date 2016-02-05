@@ -58,6 +58,8 @@
             <groupId>com.vmware</groupId>
             <artifactId>vim25</artifactId>
             <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${vmware_path}\vim25-1.0.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -143,10 +145,39 @@
     </build>
     <profiles>
         <profile>
-            <id>default-profile</id>
+            <id>windows</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
+                <os>
+                    <family>windows</family>
+                </os>
             </activation>
+            <properties>
+                <!-- Value for Windows based OSes vmware_path variable -->
+                <vmware_path>${env.USERPROFILE}\.m2\repository\com\vmware\vim25\1.0</vmware_path>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.8.1</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <!-- Value for Unix based OSes vmware_path variable -->
+                <vmware_path>${env.HOME}/.m2/repository/com/vmware/vim25/1.0</vmware_path>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
