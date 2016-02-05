@@ -59,7 +59,7 @@
             <artifactId>vim25</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${vmware_path}\vim25-1.0.jar</systemPath>
+            <systemPath>${vmware_path}vim25-1.0.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -154,7 +154,7 @@
             </activation>
             <properties>
                 <!-- Value for Windows based OSes vmware_path variable -->
-                <vmware_path>${env.USERPROFILE}\.m2\repository\com\vmware\vim25\1.0</vmware_path>
+                <vmware_path>${env.USERPROFILE}\.m2\repository\com\vmware\vim25\1.0\</vmware_path>
             </properties>
             <build>
                 <plugins>
@@ -176,7 +176,7 @@
             </activation>
             <properties>
                 <!-- Value for Unix based OSes vmware_path variable -->
-                <vmware_path>${env.HOME}/.m2/repository/com/vmware/vim25/1.0</vmware_path>
+                <vmware_path>${env.HOME}/.m2/repository/com/vmware/vim25/1.0/</vmware_path>
             </properties>
             <build>
                 <plugins>
