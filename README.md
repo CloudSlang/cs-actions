@@ -1,6 +1,6 @@
 score-actions
 =============
 
-Java actions to be used by operations
+Java actions to be used by operations.
 
-[![Build Status](https://travis-ci.org/openscore/score-actions.svg?branch=master)](https://travis-ci.org/openscore/score-actions)
+[![Build Status](https://travis-ci.org/CloudSlang/score-actions.svg?branch=master)](https://travis-ci.org/CloudSlang/score-actions)
