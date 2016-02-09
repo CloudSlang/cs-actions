@@ -3,5 +3,9 @@ language: java
 env:
   - MVN_EXCLUDE_MODULES='-pl !score-vmware'
 
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V ${MVN_EXCLUDE_MODULES}
-script: mvn test -B ${MVN_EXCLUDE_MODULES}
+install:
+  - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V ${MVN_EXCLUDE_MODULES}
+script:
+  - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
+  - mvn test -B ${MVN_EXCLUDE_MODULES}
