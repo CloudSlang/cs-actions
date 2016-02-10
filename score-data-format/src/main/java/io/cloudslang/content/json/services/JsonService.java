@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONStyle;
 
 import java.util.LinkedHashMap;
 
@@ -15,13 +16,7 @@ public class JsonService {
     public String removeEmptyElementsJson(String json) throws RemoveEmptyElementException {
         String normalizedJson = removeBlanks(json);
 
-        char quote = '\"';
-        for (char c : normalizedJson.toCharArray()) {
-            if (c == '\'' || c == '\"') {
-                quote = c;
-                break;
-            }
-        }
+        char wrappingQuote = retrieveWrappingQuoteTypeOfJsonMemberNames(normalizedJson);
 
         LinkedHashMap<String, Object> jsonMap;
 
@@ -32,14 +27,35 @@ public class JsonService {
         }
 
         removeEmptyElementsFromMap(jsonMap);
-        JSONObject jsonObject = new JSONObject(jsonMap);
-        String newJson = jsonObject.toJSONString();
+        JSONObject jsonObject = new JSONObject();
 
-        if (newJson.charAt(1) != quote) {
-            return searchAndReplace(newJson, newJson.charAt(1), quote);
+        for(String key:jsonMap.keySet()){
+             jsonObject.put(key,jsonMap.get(key));
+        }
+
+        String newJson = jsonObject.toJSONString(JSONStyle.LT_COMPRESS);
+
+        if (newJson.charAt(1) != wrappingQuote) {
+            return searchAndReplace(newJson, newJson.charAt(1), wrappingQuote);
         }
 
         return newJson;
+    }
+
+    /**
+     * Returns the quote character used for specifying json member names and String values of json members
+     * @param jsonString
+     * @return either one of the characters ' (single quote)or " (double quote)
+     */
+    private char retrieveWrappingQuoteTypeOfJsonMemberNames(String jsonString) {
+        char quote = '\"';   //  the default quote character used to specify json member names and string value according to the json specification
+        for (char c : jsonString.toCharArray()) {
+            if (c == '\'' || c == '\"') {
+                quote = c;
+                break;
+            }
+        }
+        return quote;
     }
 
     private void removeEmptyElementsFromMap(LinkedHashMap<String, Object> json) {
@@ -104,6 +120,6 @@ public class JsonService {
     }
 
     private String removeBlanks(String json) {
-        return json.substring(json.indexOf('{'), json.length());
+        return json.trim();
     }
 }
