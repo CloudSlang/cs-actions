@@ -1,11 +1,13 @@
 package io.cloudslang.content.json.services;
 
 
+
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,6 +20,10 @@ public class JsonServiceTest {
     private String jsonStringInput;
     private String expectedJsonStringOutput;
     private String actualJsonStringOutput;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
 
     @Before
     public void setUp(){
@@ -161,6 +167,12 @@ public class JsonServiceTest {
         assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
     }
 
+    @Test
+    public void givenInvalidJsonThenThrowException() throws RemoveEmptyElementException {
+        jsonStringInput = "{\"removed1\":\"\", \"removed2\":[], \"removed3\":null \"expected\":\"http://test.com\"}";
+        expectedJsonStringOutput ="{\"expected\":\"http://test.com\"}";
 
-
+        exception.expect(RemoveEmptyElementException.class);
+        actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
+    }
 }
