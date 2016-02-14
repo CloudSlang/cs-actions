@@ -1,7 +1,7 @@
 package io.cloudslang.content.json.services;
 
 
-
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
 import org.junit.After;
 import org.junit.Before;
@@ -122,8 +122,7 @@ public class JsonServiceTest {
         expectedJsonStringOutput ="{\"expected1\":\"value\",\"expected2\":1,\"expected\":{\"public\":[{\"expected1\":\"value\",\"expected2\":1}]},\"links\":[{\"expected1\":\"http://test.com\",\"expected2\":1}]}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-
-        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
+        assertEquals( JsonPath.parse(expectedJsonStringOutput).json(),  JsonPath.parse(actualJsonStringOutput).json());
     }
 
     @Test
@@ -154,9 +153,8 @@ public class JsonServiceTest {
         expectedJsonStringOutput ="{'expected1':'value','expected2':1,'expected':{'public':[{'expected1':'value','expected2':1}]},'links':[{'expected1':'http://test.com','expected2':1}]}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(JsonPath.parse(expectedJsonStringOutput).json(), JsonPath.parse(actualJsonStringOutput).json());
     }
-
 
     @Test
     public void givenURLJsonValueAndDoubleQuoteThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {

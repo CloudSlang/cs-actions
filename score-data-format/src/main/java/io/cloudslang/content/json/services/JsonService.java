@@ -53,10 +53,11 @@ public class JsonService {
         return newJson;
     }
 
+
     private void parseJsonForInconsistencies(String normalizedJson) {
         JsonProvider provider = new GsonJsonProvider();
         Configuration configuration =  Configuration.builder().jsonProvider(provider).build();
-        DocumentContext jsonDocument = JsonPath.parse(normalizedJson, configuration);
+        JsonPath.parse(normalizedJson, configuration);       //throws an exception at runtime if the json is malformed
     }
 
     /**
