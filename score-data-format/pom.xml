@@ -70,6 +70,12 @@
             <artifactId>json-path</artifactId>
             <version>1.2.0</version>
         </dependency>
+        <!-- Json provider required for Jayway in order to handle single quoted JSONs-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -81,6 +87,8 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
 
     <build>
