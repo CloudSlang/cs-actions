@@ -1,17 +1,19 @@
 package io.cloudslang.content.json.services;
 
 import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
+import io.cloudslang.content.json.utils.StringUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONStyle;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Folea Ilie Cristian on 2/3/2016.
@@ -19,14 +21,13 @@ import java.util.Map;
 public class JsonService {
 
     public String removeEmptyElementsJson(String json) throws RemoveEmptyElementException {
-        String normalizedJson = removeBlanks(json);
+        String normalizedJson = json.trim();
 
         char wrappingQuote = retrieveWrappingQuoteTypeOfJsonMemberNames(normalizedJson);
 
         Map<String, Object> jsonMap;
 
         try {
-
             parseJsonForInconsistencies(normalizedJson);
             jsonMap = JsonPath.read(normalizedJson, "$");
         } catch (com.jayway.jsonpath.InvalidJsonException | com.google.gson.JsonSyntaxException ije) {
@@ -38,12 +39,7 @@ public class JsonService {
     }
 
     private String generateResultingJsonString(char wrappingQuote, Map<String, Object> jsonMap) {
-        JSONObject jsonObject = new JSONObject();
-
-        for(String key:jsonMap.keySet()){
-             jsonObject.put(key,jsonMap.get(key));
-        }
-
+        JSONObject jsonObject = new JSONObject(jsonMap);
         String newJson = jsonObject.toJSONString(JSONStyle.LT_COMPRESS);
 
         if (newJson.charAt(1) != wrappingQuote) {
@@ -77,59 +73,58 @@ public class JsonService {
     }
 
     private void removeEmptyElementsFromMap(Map<String, Object> json) {
-        LinkedHashMap<String, Object> copyJson = new LinkedHashMap<String, Object>(json);
-        for (Object element : copyJson.values()) {
-            if (element == null) {
-                json.values().remove(element);
-            } else if (element instanceof String) {
-                if (element.equals("")) {
-                    json.values().remove(element);
-                }
-            } else if (element instanceof JSONArray) {
-                if (((JSONArray) element).isEmpty()) {
-                    json.values().remove(element);
+        Set<Map.Entry<String, Object>> jsonElements = json.entrySet();
+        Iterator<Map.Entry<String, Object>> jsonElementsIterator = jsonElements.iterator();
+        while(jsonElementsIterator.hasNext()) {
+            Map.Entry<String, Object> jsonElement = jsonElementsIterator.next();
+            Object jsonElementValue = jsonElement.getValue();
+            if (StringUtils.isEmpty(jsonElementValue)) {
+                   jsonElementsIterator.remove();
+            } else if (jsonElementValue instanceof JSONArray) {
+                if (((JSONArray) jsonElementValue).isEmpty()) {
+                   jsonElementsIterator.remove();
                 } else {
-                    removeEmptyElementFromJsonArray((JSONArray) element);
+                    removeEmptyElementFromJsonArray((JSONArray) jsonElementValue);
                 }
-            } else if (element instanceof LinkedHashMap) {
-                if (((LinkedHashMap) element).isEmpty()) {
-                    json.values().remove(element);
+            } else if (jsonElementValue instanceof LinkedHashMap) {
+                if (((LinkedHashMap) jsonElementValue).isEmpty()) {
+                    jsonElementsIterator.remove();
                 } else {
-                    removeEmptyElementsFromMap((Map<String,Object>) element);
+                    removeEmptyElementsFromMap((Map<String, Object>) jsonElementValue);
                 }
             }
         }
+
     }
 
     private void removeEmptyElementFromJsonArray(JSONArray jsonArray) {
-        JSONArray copyJsonArray = (JSONArray) jsonArray.clone();
-        for (Object element : copyJsonArray) {
-            if (element == null) {
-                jsonArray.remove(element);
-            } else if (element instanceof String) {
-                if (element.equals("")) {
-                    jsonArray.remove(element);
-                }
-            } else if (element instanceof JSONArray) {
-                if (((JSONArray) element).isEmpty()) {
-                    jsonArray.remove(element);
+
+        Iterator jsonArrayIterator = jsonArray.iterator();
+        while(jsonArrayIterator.hasNext()){
+            Object jsonArrayElement = jsonArrayIterator.next();
+             if (StringUtils.isEmpty(jsonArrayElement)) {
+                    jsonArrayIterator.remove();
+            } else if (jsonArrayElement instanceof JSONArray) {
+                if (((JSONArray) jsonArrayElement).isEmpty()) {
+                    jsonArrayIterator.remove();
                 } else {
-                    removeEmptyElementFromJsonArray((JSONArray) element);
+                    removeEmptyElementFromJsonArray((JSONArray) jsonArrayElement);
                 }
-            } else if (element instanceof LinkedHashMap) {
-                if (((LinkedHashMap) element).isEmpty()) {
-                    jsonArray.remove(element);
+            } else if (jsonArrayElement instanceof LinkedHashMap) {
+                if (((LinkedHashMap) jsonArrayElement).isEmpty()) {
+                    jsonArrayIterator.remove();
                 } else {
-                    removeEmptyElementsFromMap((LinkedHashMap) element);
+                    removeEmptyElementsFromMap((LinkedHashMap) jsonArrayElement);
                 }
             }
         }
+
     }
 
     private String replaceUnescapedOccurrencesOfCharacterInText(String text, char toReplace, char newChar) {
         char[] charArrayText = text.toCharArray();
         for (int i = 0; i < charArrayText.length; i++) {
-            if(shouldCharacterBeReplace(charArrayText,toReplace,i))  {
+            if(shouldCharacterBeReplaced(charArrayText, toReplace, i))  {
                 charArrayText[i] = newChar;
             }
         }
@@ -137,7 +132,7 @@ public class JsonService {
         return String.valueOf(charArrayText);
     }
 
-    private boolean shouldCharacterBeReplace(char[] characters,char characterToReplace,int characterPosition) {
+    private boolean shouldCharacterBeReplaced(char[] characters, char characterToReplace, int characterPosition) {
         if(characters[characterPosition] == characterToReplace){
             if( characterPosition == 0){
                 return true;
@@ -146,9 +141,5 @@ public class JsonService {
             }
         }
         return false;
-    }
-
-    private String removeBlanks(String json) {
-        return json.trim();
     }
 }

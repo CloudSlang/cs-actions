@@ -36,7 +36,7 @@ public class RemoveEmptyElementAction {
             resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
             resultMap.put(Constants.OutputNames.RETURN_RESULT, result);
         } catch (Exception ex) {
-            resultMap.put(Constants.OutputNames.EXCEPTION, StringUtils.toString(ex));
+            resultMap.put(Constants.OutputNames.EXCEPTION, StringUtils.getStackTraceAsString(ex));
             resultMap.put(Constants.OutputNames.ERROR_MESSAGE, ex.getMessage());
             resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
             return resultMap;
