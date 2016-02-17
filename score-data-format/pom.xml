@@ -40,9 +40,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://CloudSlang/score-content.git</connection>
-        <developerConnection>scm:git:git@github.com:CloudSlang/score-content.git</developerConnection>
-        <url>https://github.com/CloudSlang/score-content.git</url>
+        <connection>scm:git:https://CloudSlang/score-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:CloudSlang/score-actions.git</developerConnection>
+        <url>https://github.com/CloudSlang/score-actions.git</url>
         <tag>master</tag>
     </scm>
 
