@@ -11,7 +11,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>score-data-format</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Data format java actions</description>
