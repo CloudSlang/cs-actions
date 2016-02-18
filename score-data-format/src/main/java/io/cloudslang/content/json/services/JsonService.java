@@ -42,7 +42,7 @@ public class JsonService {
         JSONObject jsonObject = new JSONObject(jsonMap);
         String newJson = jsonObject.toJSONString(JSONStyle.LT_COMPRESS);
 
-        if (newJson.charAt(1) != wrappingQuote) {
+        if ((!jsonObject.isEmpty()) && (newJson.charAt(1) != wrappingQuote)) {
             return replaceUnescapedOccurrencesOfCharacterInText(newJson, newJson.charAt(1), wrappingQuote);
         }
 

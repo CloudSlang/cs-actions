@@ -173,4 +173,13 @@ public class JsonServiceTest {
         exception.expect(RemoveEmptyElementException.class);
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
     }
+
+    @Test
+    public void givenJsonWithEmptyElementsThenReturnEmptyJsonString() throws RemoveEmptyElementException {
+        jsonStringInput = "{'remove1': '','remove2': ''}";
+        expectedJsonStringOutput ="{}";
+        actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
+
+        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+    }
 }
