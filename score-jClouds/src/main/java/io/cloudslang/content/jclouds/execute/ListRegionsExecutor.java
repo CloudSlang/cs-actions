@@ -1,12 +1,12 @@
 package io.cloudslang.content.jclouds.execute;
 
-import io.cloudslang.content.jclouds.entities.inputs.ListRegionsInputs;
-import io.cloudslang.content.jclouds.entities.outputs.Outputs;
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.utilities.InputsValidator;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
+import io.cloudslang.content.jclouds.utils.OutputsUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,23 +14,22 @@ import java.util.Set;
  * Created by persdana on 6/23/2015.
  */
 public class ListRegionsExecutor {
-    public Map<String, String> execute(ListRegionsInputs listRegionsInputs) throws Exception {
-        Map<String, String> result = new HashMap<>();
-        InputsValidator.validateListRegionsInputs(listRegionsInputs);
+    public Map<String, String> execute(CommonInputs inputs) throws Exception {
+        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(listRegionsInputs);
-        Set<String> resultSet = cs.listRegions();
+        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        Set<String> availableRegions = cs.listRegions();
 
-        StringBuilder resultBuf = new StringBuilder();
-        for(String region : resultSet) {
-            resultBuf.append(region);
-            resultBuf.append(listRegionsInputs.getDelimiter());
+        int index = 0;
+        StringBuilder sb = new StringBuilder();
+        for (String region : availableRegions) {
+            sb.append(region);
+            if (index < availableRegions.size() - 1) {
+                sb.append(inputs.getDelimiter());
+            }
+            index++;
         }
-        String regions = resultBuf.substring(0, resultBuf.length() - listRegionsInputs.getDelimiter().length());
 
-        result.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
-        result.put(Outputs.RETURN_RESULT, regions);
-
-        return  result;
+        return OutputsUtil.getResultsMap(sb.toString());
     }
 }

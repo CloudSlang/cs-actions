@@ -1,8 +1,5 @@
 package io.cloudslang.content.jclouds.execute;
 
-import io.cloudslang.content.jclouds.entities.inputs.ListRegionsInputs;
-import io.cloudslang.content.jclouds.entities.inputs.ListServersInputs;
-import io.cloudslang.content.jclouds.entities.inputs.ServerIdentificationInputs;
 
 /**
  * Created by persdana on 7/13/2015.
@@ -19,15 +16,15 @@ public class Inputs {
     public static final String SERVER_ID = "i-578dde87";
     private static final String DELIMITER = ";;";
 
-    public static ServerIdentificationInputs getServerIdentificationInputsForAmazon() {
-        return new ServerIdentificationInputs(PROVIDER, IDENTITY,CREDENTIAL, ENDPOINT, PROXY_HOST, PROXY_PORT, REGION, SERVER_ID);
-    }
-
-    public static ListServersInputs getListServerInputsForAmazon() {
-        return new ListServersInputs(PROVIDER, IDENTITY, CREDENTIAL, ENDPOINT, PROXY_HOST, PROXY_PORT, REGION, DELIMITER);
-    }
-
-    public static ListRegionsInputs getListRegionsInputsForAmazon() {
-        return new ListRegionsInputs(PROVIDER, IDENTITY, CREDENTIAL, ENDPOINT, PROXY_HOST, PROXY_PORT, DELIMITER);
-    }
+//    public static ServerIdentificationInputs getServerIdentificationInputsForAmazon() {
+//        return new ServerIdentificationInputs(PROVIDER, IDENTITY,CREDENTIAL, ENDPOINT, PROXY_HOST, PROXY_PORT, REGION, SERVER_ID);
+//    }
+//
+//    public static ListServersInputs getListServerInputsForAmazon() {
+//        return new ListServersInputs(PROVIDER, IDENTITY, CREDENTIAL, ENDPOINT, PROXY_HOST, PROXY_PORT, REGION, DELIMITER);
+//    }
+//
+//    public static ListRegionsInputs getListRegionsInputsForAmazon() {
+//        return new ListRegionsInputs(PROVIDER, IDENTITY, CREDENTIAL, ENDPOINT, PROXY_HOST, PROXY_PORT, DELIMITER);
+//    }
 }

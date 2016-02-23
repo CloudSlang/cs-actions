@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.utilities;
+package io.cloudslang.content.jclouds.utils;
 
 import org.junit.Test;
 

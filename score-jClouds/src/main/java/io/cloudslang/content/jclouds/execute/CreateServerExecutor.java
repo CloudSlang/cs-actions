@@ -7,22 +7,22 @@ import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
 
 import java.util.Map;
 
 /**
- * Created by persdana on 6/18/2015.
+ * Created by Mihai Tusa.
+ * 2/18/2016.
  */
-public class StopServerExecutor {
-    private static final String SERVER_STOPPED = "server stopped";
-    private static final String EMPTY = "";
-
+public class CreateServerExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
 
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        String resultStr = cs.stop(customInputs.getRegion(), customInputs.getServerId());
+        Reservation<? extends RunningInstance> result = cs.createServer(inputs, customInputs);
 
-        return OutputsUtil.getResultsMap((resultStr == null || resultStr.isEmpty()) ? SERVER_STOPPED : EMPTY);
+        return OutputsUtil.getResultsMap(result.toString());
     }
 }

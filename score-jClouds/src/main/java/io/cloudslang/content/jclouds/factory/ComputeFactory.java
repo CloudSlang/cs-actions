@@ -5,17 +5,17 @@ import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.impl.AmazonComputeService;
 import io.cloudslang.content.jclouds.services.impl.ComputeServiceImpl;
 import io.cloudslang.content.jclouds.services.impl.OpenstackComputeService;
-import io.cloudslang.content.jclouds.utilities.InputsValidator;
 
 /**
  * Created by persdana on 5/27/2015.
  */
 public class ComputeFactory {
+    private static final String OPENSTACK = "openstack";
+    private static final String AMAZON = "amazon";
 
     public static ComputeService getComputeService(CommonInputs commonInputs) throws Exception {
-        InputsValidator.validateCommonInputs(commonInputs);
-        ComputeService computeService = null;
-        switch (commonInputs.getProvider()) {
+        ComputeService computeService;
+        switch (commonInputs.getProvider().toLowerCase()) {
             case OPENSTACK:
                 computeService = new OpenstackComputeService(
                         commonInputs.getEndpoint(),
@@ -32,15 +32,14 @@ public class ComputeFactory {
                         commonInputs.getProxyHost(),
                         commonInputs.getProxyPort());
                 break;
-            case OTHER:
+            default:
                 computeService = new ComputeServiceImpl(
-                        commonInputs.getProvider().getProviderStr(),
+                        commonInputs.getProvider(),
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),
                         commonInputs.getCredential(),
                         commonInputs.getProxyHost(),
                         commonInputs.getProxyPort());
-            break;
         }
 
         return computeService;

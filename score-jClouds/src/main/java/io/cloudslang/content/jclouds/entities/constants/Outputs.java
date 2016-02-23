@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.entities.outputs;
+package io.cloudslang.content.jclouds.entities.constants;
 
 /**
  * Created by persdana on 6/18/2015.

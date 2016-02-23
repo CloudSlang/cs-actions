@@ -1,12 +1,13 @@
 package io.cloudslang.content.jclouds.execute;
 
-import io.cloudslang.content.jclouds.entities.inputs.ServerIdentificationInputs;
-import io.cloudslang.content.jclouds.entities.outputs.Outputs;
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.utilities.InputsValidator;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
+import io.cloudslang.content.jclouds.utils.OutputsUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,20 +15,14 @@ import java.util.Map;
  */
 public class StartServerExecutor {
     private static final String SERVER_STARTED = "server started";
+    private static final String EMPTY = "";
 
-    public Map<String, String> execute(ServerIdentificationInputs serverIdentificationInputs) throws Exception {
-        Map<String, String> result = new HashMap<>();
-        InputsValidator.validateServerIdentificationInputs(serverIdentificationInputs);
+    public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
+        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(serverIdentificationInputs);
-        String res = cs.start(serverIdentificationInputs.getRegion(), serverIdentificationInputs.getServerId());
+        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        String resultStr = cs.start(customInputs.getRegion(), customInputs.getServerId());
 
-        if(res == null || res.isEmpty()) {
-            res = SERVER_STARTED;
-        }
-        result.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
-        result.put(Outputs.RETURN_RESULT, res);
-
-        return  result;
+        return OutputsUtil.getResultsMap((resultStr == null || resultStr.isEmpty()) ? SERVER_STARTED : EMPTY);
     }
 }

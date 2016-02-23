@@ -1,28 +1,25 @@
 package io.cloudslang.content.jclouds.execute;
 
-import io.cloudslang.content.jclouds.entities.inputs.ServerIdentificationInputs;
-import io.cloudslang.content.jclouds.entities.outputs.Outputs;
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.utilities.InputsValidator;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
+import io.cloudslang.content.jclouds.utils.OutputsUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by persdana on 6/23/2015.
  */
 public class RemoveServerExecutor {
-    public Map<String, String> execute(ServerIdentificationInputs serverIdentificationInputs) throws Exception {
-        Map<String, String> result = new HashMap<>();
-        InputsValidator.validateServerIdentificationInputs(serverIdentificationInputs);
+    public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
+        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(serverIdentificationInputs);
-        String resultStr = cs.removeServer(serverIdentificationInputs.getRegion(), serverIdentificationInputs.getServerId());
+        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        String resultStr = cs.removeServer(customInputs.getRegion(), customInputs.getServerId());
 
-        result.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
-        result.put(Outputs.RETURN_RESULT, resultStr);
-
-        return  result;
+        return OutputsUtil.getResultsMap(resultStr);
     }
 }

@@ -1,12 +1,13 @@
 package io.cloudslang.content.jclouds.execute;
 
-import io.cloudslang.content.jclouds.entities.inputs.ListServersInputs;
-import io.cloudslang.content.jclouds.entities.outputs.Outputs;
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.utilities.InputsValidator;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
+import io.cloudslang.content.jclouds.utils.OutputsUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,23 +15,22 @@ import java.util.Set;
  * Created by persdana on 6/23/2015.
  */
 public class ListServersExecutor {
-    public Map<String, String> execute(ListServersInputs listServersInputs) throws Exception {
-        Map<String, String> result = new HashMap<>();
-        InputsValidator.validateListRegionsInputs(listServersInputs);
+    public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
+        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(listServersInputs);
-        Set<String> resultSet = cs.listNodes(listServersInputs.getRegion());
+        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        Set<String> nodesInRegion = cs.listNodes(customInputs.getRegion());
 
-        StringBuilder resultBuf = new StringBuilder();
-        for(String serve : resultSet) {
-            resultBuf.append(serve);
-            resultBuf.append(listServersInputs.getDelimiter());
+        int index = 0;
+        StringBuilder sb = new StringBuilder();
+        for (String server : nodesInRegion) {
+            sb.append(server);
+            if (index < nodesInRegion.size() - 1) {
+                sb.append(inputs.getDelimiter());
+            }
+            index++;
         }
-        String servers = resultBuf.substring(0, resultBuf.length() - listServersInputs.getDelimiter().length());
 
-        result.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
-        result.put(Outputs.RETURN_RESULT, servers);
-
-        return  result;
+        return OutputsUtil.getResultsMap(sb.toString());
     }
 }

@@ -1,11 +1,15 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.JcloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
@@ -19,7 +23,8 @@ import java.util.Set;
 /**
  * Created by persdana on 5/27/2015.
  */
-public class OpenstackComputeService extends JcloudsComputeService implements ComputeService {
+public class OpenstackComputeService extends JCloudsComputeService implements ComputeService {
+    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon' provider in provider input.";
     private static final String OPENSTACK_PROVIDER = "openstack-nova";
 
     protected NovaApi novaApi = null;
@@ -138,6 +143,11 @@ public class OpenstackComputeService extends JcloudsComputeService implements Co
             }
         }
         return res;
+    }
+
+    @Override
+    public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     public String createServer(String region, String name, String imageRef, String flavorRef) {

@@ -10,29 +10,17 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.ResumeServerExecutor;
+import io.cloudslang.content.jclouds.execute.CreateServerExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by Mihai Tusa.
+ * 2/18/2016.
  */
-public class ResumeServerAction {
-    /**
-     * Resumes a SUSPENDED server and changes its status to ACTIVE. Paused servers cannot be resumed. This operation works on Openstack providers.
-     *
-     * @param provider         The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
-     * @param identityEndpoint The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon or "http://hostOrIp:5000/v2.0" for openstack.
-     * @param identity         The username of your account or the Access Key ID. For openstack provider the required format is 'alias:username'.
-     * @param credential       The password of the user or the Secret Access Key that correspond to the identity input.
-     * @param region           The region where the server to reboot can be find. Ex: "RegionOne", "us-east-1". ListRegionAction can be used in order to get all regions.
-     * @param serverId         The ID of the instance you want to reboot.
-     * @param proxyHost        The proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort        The proxy server port.
-     * @return
-     */
-    @Action(name = "Resume Server",
+public class CreateServerAction {
+    @Action(name = "Create Server",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -49,10 +37,14 @@ public class ResumeServerAction {
                                        @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
                                        @Param(value = Inputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CREDENTIAL) String credential,
-                                       @Param(value = Inputs.REGION) String region,
-                                       @Param(value = Inputs.SERVER_ID) String serverId,
                                        @Param(value = Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.PROXY_PORT) String proxyPort) throws Exception {
+                                       @Param(value = Inputs.PROXY_PORT) String proxyPort,
+
+                                       @Param(value = Inputs.REGION) String region,
+                                       @Param(value = Inputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(value = Inputs.IMAGE_REF) String imageRef,
+                                       @Param(value = Inputs.MIN_COUNT) String minCount,
+                                       @Param(value = Inputs.MAX_COUNT) String maxCount) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -65,11 +57,14 @@ public class ResumeServerAction {
 
         CustomInputs customInputs = new CustomInputs.SpecificInputsBuilder()
                 .withRegion(region)
-                .withServerId(serverId)
+                .withAvailabilityZone(availabilityZone)
+                .withImageRef(imageRef)
+                .withMinCount(minCount)
+                .withMaxCount(maxCount)
                 .build();
 
         try {
-            return new ResumeServerExecutor().execute(inputs, customInputs);
+            return new CreateServerExecutor().execute(inputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

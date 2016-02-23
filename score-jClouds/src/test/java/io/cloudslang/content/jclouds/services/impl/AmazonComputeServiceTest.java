@@ -48,7 +48,6 @@ public class AmazonComputeServiceTest {
     private AmazonComputeService toTest;
 
     private static final String REGION = "us-east-1";
-    private static final String INVALID_REGION = "randomRegion";
     private static final String SERVER_ID = "i-578dde87";
     private static final String INVALID_SERVER_ID = "i-578dde88";
     private static final String ENDPOINT = "https://ec2.amazonaws.com";
@@ -68,7 +67,6 @@ public class AmazonComputeServiceTest {
     private static final String SERVER_START_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=stopped, instanceId=i-578dde87, previousState=running, region=us-east-1]]";
     private static final String REMOVE_SERVER_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=terminated, instanceId=i-578dde87, previousState=stopped, region=us-east-1]]";
 
-    private static final String INVALID_REGION_EXCEPTION_MESSAGE = "requested location RegionOneTwo, which is not a configured region: {RegionOne=Suppliers.ofInstance(http://11.11.11.11:8774/v2/462822a54b064729b26d41a5027002cd)}";
     private static final String CONNECTION_REFUSE_EXCEPTION_MESSAGE = "org.jclouds.http.HttpResponseException: Connection refused: connect connecting to POST http://11.11.11.11:5000/v2.0/tokens HTTP/1.1";
     private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "The instance ID 'i-a7be737' does not exist";
 
@@ -579,27 +577,27 @@ public class AmazonComputeServiceTest {
     /**
      * Test createServer method. Positive scenario.
      */
-    @Test
-    public void testCreateServer() {
-        doNothing().when(amazonComputeServiceSpy).lazyInit(REGION);
-        amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
-        Mockito.doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
-        Mockito.doReturn(instanceApiMock).when(optionalInstanceApi).get();
-        Mockito.doReturn(serverCreatedMock).when(instanceApiMock).runInstancesInRegion(REGION, null, "imageRef", 1, 1, RunInstancesOptions.NONE);
-        String exceptedResult = "server created";
-        Mockito.doReturn(exceptedResult).when(serverCreatedMock).toString();
-
-        String result = amazonComputeServiceSpy.createServer(REGION, null, "imageRef", "flavorRef");
-
-        assertEquals(exceptedResult, result);
-        verify(amazonComputeServiceSpy).lazyInit(REGION);
-        verify(ec2ApiMock).getInstanceApiForRegion(REGION);
-        verifyNoMoreInteractions(ec2ApiMock);
-        verify(optionalInstanceApi).get();
-        verifyNoMoreInteractions(optionalInstanceApi);
-        verify(instanceApiMock).runInstancesInRegion(REGION, null, "imageRef", 1, 1, RunInstancesOptions.NONE);
-        verifyNoMoreInteractions(instanceApiMock);
-    }
+//    @Test
+//    public void testCreateServer() {
+//        doNothing().when(amazonComputeServiceSpy).lazyInit(REGION);
+//        amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
+//        Mockito.doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
+//        Mockito.doReturn(instanceApiMock).when(optionalInstanceApi).get();
+//        Mockito.doReturn(serverCreatedMock).when(instanceApiMock).runInstancesInRegion(REGION, null, "imageRef", 1, 1, RunInstancesOptions.NONE);
+//        String exceptedResult = "server created";
+//        Mockito.doReturn(exceptedResult).when(serverCreatedMock).toString();
+//
+//        String result = amazonComputeServiceSpy.createServer(REGION, null, "imageRef", "flavorRef");
+//
+//        assertEquals(exceptedResult, result);
+//        verify(amazonComputeServiceSpy).lazyInit(REGION);
+//        verify(ec2ApiMock).getInstanceApiForRegion(REGION);
+//        verifyNoMoreInteractions(ec2ApiMock);
+//        verify(optionalInstanceApi).get();
+//        verifyNoMoreInteractions(optionalInstanceApi);
+//        verify(instanceApiMock).runInstancesInRegion(REGION, null, "imageRef", 1, 1, RunInstancesOptions.NONE);
+//        verifyNoMoreInteractions(instanceApiMock);
+//    }
 
 
     /**

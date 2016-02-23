@@ -560,15 +560,4 @@ public class ComputeServiceImplTest {
         verify(computeMetadataIteratorMock, times(2)).hasNext();
         verify(computeMetadataIteratorMock).next();
     }
-
-    /**
-     * Test create server method. Positive scenario.
-     */
-    @Test
-    public void testCreateServer() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("not implemented yet");
-
-        ComputeServiceImplSpy.createServer(null, null, null, null);
-    }
 }

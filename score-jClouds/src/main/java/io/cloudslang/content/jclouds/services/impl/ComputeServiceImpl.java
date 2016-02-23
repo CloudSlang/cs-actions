@@ -1,11 +1,15 @@
 package io.cloudslang.content.jclouds.services.impl;
 
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.JcloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.domain.Location;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +17,7 @@ import java.util.Set;
 /**
  * Created by persdana on 6/5/2015.
  */
-public class ComputeServiceImpl extends JcloudsComputeService implements ComputeService{
+public class ComputeServiceImpl extends JCloudsComputeService implements ComputeService {
     private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' providers in the provider input";
 
     org.jclouds.compute.ComputeService computeService = null;
@@ -33,16 +37,16 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
     }
 
     protected void lazyInit() {
-        if(computeService == null) {
+        if (computeService == null) {
             this.init();
         }
     }
 
     protected void lazyInit(String region) {
-        if(this.region == null || !this.region.equals(region)) {
+        if (this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
-        } else if(computeService == null) {
+        } else if (computeService == null) {
             this.init();
         }
     }
@@ -96,7 +100,7 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
         lazyInit();
         Set<? extends Location> locations = computeService.listAssignableLocations();
         Set<String> res = new HashSet<>();
-        for(Location l : locations) {
+        for (Location l : locations) {
             res.add(l.getDescription());
         }
 
@@ -108,7 +112,7 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
         lazyInit(region);
         Set<? extends ComputeMetadata> nodes = computeService.listNodes();
         Set<String> result = new HashSet<>();
-        for(ComputeMetadata cm: nodes) {
+        for (ComputeMetadata cm : nodes) {
             result.add(cm.toString());
         }
         return result;
@@ -118,25 +122,14 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
         lazyInit();
         Set<? extends ComputeMetadata> locations = computeService.listNodes();
         Set<String> res = new HashSet<>();
-        for(ComputeMetadata cm : locations) {
+        for (ComputeMetadata cm : locations) {
             res.add(cm.toString());
         }
         return res;
     }
 
-    public String createServer(String region, String name, String imageRef, String flavorRef) throws Exception {
-
-        throw new Exception("not implemented yet");
-//        String res = null;
-//        lazyInit(region);
-//
-//        Template template = computeService.templateBuilder().build();
-//
-//        template.getOptions().as(EC2TemplateOptions.class)
-//                .authorizePublicKey("aaa");
-//
-//        computeService.createNodesInGroup(region, 1);
-//
-//        return res;
+    @Override
+    public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 }
