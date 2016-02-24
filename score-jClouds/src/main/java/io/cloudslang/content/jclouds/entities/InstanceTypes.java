@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
  * 2/22/2016.
  */
 public enum InstanceTypes {
+    // Actual Generation Instances
     // General purpose
     T2_NANO("t2.nano"),
     T2_MICRO("t2.micro"),
@@ -54,7 +55,35 @@ public enum InstanceTypes {
 
     // GPU instances
     G2_2XLARGE("g2.2xlarge"),
-    G2_8XLARGE("g2.8xlarge");
+    G2_8XLARGE("g2.8xlarge"),
+
+    // Previous Generation Instances
+    // General purpose
+    M1_SMALL("m1.small"),
+    M1_MEDIUM("m1.medium"),
+    M1_LARGE("m1.large"),
+    M1_XLARGE("m1.xlarge"),
+
+    // Compute optimized
+    C1_MEDIUM("c1.medium"),
+    C1_XLARGE("c1.xlarge"),
+    CC2_8XLARGE("Cc2.8xlarge"),
+
+    // Memory optimized
+    M2_XLARGE("m2.xlarge"),
+    M2_2XLARGE("m2.2xlarge"),
+    M2_4XLARGE("m2.4xlarge"),
+    CR1_8XLARGE("cr1.8xlarge"),
+
+    // Storage optimized
+    HI1_4XLARGE("hi1.4xlarge"),
+    HS1_8XLARGE("hs1.8xlarge"),
+
+    // GPU instances
+    CG1_4XLARGE("cg1.4xlarge"),
+
+    // Micro instances
+    T1_MICRO("t1.micro");
 
     private final String value;
     private static final String INVALID_INSTANCE_TYPE = "Invalid instance type.";

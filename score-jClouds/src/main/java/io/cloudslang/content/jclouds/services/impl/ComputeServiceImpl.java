@@ -132,4 +132,9 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
+
+    @Override
+    public String updateInstanceType(CustomInputs customInputs) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
 }

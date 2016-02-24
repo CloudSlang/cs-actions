@@ -24,7 +24,7 @@ import java.util.Set;
  * Created by persdana on 5/27/2015.
  */
 public class OpenstackComputeService extends JCloudsComputeService implements ComputeService {
-    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon' provider in provider input.";
+    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
     private static final String OPENSTACK_PROVIDER = "openstack-nova";
 
     protected NovaApi novaApi = null;
@@ -145,11 +145,6 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
         return res;
     }
 
-    @Override
-    public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
     public String createServer(String region, String name, String imageRef, String flavorRef) {
         lazyInit(region);
         ServerApi serverApi = novaApi.getServerApi(region);
@@ -158,4 +153,13 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
         return serverCreated.toString();
     }
 
+    @Override
+    public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
+
+    @Override
+    public String updateInstanceType(CustomInputs customInputs) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
 }

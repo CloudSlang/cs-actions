@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.InstanceTypes;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,6 +15,7 @@ public class CustomInputs {
     private String serverId;
     private String availabilityZone;
     private String imageRef;
+    private String instanceType;
     private int minCount;
     private int maxCount;
 
@@ -22,6 +24,7 @@ public class CustomInputs {
         this.serverId = builder.serverId;
         this.availabilityZone = builder.availabilityZone;
         this.imageRef = builder.imageRef;
+        this.instanceType = builder.instanceType;
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
     }
@@ -42,6 +45,10 @@ public class CustomInputs {
         return imageRef;
     }
 
+    public String getInstanceType() {
+        return instanceType;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -55,6 +62,7 @@ public class CustomInputs {
         private String serverId;
         private String availabilityZone;
         private String imageRef;
+        private String instanceType;
         private int minCount;
         private int maxCount;
 
@@ -79,6 +87,11 @@ public class CustomInputs {
 
         public SpecificInputsBuilder withImageRef(String inputValue) {
             imageRef = inputValue;
+            return this;
+        }
+
+        public SpecificInputsBuilder withInstanceType(String inputValue) {
+            instanceType = InstanceTypes.getInstanceType(inputValue);
             return this;
         }
 

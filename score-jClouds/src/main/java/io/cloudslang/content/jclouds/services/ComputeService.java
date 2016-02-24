@@ -31,4 +31,6 @@ public interface ComputeService {
     Set<String> listNodes(String region);
 
     Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception;
+
+    String updateInstanceType(CustomInputs customInputs) throws Exception;
 }

@@ -10,17 +10,17 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.CreateServerExecutor;
+import io.cloudslang.content.jclouds.execute.UpdateServerTypeExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 2/18/2016.
+ * 2/24/2016.
  */
-public class CreateServerAction {
-    @Action(name = "Create Server",
+public class UpdateServerTypeAction {
+    @Action(name = "Update Server Type",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -41,10 +41,8 @@ public class CreateServerAction {
                                        @Param(value = Inputs.PROXY_PORT) String proxyPort,
 
                                        @Param(value = Inputs.REGION) String region,
-                                       @Param(value = Inputs.AVAILABILITY_ZONE) String availabilityZone,
-                                       @Param(value = Inputs.IMAGE_REF, required = true) String imageRef,
-                                       @Param(value = Inputs.MIN_COUNT) String minCount,
-                                       @Param(value = Inputs.MAX_COUNT) String maxCount) throws Exception {
+                                       @Param(value = Inputs.SERVER_ID, required = true) String serverId,
+                                       @Param(value = Inputs.SERVER_TYPE) String serverType) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -57,14 +55,12 @@ public class CreateServerAction {
 
         CustomInputs customInputs = new CustomInputs.SpecificInputsBuilder()
                 .withRegion(region)
-                .withAvailabilityZone(availabilityZone)
-                .withImageRef(imageRef)
-                .withMinCount(minCount)
-                .withMaxCount(maxCount)
+                .withServerId(serverId)
+                .withInstanceType(serverType)
                 .build();
 
         try {
-            return new CreateServerExecutor().execute(inputs, customInputs);
+            return new UpdateServerTypeExecutor().execute(inputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
