@@ -8,8 +8,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.execute.ListServersExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -47,12 +47,12 @@ public class ListServersAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
-                                       @Param(value = Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL) String credential,
-                                       @Param(value = Inputs.REGION) String region,
-                                       @Param(value = Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.PROXY_PORT) String proxyPort,
-                                       @Param(value = Inputs.DELIMITER) String delimiter) throws Exception {
+                                       @Param(Inputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(Inputs.REGION) String region,
+                                       @Param(Inputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.DELIMITER) String delimiter) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

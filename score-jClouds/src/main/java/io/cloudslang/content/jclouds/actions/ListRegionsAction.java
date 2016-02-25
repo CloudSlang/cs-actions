@@ -45,11 +45,11 @@ public class ListRegionsAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
-                                       @Param(value = Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL) String credential,
-                                       @Param(value = Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.PROXY_PORT) String proxyPort,
-                                       @Param(value = Inputs.DELIMITER) String delimiter) throws Exception {
+                                       @Param(Inputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(Inputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.DELIMITER) String delimiter) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

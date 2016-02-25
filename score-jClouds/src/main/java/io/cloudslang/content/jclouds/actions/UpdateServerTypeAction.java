@@ -36,7 +36,7 @@ public class UpdateServerTypeAction {
     public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
                                        @Param(value = Inputs.IDENTITY) String identity,
-                                       @Param(Inputs.CREDENTIAL) String credential,
+                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.PROXY_PORT) String proxyPort,
 

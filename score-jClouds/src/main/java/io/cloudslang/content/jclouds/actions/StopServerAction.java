@@ -48,12 +48,12 @@ public class StopServerAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(value = Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL) String credential,
-                                       @Param(value = Inputs.REGION) String region,
-                                       @Param(value = Inputs.SERVER_ID) String serverId,
-                                       @Param(value = Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.PROXY_PORT) String proxyPort) throws Exception {
+                                       @Param(Inputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(Inputs.REGION) String region,
+                                       @Param(Inputs.SERVER_ID) String serverId,
+                                       @Param(Inputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.PROXY_PORT) String proxyPort) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

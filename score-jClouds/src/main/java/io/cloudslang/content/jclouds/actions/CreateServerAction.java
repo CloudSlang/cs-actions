@@ -36,7 +36,7 @@ public class CreateServerAction {
     public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
                                        @Param(Inputs.IDENTITY) String identity,
-                                       @Param(Inputs.CREDENTIAL) String credential,
+                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.PROXY_PORT) String proxyPort,
 
@@ -68,11 +68,5 @@ public class CreateServerAction {
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        CreateServerAction createServerAction = new CreateServerAction();
-        createServerAction.execute("amazon", "https://ec2.amazonaws.com", "AKIAIZVIPET3WVUTHYTQ",
-                "lBxknTlq4h5jEDoybSvVEH1aO2jxr4zsGfpMxB5K", "proxy.houston.hp.com", "8080", "", "", "ami-b2e3c6d8", "", "");
     }
 }
