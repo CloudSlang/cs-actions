@@ -35,16 +35,16 @@ public class CreateServerAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
-                                       @Param(value = Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL) String credential,
-                                       @Param(value = Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.IDENTITY) String identity,
+                                       @Param(Inputs.CREDENTIAL) String credential,
+                                       @Param(Inputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.PROXY_PORT) String proxyPort,
 
-                                       @Param(value = Inputs.REGION) String region,
-                                       @Param(value = Inputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(Inputs.REGION) String region,
+                                       @Param(Inputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(value = Inputs.IMAGE_REF, required = true) String imageRef,
-                                       @Param(value = Inputs.MIN_COUNT) String minCount,
-                                       @Param(value = Inputs.MAX_COUNT) String maxCount) throws Exception {
+                                       @Param(Inputs.MIN_COUNT) String minCount,
+                                       @Param(Inputs.MAX_COUNT) String maxCount) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -68,5 +68,11 @@ public class CreateServerAction {
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        CreateServerAction createServerAction = new CreateServerAction();
+        createServerAction.execute("amazon", "https://ec2.amazonaws.com", "AKIAIZVIPET3WVUTHYTQ",
+                "lBxknTlq4h5jEDoybSvVEH1aO2jxr4zsGfpMxB5K", "proxy.houston.hp.com", "8080", "", "", "ami-b2e3c6d8", "", "");
     }
 }

@@ -16,6 +16,8 @@ public class CustomInputs {
     private String availabilityZone;
     private String imageRef;
     private String instanceType;
+    private long checkStateTimeout;
+    private long polingInterval;
     private int minCount;
     private int maxCount;
 
@@ -25,6 +27,8 @@ public class CustomInputs {
         this.availabilityZone = builder.availabilityZone;
         this.imageRef = builder.imageRef;
         this.instanceType = builder.instanceType;
+        this.checkStateTimeout = builder.checkStateTimeout;
+        this.polingInterval = builder.polingInterval;
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
     }
@@ -49,6 +53,14 @@ public class CustomInputs {
         return instanceType;
     }
 
+    public long getCheckStateTimeout() {
+        return checkStateTimeout;
+    }
+
+    public long getPolingInterval() {
+        return polingInterval;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -63,6 +75,8 @@ public class CustomInputs {
         private String availabilityZone;
         private String imageRef;
         private String instanceType;
+        private long checkStateTimeout;
+        private long polingInterval;
         private int minCount;
         private int maxCount;
 
@@ -92,6 +106,16 @@ public class CustomInputs {
 
         public SpecificInputsBuilder withInstanceType(String inputValue) {
             instanceType = InstanceTypes.getInstanceType(inputValue);
+            return this;
+        }
+
+        public SpecificInputsBuilder withOperationTimeout(String inputValue) {
+            checkStateTimeout = InputsUtil.getValidLong(inputValue);
+            return this;
+        }
+
+        public SpecificInputsBuilder withPoolingInterval(String inputValue) {
+            polingInterval = InputsUtil.getValidLong(inputValue);
             return this;
         }
 

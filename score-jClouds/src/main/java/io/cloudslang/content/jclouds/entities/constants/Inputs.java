@@ -23,6 +23,8 @@ public class Inputs {
     public static final String MIN_COUNT = "minCount";
     public static final String MAX_COUNT = "maxCount";
     public static final String SERVER_TYPE = "serverType";
+    public static final String OPERATION_TIMEOUT = "operationTimeout";
+    public static final String POOLING_INTERVAl = "poolingInterval";
 
     // Miscellaneous
     public static final String DELIMITER = "delimiter";

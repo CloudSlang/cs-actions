@@ -36,13 +36,15 @@ public class UpdateServerTypeAction {
     public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
                                        @Param(value = Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL) String credential,
-                                       @Param(value = Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.CREDENTIAL) String credential,
+                                       @Param(Inputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.PROXY_PORT) String proxyPort,
 
-                                       @Param(value = Inputs.REGION) String region,
+                                       @Param(Inputs.REGION) String region,
                                        @Param(value = Inputs.SERVER_ID, required = true) String serverId,
-                                       @Param(value = Inputs.SERVER_TYPE) String serverType) throws Exception {
+                                       @Param(Inputs.SERVER_TYPE) String serverType,
+                                       @Param(Inputs.OPERATION_TIMEOUT) String operationTimeout,
+                                       @Param(Inputs.POOLING_INTERVAl) String poolingInterval) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -57,6 +59,8 @@ public class UpdateServerTypeAction {
                 .withRegion(region)
                 .withServerId(serverId)
                 .withInstanceType(serverType)
+                .withOperationTimeout(operationTimeout)
+                .withPoolingInterval(poolingInterval)
                 .build();
 
         try {

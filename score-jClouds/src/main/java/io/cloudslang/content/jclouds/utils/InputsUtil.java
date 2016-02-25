@@ -14,6 +14,11 @@ public final class InputsUtil {
     private static final String MINIMUM_INSTANCES_NUMBER = "minimumInstancesNumber";
     private static final String MAXIMUM_INSTANCES_NUMBER = "maximumInstancesNumber";
 
+    private static final long LONG_DEFAULT_VALUE = 20000;
+
+    private InputsUtil() {
+    }
+
     public static void validateInput(String input, String inputName) {
         if (StringUtils.isBlank(input)) {
             throw new RuntimeException("The required " + inputName + " input is not specified!");
@@ -38,6 +43,21 @@ public final class InputsUtil {
 
     public static String getDefaultDelimiter(String delimiter) {
         return StringUtils.isBlank(delimiter) ? DEFAULT_DELIMITER : delimiter;
+    }
+
+    public static long getValidLong(String input) {
+        if (StringUtils.isBlank(input)) {
+            return LONG_DEFAULT_VALUE;
+        }
+        try {
+            long longInput = Long.parseLong(input);
+            if (longInput < 0) {
+                throw new RuntimeException("Incorrect provided value: " + input + ". Valid values are positive longs.");
+            }
+            return longInput;
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException("The provided value: " + input + " input must be long.");
+        }
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {
@@ -68,11 +88,11 @@ public final class InputsUtil {
         return validLimits;
     }
 
-    private static String getValidationException(String customInput, boolean invalid) {
+    private static String getValidationException(String input, boolean invalid) {
         if (invalid) {
-            return "The provided value: " + customInput + " input must be integer.";
+            return "The provided value: " + input + " input must be integer.";
         }
-        return "Incorrect provided value: " + customInput + " input. The value doesn't meet conditions for " +
+        return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for " +
                 "general purpose usage.";
     }
 }

@@ -39,8 +39,8 @@ public class AmazonComputeServiceHelper {
     private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, CustomInputs customInputs)
             throws Exception {
         long waitTime = 0;
-        while (!InstanceState.STOPPED.equals(instanceState) || waitTime > 20000) {
-            Thread.sleep(4000);
+        while (!InstanceState.STOPPED.equals(instanceState) && waitTime <= customInputs.getCheckStateTimeout()) {
+            Thread.sleep(customInputs.getPolingInterval());
             waitTime += 4000;
             instanceState = getInstanceState(instanceApi, customInputs);
         }
