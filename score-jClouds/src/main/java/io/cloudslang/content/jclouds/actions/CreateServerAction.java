@@ -55,7 +55,7 @@ public class CreateServerAction {
                 .withProxyPort(proxyPort)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.SpecificInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withAvailabilityZone(availabilityZone)
                 .withImageRef(imageRef)

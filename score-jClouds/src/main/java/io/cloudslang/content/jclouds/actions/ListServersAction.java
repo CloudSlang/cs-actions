@@ -64,7 +64,7 @@ public class ListServersAction {
                 .withDelimiter(delimiter)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.SpecificInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .build();
 

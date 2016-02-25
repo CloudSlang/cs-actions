@@ -21,7 +21,7 @@ public class CustomInputs {
     private int minCount;
     private int maxCount;
 
-    public CustomInputs(SpecificInputsBuilder builder) {
+    public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
         this.serverId = builder.serverId;
         this.availabilityZone = builder.availabilityZone;
@@ -69,7 +69,7 @@ public class CustomInputs {
         return maxCount;
     }
 
-    public static class SpecificInputsBuilder {
+    public static class CustomInputsBuilder {
         private String region;
         private String serverId;
         private String availabilityZone;
@@ -84,47 +84,47 @@ public class CustomInputs {
             return new CustomInputs(this);
         }
 
-        public SpecificInputsBuilder withRegion(String inputValue) {
+        public CustomInputsBuilder withRegion(String inputValue) {
             region = (StringUtils.isBlank(inputValue)) ? AMAZON_DEFAULT_REGION : inputValue;
             return this;
         }
 
-        public SpecificInputsBuilder withServerId(String inputValue) {
+        public CustomInputsBuilder withServerId(String inputValue) {
             serverId = inputValue;
             return this;
         }
 
-        public SpecificInputsBuilder withAvailabilityZone(String inputValue) {
+        public CustomInputsBuilder withAvailabilityZone(String inputValue) {
             availabilityZone = inputValue;
             return this;
         }
 
-        public SpecificInputsBuilder withImageRef(String inputValue) {
+        public CustomInputsBuilder withImageRef(String inputValue) {
             imageRef = inputValue;
             return this;
         }
 
-        public SpecificInputsBuilder withInstanceType(String inputValue) {
+        public CustomInputsBuilder withInstanceType(String inputValue) {
             instanceType = InstanceTypes.getInstanceType(inputValue);
             return this;
         }
 
-        public SpecificInputsBuilder withOperationTimeout(String inputValue) {
+        public CustomInputsBuilder withOperationTimeout(String inputValue) {
             checkStateTimeout = InputsUtil.getValidLong(inputValue);
             return this;
         }
 
-        public SpecificInputsBuilder withPoolingInterval(String inputValue) {
+        public CustomInputsBuilder withPoolingInterval(String inputValue) {
             polingInterval = InputsUtil.getValidLong(inputValue);
             return this;
         }
 
-        public SpecificInputsBuilder withMinCount(String inputValue) {
+        public CustomInputsBuilder withMinCount(String inputValue) {
             minCount = InputsUtil.getMinInstancesCount(inputValue);
             return this;
         }
 
-        public SpecificInputsBuilder withMaxCount(String inputValue) {
+        public CustomInputsBuilder withMaxCount(String inputValue) {
             maxCount = InputsUtil.getMaxInstancesCount(inputValue);
             return this;
         }

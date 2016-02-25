@@ -64,7 +64,7 @@ public class RemoveServerAction {
                 .withProxyPort(proxyPort)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.SpecificInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withServerId(serverId)
                 .build();
