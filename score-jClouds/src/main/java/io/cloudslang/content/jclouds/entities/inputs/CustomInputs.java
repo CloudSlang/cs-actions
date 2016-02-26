@@ -109,12 +109,12 @@ public class CustomInputs {
             return this;
         }
 
-        public CustomInputsBuilder withOperationTimeout(String inputValue) {
+        public CustomInputsBuilder withCheckStateTimeout(String inputValue) {
             checkStateTimeout = InputsUtil.getValidLong(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withPoolingInterval(String inputValue) {
+        public CustomInputsBuilder withPolingInterval(String inputValue) {
             polingInterval = InputsUtil.getValidLong(inputValue);
             return this;
         }

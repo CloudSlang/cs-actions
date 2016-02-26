@@ -1,9 +1,6 @@
 package io.cloudslang.content.jclouds.utils;
 
-import io.cloudslang.content.jclouds.entities.Providers;
-import io.cloudslang.content.jclouds.execute.Inputs;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static junit.framework.TestCase.assertEquals;

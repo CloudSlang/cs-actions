@@ -59,8 +59,8 @@ public class UpdateServerTypeAction {
                 .withRegion(region)
                 .withServerId(serverId)
                 .withInstanceType(serverType)
-                .withOperationTimeout(operationTimeout)
-                .withPoolingInterval(poolingInterval)
+                .withCheckStateTimeout(operationTimeout)
+                .withPolingInterval(poolingInterval)
                 .build();
 
         try {

@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.ec2.EC2Api;
@@ -38,6 +39,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Created by persdana on 6/19/2015.
@@ -105,10 +111,10 @@ public class AmazonComputeServiceTest {
     ServerAdminApi serverAdminApiMock;
 
     @Mock
-    java.util.Set<org.jclouds.ec2.domain.RunningInstance> instancesInRegion;
+    Set<RunningInstance> instancesInRegion;
 
     @Mock
-    Iterator<org.jclouds.ec2.domain.RunningInstance> iterableWithMarkerIteratorMock;
+    Iterator<RunningInstance> iterableWithMarkerIteratorMock;
 
     @Mock
     Iterator<Image> imageIteratorMock;
@@ -120,7 +126,7 @@ public class AmazonComputeServiceTest {
     Iterator<Server> serverIteratorMock;
 
     @Mock
-    org.jclouds.ec2.domain.Reservation<org.jclouds.ec2.domain.RunningInstance> serverMock;
+    Reservation<RunningInstance> serverMock;
 
     @Mock
     Reservation<RunningInstance> serverCreatedMock;
@@ -130,6 +136,9 @@ public class AmazonComputeServiceTest {
 
     @Mock
     Image imageMock;
+
+    @Mock
+    AmazonComputeServiceHelper helperMock;
 
     @Spy
     private AmazonComputeService amazonComputeServiceSpy = new AmazonComputeService(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
@@ -331,9 +340,7 @@ public class AmazonComputeServiceTest {
         amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
-        Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
-        InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.STOPPED, InstanceState.RUNNING);
-        instanceStateChangeSet.add(instanceStateChange);
+        Set<InstanceStateChange> instanceStateChangeSet = getInstanceStateChanges();
         doReturn(instanceStateChangeSet).when(instanceApiMock).startInstancesInRegion(REGION, SERVER_ID);
 
         String result = amazonComputeServiceSpy.start(REGION, SERVER_ID);
@@ -585,6 +592,30 @@ public class AmazonComputeServiceTest {
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
     }
 
+    /**
+     * Test updateServer method. Positive scenario.
+     */
+    @Test
+    public void testUpdateServer() throws Exception {
+        doNothing().when(amazonComputeServiceSpy).lazyInit(anyString());
+        amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
+        doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
+        doReturn(instanceApiMock).when(optionalInstanceApi).get();
+        whenNew(AmazonComputeServiceHelper.class).withNoArguments().thenReturn(helperMock);
+        doReturn(InstanceState.RUNNING).when(helperMock).getInstanceState(instanceApiMock, getCustomInputs());
+        doNothing().when(helperMock).stopAndWaitToStopInstance(instanceApiMock, InstanceState.RUNNING, getCustomInputs());
+        doNothing().when(instanceApiMock).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
+        Set<InstanceStateChange> instanceStateChangeSet = getInstanceStateChanges();
+
+        doReturn(instanceStateChangeSet).when(instanceApiMock).startInstancesInRegion(anyString(), anyString());
+
+        amazonComputeServiceSpy.updateInstanceType(getCustomInputs());
+
+        verify(amazonComputeServiceSpy, atMost(1)).lazyInit(REGION);
+        verify(ec2ApiMock, atMost(1)).getInstanceApi();
+        verify(optionalInstanceApi, atMost(1)).get();
+        verify(instanceApiMock, atMost(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
+    }
 
     /**
      * Test list images in region method. Positive scenario.
@@ -614,12 +645,21 @@ public class AmazonComputeServiceTest {
         verify(imageIteratorMock).next();
     }
 
+    private Set<InstanceStateChange> getInstanceStateChanges() {
+        Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
+        InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.STOPPED, InstanceState.RUNNING);
+        instanceStateChangeSet.add(instanceStateChange);
+        return instanceStateChangeSet;
+    }
 
     private CommonInputs getCommonInputs() throws Exception {
         return new CommonInputs.CommonInputsBuilder().build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder().build();
+        return new CustomInputs.CustomInputsBuilder()
+                .withRegion(REGION)
+                .withServerId(SERVER_ID)
+                .build();
     }
 }
