@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.utils;
 
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -9,110 +10,86 @@ import static junit.framework.TestCase.assertEquals;
  * Created by persdana on 7/13/2015.
  */
 public class InputsUtilTest {
-    public static final String SERVER_ID_NOT_SPECIFIED = "The required serverId input is not specified!";
-    public static final String ENDPOINT_NOT_SPECIFIED   = "Endpoint input is not specified!";
-    public static final String PROVIDER_NOT_SPECIFIED   = "Provider input is not specified! Valid values: openstack, amazon";
-    private static final String REGION = "us-east-1";
-    private static final String SERVER_ID = "i-578dde87";
-    private static final String DELIMITER = ";;";
     private static final String DEFAULT_DELIMITER  = ";" + System.lineSeparator();
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    /**
-     * Test validateServerIdentificationInputs method. Positive scenario.
-     * @throws Exception
-     */
-//    @Test
-//    public void testValidateServerIdentificationInputs() throws Exception {
-//        ServerIdentificationInputs inputs = Inputs.getServerIdentificationInputsForAmazon();
-//        inputs.setServerId(SERVER_ID + " ");
-//        InputsUtil.validateServerIdentificationInputs(inputs);
-//
-//        assertEquals(REGION, inputs.getRegion());
-//        assertEquals(SERVER_ID.trim(), inputs.getServerId());
-//    }
-//
-//    /**
-//     * Test ValidateServerIdentificationInputs method with null server id.
-//     * @throws Exception
-//     */
-//    @Test
-//    public void testValidateServerIdentificationInputsWithNullServerId() throws Exception {
-//        exception.expect(Exception.class);
-//        exception.expectMessage(SERVER_ID_NOT_SPECIFIED);
-//
-//        ServerIdentificationInputs inputs = Inputs.getServerIdentificationInputsForAmazon();
-//        inputs.setServerId(null);
-//        InputsUtil.validateServerIdentificationInputs(inputs);
-//    }
-//
-//    /**
-//     * Test validateListRegionsInputs method. Positive scenario.
-//     * @throws Exception
-//     */
-//    @Test
-//    public void testValidateListRegionsInputs() throws Exception {
-//        ListRegionsInputs inputs = Inputs.getListRegionsInputsForAmazon();
-//        inputs.setDelimiter(DELIMITER);
-//        InputsUtil.validateListRegionsInputs(inputs);
-//
-//        assertEquals(DELIMITER, inputs.getDelimiter());
-//    }
-//
-//    /**
-//     * Test ValidateListRegionsInputs method with null server id.
-//     * Default delimiter should be set.
-//     * @throws Exception
-//     */
-//    @Test
-//    public void testValidateListRegionsInputsWithNullServerId() throws Exception {
-//        ListRegionsInputs inputs = Inputs.getListRegionsInputsForAmazon();
-//        inputs.setDelimiter(null);
-//        InputsUtil.validateListRegionsInputs(inputs);
-//
-//        assertEquals(DEFAULT_DELIMITER, inputs.getDelimiter());
-//    }
-//
-//    /**
-//     * Test ValidateCommonInputs method. Positive scenario.
-//     * @throws Exception
-//     */
-//    @Test
-//    public void testValidateCommonInputs() throws Exception {
-//        ListRegionsInputs inputs = Inputs.getListServerInputsForAmazon();
-//        inputs.setProvider(Providers.getProvider("testprov"));
-//        InputsUtil.validateCommonInputs(inputs);
-//
-//        assertEquals("testprov", inputs.getProvider().getProviderStr());
-//    }
-//
-//    /**
-//     * Test ValidateCommonInputs method with null Provider.
-//     * @throws Exception
-//     */
-//    @Test
-//    public void testValidateCommonInputsWithNullProvider() throws Exception {
-//        exception.expect(Exception.class);
-//        exception.expectMessage(PROVIDER_NOT_SPECIFIED);
-//
-//        ListRegionsInputs inputs = Inputs.getListServerInputsForAmazon();
-//        inputs.setProvider(Providers.getProvider(""));
-//        InputsUtil.validateCommonInputs(inputs);
-//    }
-//
-//    /**
-//     * Test ValidateCommonInputs method with null Endpoint.
-//     * @throws Exception
-//     */
-//    @Test
-//    public void testValidateCommonInputsWithNullEndpoint() throws Exception {
-//        exception.expect(Exception.class);
-//        exception.expectMessage(ENDPOINT_NOT_SPECIFIED);
-//
-//        ListRegionsInputs inputs = Inputs.getListServerInputsForAmazon();
-//        inputs.setEndpoint(null);
-//        InputsUtil.validateCommonInputs(inputs);
-//    }
+    @Test
+    public void validateInput() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("The required endpoint input is not specified!");
+
+        InputsUtil.validateInput("", "endpoint");
+    }
+
+    @Test
+    public void getMinInstancesCountBlank() {
+        int testMinInstanceCount = InputsUtil.getMinInstancesCount("");
+        assertEquals(1, testMinInstanceCount);
+    }
+
+    @Test
+    public void getMinInstancesCountNegative() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Incorrect provided value: -1 input. The value doesn't meet conditions for general purpose usage.");
+
+        InputsUtil.getMinInstancesCount("-1");
+    }
+
+    @Test
+    public void getMinInstancesCountNotInt() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("The provided value: [abracadabra] input must be integer.");
+
+        InputsUtil.getMinInstancesCount("[abracadabra]");
+    }
+
+    @Test
+    public void getMinInstancesCount() {
+        int testMinInstanceCount = InputsUtil.getMinInstancesCount("3");
+        assertEquals(3, testMinInstanceCount);
+    }
+
+    @Test
+    public void getMaxInstancesCountBlank() {
+        int testGetMaxInstancesCount = InputsUtil.getMaxInstancesCount("");
+        assertEquals(1, testGetMaxInstancesCount);
+    }
+
+    @Test
+    public void getMaxInstancesCountOver() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Incorrect provided value: 51 input. The value doesn't meet conditions for general purpose usage.");
+
+        InputsUtil.getMaxInstancesCount("51");
+    }
+
+    @Test
+    public void getValidLongBlank() {
+        long testLong = InputsUtil.getValidLong("");
+        assertEquals(20000, testLong);
+    }
+
+    @Test
+    public void getValidLongNegative() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Incorrect provided value: -1. Valid values are positive longs.");
+
+        InputsUtil.getValidLong("-1");
+    }
+
+    @Test
+    public void getValidLongNotLong() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("The provided value: [anything_here] input must be long.");
+
+        InputsUtil.getValidLong("[anything_here]");
+    }
+
+    @Test
+    public void getValidLong() {
+        long testLong = InputsUtil.getValidLong("60000");
+        assertEquals(60000, testLong);
+    }
 }
