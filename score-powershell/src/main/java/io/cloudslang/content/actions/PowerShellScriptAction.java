@@ -22,6 +22,8 @@ public class PowerShellScriptAction {
      * Executes a PowerShell command(s) on the remote machine.
      *
      * @param host The hostname or ip address of the source remote machine.
+     * @param port The port to use when connecting to the remote machine.
+     *             The interpretation and the default value for this connection option depend on the protocol that is used.
      * @param userName The username used to connect to the the remote machine.
      * @param password The password used to connect to the remote machine.
      * @param script The PowerShell script that will run on the remote machine.
@@ -90,8 +92,9 @@ public class PowerShellScriptAction {
     )
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.INPUT_HOST, required = true) String host,
+            @Param(value = Constants.InputNames.INPUT_PORT) String port,
             @Param(value = Constants.InputNames.INPUT_USERNAME, required = true) String userName,
-            @Param(value = Constants.InputNames.INPUT_PASSWORD, required = true) String password,
+            @Param(value = Constants.InputNames.INPUT_PASSWORD, required = true, encrypted = true) String password,
             @Param(value = Constants.InputNames.INPUT_SCRIPT, required = true) String script,
             @Param(value = Constants.InputNames.CONNECTION_TYPE, required = true) String connectionType,
             @Param(value = Constants.InputNames.WINRM_CONTEXT) String winrmContext,
@@ -107,6 +110,7 @@ public class PowerShellScriptAction {
 
         PowerShellActionInputs inputs = new PowerShellActionInputs();
         inputs.setHost(host);
+        inputs.setPort(port);
         inputs.setUsername(userName);
         inputs.setPassword(password);
         inputs.setScript(script);
