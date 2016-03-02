@@ -19,9 +19,23 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.xebialabs.overthere.ConnectionOptions.*;
+import static com.xebialabs.overthere.ConnectionOptions.ADDRESS;
+import static com.xebialabs.overthere.ConnectionOptions.OPERATING_SYSTEM;
+import static com.xebialabs.overthere.ConnectionOptions.PASSWORD;
+import static com.xebialabs.overthere.ConnectionOptions.PORT;
+import static com.xebialabs.overthere.ConnectionOptions.USERNAME;
 import static com.xebialabs.overthere.OperatingSystemFamily.WINDOWS;
-import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.*;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.CONNECTION_TYPE;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_CONTEXT;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_ENABLE_HTTPS;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_ENVELOP_SIZE;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_HTTPS_CERTIFICATE_TRUST_STRATEGY;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_HTTPS_HOSTNAME_VERIFICATION_STRATEGY;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_KERBEROS_ADD_PORT_TO_SPN;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_KERBEROS_TICKET_CACHE;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_KERBEROS_USE_HTTP_SPN;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_LOCALE;
+import static com.xebialabs.overthere.cifs.CifsConnectionBuilder.WINRM_TIMEMOUT;
 import static com.xebialabs.overthere.util.CapturingOverthereExecutionOutputHandler.capturingHandler;
 
 /**
@@ -41,8 +55,8 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
 
     private Map<String, String> executePowerShellScript(PowerShellActionInputs inputs) {
         ConnectionOptions options = getConnectionOptions(inputs);
-        try(OverthereConnection connection =
-                    Overthere.getConnection(CifsConnectionBuilder.CIFS_PROTOCOL, options)) {
+        try (OverthereConnection connection =
+                     Overthere.getConnection(CifsConnectionBuilder.CIFS_PROTOCOL, options)) {
             String encodeBase64 = getBase64EncodedScript(inputs.getScript());
 
             CapturingOverthereExecutionOutputHandler outHandler = capturingHandler();
@@ -85,6 +99,7 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
         options.set(OPERATING_SYSTEM, WINDOWS);
         options.set(CONNECTION_TYPE, CifsConnectionType.valueOf(inputs.getConnectionType()));
 
+        setOptionalInput(options, PORT, inputs.getPort());
         setOptionalInput(options, WINRM_CONTEXT, inputs.getWinrmContext());
         setOptionalInput(options, WINRM_ENABLE_HTTPS, inputs.getWinrmEnableHTTPS());
         setOptionalInput(options, WINRM_ENVELOP_SIZE, inputs.getWinrmEnvelopSize());
@@ -103,6 +118,11 @@ public class PowerShellScriptServiceImpl implements PowerShellScriptService {
     private void setOptionalInput(ConnectionOptions options, String key, String value) {
         if (StringUtils.isNotBlank(value))
             switch (key) {
+                case PORT:
+                    if (StringUtils.isNotEmpty(value)) {
+                        options.set(key, Integer.parseInt(value));
+                    }
+                    break;
                 case WINRM_ENVELOP_SIZE:
                     options.set(key, Integer.parseInt(value));
                     break;
