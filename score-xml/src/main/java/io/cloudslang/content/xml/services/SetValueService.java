@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by markowis on 03/03/2016.
  */
-public class AddAttributeService {
+public class SetValueService {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs){
         Map<String, String> result = new HashMap<>();
 
@@ -26,19 +26,19 @@ public class AddAttributeService {
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
             if(nodeList.getLength() == 0){
-                ResultUtils.populateFailureResult(result, "Attribute not added: element not found.");
+                ResultUtils.populateFailureResult(result, "Value not set: element not found");
                 return result;
             }
 
-            XmlUtils.addAttributesToList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
-            ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));
+            XmlUtils.setValueToList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
+            ResultUtils.populateSuccessResult(result, "Value set successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
             ResultUtils.populateFailureResult(result, "XPath parsing error: " + e.getMessage());
         } catch (TransformerException te) {
-            ResultUtils.populateFailureResult(result, "Transformer error: " + te.getMessage());
+            ResultUtils.populateFailureResult(result, "Transform error: " + te.getMessage());
         } catch (Exception e) {
-            ResultUtils.populateFailureResult(result, "Error: " + e.getMessage());
+            ResultUtils.populateFailureResult(result, "Parsing error: " + e.getMessage());
         }
 
         return result;

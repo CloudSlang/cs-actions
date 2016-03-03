@@ -5,6 +5,10 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.xml.entities.inputs.CommonInputs;
+import io.cloudslang.content.xml.entities.inputs.CustomInputs;
+import io.cloudslang.content.xml.services.RemoveService;
+import io.cloudslang.content.xml.services.SetValueService;
 import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
@@ -36,51 +40,18 @@ public class SetValue {
             @Param(value = Constants.InputNames.VALUE, required = true) String value,
             @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
 
-        Map<String, String> result = new HashMap<>();
+        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+                .withXmlDocument(xmlDocument)
+                .withXpathQuery(xPathQuery)
+                .withSecureProcessing(secureProcessing)
+                .build();
 
-        try {
-            Document doc = XmlUtils.parseXML(xmlDocument, Boolean.parseBoolean(secureProcessing));
-            NamespaceContext context = XmlUtils.createNamespaceContext(xmlDocument);
-            NodeList nl = XmlUtils.evaluateXPathQuery(doc,context,xPathQuery);
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withAttributeName(attributeName)
+                .withValue(value)
+                .build();
 
-            if(nl.getLength() == 0){
-                result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-                result.put(Constants.OutputNames.RETURN_RESULT, "Value not set: element not found");
-                return result;
-            }
-
-            for (int i = 0; i < nl.getLength(); i++) {
-                Node node = nl.item(i);
-
-                if(node.getNodeType() != Node.ELEMENT_NODE){
-                    result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-                    result.put(Constants.OutputNames.RETURN_RESULT, "Removal failed: XPath must return element types.");
-                    return result;
-                }
-
-                if(attributeName == null) {
-                    node.setTextContent(value);
-                }
-                else {
-                    ((Element) node).setAttribute(attributeName, value);
-                }
-            }
-
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.SUCCESS);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Value set successfully.");
-            result.put(Constants.OutputNames.RESULT_XML, XmlUtils.nodeToString(doc));
-
-        } catch (XPathExpressionException e) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "XPath parsing error: " + e.getMessage());
-        } catch (TransformerException te) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-        } catch (Exception e) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Parsing error: " + e.getMessage());
-        }
-
-        return result;
+        return new SetValueService().execute(inputs, customInputs);
     }
 
 }

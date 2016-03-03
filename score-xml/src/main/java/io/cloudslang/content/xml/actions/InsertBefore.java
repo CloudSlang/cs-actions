@@ -5,6 +5,10 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.xml.entities.inputs.CommonInputs;
+import io.cloudslang.content.xml.entities.inputs.CustomInputs;
+import io.cloudslang.content.xml.services.AppendChildService;
+import io.cloudslang.content.xml.services.InsertBeforeService;
 import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
@@ -34,49 +38,16 @@ public class InsertBefore {
             @Param(value = Constants.InputNames.XML_ELEMENT, required = true) String xmlElement,
             @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
 
-        Map<String, String> result = new HashMap<>();
+        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+                .withXmlDocument(xmlDocument)
+                .withXpathQuery(xPathQuery)
+                .withSecureProcessing(secureProcessing)
+                .build();
 
-        try {
-            Document doc = XmlUtils.parseXML(xmlDocument, Boolean.parseBoolean(secureProcessing));
-            NamespaceContext context = XmlUtils.createNamespaceContext(xmlDocument);
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withXmlElement(xmlElement)
+                .build();
 
-            Document beforeDoc = XmlUtils.parseXML(xmlElement, Boolean.parseBoolean(secureProcessing));
-            Node beforeNode = doc.importNode(beforeDoc.getDocumentElement(), true);
-
-            NodeList nl = XmlUtils.evaluateXPathQuery(doc,context,xPathQuery);
-
-            if (nl.getLength() == 0) {
-                result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-                result.put(Constants.OutputNames.RETURN_RESULT, "Insert failed: element not found");
-                return result;
-            }
-
-            for (int i = 0; i < nl.getLength(); i++) {
-                Node node = nl.item(i);
-
-                if(node.getNodeType() != Node.ELEMENT_NODE){
-                    result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-                    result.put(Constants.OutputNames.RETURN_RESULT, "Insert failed: XPath must return element types.");
-                    return result;
-                }
-                node.getParentNode().insertBefore(beforeNode.cloneNode(true), node);
-            }
-
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.SUCCESS);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Attribute set successfully.");
-            result.put(Constants.OutputNames.RESULT_XML, XmlUtils.nodeToString(doc));
-
-        } catch (XPathExpressionException e) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "XPath parsing error: " + e.getMessage());
-        } catch (TransformerException te) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Transform error: " + te.getMessage());
-        } catch (Exception e) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Parsing error: " + e.getMessage());
-        }
-
-        return result;
+        return new InsertBeforeService().execute(inputs, customInputs);
     }
 }

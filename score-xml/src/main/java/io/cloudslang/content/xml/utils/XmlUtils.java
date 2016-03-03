@@ -5,13 +5,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.StartElement;
@@ -22,11 +19,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import javax.xml.xpath.*;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -38,18 +35,32 @@ public class XmlUtils {
 
         if(node == null){
             return "";
-        } else if(node.getNodeType() == 2) {
+        } else if(node.getNodeType() == Node.ATTRIBUTE_NODE) {
             return node.toString();
+        } else {
+            return transformElementNode(node);
         }
+    }
 
-        StringWriter sw = new StringWriter();
+    public static String nodeListToString(NodeList nodeList, String delimiter) throws  TransformerException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < nodeList.getLength() - 1; i++) {
+            sb.append(nodeToString(nodeList.item(i)));
+            sb.append(delimiter);
+        }
+        sb.append(nodeToString(nodeList.item(nodeList.getLength()-1)));
+        return sb.toString();
+    }
 
-        Transformer t = TransformerFactory.newInstance().newTransformer();
-        t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        t.setOutputProperty(OutputKeys.INDENT, "yes");
-        t.transform(new DOMSource(node), new StreamResult(sw));
+    public static String transformElementNode(Node node) throws TransformerException{
+        StringWriter stringWriter = new StringWriter();
 
-        return sw.toString().trim();
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(new DOMSource(node), new StreamResult(stringWriter));
+
+        return stringWriter.toString().trim();
     }
 
     public static NamespaceContext createNamespaceContext(String xmlDocument) throws Exception{
@@ -60,8 +71,7 @@ public class XmlUtils {
         while (evtReader.hasNext()) {
             XMLEvent event = evtReader.nextEvent();
             if (event.isStartElement()) {
-                nsContext = ((StartElement) event)
-                        .getNamespaceContext();
+                nsContext = ((StartElement) event).getNamespaceContext();
                 break;
             }
         }
@@ -72,32 +82,126 @@ public class XmlUtils {
     public static Document parseXML(String xmlDocument, boolean secure) throws Exception{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING,secure);
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, secure);
         DocumentBuilder builder = factory.newDocumentBuilder();
 
-        Document doc = builder.parse(new InputSource(new StringReader(xmlDocument)));
-        return doc;
+        return builder.parse(new InputSource(new StringReader(xmlDocument)));
     }
 
-    public static NodeList evaluateXPathQuery(Document doc, NamespaceContext context, String xPathQuery) throws Exception{
+    public static NodeList evaluateXPathQuery(Document doc, NamespaceContext context, String xPathQuery) throws XPathExpressionException{
+        XPathExpression expr = createXPathExpression(context, xPathQuery);
+        return (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+    }
+
+    public static XPathExpression createXPathExpression(NamespaceContext context, String xPathQuery) throws XPathExpressionException{
         XPath xpath =  XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(context);
-        XPathExpression expr = xpath.compile(xPathQuery);
-
-        NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-        return nl;
+        return xpath.compile(xPathQuery);
     }
 
-    public static boolean addAttributesToList(NodeList nodeList, String name, String value) {
+    public static void addAttributesToList(NodeList nodeList, String name, String value) throws Exception{
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
 
             if(node.getNodeType() != Node.ELEMENT_NODE){
-                return false;
+                throw new Exception("Addition of attribute failed: XPath must return element types.");
             }
 
             ((Element) node).setAttribute(name, value);
         }
-        return true;
     }
+
+    public static void appendChildToList(NodeList nodeList, Node childNode) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Append failed: XPath must return element types.");
+            }
+
+            node.appendChild(childNode.cloneNode(true));
+        }
+    }
+
+    public static void insertBeforeToList(NodeList nodeList, Node beforeNode) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Insert failed: XPath must return element types.");
+            }
+            node.getParentNode().insertBefore(beforeNode.cloneNode(true), node);
+        }
+    }
+
+    public static void removeFromList(NodeList nodeList, String attributeName) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Removal failed: XPath must return element types.");
+            }
+
+            if (attributeName == null || attributeName.isEmpty()) {
+                node.getParentNode().removeChild(node);
+            }
+            else{
+                node.getAttributes().removeNamedItem(attributeName);
+            }
+        }
+    }
+
+    public static void setValueToList(NodeList nodeList, String attributeName, String value) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Removal failed: XPath must return element types.");
+            }
+
+            if(attributeName == null || attributeName.isEmpty()) {
+                node.setTextContent(value);
+            }
+            else {
+                ((Element) node).setAttribute(attributeName, value);
+            }
+        }
+    }
+
+    public static void validateAgainstXsd(String xmlDocument, String xsdDocument) throws Exception{
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = schemaFactory.newSchema(new StreamSource(new StringReader(xsdDocument)));
+        Validator validator = schema.newValidator();
+        validator.validate(new StreamSource(new StringReader(xmlDocument)));
+    }
+
+    public static String xPathQuery(Document doc, XPathExpression expr, String queryType, String delimiter) throws Exception{
+        if(queryType.equals(Constants.QueryTypes.NODE_LIST)) {
+            return xPathNodeListQuery(doc, expr, delimiter);
+        }
+        else if (queryType.equals(Constants.QueryTypes.NODE)) {
+            return xPathNodeQuery(doc, expr);
+        }
+        else if (queryType.equals(Constants.QueryTypes.VALUE)) {
+            return xPathValueQuery(doc, expr);
+        }
+        else{
+            throw new Exception("Invalid query type");
+        }
+    }
+
+    public static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
+        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+        return nodeListToString(nodeList,delimiter);
+    }
+
+    public static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
+        Node n = (Node) expr.evaluate(doc, XPathConstants.NODE);
+        return nodeToString(n);
+    }
+
+    public static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
+        return  (String) expr.evaluate(doc, XPathConstants.STRING);
+    }
+
 }

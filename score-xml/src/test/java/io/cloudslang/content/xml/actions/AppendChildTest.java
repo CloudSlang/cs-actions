@@ -1,29 +1,25 @@
 package io.cloudslang.content.xml.actions;
 
 import io.cloudslang.content.xml.utils.Constants;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Map;
 
 /**
  * Created by markowis on 25/02/2016.
  */
 public class AppendChildTest {
-    String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-            "<root someid=\"5\">\n" +
-            "  <element1 attr=\"ibute\">First element</element1>\n" +
-            "  <element2>\n" +
-            "    <subelement>Sub2</subelement>\n" +
-            "  </element2>\n" +
-            "  <element3>\n" +
-            "    <subelement>Sub3</subelement>\n" +
-            "  </element3>\n" +
-            "</root>";
 
     @Test
-    public void testAddChild() {
+    public void testAddChild() throws Exception {
         AppendChild toTest = new AppendChild();
+
+        URI resource = getClass().getResource("/xml/test.xml").toURI();
+        String xml = FileUtils.readFileToString(new File(resource));
 
         String xPathQuery = "//element1";
         String xmlChild = "<sub1 attr=\"ibute\">Sub1</sub1>";
@@ -35,8 +31,11 @@ public class AppendChildTest {
     }
 
     @Test
-    public void testAddChildMultiple() {
+    public void testAddChildMultiple() throws Exception {
         AppendChild toTest = new AppendChild();
+
+        URI resource = getClass().getResource("/xml/test.xml").toURI();
+        String xml = FileUtils.readFileToString(new File(resource));
 
         String xPathQuery = "//subelement";
         String xmlChild = "<subsub attr=\"ibute\">Deeply nested</subsub>";
@@ -48,8 +47,11 @@ public class AppendChildTest {
     }
 
     @Test
-    public void testNotFound() {
+    public void testNotFound() throws Exception{
         AppendChild toTest = new AppendChild();
+
+        URI resource = getClass().getResource("/xml/test.xml").toURI();
+        String xml = FileUtils.readFileToString(new File(resource));
 
         String xPathQuery = "/subelement";
         String xmlChild = "<toAdd>Text</toAdd>";
@@ -61,8 +63,11 @@ public class AppendChildTest {
     }
 
     @Test
-    public void testInvalidChild() {
+    public void testInvalidChild() throws Exception{
         AppendChild toTest = new AppendChild();
+
+        URI resource = getClass().getResource("/xml/test.xml").toURI();
+        String xml = FileUtils.readFileToString(new File(resource));
 
         String xPathQuery = "//subelement";
         String xmlChild = "<open>Text</close>";
@@ -74,8 +79,11 @@ public class AppendChildTest {
     }
 
     @Test
-    public void testNonElementXPathQuery() {
+    public void testNonElementXPathQuery() throws Exception{
         AppendChild toTest = new AppendChild();
+
+        URI resource = getClass().getResource("/xml/test.xml").toURI();
+        String xml = FileUtils.readFileToString(new File(resource));
 
         String xPathQuery = "//element1/@attr";
         String xmlChild = "<toAdd>Text</toAdd>";
