@@ -1,6 +1,7 @@
 package io.cloudslang.content.xml.utils;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -85,5 +86,18 @@ public class XmlUtils {
 
         NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         return nl;
+    }
+
+    public static boolean addAttributesToList(NodeList nodeList, String name, String value) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                return false;
+            }
+
+            ((Element) node).setAttribute(name, value);
+        }
+        return true;
     }
 }
