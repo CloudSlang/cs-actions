@@ -480,7 +480,7 @@ public class SendMailTest {
         Mockito.doReturn(mockPath).when(fileMock).toPath();
         PowerMockito.mockStatic(Files.class);
         when(Files.isReadable(mockPath)).thenReturn(true);
-        PowerMockito.whenNew(DataHandler.class).withArguments(fileDataSourceMock).thenReturn(dataHandlerMock);  ///
+        PowerMockito.whenNew(DataHandler.class).withArguments(fileDataSourceMock).thenReturn(dataHandlerMock);
         doNothing().when(mimeBodyPartMock).setDataHandler(dataHandlerMock);
         doNothing().when(mimeBodyPartMock).setFileName(anyString());
         doNothing().when(mimeMultipartMock).addBodyPart(mimeBodyPartMock);
