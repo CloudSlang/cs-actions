@@ -25,10 +25,8 @@ import javax.mail.internet.MimeUtility;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
+import java.nio.file.Files;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -144,7 +142,10 @@ public class SendMail {
                     if(!source.getFile().exists()) {
                         throw new FileNotFoundException("Cannot attach " + attachment);
                     }
-                    source.getInputStream(); //checks read access permission.
+
+                    if(!Files.isReadable(source.getFile().toPath())) {
+                        throw new InvalidParameterException(attachment + " don't have read permision");
+                    }
 
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
