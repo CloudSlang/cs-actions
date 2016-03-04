@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!--
         (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
@@ -13,7 +11,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>score-data-format</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Data format java actions</description>
@@ -40,9 +38,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://CloudSlang/score-content.git</connection>
-        <developerConnection>scm:git:git@github.com:CloudSlang/score-content.git</developerConnection>
-        <url>https://github.com/CloudSlang/score-content.git</url>
+        <connection>scm:git:https://CloudSlang/score-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:CloudSlang/score-actions.git</developerConnection>
+        <url>https://github.com/CloudSlang/score-actions.git</url>
         <tag>master</tag>
     </scm>
 
@@ -70,6 +68,12 @@
             <artifactId>json-path</artifactId>
             <version>1.2.0</version>
         </dependency>
+        <!-- Json provider required for Jayway in order to handle single quoted JSONs-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -81,6 +85,8 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
 
     <build>

@@ -23,7 +23,7 @@ public class StopServerAction {
      * Stops an ACTIVE server and changes its status to STOPPED. Suspended servers cannot be stopped.
      *
      * @param provider          The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
-     * @param identityEndpoint  The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon or "http://hostOrIp:5000/v2.0" for openstack.
+     * @param endpoint          The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon or "http://hostOrIp:5000/v2.0" for openstack.
      * @param identity          The username of your account or the Access Key ID. For openstack provider the required format is 'alias:username'.
      * @param credential        The password of the user or the Secret Access Key that correspond to the identity input.
      * @param region            The region where the server to reboot can be find. Ex: "RegionOne", "us-east-1". ListRegionAction can be used in order to get all regions.
@@ -45,16 +45,15 @@ public class StopServerAction {
     )
     public Map<String, String> execute(
             @Param(value = CommonInputs.PROVIDER, required = true) String provider,
-            @Param(value = CommonInputs.ENDPOINT, required = true) String identityEndpoint,
+            @Param(value = CommonInputs.ENDPOINT, required = true) String endpoint,
             @Param(value = CommonInputs.IDENTITY) String identity,
             @Param(value = CommonInputs.CREDENTIAL) String credential,
             @Param(value = ServerIdentificationInputs.REGION) String region,
             @Param(value = ServerIdentificationInputs.SERVER_ID) String serverId,
             @Param(value = CommonInputs.PROXY_HOST) String proxyHost,
-            @Param(value = CommonInputs.PROXY_PORT) String proxyPort
-    ) {
+            @Param(value = CommonInputs.PROXY_PORT) String proxyPort) {
 
-        ServerIdentificationInputs serverIdentificationInputs = new ServerIdentificationInputs(provider, identity, credential, identityEndpoint, proxyHost, proxyPort, region, serverId);
+        ServerIdentificationInputs serverIdentificationInputs = new ServerIdentificationInputs(provider, identity, credential, endpoint, proxyHost, proxyPort, region, serverId);
 
         try {
             return new StopServerExecutor().execute(serverIdentificationInputs);

@@ -1,0 +1,64 @@
+package io.cloudslang.content.vmware.actions.vm;
+
+import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.services.VmService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
+/**
+ * Created by Mihai Tusa.
+ * 2/2/2016.
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(UpdateVM.class)
+public class UpdateVMTest {
+    private UpdateVM updateVM = new UpdateVM();
+
+    @Mock
+    private VmService vmServiceMock;
+
+    @Test
+    public void testUpdateVM() throws Exception {
+        Map<String, String> resultMap = new HashMap<>();
+        whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
+        when(vmServiceMock.updateVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
+
+        resultMap = updateVM.updateVM("", "", "", "", "", "", "", "update", "cpu", "low", "", "");
+
+        assertNotNull(resultMap);
+        verify(vmServiceMock).updateVM(any(HttpInputs.class), any(VmInputs.class));
+    }
+
+    @Test
+    public void testUpdateVMProtocolException() throws Exception {
+        Map<String, String> resultMap = updateVM.updateVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "");
+
+        assertNotNull(resultMap);
+        verify(vmServiceMock, never()).deleteVM(any(HttpInputs.class), any(VmInputs.class));
+        assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
+        assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
+    }
+
+    @Test
+    public void testUpdateVMOperationException() throws Exception {
+        Map<String, String> resultMap = updateVM.updateVM("", "", "", "", "", "", "", "", "", "", "", "");
+
+        assertNotNull(resultMap);
+        verify(vmServiceMock, never()).updateVM(any(HttpInputs.class), any(VmInputs.class));
+        assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
+        assertEquals("Unsupported operation value: []. Valid values are: create, add, remove, update.", resultMap.get("returnResult"));
+    }
+}

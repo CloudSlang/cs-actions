@@ -39,6 +39,7 @@ public class AuthTypes implements Iterable<String> {
         supportedAuthTypes.add(DIGEST);
         supportedAuthTypes.add(NTLM);
         supportedAuthTypes.add(KERBEROS);
+        supportedAuthTypes.add(ANONYMOUS);
     }
 
     private Set<String> authTypes = new HashSet();
@@ -71,8 +72,6 @@ public class AuthTypes implements Iterable<String> {
 
         if (authType.equalsIgnoreCase(ANY)) {
             authTypes.addAll(supportedAuthTypes);
-        } else if (authType.equalsIgnoreCase(ANONYMOUS)) {
-            add(ANONYMOUS);
         } else {
             String[] toks = authType.split(",");
             for (String tok : toks) {

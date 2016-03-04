@@ -47,6 +47,12 @@
             <organization>HP Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
+        <developer>
+            <name>Mihail Cristian Tusa</name>
+            <email>mihail-cristian.tusa@hpe.com</email>
+            <organization>HPE Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
     </developers>
     <build>
         <pluginManagement>
@@ -168,6 +174,9 @@
         <module>score-mail</module>
         <module>score-data-format</module>
         <module>score-utilities</module>
+        <module>score-rft</module>
         <module>score-jClouds</module>
+        <module>score-powershell</module>
+        <module>score-vmware</module>
     </modules>
 </project>

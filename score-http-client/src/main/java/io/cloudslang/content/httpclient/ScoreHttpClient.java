@@ -10,6 +10,7 @@
 
 package io.cloudslang.content.httpclient;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.build.*;
 import io.cloudslang.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
@@ -83,7 +84,7 @@ public class ScoreHttpClient {
     private StatusConsumer statusConsumer;
 
     public Map<String, String> execute(HttpClientInputs httpClientInputs) {
-
+        initSessionsObjects(httpClientInputs);
         HttpComponents httpComponents = buildHttpComponents(httpClientInputs);
 
         CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
@@ -104,6 +105,18 @@ public class ScoreHttpClient {
                 httpResponse);
 
         return result;
+    }
+
+    private void initSessionsObjects(HttpClientInputs httpClientInputs) {
+        SerializableSessionObject cookieStoreSessionObject = httpClientInputs.getCookieStoreSessionObject();
+        if (cookieStoreSessionObject == null) {
+            httpClientInputs.setCookieStoreSessionObject(new SerializableSessionObject());
+        }
+
+        GlobalSessionObject globalSessionObject = httpClientInputs.getConnectionPoolSessionObject();
+        if (globalSessionObject == null) {
+            httpClientInputs.setConnectionPoolSessionObject(new GlobalSessionObject());
+        }
     }
 
     public HttpComponents buildHttpComponents(HttpClientInputs httpClientInputs) {
@@ -186,7 +199,7 @@ public class ScoreHttpClient {
 
         httpRequestBase.setHeaders(theHeaders.toArray(new Header[theHeaders.size()]));
 
-        CookieStore cookieStore = httpClientInputs.getCookieStoreSessionObject() == null ? null : cookieStoreBuilder
+        CookieStore cookieStore = cookieStoreBuilder
                 .setUseCookies(httpClientInputs.getUseCookies())
                 .setCookieStoreSessionObject(httpClientInputs.getCookieStoreSessionObject())
                 .buildCookieStore();
@@ -299,7 +312,9 @@ public class ScoreHttpClient {
     private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager,
                                 String keepAliveInput, CloseableHttpResponse httpResponse) {
         boolean keepAlive = StringUtils.isBlank(keepAliveInput) || Boolean.parseBoolean(keepAliveInput);
-        if (!keepAlive) {
+        if (keepAlive) {
+            httpRequestBase.releaseConnection();
+        } else {
             try {
                 httpResponse.close();
             } catch (IOException e) {

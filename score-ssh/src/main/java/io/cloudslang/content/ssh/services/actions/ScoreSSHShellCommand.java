@@ -67,7 +67,11 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         return service;
     }
 
-    private void runSSHCommand(SSHShellInputs sshShellInputs, Map<String, String> returnResult, SSHService service, String sessionId, boolean saveSSHSession) {
+    private void runSSHCommand(
+            SSHShellInputs sshShellInputs,
+            Map<String, String> returnResult,
+            SSHService service, String sessionId,
+            boolean saveSSHSession) {
 
         int timeoutNumber = StringUtils.toInt(sshShellInputs.getTimeout(), Constants.DEFAULT_TIMEOUT);
         boolean usePseudoTerminal = StringUtils.toBoolean(sshShellInputs.getPty(), Constants.DEFAULT_USE_PSEUDO_TERMINAL);

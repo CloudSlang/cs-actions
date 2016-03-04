@@ -37,10 +37,9 @@ public class ConnectionManagerBuilderTest {
     private PoolingHttpClientConnectionManager connectionManagerMock;
 
     @Test
-    public void buildConnectionManagerWithNullPoolHolder() {
+    public void buildConnectionManagerWithoutPoolHolder() {
         PoolingHttpClientConnectionManager connectionManager = new ConnectionManagerBuilder()
                 .setConnectionManagerMapKey("key1", "key2")
-                .setConnectionPoolHolder(null)
                 .buildConnectionManager();
         assertNull(connectionManager);
     }
