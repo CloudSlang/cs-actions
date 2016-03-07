@@ -1,6 +1,7 @@
 package io.cloudslang.content.vmware.services.utils;
 
 import com.vmware.vim25.*;
+import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.entities.DiskMode;
 import io.cloudslang.content.vmware.entities.Levels;
 import io.cloudslang.content.vmware.entities.Operation;
@@ -8,6 +9,7 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
@@ -17,12 +19,19 @@ public class VmUtils {
     private static final String TEST_CD_ISO = "testcd.iso";
     private static final int DISK_AMOUNT_MULTIPLIER = 1024;
 
-    public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs) {
-        vmConfigSpec.setName(vmInputs.getVirtualMachineName());
-        vmConfigSpec.setAnnotation(vmInputs.getDescription());
-        vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
+    public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs, String name) {
+        vmConfigSpec.setName(name);
         vmConfigSpec.setNumCPUs(vmInputs.getIntNumCPUs());
-        vmConfigSpec.setGuestId(vmInputs.getGuestOsId());
+        vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
+        vmConfigSpec.setAnnotation(vmInputs.getDescription());
+
+        if (!Constants.EMPTY.equalsIgnoreCase(String.valueOf(vmInputs.getCoresPerSocket()))) {
+            vmConfigSpec.setNumCoresPerSocket(vmInputs.getCoresPerSocket());
+        }
+
+        if (!Constants.EMPTY.equalsIgnoreCase(vmInputs.getGuestOsId())) {
+            vmConfigSpec.setGuestId(vmInputs.getGuestOsId());
+        }
 
         return vmConfigSpec;
     }
@@ -101,6 +110,15 @@ public class VmUtils {
         }
 
         return sharesInfo;
+    }
+
+    public ManagedObjectReference getMorObject(Map<String, ManagedObjectReference> morMap, String input) {
+        for (String key : morMap.keySet()) {
+            if (input.equalsIgnoreCase(key)) {
+                return morMap.get(key);
+            }
+        }
+        return null;
     }
 
     private void setSharesInfoLevel(String value, SharesInfo sharesInfo) throws Exception {

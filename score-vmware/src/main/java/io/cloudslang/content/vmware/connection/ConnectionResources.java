@@ -6,6 +6,7 @@ import com.vmware.vim25.RuntimeFaultFaultMsg;
 import com.vmware.vim25.VimPortType;
 import io.cloudslang.content.vmware.connection.helpers.GetMOREF;
 import io.cloudslang.content.vmware.connection.impl.BasicConnection;
+import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -18,8 +19,6 @@ import org.apache.commons.lang3.StringUtils;
  * 1/6/2016.
  */
 public class ConnectionResources {
-    private static final String DATA_CENTER = "Datacenter";
-    private static final String HOST_SYSTEM = "HostSystem";
     private static final String RESOURCE_POOL = "resourcePool";
     private static final String PARENT = "parent";
     private static final String VM_FOLDER = "vmFolder";
@@ -162,7 +161,7 @@ public class ConnectionResources {
     private ManagedObjectReference getDataCenterMor(String dataCenterName, ManagedObjectReference mor, GetMOREF getMOREF)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
-        ManagedObjectReference dataCenterMor = getMOREF.inContainerByType(mor, DATA_CENTER).get(dataCenterName);
+        ManagedObjectReference dataCenterMor = getMOREF.inContainerByType(mor, Constants.DATA_CENTER).get(dataCenterName);
         if (dataCenterMor == null) {
             throw new RuntimeException("Datacenter [" + dataCenterName + "] not found.");
         }
@@ -173,7 +172,7 @@ public class ConnectionResources {
     private ManagedObjectReference getHostMor(String hostname, GetMOREF getMOREF, ManagedObjectReference dataCenterMor)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
-        ManagedObjectReference hostMor = getMOREF.inContainerByType(dataCenterMor, HOST_SYSTEM).get(hostname);
+        ManagedObjectReference hostMor = getMOREF.inContainerByType(dataCenterMor, Constants.HOST_SYSTEM).get(hostname);
         if (hostMor == null) {
             throw new RuntimeException("Host [" + hostname + "] not found.");
         }

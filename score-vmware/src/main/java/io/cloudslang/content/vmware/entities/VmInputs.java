@@ -9,6 +9,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 public class VmInputs {
     private static final int DEFAULT_CPU_COUNT = 1;
+    private static final int DEFAULT_CORES_PER_SOCKET = 1;
     private static final long DEFAULT_VM_DISK_SIZE_MB = 1024;
     private static final long DEFAULT_VM_MEMORY_SIZE_MB = 1024;
 
@@ -17,14 +18,24 @@ public class VmInputs {
     private String virtualMachineName;
     private String description;
     private String dataStore;
-    private int intNumCPUs;
-    private long longVmDiskSize;
-    private long longVmMemorySize;
     private String guestOsId;
     private String operation;
     private String device;
     private String updateValue;
     private String vmDiskMode;
+    private String folderName;
+    private String cloneName;
+    private String cloneResourcePool;
+    private String cloneHost;
+    private String cloneDataStore;
+
+    private int intNumCPUs;
+    private int coresPerSocket;
+    private long longVmDiskSize;
+    private long longVmMemorySize;
+
+    private boolean thickProvision;
+    private boolean template;
 
     public VmInputs(VmInputsBuilder builder) {
         this.dataCenterName = builder.dataCenterName;
@@ -32,14 +43,24 @@ public class VmInputs {
         this.virtualMachineName = builder.virtualMachineName;
         this.description = builder.description;
         this.dataStore = builder.dataStore;
-        this.intNumCPUs = builder.intNumCPUs;
-        this.longVmDiskSize = builder.longVmDiskSize;
-        this.longVmMemorySize = builder.longVmMemorySize;
         this.guestOsId = builder.guestOsId;
         this.operation = builder.operation;
         this.device = builder.device;
         this.updateValue = builder.updateValue;
         this.vmDiskMode = builder.vmDiskMode;
+        this.folderName = builder.folderName;
+        this.cloneName = builder.cloneName;
+        this.cloneResourcePool = builder.cloneResourcePool;
+        this.cloneHost = builder.cloneHost;
+        this.cloneDataStore = builder.cloneDataStore;
+
+        this.intNumCPUs = builder.intNumCPUs;
+        this.coresPerSocket = builder.coresPerSocket;
+        this.longVmDiskSize = builder.longVmDiskSize;
+        this.longVmMemorySize = builder.longVmMemorySize;
+
+        this.thickProvision = builder.thickProvision;
+        this.template = builder.template;
     }
 
     public String getDataCenterName() {
@@ -62,18 +83,6 @@ public class VmInputs {
         return dataStore;
     }
 
-    public int getIntNumCPUs() {
-        return intNumCPUs;
-    }
-
-    public long getLongVmDiskSize() {
-        return longVmDiskSize;
-    }
-
-    public long getLongVmMemorySize() {
-        return longVmMemorySize;
-    }
-
     public String getGuestOsId() {
         return guestOsId;
     }
@@ -94,20 +103,74 @@ public class VmInputs {
         return vmDiskMode;
     }
 
+    public String getFolderName() {
+        return folderName;
+    }
+
+    public String getCloneName() {
+        return cloneName;
+    }
+
+    public int getIntNumCPUs() {
+        return intNumCPUs;
+    }
+
+    public int getCoresPerSocket() {
+        return coresPerSocket;
+    }
+
+    public long getLongVmDiskSize() {
+        return longVmDiskSize;
+    }
+
+    public long getLongVmMemorySize() {
+        return longVmMemorySize;
+    }
+
+    public boolean isThickProvision() {
+        return thickProvision;
+    }
+
+    public boolean isTemplate() {
+        return template;
+    }
+
+    public String getCloneResourcePool() {
+        return cloneResourcePool;
+    }
+
+    public String getCloneHost() {
+        return cloneHost;
+    }
+
+    public String getCloneDataStore() {
+        return cloneDataStore;
+    }
+
     public static class VmInputsBuilder {
         private String dataCenterName;
         private String hostname;
         private String virtualMachineName;
         private String description;
         private String dataStore;
-        private int intNumCPUs;
-        private long longVmDiskSize;
-        private long longVmMemorySize;
         private String guestOsId;
         private String operation;
         private String device;
         private String updateValue;
         private String vmDiskMode;
+        private String folderName;
+        private String cloneName;
+        private String cloneResourcePool;
+        private String cloneHost;
+        private String cloneDataStore;
+
+        private int intNumCPUs;
+        private int coresPerSocket;
+        private long longVmDiskSize;
+        private long longVmMemorySize;
+
+        private boolean thickProvision;
+        private boolean template;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -138,21 +201,6 @@ public class VmInputs {
             return this;
         }
 
-        public VmInputsBuilder withIntNumCPUs(String inputValue) {
-            intNumCPUs = InputUtils.getIntInput(inputValue, DEFAULT_CPU_COUNT);
-            return this;
-        }
-
-        public VmInputsBuilder withLongVmDiskSize(String inputValue) {
-            longVmDiskSize = InputUtils.getLongInput(inputValue, DEFAULT_VM_DISK_SIZE_MB);
-            return this;
-        }
-
-        public VmInputsBuilder withLongVmMemorySize(String inputValue) {
-            longVmMemorySize = InputUtils.getLongInput(inputValue, DEFAULT_VM_MEMORY_SIZE_MB);
-            return this;
-        }
-
         public VmInputsBuilder withGuestOsId(String inputValue) {
             guestOsId = inputValue;
             return this;
@@ -175,6 +223,61 @@ public class VmInputs {
 
         public VmInputsBuilder withDiskMode(String inputValue) throws Exception {
             vmDiskMode = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withFolderName(String inputValue) {
+            folderName = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withCloneName(String inputValue) {
+            cloneName = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withCloneResourcePool(String inputValue) {
+            cloneResourcePool = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withCloneHost(String inputValue) {
+            cloneHost = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withCloneDataStore(String inputValue) {
+            cloneDataStore = inputValue;
+            return this;
+        }
+
+        public VmInputsBuilder withIntNumCPUs(String inputValue) {
+            intNumCPUs = InputUtils.getIntInput(inputValue, DEFAULT_CPU_COUNT);
+            return this;
+        }
+
+        public VmInputsBuilder withCoresPerSocket(String inputValue) {
+            coresPerSocket = InputUtils.getIntInput(inputValue, DEFAULT_CORES_PER_SOCKET);
+            return this;
+        }
+
+        public VmInputsBuilder withLongVmDiskSize(String inputValue) {
+            longVmDiskSize = InputUtils.getLongInput(inputValue, DEFAULT_VM_DISK_SIZE_MB);
+            return this;
+        }
+
+        public VmInputsBuilder withLongVmMemorySize(String inputValue) {
+            longVmMemorySize = InputUtils.getLongInput(inputValue, DEFAULT_VM_MEMORY_SIZE_MB);
+            return this;
+        }
+
+        public VmInputsBuilder withThickProvision(String inputValue){
+            thickProvision = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public VmInputsBuilder withTemplate(String inputValue) {
+            template = Boolean.parseBoolean(inputValue);
             return this;
         }
     }
