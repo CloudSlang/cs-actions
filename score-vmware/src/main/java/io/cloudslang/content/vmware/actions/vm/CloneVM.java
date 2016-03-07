@@ -89,27 +89,4 @@ public class CloneVM {
 
         return resultMap;
     }
-
-    public static void main(String[] args) {
-        CloneVM cloneVM = new CloneVM();
-        Map<String, String> results = cloneVM.cloneVM("rosvc.rose.hp.com",
-                "",
-                "",
-                "EMEA\\tusami",
-                "#KidFisto43",
-                "true",
-                "Ubuntu 14.04",
-                "Mihai_Tusa",
-                "clona3",
-                "true",
-                "",
-                "2",
-                "4",
-                "4096",
-                "fromInteliJ",
-                "Adrian Dolha",
-                "blade01-08-v163.rose.hp.com",
-                "CMSOO-J-EVA1");
-        System.out.println(results.get("returnResult"));
-    }
 }
