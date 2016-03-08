@@ -40,17 +40,17 @@ public class CloneVM {
                                        @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
                                        @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                       @Param(value = Inputs.FOLDER_NAME, required = true) String folderName,
                                        @Param(value = Inputs.CLONE_NAME, required = true) String cloneName,
+                                       @Param(Inputs.FOLDER_NAME) String folderName,
+                                       @Param(Inputs.CLONE_HOST) String cloneHost,
+                                       @Param(Inputs.CLONE_RESOURCE_POOL) String cloneResourcePool,
+                                       @Param(Inputs.CLONE_DATA_STORE) String cloneDataStore,
                                        @Param(Inputs.THIN_PROVISION) String thickProvision,
                                        @Param(Inputs.IS_TEMPLATE) String isTemplate,
                                        @Param(Inputs.CPU_NUM) String cpuNum,
                                        @Param(Inputs.CORES_PER_SOCKET) String coresPerSocket,
                                        @Param(Inputs.MEMORY) String memory,
-                                       @Param(Inputs.CLONE_DESCRIPTION) String cloneDescription,
-                                       @Param(Inputs.CLONE_RESOURCE_POOL) String cloneResourcePool,
-                                       @Param(Inputs.CLONE_HOST) String cloneHost,
-                                       @Param(Inputs.CLONE_DATA_STORE) String cloneDataStore) {
+                                       @Param(Inputs.CLONE_DESCRIPTION) String cloneDescription) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -66,17 +66,17 @@ public class CloneVM {
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withVirtualMachineName(virtualMachineName)
-                    .withFolderName(folderName)
                     .withCloneName(cloneName)
+                    .withFolderName(folderName)
+                    .withCloneHost(cloneHost)
+                    .withCloneResourcePool(cloneResourcePool)
+                    .withCloneDataStore(cloneDataStore)
                     .withThickProvision(thickProvision)
                     .withTemplate(isTemplate)
                     .withIntNumCPUs(cpuNum)
                     .withCoresPerSocket(coresPerSocket)
                     .withLongVmMemorySize(memory)
                     .withDescription(cloneDescription)
-                    .withCloneResourcePool(cloneResourcePool)
-                    .withCloneHost(cloneHost)
-                    .withCloneDataStore(cloneDataStore)
                     .build();
 
             resultMap = new VmService().cloneVM(httpInputs, vmInputs);

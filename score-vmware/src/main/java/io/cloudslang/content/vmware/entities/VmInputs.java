@@ -111,6 +111,18 @@ public class VmInputs {
         return cloneName;
     }
 
+    public String getCloneResourcePool() {
+        return cloneResourcePool;
+    }
+
+    public String getCloneHost() {
+        return cloneHost;
+    }
+
+    public String getCloneDataStore() {
+        return cloneDataStore;
+    }
+
     public int getIntNumCPUs() {
         return intNumCPUs;
     }
@@ -133,18 +145,6 @@ public class VmInputs {
 
     public boolean isTemplate() {
         return template;
-    }
-
-    public String getCloneResourcePool() {
-        return cloneResourcePool;
-    }
-
-    public String getCloneHost() {
-        return cloneHost;
-    }
-
-    public String getCloneDataStore() {
-        return cloneDataStore;
     }
 
     public static class VmInputsBuilder {
