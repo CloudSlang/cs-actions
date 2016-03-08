@@ -25,10 +25,7 @@ public class RemoveService {
             NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
-            if(nodeList.getLength() == 0){
-                ResultUtils.populateFailureResult(result, "Removal failed: element not found");
-                return result;
-            }
+            XmlUtils.validateNodeList(nodeList);
 
             XmlUtils.removeFromList(nodeList, customInputs.getAttributeName());
             ResultUtils.populateSuccessResult(result, "Removed successfully.", XmlUtils.nodeToString(doc));

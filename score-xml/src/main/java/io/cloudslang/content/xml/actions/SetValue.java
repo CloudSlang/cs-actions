@@ -7,18 +7,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
-import io.cloudslang.content.xml.services.RemoveService;
 import io.cloudslang.content.xml.services.SetValueService;
 import io.cloudslang.content.xml.utils.Constants;
-import io.cloudslang.content.xml.utils.XmlUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.*;
-import java.util.HashMap;
+
 import java.util.Map;
 
 /**

@@ -25,10 +25,7 @@ public class AddAttributeService {
             NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
-            if(nodeList.getLength() == 0){
-                ResultUtils.populateFailureResult(result, "Attribute not added: element not found.");
-                return result;
-            }
+            XmlUtils.validateNodeList(nodeList);
 
             XmlUtils.addAttributesToList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
             ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));

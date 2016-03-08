@@ -30,10 +30,7 @@ public class AppendChildService {
 
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
-            if(nodeList.getLength() == 0){
-                ResultUtils.populateFailureResult(result, "Child not added: element not found");
-                return result;
-            }
+            XmlUtils.validateNodeList(nodeList);
 
             XmlUtils.appendChildToList(nodeList, childNode);
             ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));

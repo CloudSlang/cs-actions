@@ -25,10 +25,7 @@ public class SetValueService {
             NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
-            if(nodeList.getLength() == 0){
-                ResultUtils.populateFailureResult(result, "Value not set: element not found");
-                return result;
-            }
+            XmlUtils.validateNodeList(nodeList);
 
             XmlUtils.setValueToList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
             ResultUtils.populateSuccessResult(result, "Value set successfully.", XmlUtils.nodeToString(doc));

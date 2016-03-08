@@ -1,7 +1,5 @@
 package io.cloudslang.content.xml.utils;
 
-import javax.xml.xpath.XPathConstants;
-
 /**
  * Created by markowis on 18/02/2016.
  */
@@ -9,9 +7,6 @@ public class Constants {
     public static final String SUCCESS = "success";
     public static final String FAILURE = "failure";
     public static final String EMPTY_STRING = "";
-    public static final String EQUAL = "equal";
-    public static final String NOT_EQUAL = "notEqual";
-
 
     public static final class OutputNames {
         public static final String RETURN_RESULT = "returnResult";
@@ -22,8 +17,6 @@ public class Constants {
 
     public static final class InputNames {
         public static final String XML_DOCUMENT = "xmlDocument";
-        public static final String XML_DOCUMENT1 = "xmlDocument1";
-        public static final String XML_DOCUMENT2 = "xmlDocument2";
         public static final String XSD_DOCUMENT = "xsdDocument";
         public static final String XPATH_QUERY = "xPathQuery";
         public static final String XPATH_ELEMENT_QUERY = "xPathElementQuery";

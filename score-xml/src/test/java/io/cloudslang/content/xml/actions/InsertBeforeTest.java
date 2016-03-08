@@ -2,7 +2,9 @@ package io.cloudslang.content.xml.actions;
 
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,83 +16,71 @@ import java.util.Map;
  */
 public class InsertBeforeTest {
 
-    @Test
-    public void testInsertBefore() throws Exception {
-        InsertBefore toTest = new InsertBefore();
+    private InsertBefore insertBefore;
+    Map<String, String> result;
+    String xml;
 
+    @Before
+    public void setUp() throws Exception{
+        insertBefore = new InsertBefore();
         URI resource = getClass().getResource("/xml/test.xml").toURI();
-        String xml = FileUtils.readFileToString(new File(resource));
+        xml = FileUtils.readFileToString(new File(resource));
+    }
 
+    @After
+    public void tearDown(){
+        insertBefore = null;
+        result = null;
+        xml = null;
+    }
+
+    @Test
+    public void testInsertBefore() {
         String xPathQuery = "//element1";
         String xmlElement = "<element0>Zero</element0>";
 
-        Map<String, String> result = toTest.execute(xml, xPathQuery, xmlElement, "false");
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, resultText);
+        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 
     @Test
-    public void testAddChildMultiple() throws Exception {
-        InsertBefore toTest = new InsertBefore();
-
-        URI resource = getClass().getResource("/xml/test.xml").toURI();
-        String xml = FileUtils.readFileToString(new File(resource));
-
+    public void testAddChildMultiple() {
         String xPathQuery = "//subelement";
         String xmlElement = "<presub>Zero</presub>";
 
-        Map<String, String> result = toTest.execute(xml, xPathQuery, xmlElement, "false");
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, resultText);
+        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 
     @Test
-    public void testNotFound() throws Exception {
-        InsertBefore toTest = new InsertBefore();
-
-        URI resource = getClass().getResource("/xml/test.xml").toURI();
-        String xml = FileUtils.readFileToString(new File(resource));
-
+    public void testNotFound() {
         String xPathQuery = "/subelement";
         String xmlElement = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = toTest.execute(xml, xPathQuery, xmlElement, "false");
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
-        Assert.assertEquals(Constants.FAILURE, resultText);
+        Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 
     @Test
-    public void testInvalidElement() throws Exception {
-        InsertBefore toTest = new InsertBefore();
-
-        URI resource = getClass().getResource("/xml/test.xml").toURI();
-        String xml = FileUtils.readFileToString(new File(resource));
-
+    public void testInvalidElement() {
         String xPathQuery = "//subelement";
         String xmlElement = "<open>Text</close>";
 
-        Map<String, String> result = toTest.execute(xml, xPathQuery, xmlElement, "false");
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
-        Assert.assertEquals(Constants.FAILURE, resultText);
+        Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 
     @Test
-    public void testNonElementXPathQuery() throws Exception {
-        InsertBefore toTest = new InsertBefore();
-
-        URI resource = getClass().getResource("/xml/test.xml").toURI();
-        String xml = FileUtils.readFileToString(new File(resource));
-
+    public void testNonElementXPathQuery() {
         String xPathQuery = "//element1/@attr";
         String xmlElement = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = toTest.execute(xml, xPathQuery, xmlElement, "false");
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
-        Assert.assertEquals(Constants.FAILURE, resultText);
+        Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 }

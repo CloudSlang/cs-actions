@@ -2,7 +2,9 @@ package io.cloudslang.content.xml.actions;
 
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,58 +16,63 @@ import java.util.Map;
  */
 public class ValidateTest {
 
+    private Validate validate;
+    Map<String, String> result;
+    String xml;
+
+    @Before
+    public void setUp() throws Exception{
+        validate = new Validate();
+    }
+
+    @After
+    public void tearDown(){
+        validate = null;
+        result = null;
+        xml = null;
+    }
+
     @Test
     public void testWithWellFormedXML() {
-        Validate toTest = new Validate();
-        String xml = "<root>toot</root>";
+        xml = "<root>toot</root>";
 
-        Map<String, String> result = toTest.execute(xml, null);
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = validate.execute(xml, null);
 
-        Assert.assertEquals(Constants.SUCCESS, resultText);
+        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 
     @Test
     public void testWithNonWellFormedXML() {
-        Validate toTest = new Validate();
-        String xml = "<root>toot</roo>";
+        xml = "<root>toot</roo>";
 
-        Map<String, String> result = toTest.execute(xml, null);
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+       result = validate.execute(xml, null);
 
-        Assert.assertEquals(Constants.FAILURE, resultText);
+        Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 
     @Test
     public void testWithValidXML() throws Exception {
-        Validate toTest = new Validate();
-
         URI resourceXML = getClass().getResource("/xml/valid.xml").toURI();
-        String xml = FileUtils.readFileToString(new File(resourceXML));
+        xml = FileUtils.readFileToString(new File(resourceXML));
 
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        Map<String, String> result = toTest.execute(xml, xsd);
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = validate.execute(xml, xsd);
 
-        Assert.assertEquals(Constants.SUCCESS, resultText);
+        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
     }
 
     @Test
     public void testWithNotValidXML() throws Exception {
-        Validate toTest = new Validate();
-
         URI resourceXML = getClass().getResource("/xml/notValid.xml").toURI();
-        String xml = FileUtils.readFileToString(new File(resourceXML));
+        xml = FileUtils.readFileToString(new File(resourceXML));
 
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        Map<String, String> result = toTest.execute(xml, xsd);
-        String resultText = result.get(Constants.OutputNames.RESULT_TEXT);
+        result = validate.execute(xml, xsd);
 
-        Assert.assertEquals(Constants.FAILURE, resultText);
+        Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
     }
-
 }

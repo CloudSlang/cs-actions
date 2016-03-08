@@ -9,6 +9,7 @@ import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.SelectService;
 import io.cloudslang.content.xml.utils.Constants;
+
 import java.util.Map;
 
 /**
@@ -33,6 +34,7 @@ public class Select {
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
                 .withXpathQuery(xPathQuery)
+                .withSecureProcessing(secureProcessing)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

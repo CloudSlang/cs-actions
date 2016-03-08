@@ -30,10 +30,7 @@ public class InsertBeforeService {
 
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
-            if (nodeList.getLength() == 0) {
-                ResultUtils.populateFailureResult(result, "Insert failed: element not found");
-                return result;
-            }
+            XmlUtils.validateNodeList(nodeList);
 
             XmlUtils.insertBeforeToList(nodeList,beforeNode);
             ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));

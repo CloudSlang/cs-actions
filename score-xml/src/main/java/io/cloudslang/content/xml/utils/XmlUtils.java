@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -34,7 +35,7 @@ public class XmlUtils {
     public static String nodeToString(Node node) throws TransformerException {
 
         if(node == null){
-            return "";
+            return Constants.EMPTY_STRING;
         } else if(node.getNodeType() == Node.ATTRIBUTE_NODE) {
             return node.toString();
         } else {
@@ -42,7 +43,7 @@ public class XmlUtils {
         }
     }
 
-    public static String nodeListToString(NodeList nodeList, String delimiter) throws  TransformerException {
+    private static String nodeListToString(NodeList nodeList, String delimiter) throws  TransformerException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nodeList.getLength() - 1; i++) {
             sb.append(nodeToString(nodeList.item(i)));
@@ -52,7 +53,7 @@ public class XmlUtils {
         return sb.toString();
     }
 
-    public static String transformElementNode(Node node) throws TransformerException{
+    private static String transformElementNode(Node node) throws TransformerException{
         StringWriter stringWriter = new StringWriter();
 
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -190,18 +191,24 @@ public class XmlUtils {
         }
     }
 
-    public static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
+    private static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         return nodeListToString(nodeList,delimiter);
     }
 
-    public static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
+    private static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
         Node n = (Node) expr.evaluate(doc, XPathConstants.NODE);
         return nodeToString(n);
     }
 
-    public static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
+    private static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
         return  (String) expr.evaluate(doc, XPathConstants.STRING);
+    }
+
+    public static void validateNodeList(NodeList nodeList) throws Exception{
+        if(nodeList.getLength() == 0){
+            throw new Exception("Element not found.");
+        }
     }
 
 }

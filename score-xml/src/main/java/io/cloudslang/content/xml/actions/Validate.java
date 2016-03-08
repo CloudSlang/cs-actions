@@ -9,6 +9,7 @@ import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.ValidateService;
 import io.cloudslang.content.xml.utils.Constants;
+
 import java.util.Map;
 
 
