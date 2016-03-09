@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -29,9 +30,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.eq;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -40,7 +39,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * 1/08/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({VmService.class, FindObjects.class, GetObjectProperties.class})
+@PrepareForTest({VmService.class, FindObjects.class, GetObjectProperties.class, VmConfigSpecs.class, VirtualMachineRelocateSpec.class, VmUtils.class})
 public class VmServiceTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -114,12 +113,8 @@ public class VmServiceTest {
     @Mock
     private VmUtils utilsMock;
 
-    @Mock
-    private VmService serviceMock;
-
     private List<ManagedObjectReference> dataStoresVictim;
     private ManagedObjectReference morVictim;
-    private Map<String, ManagedObjectReference> morsMapVictim;
 
     @Before
     public void init() throws Exception {
@@ -137,18 +132,16 @@ public class VmServiceTest {
         dataStoresVictim = new ArrayList<>();
         morVictim = new ManagedObjectReference();
         dataStoresVictim.add(morVictim);
-        morsMapVictim = new HashMap<>();
     }
 
     @After
     public void tearDown() {
         dataStoresVictim = null;
         morVictim = null;
-        morsMapVictim = null;
     }
 
     @Test
-    public void testSuccessfullyCreatesVirtualMachine() throws Exception {
+    public void createVMSuccess() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         whenNew(VmConfigSpecs.class).withNoArguments().thenReturn(configSpecsMock);
@@ -178,7 +171,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testFailureToCreateVirtualMachine() throws Exception {
+    public void createVMFailure() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(false);
 
         whenNew(VmConfigSpecs.class).withNoArguments().thenReturn(configSpecsMock);
@@ -208,7 +201,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testSuccessfullyDeletesVirtualMachine() throws Exception {
+    public void deleteVMSuccess() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -231,7 +224,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testFailureToDeleteVirtualMachine() throws Exception {
+    public void deleteVMFailure() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(false);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -254,7 +247,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testNotFoundVirtualMachineToDelete() throws Exception {
+    public void deleteVMNotFound() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -279,7 +272,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testSuccessfullyPowersOnVirtualMachine() throws Exception {
+    public void powerOnVMSuccess() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -304,7 +297,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testFailureToPowerOnVirtualMachine() throws Exception {
+    public void powerOnVMtFailure() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(false);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -327,7 +320,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testNotFoundVirtualMachineToPowerOn() throws Exception {
+    public void powerOnVMtNotFound() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -354,7 +347,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testSuccessfullyPowersOffVirtualMachine() throws Exception {
+    public void powerOffVMSuccess() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -377,7 +370,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testFailureToPowerOffVirtualMachine() throws Exception {
+    public void powerOffVMFailure() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(false);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -399,7 +392,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testNotFoundVirtualMachineToPowerOff() throws Exception {
+    public void powerOffVMtNotFound() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(FindObjects.findObject(any(VimPortType.class),
@@ -425,7 +418,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testSuccessfullyGetsOSDescriptors() throws Exception {
+    public void getOsDescriptorsSuccess() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
@@ -449,7 +442,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testSuccessfullyListVMsAndTemplates() throws Exception {
+    public void listVMsAndTemplatesSuccess() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
         Set<String> virtualMachineNamesList = new HashSet<>();
         virtualMachineNamesList.add("firstVM");
@@ -468,7 +461,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testEmptyListVMsAndTemplates() throws Exception {
+    public void listVMsAndTemplatesEmptyList() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
         Set<String> virtualMachineNamesList = new HashSet<>();
 
@@ -485,7 +478,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testSuccessfullyGetsVMDetails() throws Exception {
+    public void getVMDetailsSuccess() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
         ObjectContent[] objectContents = getObjectContents();
 
@@ -512,7 +505,7 @@ public class VmServiceTest {
     }
 
     @Test
-    public void testGetVMDetailsEmpty() throws Exception {
+    public void getVMDetailsEmpty() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
         when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
@@ -861,14 +854,13 @@ public class VmServiceTest {
                 .withDevice("nic")
                 .withUpdateValue("eth2")
                 .build());
-
     }
 
     @Test
     public void updateVMNotFound() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
-        doNothing().when(virtualMachineConfigSpecMock).setMemoryAllocation(any(ResourceAllocationInfo.class));
+        PowerMockito.doNothing().when(virtualMachineConfigSpecMock).setMemoryAllocation(any(ResourceAllocationInfo.class));
         when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
                 .thenReturn(null);
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
@@ -922,10 +914,10 @@ public class VmServiceTest {
     }
 
     @Test
-    public void updateCpu() throws Exception {
+    public void updateVMCpu() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
-        doNothing().when(virtualMachineConfigSpecMock).setCpuAllocation(any(ResourceAllocationInfo.class));
+        PowerMockito.doNothing().when(virtualMachineConfigSpecMock).setCpuAllocation(any(ResourceAllocationInfo.class));
         when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
                 .thenReturn(vmMorMock);
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
@@ -949,10 +941,10 @@ public class VmServiceTest {
     }
 
     @Test
-    public void updateMemory() throws Exception {
+    public void updateVMMemory() throws Exception {
         VmService vmService = getVmServiceWithTaskResult(true);
 
-        doNothing().when(virtualMachineConfigSpecMock).setCpuAllocation(any(ResourceAllocationInfo.class));
+        PowerMockito.doNothing().when(virtualMachineConfigSpecMock).setCpuAllocation(any(ResourceAllocationInfo.class));
         when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
                 .thenReturn(vmMorMock);
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
@@ -976,14 +968,14 @@ public class VmServiceTest {
     }
 
     @Test
-    public void updateNotSupported() throws Exception {
+    public void updateVMNotSupported() throws Exception {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Unsupported operation specified for CPU or memory device. " +
                 "The CPU or memory can only be updated.");
 
         VmService vmService = getVmServiceWithTaskResult(true);
 
-        doNothing().when(virtualMachineConfigSpecMock).setMemoryAllocation(any(ResourceAllocationInfo.class));
+        PowerMockito.doNothing().when(virtualMachineConfigSpecMock).setMemoryAllocation(any(ResourceAllocationInfo.class));
         when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
                 .thenReturn(vmMorMock);
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
@@ -992,7 +984,112 @@ public class VmServiceTest {
         vmService.updateVM(httpInputsMock, new VmInputs.VmInputsBuilder().withOperation("add").withDevice("memory").build());
     }
 
-//    }
+    @Test
+    public void cloneVMSuccess() throws Exception {
+        ManagedObjectReference folderMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference resourcePoolMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference hostMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference dataStoreMock = PowerMockito.mock(ManagedObjectReference.class);
+        VirtualMachineRelocateSpec vmRelocateSpecMock = PowerMockito.mock(VirtualMachineRelocateSpec.class);
+        VirtualMachineCloneSpec cloneSpeckMock = PowerMockito.mock(VirtualMachineCloneSpec.class);
+
+        Map<String, ManagedObjectReference> testMap = new HashMap<>();
+
+        VmService vmService = createVmServiceForCloneVM(true, folderMock, resourcePoolMock, hostMock, dataStoreMock);
+        when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
+                .thenReturn(vmMorMock);
+        when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
+        when(getMOREFMock.inContainerByType(eq(folderMock), eq("Folder")))
+                .thenReturn(getPopulatedMor(testMap, "folderKey", "Folder", "testFolder"));
+        when(getMOREFMock.inContainerByType(eq(resourcePoolMock), eq("ResourcePool")))
+                .thenReturn(getPopulatedMor(testMap, "resourcePoolKey", "ResourcePool", "testResourcePool"));
+        when(getMOREFMock.inContainerByType(eq(hostMock), eq("HostSystem")))
+                .thenReturn(getPopulatedMor(testMap, "hostKey", "HostSystem", "testHost"));
+        when(getMOREFMock.inContainerByType(eq(dataStoreMock), eq("datastore")))
+                .thenReturn(getPopulatedMor(testMap, "dataStoreKey", "datastore", "testDataStore"));
+        whenNew(VmConfigSpecs.class).withNoArguments().thenReturn(configSpecsMock);
+        whenNew(VmUtils.class).withNoArguments().thenReturn(utilsMock);
+        whenNew(VirtualMachineRelocateSpec.class).withNoArguments().thenReturn(vmRelocateSpecMock);
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withVirtualMachineName("toCloneVM")
+                .withCloneName("cloneVM")
+                .withFolderName("testFolder")
+                .withCloneHost("testHost")
+                .withCloneResourcePool("testResourcePool")
+                .withCloneDataStore("testDataStore")
+                .build();
+
+        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
+        when(configSpecsMock.getCloneSpec(vmInputs, vmRelocateSpecMock)).thenReturn(cloneSpeckMock);
+        when(utilsMock.getMorObject(eq(testMap), eq("Folder"))).thenReturn(testMap.get("folderKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("ResourcePool"))).thenReturn(testMap.get("resourcePoolKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("HostSystem"))).thenReturn(testMap.get("hostKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("datastore"))).thenReturn(testMap.get("dataStoreKey"));
+        when(vimPortMock.cloneVMTask(vmMorMock, folderMock, "cloneVM", cloneSpeckMock)).thenReturn(taskMorMock);
+
+        Map<String, String> results = vmService.cloneVM(httpInputsMock, vmInputs);
+
+        assertNotNull(results);
+        verifyConnection();
+        assertEquals(0, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Success: The [toCloneVM] VM was successfully cloned. The taskId is: task-12345",
+                results.get("returnResult"));
+    }
+
+    @Test
+    public void cloneVMFailure() throws Exception {
+        ManagedObjectReference folderMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference resourcePoolMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference hostMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference dataStoreMock = PowerMockito.mock(ManagedObjectReference.class);
+        VirtualMachineRelocateSpec vmRelocateSpecMock = PowerMockito.mock(VirtualMachineRelocateSpec.class);
+        VirtualMachineCloneSpec cloneSpeckMock = PowerMockito.mock(VirtualMachineCloneSpec.class);
+
+        Map<String, ManagedObjectReference> testMap = new HashMap<>();
+
+        VmService vmService = createVmServiceForCloneVM(true, folderMock, resourcePoolMock, hostMock, dataStoreMock);
+        when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
+                .thenReturn(null);
+        when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
+        when(getMOREFMock.inContainerByType(eq(folderMock), eq("Folder")))
+                .thenReturn(getPopulatedMor(testMap, "folderKey", "Folder", "testFolder"));
+        when(getMOREFMock.inContainerByType(eq(resourcePoolMock), eq("ResourcePool")))
+                .thenReturn(getPopulatedMor(testMap, "resourcePoolKey", "ResourcePool", "testResourcePool"));
+        when(getMOREFMock.inContainerByType(eq(hostMock), eq("HostSystem")))
+                .thenReturn(getPopulatedMor(testMap, "hostKey", "HostSystem", "testHost"));
+        when(getMOREFMock.inContainerByType(eq(dataStoreMock), eq("datastore")))
+                .thenReturn(getPopulatedMor(testMap, "dataStoreKey", "datastore", "testDataStore"));
+        whenNew(VmConfigSpecs.class).withNoArguments().thenReturn(configSpecsMock);
+        whenNew(VmUtils.class).withNoArguments().thenReturn(utilsMock);
+        whenNew(VirtualMachineRelocateSpec.class).withNoArguments().thenReturn(vmRelocateSpecMock);
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withVirtualMachineName("toCloneVM")
+                .withCloneName("cloneVM")
+                .withFolderName("testFolder")
+                .withCloneHost("testHost")
+                .withCloneResourcePool("testResourcePool")
+                .withCloneDataStore("testDataStore")
+                .build();
+
+        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
+        when(configSpecsMock.getCloneSpec(vmInputs, vmRelocateSpecMock)).thenReturn(cloneSpeckMock);
+        when(utilsMock.getMorObject(eq(testMap), eq("Folder"))).thenReturn(testMap.get("folderKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("ResourcePool"))).thenReturn(testMap.get("resourcePoolKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("HostSystem"))).thenReturn(testMap.get("hostKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("datastore"))).thenReturn(testMap.get("dataStoreKey"));
+        when(vimPortMock.cloneVMTask(vmMorMock, folderMock, "cloneVM", cloneSpeckMock)).thenReturn(taskMorMock);
+
+        Map<String, String> results = vmService.cloneVM(httpInputsMock, vmInputs);
+
+        assertNotNull(results);
+        verify(connectionResourcesMock, atMost(2)).getVimPortType();
+        verify(connectionResourcesMock).getConnection();
+        verify(connectionMock).disconnect();
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Could not find the [toCloneVM] VM.", results.get("returnResult"));
+    }
 
     private VmService getVmServiceWithTaskResult(final boolean isDone) {
         return new VmService() {
@@ -1054,5 +1151,47 @@ public class VmServiceTest {
         when(objectItemMock.getPropSet()).thenReturn(vmProperties);
 
         return objectContents;
+    }
+
+    private VmService createVmServiceForCloneVM(final boolean isDone,
+                                                final ManagedObjectReference folderMock,
+                                                final ManagedObjectReference resourcePoolMock,
+                                                final ManagedObjectReference hostMock,
+                                                final ManagedObjectReference dataStoreMock) {
+        return new VmService() {
+            public boolean getTaskResultAfterDone(ConnectionResources connectionResources,
+                                                  ManagedObjectReference task)
+                    throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
+                return isDone;
+            }
+
+            ManagedObjectReference getMorFolder(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils) {
+                return folderMock;
+            }
+
+            ManagedObjectReference getMorResourcePool(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils) {
+                return resourcePoolMock;
+            }
+
+            ManagedObjectReference getMorHost(VmInputs vmInputs, ConnectionResources connectionResources,
+                                              ManagedObjectReference vmMor, VmUtils utils) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+                return hostMock;
+            }
+
+            ManagedObjectReference getMorDataStore(VmInputs vmInputs, ConnectionResources connectionResources,
+                                                   ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+                return dataStoreMock;
+            }
+        };
+    }
+
+    private Map<String, ManagedObjectReference> getPopulatedMor(Map<String, ManagedObjectReference> map,
+                                                                String key, String type, String value) {
+        ManagedObjectReference mor = new ManagedObjectReference();
+        mor.setType(type);
+        mor.setValue(value);
+        map.put(key, mor);
+
+        return map;
     }
 }
