@@ -992,60 +992,6 @@ public class VmServiceTest {
         vmService.updateVM(httpInputsMock, new VmInputs.VmInputsBuilder().withOperation("add").withDevice("memory").build());
     }
 
-//    @Test
-//    public void cloneVM() throws Exception {
-//        VmService vmService = getVmServiceWithTaskResult(true);
-//
-//        DatastoreSummary datastoreSummary = new DatastoreSummary();
-//        datastoreSummary.setName("testDataStore");
-//
-//        whenNew(VmUtils.class).withNoArguments().thenReturn(utilsMock);
-//
-//        when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
-//        when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
-//                .thenReturn(vmMorMock);
-//        when(connectionResourcesMock.getMorRootFolder()).thenReturn(folderMock);
-//        when(getMOREFMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
-//        when(entityPropsMock.get(eq("datastore"))).thenReturn(dataStoresMock);
-//        when(dataStoresMock.getManagedObjectReference()).thenReturn(dataStoresVictim);
-//        when(entityPropsMock.get(eq("summary"))).thenReturn(datastoreSummary);
-//
-//        doReturn(getPopulatedMorsMap(morsMapVictim, "Folder")).when(getMOREFMock)
-//                .inContainerByType(any(ManagedObjectReference.class), eq("Folder"), any(RetrieveOptions.class));
-//        doReturn(getPopulatedMorsMap(morsMapVictim, "ResourcePool")).when(getMOREFMock)
-//                .inContainerByType(any(ManagedObjectReference.class), eq("ResourcePool"), any(RetrieveOptions.class));
-//        doReturn(getPopulatedMorsMap(morsMapVictim, "HostSystem")).when(getMOREFMock)
-//                .inContainerByType(any(ManagedObjectReference.class), eq("HostSystem"), any(RetrieveOptions.class));
-//        doReturn(getPopulatedMorsMap(morsMapVictim, "datastore")).when(getMOREFMock)
-//                .inContainerByType(any(ManagedObjectReference.class), eq("datastore"), any(RetrieveOptions.class));
-//
-//        doReturn(folderMock).when(serviceMock).getMorFolder(any(VmInputs.class), any(ConnectionResources.class), any(VmUtils.class));
-//        doReturn(folderMock).when(utilsMock).getMorObject(morsMapVictim, "folderKey");
-//
-//        folderMock.setValue("testFolder");
-//
-//        doReturn(resourcePoolMock).when(utilsMock).getMorObject(morsMapVictim, "resourcePoolKey");
-//        doReturn(hostMock).when(utilsMock).getMorObject(morsMapVictim, "hostKey");
-//        doReturn(dataStoreMock).when(utilsMock).getMorObject(morsMapVictim, "dataStoreKey");
-//
-//        doReturn(taskMorMock).when(vimPortMock).cloneVMTask(any(ManagedObjectReference.class), any(ManagedObjectReference.class),
-//                anyString(), any(VirtualMachineCloneSpec.class));
-//
-//        Map<String, String> results = vmService.cloneVM(httpInputsMock, new VmInputs.VmInputsBuilder()
-//                .withVirtualMachineName("toCloneVM")
-//                .withCloneName("cloneVM")
-//                .withFolderName("testFolder")
-//                .withCloneHost("testHost")
-//                .withCloneResourcePool("testResourcePool")
-//                .withCloneDataStore("testDataStore")
-//                .build());
-//
-//        verifyConnection();
-//
-//        assertNotNull(results);
-//        assertEquals(0, Integer.parseInt(results.get("returnCode")));
-//        assertEquals("Success: The [toCloneVM] VM was successfully  cloned. The taskId is: task-12345",
-//                results.get("returnResult"));
 //    }
 
     private VmService getVmServiceWithTaskResult(final boolean isDone) {
@@ -1108,30 +1054,5 @@ public class VmServiceTest {
         when(objectItemMock.getPropSet()).thenReturn(vmProperties);
 
         return objectContents;
-    }
-
-    private Map<String, ManagedObjectReference> getPopulatedMorsMap(Map<String, ManagedObjectReference> map, String morType) {
-        switch (morType) {
-            case "Folder":
-                return getPopulatedMor(map, "folderKey", "Folder", "testFolder");
-            case "ResourcePool":
-                return getPopulatedMor(map, "resourcePoolKey", "ResourcePool", "testResourcePool");
-            case "HostSystem":
-                return getPopulatedMor(map, "hostKey", "HostSystem", "testHost");
-            case "datastore":
-                return getPopulatedMor(map, "dataStoreKey", "datastore", "testDataStore");
-            default:
-                return null;
-        }
-    }
-
-    private Map<String, ManagedObjectReference> getPopulatedMor(Map<String, ManagedObjectReference> map,
-                                                                String key, String type, String value) {
-        ManagedObjectReference mor = new ManagedObjectReference();
-        mor.setType(type);
-        mor.setValue(value);
-        map.put(key, mor);
-
-        return map;
     }
 }

@@ -29,7 +29,7 @@ public class Inputs {
     public static final String VM_DISK_MODE = "vmDiskMode";
     public static final String FOLDER_NAME = "folderName";
     public static final String CLONE_NAME = "cloneName";
-    public static final String THIN_PROVISION = "thinProvision";
+    public static final String THICK_PROVISION = "thickProvision";
     public static final String IS_TEMPLATE = "isTemplate";
     public static final String CPU_NUM = "cpuNum";
     public static final String CORES_PER_SOCKET = "coresPerSocket";

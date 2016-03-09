@@ -332,7 +332,7 @@ public class VmService {
         return results;
     }
 
-    protected ManagedObjectReference getMorDataStore(VmInputs vmInputs, ConnectionResources connectionResources,
+    private ManagedObjectReference getMorDataStore(VmInputs vmInputs, ConnectionResources connectionResources,
                                                    ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference dataStore = null;
         if (StringUtils.isNotBlank(vmInputs.getCloneDataStore())) {
@@ -359,7 +359,7 @@ public class VmService {
         return dataStore;
     }
 
-    protected ManagedObjectReference getMorHost(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference vmMor,
+    private ManagedObjectReference getMorHost(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                               VmUtils utils) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference host = null;
         if (StringUtils.isNotBlank(vmInputs.getCloneHost())) {
@@ -386,7 +386,7 @@ public class VmService {
         return host;
     }
 
-    protected ManagedObjectReference getMorResourcePool(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils)
+    private ManagedObjectReference getMorResourcePool(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference resourcePool;
         if (StringUtils.isNotBlank(vmInputs.getCloneResourcePool())) {
@@ -404,7 +404,7 @@ public class VmService {
         return resourcePool;
     }
 
-    protected ManagedObjectReference getMorFolder(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils)
+    private ManagedObjectReference getMorFolder(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference folder;
         if (StringUtils.isNotBlank(vmInputs.getFolderName())) {

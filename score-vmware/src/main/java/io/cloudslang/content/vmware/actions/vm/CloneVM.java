@@ -45,7 +45,7 @@ public class CloneVM {
                                        @Param(Inputs.CLONE_HOST) String cloneHost,
                                        @Param(Inputs.CLONE_RESOURCE_POOL) String cloneResourcePool,
                                        @Param(Inputs.CLONE_DATA_STORE) String cloneDataStore,
-                                       @Param(Inputs.THIN_PROVISION) String thickProvision,
+                                       @Param(Inputs.THICK_PROVISION) String thickProvision,
                                        @Param(Inputs.IS_TEMPLATE) String isTemplate,
                                        @Param(Inputs.CPU_NUM) String cpuNum,
                                        @Param(Inputs.CORES_PER_SOCKET) String coresPerSocket,
