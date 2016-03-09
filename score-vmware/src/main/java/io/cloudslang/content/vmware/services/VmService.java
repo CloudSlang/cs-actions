@@ -240,7 +240,7 @@ public class VmService {
                     VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
                     VirtualMachineConfigSummary virtualMachineConfigSummary = virtualMachineSummary.getConfig();
 
-                    vmDetails = ResponseUtils.getVmDetailedMap(vmDetails, virtualMachineSummary, virtualMachineConfigSummary);
+                    ResponseUtils.addDataToVmDetailsMap(vmDetails, virtualMachineSummary, virtualMachineConfigSummary);
                 }
             }
             String responseJson = ResponseUtils.getJsonString(vmDetails);

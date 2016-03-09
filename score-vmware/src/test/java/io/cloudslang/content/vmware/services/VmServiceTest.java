@@ -99,18 +99,6 @@ public class VmServiceTest {
     private ArrayOfVirtualDevice virtualDevicesMock;
 
     @Mock
-    private ManagedObjectReference folderMock;
-
-    @Mock
-    private ManagedObjectReference resourcePoolMock;
-
-    @Mock
-    private ManagedObjectReference hostMock;
-
-    @Mock
-    private ManagedObjectReference dataStoreMock;
-
-    @Mock
     private VmUtils utilsMock;
 
     private List<ManagedObjectReference> dataStoresVictim;
@@ -1140,6 +1128,7 @@ public class VmServiceTest {
         assertNotNull(results);
         verify(connectionResourcesMock, atMost(2)).getVimPortType();
         verify(connectionResourcesMock).getConnection();
+        verify(taskMorMock, never()).getValue();
         verify(connectionMock).disconnect();
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
         assertEquals("Could not find the [toCloneVM] VM.", results.get("returnResult"));

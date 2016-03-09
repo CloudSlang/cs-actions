@@ -46,9 +46,9 @@ public class ResponseUtils {
         return sb.toString();
     }
 
-    public static Map<String, String> getVmDetailedMap(Map<String, String> inputMap,
-                                                       VirtualMachineSummary virtualMachineSummary,
-                                                       VirtualMachineConfigSummary virtualMachineConfigSummary) {
+    public static void addDataToVmDetailsMap(Map<String, String> inputMap,
+                                                            VirtualMachineSummary virtualMachineSummary,
+                                                            VirtualMachineConfigSummary virtualMachineConfigSummary) {
         inputMap.put(VM_ID, virtualMachineSummary.getVm().getValue());
         inputMap.put(VM_FULL_NAME, virtualMachineConfigSummary.getGuestFullName());
         inputMap.put(VM_UUID, virtualMachineConfigSummary.getUuid());
@@ -60,8 +60,6 @@ public class ResponseUtils {
                 .substring(1, virtualMachineConfigSummary.getVmPathName().indexOf(Constants.RIGHT_SQUARE_BRACKET)));
         inputMap.put(VM_PATH_NAME, virtualMachineConfigSummary.getVmPathName());
         inputMap.put(VM_IS_TEMPLATE, Boolean.toString(virtualMachineConfigSummary.isTemplate()));
-
-        return inputMap;
     }
 
     public static String getJsonString(Map<String, String> inputMap) throws JsonProcessingException {
