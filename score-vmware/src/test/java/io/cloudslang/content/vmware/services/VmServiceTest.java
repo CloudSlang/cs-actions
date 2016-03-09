@@ -1048,6 +1048,60 @@ public class VmServiceTest {
 
         Map<String, ManagedObjectReference> testMap = new HashMap<>();
 
+        VmService vmService = createVmServiceForCloneVM(false, folderMock, resourcePoolMock, hostMock, dataStoreMock);
+        when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
+                .thenReturn(vmMorMock);
+        when(connectionResourcesMock.getGetMOREF()).thenReturn(getMOREFMock);
+        when(getMOREFMock.inContainerByType(eq(folderMock), eq("Folder")))
+                .thenReturn(getPopulatedMor(testMap, "folderKey", "Folder", "testFolder"));
+        when(getMOREFMock.inContainerByType(eq(resourcePoolMock), eq("ResourcePool")))
+                .thenReturn(getPopulatedMor(testMap, "resourcePoolKey", "ResourcePool", "testResourcePool"));
+        when(getMOREFMock.inContainerByType(eq(hostMock), eq("HostSystem")))
+                .thenReturn(getPopulatedMor(testMap, "hostKey", "HostSystem", "testHost"));
+        when(getMOREFMock.inContainerByType(eq(dataStoreMock), eq("datastore")))
+                .thenReturn(getPopulatedMor(testMap, "dataStoreKey", "datastore", "testDataStore"));
+        whenNew(VmConfigSpecs.class).withNoArguments().thenReturn(configSpecsMock);
+        whenNew(VmUtils.class).withNoArguments().thenReturn(utilsMock);
+        whenNew(VirtualMachineRelocateSpec.class).withNoArguments().thenReturn(vmRelocateSpecMock);
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withVirtualMachineName("toCloneVM")
+                .withCloneName("cloneVM")
+                .withFolderName("testFolder")
+                .withCloneHost("testHost")
+                .withCloneResourcePool("testResourcePool")
+                .withCloneDataStore("testDataStore")
+                .build();
+
+        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
+        when(configSpecsMock.getCloneSpec(vmInputs, vmRelocateSpecMock)).thenReturn(cloneSpeckMock);
+        when(utilsMock.getMorObject(eq(testMap), eq("Folder"))).thenReturn(testMap.get("folderKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("ResourcePool"))).thenReturn(testMap.get("resourcePoolKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("HostSystem"))).thenReturn(testMap.get("hostKey"));
+        when(utilsMock.getMorObject(eq(testMap), eq("datastore"))).thenReturn(testMap.get("dataStoreKey"));
+        when(vimPortMock.cloneVMTask(vmMorMock, folderMock, "cloneVM", cloneSpeckMock)).thenReturn(taskMorMock);
+
+        Map<String, String> results = vmService.cloneVM(httpInputsMock, vmInputs);
+
+        assertNotNull(results);
+        verify(connectionResourcesMock, atMost(3)).getVimPortType();
+        verify(connectionResourcesMock).getConnection();
+        verify(connectionMock).disconnect();
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Failure: The [toCloneVM] VM could not be cloned.", results.get("returnResult"));
+    }
+
+    @Test
+    public void cloneVMNotFound() throws Exception {
+        ManagedObjectReference folderMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference resourcePoolMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference hostMock = PowerMockito.mock(ManagedObjectReference.class);
+        ManagedObjectReference dataStoreMock = PowerMockito.mock(ManagedObjectReference.class);
+        VirtualMachineRelocateSpec vmRelocateSpecMock = PowerMockito.mock(VirtualMachineRelocateSpec.class);
+        VirtualMachineCloneSpec cloneSpeckMock = PowerMockito.mock(VirtualMachineCloneSpec.class);
+
+        Map<String, ManagedObjectReference> testMap = new HashMap<>();
+
         VmService vmService = createVmServiceForCloneVM(true, folderMock, resourcePoolMock, hostMock, dataStoreMock);
         when(FindObjects.findObject(any(VimPortType.class), any(ServiceContent.class), anyString(), anyString()))
                 .thenReturn(null);

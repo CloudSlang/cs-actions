@@ -333,7 +333,7 @@ public class VmService {
     }
 
     ManagedObjectReference getMorDataStore(VmInputs vmInputs, ConnectionResources connectionResources,
-                                                   ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+                                           ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference dataStore = null;
         if (StringUtils.isNotBlank(vmInputs.getCloneDataStore())) {
             dataStore = getDataStore(vmInputs.getCloneDataStore(), connectionResources, vmMor);
@@ -360,7 +360,7 @@ public class VmService {
     }
 
     ManagedObjectReference getMorHost(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference vmMor,
-                                              VmUtils utils) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+                                      VmUtils utils) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference host = null;
         if (StringUtils.isNotBlank(vmInputs.getCloneHost())) {
             Map<String, ManagedObjectReference> hostsMap = connectionResources.getGetMOREF()
