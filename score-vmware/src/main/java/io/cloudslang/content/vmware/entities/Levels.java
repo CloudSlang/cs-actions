@@ -1,5 +1,7 @@
 package io.cloudslang.content.vmware.entities;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by Mihai Tusa.
  * 1/22/2016.

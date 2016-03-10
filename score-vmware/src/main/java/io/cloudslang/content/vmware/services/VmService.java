@@ -15,6 +15,7 @@ import io.cloudslang.content.vmware.services.utils.VmConfigSpecs;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -24,6 +25,9 @@ import java.util.*;
  */
 public class VmService {
     private static final String VIRTUAL_MACHINE = "VirtualMachine";
+    private static final String FOLDER = "Folder";
+    private static final String RESOURCE_POOL = "ResourcePool";
+    private static final String RESOURCES = "Resources";
     private static final String CPU = "cpu";
     private static final String MEMORY = "memory";
     private static final String DISK = "disk";
@@ -75,7 +79,7 @@ public class VmService {
      */
     public Map<String, String> deleteVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getMorObject(connectionResources, VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
@@ -104,7 +108,7 @@ public class VmService {
      */
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getMorObject(connectionResources, VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
@@ -133,7 +137,7 @@ public class VmService {
      */
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getMorObject(connectionResources, VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
@@ -222,7 +226,7 @@ public class VmService {
      */
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getMorObject(connectionResources, VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
                 new String[]{Constants.SUMMARY});
@@ -236,7 +240,7 @@ public class VmService {
                     VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
                     VirtualMachineConfigSummary virtualMachineConfigSummary = virtualMachineSummary.getConfig();
 
-                    vmDetails = ResponseUtils.getVmDetailedMap(vmDetails, virtualMachineSummary, virtualMachineConfigSummary);
+                    ResponseUtils.addDataToVmDetailsMap(vmDetails, virtualMachineSummary, virtualMachineConfigSummary);
                 }
             }
             String responseJson = ResponseUtils.getJsonString(vmDetails);
@@ -261,7 +265,7 @@ public class VmService {
      */
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getMorObject(connectionResources, VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
 
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
@@ -287,15 +291,177 @@ public class VmService {
         return results;
     }
 
+    /**
+     * Method used to connect to a data center to clone an existing virtual machine.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the virtual machine that will be cloned
+     * @return Map with String as key and value that contains returnCode of the operation, success message with task id
+     * of the execution or failure message and the exception if there is one
+     * @throws Exception
+     */
+    public Map<String, String> cloneVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ManagedObjectReference vmMor = getMorObject(connectionResources, VIRTUAL_MACHINE, vmInputs.getVirtualMachineName());
+
+        Map<String, String> results = new HashMap<>();
+        VmUtils utils = new VmUtils();
+        if (vmMor != null) {
+            ManagedObjectReference folder = getMorFolder(vmInputs, connectionResources, utils);
+            ManagedObjectReference resourcePool = getMorResourcePool(vmInputs, connectionResources, utils);
+            ManagedObjectReference host = getMorHost(vmInputs, connectionResources, vmMor, utils);
+            ManagedObjectReference dataStore = getMorDataStore(vmInputs, connectionResources, vmMor);
+
+            VirtualMachineRelocateSpec vmRelocateSpec = getVirtualMachineRelocateSpec(resourcePool, host, dataStore, vmInputs);
+
+            VmConfigSpecs helper = new VmConfigSpecs();
+            VirtualMachineCloneSpec cloneSpec = helper.getCloneSpec(vmInputs, vmRelocateSpec);
+
+            ManagedObjectReference taskMor = connectionResources.getVimPortType()
+                    .cloneVMTask(vmMor, folder, vmInputs.getCloneName(), cloneSpec);
+
+            setTaskResults(results, connectionResources, taskMor, "Success: The [" + vmInputs.getVirtualMachineName() +
+                            "] VM was successfully cloned. The taskId is: " + taskMor.getValue(),
+                    "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be cloned.");
+        } else {
+            ResponseUtils.setResults(results, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.",
+                    Outputs.RETURN_CODE_FAILURE);
+        }
+        connectionResources.getConnection().disconnect();
+
+        return results;
+    }
+
+    ManagedObjectReference getMorDataStore(VmInputs vmInputs, ConnectionResources connectionResources,
+                                           ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference dataStore = null;
+        if (StringUtils.isNotBlank(vmInputs.getCloneDataStore())) {
+            dataStore = getDataStore(vmInputs.getCloneDataStore(), connectionResources, vmMor);
+            if (dataStore == null) {
+                throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND);
+            }
+        } else {
+            ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
+                    new String[]{Constants.SUMMARY});
+
+            for (ObjectContent objectItem : objectContents) {
+                List<DynamicProperty> vmProperties = objectItem.getPropSet();
+                for (DynamicProperty propertyItem : vmProperties) {
+                    VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
+                    String vmPathName = virtualMachineSummary.getConfig().getVmPathName();
+                    String dataStoreName = vmPathName.substring(1, vmPathName.indexOf(Constants.RIGHT_SQUARE_BRACKET));
+                    dataStore = getDataStore(dataStoreName, connectionResources, vmMor);
+                    break;
+                }
+                break;
+            }
+        }
+        return dataStore;
+    }
+
+    ManagedObjectReference getMorHost(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference vmMor,
+                                      VmUtils utils) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference host = null;
+        if (StringUtils.isNotBlank(vmInputs.getCloneHost())) {
+            Map<String, ManagedObjectReference> hostsMap = connectionResources.getGetMOREF()
+                    .inContainerByType(connectionResources.getMorRootFolder(), Constants.HOST_SYSTEM, new RetrieveOptions());
+            host = utils.getMorObject(hostsMap, vmInputs.getCloneHost());
+            if (host == null) {
+                throw new RuntimeException(ErrorMessages.HOST_NOT_FOUND);
+            }
+        } else {
+            ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
+                    new String[]{Constants.SUMMARY});
+
+            for (ObjectContent objectItem : objectContents) {
+                List<DynamicProperty> vmProperties = objectItem.getPropSet();
+                for (DynamicProperty propertyItem : vmProperties) {
+                    VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
+                    host = virtualMachineSummary.getRuntime().getHost();
+                    break;
+                }
+                break;
+            }
+        }
+        return host;
+    }
+
+    ManagedObjectReference getMorResourcePool(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference resourcePool;
+        if (StringUtils.isNotBlank(vmInputs.getCloneResourcePool())) {
+            Map<String, ManagedObjectReference> poolsMap = connectionResources.getGetMOREF()
+                    .inContainerByType(connectionResources.getMorRootFolder(), RESOURCE_POOL, new RetrieveOptions());
+            resourcePool = utils.getMorObject(poolsMap, vmInputs.getCloneResourcePool());
+            if (resourcePool == null) {
+                throw new RuntimeException(ErrorMessages.RESOURCE_POOL_NOT_FOUND);
+            }
+        } else {
+            Map<String, ManagedObjectReference> poolsMap = connectionResources.getGetMOREF()
+                    .inContainerByType(connectionResources.getMorRootFolder(), RESOURCE_POOL, new RetrieveOptions());
+            resourcePool = utils.getMorObject(poolsMap, RESOURCES);
+        }
+        return resourcePool;
+    }
+
+    ManagedObjectReference getMorFolder(VmInputs vmInputs, ConnectionResources connectionResources, VmUtils utils)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference folder;
+        if (StringUtils.isNotBlank(vmInputs.getFolderName())) {
+            Map<String, ManagedObjectReference> foldersMap = connectionResources.getGetMOREF()
+                    .inContainerByType(connectionResources.getMorRootFolder(), FOLDER, new RetrieveOptions());
+            folder = utils.getMorObject(foldersMap, vmInputs.getFolderName());
+            if (folder == null) {
+                throw new RuntimeException(ErrorMessages.FOLDER_NOT_FOUND);
+            }
+        } else {
+            folder = connectionResources.getMorRootFolder();
+        }
+        return folder;
+    }
+
+    private ManagedObjectReference getDataStore(String dataStoreName, ConnectionResources connectionResources,
+                                                ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
+                .entityProps(vmMor, new String[]{Constants.DATASTORE}).get(Constants.DATASTORE)).getManagedObjectReference();
+
+        for (ManagedObjectReference dataStore : dataStores) {
+            DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
+                    .entityProps(dataStore, new String[]{Constants.SUMMARY}).get(Constants.SUMMARY);
+            if (dataStoreName.equalsIgnoreCase(datastoreSummary.getName())) {
+                return dataStore;
+            }
+        }
+        return null;
+    }
+
+    private VirtualMachineRelocateSpec getVirtualMachineRelocateSpec(ManagedObjectReference resourcePool,
+                                                                     ManagedObjectReference host,
+                                                                     ManagedObjectReference dataStore,
+                                                                     VmInputs vmInputs) {
+        VirtualMachineRelocateSpec vmRelocateSpec = new VirtualMachineRelocateSpec();
+        vmRelocateSpec.setPool(resourcePool);
+        vmRelocateSpec.setHost(host);
+        vmRelocateSpec.setDatastore(dataStore);
+
+        if (vmInputs.isThickProvision()) {
+            vmRelocateSpec.setTransform(VirtualMachineRelocateTransformation.FLAT);
+        } else {
+            vmRelocateSpec.setTransform(VirtualMachineRelocateTransformation.SPARSE);
+        }
+
+        return vmRelocateSpec;
+    }
+
     private ServiceContent getServiceContent(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg {
         ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
         return connectionResources.getVimPortType().retrieveServiceContent(serviceInstance);
     }
 
-    private ManagedObjectReference getVmMor(ConnectionResources connectionResources, VmInputs vmInputs) throws Exception {
+    private ManagedObjectReference getMorObject(ConnectionResources connectionResources, String objectType, String objectName)
+            throws Exception {
         ServiceContent serviceContent = getServiceContent(connectionResources);
-        return FindObjects.findObject(connectionResources.getVimPortType(), serviceContent, VIRTUAL_MACHINE,
-                vmInputs.getVirtualMachineName());
+        return FindObjects.findObject(connectionResources.getVimPortType(), serviceContent, objectType, objectName);
     }
 
     private VirtualMachineConfigSpec getUpdateConfigSpec(VmInputs vmInputs, VirtualMachineConfigSpec vmConfigSpec,
@@ -303,7 +469,8 @@ public class VmService {
         if (!InputUtils.isUpdateOperation(vmInputs)) {
             throw new RuntimeException(ErrorMessages.CPU_OR_MEMORY_INVALID_OPERATION);
         }
-        ResourceAllocationInfo resourceAllocationInfo = getResourceAllocationInfo(vmInputs);
+        VmConfigSpecs specs = new VmConfigSpecs();
+        ResourceAllocationInfo resourceAllocationInfo = specs.getResourceAllocationInfo(vmInputs.getUpdateValue());
         if (CPU.equalsIgnoreCase(device)) {
             vmConfigSpec.setCpuAllocation(resourceAllocationInfo);
         } else {
@@ -338,15 +505,6 @@ public class VmService {
         vmConfigSpec.getDeviceChange().addAll(specs);
 
         return vmConfigSpec;
-    }
-
-    private ResourceAllocationInfo getResourceAllocationInfo(VmInputs vmInputs) throws Exception {
-        VmUtils vmUtils = new VmUtils();
-        SharesInfo sharesInfo = vmUtils.getSharesInfo(vmInputs.getUpdateValue());
-        ResourceAllocationInfo resourceAllocationInfo = new ResourceAllocationInfo();
-        resourceAllocationInfo.setShares(sharesInfo);
-
-        return resourceAllocationInfo;
     }
 
     private void setTaskResults(Map<String, String> results, ConnectionResources connectionResources,

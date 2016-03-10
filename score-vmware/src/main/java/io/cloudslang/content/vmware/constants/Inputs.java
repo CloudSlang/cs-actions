@@ -24,11 +24,20 @@ public class Inputs {
     public static final String VM_MEMORY_SIZE = "vmMemorySize";
     public static final String GUEST_OS_ID = "guestOsId";
     public static final String DEVICE = "device";
-    public static final String DEVICE_NAME = "deviceName";
     public static final String OPERATION = "operation";
     public static final String UPDATE_VALUE = "updateValue";
     public static final String VM_DISK_MODE = "vmDiskMode";
-    public static final String VM_DISK_SHARING = "sharing";
+    public static final String FOLDER_NAME = "folderName";
+    public static final String CLONE_NAME = "cloneName";
+    public static final String THICK_PROVISION = "thickProvision";
+    public static final String IS_TEMPLATE = "isTemplate";
+    public static final String CPU_NUM = "cpuNum";
+    public static final String CORES_PER_SOCKET = "coresPerSocket";
+    public static final String MEMORY = "memory";
+    public static final String CLONE_DESCRIPTION = "cloneDescription";
+    public static final String CLONE_RESOURCE_POOL = "cloneResourcePool";
+    public static final String CLONE_HOST = "cloneHost";
+    public static final String CLONE_DATA_STORE = "cloneDataStore";
 
     // Miscellaneous
     public static final String DELIMITER = "delimiter";

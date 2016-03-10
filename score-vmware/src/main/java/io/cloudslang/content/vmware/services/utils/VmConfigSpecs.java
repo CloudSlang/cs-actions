@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public class VmConfigSpecs {
     private static final String GENERATED = "generated";
-    private static final String DATASTORE = "datastore";
     private static final String CONFIG_HARDWARE_DEVICE = "config.hardware.device";
     private static final String DEFAULT_FLOPPY_DEVICE_NAME = "/dev/fd0";
     private static final String DEFAULT_VOLUME_NAME = "[Local]";
@@ -44,7 +43,7 @@ public class VmConfigSpecs {
             throws Exception {
         VmUtils vmUtils = new VmUtils();
         VirtualMachineConfigSpec vmConfigSpec = createVmConfigSpec(connectionResources, vmInputs);
-        vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(vmConfigSpec, vmInputs);
+        vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(vmConfigSpec, vmInputs, vmInputs.getVirtualMachineName());
 
         return vmConfigSpec;
     }
@@ -144,6 +143,36 @@ public class VmConfigSpecs {
         }
     }
 
+    public VirtualMachineCloneSpec getCloneSpec(VmInputs vmInputs, VirtualMachineRelocateSpec virtualMachineRelocateSpec)
+            throws Exception {
+        VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
+
+        cloneSpec.setLocation(virtualMachineRelocateSpec);
+        cloneSpec.setPowerOn(false);
+        cloneSpec.setTemplate(vmInputs.isTemplate());
+
+        VmUtils vmUtils = new VmUtils();
+        VirtualMachineConfigSpec vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(new VirtualMachineConfigSpec(),
+                vmInputs, vmInputs.getCloneName());
+
+        ResourceAllocationInfo resourceAllocationInfo = getResourceAllocationInfo(SharesLevel.NORMAL.value());
+        vmConfigSpec.setMemoryAllocation(resourceAllocationInfo);
+        vmConfigSpec.setCpuAllocation(resourceAllocationInfo);
+
+        cloneSpec.setConfig(vmConfigSpec);
+
+        return cloneSpec;
+    }
+
+    public ResourceAllocationInfo getResourceAllocationInfo(String input) throws Exception {
+        VmUtils vmUtils = new VmUtils();
+        SharesInfo sharesInfo = vmUtils.getSharesInfo(input);
+        ResourceAllocationInfo resourceAllocationInfo = new ResourceAllocationInfo();
+        resourceAllocationInfo.setShares(sharesInfo);
+
+        return resourceAllocationInfo;
+    }
+
     private VirtualMachineConfigSpec createVmConfigSpec(ConnectionResources connectionResources, VmInputs vmInputs)
             throws Exception {
         ConfigTarget configTarget = getHostConfigTarget(connectionResources);
@@ -220,12 +249,12 @@ public class VmConfigSpecs {
             DatastoreSummary dsSummary = dataStore.getDatastore();
             if (dataStoreName.equals(dsSummary.getName())) {
                 if (!dsSummary.isAccessible()) {
-                    throw new RuntimeException(ErrorMessages.SPECIFIED_DATA_STORE_NOT_ACCESSIBLE);
+                    throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_ACCESSIBLE);
                 }
                 return dsSummary.getDatastore();
             }
         }
-        throw new RuntimeException(ErrorMessages.SPECIFIED_DATA_STORE_IS_NOT_FOUND);
+        throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND);
     }
 
     private VirtualMachineConfigSpec getVirtualMachineConfigSpec(String dataStoreName) {
@@ -335,7 +364,7 @@ public class VmConfigSpecs {
     private String getDataStoreWithFreeSpaceNeeded(ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                                    long minFreeSpace) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(vmMor, new String[]{DATASTORE}).get(DATASTORE)).getManagedObjectReference();
+                .entityProps(vmMor, new String[]{Constants.DATASTORE}).get(Constants.DATASTORE)).getManagedObjectReference();
 
         for (ManagedObjectReference dataStore : dataStores) {
             DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
