@@ -38,15 +38,15 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         VmUtils utils = new VmUtils();
 
-        ManagedObjectReference vmFolderMor = utils.getMorFolder(vmInputs, connectionResources);
-        ManagedObjectReference resourcePoolMor = utils.getMorResourcePool(vmInputs, connectionResources);
+        ManagedObjectReference vmFolderMor = utils.getMorFolder(vmInputs.getFolderName(), connectionResources);
+        ManagedObjectReference resourcePoolMor = utils.getMorResourcePool(vmInputs.getResourcePool(), connectionResources);
         ManagedObjectReference hostMor = connectionResources.getHostMor();
 
         VmConfigSpecs vmConfigSpecs = new VmConfigSpecs();
         VirtualMachineConfigSpec vmConfigSpec = vmConfigSpecs.getVmConfigSpec(vmInputs, connectionResources);
 
-        ManagedObjectReference taskMor = connectionResources.getVimPortType().createVMTask(vmFolderMor, vmConfigSpec,
-                resourcePoolMor, hostMor);
+        ManagedObjectReference taskMor = connectionResources.getVimPortType()
+                .createVMTask(vmFolderMor, vmConfigSpec, resourcePoolMor, hostMor);
 
         Map<String, String> results = new HashMap<>();
         setTaskResults(results, connectionResources, taskMor, "Success: Created [" + vmInputs.getVirtualMachineName() +
@@ -307,10 +307,10 @@ public class VmService {
         Map<String, String> results = new HashMap<>();
         VmUtils utils = new VmUtils();
         if (vmMor != null) {
-            ManagedObjectReference folder = utils.getMorFolder(vmInputs, connectionResources);
-            ManagedObjectReference resourcePool = utils.getMorResourcePool(vmInputs, connectionResources);
-            ManagedObjectReference host = utils.getMorHost(vmInputs, connectionResources, vmMor);
-            ManagedObjectReference dataStore = utils.getMorDataStore(vmInputs, connectionResources, vmMor);
+            ManagedObjectReference folder = utils.getMorFolder(vmInputs.getFolderName(), connectionResources);
+            ManagedObjectReference resourcePool = utils.getMorResourcePool(vmInputs.getCloneResourcePool(), connectionResources);
+            ManagedObjectReference host = utils.getMorHost(vmInputs.getHostname(), connectionResources, vmMor);
+            ManagedObjectReference dataStore = utils.getMorDataStore(vmInputs.getCloneDataStore(), connectionResources, vmMor);
 
             VirtualMachineRelocateSpec vmRelocateSpec = utils.getVirtualMachineRelocateSpec(resourcePool, host, dataStore,
                     vmInputs);
