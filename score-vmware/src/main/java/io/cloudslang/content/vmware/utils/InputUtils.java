@@ -15,8 +15,6 @@ import java.net.URL;
  * 10/21/2015.
  */
 public class InputUtils {
-    private static final String NOT_INTEGER = "The input value must be a int number.";
-    private static final String NOT_LONG = "The input value must be a long number.";
     private static final String URI_PATH = "/sdk";
     private static final String VMDK_SUFFIX = ".vmdk";
 
@@ -63,7 +61,7 @@ public class InputUtils {
         try {
             intInput = StringUtils.isBlank(input) ? defaultValue : Integer.parseInt(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(NOT_INTEGER);
+            throw new RuntimeException(ErrorMessages.NOT_INTEGER);
         }
 
         return intInput;
@@ -74,7 +72,7 @@ public class InputUtils {
         try {
             longInput = StringUtils.isBlank(input) ? defaultValue : Long.parseLong(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(NOT_LONG);
+            throw new RuntimeException(ErrorMessages.NOT_LONG);
         }
 
         return longInput;

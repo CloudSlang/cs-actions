@@ -20,7 +20,6 @@
 package io.cloudslang.content.vmware.services.helpers;
 
 import com.vmware.vim25.*;
-import io.cloudslang.content.vmware.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +43,8 @@ import java.util.List;
  */
 
 public class FindObjects {
-    private static final String TRAVERSE_ENTITIES = "traverseEntities";
-
-    private FindObjects() {}
+    private FindObjects() {
+    }
 
     /**
      * Returns all ObjectContent objects of the specified type and with each one include the properties specified.
@@ -76,14 +74,14 @@ public class FindObjects {
         // container view is the root object for this traversal
         ObjectSpec oSpec = new ObjectSpec();
         oSpec.setObj(cViewRef);
-        oSpec.setSkip(Boolean.TRUE);
+        oSpec.setSkip(true);
 
         // create a traversal spec to select all objects in the view
         TraversalSpec tSpec = new TraversalSpec();
-        tSpec.setName(TRAVERSE_ENTITIES);
-        tSpec.setPath(Constants.VIEW);
-        tSpec.setSkip(Boolean.FALSE);
-        tSpec.setType(Constants.CONTAINER_VIEW);
+        tSpec.setName("traverseEntities");
+        tSpec.setPath("view");
+        tSpec.setSkip(false);
+        tSpec.setType("ContainerView");
 
         // add the traversal spec to the object spec;
         // the accessor method (getSelectSet) returns a reference
@@ -155,20 +153,20 @@ public class FindObjects {
         typeList.add(objectType);
 
         ManagedObjectReference cViewRef = vimPort.createContainerView(viewMgrRef,
-                serviceContent.getRootFolder(), typeList, Boolean.TRUE);
+                serviceContent.getRootFolder(), typeList, true);
 
         // create an object spec to define the beginning of the traversal;
         // container view is the root object for this traversal
         ObjectSpec oSpec = new ObjectSpec();
         oSpec.setObj(cViewRef);
-        oSpec.setSkip(Boolean.TRUE);
+        oSpec.setSkip(true);
 
         // create a traversal spec to select all objects in the view
         TraversalSpec tSpec = new TraversalSpec();
-        tSpec.setName(TRAVERSE_ENTITIES);
-        tSpec.setPath(Constants.VIEW);
-        tSpec.setSkip(Boolean.FALSE);
-        tSpec.setType(Constants.CONTAINER_VIEW);
+        tSpec.setName("traverseEntities");
+        tSpec.setPath("view");
+        tSpec.setSkip(false);
+        tSpec.setType("ContainerView");
 
         // add the traversal spec to the object spec;
         // the accessor method (getSelectSet) returns a reference
@@ -183,7 +181,7 @@ public class FindObjects {
         // property names will update the pathSet list
         PropertySpec pSpec = new PropertySpec();
         pSpec.setType(objectType);
-        pSpec.getPathSet().add(Constants.NAME);
+        pSpec.getPathSet().add("name");
 
         // create a PropertyFilterSpec and add the object and
         // property specs to it; use the getter methods to reference
@@ -210,7 +208,7 @@ public class FindObjects {
                 if (dps != null) {
                     for (DynamicProperty dp : dps) {
                         path = dp.getName();
-                        if (path.equals(Constants.NAME)) {
+                        if (path.equals("name")) {
                             value = (String) dp.getVal();
                             if (value.equals(name)) {
                                 return oc.getObj();
@@ -250,20 +248,20 @@ public class FindObjects {
         typeList.add(propertySpec.getType());
 
         ManagedObjectReference cViewRef = vimPort.createContainerView(viewMgrRef,
-                serviceContent.getRootFolder(), typeList, Boolean.TRUE);
+                serviceContent.getRootFolder(), typeList, true);
 
         // create an object spec to define the beginning of the traversal;
         // container view is the root object for this traversal
         ObjectSpec oSpec = new ObjectSpec();
         oSpec.setObj(cViewRef);
-        oSpec.setSkip(Boolean.TRUE);
+        oSpec.setSkip(true);
 
         // create a traversal spec to select all objects in the view
         TraversalSpec tSpec = new TraversalSpec();
-        tSpec.setName(TRAVERSE_ENTITIES);
-        tSpec.setPath(Constants.VIEW);
-        tSpec.setSkip(Boolean.FALSE);
-        tSpec.setType(Constants.CONTAINER_VIEW);
+        tSpec.setName("traverseEntities");
+        tSpec.setPath("view");
+        tSpec.setSkip(false);
+        tSpec.setType("ContainerView");
 
         // add the traversal spec to the object spec;
         // the accessor method (getSelectSet) returns a reference
@@ -296,7 +294,7 @@ public class FindObjects {
                 if (dps != null) {
                     for (DynamicProperty dp : dps) {
                         path = dp.getName();
-                        if (path.equals(Constants.NAME)) {
+                        if (path.equals("name")) {
                             value = (String) dp.getVal();
                             if (value.equals(name)) {
                                 return oc;

@@ -38,18 +38,22 @@ public class CreateVM {
      * @param hostname           the name of the target host to be queried to retrieve the supported guest OSes
      *                           - Example: "host123.subdomain.example.com"
      * @param virtualMachineName the name of the virtual machine that will be created
-     * @param description        optional - the description of the virtual machine that will be created - Default: ""
      * @param dataStore          the datastore where the disk of the new created virtual machine will reside
      *                           - Example: "datastore2-vc6-1"
+     * @param guestOsId          the operating system associated with the new created virtual machine. The value for this
+     *                           input can be obtained by running GetOSDescriptors operation - Examples: "winXPProGuest",
+     *                           "win95Guest", "centosGuest", "fedoraGuest", "freebsd64Guest"... etc.
+     * @param folderName:        optional - name of the folder where the virtual machine will be created. If not
+     *                           provided then the top parent folder will be used - Default: ""
+     * @param resourcePool:      optional - the resource pool for the cloned virtual machine. If not provided then the
+     *                           parent resource pool be used - Default: ""
+     * @param description        optional - the description of the virtual machine that will be created - Default: ""
      * @param numCPUs            optional - the number that indicates how many processors will have the virtual machine
      *                           that will be created - Default: "1"
      * @param vmDiskSize         optional - the disk capacity amount (in Mb) attached to the virtual machine that will
      *                           be created - Default: "1024"
      * @param vmMemorySize       optional - the memory amount (in Mb) attached to the virtual machine that will will
      *                           be created - Default: "1024"
-     * @param guestOsId          the operating system associated with the new created virtual machine. The value for this
-     *                           input can be obtained by running GetOSDescriptors operation - Examples: "winXPProGuest",
-     *                           "win95Guest", "centosGuest", "fedoraGuest", "freebsd64Guest"... etc.
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
      * task id of the execution or failure message and the exception if there is one
      */
@@ -75,12 +79,14 @@ public class CreateVM {
                                         @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
                                         @Param(value = Inputs.HOSTNAME, required = true) String hostname,
                                         @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                        @Param(Inputs.VM_DESCRIPTION) String description,
                                         @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
+                                        @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId,
+                                        @Param(Inputs.FOLDER_NAME) String folderName,
+                                        @Param(Inputs.RESOURCE_POOL) String resourcePool,
+                                        @Param(Inputs.VM_DESCRIPTION) String description,
                                         @Param(Inputs.VM_CPU_COUNT) String numCPUs,
                                         @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
-                                        @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize,
-                                        @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId) {
+                                        @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -98,12 +104,14 @@ public class CreateVM {
                     .withDataCenterName(dataCenterName)
                     .withHostname(hostname)
                     .withVirtualMachineName(virtualMachineName)
-                    .withDescription(description)
                     .withDataStore(dataStore)
+                    .withGuestOsId(guestOsId)
+                    .withFolderName(folderName)
+                    .withResourcePool(resourcePool)
+                    .withDescription(description)
                     .withIntNumCPUs(numCPUs)
                     .withLongVmDiskSize(vmDiskSize)
                     .withLongVmMemorySize(vmMemorySize)
-                    .withGuestOsId(guestOsId)
                     .build();
 
             resultMap = new VmService().createVM(httpInputs, vmInputs);

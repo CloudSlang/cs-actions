@@ -8,10 +8,10 @@ import org.w3c.dom.Element;
 import java.util.Arrays;
 
 public class WaitForValues {
-    private static final String FILTER_VALUES = "filtervals";
-    private static final String KEY_VALUE_NULL_STRING = "val: null";
     private static final String ERROR = "error";
     private static final String READY = "ready";
+    private static final String FILTER_VALUES = "filtervals";
+    private static final String KEY_VALUE_NULL_STRING = "val: null";
     private static final int MAX_TRIED_WAIT_FOR_UPDATE_COUNTER = 100;
 
     Connection connection;

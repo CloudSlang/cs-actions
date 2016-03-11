@@ -8,6 +8,7 @@ import com.vmware.vim25.VirtualMachineSummary;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
+import io.cloudslang.content.vmware.entities.VmParameter;
 
 import java.util.Collection;
 import java.util.Map;
@@ -17,13 +18,6 @@ import java.util.Map;
  * 1/19/2016.
  */
 public class ResponseUtils {
-    private static final String VM_ID = "vmId";
-    private static final String VM_FULL_NAME = "virtualMachineFullName";
-    private static final String VM_UUID = "vmUuid";
-    private static final String VM_ETH_COUNT = "numEths";
-    private static final String VM_DISK_COUNT = "numDisks";
-    private static final String VM_PATH_NAME = "vmPathName";
-    private static final String VM_IS_TEMPLATE = "isTemplate";
     private static final String COMMA_DELIMITER = ",";
 
     public static void setResults(Map<String, String> results, String returnResultMessage, String returnCodeMessage) {
@@ -47,19 +41,19 @@ public class ResponseUtils {
     }
 
     public static void addDataToVmDetailsMap(Map<String, String> inputMap,
-                                                            VirtualMachineSummary virtualMachineSummary,
-                                                            VirtualMachineConfigSummary virtualMachineConfigSummary) {
-        inputMap.put(VM_ID, virtualMachineSummary.getVm().getValue());
-        inputMap.put(VM_FULL_NAME, virtualMachineConfigSummary.getGuestFullName());
-        inputMap.put(VM_UUID, virtualMachineConfigSummary.getUuid());
+                                             VirtualMachineSummary virtualMachineSummary,
+                                             VirtualMachineConfigSummary virtualMachineConfigSummary) {
+        inputMap.put(VmParameter.VM_ID.getValue(), virtualMachineSummary.getVm().getValue());
+        inputMap.put(VmParameter.VM_FULL_NAME.getValue(), virtualMachineConfigSummary.getGuestFullName());
+        inputMap.put(VmParameter.VM_UUID.getValue(), virtualMachineConfigSummary.getUuid());
         inputMap.put(Inputs.VM_CPU_COUNT, virtualMachineConfigSummary.getNumCpu().toString());
         inputMap.put(Inputs.VM_MEMORY_SIZE, virtualMachineConfigSummary.getMemorySizeMB().toString());
-        inputMap.put(VM_ETH_COUNT, virtualMachineConfigSummary.getNumEthernetCards().toString());
-        inputMap.put(VM_DISK_COUNT, virtualMachineConfigSummary.getNumVirtualDisks().toString());
+        inputMap.put(VmParameter.VM_ETH_COUNT.getValue(), virtualMachineConfigSummary.getNumEthernetCards().toString());
+        inputMap.put(VmParameter.VM_DISK_COUNT.getValue(), virtualMachineConfigSummary.getNumVirtualDisks().toString());
         inputMap.put(Inputs.DATA_STORE, virtualMachineConfigSummary.getVmPathName()
                 .substring(1, virtualMachineConfigSummary.getVmPathName().indexOf(Constants.RIGHT_SQUARE_BRACKET)));
-        inputMap.put(VM_PATH_NAME, virtualMachineConfigSummary.getVmPathName());
-        inputMap.put(VM_IS_TEMPLATE, Boolean.toString(virtualMachineConfigSummary.isTemplate()));
+        inputMap.put(VmParameter.VM_PATH_NAME.getValue(), virtualMachineConfigSummary.getVmPathName());
+        inputMap.put(VmParameter.VM_IS_TEMPLATE.getValue(), Boolean.toString(virtualMachineConfigSummary.isTemplate()));
     }
 
     public static String getJsonString(Map<String, String> inputMap) throws JsonProcessingException {
