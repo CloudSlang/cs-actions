@@ -84,6 +84,8 @@ public class CreateVM {
                                         @Param(Inputs.FOLDER_NAME) String folderName,
                                         @Param(Inputs.RESOURCE_POOL) String resourcePool,
                                         @Param(Inputs.VM_DESCRIPTION) String description,
+                                        @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId,
+                                        @Param(Inputs.VM_DESCRIPTION) String description,
                                         @Param(Inputs.VM_CPU_COUNT) String numCPUs,
                                         @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
                                         @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize) {
@@ -104,10 +106,13 @@ public class CreateVM {
                     .withDataCenterName(dataCenterName)
                     .withHostname(hostname)
                     .withVirtualMachineName(virtualMachineName)
+                    .withDescription(description)
                     .withDataStore(dataStore)
                     .withGuestOsId(guestOsId)
                     .withFolderName(folderName)
                     .withResourcePool(resourcePool)
+                    .withDescription(description)
+                    .withGuestOsId(guestOsId)
                     .withDescription(description)
                     .withIntNumCPUs(numCPUs)
                     .withLongVmDiskSize(vmDiskSize)
