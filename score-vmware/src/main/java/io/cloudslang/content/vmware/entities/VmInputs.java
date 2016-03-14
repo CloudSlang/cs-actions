@@ -28,9 +28,9 @@ public class VmInputs {
     private String cloneResourcePool;
     private String cloneHost;
     private String cloneDataStore;
+    private String coresPerSocket;
 
     private int intNumCPUs;
-    private int coresPerSocket;
     private long longVmDiskSize;
     private long longVmMemorySize;
 
@@ -53,9 +53,9 @@ public class VmInputs {
         this.cloneResourcePool = builder.cloneResourcePool;
         this.cloneHost = builder.cloneHost;
         this.cloneDataStore = builder.cloneDataStore;
+        this.coresPerSocket = builder.coresPerSocket;
 
         this.intNumCPUs = builder.intNumCPUs;
-        this.coresPerSocket = builder.coresPerSocket;
         this.longVmDiskSize = builder.longVmDiskSize;
         this.longVmMemorySize = builder.longVmMemorySize;
 
@@ -127,7 +127,7 @@ public class VmInputs {
         return intNumCPUs;
     }
 
-    public int getCoresPerSocket() {
+    public String getCoresPerSocket() {
         return coresPerSocket;
     }
 
@@ -163,9 +163,9 @@ public class VmInputs {
         private String cloneResourcePool;
         private String cloneHost;
         private String cloneDataStore;
+        private String coresPerSocket;
 
         private int intNumCPUs;
-        private int coresPerSocket;
         private long longVmDiskSize;
         private long longVmMemorySize;
 
@@ -257,7 +257,7 @@ public class VmInputs {
         }
 
         public VmInputsBuilder withCoresPerSocket(String inputValue) {
-            coresPerSocket = InputUtils.getIntInput(inputValue, DEFAULT_CORES_PER_SOCKET);
+            coresPerSocket = inputValue;
             return this;
         }
 

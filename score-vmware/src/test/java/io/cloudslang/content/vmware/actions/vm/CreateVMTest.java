@@ -54,7 +54,7 @@ public class CreateVMTest {
 
     @Test
     public void testCreatesVMIntException() throws Exception {
-        Map<String, String> resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "");
+        Map<String, String> resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "");
 
         assertNotNull(resultMap);
         verify(vmServiceMock, never()).createVM(any(HttpInputs.class), any(VmInputs.class));

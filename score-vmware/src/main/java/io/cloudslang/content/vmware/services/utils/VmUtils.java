@@ -1,7 +1,6 @@
 package io.cloudslang.content.vmware.services.utils;
 
 import com.vmware.vim25.*;
-import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.entities.DiskMode;
 import io.cloudslang.content.vmware.entities.Levels;
 import io.cloudslang.content.vmware.entities.Operation;
@@ -18,6 +17,7 @@ import java.util.Map;
 public class VmUtils {
     private static final String TEST_CD_ISO = "testcd.iso";
     private static final int DISK_AMOUNT_MULTIPLIER = 1024;
+    private static final int DEFAULT_CORES_PER_SOCKET = 1;
 
     public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs, String name) {
         vmConfigSpec.setName(name);
@@ -25,11 +25,11 @@ public class VmUtils {
         vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
         vmConfigSpec.setAnnotation(vmInputs.getDescription());
 
-        if (!Constants.EMPTY.equalsIgnoreCase(String.valueOf(vmInputs.getCoresPerSocket()))) {
-            vmConfigSpec.setNumCoresPerSocket(vmInputs.getCoresPerSocket());
+        if (vmInputs.getCoresPerSocket() != null) {
+            vmConfigSpec.setNumCoresPerSocket(InputUtils.getIntInput(vmInputs.getCoresPerSocket(), DEFAULT_CORES_PER_SOCKET));
         }
 
-        if (!Constants.EMPTY.equalsIgnoreCase(vmInputs.getGuestOsId())) {
+        if (vmInputs.getGuestOsId() != null) {
             vmConfigSpec.setGuestId(vmInputs.getGuestOsId());
         }
 

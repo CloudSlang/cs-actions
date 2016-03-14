@@ -75,12 +75,12 @@ public class CreateVM {
                                         @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
                                         @Param(value = Inputs.HOSTNAME, required = true) String hostname,
                                         @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                        @Param(Inputs.VM_DESCRIPTION) String description,
                                         @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
+                                        @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId,
+                                        @Param(Inputs.VM_DESCRIPTION) String description,
                                         @Param(Inputs.VM_CPU_COUNT) String numCPUs,
                                         @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
-                                        @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize,
-                                        @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId) {
+                                        @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -98,12 +98,12 @@ public class CreateVM {
                     .withDataCenterName(dataCenterName)
                     .withHostname(hostname)
                     .withVirtualMachineName(virtualMachineName)
-                    .withDescription(description)
                     .withDataStore(dataStore)
+                    .withGuestOsId(guestOsId)
+                    .withDescription(description)
                     .withIntNumCPUs(numCPUs)
                     .withLongVmDiskSize(vmDiskSize)
                     .withLongVmMemorySize(vmMemorySize)
-                    .withGuestOsId(guestOsId)
                     .build();
 
             resultMap = new VmService().createVM(httpInputs, vmInputs);
