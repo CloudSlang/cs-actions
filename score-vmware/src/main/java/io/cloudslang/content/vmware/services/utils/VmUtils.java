@@ -205,7 +205,7 @@ public class VmUtils {
                 throw new RuntimeException(ErrorMessages.FOLDER_NOT_FOUND);
             }
         } else {
-            folder = connectionResources.getMorRootFolder();
+            folder = connectionResources.getVmFolderMor();
         }
         return folder;
     }
