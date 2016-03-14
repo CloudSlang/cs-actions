@@ -2,7 +2,6 @@ package io.cloudslang.content.vmware.services.utils;
 
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.entities.DiskMode;
-import io.cloudslang.content.vmware.entities.Levels;
 import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
@@ -27,7 +26,6 @@ public class VmUtils {
     private static final String CD = "cd";
     private static final String NIC = "nic";
 
-    private static final int DEFAULT_CORES_PER_SOCKET = 1;
     private static final int DISK_AMOUNT_MULTIPLIER = 1024;
     private static final int DEFAULT_CORES_PER_SOCKET = 1;
 
