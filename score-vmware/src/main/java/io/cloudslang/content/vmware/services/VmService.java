@@ -40,7 +40,7 @@ public class VmService {
 
         ManagedObjectReference vmFolderMor = utils.getMorFolder(vmInputs.getFolderName(), connectionResources);
         ManagedObjectReference resourcePoolMor = utils.getMorResourcePool(vmInputs.getResourcePool(), connectionResources);
-        ManagedObjectReference hostMor = connectionResources.getHostMor();
+        ManagedObjectReference hostMor = utils.getMorHost(vmInputs.getHostname(), connectionResources, null);
 
         VmConfigSpecs vmConfigSpecs = new VmConfigSpecs();
         VirtualMachineConfigSpec vmConfigSpec = vmConfigSpecs.getVmConfigSpec(vmInputs, connectionResources);
@@ -312,8 +312,7 @@ public class VmService {
             ManagedObjectReference host = utils.getMorHost(vmInputs.getHostname(), connectionResources, vmMor);
             ManagedObjectReference dataStore = utils.getMorDataStore(vmInputs.getCloneDataStore(), connectionResources, vmMor);
 
-            VirtualMachineRelocateSpec vmRelocateSpec = utils.getVirtualMachineRelocateSpec(resourcePool, host, dataStore,
-                    vmInputs);
+            VirtualMachineRelocateSpec vmRelocateSpec = utils.getVirtualMachineRelocateSpec(resourcePool, host, dataStore, vmInputs);
 
             VmConfigSpecs helper = new VmConfigSpecs();
             VirtualMachineCloneSpec cloneSpec = helper.getCloneSpec(vmInputs, vmRelocateSpec);
