@@ -247,7 +247,7 @@ public class VmUtils {
                                                         VmInputs vmInputs, VirtualMachineConfigSpec vmConfigSpec, String device)
             throws Exception {
         VmConfigSpecs vmConfigSpecs = new VmConfigSpecs();
-        VirtualDeviceConfigSpec deviceConfigSpec = new VirtualDeviceConfigSpec();
+        VirtualDeviceConfigSpec deviceConfigSpec;
         switch (device) {
             case DISK:
                 InputUtils.checkValidOperation(vmInputs, device);
@@ -262,6 +262,9 @@ public class VmUtils {
                 InputUtils.checkValidOperation(vmInputs, device);
                 deviceConfigSpec = vmConfigSpecs.getNICDeviceConfigSpec(connectionResources, vmMor, vmInputs);
                 break;
+            default:
+                throw new RuntimeException("Invalid operation specified for " + device + " device. " +
+                        "The " + device + " device can be only added or removed.");
         }
         List<VirtualDeviceConfigSpec> specs = new ArrayList<>();
         specs.add(deviceConfigSpec);
