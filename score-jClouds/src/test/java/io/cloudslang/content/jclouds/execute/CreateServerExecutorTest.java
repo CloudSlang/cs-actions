@@ -15,18 +15,14 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Created by Mihai Tusa.
@@ -64,14 +60,16 @@ public class CreateServerExecutorTest {
      * @throws Exception
      */
     @Test
-    public void testExecute() throws Exception {
+    public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
         doReturn(reservationsMock).when(computeServiceMock).createServer(any(CommonInputs.class), any(CustomInputs.class));
         Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        assertEquals(results.get(Outputs.RETURN_CODE), "0");
-        assertNotNull(results.get(Outputs.RETURN_RESULT));
         verify(computeServiceMock, times(1)).createServer(any(CommonInputs.class), any(CustomInputs.class));
+
+        assertNotNull(results);
+        assertEquals("0", results.get(Outputs.RETURN_CODE));
+        assertEquals("reservation", results.get(Outputs.RETURN_RESULT));
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {

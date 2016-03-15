@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
  * Created by Mihai Tusa.
  * 2/22/2016.
  */
-public enum InstanceTypes {
+public enum InstanceType {
     // Actual Generation Instances
     // General purpose
     T2_NANO("t2.nano"),
@@ -88,7 +88,7 @@ public enum InstanceTypes {
     private final String value;
     private static final String INVALID_INSTANCE_TYPE = "Invalid instance type.";
 
-    InstanceTypes(String value) {
+    InstanceType(String value) {
         this.value = value;
     }
 
@@ -100,7 +100,7 @@ public enum InstanceTypes {
         if (StringUtils.isBlank(input)) {
             return T2_MICRO.getValue().toLowerCase();
         }
-        for (InstanceTypes type : InstanceTypes.values()) {
+        for (InstanceType type : InstanceType.values()) {
             if (type.getValue().toLowerCase().equals(input.toLowerCase())) {
                 return type.getValue().toLowerCase();
             }

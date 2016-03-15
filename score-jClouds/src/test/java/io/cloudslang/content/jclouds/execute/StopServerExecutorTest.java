@@ -16,6 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -61,9 +62,11 @@ public class StopServerExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
+        verify(computeServiceMock).stop(inputs.getRegion(), inputs.getServerId());
+
+        assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
         assertEquals("server stopped", result.get(Outputs.RETURN_RESULT));
-        verify(computeServiceMock).stop(inputs.getRegion(), inputs.getServerId());
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {

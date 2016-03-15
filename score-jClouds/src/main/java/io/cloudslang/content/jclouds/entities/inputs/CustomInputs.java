@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.InstanceTypes;
+import io.cloudslang.content.jclouds.entities.InstanceType;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -105,7 +105,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withInstanceType(String inputValue) {
-            instanceType = InstanceTypes.getInstanceType(inputValue);
+            instanceType = InstanceType.getInstanceType(inputValue);
             return this;
         }
 

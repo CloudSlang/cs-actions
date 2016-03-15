@@ -99,7 +99,7 @@ public class AmazonInputs {
         return delimiter;
     }
 
-    public static AmazonInputs getAmazonInstance(){
+    public static AmazonInputs getAmazonInstance() {
         return new AmazonInputs(commonInputs, customInputs);
     }
 }

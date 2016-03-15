@@ -10,8 +10,6 @@ import static junit.framework.TestCase.assertEquals;
  * Created by persdana on 7/13/2015.
  */
 public class InputsUtilTest {
-    private static final String DEFAULT_DELIMITER  = ";" + System.lineSeparator();
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
 

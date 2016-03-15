@@ -6,12 +6,10 @@ import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -20,10 +18,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -55,6 +52,7 @@ public class ListServersExecutorTest {
 
     /**
      * Tests the execute method. Positive scenario.
+     *
      * @throws Exception
      */
     @Test
@@ -68,9 +66,11 @@ public class ListServersExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
+        verify(computeServiceMock, times(1)).listNodes(inputs.getRegion());
+
+        assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
         assertEquals("nod2;;nod1", result.get(Outputs.RETURN_RESULT));
-        verify(computeServiceMock, times(1)).listNodes(inputs.getRegion());
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {

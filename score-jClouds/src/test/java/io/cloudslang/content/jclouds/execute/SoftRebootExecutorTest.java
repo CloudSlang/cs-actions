@@ -16,6 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -60,9 +61,11 @@ public class SoftRebootExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
+        verify(computeServiceMock, times(1)).softReboot(inputs.getRegion(), inputs.getServerId());
+
+        assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
         assertEquals("Soft reboot started successfully", result.get(Outputs.RETURN_RESULT));
-        verify(computeServiceMock, times(1)).softReboot(inputs.getRegion(), inputs.getServerId());
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {

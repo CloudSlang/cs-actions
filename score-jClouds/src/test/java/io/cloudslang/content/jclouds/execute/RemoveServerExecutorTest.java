@@ -16,6 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -60,9 +61,11 @@ public class RemoveServerExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        assertEquals(result.get(Outputs.RETURN_CODE), "0");
-        assertEquals(result.get(Outputs.RETURN_RESULT), "removed");
         verify(computeServiceMock, times(1)).removeServer(eq(inputs.getRegion()), eq(inputs.getServerId()));
+
+        assertNotNull(result);
+        assertEquals("0", result.get(Outputs.RETURN_CODE));
+        assertEquals("removed", result.get(Outputs.RETURN_RESULT));
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
