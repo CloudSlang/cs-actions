@@ -209,30 +209,6 @@ public class VmUtils {
         return folder;
     }
 
-    private ManagedObjectReference getSpecificMor(ConnectionResources connectionResources, String morName, String parameter)
-            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        Map<String, ManagedObjectReference> morMap = connectionResources.getGetMOREF()
-                .inContainerByType(connectionResources.getMorRootFolder(), parameter, new RetrieveOptions());
-        return getMorObject(morMap, morName);
-    }
-
-    private ManagedObjectReference getDataStore(String dataStoreName, ConnectionResources connectionResources,
-                                                ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(vmMor, new String[]{VmParameter.DATA_STORE.getValue()})
-                .get(VmParameter.DATA_STORE.getValue()))
-                .getManagedObjectReference();
-
-        for (ManagedObjectReference dataStore : dataStores) {
-            DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
-                    .entityProps(dataStore, new String[]{VmParameter.SUMMARY.getValue()}).get(VmParameter.SUMMARY.getValue());
-            if (dataStoreName.equalsIgnoreCase(datastoreSummary.getName())) {
-                return dataStore;
-            }
-        }
-        return null;
-    }
-
     public VirtualMachineRelocateSpec getVirtualMachineRelocateSpec(ManagedObjectReference resourcePool,
                                                                     ManagedObjectReference host,
                                                                     ManagedObjectReference dataStore,
@@ -298,6 +274,30 @@ public class VmUtils {
         for (String key : morMap.keySet()) {
             if (input.equalsIgnoreCase(key)) {
                 return morMap.get(key);
+            }
+        }
+        return null;
+    }
+
+    private ManagedObjectReference getSpecificMor(ConnectionResources connectionResources, String morName, String parameter)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        Map<String, ManagedObjectReference> morMap = connectionResources.getGetMOREF()
+                .inContainerByType(connectionResources.getMorRootFolder(), parameter, new RetrieveOptions());
+        return getMorObject(morMap, morName);
+    }
+
+    private ManagedObjectReference getDataStore(String dataStoreName, ConnectionResources connectionResources,
+                                                ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
+                .entityProps(vmMor, new String[]{VmParameter.DATA_STORE.getValue()})
+                .get(VmParameter.DATA_STORE.getValue()))
+                .getManagedObjectReference();
+
+        for (ManagedObjectReference dataStore : dataStores) {
+            DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
+                    .entityProps(dataStore, new String[]{VmParameter.SUMMARY.getValue()}).get(VmParameter.SUMMARY.getValue());
+            if (dataStoreName.equalsIgnoreCase(datastoreSummary.getName())) {
+                return dataStore;
             }
         }
         return null;
