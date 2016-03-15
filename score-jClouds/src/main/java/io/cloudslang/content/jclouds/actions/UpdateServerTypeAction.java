@@ -20,6 +20,28 @@ import java.util.Map;
  * 2/24/2016.
  */
 public class UpdateServerTypeAction {
+    /**
+     * Updates (changes) instance (identified by "serverId") type with the new one specified by "serverType".
+     *
+     * @param provider         The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
+     * @param identityEndpoint The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com"
+     *                         for amazon or "http://hostOrIp:5000/v2.0" for openstack.
+     * @param identity         The username of your account or the Access Key ID. For openstack provider the required
+     *                         format is 'alias:username'.
+     * @param credential       The password of the user or the Secret Access Key that correspond to the identity input.
+     * @param proxyHost        The proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort        The proxy server port.
+     * @param region           Optional - the region where the server (instance) to be started can be found.
+     *                         listRegionsAction can be used in order to get all regions - Default: 'us-east-1'
+     * @param serverId         The ID of the server (instance) you want to update
+     * @param serverType       The new server type to be used when updating the instance. The complete list of instance
+     *                         types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
+     *                         - Example: 't2.medium', 'm3.large' - Default: 't2.micro'
+     * @param operationTimeout Optional - the total time (in milliseconds) that operation will wait to complete the execution
+     * @param poolingInterval  Optional - the time (in milliseconds) that operation will wait until next check of the instance
+     *                         state
+     * @return
+     */
     @Action(name = "Update Server Type",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
