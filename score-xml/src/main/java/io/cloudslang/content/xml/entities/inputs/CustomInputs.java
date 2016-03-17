@@ -1,5 +1,7 @@
 package io.cloudslang.content.xml.entities.inputs;
 
+import io.cloudslang.content.xml.utils.Constants;
+
 /**
  * Created by markowis on 03/03/2016.
  */
@@ -82,7 +84,12 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withDelimiter(String inputValue) {
-            delimiter = inputValue;
+            if(inputValue == null || inputValue.isEmpty()){
+                delimiter = Constants.Defaults.DELIMITER;
+            }
+            else {
+                delimiter = inputValue;
+            }
             return this;
         }
     }

@@ -19,4 +19,10 @@ public class ResultUtils {
         result.put(Constants.OutputNames.RETURN_RESULT, returnResult);
         result.put(Constants.OutputNames.RESULT_XML, resultXml);
     }
+
+    public static void populateValueResult(Map<String, String> result, String resultText, String returnResult, String selectedValue) {
+        result.put(Constants.OutputNames.RESULT_TEXT, resultText);
+        result.put(Constants.OutputNames.RETURN_RESULT, returnResult);
+        result.put(Constants.OutputNames.SELECTED_VALUE, selectedValue);
+    }
 }

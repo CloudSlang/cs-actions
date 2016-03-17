@@ -38,4 +38,8 @@ public class Constants {
         public static final String NODE_LIST = "nodelist";
         public static final String VALUE = "value";
     }
+
+    public static final class Defaults {
+        public static final String DELIMITER = ",";
+    }
 }

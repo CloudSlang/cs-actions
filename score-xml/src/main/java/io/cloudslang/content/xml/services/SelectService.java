@@ -3,6 +3,7 @@ package io.cloudslang.content.xml.services;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
 
@@ -27,22 +28,16 @@ public class SelectService {
 
             String selection = XmlUtils.xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
 
-            populateResult(result, Constants.SUCCESS, "XPath queried successfully.", selection);
+            ResultUtils.populateValueResult(result, Constants.SUCCESS, "XPath queried successfully.", selection);
 
         } catch (XPathExpressionException e) {
-            populateResult(result, Constants.FAILURE, "XPath parsing error: " + e.getMessage(), Constants.EMPTY_STRING);
+            ResultUtils.populateValueResult(result, Constants.FAILURE, "XPath parsing error: " + e.getMessage(), Constants.EMPTY_STRING);
         } catch (TransformerException te) {
-            populateResult(result, Constants.FAILURE, "Transformer error: " + te.getMessage(), Constants.EMPTY_STRING);
+            ResultUtils.populateValueResult(result, Constants.FAILURE, "Transformer error: " + te.getMessage(), Constants.EMPTY_STRING);
         } catch (Exception e) {
-            populateResult(result, Constants.FAILURE, "Parsing error: " + e.getMessage(), Constants.EMPTY_STRING);
+            ResultUtils.populateValueResult(result, Constants.FAILURE, "Parsing error: " + e.getMessage(), Constants.EMPTY_STRING);
         }
 
         return result;
-    }
-
-    private static void populateResult(Map<String, String> result, String resultText, String returnResult, String selectedValue) {
-        result.put(Constants.OutputNames.RESULT_TEXT, resultText);
-        result.put(Constants.OutputNames.RETURN_RESULT, returnResult);
-        result.put(Constants.OutputNames.SELECTED_VALUE, selectedValue);
     }
 }

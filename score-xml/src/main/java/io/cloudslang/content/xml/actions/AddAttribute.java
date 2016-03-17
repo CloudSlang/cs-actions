@@ -27,7 +27,7 @@ public class AddAttribute {
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
             @Param(value = Constants.InputNames.XPATH_ELEMENT_QUERY, required = true) String xPathElementQuery,
-            @Param(value = Constants.InputNames.ATTRIBUTE_NAME, required = false) String attributeName,
+            @Param(value = Constants.InputNames.ATTRIBUTE_NAME, required = true) String attributeName,
             @Param(value = Constants.InputNames.VALUE, required = true) String value,
             @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
 
