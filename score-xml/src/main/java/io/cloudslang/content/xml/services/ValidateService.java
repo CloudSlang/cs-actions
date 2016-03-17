@@ -4,13 +4,8 @@ import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,10 +20,7 @@ public class ValidateService {
             String xmlDocument = commonInputs.getXmlDocument();
             String xsdDocument = customInputs.getXsdDocument();
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-
-            builder.parse(new InputSource(new StringReader(xmlDocument)));
+            XmlUtils.parseXML(xmlDocument, commonInputs.getSecureProcessing());
             result.put(Constants.OutputNames.RETURN_RESULT, "Parsing successful.");
 
             if(xsdDocument != null && !xsdDocument.isEmpty()) {

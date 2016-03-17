@@ -5,6 +5,8 @@ import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
@@ -27,7 +29,7 @@ public class SetValueService {
 
             XmlUtils.validateNodeList(nodeList);
 
-            XmlUtils.setValueToList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
+            setValueToNodeList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
             ResultUtils.populateSuccessResult(result, "Value set successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
@@ -39,5 +41,22 @@ public class SetValueService {
         }
 
         return result;
+    }
+
+    private static void setValueToNodeList(NodeList nodeList, String attributeName, String value) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Removal failed: XPath must return element types.");
+            }
+
+            if(attributeName == null || attributeName.isEmpty()) {
+                node.setTextContent(value);
+            }
+            else {
+                ((Element) node).setAttribute(attributeName, value);
+            }
+        }
     }
 }

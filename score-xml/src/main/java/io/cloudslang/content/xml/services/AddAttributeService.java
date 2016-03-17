@@ -5,6 +5,8 @@ import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
@@ -27,7 +29,7 @@ public class AddAttributeService {
 
             XmlUtils.validateNodeList(nodeList);
 
-            XmlUtils.addAttributesToList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
+            addAttributesToNodeList(nodeList, customInputs.getAttributeName(), customInputs.getValue());
             ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
@@ -39,5 +41,17 @@ public class AddAttributeService {
         }
 
         return result;
+    }
+
+    private static void addAttributesToNodeList(NodeList nodeList, String name, String value) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Addition of attribute failed: XPath must return element types.");
+            }
+
+            ((Element) node).setAttribute(name, value);
+        }
     }
 }

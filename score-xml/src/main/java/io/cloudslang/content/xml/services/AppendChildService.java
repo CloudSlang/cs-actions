@@ -32,7 +32,7 @@ public class AppendChildService {
 
             XmlUtils.validateNodeList(nodeList);
 
-            XmlUtils.appendChildToList(nodeList, childNode);
+            appendChildToNodeList(nodeList, childNode);
             ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
@@ -45,4 +45,17 @@ public class AppendChildService {
 
         return result;
     }
+
+    private static void appendChildToNodeList(NodeList nodeList, Node childNode) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Append failed: XPath must return element types.");
+            }
+
+            node.appendChild(childNode.cloneNode(true));
+        }
+    }
+
 }

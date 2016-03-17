@@ -32,7 +32,7 @@ public class InsertBeforeService {
 
             XmlUtils.validateNodeList(nodeList);
 
-            XmlUtils.insertBeforeToList(nodeList,beforeNode);
+            insertBeforeToNodeList(nodeList,beforeNode);
             ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
@@ -44,5 +44,16 @@ public class InsertBeforeService {
         }
 
         return result;
+    }
+
+    private static void insertBeforeToNodeList(NodeList nodeList, Node beforeNode) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Insert failed: XPath must return element types.");
+            }
+            node.getParentNode().insertBefore(beforeNode.cloneNode(true), node);
+        }
     }
 }

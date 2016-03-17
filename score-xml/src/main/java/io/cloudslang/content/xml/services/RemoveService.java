@@ -5,6 +5,7 @@ import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
@@ -27,7 +28,7 @@ public class RemoveService {
 
             XmlUtils.validateNodeList(nodeList);
 
-            XmlUtils.removeFromList(nodeList, customInputs.getAttributeName());
+            removeFromNodeList(nodeList, customInputs.getAttributeName());
             ResultUtils.populateSuccessResult(result, "Removed successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
@@ -39,5 +40,22 @@ public class RemoveService {
         }
 
         return result;
+    }
+
+    private static void removeFromNodeList(NodeList nodeList, String attributeName) throws Exception{
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if(node.getNodeType() != Node.ELEMENT_NODE){
+                throw new Exception("Removal failed: XPath must return element types.");
+            }
+
+            if (attributeName == null || attributeName.isEmpty()) {
+                node.getParentNode().removeChild(node);
+            }
+            else{
+                node.getAttributes().removeNamedItem(attributeName);
+            }
+        }
     }
 }

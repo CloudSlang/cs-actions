@@ -27,10 +27,12 @@ public class Validate {
                 @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
-            @Param(value = Constants.InputNames.XSD_DOCUMENT, required = false) String xsdDocument) {
+            @Param(value = Constants.InputNames.XSD_DOCUMENT, required = false) String xsdDocument,
+            @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
+                .withSecureProcessing(secureProcessing)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

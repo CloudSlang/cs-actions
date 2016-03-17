@@ -36,7 +36,7 @@ public class ValidateTest {
     public void testWithWellFormedXML() {
         xml = "<root>toot</root>";
 
-        result = validate.execute(xml, null);
+        result = validate.execute(xml, null, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
     }
@@ -45,7 +45,7 @@ public class ValidateTest {
     public void testWithNonWellFormedXML() {
         xml = "<root>toot</roo>";
 
-       result = validate.execute(xml, null);
+       result = validate.execute(xml, null, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
     }
@@ -58,7 +58,7 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        result = validate.execute(xml, xsd);
+        result = validate.execute(xml, xsd, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
     }
@@ -71,7 +71,7 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        result = validate.execute(xml, xsd);
+        result = validate.execute(xml, xsd, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
     }

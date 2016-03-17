@@ -1,7 +1,6 @@
 package io.cloudslang.content.xml.utils;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -98,75 +97,6 @@ public class XmlUtils {
         XPath xpath =  XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(context);
         return xpath.compile(xPathQuery);
-    }
-
-    public static void addAttributesToList(NodeList nodeList, String name, String value) throws Exception{
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-
-            if(node.getNodeType() != Node.ELEMENT_NODE){
-                throw new Exception("Addition of attribute failed: XPath must return element types.");
-            }
-
-            ((Element) node).setAttribute(name, value);
-        }
-    }
-
-    public static void appendChildToList(NodeList nodeList, Node childNode) throws Exception{
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-
-            if(node.getNodeType() != Node.ELEMENT_NODE){
-                throw new Exception("Append failed: XPath must return element types.");
-            }
-
-            node.appendChild(childNode.cloneNode(true));
-        }
-    }
-
-    public static void insertBeforeToList(NodeList nodeList, Node beforeNode) throws Exception{
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-
-            if(node.getNodeType() != Node.ELEMENT_NODE){
-                throw new Exception("Insert failed: XPath must return element types.");
-            }
-            node.getParentNode().insertBefore(beforeNode.cloneNode(true), node);
-        }
-    }
-
-    public static void removeFromList(NodeList nodeList, String attributeName) throws Exception{
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-
-            if(node.getNodeType() != Node.ELEMENT_NODE){
-                throw new Exception("Removal failed: XPath must return element types.");
-            }
-
-            if (attributeName == null || attributeName.isEmpty()) {
-                node.getParentNode().removeChild(node);
-            }
-            else{
-                node.getAttributes().removeNamedItem(attributeName);
-            }
-        }
-    }
-
-    public static void setValueToList(NodeList nodeList, String attributeName, String value) throws Exception{
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-
-            if(node.getNodeType() != Node.ELEMENT_NODE){
-                throw new Exception("Removal failed: XPath must return element types.");
-            }
-
-            if(attributeName == null || attributeName.isEmpty()) {
-                node.setTextContent(value);
-            }
-            else {
-                ((Element) node).setAttribute(attributeName, value);
-            }
-        }
     }
 
     public static void validateAgainstXsd(String xmlDocument, String xsdDocument) throws Exception{
