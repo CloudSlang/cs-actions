@@ -9,7 +9,6 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 public class VmInputs {
     private static final int DEFAULT_CPU_COUNT = 1;
-    private static final int DEFAULT_CORES_PER_SOCKET = 1;
     private static final long DEFAULT_VM_DISK_SIZE_MB = 1024;
     private static final long DEFAULT_VM_MEMORY_SIZE_MB = 1024;
 
@@ -24,6 +23,7 @@ public class VmInputs {
     private String updateValue;
     private String vmDiskMode;
     private String folderName;
+    private String resourcePool;
     private String cloneName;
     private String cloneResourcePool;
     private String cloneHost;
@@ -49,6 +49,7 @@ public class VmInputs {
         this.updateValue = builder.updateValue;
         this.vmDiskMode = builder.vmDiskMode;
         this.folderName = builder.folderName;
+        this.resourcePool = builder.resourcePool;
         this.cloneName = builder.cloneName;
         this.cloneResourcePool = builder.cloneResourcePool;
         this.cloneHost = builder.cloneHost;
@@ -107,6 +108,10 @@ public class VmInputs {
         return folderName;
     }
 
+    public String getResourcePool() {
+        return resourcePool;
+    }
+
     public String getCloneName() {
         return cloneName;
     }
@@ -159,6 +164,7 @@ public class VmInputs {
         private String updateValue;
         private String vmDiskMode;
         private String folderName;
+        private String resourcePool;
         private String cloneName;
         private String cloneResourcePool;
         private String cloneHost;
@@ -231,6 +237,11 @@ public class VmInputs {
             return this;
         }
 
+        public VmInputsBuilder withResourcePool(String inputValue) {
+            resourcePool = inputValue;
+            return this;
+        }
+
         public VmInputsBuilder withCloneName(String inputValue) {
             cloneName = inputValue;
             return this;
@@ -271,7 +282,7 @@ public class VmInputs {
             return this;
         }
 
-        public VmInputsBuilder withThickProvision(String inputValue){
+        public VmInputsBuilder withThickProvision(String inputValue) {
             thickProvision = Boolean.parseBoolean(inputValue);
             return this;
         }

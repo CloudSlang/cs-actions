@@ -6,6 +6,7 @@ import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -232,8 +233,8 @@ public class VmConfigSpecs {
     private ConfigTarget getHostConfigTarget(ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(connectionResources.getComputeResourceMor(), new String[]{Constants.ENVIRONMENT_BROWSER})
-                .get(Constants.ENVIRONMENT_BROWSER);
+                .entityProps(connectionResources.getComputeResourceMor(), new String[]{VmParameter.ENVIRONMENT_BROWSER.getValue()})
+                .get(VmParameter.ENVIRONMENT_BROWSER.getValue());
 
         ConfigTarget configTarget = connectionResources.getVimPortType()
                 .queryConfigTarget(environmentBrowserMor, connectionResources.getHostMor());
@@ -314,8 +315,8 @@ public class VmConfigSpecs {
     private List<VirtualDevice> getDefaultDevicesList(ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(connectionResources.getComputeResourceMor(), new String[]{Constants.ENVIRONMENT_BROWSER})
-                .get(Constants.ENVIRONMENT_BROWSER);
+                .entityProps(connectionResources.getComputeResourceMor(), new String[]{VmParameter.ENVIRONMENT_BROWSER.getValue()})
+                .get(VmParameter.ENVIRONMENT_BROWSER.getValue());
 
         VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
@@ -364,11 +365,12 @@ public class VmConfigSpecs {
     private String getDataStoreWithFreeSpaceNeeded(ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                                    long minFreeSpace) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(vmMor, new String[]{Constants.DATASTORE}).get(Constants.DATASTORE)).getManagedObjectReference();
+                .entityProps(vmMor, new String[]{VmParameter.DATA_STORE.getValue()}).get(VmParameter.DATA_STORE.getValue()))
+                .getManagedObjectReference();
 
         for (ManagedObjectReference dataStore : dataStores) {
             DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
-                    .entityProps(dataStore, new String[]{Constants.SUMMARY}).get(Constants.SUMMARY);
+                    .entityProps(dataStore, new String[]{VmParameter.SUMMARY.getValue()}).get(VmParameter.SUMMARY.getValue());
             if (datastoreSummary.getFreeSpace() > minFreeSpace) {
                 return datastoreSummary.getName();
             }

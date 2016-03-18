@@ -35,16 +35,16 @@ public class GetObjectProperties {
         spec.getPropSet().add(new PropertySpec());
 
         if ((properties == null || properties.length == 0)) {
-            spec.getPropSet().get(0).setAll(Boolean.TRUE);
+            spec.getPropSet().get(0).setAll(true);
         } else {
-            spec.getPropSet().get(0).setAll(Boolean.FALSE);
+            spec.getPropSet().get(0).setAll(false);
         }
 
         spec.getPropSet().get(0).setType(mor.getType());
         spec.getPropSet().get(0).getPathSet().addAll(Arrays.asList(properties));
         spec.getObjectSet().add(new ObjectSpec());
         spec.getObjectSet().get(0).setObj(mor);
-        spec.getObjectSet().get(0).setSkip(Boolean.FALSE);
+        spec.getObjectSet().get(0).setSkip(false);
 
         List<PropertyFilterSpec> propertyFilterSpecs = new ArrayList<>(1);
         propertyFilterSpecs.add(spec);

@@ -6,7 +6,7 @@ import io.cloudslang.content.vmware.connection.helpers.build.ObjectSpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.PropertyFilterSpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.PropertySpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.TraversalSpecBuilder;
-import io.cloudslang.content.vmware.constants.Constants;
+import io.cloudslang.content.vmware.entities.VmParameter;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class GetMOREF {
                                               final String morefType,
                                               final RetrieveOptions retrieveOptions
     ) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        return this.containerViewByType(container, morefType, retrieveOptions, Constants.NAME);
+        return this.containerViewByType(container, morefType, retrieveOptions, VmParameter.NAME.getValue());
     }
 
     /**
@@ -68,10 +68,10 @@ public class GetMOREF {
                 new PropertyFilterSpecBuilder().propSet(new PropertySpecBuilder().all(false)
                         .type(morefType).pathSet(morefProperties)).objectSet(new ObjectSpecBuilder()
                         .obj(containerView).skip(true).selectSet(new TraversalSpecBuilder()
-                                .name(Constants.VIEW)
-                                .path(Constants.VIEW)
+                                .name(VmParameter.VIEW.getValue())
+                                .path(VmParameter.VIEW.getValue())
                                 .skip(false)
-                                .type(Constants.CONTAINER_VIEW)))};
+                                .type(VmParameter.CONTAINER_VIEW.getValue())))};
     }
 
     public RetrieveResult containerViewByType(final RetrieveOptions retrieveOptions,

@@ -28,6 +28,7 @@ public class Inputs {
     public static final String UPDATE_VALUE = "updateValue";
     public static final String VM_DISK_MODE = "vmDiskMode";
     public static final String FOLDER_NAME = "folderName";
+    public static final String RESOURCE_POOL = "resourcePool";
     public static final String CLONE_NAME = "cloneName";
     public static final String THICK_PROVISION = "thickProvision";
     public static final String IS_TEMPLATE = "isTemplate";

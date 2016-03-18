@@ -1,12 +1,10 @@
 package io.cloudslang.content.vmware.entities;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * Created by Mihai Tusa.
  * 1/22/2016.
  */
-public enum Levels {
+public enum Level {
     HIGH,
     NORMAL,
     LOW;
