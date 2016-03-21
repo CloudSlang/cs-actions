@@ -26,7 +26,7 @@ public class SelectService {
             NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
             XPathExpression expr = XmlUtils.createXPathExpression(context, commonInputs.getXPathQuery());
 
-            String selection = XmlUtils.xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
+            String selection = xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
 
             ResultUtils.populateValueResult(result, Constants.SUCCESS, "XPath queried successfully.", selection);
 
@@ -39,5 +39,20 @@ public class SelectService {
         }
 
         return result;
+    }
+
+    private static String xPathQuery(Document doc, XPathExpression expr, String queryType, String delimiter) throws Exception{
+        if(queryType.equals(Constants.QueryTypes.NODE_LIST)) {
+            return XmlUtils.xPathNodeListQuery(doc, expr, delimiter);
+        }
+        else if (queryType.equals(Constants.QueryTypes.NODE)) {
+            return XmlUtils.xPathNodeQuery(doc, expr);
+        }
+        else if (queryType.equals(Constants.QueryTypes.VALUE)) {
+            return XmlUtils.xPathValueQuery(doc, expr);
+        }
+        else{
+            throw new Exception("Invalid query type");
+        }
     }
 }

@@ -6,6 +6,13 @@ import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +31,7 @@ public class ValidateService {
             result.put(Constants.OutputNames.RETURN_RESULT, "Parsing successful.");
 
             if(xsdDocument != null && !xsdDocument.isEmpty()) {
-                XmlUtils.validateAgainstXsd(xmlDocument, customInputs.getXsdDocument());
+                validateAgainstXsd(xmlDocument, customInputs.getXsdDocument());
                 result.put(Constants.OutputNames.RETURN_RESULT, "XML is valid.");
             }
 
@@ -42,5 +49,12 @@ public class ValidateService {
         }
 
         return result;
+    }
+
+    private static void validateAgainstXsd(String xmlDocument, String xsdDocument) throws Exception{
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = schemaFactory.newSchema(new StreamSource(new StringReader(xsdDocument)));
+        Validator validator = schema.newValidator();
+        validator.validate(new StreamSource(new StringReader(xmlDocument)));
     }
 }

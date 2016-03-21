@@ -99,39 +99,17 @@ public class XmlUtils {
         return xpath.compile(xPathQuery);
     }
 
-    public static void validateAgainstXsd(String xmlDocument, String xsdDocument) throws Exception{
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(new StreamSource(new StringReader(xsdDocument)));
-        Validator validator = schema.newValidator();
-        validator.validate(new StreamSource(new StringReader(xmlDocument)));
-    }
-
-    public static String xPathQuery(Document doc, XPathExpression expr, String queryType, String delimiter) throws Exception{
-        if(queryType.equals(Constants.QueryTypes.NODE_LIST)) {
-            return xPathNodeListQuery(doc, expr, delimiter);
-        }
-        else if (queryType.equals(Constants.QueryTypes.NODE)) {
-            return xPathNodeQuery(doc, expr);
-        }
-        else if (queryType.equals(Constants.QueryTypes.VALUE)) {
-            return xPathValueQuery(doc, expr);
-        }
-        else{
-            throw new Exception("Invalid query type");
-        }
-    }
-
-    private static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
+    public static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         return nodeListToString(nodeList,delimiter);
     }
 
-    private static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
+    public static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
         Node n = (Node) expr.evaluate(doc, XPathConstants.NODE);
         return nodeToString(n);
     }
 
-    private static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
+    public static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
         return  (String) expr.evaluate(doc, XPathConstants.STRING);
     }
 
