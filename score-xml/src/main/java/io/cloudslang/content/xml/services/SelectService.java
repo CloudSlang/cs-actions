@@ -6,9 +6,12 @@ import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import java.util.HashMap;
@@ -43,16 +46,42 @@ public class SelectService {
 
     private static String xPathQuery(Document doc, XPathExpression expr, String queryType, String delimiter) throws Exception{
         if(queryType.equals(Constants.QueryTypes.NODE_LIST)) {
-            return XmlUtils.xPathNodeListQuery(doc, expr, delimiter);
+            return xPathNodeListQuery(doc, expr, delimiter);
         }
         else if (queryType.equals(Constants.QueryTypes.NODE)) {
-            return XmlUtils.xPathNodeQuery(doc, expr);
+            return xPathNodeQuery(doc, expr);
         }
         else if (queryType.equals(Constants.QueryTypes.VALUE)) {
-            return XmlUtils.xPathValueQuery(doc, expr);
+            return xPathValueQuery(doc, expr);
         }
         else{
             throw new Exception("Invalid query type");
         }
     }
+
+    private static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
+        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+        return nodeListToString(nodeList,delimiter);
+    }
+
+    private static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
+        Node n = (Node) expr.evaluate(doc, XPathConstants.NODE);
+        return XmlUtils.nodeToString(n);
+    }
+
+    private static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
+        return  (String) expr.evaluate(doc, XPathConstants.STRING);
+    }
+
+    private static String nodeListToString(NodeList nodeList, String delimiter) throws  TransformerException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < nodeList.getLength() - 1; i++) {
+            sb.append(XmlUtils.nodeToString(nodeList.item(i)));
+            sb.append(delimiter);
+        }
+        sb.append(XmlUtils.nodeToString(nodeList.item(nodeList.getLength()-1)));
+        return sb.toString();
+    }
+
+
 }

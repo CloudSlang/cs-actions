@@ -19,10 +19,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import javax.xml.xpath.*;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -40,16 +36,6 @@ public class XmlUtils {
         } else {
             return transformElementNode(node);
         }
-    }
-
-    private static String nodeListToString(NodeList nodeList, String delimiter) throws  TransformerException {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < nodeList.getLength() - 1; i++) {
-            sb.append(nodeToString(nodeList.item(i)));
-            sb.append(delimiter);
-        }
-        sb.append(nodeToString(nodeList.item(nodeList.getLength()-1)));
-        return sb.toString();
     }
 
     private static String transformElementNode(Node node) throws TransformerException{
@@ -97,20 +83,6 @@ public class XmlUtils {
         XPath xpath =  XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(context);
         return xpath.compile(xPathQuery);
-    }
-
-    public static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
-        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-        return nodeListToString(nodeList,delimiter);
-    }
-
-    public static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
-        Node n = (Node) expr.evaluate(doc, XPathConstants.NODE);
-        return nodeToString(n);
-    }
-
-    public static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
-        return  (String) expr.evaluate(doc, XPathConstants.STRING);
     }
 
     public static void validateNodeList(NodeList nodeList) throws Exception{
