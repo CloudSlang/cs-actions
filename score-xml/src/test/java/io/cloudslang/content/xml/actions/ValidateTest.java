@@ -17,7 +17,6 @@ import java.util.Map;
 public class ValidateTest {
 
     private Validate validate;
-    Map<String, String> result;
     String xml;
 
     @Before
@@ -28,7 +27,6 @@ public class ValidateTest {
     @After
     public void tearDown(){
         validate = null;
-        result = null;
         xml = null;
     }
 
@@ -36,18 +34,20 @@ public class ValidateTest {
     public void testWithWellFormedXML() {
         xml = "<root>toot</root>";
 
-        result = validate.execute(xml, null, "false");
+        Map<String, String> result = validate.execute(xml, null, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing successful.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
     public void testWithNonWellFormedXML() {
         xml = "<root>toot</roo>";
 
-       result = validate.execute(xml, null, "false");
+        Map<String, String> result = validate.execute(xml, null, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: The element type \"root\" must be terminated by the matching end-tag \"</root>\".", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -58,9 +58,10 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        result = validate.execute(xml, xsd, "false");
+        Map<String, String> result = validate.execute(xml, xsd, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("XML is valid.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -71,8 +72,9 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        result = validate.execute(xml, xsd, "false");
+        Map<String, String> result = validate.execute(xml, xsd, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: cvc-complex-type.4: Attribute 'someid' must appear on element 'root'.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

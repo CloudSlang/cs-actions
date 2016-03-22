@@ -17,7 +17,6 @@ import java.util.Map;
 public class AppendChildTest {
 
     private AppendChild appendChild;
-    Map<String, String> result;
     String xml;
 
     @Before
@@ -30,7 +29,6 @@ public class AppendChildTest {
     @After
     public void tearDown(){
         appendChild = null;
-        result = null;
         xml = null;
     }
 
@@ -39,9 +37,10 @@ public class AppendChildTest {
         String xPathQuery = "//element1";
         String xmlChild = "<sub1 attr=\"ibute\">Sub1</sub1>";
 
-        result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Child appended successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -49,9 +48,10 @@ public class AppendChildTest {
         String xPathQuery = "//subelement";
         String xmlChild = "<subsub attr=\"ibute\">Deeply nested</subsub>";
 
-        result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Child appended successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -59,9 +59,10 @@ public class AppendChildTest {
         String xPathQuery = "/subelement";
         String xmlChild = "<toAdd>Text</toAdd>";
 
-        result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -69,9 +70,10 @@ public class AppendChildTest {
         String xPathQuery = "//subelement";
         String xmlChild = "<open>Text</close>";
 
-        result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: The element type \"open\" must be terminated by the matching end-tag \"</open>\".", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -79,8 +81,9 @@ public class AppendChildTest {
         String xPathQuery = "//element1/@attr";
         String xmlChild = "<toAdd>Text</toAdd>";
 
-        result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Append failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

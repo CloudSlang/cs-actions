@@ -17,7 +17,6 @@ import java.util.Map;
 public class AddAttributeTest {
 
     private AddAttribute addAttribute;
-    Map<String, String> result;
     String xml;
 
     @Before
@@ -30,7 +29,6 @@ public class AddAttributeTest {
     @After
     public void tearDown(){
         addAttribute = null;
-        result = null;
         xml = null;
     }
 
@@ -40,9 +38,10 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Attribute set successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -51,9 +50,10 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -62,8 +62,9 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Error: Addition of attribute failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

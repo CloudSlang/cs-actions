@@ -17,7 +17,6 @@ import java.util.Map;
 public class InsertBeforeTest {
 
     private InsertBefore insertBefore;
-    Map<String, String> result;
     String xml;
 
     @Before
@@ -30,7 +29,6 @@ public class InsertBeforeTest {
     @After
     public void tearDown(){
         insertBefore = null;
-        result = null;
         xml = null;
     }
 
@@ -39,9 +37,10 @@ public class InsertBeforeTest {
         String xPathQuery = "//element1";
         String xmlElement = "<element0>Zero</element0>";
 
-        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Inserted before successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -49,9 +48,10 @@ public class InsertBeforeTest {
         String xPathQuery = "//subelement";
         String xmlElement = "<presub>Zero</presub>";
 
-        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Inserted before successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -59,9 +59,10 @@ public class InsertBeforeTest {
         String xPathQuery = "/subelement";
         String xmlElement = "<toAdd>Text</toAdd>";
 
-        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -69,9 +70,10 @@ public class InsertBeforeTest {
         String xPathQuery = "//subelement";
         String xmlElement = "<open>Text</close>";
 
-        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: The element type \"open\" must be terminated by the matching end-tag \"</open>\".", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -79,8 +81,9 @@ public class InsertBeforeTest {
         String xPathQuery = "//element1/@attr";
         String xmlElement = "<toAdd>Text</toAdd>";
 
-        result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Insert failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

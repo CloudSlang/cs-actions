@@ -17,7 +17,6 @@ import java.util.Map;
 public class SetValueTest {
 
     private SetValue setValue;
-    Map<String, String> result;
     String xml;
 
     @Before
@@ -30,7 +29,6 @@ public class SetValueTest {
     @After
     public void tearDown(){
         setValue = null;
-        result = null;
         xml = null;
     }
 
@@ -40,9 +38,10 @@ public class SetValueTest {
         String name = null;
         String value = "test value";
 
-        result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Value set successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -51,9 +50,10 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Value set successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -62,9 +62,10 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -73,8 +74,9 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Removal failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

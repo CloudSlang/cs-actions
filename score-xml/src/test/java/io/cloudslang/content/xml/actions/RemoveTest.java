@@ -17,7 +17,6 @@ import java.util.Map;
 public class RemoveTest {
 
     private Remove remove;
-    Map<String, String> result;
     String xml;
 
     @Before
@@ -30,7 +29,6 @@ public class RemoveTest {
     @After
     public void tearDown(){
         remove = null;
-        result = null;
         xml = null;
     }
 
@@ -39,9 +37,10 @@ public class RemoveTest {
         String xPathQuery = "//subelement";
         String name = null;
 
-        result = remove.execute(xml, xPathQuery, name, "false");
+        Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Removed successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -49,9 +48,10 @@ public class RemoveTest {
         String xPathQuery = "//subelement";
         String name = "attr";
 
-        result = remove.execute(xml, xPathQuery, name, "false");
+        Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Removed successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -59,9 +59,10 @@ public class RemoveTest {
         String xPathQuery = "/subelement";
         String name = null;
 
-        result = remove.execute(xml, xPathQuery, name, "false");
+        Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -69,8 +70,9 @@ public class RemoveTest {
         String xPathQuery = "//subelement/@attr";
         String name = null;
 
-        result = remove.execute(xml, xPathQuery, name, "false");
+        Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        Assert.assertEquals("Parsing error: Removal failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

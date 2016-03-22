@@ -33,7 +33,7 @@ public class InsertBeforeService {
             XmlUtils.validateNodeList(nodeList);
 
             insertBeforeToNodeList(nodeList,beforeNode);
-            ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));
+            ResultUtils.populateSuccessResult(result, "Inserted before successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
             ResultUtils.populateFailureResult(result, "XPath parsing error: " + e.getMessage());

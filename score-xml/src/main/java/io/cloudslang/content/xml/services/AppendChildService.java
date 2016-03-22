@@ -33,7 +33,7 @@ public class AppendChildService {
             XmlUtils.validateNodeList(nodeList);
 
             appendChildToNodeList(nodeList, childNode);
-            ResultUtils.populateSuccessResult(result, "Attribute set successfully.", XmlUtils.nodeToString(doc));
+            ResultUtils.populateSuccessResult(result, "Child appended successfully.", XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
             ResultUtils.populateFailureResult(result, "XPath parsing error: " + e.getMessage());

@@ -17,7 +17,6 @@ import java.util.Map;
 public class SelectTest {
 
     private Select select;
-    Map<String, String> result;
     String xml;
 
     @Before
@@ -30,7 +29,6 @@ public class SelectTest {
     @After
     public void tearDown(){
         select = null;
-        result = null;
         xml = null;
     }
 
@@ -41,9 +39,10 @@ public class SelectTest {
         String delimiter = null;
         String expectedResult = "Sub3";
 
-        result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
+        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -53,9 +52,10 @@ public class SelectTest {
         String delimiter = null;
         String expectedResult = "<subelement attr=\"toDelete\">Sub3</subelement>";
 
-        result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
+        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -65,9 +65,10 @@ public class SelectTest {
         String delimiter = ",";
         String expectedResult = "<subelement attr=\"toDelete\">Sub2</subelement>,<subelement attr=\"toDelete\">Sub3</subelement>";
 
-        result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
+        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -77,9 +78,10 @@ public class SelectTest {
         String delimiter = ",";
         String expectedResult = "someid=\"5\"";
 
-        result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
+        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -89,9 +91,10 @@ public class SelectTest {
         String delimiter = null;
         String expectedResult = "";
 
-        result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
+        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -101,9 +104,10 @@ public class SelectTest {
         String delimiter = null;
         String expectedResult = "";
 
-       result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
+        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -117,8 +121,9 @@ public class SelectTest {
         String delimiter = null;
         String expectedResult = "<foo:element1 xmlns:foo=\"http://www.foo.org/\">First element</foo:element1>";
 
-        result = select.execute(namespaceXml, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(namespaceXml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
+        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }
