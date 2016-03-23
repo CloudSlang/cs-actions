@@ -176,7 +176,6 @@
         <module>score-utilities</module>
         <module>score-rft</module>
         <module>score-jClouds</module>
-        <module>score-powershell</module>
         <module>score-vmware</module>
     </modules>
 </project>
