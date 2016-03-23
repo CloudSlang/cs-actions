@@ -40,6 +40,25 @@ public class Inputs {
     public static final String CLONE_HOST = "cloneHost";
     public static final String CLONE_DATA_STORE = "cloneDataStore";
 
+    // Guest specific inputs
+    public static final String REBOOT_OPTION = "rebootOption";
+    public static final String COMPUTER_NAME = "computerName";
+    public static final String COMPUTER_PASSWORD = "computerPassword";
+    public static final String OWNER_ORGANIZATION = "ownerOrganization";
+    public static final String PRODUCT_KEY = "productKey";
+    public static final String DOMAIN_PASSWORD = "adminPassword";
+    public static final String DOMAIN_USERNAME = "domainUsername";
+    public static final String DOMAIN = "domain";
+    public static final String WORKGROUP = "workgroup";
+    public static final String LICENSE_DATA_MODE = "licenseDataMode";
+    public static final String AUTO_LOGON = "autoLogon";
+    public static final String PLAIN_TEXT = "plainText";
+    public static final String DELETE_ACCOUNTS = "deleteAccounts";
+    public static final String CHANGE_SID = "changeSID";
+    public static final String AUTO_LOGON_COUNT = "autoLogonCount";
+    public static final String AUTO_USERS = "autoUsers";
+    public static final String DNS_SERVER = "dnsServer";
+
     // Miscellaneous
     public static final String DELIMITER = "delimiter";
 }
