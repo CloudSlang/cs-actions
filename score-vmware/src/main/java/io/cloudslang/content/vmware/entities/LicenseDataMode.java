@@ -5,14 +5,26 @@ package io.cloudslang.content.vmware.entities;
  * 3/22/2016.
  */
 public enum LicenseDataMode {
-    PER_SERVER,
-    PER_SEAT;
+    PERSERVER("perServer"),
+    PERSEAT("perSeat");
 
-    public static String getValue(String input) throws Exception {
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unsupported level value: [" + input + "]. Valid values are: perServer, perSeat.");
-        }
+    private String value;
+
+    /**
+     * Retrieve license data mode.
+     *
+     * @param value the element value
+     */
+    LicenseDataMode(String value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the value.
+     *
+     * @return value
+     */
+    public String getValue() {
+        return value;
     }
 }

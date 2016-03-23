@@ -7,14 +7,14 @@ import io.cloudslang.content.vmware.utils.InputUtils;
  * 3/21/2016.
  */
 public class GuestInputs {
-    private static final boolean DEFAULT_PLAIN_TEXT = true;
-
     private static final int DEFAULT_AUTO_LOGON_COUNT = 1;
     private static final int DEFAULT_AUTO_USERS_NUMBER = 1;
+    private static final int DEFAULT_TIME_ZONE = 0;
 
     private String rebootOption;
     private String computerName;
     private String computerPassword;
+    private String ownerName;
     private String ownerOrganization;
     private String productKey;
     private String domainUsername;
@@ -23,19 +23,24 @@ public class GuestInputs {
     private String workgroup;
     private String licenseDataMode;
     private String dnsServer;
+    private String ipAddress;
+    private String subnetMask;
+    private String defaultGateway;
+    private String macAddress;
 
     private boolean deleteAccounts;
     private boolean changeSID;
     private boolean autoLogon;
-    private boolean plainText;
 
     private int autoLogonCount;
     private int autoUsers;
+    private int timeZone;
 
     public GuestInputs(GuestInputsBuilder builder) {
         this.rebootOption = builder.rebootOption;
         this.computerName = builder.computerName;
         this.computerPassword = builder.computerPassword;
+        this.ownerName = builder.ownerName;
         this.ownerOrganization = builder.ownerOrganization;
         this.productKey = builder.productKey;
         this.domainUsername = builder.domainUsername;
@@ -44,12 +49,18 @@ public class GuestInputs {
         this.workgroup = builder.workgroup;
         this.licenseDataMode = builder.licenseDataMode;
         this.dnsServer = builder.dnsServer;
+        this.ipAddress = builder.ipAddress;
+        this.subnetMask = builder.subnetMask;
+        this.defaultGateway = builder.defaultGateway;
+        this.macAddress = builder.macAddress;
+
         this.deleteAccounts = builder.deleteAccounts;
         this.changeSID = builder.changeSID;
         this.autoLogon = builder.autoLogon;
-        this.plainText = builder.plainText;
+
         this.autoLogonCount = builder.autoLogonCount;
         this.autoUsers = builder.autoUsers;
+        this.timeZone = builder.timeZone;
     }
 
     public String getRebootOption() {
@@ -64,6 +75,10 @@ public class GuestInputs {
         return computerPassword;
     }
 
+    public String getOwnerName() {
+        return ownerName;
+    }
+
     public String getOwnerOrganization() {
         return ownerOrganization;
     }
@@ -72,12 +87,12 @@ public class GuestInputs {
         return productKey;
     }
 
-    public String getDomainPassword() {
-        return domainPassword;
-    }
-
     public String getDomainUsername() {
         return domainUsername;
+    }
+
+    public String getDomainPassword() {
+        return domainPassword;
     }
 
     public String getDomain() {
@@ -96,6 +111,22 @@ public class GuestInputs {
         return dnsServer;
     }
 
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public String getSubnetMask() {
+        return subnetMask;
+    }
+
+    public String getDefaultGateway() {
+        return defaultGateway;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
     public boolean isDeleteAccounts() {
         return deleteAccounts;
     }
@@ -108,10 +139,6 @@ public class GuestInputs {
         return autoLogon;
     }
 
-    public boolean isPlainText() {
-        return plainText;
-    }
-
     public int getAutoLogonCount() {
         return autoLogonCount;
     }
@@ -120,9 +147,14 @@ public class GuestInputs {
         return autoUsers;
     }
 
+    public int getTimeZone() {
+        return timeZone;
+    }
+
     public static class GuestInputsBuilder {
         private String rebootOption;
         private String computerName;
+        private String ownerName;
         private String computerPassword;
         private String ownerOrganization;
         private String productKey;
@@ -132,26 +164,35 @@ public class GuestInputs {
         private String workgroup;
         private String licenseDataMode;
         private String dnsServer;
+        private String ipAddress;
+        private String subnetMask;
+        private String defaultGateway;
+        private String macAddress;
 
         private boolean deleteAccounts;
         private boolean changeSID;
         private boolean autoLogon;
-        private boolean plainText;
 
         private int autoLogonCount;
         private int autoUsers;
+        private int timeZone;
 
         public GuestInputs build() {
             return new GuestInputs(this);
         }
 
         public GuestInputsBuilder withRebootOption(String inputValue) throws Exception {
-            rebootOption = RebootOption.getValue(inputValue);
+            rebootOption = RebootOption.valueOf(inputValue.toUpperCase()).getValue();
             return this;
         }
 
         public GuestInputsBuilder withComputerName(String inputValue) throws Exception {
             computerName = inputValue;
+            return this;
+        }
+
+        public GuestInputsBuilder withOwnerName(String inputValue) throws Exception {
+            ownerName = inputValue;
             return this;
         }
 
@@ -191,7 +232,7 @@ public class GuestInputs {
         }
 
         public GuestInputsBuilder withLicenseDataMode(String inputValue) throws Exception {
-            licenseDataMode = LicenseDataMode.getValue(inputValue);
+            licenseDataMode = LicenseDataMode.valueOf(inputValue.toUpperCase()).getValue();
             return this;
         }
 
@@ -200,13 +241,28 @@ public class GuestInputs {
             return this;
         }
 
-        public GuestInputsBuilder withAutoLogon(String inputValue) throws Exception {
-            autoLogon = Boolean.parseBoolean(inputValue);
+        public GuestInputsBuilder withIpAddress(String inputValue) throws Exception {
+            ipAddress = inputValue;
             return this;
         }
 
-        public GuestInputsBuilder withWithPlainText(String inputValue) throws Exception {
-            plainText = InputUtils.getBooleanInput(inputValue, DEFAULT_PLAIN_TEXT);
+        public GuestInputsBuilder withSubnetMask(String inputValue) throws Exception {
+            subnetMask = inputValue;
+            return this;
+        }
+
+        public GuestInputsBuilder withDefaultGateway(String inputValue) throws Exception {
+            defaultGateway = inputValue;
+            return this;
+        }
+
+        public GuestInputsBuilder withMacAddress(String inputValue) throws Exception {
+            macAddress = inputValue;
+            return this;
+        }
+
+        public GuestInputsBuilder withAutoLogon(String inputValue) throws Exception {
+            autoLogon = Boolean.parseBoolean(inputValue);
             return this;
         }
 
@@ -227,6 +283,11 @@ public class GuestInputs {
 
         public GuestInputsBuilder withAutoUsers(String inputValue) {
             autoUsers = InputUtils.getIntInput(inputValue, DEFAULT_AUTO_USERS_NUMBER);
+            return this;
+        }
+
+        public GuestInputsBuilder withTimeZone(String inputValue) {
+            timeZone = InputUtils.getIntInput(inputValue, DEFAULT_TIME_ZONE);
             return this;
         }
     }

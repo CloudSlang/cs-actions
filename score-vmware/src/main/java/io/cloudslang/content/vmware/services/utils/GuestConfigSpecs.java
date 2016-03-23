@@ -1,6 +1,7 @@
 package io.cloudslang.content.vmware.services.utils;
 
 import com.vmware.vim25.*;
+import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.GuestInputs;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,12 +21,12 @@ public class GuestConfigSpecs {
         CustomizationWinOptions winOptions = getCustomizationWinOptions(guestInputs);
         customizationSpec.setOptions(winOptions);
 
-        CustomizationGlobalIPSettings globalIPSettings = getCustomizationGlobalIPSettings(guestInputs);
-        customizationSpec.setGlobalIPSettings(globalIPSettings);
+        customizationSpec.setGlobalIPSettings(new CustomizationGlobalIPSettings());
+
+        setAdapter(guestInputs, customizationSpec);
 
         return customizationSpec;
     }
-
 
     private CustomizationSysprep getCustomizationSysprep(GuestInputs guestInputs) {
         CustomizationSysprep customizationSysprep = getPopulatedCustomizationSysprep(guestInputs);
@@ -42,19 +43,43 @@ public class GuestConfigSpecs {
         winOptions.setDeleteAccounts(guestInputs.isDeleteAccounts());
         winOptions.setChangeSID(guestInputs.isChangeSID());
 
-        CustomizationSysprepRebootOption rebootOption = CustomizationSysprepRebootOption
-                .fromValue(guestInputs.getRebootOption());
+        CustomizationSysprepRebootOption rebootOption = CustomizationSysprepRebootOption.fromValue(guestInputs.getRebootOption());
         winOptions.setReboot(rebootOption);
 
         return winOptions;
     }
 
-    private CustomizationGlobalIPSettings getCustomizationGlobalIPSettings(GuestInputs guestInputs) {
-        CustomizationGlobalIPSettings globalIPSettings = new CustomizationGlobalIPSettings();
-        List<String> dnsServerList = globalIPSettings.getDnsServerList();
-        dnsServerList.add(guestInputs.getDnsServer());
+    private void setAdapter(GuestInputs guestInputs, CustomizationSpec customizationSpec) {
+        List<CustomizationAdapterMapping> adaptersList = customizationSpec.getNicSettingMap();
+        CustomizationAdapterMapping adapterMapping = getCustomizationAdapterMapping(guestInputs);
+        adaptersList.add(adapterMapping);
+    }
 
-        return globalIPSettings;
+    private CustomizationAdapterMapping getCustomizationAdapterMapping(GuestInputs guestInputs) {
+        CustomizationAdapterMapping adapterMapping = new CustomizationAdapterMapping();
+
+        CustomizationIPSettings ipSettings = new CustomizationIPSettings();
+        ipSettings.setSubnetMask(guestInputs.getSubnetMask());
+
+        CustomizationFixedIp fixedIp = new CustomizationFixedIp();
+        fixedIp.setIpAddress(guestInputs.getIpAddress());
+
+        ipSettings.setIp(fixedIp);
+
+        if (StringUtils.isNotBlank(guestInputs.getDefaultGateway())) {
+            List<String> gatewaysList = ipSettings.getGateway();
+            gatewaysList.add(guestInputs.getDefaultGateway());
+        }
+
+        if (StringUtils.isNotBlank(guestInputs.getDnsServer())) {
+            List<String> dnsServersList = ipSettings.getDnsServerList();
+            dnsServersList.add(guestInputs.getDnsServer());
+        }
+
+        adapterMapping.setAdapter(ipSettings);
+        adapterMapping.setMacAddress("");
+
+        return adapterMapping;
     }
 
     private CustomizationSysprep getPopulatedCustomizationSysprep(GuestInputs guestInputs) {
@@ -74,9 +99,14 @@ public class GuestConfigSpecs {
 
     private CustomizationUserData getCustomizationUserData(GuestInputs guestInputs) {
         CustomizationUserData userData = new CustomizationUserData();
-        userData.setFullName(guestInputs.getComputerName());
+        userData.setFullName(guestInputs.getOwnerName());
         userData.setOrgName(guestInputs.getOwnerOrganization());
         userData.setProductId(guestInputs.getProductKey());
+
+        CustomizationFixedName computerName = new CustomizationFixedName();
+
+        computerName.setName(guestInputs.getComputerName());
+        userData.setComputerName(computerName);
 
         return userData;
     }
@@ -85,9 +115,9 @@ public class GuestConfigSpecs {
         CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
         guiUnattended.setAutoLogon(guestInputs.isAutoLogon());
         guiUnattended.setAutoLogonCount(guestInputs.getAutoLogonCount());
+        guiUnattended.setTimeZone(guestInputs.getTimeZone());
 
-        CustomizationPassword password = getCustomizationPassword(guestInputs.isPlainText(),
-                guestInputs.getComputerPassword());
+        CustomizationPassword password = getCustomizationPassword(guestInputs.getComputerPassword());
         guiUnattended.setPassword(password);
 
         return guiUnattended;
@@ -95,14 +125,21 @@ public class GuestConfigSpecs {
 
     private CustomizationIdentification getCustomizationIdentification(GuestInputs guestInputs) {
         CustomizationIdentification identification = new CustomizationIdentification();
-        identification.setDomainAdmin(guestInputs.getDomainUsername());
-        identification.setJoinDomain(guestInputs.getDomain());
-        identification.setJoinWorkgroup(guestInputs.getWorkgroup());
 
-        CustomizationPassword password = getCustomizationPassword(guestInputs.isPlainText(),
-                guestInputs.getDomainPassword());
-        identification.setDomainAdminPassword(password);
+        if (StringUtils.isNotBlank(guestInputs.getDomain()) && StringUtils.isNotBlank(guestInputs.getWorkgroup())) {
+            throw new RuntimeException(ErrorMessages.DOMAIN_AND_WORKGROUP_BOTH_PRESENT);
+        }
 
+        if (StringUtils.isNotBlank(guestInputs.getDomain())) {
+            identification.setDomainAdmin(guestInputs.getDomainUsername());
+            identification.setJoinDomain(guestInputs.getDomain());
+
+            CustomizationPassword customPassword = getCustomizationPassword(guestInputs.getDomainPassword());
+            identification.setDomainAdminPassword(customPassword);
+
+        } else {
+            identification.setJoinWorkgroup(guestInputs.getWorkgroup());
+        }
 
         return identification;
     }
@@ -111,17 +148,21 @@ public class GuestConfigSpecs {
         CustomizationLicenseFilePrintData licenseFilePrintData = new CustomizationLicenseFilePrintData();
         licenseFilePrintData.setAutoUsers(guestInputs.getAutoUsers());
 
-        CustomizationLicenseDataMode licenseDataMode = CustomizationLicenseDataMode
-                .fromValue(guestInputs.getLicenseDataMode());
+        CustomizationLicenseDataMode licenseDataMode = CustomizationLicenseDataMode.fromValue(guestInputs.getLicenseDataMode());
         licenseFilePrintData.setAutoMode(licenseDataMode);
 
         return licenseFilePrintData;
     }
 
-    private CustomizationPassword getCustomizationPassword(boolean plainText, String value) {
+    private CustomizationPassword getCustomizationPassword(String value) {
         CustomizationPassword password = new CustomizationPassword();
-        password.setPlainText(plainText);
-        password.setValue(value);
+
+        if (StringUtils.isNotBlank(value)) {
+            password.setPlainText(true);
+            password.setValue(value);
+        } else {
+            password.setValue(null);
+        }
 
         return password;
     }

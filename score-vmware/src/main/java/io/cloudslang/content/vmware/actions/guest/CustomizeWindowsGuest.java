@@ -44,6 +44,7 @@ public class CustomizeWindowsGuest {
                                                      @Param(Inputs.REBOOT_OPTION) String rebootOption,
                                                      @Param(Inputs.COMPUTER_NAME) String computerName,
                                                      @Param(Inputs.COMPUTER_PASSWORD) String computerPassword,
+                                                     @Param(Inputs.OWNER_NAME) String ownerName,
                                                      @Param(Inputs.OWNER_ORGANIZATION) String ownerOrganization,
                                                      @Param(Inputs.PRODUCT_KEY) String productKey,
                                                      @Param(Inputs.DOMAIN_USERNAME) String domainUsername,
@@ -52,12 +53,17 @@ public class CustomizeWindowsGuest {
                                                      @Param(Inputs.WORKGROUP) String workgroup,
                                                      @Param(Inputs.LICENSE_DATA_MODE) String licenseDataMode,
                                                      @Param(Inputs.DNS_SERVER) String dnsServer,
+                                                     @Param(Inputs.IP_ADDRESS) String ipAddress,
+                                                     @Param(Inputs.SUBNET_MASK) String subnetMask,
+                                                     @Param(Inputs.DEFAULT_GATEWAY) String defaultGateway,
+                                                     @Param(Inputs.MAC_ADDRESS) String macAddress,
+
                                                      @Param(Inputs.AUTO_LOGON) String autoLogon,
-                                                     @Param(Inputs.PLAIN_TEXT) String plainText,
                                                      @Param(Inputs.DELETE_ACCOUNTS) String deleteAccounts,
                                                      @Param(Inputs.CHANGE_SID) String changeSID,
                                                      @Param(Inputs.AUTO_LOGON_COUNT) String autoLogonCount,
-                                                     @Param(Inputs.AUTO_USERS) String autoUsers) {
+                                                     @Param(Inputs.AUTO_USERS) String autoUsers,
+                                                     @Param(Inputs.TIME_ZONE) String timeZone) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -79,6 +85,7 @@ public class CustomizeWindowsGuest {
                     .withRebootOption(rebootOption)
                     .withComputerName(computerName)
                     .withComputerPassword(computerPassword)
+                    .withOwnerName(ownerName)
                     .withOwnerOrganization(ownerOrganization)
                     .withProductKey(productKey)
                     .withDomainUsername(domainUsername)
@@ -87,12 +94,16 @@ public class CustomizeWindowsGuest {
                     .withWorkgroup(workgroup)
                     .withLicenseDataMode(licenseDataMode)
                     .withDnsServer(dnsServer)
+                    .withIpAddress(ipAddress)
+                    .withSubnetMask(subnetMask)
+                    .withDefaultGateway(defaultGateway)
+                    .withMacAddress(macAddress)
                     .withAutoLogon(autoLogon)
-                    .withWithPlainText(plainText)
                     .withDeleteAccounts(deleteAccounts)
                     .withChangeSID(changeSID)
                     .withAutoLogonCount(autoLogonCount)
                     .withAutoUsers(autoUsers)
+                    .withTimeZone(timeZone)
                     .build();
 
             resultMap = new GuestService().customizeWinVM(httpInputs, vmInputs, guestInputs);

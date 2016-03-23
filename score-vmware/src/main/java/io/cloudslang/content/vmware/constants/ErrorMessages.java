@@ -37,4 +37,7 @@ public class ErrorMessages {
 
     public static final String NOT_INTEGER = "The input value must be a int number.";
     public static final String NOT_LONG = "The input value must be a long number.";
+
+    public static final String DOMAIN_AND_WORKGROUP_BOTH_PRESENT = "The domain and workgroup are mutually exclusive. " +
+            "If the workgroup value is supplied, then the domain name and authentication fields must be empty.";
 }

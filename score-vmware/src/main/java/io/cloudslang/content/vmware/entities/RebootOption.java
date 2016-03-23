@@ -5,15 +5,27 @@ package io.cloudslang.content.vmware.entities;
  * 3/21/2016.
  */
 public enum RebootOption {
-    REBOOT,
-    NOREBOOT,
-    SHUTDOWN;
+    REBOOT("reboot"),
+    NOREBOOT("noreboot"),
+    SHUTDOWN("shutdown");
 
-    public static String getValue(String input) throws Exception {
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unsupported level value: [" + input + "]. Valid values are: reboot, noreboot, shutdown.");
-        }
+    private String value;
+
+    /**
+     * Retrieve reboot option.
+     *
+     * @param value the element value
+     */
+    RebootOption(String value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the value.
+     *
+     * @return value
+     */
+    public String getValue() {
+        return value;
     }
 }
