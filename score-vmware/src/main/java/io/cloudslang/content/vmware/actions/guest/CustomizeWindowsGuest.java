@@ -105,33 +105,4 @@ public class CustomizeWindowsGuest {
 
         return resultMap;
     }
-
-    public static void main(String[] args) {
-        CustomizeWindowsGuest windowsGuest = new CustomizeWindowsGuest();
-        Map<String, String> results = windowsGuest.customizeWindowsGuest("oovc6.hpswlabs.adapps.hp.com",
-                "",
-                "",
-                "Administrator@vsphere.local",
-                "oovc64testingHP!",
-                "true",
-                "win2k8R2",
-                "noreboot",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "");
-        System.out.println(results.get("returnResult"));
-    }
 }
