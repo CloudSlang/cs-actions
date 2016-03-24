@@ -61,10 +61,15 @@ public class GuestConfigSpecs {
         CustomizationIPSettings ipSettings = new CustomizationIPSettings();
         ipSettings.setSubnetMask(guestInputs.getSubnetMask());
 
-        CustomizationFixedIp fixedIp = new CustomizationFixedIp();
-        fixedIp.setIpAddress(guestInputs.getIpAddress());
+        if(StringUtils.isNotBlank(guestInputs.getIpAddress())){
+            CustomizationFixedIp fixedIp = new CustomizationFixedIp();
+            fixedIp.setIpAddress(guestInputs.getIpAddress());
 
-        ipSettings.setIp(fixedIp);
+            ipSettings.setIp(fixedIp);
+        } else {
+            ipSettings.setIp(new CustomizationDhcpIpGenerator());
+        }
+
 
         if (StringUtils.isNotBlank(guestInputs.getDefaultGateway())) {
             List<String> gatewaysList = ipSettings.getGateway();
