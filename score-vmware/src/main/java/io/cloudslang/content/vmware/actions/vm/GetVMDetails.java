@@ -87,17 +87,4 @@ public class GetVMDetails {
 
         return resultMap;
     }
-
-    public static void main(String[] args) {
-        GetVMDetails getVMDetails = new GetVMDetails();
-        Map<String, String> results = getVMDetails.getVMDetails("rosvc.rose.hp.com",
-                "",
-                "",
-                "EMEA\\tusami",
-                "#KidFisto43",
-                "true",
-                "rosesx0012.rose.hp.com",
-                "simple");
-        System.out.println(results.get("returnResult"));
-    }
 }
