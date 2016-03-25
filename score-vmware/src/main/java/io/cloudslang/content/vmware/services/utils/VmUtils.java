@@ -282,7 +282,7 @@ public class VmUtils {
         return null;
     }
 
-    private ManagedObjectReference getSpecificMor(ConnectionResources connectionResources, String morName, String parameter)
+    protected ManagedObjectReference getSpecificMor(ConnectionResources connectionResources, String morName, String parameter)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         Map<String, ManagedObjectReference> morMap = connectionResources.getGetMOREF()
                 .inContainerByType(connectionResources.getMorRootFolder(), parameter, new RetrieveOptions());

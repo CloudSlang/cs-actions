@@ -7,6 +7,7 @@ import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,11 +15,21 @@ import java.util.Map;
  * 3/22/2016.
  */
 public class ResponseHelper {
-    public void setTaskResults(Map<String, String> results, ConnectionResources connectionResources,
-                               ManagedObjectReference taskMor, String successMessage, String failureMessage)
+    public Map<String, String> getResultsMap(ConnectionResources connectionResources, ManagedObjectReference task,
+                                             String successMessage, String failureMessage)
+            throws InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+
+        Map<String, String> results = new HashMap<>();
+        setTaskResults(results, connectionResources, task, successMessage, failureMessage);
+
+        return results;
+    }
+
+    protected void setTaskResults(Map<String, String> results, ConnectionResources connectionResources,
+                                ManagedObjectReference task, String successMessage, String failureMessage)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
 
-        if (getTaskResultAfterDone(connectionResources, taskMor)) {
+        if (getTaskResultAfterDone(connectionResources, task)) {
             ResponseUtils.setResults(results, successMessage, Outputs.RETURN_CODE_SUCCESS);
         } else {
             ResponseUtils.setResults(results, failureMessage, Outputs.RETURN_CODE_FAILURE);

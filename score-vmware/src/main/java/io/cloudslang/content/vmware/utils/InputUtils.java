@@ -78,10 +78,6 @@ public class InputUtils {
         return longInput;
     }
 
-    public static boolean getBooleanInput(String input, boolean defaultValue) {
-        return StringUtils.isBlank(input) ? defaultValue : Boolean.parseBoolean(input);
-    }
-
     public static String getDefaultDelimiter(String input, String defaultValue) {
         return StringUtils.isBlank(input) ? defaultValue : input;
     }

@@ -50,26 +50,36 @@ public class GuestConfigSpecs {
     }
 
     private void setAdapter(GuestInputs guestInputs, CustomizationSpec customizationSpec) {
-        List<CustomizationAdapterMapping> adaptersList = customizationSpec.getNicSettingMap();
         CustomizationAdapterMapping adapterMapping = getCustomizationAdapterMapping(guestInputs);
+        List<CustomizationAdapterMapping> adaptersList = customizationSpec.getNicSettingMap();
         adaptersList.add(adapterMapping);
     }
 
     private CustomizationAdapterMapping getCustomizationAdapterMapping(GuestInputs guestInputs) {
         CustomizationAdapterMapping adapterMapping = new CustomizationAdapterMapping();
+        CustomizationIPSettings ipSettings;
 
-        CustomizationIPSettings ipSettings = new CustomizationIPSettings();
-        ipSettings.setSubnetMask(guestInputs.getSubnetMask());
-
-        if(StringUtils.isNotBlank(guestInputs.getIpAddress())){
-            CustomizationFixedIp fixedIp = new CustomizationFixedIp();
-            fixedIp.setIpAddress(guestInputs.getIpAddress());
-
-            ipSettings.setIp(fixedIp);
+        if (StringUtils.isNotBlank(guestInputs.getIpAddress())) {
+            ipSettings = getFixedIpSettings(guestInputs);
         } else {
+            ipSettings = new CustomizationIPSettings();
             ipSettings.setIp(new CustomizationDhcpIpGenerator());
         }
 
+        adapterMapping.setAdapter(ipSettings);
+        adapterMapping.setMacAddress(guestInputs.getMacAddress());
+
+        return adapterMapping;
+    }
+
+    private CustomizationIPSettings getFixedIpSettings(GuestInputs guestInputs) {
+        CustomizationIPSettings ipSettings = new CustomizationIPSettings();
+
+        CustomizationFixedIp fixedIp = new CustomizationFixedIp();
+        fixedIp.setIpAddress(guestInputs.getIpAddress());
+
+        ipSettings.setIp(fixedIp);
+        ipSettings.setSubnetMask(guestInputs.getSubnetMask());
 
         if (StringUtils.isNotBlank(guestInputs.getDefaultGateway())) {
             List<String> gatewaysList = ipSettings.getGateway();
@@ -81,10 +91,7 @@ public class GuestConfigSpecs {
             dnsServersList.add(guestInputs.getDnsServer());
         }
 
-        adapterMapping.setAdapter(ipSettings);
-        adapterMapping.setMacAddress("");
-
-        return adapterMapping;
+        return ipSettings;
     }
 
     private CustomizationSysprep getPopulatedCustomizationSysprep(GuestInputs guestInputs) {
@@ -109,7 +116,6 @@ public class GuestConfigSpecs {
         userData.setProductId(guestInputs.getProductKey());
 
         CustomizationFixedName computerName = new CustomizationFixedName();
-
         computerName.setName(guestInputs.getComputerName());
         userData.setComputerName(computerName);
 
@@ -141,7 +147,6 @@ public class GuestConfigSpecs {
 
             CustomizationPassword customPassword = getCustomizationPassword(guestInputs.getDomainPassword());
             identification.setDomainAdminPassword(customPassword);
-
         } else {
             identification.setJoinWorkgroup(guestInputs.getWorkgroup());
         }
