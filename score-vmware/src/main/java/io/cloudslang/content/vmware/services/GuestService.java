@@ -43,7 +43,6 @@ public class GuestService {
             CustomizationSpec customizationSpec = new GuestConfigSpecs().getWinCustomizationSpec(guestInputs);
             connectionResources.getVimPortType().checkCustomizationSpec(vmMor, customizationSpec);
 
-
             ManagedObjectReference task = connectionResources.getVimPortType().customizeVMTask(vmMor, customizationSpec);
 
             results = new ResponseHelper().getResultsMap(connectionResources, task,

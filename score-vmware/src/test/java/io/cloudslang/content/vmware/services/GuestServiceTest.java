@@ -101,10 +101,7 @@ public class GuestServiceTest {
 
         whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
 
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withVirtualMachineName("testVMName")
-                .build();
-
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testWinVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                 .withRebootOption("noreboot").withLicenseDataMode("perServer").build();
 
@@ -119,8 +116,7 @@ public class GuestServiceTest {
 
         assertNotNull(results);
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
-        assertEquals("Success: The [testVMName] VM was successfully customized. The taskId is: task-12345",
-                results.get("returnResult"));
+        assertEquals("Success: The [testWinVMName] VM was successfully customized. The taskId is: task-12345", results.get("returnResult"));
     }
 
     @Test
@@ -135,10 +131,7 @@ public class GuestServiceTest {
 
         whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
 
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withVirtualMachineName("testVMName")
-                .build();
-
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testWinVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                 .withRebootOption("noreboot").withLicenseDataMode("perServer").build();
 
@@ -153,7 +146,7 @@ public class GuestServiceTest {
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
-        assertEquals("Failure: The [testVMName] VM could not be customized.", results.get("returnResult"));
+        assertEquals("Failure: The [testWinVMName] VM could not be customized.", results.get("returnResult"));
     }
 
     @Test
@@ -164,14 +157,9 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
-
-
         whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
 
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withVirtualMachineName("testVMName")
-                .build();
-
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testWinVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                 .withRebootOption("noreboot").withLicenseDataMode("perServer").build();
 
@@ -188,7 +176,90 @@ public class GuestServiceTest {
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
-        assertEquals("Could not find the [testVMName] VM.", results.get("returnResult"));
+        assertEquals("Could not find the [testWinVMName] VM.", results.get("returnResult"));
+    }
+
+    @Test
+    public void customizeLinuxVMSuccess() throws Exception {
+        whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
+        when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
+        doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
+        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
+        GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
+
+        Map<String, String> results = guestService.customizeLinuxVM(httpInputsMock, vmInputs, guestInputs);
+
+        verifyConnection();
+        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(guestConfigSpecsMock, times(1)).getLinuxCustomizationSpec(any(GuestInputs.class));
+        verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(taskMock, times(1)).getValue();
+
+        assertNotNull(results);
+        assertEquals(0, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Success: The [testLinuxVMName] VM was successfully customized. The taskId is: task-12345", results.get("returnResult"));
+    }
+
+    @Test
+    public void customizeLinuxVMFailure() throws Exception {
+        whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
+        when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
+        doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
+        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
+        GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
+
+        Map<String, String> results = guestService.customizeLinuxVM(httpInputsMock, vmInputs, guestInputs);
+
+        verifyConnection();
+        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(guestConfigSpecsMock, times(1)).getLinuxCustomizationSpec(any(GuestInputs.class));
+        verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(taskMock, times(1)).getValue();
+
+        assertNotNull(results);
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Failure: The [testLinuxVMName] VM could not be customized.", results.get("returnResult"));
+    }
+
+    @Test
+    public void customizeLinuxVMNotFound() throws Exception {
+        whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
+        whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
+        when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
+        doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
+        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
+        GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
+
+        Map<String, String> results = guestService.customizeLinuxVM(httpInputsMock, vmInputs, guestInputs);
+
+        verify(connectionResourcesMock).getConnection();
+        verify(connectionMock).disconnect();
+        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(connectionResourcesMock, never()).getVimPortType();
+        verify(guestConfigSpecsMock, never()).getLinuxCustomizationSpec(any(GuestInputs.class));
+        verify(vimPortMock, never()).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(vimPortMock, never()).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(taskMock, never()).getValue();
+
+        assertNotNull(results);
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Could not find the [testLinuxVMName] VM.", results.get("returnResult"));
     }
 
     private ResponseHelper getResponseHelper(final boolean isDone) {
