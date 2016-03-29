@@ -68,7 +68,8 @@ public class VmService {
      */
     public Map<String, String> deleteVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources, vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+                VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         Map<String, String> results;
         if (vmMor != null) {
@@ -98,7 +99,8 @@ public class VmService {
      */
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources, vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+                VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         Map<String, String> results;
         if (vmMor != null) {
@@ -128,7 +130,8 @@ public class VmService {
      */
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources, vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+                VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         Map<String, String> results;
         if (vmMor != null) {
@@ -220,7 +223,8 @@ public class VmService {
      */
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources, vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+                VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
                 new String[]{VmParameter.SUMMARY.getValue()});
@@ -260,7 +264,8 @@ public class VmService {
      */
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources, vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+                VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         Map<String, String> results;
         if (vmMor != null) {
@@ -299,7 +304,8 @@ public class VmService {
      */
     public Map<String, String> cloneVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources, vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+                VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         Map<String, String> results;
         VmUtils utils = new VmUtils();

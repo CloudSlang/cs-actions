@@ -6,6 +6,7 @@ import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.helpers.ResponseHelper;
@@ -24,7 +25,8 @@ public class GuestService {
             throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources, vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+                VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         Map<String, String> results;
         if (vmMor != null) {
