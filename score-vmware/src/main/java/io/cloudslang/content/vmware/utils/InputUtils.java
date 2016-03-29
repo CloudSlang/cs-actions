@@ -78,6 +78,21 @@ public class InputUtils {
         return longInput;
     }
 
+    public static byte getByteInput(String input, byte defaultValue) {
+        byte byteInput;
+        try {
+            byteInput = StringUtils.isBlank(input) ? defaultValue : Byte.parseByte(input);
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException(ErrorMessages.NOT_BYTE);
+        }
+
+        return byteInput;
+    }
+
+    public static boolean getBooleanInput(String input, boolean defaultValue) {
+        return StringUtils.isBlank(input) ? defaultValue : Boolean.parseBoolean(input);
+    }
+
     public static String getDefaultDelimiter(String input, String defaultValue) {
         return StringUtils.isBlank(input) ? defaultValue : input;
     }

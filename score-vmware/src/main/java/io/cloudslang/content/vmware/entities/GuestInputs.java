@@ -10,6 +10,7 @@ public class GuestInputs {
     private static final int DEFAULT_AUTO_LOGON_COUNT = 1;
     private static final int DEFAULT_AUTO_USERS_NUMBER = 1;
     private static final int DEFAULT_TIME_ZONE = 0;
+    private static final byte DEFAULT_ENCRYPTION_KEY = 0;
 
     private String rebootOption;
     private String computerName;
@@ -31,10 +32,13 @@ public class GuestInputs {
     private boolean deleteAccounts;
     private boolean changeSID;
     private boolean autoLogon;
+    private boolean hwClockUTC;
 
     private int autoLogonCount;
     private int autoUsers;
     private int timeZone;
+
+    private byte encryptionKey;
 
     public GuestInputs(GuestInputsBuilder builder) {
         this.rebootOption = builder.rebootOption;
@@ -57,10 +61,13 @@ public class GuestInputs {
         this.deleteAccounts = builder.deleteAccounts;
         this.changeSID = builder.changeSID;
         this.autoLogon = builder.autoLogon;
+        this.hwClockUTC = builder.hwClockUTC;
 
         this.autoLogonCount = builder.autoLogonCount;
         this.autoUsers = builder.autoUsers;
         this.timeZone = builder.timeZone;
+
+        this.encryptionKey =  builder.encryptionKey;
     }
 
     public String getRebootOption() {
@@ -139,6 +146,10 @@ public class GuestInputs {
         return autoLogon;
     }
 
+    public boolean isHwClockUTC() {
+        return hwClockUTC;
+    }
+
     public int getAutoLogonCount() {
         return autoLogonCount;
     }
@@ -149,6 +160,10 @@ public class GuestInputs {
 
     public int getTimeZone() {
         return timeZone;
+    }
+
+    public byte getEncryptionKey() {
+        return encryptionKey;
     }
 
     public static class GuestInputsBuilder {
@@ -172,10 +187,13 @@ public class GuestInputs {
         private boolean deleteAccounts;
         private boolean changeSID;
         private boolean autoLogon;
+        private boolean hwClockUTC;
 
         private int autoLogonCount;
         private int autoUsers;
         private int timeZone;
+
+        private byte encryptionKey;
 
         public GuestInputs build() {
             return new GuestInputs(this);
@@ -266,6 +284,11 @@ public class GuestInputs {
             return this;
         }
 
+        public GuestInputsBuilder withHwClockUTC(String inputValue) throws Exception {
+            hwClockUTC = InputUtils.getBooleanInput(inputValue, true);
+            return this;
+        }
+
         public GuestInputsBuilder withDeleteAccounts(String inputValue) {
             deleteAccounts = Boolean.parseBoolean(inputValue);
             return this;
@@ -288,6 +311,11 @@ public class GuestInputs {
 
         public GuestInputsBuilder withTimeZone(String inputValue) {
             timeZone = InputUtils.getIntInput(inputValue, DEFAULT_TIME_ZONE);
+            return this;
+        }
+
+        public GuestInputsBuilder withEncryptionKey(String inputValue) {
+            encryptionKey = InputUtils.getByteInput(inputValue, DEFAULT_ENCRYPTION_KEY);
             return this;
         }
     }

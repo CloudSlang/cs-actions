@@ -3,8 +3,10 @@ package io.cloudslang.content.vmware.services.utils;
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.GuestInputs;
+import io.cloudslang.content.vmware.entities.VmInputs;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ import java.util.List;
  * 3/21/2016.
  */
 public class GuestConfigSpecs {
-    public CustomizationSpec getCustomizationSpec(GuestInputs guestInputs) {
+    public CustomizationSpec getWinCustomizationSpec(GuestInputs guestInputs) {
         CustomizationSpec customizationSpec = new CustomizationSpec();
 
         CustomizationSysprep customizationSysprep = getCustomizationSysprep(guestInputs);
@@ -26,6 +28,44 @@ public class GuestConfigSpecs {
         setAdapter(guestInputs, customizationSpec);
 
         return customizationSpec;
+    }
+
+    public CustomizationSpec getLinuxCustomizationSpec(GuestInputs guestInputs) {
+        CustomizationSpec customizationSpec = new CustomizationSpec();
+
+        CustomizationLinuxPrep customizationLinuxPrep = getCustomizationLinuxPrep(guestInputs);
+        customizationSpec.setIdentity(customizationLinuxPrep);
+
+        CustomizationGlobalIPSettings customizationGlobalIPSettings = new CustomizationGlobalIPSettings();
+        customizationSpec.setGlobalIPSettings(customizationGlobalIPSettings);
+
+        setAdapter(guestInputs, customizationSpec);
+//        setEncryptionKey(guestInputs.getEncryptionKey(), customizationSpec);
+
+        return customizationSpec;
+    }
+
+    private void setEncryptionKey(byte encryptionKey, CustomizationSpec customizationSpec) {
+        List<Byte> encryptionKeysList = customizationSpec.getEncryptionKey();
+        encryptionKeysList.add(encryptionKey);
+    }
+
+    private CustomizationLinuxPrep getCustomizationLinuxPrep(GuestInputs guestInputs) {
+        CustomizationLinuxPrep customizationLinuxPrep = new CustomizationLinuxPrep();
+        customizationLinuxPrep.setDomain(guestInputs.getDomain());
+        customizationLinuxPrep.setTimeZone(String.valueOf(guestInputs.getTimeZone()));
+
+        CustomizationFixedName computerName = new CustomizationFixedName();
+        computerName.setName(guestInputs.getComputerName());
+        customizationLinuxPrep.setHostName(computerName);
+
+        if (guestInputs.isHwClockUTC()) {
+            customizationLinuxPrep.setHwClockUTC(true);
+        } else {
+            customizationLinuxPrep.setHwClockUTC(false);
+        }
+
+        return customizationLinuxPrep;
     }
 
     private CustomizationSysprep getCustomizationSysprep(GuestInputs guestInputs) {

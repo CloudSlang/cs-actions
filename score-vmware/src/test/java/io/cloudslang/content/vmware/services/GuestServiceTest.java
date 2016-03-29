@@ -94,7 +94,7 @@ public class GuestServiceTest {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
-        when(guestConfigSpecsMock.getCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
+        when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
 
@@ -112,7 +112,7 @@ public class GuestServiceTest {
 
         verifyConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
-        verify(guestConfigSpecsMock, times(1)).getCustomizationSpec(any(GuestInputs.class));
+        verify(guestConfigSpecsMock, times(1)).getWinCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(taskMock, times(1)).getValue();
@@ -128,7 +128,7 @@ public class GuestServiceTest {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
-        when(guestConfigSpecsMock.getCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
+        when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
 
@@ -146,7 +146,7 @@ public class GuestServiceTest {
 
         verifyConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
-        verify(guestConfigSpecsMock, times(1)).getCustomizationSpec(any(GuestInputs.class));
+        verify(guestConfigSpecsMock, times(1)).getWinCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(taskMock, times(1)).getValue();
@@ -161,7 +161,7 @@ public class GuestServiceTest {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
-        when(guestConfigSpecsMock.getCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
+        when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
 
@@ -181,7 +181,7 @@ public class GuestServiceTest {
         verify(connectionMock).disconnect();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(connectionResourcesMock, never()).getVimPortType();
-        verify(guestConfigSpecsMock, never()).getCustomizationSpec(any(GuestInputs.class));
+        verify(guestConfigSpecsMock, never()).getWinCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, never()).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, never()).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(taskMock, never()).getValue();

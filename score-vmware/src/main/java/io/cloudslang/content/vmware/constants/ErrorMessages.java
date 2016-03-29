@@ -35,6 +35,7 @@ public class ErrorMessages {
     public static final String ATAPI_CONTROLLER_CAPACITY_MAXED_OUT = "The IDE controller on the vm has maxed out its " +
             "capacity. Please add an additional IDE controller";
 
+    public static final String NOT_BYTE = "The input value must be a byte number.";
     public static final String NOT_INTEGER = "The input value must be a int number.";
     public static final String NOT_LONG = "The input value must be a long number.";
 

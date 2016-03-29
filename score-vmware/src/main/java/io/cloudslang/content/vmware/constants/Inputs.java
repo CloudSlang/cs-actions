@@ -63,6 +63,7 @@ public class Inputs {
     public static final String DEFAULT_GATEWAY = "defaultGateway";
     public static final String MAC_ADDRESS = "macAddress";
     public static final String TIME_ZONE = "timeZone";
+    public static final String UTC_CLOCK = "hwClockUTC";
 
     // Miscellaneous
     public static final String DELIMITER = "delimiter";

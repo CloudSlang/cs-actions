@@ -163,4 +163,44 @@ public class InputsUtilsTest {
                 .build();
         InputUtils.validateDiskInputs(vmInputs);
     }
+
+    @Test
+    public void getByteInputSuccess() {
+        byte test = 0;
+        InputUtils.getByteInput("-128", test);
+
+        assertEquals(0, test);
+    }
+
+    @Test
+    public void getByteInputNotByte() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("The input value must be a byte number.");
+
+        byte test = 0;
+        InputUtils.getByteInput("128", test);
+    }
+
+    @Test
+    public void getByteInputDefault() {
+        byte test = 0;
+        InputUtils.getByteInput("", test);
+
+        assertEquals(0, test);
+    }
+
+    @Test
+    public void getBooleanInputFalse() {
+        assertFalse(InputUtils.getBooleanInput("anything", true));
+    }
+
+    @Test
+    public void getBooleanInputDefault() {
+        assertTrue(InputUtils.getBooleanInput("", true));
+    }
+
+    @Test
+    public void getBooleanInputTrue() {
+        assertTrue(InputUtils.getBooleanInput("TrUe", false));
+    }
 }
