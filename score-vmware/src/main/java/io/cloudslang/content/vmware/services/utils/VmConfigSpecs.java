@@ -7,6 +7,7 @@ import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.VmParameter;
+import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -52,7 +53,6 @@ public class VmConfigSpecs {
     public VirtualDeviceConfigSpec getDiskDeviceConfigSpec(ConnectionResources connectionResources,
                                                            ManagedObjectReference vmMor,
                                                            VmInputs vmInputs) throws Exception {
-        VmUtils vmUtils = new VmUtils();
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
             String dataStoreName = getDataStoreWithFreeSpaceNeeded(connectionResources, vmMor,
                     vmInputs.getLongVmDiskSize());
@@ -67,7 +67,7 @@ public class VmConfigSpecs {
                 unitNumber = getControllerKeysArray.get(1);
             }
 
-            return vmUtils.getPopulatedDiskSpec(volumeName, null, VirtualDeviceConfigSpecOperation.ADD,
+            return new VmUtils().getPopulatedDiskSpec(volumeName, null, VirtualDeviceConfigSpecOperation.ADD,
                     VirtualDeviceConfigSpecFileOperation.CREATE, controllerKey, unitNumber, SERVER_ASSIGNED,
                     Operation.ADD.toString(), vmInputs);
 
@@ -76,7 +76,7 @@ public class VmConfigSpecs {
                     .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
                     .getVirtualDevice();
 
-            return vmUtils.getPopulatedDiskSpec(Constants.EMPTY, deviceList, VirtualDeviceConfigSpecOperation.REMOVE,
+            return new VmUtils().getPopulatedDiskSpec(Constants.EMPTY, deviceList, VirtualDeviceConfigSpecOperation.REMOVE,
                     VirtualDeviceConfigSpecFileOperation.DESTROY, DEFAULT_DISK_CONTROLLER_KEY, DEFAULT_DISK_UNIT_NUMBER,
                     SERVER_ASSIGNED, Operation.REMOVE.toString(), vmInputs);
         }
@@ -86,7 +86,6 @@ public class VmConfigSpecs {
                                                          VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getGetMOREF()
                 .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE)).getVirtualDevice();
-        VmUtils vmUtils = new VmUtils();
 
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
             Map<Integer, VirtualDevice> deviceMap = getVirtualDeviceMap(virtualDevicesList);
@@ -114,7 +113,7 @@ public class VmConfigSpecs {
                         }
                     }
                     if (isAtapiCtrlAvailable) {
-                        return vmUtils.getPopulatedCDSpecs(Constants.EMPTY, null, null,
+                        return new VmUtils().getPopulatedCDSpecs(Constants.EMPTY, null, null,
                                 VirtualDeviceConfigSpecOperation.ADD, controllerKey, unitNumber, SERVER_ASSIGNED,
                                 Operation.ADD.toString(), vmInputs);
                     }
@@ -122,24 +121,22 @@ public class VmConfigSpecs {
             }
             throw new RuntimeException(ErrorMessages.ATAPI_CONTROLLER_CAPACITY_MAXED_OUT);
         } else {
-            return vmUtils.getPopulatedCDSpecs(null, null, virtualDevicesList,
+            return new VmUtils().getPopulatedCDSpecs(null, null, virtualDevicesList,
                     VirtualDeviceConfigSpecOperation.REMOVE, null, null, null, Operation.REMOVE.toString(), vmInputs);
         }
     }
 
     public VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                                           VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        VmUtils vmUtils = new VmUtils();
-
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
-            return vmUtils.getNicSpecs(vmInputs.getUpdateValue(), null, VirtualDeviceConfigSpecOperation.ADD,
+            return new VmUtils().getNicSpecs(vmInputs.getUpdateValue(), null, VirtualDeviceConfigSpecOperation.ADD,
                     GENERATED, SERVER_ASSIGNED, Operation.ADD.toString(), vmInputs);
         } else {
             List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getGetMOREF()
                     .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
                     .getVirtualDevice();
 
-            return vmUtils.getNicSpecs(Constants.EMPTY, virtualDevicesList, VirtualDeviceConfigSpecOperation.REMOVE,
+            return new VmUtils().getNicSpecs(Constants.EMPTY, virtualDevicesList, VirtualDeviceConfigSpecOperation.REMOVE,
                     Constants.EMPTY, null, Operation.REMOVE.toString(), vmInputs);
         }
     }
@@ -232,10 +229,8 @@ public class VmConfigSpecs {
 
     private ConfigTarget getHostConfigTarget(ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(connectionResources.getComputeResourceMor(), new String[]{VmParameter.ENVIRONMENT_BROWSER.getValue()})
-                .get(VmParameter.ENVIRONMENT_BROWSER.getValue());
-
+        ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
+                .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());
         ConfigTarget configTarget = connectionResources.getVimPortType()
                 .queryConfigTarget(environmentBrowserMor, connectionResources.getHostMor());
         if (configTarget == null) {
@@ -314,9 +309,8 @@ public class VmConfigSpecs {
 
     private List<VirtualDevice> getDefaultDevicesList(ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(connectionResources.getComputeResourceMor(), new String[]{VmParameter.ENVIRONMENT_BROWSER.getValue()})
-                .get(VmParameter.ENVIRONMENT_BROWSER.getValue());
+        ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
+                .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());;
 
         VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
@@ -367,7 +361,6 @@ public class VmConfigSpecs {
         List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
                 .entityProps(vmMor, new String[]{VmParameter.DATA_STORE.getValue()}).get(VmParameter.DATA_STORE.getValue()))
                 .getManagedObjectReference();
-
         for (ManagedObjectReference dataStore : dataStores) {
             DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
                     .entityProps(dataStore, new String[]{VmParameter.SUMMARY.getValue()}).get(VmParameter.SUMMARY.getValue());
