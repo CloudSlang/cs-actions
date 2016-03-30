@@ -7,7 +7,10 @@ package io.cloudslang.content.vmware.actions.vm.conf;
 
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.services.GuestService;
 import io.cloudslang.content.vmware.services.VmService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -21,15 +24,26 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(GetOSDescriptors.class)
 public class GetOSDescriptorsTest {
-    private GetOSDescriptors getOSDescriptors = new GetOSDescriptors();
+    private GetOSDescriptors getOSDescriptors;
+
+    @Before
+    public void init() {
+        getOSDescriptors = new GetOSDescriptors();
+    }
+
+    @After
+    public void tearDown() {
+        getOSDescriptors = null;
+    }
+
+    @Mock
+    private GuestService guestServiceMock;
 
     @Mock
     private VmService vmServiceMock;
@@ -42,16 +56,18 @@ public class GetOSDescriptorsTest {
 
         resultMap = getOSDescriptors.getOsDescriptors("", "", "", "", "", "", "", "", "");
 
+        verify(vmServiceMock, times(1)).getOsDescriptors(any(HttpInputs.class), any(VmInputs.class), anyString());
+
         assertNotNull(resultMap);
-        verify(vmServiceMock).getOsDescriptors(any(HttpInputs.class), any(VmInputs.class), anyString());
     }
 
     @Test
     public void testGetOSDescriptorsProtocolException() throws Exception {
         Map<String, String> resultMap = getOSDescriptors.getOsDescriptors("", "", "myProtocol", "", "", "", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).getOsDescriptors(any(HttpInputs.class), any(VmInputs.class), anyString());
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }

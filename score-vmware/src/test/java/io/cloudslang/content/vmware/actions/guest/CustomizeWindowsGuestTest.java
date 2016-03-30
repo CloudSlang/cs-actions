@@ -4,6 +4,8 @@ import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.GuestService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,7 +28,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CustomizeWindowsGuest.class)
 public class CustomizeWindowsGuestTest {
-    private CustomizeWindowsGuest windowsGuest = new CustomizeWindowsGuest();
+    private CustomizeWindowsGuest windowsGuest;
+
+    @Before
+    public void init() {
+        windowsGuest = new CustomizeWindowsGuest();
+    }
+
+    @After
+    public void tearDown() {
+        windowsGuest = null;
+    }
 
     @Mock
     private GuestService guestServiceMock;
@@ -35,13 +47,12 @@ public class CustomizeWindowsGuestTest {
     public void customizeWindowsGuestSuccess() throws Exception {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
-        when(guestServiceMock.customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class)))
-                .thenReturn(resultMap);
+        when(guestServiceMock.customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class))).thenReturn(resultMap);
 
         resultMap = windowsGuest.customizeWindowsGuest("", "", "", "", "", "", "", "noreboot", "", "", "", "", "", "",
                 "", "", "", "perServer", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock).customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, times(1)).customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
 
         assertNotNull(resultMap);
     }

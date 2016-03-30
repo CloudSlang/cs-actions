@@ -4,6 +4,8 @@ import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.GuestService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,6 +19,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
@@ -26,7 +29,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CustomizeLinuxGuest.class)
 public class CustomizeLinuxGuestTest {
-    private CustomizeLinuxGuest linuxGuest = new CustomizeLinuxGuest();
+    private CustomizeLinuxGuest linuxGuest;
+
+    @Before
+    public void init() {
+        linuxGuest = new CustomizeLinuxGuest();
+    }
+
+    @After
+    public void tearDown() {
+        linuxGuest = null;
+    }
 
     @Mock
     private GuestService guestServiceMock;
@@ -39,7 +52,7 @@ public class CustomizeLinuxGuestTest {
 
         resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock).customizeLinuxVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, times(1)).customizeLinuxVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
 
         assertNotNull(resultMap);
     }

@@ -88,14 +88,12 @@ public class InputsUtilsTest {
     @Test
     public void getSuccessfullyDefaultDelimiter() {
         String testDelimiter = InputUtils.getDefaultDelimiter("", ",");
-
         assertEquals(",", testDelimiter);
     }
 
     @Test
     public void getDiskFileNameString() {
         String testDiskFileNameString = InputUtils.getDiskFileNameString("someDataStore", "testVM", "Renamed");
-
         assertEquals("[someDataStore] testVM/Renamed.vmdk", testDiskFileNameString);
     }
 
@@ -104,35 +102,24 @@ public class InputsUtilsTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Invalid operation specified for disk device. The disk device can be only added or removed.");
 
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withDevice("disk")
-                .withOperation("update")
-                .build();
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withDevice("disk").withOperation("update").build();
         InputUtils.checkValidOperation(vmInputs, "disk");
     }
 
     @Test
     public void isUpdateOperation() throws Exception {
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withOperation("add")
-                .build();
-        boolean isUpdate = InputUtils.isUpdateOperation(vmInputs);
-
-        assertFalse(isUpdate);
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withOperation("add").build();
+        assertFalse(InputUtils.isUpdateOperation(vmInputs));
     }
 
     @Test
     public void isIntFalse() {
-        boolean isUpdate = InputUtils.isInt("2147483648");
-
-        assertFalse(isUpdate);
+        assertFalse(InputUtils.isInt("2147483648"));
     }
 
     @Test
     public void isIntTrue() {
-        boolean isUpdate = InputUtils.isInt("2147483647");
-
-        assertTrue(isUpdate);
+        assertTrue(InputUtils.isInt("2147483647"));
     }
 
     @Test

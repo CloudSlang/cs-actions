@@ -1,9 +1,10 @@
 package io.cloudslang.content.vmware.actions.vm;
 
-import io.cloudslang.content.vmware.actions.vm.CloneVM;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,7 +28,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CloneVM.class)
 public class CloneVMTest {
-    private CloneVM cloneVM = new CloneVM();
+    private CloneVM cloneVM;
+
+    @Before
+    public void init() {
+        cloneVM = new CloneVM();
+    }
+
+    @After
+    public void tearDown() {
+        cloneVM = null;
+    }
 
     @Mock
     private VmService vmServiceMock;
@@ -40,16 +51,18 @@ public class CloneVMTest {
 
         resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
+        verify(vmServiceMock, times(1)).cloneVM(any(HttpInputs.class), any(VmInputs.class));
+
         assertNotNull(resultMap);
-        verify(vmServiceMock, atMost(1)).cloneVM(any(HttpInputs.class), any(VmInputs.class));
     }
 
     @Test
     public void testCloneVMProtocolException() throws Exception {
         Map<String, String> resultMap = cloneVM.cloneVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }
@@ -58,8 +71,9 @@ public class CloneVMTest {
     public void testCloneVMIntException() throws Exception {
         Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("The input value must be a int number.", resultMap.get("returnResult"));
     }
@@ -68,8 +82,9 @@ public class CloneVMTest {
     public void testCloneVMLongException() throws Exception {
         Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "anything", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("The input value must be a long number.", resultMap.get("returnResult"));
     }
