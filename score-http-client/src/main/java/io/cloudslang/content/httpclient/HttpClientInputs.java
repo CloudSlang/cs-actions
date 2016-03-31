@@ -60,7 +60,7 @@ public class HttpClientInputs {
     public static final String MULTIPART_BODIES = "multipartBodies";
     public static final String MULTIPART_BODIES_CONTENT_TYPE = "multipartBodiesContentType";
     public static final String MULTIPART_FILES = "multipartFiles";
-    public static final String MULTIPART_FILES_CONTENT_TYPE = "multipartBodiesContentType";
+    public static final String MULTIPART_FILES_CONTENT_TYPE = "multipartFilesContentType";
     public static final String MULTIPART_VALUES_ARE_URLENCODED = "multipartValuesAreURLEncoded";
     public static final String CHUNKED_REQUEST_ENTITY = "chunkedRequestEntity";
 
