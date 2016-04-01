@@ -3,10 +3,9 @@ package io.cloudslang.content.vmware.services.utils;
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.GuestInputs;
-import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.LicenseDataMode;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,14 +39,8 @@ public class GuestConfigSpecs {
         customizationSpec.setGlobalIPSettings(customizationGlobalIPSettings);
 
         setAdapter(guestInputs, customizationSpec);
-//        setEncryptionKey(guestInputs.getEncryptionKey(), customizationSpec);
 
         return customizationSpec;
-    }
-
-    private void setEncryptionKey(byte encryptionKey, CustomizationSpec customizationSpec) {
-        List<Byte> encryptionKeysList = customizationSpec.getEncryptionKey();
-        encryptionKeysList.add(encryptionKey);
     }
 
     private CustomizationLinuxPrep getCustomizationLinuxPrep(GuestInputs guestInputs) {
@@ -196,7 +189,9 @@ public class GuestConfigSpecs {
 
     private CustomizationLicenseFilePrintData getCustomizationLicenseFilePrintData(GuestInputs guestInputs) {
         CustomizationLicenseFilePrintData licenseFilePrintData = new CustomizationLicenseFilePrintData();
-        licenseFilePrintData.setAutoUsers(guestInputs.getAutoUsers());
+        if (LicenseDataMode.PERSERVER.getValue().equals(guestInputs.getLicenseDataMode())) {
+            licenseFilePrintData.setAutoUsers(guestInputs.getAutoUsers());
+        }
 
         CustomizationLicenseDataMode licenseDataMode = CustomizationLicenseDataMode.fromValue(guestInputs.getLicenseDataMode());
         licenseFilePrintData.setAutoMode(licenseDataMode);

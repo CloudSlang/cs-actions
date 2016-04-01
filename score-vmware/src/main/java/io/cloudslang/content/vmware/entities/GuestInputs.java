@@ -9,8 +9,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 public class GuestInputs {
     private static final int DEFAULT_AUTO_LOGON_COUNT = 1;
     private static final int DEFAULT_AUTO_USERS_NUMBER = 1;
-    private static final int DEFAULT_TIME_ZONE = 0;
-    private static final byte DEFAULT_ENCRYPTION_KEY = 0;
+    private static final int DEFAULT_TIME_ZONE = 360;
 
     private String rebootOption;
     private String computerName;
@@ -38,8 +37,6 @@ public class GuestInputs {
     private int autoUsers;
     private int timeZone;
 
-    private byte encryptionKey;
-
     public GuestInputs(GuestInputsBuilder builder) {
         this.rebootOption = builder.rebootOption;
         this.computerName = builder.computerName;
@@ -66,8 +63,6 @@ public class GuestInputs {
         this.autoLogonCount = builder.autoLogonCount;
         this.autoUsers = builder.autoUsers;
         this.timeZone = builder.timeZone;
-
-        this.encryptionKey =  builder.encryptionKey;
     }
 
     public String getRebootOption() {
@@ -162,10 +157,6 @@ public class GuestInputs {
         return timeZone;
     }
 
-    public byte getEncryptionKey() {
-        return encryptionKey;
-    }
-
     public static class GuestInputsBuilder {
         private String rebootOption;
         private String computerName;
@@ -192,8 +183,6 @@ public class GuestInputs {
         private int autoLogonCount;
         private int autoUsers;
         private int timeZone;
-
-        private byte encryptionKey;
 
         public GuestInputs build() {
             return new GuestInputs(this);
@@ -311,11 +300,6 @@ public class GuestInputs {
 
         public GuestInputsBuilder withTimeZone(String inputValue) {
             timeZone = InputUtils.getIntInput(inputValue, DEFAULT_TIME_ZONE);
-            return this;
-        }
-
-        public GuestInputsBuilder withEncryptionKey(String inputValue) {
-            encryptionKey = InputUtils.getByteInput(inputValue, DEFAULT_ENCRYPTION_KEY);
             return this;
         }
     }
