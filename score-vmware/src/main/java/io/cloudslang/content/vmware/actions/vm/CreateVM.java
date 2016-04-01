@@ -46,7 +46,7 @@ public class CreateVM {
      * @param folderName:        optional - name of the folder where the virtual machine will be created. If not
      *                           provided then the top parent folder will be used - Default: ""
      * @param resourcePool:      optional - the resource pool for the cloned virtual machine. If not provided then the
-     *                           parent resource pool be used - Default: ""
+     *                           parent resource pool be will be used - Default: ""
      * @param description        optional - the description of the virtual machine that will be created - Default: ""
      * @param numCPUs            optional - the number that indicates how many processors will have the virtual machine
      *                           that will be created - Default: "1"
