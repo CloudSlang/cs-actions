@@ -2,7 +2,6 @@ package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.CustomizationSpec;
 import com.vmware.vim25.ManagedObjectReference;
-import com.vmware.vim25.ServiceContent;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
@@ -26,8 +25,9 @@ public class GuestService {
      * Method used to connect to specified data center and customize the windows OS based virtual machine identified
      * by the inputs provided.
      *
-     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
-     * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
+     * @param httpInputs  Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs    Object that has all the specific inputs necessary to identify the targeted virtual machine
+     * @param guestInputs Object that has all specific inputs necessary to customize specified virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
      * of the execution or failure message and the exception if there is one
      * @throws Exception
@@ -64,6 +64,7 @@ public class GuestService {
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
+     * @param guestInputs Object that has all specific inputs necessary to customize specified virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
      * of the execution or failure message and the exception if there is one
      * @throws Exception
