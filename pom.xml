@@ -172,6 +172,7 @@
         <module>score-http-client</module>
         <module>score-ssh</module>
         <module>score-mail</module>
+		<module>score-powershell</module>
         <module>score-data-format</module>
         <module>score-utilities</module>
         <module>score-rft</module>
