@@ -45,18 +45,4 @@ public class PowerShellScriptAction {
         }
         return resultMap;
     }
-
-    public static void main(String[] args) {
-        PowerShellScriptAction powerShellScriptAction = new PowerShellScriptAction();
-        Map<String, String> map = powerShellScriptAction.execute(
-                "16.77.9.170",
-                "5985",
-                "http",
-                "Administrator",
-                "B33f34t3r",
-//                "Get-WMIObject -class win32_physicalmemory | Format-Table devicelocator, capacity -a"
-                "get-host"
-        );
-        System.out.println(map.toString());
-    }
 }
