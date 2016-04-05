@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.OutputKeys;
@@ -52,12 +53,16 @@ public class XmlUtils {
     public static NamespaceContext createNamespaceContext(String xmlDocument) throws Exception{
         NamespaceContext nsContext = null;
 
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLEventReader evtReader = factory.createXMLEventReader(new StringReader(xmlDocument));
-        while (evtReader.hasNext()) {
-            XMLEvent event = evtReader.nextEvent();
-            if (event.isStartElement()) {
-                nsContext = ((StartElement) event).getNamespaceContext();
+        XMLInputFactory xif = XMLInputFactory.newFactory();
+        xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+
+        XMLStreamReader streamReader = xif.createXMLStreamReader(new StringReader(xmlDocument));
+
+        while (streamReader.hasNext()) {
+            streamReader.next();
+            if (streamReader.isStartElement()) {
+                nsContext = streamReader.getNamespaceContext();
                 break;
             }
         }
@@ -66,7 +71,19 @@ public class XmlUtils {
     }
 
     public static Document parseXML(String xmlDocument, boolean secure) throws Exception{
+        String feature;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        feature = "http://xml.org/sax/features/external-general-entities";
+        factory.setFeature(feature, false);
+        feature = "http://xml.org/sax/features/external-parameter-entities";
+        factory.setFeature(feature, false);
+        feature = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+        factory.setFeature(feature, false);
+        feature = "http://apache.org/xml/features/disallow-doctype-decl";
+        factory.setFeature(feature, true);
+        factory.setXIncludeAware(false);
+        factory.setExpandEntityReferences(false);
         factory.setNamespaceAware(true);
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, secure);
         DocumentBuilder builder = factory.newDocumentBuilder();
