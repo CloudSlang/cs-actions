@@ -11,7 +11,6 @@ import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.helpers.ResponseHelper;
 import io.cloudslang.content.vmware.services.utils.VmConfigSpecs;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
-import io.cloudslang.content.vmware.utils.ResponseUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -157,7 +156,8 @@ public class VmServiceTest {
                 any(ManagedObjectReference.class), any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         VmService vmService = createResponseHelperForCreateAndCloneVM(folderMock, resourcePoolMock, hostMock, dataStoreMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
 
         Map<String, String> results = vmService.createVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder()
@@ -206,7 +206,8 @@ public class VmServiceTest {
                 any(ManagedObjectReference.class), any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         VmService vmService = createResponseHelperForCreateAndCloneVM(folderMock, resourcePoolMock, hostMock, dataStoreMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, false));
 
         Map<String, String> results = vmService.createVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder()
@@ -234,7 +235,8 @@ public class VmServiceTest {
     public void deleteVMSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().deleteVM(httpInputsMock,
@@ -254,7 +256,8 @@ public class VmServiceTest {
     public void deleteVMFailure() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, false));
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().deleteVM(httpInputsMock,
@@ -273,7 +276,8 @@ public class VmServiceTest {
     public void deleteVMNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().deleteVM(httpInputsMock,
@@ -294,7 +298,8 @@ public class VmServiceTest {
     public void deleteVMException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(null);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.destroyTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().deleteVM(httpInputsMock,
@@ -315,7 +320,8 @@ public class VmServiceTest {
     public void powerOnVMSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.powerOnVMTask(any(ManagedObjectReference.class), any(ManagedObjectReference.class)))
                 .thenReturn(taskMorMock);
 
@@ -336,7 +342,8 @@ public class VmServiceTest {
     public void powerOnVMFailure() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, false));
         when(vimPortMock.powerOnVMTask(any(ManagedObjectReference.class), any(ManagedObjectReference.class)))
                 .thenReturn(taskMorMock);
 
@@ -356,7 +363,8 @@ public class VmServiceTest {
     public void powerOnVMException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(null);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, false));
         when(vimPortMock.powerOnVMTask(any(ManagedObjectReference.class), any(ManagedObjectReference.class)))
                 .thenReturn(taskMorMock);
 
@@ -375,7 +383,8 @@ public class VmServiceTest {
     public void powerOnVMtNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.powerOnVMTask(any(ManagedObjectReference.class), any(ManagedObjectReference.class)))
                 .thenReturn(taskMorMock);
 
@@ -397,7 +406,8 @@ public class VmServiceTest {
     public void powerOffVMSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.powerOffVMTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().powerOffVM(httpInputsMock,
@@ -417,14 +427,15 @@ public class VmServiceTest {
     public void powerOffVMFailure() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, false));
         when(vimPortMock.powerOffVMTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().powerOffVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOffNameToBeTested").build());
 
         verifyConnection();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(),anyString());
+        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, times(1)).powerOffVMTask(any(ManagedObjectReference.class));
 
         assertNotNull(results);
@@ -436,7 +447,8 @@ public class VmServiceTest {
     public void powerOffVMNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.powerOffVMTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().powerOffVM(httpInputsMock,
@@ -457,7 +469,8 @@ public class VmServiceTest {
     public void powerOffVMException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(null);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.powerOffVMTask(any(ManagedObjectReference.class))).thenReturn(taskMorMock);
 
         Map<String, String> results = new VmService().powerOffVM(httpInputsMock,
@@ -476,7 +489,8 @@ public class VmServiceTest {
 
     @Test
     public void getOsDescriptorsSuccess() throws Exception {
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(anyString())).thenReturn(environmentBrowserMorMock);
@@ -505,7 +519,8 @@ public class VmServiceTest {
 
     @Test
     public void getOsDescriptorsException() throws Exception {
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(anyString())).thenReturn(environmentBrowserMorMock);
@@ -541,7 +556,8 @@ public class VmServiceTest {
         vmsMap.put("secondVM", null);
 
         when(morObjectHandlerMock.getSpecificObjectsMap(any(ConnectionResources.class), anyString())).thenReturn(vmsMap);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
 
         Map<String, String> results = new VmService().listVMsAndTemplates(httpInputsMock, new VmInputs.VmInputsBuilder().build(), "");
 
@@ -559,7 +575,8 @@ public class VmServiceTest {
         Map<String, ManagedObjectReference> vmsMap = new HashMap<>();
 
         when(morObjectHandlerMock.getSpecificObjectsMap(any(ConnectionResources.class), anyString())).thenReturn(vmsMap);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
 
         Map<String, String> results = new VmService().listVMsAndTemplates(httpInputsMock, new VmInputs.VmInputsBuilder().build(), "");
 
@@ -577,7 +594,8 @@ public class VmServiceTest {
         Map<String, ManagedObjectReference> vmsMap = new HashMap<>();
 
         when(morObjectHandlerMock.getSpecificObjectsMap(any(ConnectionResources.class), anyString())).thenReturn(vmsMap);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
 
         Map<String, String> results = new VmService().listVMsAndTemplates(httpInputsMock, new VmInputs.VmInputsBuilder().build(), "");
 
@@ -592,7 +610,8 @@ public class VmServiceTest {
     public void getVMDetailsSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
 
         ObjectContent[] objectContents = getObjectContents();
         when(GetObjectProperties.getObjectProperties(any(ConnectionResources.class), any(ManagedObjectReference.class),
@@ -621,7 +640,8 @@ public class VmServiceTest {
     public void getVMDetailsEmpty() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(GetObjectProperties.getObjectProperties(any(ConnectionResources.class), any(ManagedObjectReference.class),
                 any(String[].class))).thenReturn(null);
 
@@ -639,7 +659,8 @@ public class VmServiceTest {
     public void getVMDetailsException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(null);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(GetObjectProperties.getObjectProperties(any(ConnectionResources.class), any(ManagedObjectReference.class),
                 any(String[].class))).thenReturn(null);
 
@@ -664,7 +685,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("datastore"))).thenReturn(dataStoresMock);
@@ -705,7 +727,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("config.hardware.device"))).thenReturn(virtualDevicesMock);
@@ -735,7 +758,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(virtualDevicesMock.getVirtualDevice()).thenReturn(virtualDevicesList);
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
                 .thenReturn(taskMorMock);
@@ -769,7 +793,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("datastore"))).thenReturn(dataStoresMock);
@@ -810,7 +835,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("config.hardware.device"))).thenReturn(virtualDevicesMock);
@@ -846,7 +872,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("config.hardware.device"))).thenReturn(virtualDevicesMock);
@@ -887,7 +914,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("datastore"))).thenReturn(dataStoresMock);
@@ -922,7 +950,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("config.hardware.device"))).thenReturn(virtualDevicesMock);
@@ -953,7 +982,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("config.hardware.device"))).thenReturn(virtualDevicesMock);
@@ -977,7 +1007,8 @@ public class VmServiceTest {
     public void updateVMNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, false));
         PowerMockito.doNothing().when(virtualMachineConfigSpecMock).setMemoryAllocation(any(ResourceAllocationInfo.class));
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
                 .thenReturn(taskMorMock);
@@ -1002,7 +1033,8 @@ public class VmServiceTest {
 
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(connectionResourcesMock.getMoRefHandler()).thenReturn(moRefHandlerMock);
         when(moRefHandlerMock.entityProps(any(ManagedObjectReference.class), any(String[].class))).thenReturn(entityPropsMock);
         when(entityPropsMock.get(eq("datastore"))).thenReturn(dataStoresMock);
@@ -1028,7 +1060,8 @@ public class VmServiceTest {
     public void updateVMCpu() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
                 .thenReturn(taskMorMock);
 
@@ -1048,7 +1081,8 @@ public class VmServiceTest {
     public void updateVMMemory() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
                 .thenReturn(taskMorMock);
 
@@ -1068,7 +1102,8 @@ public class VmServiceTest {
     public void updateVMNotSupported() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         when(vimPortMock.reconfigVMTask(any(ManagedObjectReference.class), any(VirtualMachineConfigSpec.class)))
                 .thenReturn(taskMorMock);
 
@@ -1096,7 +1131,8 @@ public class VmServiceTest {
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
 
         VmService vmService = createResponseHelperForCreateAndCloneVM(folderMock, resourcePoolMock, hostMock, dataStoreMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
 
         when(utilsMock.getMorFolder(anyString(), any(ConnectionResources.class))).thenReturn(folderMock);
         when(utilsMock.getMorResourcePool(anyString(), any(ConnectionResources.class))).thenReturn(resourcePoolMock);
@@ -1148,7 +1184,8 @@ public class VmServiceTest {
         when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
 
         VmService vmService = createResponseHelperForCreateAndCloneVM(folderMock, resourcePoolMock, hostMock, dataStoreMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, false));
 
         when(utilsMock.getMorFolder(anyString(), any(ConnectionResources.class))).thenReturn(folderMock);
         when(utilsMock.getMorResourcePool(anyString(), any(ConnectionResources.class))).thenReturn(resourcePoolMock);
@@ -1190,7 +1227,8 @@ public class VmServiceTest {
         whenNew(VmUtils.class).withNoArguments().thenReturn(utilsMock);
 
         VmService vmService = createResponseHelperForCreateAndCloneVM(null, null, null, null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("toCloneVM").withCloneName("cloneVM").build();
 
         Map<String, String> results = vmService.cloneVM(httpInputsMock, vmInputs);
@@ -1215,7 +1253,8 @@ public class VmServiceTest {
         whenNew(VmUtils.class).withNoArguments().thenReturn(utilsMock);
 
         VmService vmService = createResponseHelperForCreateAndCloneVM(null, null, null, null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMorMock, true));
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("toCloneVM").withCloneName("cloneVM").build();
 
         Map<String, String> results = vmService.cloneVM(httpInputsMock, vmInputs);
@@ -1310,8 +1349,10 @@ public class VmServiceTest {
         };
     }
 
-    private ResponseHelper getResponseHelper(final boolean isDone) {
-        return new ResponseHelper() {
+    private ResponseHelper getResponseHelper(final ConnectionResources connectionResources,
+                                             final ManagedObjectReference task,
+                                             final boolean isDone) {
+        return new ResponseHelper(connectionResources, task) {
             public boolean getTaskResultAfterDone(ConnectionResources connectionResources,
                                                   ManagedObjectReference task)
                     throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {

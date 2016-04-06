@@ -97,9 +97,8 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
-
-
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testWinVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
@@ -127,9 +126,8 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
-
-
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, false));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testWinVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
@@ -157,7 +155,8 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testWinVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
@@ -187,7 +186,8 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
@@ -214,7 +214,8 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(false));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, false));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
@@ -241,7 +242,8 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(taskMock);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
@@ -270,7 +272,8 @@ public class GuestServiceTest {
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(null);
-        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+        whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
+                .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
@@ -291,8 +294,10 @@ public class GuestServiceTest {
         assertEquals("java.lang.NullPointerException", results.get("returnResult"));
     }
 
-    private ResponseHelper getResponseHelper(final boolean isDone) {
-        return new ResponseHelper() {
+    private ResponseHelper getResponseHelper(final ConnectionResources connectionResources,
+                                             final ManagedObjectReference task,
+                                             final boolean isDone) {
+        return new ResponseHelper(connectionResources, task) {
             public boolean getTaskResultAfterDone(ConnectionResources connectionResources, ManagedObjectReference task)
                     throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
                 return isDone;

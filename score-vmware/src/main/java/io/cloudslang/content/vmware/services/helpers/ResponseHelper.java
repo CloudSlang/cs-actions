@@ -14,8 +14,15 @@ import java.util.Map;
  * 3/22/2016.
  */
 public class ResponseHelper {
-    public Map<String, String> getResultsMap(ConnectionResources connectionResources, ManagedObjectReference task,
-                                             String successMessage, String failureMessage)
+    private ConnectionResources connectionResources;
+    private ManagedObjectReference task;
+
+    public ResponseHelper(ConnectionResources connectionResources, ManagedObjectReference task){
+        this.connectionResources = connectionResources;
+        this.task = task;
+    }
+
+    public Map<String, String> getResultsMap(String successMessage, String failureMessage)
             throws InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
         return (getTaskResultAfterDone(connectionResources, task)) ?

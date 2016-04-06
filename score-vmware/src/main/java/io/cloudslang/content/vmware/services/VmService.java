@@ -76,8 +76,8 @@ public class VmService {
             ManagedObjectReference task = connectionResources.getVimPortType()
                     .createVMTask(vmFolderMor, vmConfigSpec, resourcePoolMor, hostMor);
 
-            return new ResponseHelper().getResultsMap(connectionResources, task,
-                    "Success: Created [" + vmInputs.getVirtualMachineName() + "] VM. The taskId is: " + task.getValue(),
+            return new ResponseHelper(connectionResources, task).getResultsMap("Success: Created [" +
+                            vmInputs.getVirtualMachineName() + "] VM. The taskId is: " + task.getValue(),
                     "Failure: Could not create [" + vmInputs.getVirtualMachineName() + "] VM");
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
@@ -104,8 +104,8 @@ public class VmService {
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().destroyTask(vmMor);
 
-                return new ResponseHelper().getResultsMap(connectionResources, task,
-                        "Success: The [" + vmInputs.getVirtualMachineName() + "] VM was deleted. The taskId is: " + task.getValue(),
+                return new ResponseHelper(connectionResources, task).getResultsMap("Success: The [" +
+                                vmInputs.getVirtualMachineName() + "] VM was deleted. The taskId is: " + task.getValue(),
                         "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be deleted.");
             } else {
                 return ResponseUtils.getVmNotFoundResultsMap(vmInputs);
@@ -134,10 +134,9 @@ public class VmService {
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().powerOnVMTask(vmMor, null);
 
-                return new ResponseHelper().getResultsMap(connectionResources, task,
-                        "Success: The [" + vmInputs.getVirtualMachineName() + "] VM was successfully powered on. " +
-                                "The taskId is: " + task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() +
-                                "] VM could not be powered on.");
+                return new ResponseHelper(connectionResources, task).getResultsMap("Success: The [" +
+                        vmInputs.getVirtualMachineName() + "] VM was successfully powered on. The taskId is: " +
+                        task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be powered on.");
             } else {
                 return ResponseUtils.getVmNotFoundResultsMap(vmInputs);
             }
@@ -165,10 +164,9 @@ public class VmService {
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().powerOffVMTask(vmMor);
 
-                return new ResponseHelper().getResultsMap(connectionResources, task,
-                        "Success: The [" + vmInputs.getVirtualMachineName() + "] VM was successfully powered off. " +
-                                "The taskId is: " + task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() +
-                                "] VM could not be powered off.");
+                return new ResponseHelper(connectionResources, task).getResultsMap("Success: The [" +
+                        vmInputs.getVirtualMachineName() + "] VM was successfully powered off. The taskId is: " +
+                        task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be powered off.");
             } else {
                 return ResponseUtils.getVmNotFoundResultsMap(vmInputs);
             }
@@ -276,10 +274,9 @@ public class VmService {
 
                 ManagedObjectReference task = connectionResources.getVimPortType().reconfigVMTask(vmMor, vmConfigSpec);
 
-                return new ResponseHelper().getResultsMap(connectionResources, task,
-                        "Success: The [" + vmInputs.getVirtualMachineName() + "] VM was successfully reconfigured. " +
-                                "The taskId is: " + task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() +
-                                "] VM could not be reconfigured.");
+                return new ResponseHelper(connectionResources, task).getResultsMap("Success: The [" +
+                        vmInputs.getVirtualMachineName() + "] VM was successfully reconfigured. The taskId is: " +
+                        task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be reconfigured.");
             } else {
                 return ResponseUtils.getVmNotFoundResultsMap(vmInputs);
             }
@@ -320,9 +317,9 @@ public class VmService {
                 ManagedObjectReference taskMor = connectionResources.getVimPortType()
                         .cloneVMTask(vmMor, folder, vmInputs.getCloneName(), cloneSpec);
 
-                return new ResponseHelper().getResultsMap(connectionResources, taskMor,
-                        "Success: The [" + vmInputs.getVirtualMachineName() + "] VM was successfully cloned. The taskId is: " +
-                                taskMor.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be cloned.");
+                return new ResponseHelper(connectionResources, taskMor).getResultsMap("Success: The [" +
+                        vmInputs.getVirtualMachineName() + "] VM was successfully cloned. The taskId is: " +
+                        taskMor.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be cloned.");
             } else {
                 return ResponseUtils.getVmNotFoundResultsMap(vmInputs);
             }
