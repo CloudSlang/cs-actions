@@ -50,9 +50,30 @@ public class VmConfigSpecs {
         return vmConfigSpec;
     }
 
-    public VirtualDeviceConfigSpec getDiskDeviceConfigSpec(ConnectionResources connectionResources,
-                                                           ManagedObjectReference vmMor,
-                                                           VmInputs vmInputs) throws Exception {
+    public VirtualMachineCloneSpec getCloneSpec(VmInputs vmInputs, VirtualMachineRelocateSpec virtualMachineRelocateSpec)
+            throws Exception {
+        VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
+
+        cloneSpec.setLocation(virtualMachineRelocateSpec);
+        cloneSpec.setPowerOn(false);
+        cloneSpec.setTemplate(vmInputs.isTemplate());
+
+        VmUtils vmUtils = new VmUtils();
+        VirtualMachineConfigSpec vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(new VirtualMachineConfigSpec(),
+                vmInputs, vmInputs.getCloneName());
+
+        ResourceAllocationInfo resourceAllocationInfo = getResourceAllocationInfo(SharesLevel.NORMAL.value());
+        vmConfigSpec.setMemoryAllocation(resourceAllocationInfo);
+        vmConfigSpec.setCpuAllocation(resourceAllocationInfo);
+
+        cloneSpec.setConfig(vmConfigSpec);
+
+        return cloneSpec;
+    }
+
+    VirtualDeviceConfigSpec getDiskDeviceConfigSpec(ConnectionResources connectionResources,
+                                                    ManagedObjectReference vmMor,
+                                                    VmInputs vmInputs) throws Exception {
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
             String dataStoreName = getDataStoreWithFreeSpaceNeeded(connectionResources, vmMor,
                     vmInputs.getLongVmDiskSize());
@@ -72,7 +93,7 @@ public class VmConfigSpecs {
                     Operation.ADD.toString(), vmInputs);
 
         } else {
-            List<VirtualDevice> deviceList = ((ArrayOfVirtualDevice) connectionResources.getGetMOREF()
+            List<VirtualDevice> deviceList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
                     .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
                     .getVirtualDevice();
 
@@ -82,9 +103,9 @@ public class VmConfigSpecs {
         }
     }
 
-    public VirtualDeviceConfigSpec getCDDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
-                                                         VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getGetMOREF()
+    VirtualDeviceConfigSpec getCDDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
+                                                  VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+        List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
                 .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE)).getVirtualDevice();
 
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
@@ -126,13 +147,13 @@ public class VmConfigSpecs {
         }
     }
 
-    public VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
-                                                          VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+    VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
+                                                   VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
             return new VmUtils().getNicSpecs(vmInputs.getUpdateValue(), null, VirtualDeviceConfigSpecOperation.ADD,
                     GENERATED, SERVER_ASSIGNED, Operation.ADD.toString(), vmInputs);
         } else {
-            List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getGetMOREF()
+            List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
                     .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
                     .getVirtualDevice();
 
@@ -141,28 +162,7 @@ public class VmConfigSpecs {
         }
     }
 
-    public VirtualMachineCloneSpec getCloneSpec(VmInputs vmInputs, VirtualMachineRelocateSpec virtualMachineRelocateSpec)
-            throws Exception {
-        VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
-
-        cloneSpec.setLocation(virtualMachineRelocateSpec);
-        cloneSpec.setPowerOn(false);
-        cloneSpec.setTemplate(vmInputs.isTemplate());
-
-        VmUtils vmUtils = new VmUtils();
-        VirtualMachineConfigSpec vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(new VirtualMachineConfigSpec(),
-                vmInputs, vmInputs.getCloneName());
-
-        ResourceAllocationInfo resourceAllocationInfo = getResourceAllocationInfo(SharesLevel.NORMAL.value());
-        vmConfigSpec.setMemoryAllocation(resourceAllocationInfo);
-        vmConfigSpec.setCpuAllocation(resourceAllocationInfo);
-
-        cloneSpec.setConfig(vmConfigSpec);
-
-        return cloneSpec;
-    }
-
-    public ResourceAllocationInfo getResourceAllocationInfo(String input) throws Exception {
+    ResourceAllocationInfo getResourceAllocationInfo(String input) throws Exception {
         VmUtils vmUtils = new VmUtils();
         SharesInfo sharesInfo = vmUtils.getSharesInfo(input);
         ResourceAllocationInfo resourceAllocationInfo = new ResourceAllocationInfo();
@@ -310,7 +310,8 @@ public class VmConfigSpecs {
     private List<VirtualDevice> getDefaultDevicesList(ConnectionResources connectionResources)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
-                .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());;
+                .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());
+        ;
 
         VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
@@ -358,22 +359,22 @@ public class VmConfigSpecs {
 
     private String getDataStoreWithFreeSpaceNeeded(ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                                    long minFreeSpace) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
+        List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getMoRefHandler()
                 .entityProps(vmMor, new String[]{VmParameter.DATA_STORE.getValue()}).get(VmParameter.DATA_STORE.getValue()))
                 .getManagedObjectReference();
         for (ManagedObjectReference dataStore : dataStores) {
-            DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
+            DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getMoRefHandler()
                     .entityProps(dataStore, new String[]{VmParameter.SUMMARY.getValue()}).get(VmParameter.SUMMARY.getValue());
             if (datastoreSummary.getFreeSpace() > minFreeSpace) {
                 return datastoreSummary.getName();
             }
         }
-        throw new RuntimeException("Can find any dataStore with: [" + minFreeSpace + "] minimum amount of space available.");
+        throw new RuntimeException("Cannot find any dataStore with: [" + minFreeSpace + "] minimum amount of space available.");
     }
 
     private List<Integer> getControllerKey(ConnectionResources connectionResources, ManagedObjectReference vmMor)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getGetMOREF()
+        List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
                 .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
                 .getVirtualDevice();
         Map<Integer, VirtualDevice> deviceMap = getVirtualDeviceMap(virtualDevicesList);

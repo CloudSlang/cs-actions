@@ -31,7 +31,7 @@ public class InputsUtilsTest {
     @Test
     public void getIntInputException() throws RuntimeException {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a int number.");
+        exception.expectMessage("The input value must be a positive number.");
 
         InputUtils.getIntInput("Doesn't work in this way", 0);
     }
@@ -51,7 +51,7 @@ public class InputsUtilsTest {
     @Test
     public void getLongInputException() throws RuntimeException {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a long number.");
+        exception.expectMessage("The input value must be a positive number.");
 
         InputUtils.getLongInput("Still doesn't work in this way", 0);
     }
@@ -162,7 +162,7 @@ public class InputsUtilsTest {
     @Test
     public void getByteInputNotByte() {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a byte number.");
+        exception.expectMessage("The input value must be a positive number between 0 and 127 values range.");
 
         byte test = 0;
         InputUtils.getByteInput("128", test);

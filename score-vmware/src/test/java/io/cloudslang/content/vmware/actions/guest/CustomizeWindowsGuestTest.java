@@ -47,12 +47,12 @@ public class CustomizeWindowsGuestTest {
     public void customizeWindowsGuestSuccess() throws Exception {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
-        when(guestServiceMock.customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class))).thenReturn(resultMap);
+        when(guestServiceMock.customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean())).thenReturn(resultMap);
 
         resultMap = windowsGuest.customizeWindowsGuest("", "", "", "", "", "", "", "noreboot", "", "", "", "", "", "",
                 "", "", "", "perServer", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock, times(1)).customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, times(1)).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
         assertNotNull(resultMap);
     }
@@ -62,7 +62,7 @@ public class CustomizeWindowsGuestTest {
         Map<String, String> resultMap = windowsGuest.customizeWindowsGuest("", "", "myProtocol", "", "", "", "", "noreboot",
                 "", "", "", "", "", "", "", "", "", "perServer", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock, never()).customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
@@ -74,7 +74,7 @@ public class CustomizeWindowsGuestTest {
         Map<String, String> resultMap = windowsGuest.customizeWindowsGuest("", "", "", "", "", "", "", "myIncorrectOption",
                 "", "", "", "", "", "", "", "", "", "perServer", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock, never()).customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
@@ -86,7 +86,7 @@ public class CustomizeWindowsGuestTest {
         Map<String, String> resultMap = windowsGuest.customizeWindowsGuest("", "", "", "", "", "", "", "reboot",
                 "", "", "", "", "", "", "", "", "", "myIncorrectOption", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock, never()).customizeWinVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));

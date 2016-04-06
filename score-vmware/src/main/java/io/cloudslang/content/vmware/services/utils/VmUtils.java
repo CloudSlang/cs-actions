@@ -26,7 +26,7 @@ public class VmUtils {
     private static final int DISK_AMOUNT_MULTIPLIER = 1024;
     private static final int DEFAULT_CORES_PER_SOCKET = 1;
 
-    public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs, String name) {
+    VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs, String name) {
         vmConfigSpec.setName(name);
         vmConfigSpec.setNumCPUs(vmInputs.getIntNumCPUs());
         vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
@@ -43,11 +43,11 @@ public class VmUtils {
         return vmConfigSpec;
     }
 
-    public VirtualDeviceConfigSpec getPopulatedDiskSpec(String volumeName, List<VirtualDevice> virtualDevicesList,
-                                                        VirtualDeviceConfigSpecOperation operation,
-                                                        VirtualDeviceConfigSpecFileOperation fileOperation,
-                                                        int controllerKey, int unitNumber, int key, String parameter,
-                                                        VmInputs vmInputs) throws Exception {
+    VirtualDeviceConfigSpec getPopulatedDiskSpec(String volumeName, List<VirtualDevice> virtualDevicesList,
+                                                 VirtualDeviceConfigSpecOperation operation,
+                                                 VirtualDeviceConfigSpecFileOperation fileOperation,
+                                                 int controllerKey, int unitNumber, int key, String parameter,
+                                                 VmInputs vmInputs) throws Exception {
         VirtualDeviceConfigSpec diskSpecs = new VirtualDeviceConfigSpec();
 
         if (Operation.CREATE.toString().equalsIgnoreCase(parameter) || Operation.ADD.toString().equalsIgnoreCase(parameter)) {
@@ -62,11 +62,11 @@ public class VmUtils {
         throw new RuntimeException("No disk device named: [" + vmInputs.getUpdateValue() + "] can be found.");
     }
 
-    public VirtualDeviceConfigSpec getPopulatedCDSpecs(String fileName, ManagedObjectReference dataStoreRef,
-                                                       List<VirtualDevice> virtualDevicesList,
-                                                       VirtualDeviceConfigSpecOperation operation,
-                                                       Integer controllerKey, Integer unitNumber, Integer key,
-                                                       String parameter, VmInputs vmInputs) {
+    VirtualDeviceConfigSpec getPopulatedCDSpecs(String fileName, ManagedObjectReference dataStoreRef,
+                                                List<VirtualDevice> virtualDevicesList,
+                                                VirtualDeviceConfigSpecOperation operation,
+                                                Integer controllerKey, Integer unitNumber, Integer key,
+                                                String parameter, VmInputs vmInputs) {
 
         VirtualDeviceConfigSpec cdSpecs = new VirtualDeviceConfigSpec();
         if (Operation.ADD.toString().equalsIgnoreCase(parameter)) {
@@ -90,9 +90,9 @@ public class VmUtils {
         throw new RuntimeException("No optical device named: [" + vmInputs.getUpdateValue() + "] can be found.");
     }
 
-    public VirtualDeviceConfigSpec getNicSpecs(String fileName, List<VirtualDevice> virtualDevicesList,
-                                               VirtualDeviceConfigSpecOperation operation, String addressType,
-                                               Integer key, String parameter, VmInputs vmInputs) {
+    VirtualDeviceConfigSpec getNicSpecs(String fileName, List<VirtualDevice> virtualDevicesList,
+                                        VirtualDeviceConfigSpecOperation operation, String addressType,
+                                        Integer key, String parameter, VmInputs vmInputs) {
         VirtualDeviceConfigSpec nicSpecs = new VirtualDeviceConfigSpec();
         VirtualEthernetCard nic;
         if (Operation.ADD.toString().equalsIgnoreCase(parameter)) {
@@ -107,7 +107,7 @@ public class VmUtils {
         throw new RuntimeException("No nic named: [" + vmInputs.getUpdateValue() + "] can be found.");
     }
 
-    public <T> SharesInfo getSharesInfo(T value) throws Exception {
+    <T> SharesInfo getSharesInfo(T value) throws Exception {
         SharesInfo sharesInfo = new SharesInfo();
         if (InputUtils.isInt((String) value)) {
             sharesInfo.setLevel(SharesLevel.CUSTOM);

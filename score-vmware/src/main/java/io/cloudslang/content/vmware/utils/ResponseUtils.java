@@ -8,9 +8,11 @@ import com.vmware.vim25.VirtualMachineSummary;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
+import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.VmParameter;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,9 +22,16 @@ import java.util.Map;
 public class ResponseUtils {
     private static final String COMMA_DELIMITER = ",";
 
-    public static void setResults(Map<String, String> results, String returnResultMessage, String returnCodeMessage) {
+    public static Map<String, String> getResultsMap(String returnResultMessage, String returnCodeMessage) {
+        Map<String, String> results = new HashMap<>();
         results.put(Outputs.RETURN_RESULT, returnResultMessage);
         results.put(Outputs.RETURN_CODE, returnCodeMessage);
+
+        return results;
+    }
+
+    public static Map<String, String> getVmNotFoundResultsMap(VmInputs vmInputs) {
+        return getResultsMap("Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.", Outputs.RETURN_CODE_FAILURE);
     }
 
     public static <T> String getResponseStringFromCollection(Collection<T> collectionItems, String delimiter) {

@@ -14,12 +14,10 @@ public class WaitForValues {
     private static final String KEY_VALUE_NULL_STRING = "val: null";
     private static final int MAX_TRIED_WAIT_FOR_UPDATE_COUNTER = 100;
 
-    Connection connection;
-    ServiceContent serviceContent;
-    VimPortType vimPort;
+    private ServiceContent serviceContent;
+    private VimPortType vimPort;
 
     public WaitForValues(Connection connection) {
-        this.connection = connection;
         this.serviceContent = connection.getServiceContent();
         this.vimPort = connection.getVimPort();
     }
@@ -121,7 +119,7 @@ public class WaitForValues {
         }
     }
 
-    public PropertyFilterSpec propertyFilterSpec(ManagedObjectReference objmor, String[] filterProps) {
+    private PropertyFilterSpec propertyFilterSpec(ManagedObjectReference objmor, String[] filterProps) {
         ObjectSpec oSpec = new ObjectSpec();
         oSpec.setObj(objmor);
         oSpec.setSkip(false);
@@ -137,7 +135,7 @@ public class WaitForValues {
         return spec;
     }
 
-    void updateValues(String[] props, Object[] vals, PropertyChange propchg) {
+    private void updateValues(String[] props, Object[] vals, PropertyChange propchg) {
         for (int findi = 0; findi < props.length; findi++) {
             if (propchg.getName().lastIndexOf(props[findi]) >= 0) {
                 vals[findi] = propchg.getOp() == PropertyChangeOp.REMOVE ? Constants.EMPTY : propchg.getVal();

@@ -61,21 +61,21 @@ public class CustomizeLinuxGuest {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> customizeLinuxGuest(@Param(value = Inputs.HOST, required = true) String host,
-                                                   @Param(Inputs.PORT) String port,
-                                                   @Param(Inputs.PROTOCOL) String protocol,
-                                                   @Param(value = Inputs.USERNAME, required = true) String username,
-                                                   @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                                   @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+    Map<String, String> customizeLinuxGuest(@Param(value = Inputs.HOST, required = true) String host,
+                                            @Param(Inputs.PORT) String port,
+                                            @Param(Inputs.PROTOCOL) String protocol,
+                                            @Param(value = Inputs.USERNAME, required = true) String username,
+                                            @Param(value = Inputs.PASSWORD, encrypted = true) String password,
+                                            @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
-                                                   @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                                   @Param(value = Inputs.COMPUTER_NAME, required = true) String computerName,
-                                                   @Param(Inputs.DOMAIN) String domain,
-                                                   @Param(Inputs.IP_ADDRESS) String ipAddress,
-                                                   @Param(Inputs.SUBNET_MASK) String subnetMask,
-                                                   @Param(Inputs.DEFAULT_GATEWAY) String defaultGateway,
-                                                   @Param(Inputs.UTC_CLOCK) String hwClockUTC,
-                                                   @Param(Inputs.TIME_ZONE) String timeZone) {
+                                            @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
+                                            @Param(value = Inputs.COMPUTER_NAME, required = true) String computerName,
+                                            @Param(Inputs.DOMAIN) String domain,
+                                            @Param(Inputs.IP_ADDRESS) String ipAddress,
+                                            @Param(Inputs.SUBNET_MASK) String subnetMask,
+                                            @Param(Inputs.DEFAULT_GATEWAY) String defaultGateway,
+                                            @Param(Inputs.UTC_CLOCK) String hwClockUTC,
+                                            @Param(Inputs.TIME_ZONE) String timeZone) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -101,7 +101,7 @@ public class CustomizeLinuxGuest {
                     .withTimeZone(timeZone)
                     .build();
 
-            resultMap = new GuestService().customizeLinuxVM(httpInputs, vmInputs, guestInputs);
+            resultMap = new GuestService().customizeVM(httpInputs, vmInputs, guestInputs, false);
 
         } catch (Exception ex) {
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);

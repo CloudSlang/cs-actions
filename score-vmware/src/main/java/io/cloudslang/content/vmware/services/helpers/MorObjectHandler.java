@@ -1,9 +1,11 @@
 package io.cloudslang.content.vmware.services.helpers;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.RetrieveOptions;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +20,7 @@ public class MorObjectHandler {
 
     public Map<String, ManagedObjectReference> getSpecificObjectsMap(ConnectionResources connectionResources, String objectType)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        return connectionResources.getGetMOREF().inContainerByType(connectionResources.getMorRootFolder(), objectType);
+        return connectionResources.getMoRefHandler().inContainerByType(connectionResources.getMorRootFolder(), objectType);
     }
 
     public ManagedObjectReference getEnvironmentBrowser(ConnectionResources connectionResources, String filter)
@@ -29,16 +31,16 @@ public class MorObjectHandler {
 
     public ManagedObjectReference getSpecificMor(ConnectionResources connectionResources, ManagedObjectReference reference,
                                                  String filter, String parameter) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        return connectionResources.getGetMOREF().inContainerByType(reference, filter, new RetrieveOptions()).get(parameter);
+        return connectionResources.getMoRefHandler().inContainerByType(reference, filter, new RetrieveOptions()).get(parameter);
     }
 
     public Object getObjectProperties(ConnectionResources connectionResources, ManagedObjectReference reference, String filter)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        return connectionResources.getGetMOREF().entityProps(reference, new String[]{filter}).get(filter);
+        return connectionResources.getMoRefHandler().entityProps(reference, new String[]{filter}).get(filter);
     }
 
     private ManagedObjectReference getProperty(ConnectionResources connectionResources, ManagedObjectReference reference,
                                                String filter, String parameter) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        return (ManagedObjectReference) connectionResources.getGetMOREF().entityProps(reference, new String[]{filter}).get(parameter);
+        return (ManagedObjectReference) connectionResources.getMoRefHandler().entityProps(reference, new String[]{filter}).get(parameter);
     }
 }

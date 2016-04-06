@@ -105,7 +105,7 @@ public class GuestServiceTest {
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                 .withRebootOption("noreboot").withLicenseDataMode("perServer").build();
 
-        Map<String, String> results = guestService.customizeWinVM(httpInputsMock, vmInputs, guestInputs);
+        Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, true);
 
         verifyConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
@@ -135,7 +135,7 @@ public class GuestServiceTest {
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                 .withRebootOption("noreboot").withLicenseDataMode("perServer").build();
 
-        Map<String, String> results = guestService.customizeWinVM(httpInputsMock, vmInputs, guestInputs);
+        Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, true);
 
         verifyConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
@@ -163,7 +163,7 @@ public class GuestServiceTest {
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                 .withRebootOption("noreboot").withLicenseDataMode("perServer").build();
 
-        Map<String, String> results = guestService.customizeWinVM(httpInputsMock, vmInputs, guestInputs);
+        Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, true);
 
         verify(connectionResourcesMock).getConnection();
         verify(connectionMock).disconnect();
@@ -192,7 +192,7 @@ public class GuestServiceTest {
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
 
-        Map<String, String> results = guestService.customizeLinuxVM(httpInputsMock, vmInputs, guestInputs);
+        Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
 
         verifyConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
@@ -219,7 +219,7 @@ public class GuestServiceTest {
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
 
-        Map<String, String> results = guestService.customizeLinuxVM(httpInputsMock, vmInputs, guestInputs);
+        Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
 
         verifyConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
@@ -246,7 +246,7 @@ public class GuestServiceTest {
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
         GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
 
-        Map<String, String> results = guestService.customizeLinuxVM(httpInputsMock, vmInputs, guestInputs);
+        Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
 
         verify(connectionResourcesMock).getConnection();
         verify(connectionMock).disconnect();
@@ -260,6 +260,35 @@ public class GuestServiceTest {
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
         assertEquals("Could not find the [testLinuxVMName] VM.", results.get("returnResult"));
+    }
+
+    @Test
+    public void customizeLinuxVMException() throws Exception {
+        whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
+        when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
+        doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        when(vimPortMock.customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class))).thenReturn(null);
+        whenNew(ResponseHelper.class).withNoArguments().thenReturn(getResponseHelper(true));
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("testLinuxVMName").build();
+        GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder().build();
+
+        Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
+
+        verify(connectionResourcesMock).getConnection();
+        verify(connectionMock).disconnect();
+        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(connectionResourcesMock, times(2)).getVimPortType();
+        verify(guestConfigSpecsMock, times(1)).getLinuxCustomizationSpec(any(GuestInputs.class));
+        verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
+        verify(taskMock, never()).getValue();
+
+        assertNotNull(results);
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("java.lang.NullPointerException", results.get("returnResult"));
     }
 
     private ResponseHelper getResponseHelper(final boolean isDone) {

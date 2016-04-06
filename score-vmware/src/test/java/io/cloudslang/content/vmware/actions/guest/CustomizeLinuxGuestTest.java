@@ -48,11 +48,11 @@ public class CustomizeLinuxGuestTest {
     public void customizeLinuxGuestSuccess() throws Exception {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
-        when(guestServiceMock.customizeLinuxVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class))).thenReturn(resultMap);
+        when(guestServiceMock.customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean())).thenReturn(resultMap);
 
         resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock, times(1)).customizeLinuxVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, times(1)).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
         assertNotNull(resultMap);
     }
@@ -61,7 +61,7 @@ public class CustomizeLinuxGuestTest {
     public void customizeLinuxGuestProtocolFailure() throws Exception {
         Map<String, String> resultMap = linuxGuest.customizeLinuxGuest("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(guestServiceMock, never()).customizeLinuxVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class));
+        verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));

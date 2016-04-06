@@ -75,7 +75,7 @@ public class CloneVMTest {
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
-        assertEquals("The input value must be a int number.", resultMap.get("returnResult"));
+        assertEquals("The input value must be a positive number.", resultMap.get("returnResult"));
     }
 
     @Test
@@ -86,6 +86,6 @@ public class CloneVMTest {
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
-        assertEquals("The input value must be a long number.", resultMap.get("returnResult"));
+        assertEquals("The input value must be a positive number.", resultMap.get("returnResult"));
     }
 }
