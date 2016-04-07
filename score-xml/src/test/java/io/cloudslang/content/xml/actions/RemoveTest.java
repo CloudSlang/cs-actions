@@ -40,7 +40,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Removed successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.REMOVE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Removed successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.REMOVE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -62,7 +62,8 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -73,6 +74,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, xPathQuery, name, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: Removal failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.REMOVE_FAILURE +
+                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

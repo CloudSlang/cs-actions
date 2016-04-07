@@ -16,6 +16,16 @@ import java.util.Map;
  * Created by markowis on 25/02/2016.
  */
 public class InsertBefore {
+    /**
+     * Appends a child to an XML element.
+     *
+     * @param xmlDocument       XML string to insert element in
+     * @param xPathQuery        XPATH query that results in an element or element list, where element will be inserted
+     *                          before
+     * @param xmlElement        element to insert
+     * @param secureProcessing  optional - whether to use secure processing
+     * @return map of results containing success or failure text, a result message, and the modified XML
+     */
     @Action(name = "Insert Before",
             outputs = {
                     @Output(Constants.OutputNames.RESULT_TEXT),
@@ -28,7 +38,7 @@ public class InsertBefore {
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
             @Param(value = Constants.InputNames.XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
             @Param(value = Constants.InputNames.XML_ELEMENT, required = true) String xmlElement,
-            @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
+            @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)

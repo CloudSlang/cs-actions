@@ -41,7 +41,7 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Value set successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Value set successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -65,7 +65,8 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -77,6 +78,8 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: Removal failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+                Constants.ErrorMessages.SET_VALUE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

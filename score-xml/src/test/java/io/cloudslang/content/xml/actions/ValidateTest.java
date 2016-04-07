@@ -37,7 +37,7 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, null, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing successful.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.PARSING_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -47,7 +47,9 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, null, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: The element type \"root\" must be terminated by the matching end-tag \"</root>\".", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+                "The element type \"root\" must be terminated by the matching end-tag \"</root>\".",
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -61,7 +63,8 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, xsd, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("XML is valid.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.VALIDATION_SUCCESS,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -75,6 +78,8 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, xsd, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: cvc-complex-type.4: Attribute 'someid' must appear on element 'root'.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+                "cvc-complex-type.4: Attribute 'someid' must appear on element 'root'.",
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

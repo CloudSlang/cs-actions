@@ -28,21 +28,21 @@ public class ValidateService {
             String xsdDocument = customInputs.getXsdDocument();
 
             XmlUtils.parseXML(xmlDocument, commonInputs.getSecureProcessing());
-            result.put(Constants.OutputNames.RETURN_RESULT, "Parsing successful.");
+            result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.PARSING_SUCCESS);
 
             if(xsdDocument != null && !xsdDocument.isEmpty()) {
                 validateAgainstXsd(xmlDocument, customInputs.getXsdDocument());
-                result.put(Constants.OutputNames.RETURN_RESULT, "XML is valid.");
+                result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.VALIDATION_SUCCESS);
             }
 
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.SUCCESS);
 
         } catch (SAXParseException e) {
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Parsing error: " + e.getMessage());
+            result.put(Constants.OutputNames.RETURN_RESULT, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         } catch (SAXException e) {
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Validation failed: " + e.getMessage());
+            result.put(Constants.OutputNames.RETURN_RESULT, Constants.ErrorMessages.VALIDATION_FAILURE + e.getMessage());
         } catch (Exception e){
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
             result.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());

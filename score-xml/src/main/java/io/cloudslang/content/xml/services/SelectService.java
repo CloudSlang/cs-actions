@@ -31,31 +31,33 @@ public class SelectService {
 
             String selection = xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
 
-            ResultUtils.populateValueResult(result, Constants.SUCCESS, "XPath queried successfully.", selection);
+            ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
+                    selection);
 
         } catch (XPathExpressionException e) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE, "XPath parsing error: " + e.getMessage(), Constants.EMPTY_STRING);
+            ResultUtils.populateValueResult(result, Constants.FAILURE,
+                    Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING);
         } catch (TransformerException te) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE, "Transformer error: " + te.getMessage(), Constants.EMPTY_STRING);
+            ResultUtils.populateValueResult(result, Constants.FAILURE,
+                    Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage(), Constants.EMPTY_STRING);
         } catch (Exception e) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE, "Parsing error: " + e.getMessage(), Constants.EMPTY_STRING);
+            ResultUtils.populateValueResult(result, Constants.FAILURE,
+                    Constants.ErrorMessages.PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING);
         }
 
         return result;
     }
 
     private static String xPathQuery(Document doc, XPathExpression expr, String queryType, String delimiter) throws Exception{
-        if(queryType.equals(Constants.QueryTypes.NODE_LIST)) {
-            return xPathNodeListQuery(doc, expr, delimiter);
-        }
-        else if (queryType.equals(Constants.QueryTypes.NODE)) {
-            return xPathNodeQuery(doc, expr);
-        }
-        else if (queryType.equals(Constants.QueryTypes.VALUE)) {
-            return xPathValueQuery(doc, expr);
-        }
-        else{
-            throw new Exception("Invalid query type");
+        switch (queryType){
+            case Constants.QueryTypes.NODE_LIST:
+                return xPathNodeListQuery(doc, expr, delimiter);
+            case Constants.QueryTypes.NODE:
+                return xPathNodeQuery(doc, expr);
+            case Constants.QueryTypes.VALUE:
+                return xPathValueQuery(doc, expr);
+            default:
+                throw new Exception("Invalid query type");
         }
     }
 

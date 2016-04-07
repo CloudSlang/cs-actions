@@ -16,6 +16,17 @@ import java.util.Map;
  * Created by markowis on 23/02/2016.
  */
 public class Remove {
+    /**
+     * Removes an element or attribute from an XML document.
+     *
+     * @param xmlDocument       XML string to remove element or attribute from
+     * @param xPathQuery        XPATH query that results in an element or element list to remove or the element or
+     *                          element list containing the attribute to remove
+     * @param attributeName     optional - name of attribute to remove if removing an attribute; leave empty if removing
+     *                          an element
+     * @param secureProcessing  optional - whether to use secure processing
+     * @return map of results containing success or failure text, a result message, and the modified XML
+     */
     @Action(name = "Remove",
             outputs = {
                     @Output(Constants.OutputNames.RESULT_TEXT),
@@ -27,8 +38,8 @@ public class Remove {
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
             @Param(value = Constants.InputNames.XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
-            @Param(value = Constants.InputNames.ATTRIBUTE_NAME, required = false) String attributeName,
-            @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
+            @Param(Constants.InputNames.ATTRIBUTE_NAME) String attributeName,
+            @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)

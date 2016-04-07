@@ -6,6 +6,8 @@ import java.util.Map;
  * Created by markowis on 03/03/2016.
  */
 public class ResultUtils {
+    private ResultUtils(){}
+
     public static void populateFailureResult(Map<String, String> result, String returnResult){
         populateResult(result, Constants.FAILURE, returnResult, Constants.EMPTY_STRING, Constants.OutputNames.RESULT_XML);
     }

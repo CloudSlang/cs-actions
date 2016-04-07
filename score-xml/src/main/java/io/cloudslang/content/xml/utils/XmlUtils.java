@@ -28,6 +28,8 @@ import java.io.StringWriter;
  * Created by markowis on 23/02/2016.
  */
 public class XmlUtils {
+    private XmlUtils(){}
+
     public static String nodeToString(Node node) throws TransformerException {
 
         if(node == null){
@@ -37,17 +39,6 @@ public class XmlUtils {
         } else {
             return transformElementNode(node);
         }
-    }
-
-    private static String transformElementNode(Node node) throws TransformerException{
-        StringWriter stringWriter = new StringWriter();
-
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.transform(new DOMSource(node), new StreamResult(stringWriter));
-
-        return stringWriter.toString().trim();
     }
 
     public static NamespaceContext createNamespaceContext(String xmlDocument) throws Exception{
@@ -104,8 +95,18 @@ public class XmlUtils {
 
     public static void validateNodeList(NodeList nodeList) throws Exception{
         if(nodeList.getLength() == 0){
-            throw new Exception("Element not found.");
+            throw new Exception(Constants.ErrorMessages.ELEMENT_NOT_FOUND);
         }
     }
 
+    private static String transformElementNode(Node node) throws TransformerException{
+        StringWriter stringWriter = new StringWriter();
+
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, Constants.YES);
+        transformer.setOutputProperty(OutputKeys.INDENT, Constants.YES);
+        transformer.transform(new DOMSource(node), new StreamResult(stringWriter));
+
+        return stringWriter.toString().trim();
+    }
 }
