@@ -54,44 +54,44 @@ public class ConnectionResources {
         return moRefHandler;
     }
 
-    public void setDataCenterMor(ManagedObjectReference dataCenterMor) {
-        this.dataCenterMor = dataCenterMor;
-    }
-
     public ManagedObjectReference getHostMor() {
         return hostMor;
-    }
-
-    public void setHostMor(ManagedObjectReference hostMor) {
-        this.hostMor = hostMor;
     }
 
     public ManagedObjectReference getComputeResourceMor() {
         return computeResourceMor;
     }
 
-    public void setComputeResourceMor(ManagedObjectReference computeResourceMor) {
-        this.computeResourceMor = computeResourceMor;
-    }
-
     public ManagedObjectReference getResourcePoolMor() {
         return resourcePoolMor;
-    }
-
-    public void setResourcePoolMor(ManagedObjectReference resourcePoolMor) {
-        this.resourcePoolMor = resourcePoolMor;
     }
 
     public ManagedObjectReference getVmFolderMor() {
         return vmFolderMor;
     }
 
-    public void setVmFolderMor(ManagedObjectReference vmFolderMor) {
+    public VimPortType getVimPortType() {
+        return vimPortType;
+    }
+
+    private void setComputeResourceMor(ManagedObjectReference computeResourceMor) {
+        this.computeResourceMor = computeResourceMor;
+    }
+
+    private void setResourcePoolMor(ManagedObjectReference resourcePoolMor) {
+        this.resourcePoolMor = resourcePoolMor;
+    }
+
+    private void setDataCenterMor(ManagedObjectReference dataCenterMor) {
+        this.dataCenterMor = dataCenterMor;
+    }
+
+    private void setVmFolderMor(ManagedObjectReference vmFolderMor) {
         this.vmFolderMor = vmFolderMor;
     }
 
-    public VimPortType getVimPortType() {
-        return vimPortType;
+    private void setHostMor(ManagedObjectReference hostMor) {
+        this.hostMor = hostMor;
     }
 
     private Connection getVCenterConnection(HttpInputs httpInputs) throws Exception {

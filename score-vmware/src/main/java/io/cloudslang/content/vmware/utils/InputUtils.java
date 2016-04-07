@@ -34,11 +34,6 @@ public class InputUtils {
         return Operation.UPDATE.toString().equalsIgnoreCase(vmInputs.getOperation());
     }
 
-    private static boolean isValidUpdateOperation(VmInputs vmInputs) {
-        return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())
-                || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
-    }
-
     public static void checkValidOperation(VmInputs vmInputs, String device) {
         if (!InputUtils.isValidUpdateOperation(vmInputs)) {
             throw new RuntimeException("Invalid operation specified for " + device + " device. " +
@@ -105,5 +100,10 @@ public class InputUtils {
 
     static String getDefaultDelimiter(String input, String defaultValue) {
         return StringUtils.isBlank(input) ? defaultValue : input;
+    }
+
+    private static boolean isValidUpdateOperation(VmInputs vmInputs) {
+        return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())
+                || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
     }
 }

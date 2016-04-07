@@ -49,7 +49,7 @@ public class CloneVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.createVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
         verify(vmServiceMock, times(1)).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -58,7 +58,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMProtocolException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -69,7 +69,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMIntException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "");
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -80,7 +80,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMLongException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "anything", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "anything", "");
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 

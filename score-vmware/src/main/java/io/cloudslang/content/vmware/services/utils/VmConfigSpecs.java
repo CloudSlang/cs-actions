@@ -41,8 +41,7 @@ public class VmConfigSpecs {
     private static final int SERVER_ASSIGNED = -1;
     private static final int OCCUPIED = 1;
 
-    public VirtualMachineConfigSpec getVmConfigSpec(VmInputs vmInputs, ConnectionResources connectionResources)
-            throws Exception {
+    public VirtualMachineConfigSpec getVmConfigSpec(VmInputs vmInputs, ConnectionResources connectionResources) throws Exception {
         VmUtils vmUtils = new VmUtils();
         VirtualMachineConfigSpec vmConfigSpec = createVmConfigSpec(connectionResources, vmInputs);
         vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(vmConfigSpec, vmInputs, vmInputs.getVirtualMachineName());
@@ -311,7 +310,6 @@ public class VmConfigSpecs {
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
                 .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());
-        ;
 
         VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
