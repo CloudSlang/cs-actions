@@ -29,7 +29,8 @@ public enum VmParameter {
     VM_ETH_COUNT("numEths"),
     VM_DISK_COUNT("numDisks"),
     VM_PATH_NAME("vmPathName"),
-    VM_IS_TEMPLATE("isTemplate");
+    VM_IS_TEMPLATE("isTemplate"),
+    VM_IP_ADDRESS("ipAddress");
 
     private String parameter;
 

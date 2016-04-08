@@ -63,6 +63,10 @@ public class ResponseUtils {
                 .substring(1, virtualMachineConfigSummary.getVmPathName().indexOf(Constants.RIGHT_SQUARE_BRACKET)));
         inputMap.put(VmParameter.VM_PATH_NAME.getValue(), virtualMachineConfigSummary.getVmPathName());
         inputMap.put(VmParameter.VM_IS_TEMPLATE.getValue(), Boolean.toString(virtualMachineConfigSummary.isTemplate()));
+
+        if (virtualMachineSummary.getGuest() != null) {
+            inputMap.put(VmParameter.VM_IP_ADDRESS.getValue(), virtualMachineSummary.getGuest().getIpAddress());
+        }
     }
 
     public static String getJsonString(Map<String, String> inputMap) throws JsonProcessingException {
