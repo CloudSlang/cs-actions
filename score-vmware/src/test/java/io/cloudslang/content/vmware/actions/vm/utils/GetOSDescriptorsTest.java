@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.vm.conf;
+package io.cloudslang.content.vmware.actions.vm.utils;
 
 /**
  * Created by Mihai Tusa.
