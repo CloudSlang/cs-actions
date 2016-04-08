@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -288,6 +289,67 @@ public class GuestServiceTest {
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(taskMock, never()).getValue();
+
+        assertNotNull(results);
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("java.lang.NullPointerException", results.get("returnResult"));
+    }
+
+    @Test
+    public void mountToolsSuccess() throws Exception {
+        whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        PowerMockito.doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
+
+        Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
+
+        verify(connectionResourcesMock).getConnection();
+        verify(connectionResourcesMock, times(1)).getVimPortType();
+        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(vimPortMock, times(1)).mountToolsInstaller(any(ManagedObjectReference.class));
+        verify(connectionMock).disconnect();
+
+        assertNotNull(results);
+        assertEquals(0, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Initiated VMware Tools Installer Mount on: whateverName", results.get("returnResult"));
+    }
+
+    @Test
+    public void mountToolsNotFound() throws Exception {
+        whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
+        PowerMockito.doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
+
+        Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
+
+        verify(connectionResourcesMock).getConnection();
+        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(vimPortMock, never()).mountToolsInstaller(any(ManagedObjectReference.class));
+        verify(connectionMock).disconnect();
+
+        assertNotNull(results);
+        assertEquals(-1, Integer.parseInt(results.get("returnCode")));
+        assertEquals("Could not find the [whateverName] VM.", results.get("returnResult"));
+    }
+
+    @Test
+    public void mountToolsException() throws Exception {
+        whenNew(MorObjectHandler.class).withNoArguments().thenReturn(null);
+        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
+
+        Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
+
+        verify(connectionResourcesMock).getConnection();
+        verify(morObjectHandlerMock, never()).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(vimPortMock, never()).mountToolsInstaller(any(ManagedObjectReference.class));
+        verify(connectionMock).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
