@@ -85,7 +85,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withDelimiter(String inputValue) {
-            if(StringUtils.isEmpty(inputValue)){
+            if(StringUtils.isBlank(inputValue)){
                 delimiter = Constants.Defaults.DELIMITER;
             }
             else {

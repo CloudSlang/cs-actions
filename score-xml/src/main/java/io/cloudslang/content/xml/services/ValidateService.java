@@ -4,6 +4,7 @@ import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -30,7 +31,7 @@ public class ValidateService {
             XmlUtils.parseXML(xmlDocument, commonInputs.getSecureProcessing());
             result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.PARSING_SUCCESS);
 
-            if(xsdDocument != null && !xsdDocument.isEmpty()) {
+            if(xsdDocument != null && StringUtils.isNotBlank(xsdDocument)) {
                 validateAgainstXsd(xmlDocument, customInputs.getXsdDocument());
                 result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.VALIDATION_SUCCESS);
             }
