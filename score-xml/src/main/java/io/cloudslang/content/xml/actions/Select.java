@@ -16,6 +16,16 @@ import java.util.Map;
  * Created by markowis on 22/02/2016.
  */
 public class Select {
+    /**
+     * Selects from an XML document using an XPATH query.
+     *
+     * @param xmlDocument       XML string in which query
+     * @param xPathQuery        XPATH query
+     * @param queryType         type of selection result from query attribute value
+     * @param delimiter         optional - string to use as delimiter in case query_type is nodelist
+     * @param secureProcessing  optional - whether to use secure processing
+     * @return  map of results containing success or failure text, a result message, and the value selected
+     */
     @Action(name = "Select",
             outputs = {
                     @Output(Constants.OutputNames.RESULT_TEXT),
@@ -28,8 +38,8 @@ public class Select {
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
             @Param(value = Constants.InputNames.XPATH_QUERY, required = true) String xPathQuery,
             @Param(value = Constants.InputNames.QUERY_TYPE, required = true) String queryType,
-            @Param(value = Constants.InputNames.DELIMITER, required = false) String delimiter,
-            @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
+            @Param(Constants.InputNames.DELIMITER) String delimiter,
+            @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)

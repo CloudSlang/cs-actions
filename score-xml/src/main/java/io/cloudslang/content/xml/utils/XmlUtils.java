@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.OutputKeys;
@@ -27,6 +28,8 @@ import java.io.StringWriter;
  * Created by markowis on 23/02/2016.
  */
 public class XmlUtils {
+    private XmlUtils(){}
+
     public static String nodeToString(Node node) throws TransformerException {
 
         if(node == null){
@@ -38,26 +41,19 @@ public class XmlUtils {
         }
     }
 
-    private static String transformElementNode(Node node) throws TransformerException{
-        StringWriter stringWriter = new StringWriter();
-
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.transform(new DOMSource(node), new StreamResult(stringWriter));
-
-        return stringWriter.toString().trim();
-    }
-
     public static NamespaceContext createNamespaceContext(String xmlDocument) throws Exception{
         NamespaceContext nsContext = null;
 
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLEventReader evtReader = factory.createXMLEventReader(new StringReader(xmlDocument));
-        while (evtReader.hasNext()) {
-            XMLEvent event = evtReader.nextEvent();
-            if (event.isStartElement()) {
-                nsContext = ((StartElement) event).getNamespaceContext();
+        XMLInputFactory xif = XMLInputFactory.newFactory();
+        xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+
+        XMLStreamReader streamReader = xif.createXMLStreamReader(new StringReader(xmlDocument));
+
+        while (streamReader.hasNext()) {
+            streamReader.next();
+            if (streamReader.isStartElement()) {
+                nsContext = streamReader.getNamespaceContext();
                 break;
             }
         }
@@ -66,7 +62,19 @@ public class XmlUtils {
     }
 
     public static Document parseXML(String xmlDocument, boolean secure) throws Exception{
+        String feature;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        feature = "http://xml.org/sax/features/external-general-entities";
+        factory.setFeature(feature, false);
+        feature = "http://xml.org/sax/features/external-parameter-entities";
+        factory.setFeature(feature, false);
+        feature = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+        factory.setFeature(feature, false);
+        feature = "http://apache.org/xml/features/disallow-doctype-decl";
+        factory.setFeature(feature, true);
+        factory.setXIncludeAware(false);
+        factory.setExpandEntityReferences(false);
         factory.setNamespaceAware(true);
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, secure);
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -87,8 +95,18 @@ public class XmlUtils {
 
     public static void validateNodeList(NodeList nodeList) throws Exception{
         if(nodeList.getLength() == 0){
-            throw new Exception("Element not found.");
+            throw new Exception(Constants.ErrorMessages.ELEMENT_NOT_FOUND);
         }
     }
 
+    private static String transformElementNode(Node node) throws TransformerException{
+        StringWriter stringWriter = new StringWriter();
+
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, Constants.YES);
+        transformer.setOutputProperty(OutputKeys.INDENT, Constants.YES);
+        transformer.transform(new DOMSource(node), new StreamResult(stringWriter));
+
+        return stringWriter.toString().trim();
+    }
 }

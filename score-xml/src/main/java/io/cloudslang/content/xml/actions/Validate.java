@@ -16,7 +16,14 @@ import java.util.Map;
  * Created by markowis on 18/02/2016.
  */
 public class Validate {
-
+    /**
+     * Tests an XML string for well-formedness and validates it against an XSD if given.
+     *
+     * @param xmlDocument       XML string to test
+     * @param xsdDocument       optional - XSD to test given XML against
+     * @param secureProcessing  optional - whether to use secure processing
+     * @return map of results containing success or failure text and a result message
+     */
     @Action(name = "Validate",
             outputs = {
                 @Output(Constants.OutputNames.RESULT_TEXT),
@@ -26,8 +33,8 @@ public class Validate {
                 @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
-            @Param(value = Constants.InputNames.XSD_DOCUMENT, required = false) String xsdDocument,
-            @Param(value = Constants.InputNames.SECURE_PROCESSING, required = false) String secureProcessing) {
+            @Param(Constants.InputNames.XSD_DOCUMENT) String xsdDocument,
+            @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)

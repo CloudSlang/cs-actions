@@ -42,7 +42,7 @@ public class SelectTest {
         Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class SelectTest {
         Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class SelectTest {
         Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class SelectTest {
         Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class SelectTest {
         Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class SelectTest {
         Map<String, String> result = select.execute(xml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -124,6 +124,6 @@ public class SelectTest {
         Map<String, String> result = select.execute(namespaceXml, xPathQuery, queryType, delimiter, "false");
 
         Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals("XPath queried successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

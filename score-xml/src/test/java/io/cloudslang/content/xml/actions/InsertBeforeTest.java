@@ -40,7 +40,8 @@ public class InsertBeforeTest {
         Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Inserted before successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.INSERT_BEFORE_SUCCESS,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -51,7 +52,8 @@ public class InsertBeforeTest {
         Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Inserted before successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.INSERT_BEFORE_SUCCESS,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -62,7 +64,8 @@ public class InsertBeforeTest {
         Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -73,7 +76,9 @@ public class InsertBeforeTest {
         Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: The element type \"open\" must be terminated by the matching end-tag \"</open>\".", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+                "The element type \"open\" must be terminated by the matching end-tag \"</open>\".",
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -84,6 +89,8 @@ public class InsertBeforeTest {
         Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Parsing error: Insert failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+                Constants.ErrorMessages.INSERT_BEFORE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

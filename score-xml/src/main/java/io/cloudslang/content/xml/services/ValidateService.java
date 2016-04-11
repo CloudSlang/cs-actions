@@ -4,6 +4,7 @@ import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -28,21 +29,21 @@ public class ValidateService {
             String xsdDocument = customInputs.getXsdDocument();
 
             XmlUtils.parseXML(xmlDocument, commonInputs.getSecureProcessing());
-            result.put(Constants.OutputNames.RETURN_RESULT, "Parsing successful.");
+            result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.PARSING_SUCCESS);
 
-            if(xsdDocument != null && !xsdDocument.isEmpty()) {
+            if(xsdDocument != null && StringUtils.isNotBlank(xsdDocument)) {
                 validateAgainstXsd(xmlDocument, customInputs.getXsdDocument());
-                result.put(Constants.OutputNames.RETURN_RESULT, "XML is valid.");
+                result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.VALIDATION_SUCCESS);
             }
 
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.SUCCESS);
 
         } catch (SAXParseException e) {
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Parsing error: " + e.getMessage());
+            result.put(Constants.OutputNames.RETURN_RESULT, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         } catch (SAXException e) {
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, "Validation failed: " + e.getMessage());
+            result.put(Constants.OutputNames.RETURN_RESULT, Constants.ErrorMessages.VALIDATION_FAILURE + e.getMessage());
         } catch (Exception e){
             result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
             result.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());

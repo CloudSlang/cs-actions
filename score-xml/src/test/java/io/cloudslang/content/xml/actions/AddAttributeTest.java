@@ -41,7 +41,7 @@ public class AddAttributeTest {
         Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Attribute set successfully.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.SuccessMessages.ADD_ATTRIBUTE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -53,7 +53,8 @@ public class AddAttributeTest {
         Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Error: Element not found.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
+                result.get(Constants.OutputNames.RETURN_RESULT));
     }
 
     @Test
@@ -65,6 +66,7 @@ public class AddAttributeTest {
         Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals("Error: Addition of attribute failed: XPath must return element types.", result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ADD_ATTRIBUTE_FAILURE +
+                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.OutputNames.RETURN_RESULT));
     }
 }

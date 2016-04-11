@@ -2,6 +2,7 @@ package io.cloudslang.content.xml.services;
 
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
@@ -33,14 +34,15 @@ public class InsertBeforeService {
             XmlUtils.validateNodeList(nodeList);
 
             insertBeforeToNodeList(nodeList,beforeNode);
-            ResultUtils.populateSuccessResult(result, "Inserted before successfully.", XmlUtils.nodeToString(doc));
+            ResultUtils.populateSuccessResult(result, Constants.SuccessMessages.INSERT_BEFORE_SUCCESS,
+                    XmlUtils.nodeToString(doc));
 
         } catch (XPathExpressionException e) {
-            ResultUtils.populateFailureResult(result, "XPath parsing error: " + e.getMessage());
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage());
         } catch (TransformerException te) {
-            ResultUtils.populateFailureResult(result, "Transform error: " + te.getMessage());
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage());
         } catch (Exception e) {
-            ResultUtils.populateFailureResult(result, "Parsing error: " + e.getMessage());
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         }
 
         return result;
@@ -51,7 +53,8 @@ public class InsertBeforeService {
             Node node = nodeList.item(i);
 
             if(node.getNodeType() != Node.ELEMENT_NODE){
-                throw new Exception("Insert failed: XPath must return element types.");
+                throw new Exception(Constants.ErrorMessages.INSERT_BEFORE_FAILURE +
+                        Constants.ErrorMessages.NEED_ELEMENT_TYPE);
             }
             node.getParentNode().insertBefore(beforeNode.cloneNode(true), node);
         }
