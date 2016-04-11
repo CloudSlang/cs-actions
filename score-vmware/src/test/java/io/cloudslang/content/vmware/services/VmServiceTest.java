@@ -11,10 +11,7 @@ import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.helpers.ResponseHelper;
 import io.cloudslang.content.vmware.services.utils.VmConfigSpecs;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -634,6 +631,7 @@ public class VmServiceTest {
         assertTrue(results.get("returnResult").contains("\"dataStore\":\"AbCdEf123-vc6-2\""));
         assertTrue(results.get("returnResult").contains("\"vmMemorySize\":\"8192\""));
         assertTrue(results.get("returnResult").contains("\"vmPathName\":\"[AbCdEf123-vc6-2] Ubuntu64/Ubuntu64.vmx\""));
+        assertTrue(results.get("returnResult").contains("\"ipAddress\":\"127.0.0.1\""));
     }
 
     @Test
@@ -1312,6 +1310,10 @@ public class VmServiceTest {
         VirtualMachineConfigSummary virtualMachineConfigSummary = getVMConfigSummary();
         VirtualMachineSummary virtualMachineSummary = new VirtualMachineSummary();
         virtualMachineSummary.setConfig(virtualMachineConfigSummary);
+
+        VirtualMachineGuestSummary guestSummary = new VirtualMachineGuestSummary();
+        guestSummary.setIpAddress("127.0.0.1");
+        virtualMachineSummary.setGuest(guestSummary);
 
         ManagedObjectReference mor = new ManagedObjectReference();
         mor.setValue("vm-123");
