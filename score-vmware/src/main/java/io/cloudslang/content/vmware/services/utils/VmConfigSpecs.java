@@ -172,14 +172,14 @@ public class VmConfigSpecs {
 
     private VirtualMachineConfigSpec createVmConfigSpec(ConnectionResources connectionResources, VmInputs vmInputs)
             throws Exception {
-        ConfigTarget configTarget = getHostConfigTarget(connectionResources);
+        ConfigTarget configTarget = new VmUtils().getHostConfigTarget(connectionResources, connectionResources.getHostMor());
         List<VirtualMachineDatastoreInfo> dataStoresList = configTarget.getDatastore();
         String dataStoreName = vmInputs.getDataStore();
 
         ManagedObjectReference dataStoreRef = null;
 
         if (StringUtils.isNotBlank(dataStoreName)) {
-            dataStoreRef = getDataStoreRef(dataStoreName, dataStoresList);
+            dataStoreRef = new VmUtils().getDataStoreRef(dataStoreName, dataStoresList);
         } else {
             boolean isDsAvailable = false;
             for (VirtualMachineDatastoreInfo dataStore : dataStoresList) {
@@ -225,32 +225,6 @@ public class VmConfigSpecs {
         return addDeviceConfigSpecs(configSpec, scsiCtrlSpec, floppySpec, cdSpec, ideController, diskSpec, nicSpec);
     }
 
-
-    private ConfigTarget getHostConfigTarget(ConnectionResources connectionResources)
-            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
-                .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());
-        ConfigTarget configTarget = connectionResources.getVimPortType()
-                .queryConfigTarget(environmentBrowserMor, connectionResources.getHostMor());
-        if (configTarget == null) {
-            throw new RuntimeException(ErrorMessages.CONFIG_TARGET_NOT_FOUND_IN_COMPUTE_RESOURCE);
-        }
-
-        return configTarget;
-    }
-
-    private ManagedObjectReference getDataStoreRef(String dataStoreName, List<VirtualMachineDatastoreInfo> dataStoresList) {
-        for (VirtualMachineDatastoreInfo dataStore : dataStoresList) {
-            DatastoreSummary dsSummary = dataStore.getDatastore();
-            if (dataStoreName.equals(dsSummary.getName())) {
-                if (!dsSummary.isAccessible()) {
-                    throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_ACCESSIBLE);
-                }
-                return dsSummary.getDatastore();
-            }
-        }
-        throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND);
-    }
 
     private VirtualMachineConfigSpec getVirtualMachineConfigSpec(String dataStoreName) {
         VirtualMachineFileInfo virtualMachineFileInfo = new VirtualMachineFileInfo();

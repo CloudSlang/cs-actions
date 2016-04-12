@@ -128,10 +128,20 @@ public class VmUtils {
     }
 
     public ManagedObjectReference getMorDataStore(String dataStoreName, ConnectionResources connectionResources,
-                                                  ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+                                                  ManagedObjectReference vmMor, VmInputs vmInputs)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference dataStore = null;
         if (StringUtils.isNotBlank(dataStoreName)) {
-            dataStore = getDataStore(dataStoreName, connectionResources, vmMor);
+            ManagedObjectReference cloneHostMor = getMorHost(vmInputs.getCloneHost(), connectionResources, vmMor);
+            ConfigTarget configTarget = getHostConfigTarget(connectionResources, cloneHostMor);
+            List<VirtualMachineDatastoreInfo> dataStoreInfoList = configTarget.getDatastore();
+            for (VirtualMachineDatastoreInfo dataStoreInfo : dataStoreInfoList) {
+                if (vmInputs.getCloneDataStore().equals(dataStoreInfo.getDatastore().getName())) {
+                    dataStore = getDataStoreRef(vmInputs.getCloneDataStore(), dataStoreInfoList);
+                    break;
+                }
+            }
+
             if (dataStore == null) {
                 throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND);
             }
@@ -274,6 +284,31 @@ public class VmUtils {
         }
 
         return sharesInfo;
+    }
+
+    ConfigTarget getHostConfigTarget(ConnectionResources connectionResources, ManagedObjectReference hostMor)
+            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+        ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
+                .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());
+        ConfigTarget configTarget = connectionResources.getVimPortType().queryConfigTarget(environmentBrowserMor, hostMor);
+        if (configTarget == null) {
+            throw new RuntimeException(ErrorMessages.CONFIG_TARGET_NOT_FOUND_IN_COMPUTE_RESOURCE);
+        }
+
+        return configTarget;
+    }
+
+    ManagedObjectReference getDataStoreRef(String dataStoreName, List<VirtualMachineDatastoreInfo> dataStoresList) {
+        for (VirtualMachineDatastoreInfo dataStore : dataStoresList) {
+            DatastoreSummary dsSummary = dataStore.getDatastore();
+            if (dataStoreName.equals(dsSummary.getName())) {
+                if (!dsSummary.isAccessible()) {
+                    throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_ACCESSIBLE);
+                }
+                return dsSummary.getDatastore();
+            }
+        }
+        throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND);
     }
 
     private ManagedObjectReference getDataStore(String dataStoreName, ConnectionResources connectionResources,
