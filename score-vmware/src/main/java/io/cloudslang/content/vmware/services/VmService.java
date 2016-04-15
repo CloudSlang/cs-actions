@@ -4,37 +4,29 @@ import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.connection.helpers.WaitForValues;
 import io.cloudslang.content.vmware.constants.Constants;
-import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.Device;
 import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.FindObjects;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import io.cloudslang.content.vmware.services.utils.VmConfigSpecs;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
-import io.cloudslang.content.vmware.utils.InputUtils;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Mihai Tusa.
  * 1/6/2016.
  */
 public class VmService {
-    private static final String VIRTUAL_MACHINE = "VirtualMachine";
-    private static final String CPU = "cpu";
-    private static final String MEMORY = "memory";
-    private static final String DISK = "disk";
-    private static final String CD = "cd";
-    private static final String NIC = "nic";
-    private static final String STATE = "state";
-    private static final String INFO_STATE = "info.state";
-    private static final String INFO_ERROR = "info.error";
-
     /**
-     * Method used to connect to a specified data center and creates a virtual machine using the inputs provided.
+     * Method used to connect to specified data center and create a virtual machine using the inputs provided.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to create a new virtual machine
@@ -44,16 +36,17 @@ public class VmService {
      */
     public Map<String, String> createVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        VmUtils utils = new VmUtils();
 
-        ManagedObjectReference vmFolderMor = connectionResources.getVmFolderMor();
-        ManagedObjectReference resourcePoolMor = connectionResources.getResourcePoolMor();
-        ManagedObjectReference hostMor = connectionResources.getHostMor();
+        ManagedObjectReference vmFolderMor = utils.getMorFolder(vmInputs.getFolderName(), connectionResources);
+        ManagedObjectReference resourcePoolMor = utils.getMorResourcePool(vmInputs.getResourcePool(), connectionResources);
+        ManagedObjectReference hostMor = utils.getMorHost(vmInputs.getHostname(), connectionResources, null);
 
         VmConfigSpecs vmConfigSpecs = new VmConfigSpecs();
         VirtualMachineConfigSpec vmConfigSpec = vmConfigSpecs.getVmConfigSpec(vmInputs, connectionResources);
 
-        ManagedObjectReference taskMor = connectionResources.getVimPortType().createVMTask(vmFolderMor, vmConfigSpec,
-                resourcePoolMor, hostMor);
+        ManagedObjectReference taskMor = connectionResources.getVimPortType()
+                .createVMTask(vmFolderMor, vmConfigSpec, resourcePoolMor, hostMor);
 
         Map<String, String> results = new HashMap<>();
         setTaskResults(results, connectionResources, taskMor, "Success: Created [" + vmInputs.getVirtualMachineName() +
@@ -65,7 +58,7 @@ public class VmService {
     }
 
     /**
-     * Method used to connect to a specified data center and deletes the virtual machine identified by the inputs provided.
+     * Method used to connect to specified data center and delete the virtual machine identified by the inputs provided.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
@@ -75,7 +68,8 @@ public class VmService {
      */
     public Map<String, String> deleteVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getSpecificMorObject(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(),
+                vmInputs.getVirtualMachineName());
 
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
@@ -94,7 +88,7 @@ public class VmService {
     }
 
     /**
-     * Method used to connect to a specified data center and powers-on the virtual machine identified by the inputs provided.
+     * Method used to connect to specified data center and power-on virtual machine identified by the inputs provided.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
@@ -104,7 +98,8 @@ public class VmService {
      */
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getSpecificMorObject(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(),
+                vmInputs.getVirtualMachineName());
 
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
@@ -123,7 +118,7 @@ public class VmService {
     }
 
     /**
-     * Method used to connect to a specified data center and powers-off the virtual machine identified by the inputs provided.
+     * Method used to connect to specified data center and power-off virtual machine identified by the inputs provided.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
@@ -133,7 +128,8 @@ public class VmService {
      */
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getSpecificMorObject(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(),
+                vmInputs.getVirtualMachineName());
 
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
@@ -152,7 +148,7 @@ public class VmService {
     }
 
     /**
-     * Method used to connect to a data center to retrieve a list with all the guest operating system descriptors
+     * Method used to connect to data center to retrieve a list with all the guest operating system descriptors
      * supported by the host system.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
@@ -166,8 +162,8 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
         ManagedObjectReference environmentBrowserMor = (ManagedObjectReference) connectionResources.getGetMOREF()
-                .entityProps(connectionResources.getComputeResourceMor(), new String[]{Constants.ENVIRONMENT_BROWSER})
-                .get(Constants.ENVIRONMENT_BROWSER);
+                .entityProps(connectionResources.getComputeResourceMor(), new String[]{VmParameter.ENVIRONMENT_BROWSER.getValue()})
+                .get(VmParameter.ENVIRONMENT_BROWSER.getValue());
 
         VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
@@ -183,7 +179,7 @@ public class VmService {
     }
 
     /**
-     * Method used to connect to a data center to retrieve a list with all the virtual machines and templates within.
+     * Method used to connect to data center to retrieve a list with all the virtual machines and templates within.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted data center
@@ -197,11 +193,13 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
         Set<String> virtualMachineNamesList = connectionResources.getGetMOREF()
-                .inContainerByType(connectionResources.getMorRootFolder(), VIRTUAL_MACHINE).keySet();
+                .inContainerByType(connectionResources.getMorRootFolder(), VmParameter.VIRTUAL_MACHINE.getValue())
+                .keySet();
 
         Map<String, String> results = new HashMap<>();
         if (virtualMachineNamesList.size() > 0) {
-            ResponseUtils.setResults(results, ResponseUtils.getResponseStringFromCollection(virtualMachineNamesList, delimiter),
+            ResponseUtils.setResults(results,
+                    ResponseUtils.getResponseStringFromCollection(virtualMachineNamesList, delimiter),
                     Outputs.RETURN_CODE_SUCCESS);
         } else {
             ResponseUtils.setResults(results, "No VM found in datacenter.", Outputs.RETURN_CODE_FAILURE);
@@ -212,7 +210,7 @@ public class VmService {
     }
 
     /**
-     * Method used to connect to a data center to retrieve details of a specified virtual machine.
+     * Method used to connect to data center to retrieve details of a virtual machine identified by the inputs provided.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
@@ -222,10 +220,11 @@ public class VmService {
      */
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getSpecificMorObject(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(),
+                vmInputs.getVirtualMachineName());
 
         ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
-                new String[]{Constants.SUMMARY});
+                new String[]{VmParameter.SUMMARY.getValue()});
 
         Map<String, String> results = new HashMap<>();
         if (objectContents != null) {
@@ -236,7 +235,7 @@ public class VmService {
                     VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
                     VirtualMachineConfigSummary virtualMachineConfigSummary = virtualMachineSummary.getConfig();
 
-                    vmDetails = ResponseUtils.getVmDetailedMap(vmDetails, virtualMachineSummary, virtualMachineConfigSummary);
+                    ResponseUtils.addDataToVmDetailsMap(vmDetails, virtualMachineSummary, virtualMachineConfigSummary);
                 }
             }
             String responseJson = ResponseUtils.getJsonString(vmDetails);
@@ -251,7 +250,8 @@ public class VmService {
     }
 
     /**
-     * Method used to connect to a data center to update existing devices of a specified virtual machine.
+     * Method used to connect to data center to update existing devices of a virtual machine identified by the inputs
+     * provided.
      *
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted device
@@ -261,16 +261,18 @@ public class VmService {
      */
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        ManagedObjectReference vmMor = getVmMor(connectionResources, vmInputs);
+        ManagedObjectReference vmMor = getSpecificMorObject(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(),
+                vmInputs.getVirtualMachineName());
 
+        VmUtils utils = new VmUtils();
         Map<String, String> results = new HashMap<>();
         if (vmMor != null) {
             String device = Device.getValue(vmInputs.getDevice()).toLowerCase();
             VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
-            if (CPU.equalsIgnoreCase(device) || MEMORY.equalsIgnoreCase(device)) {
-                vmConfigSpec = getUpdateConfigSpec(vmInputs, vmConfigSpec, device);
+            if (Constants.CPU.equalsIgnoreCase(device) || Constants.MEMORY.equalsIgnoreCase(device)) {
+                vmConfigSpec = utils.getUpdateConfigSpec(vmInputs, vmConfigSpec, device);
             } else {
-                vmConfigSpec = getAddOrRemoveSpecs(connectionResources, vmMor, vmInputs, vmConfigSpec, device);
+                vmConfigSpec = utils.getAddOrRemoveSpecs(connectionResources, vmMor, vmInputs, vmConfigSpec, device);
             }
 
             ManagedObjectReference taskMor = connectionResources.getVimPortType().reconfigVMTask(vmMor, vmConfigSpec);
@@ -287,66 +289,58 @@ public class VmService {
         return results;
     }
 
+    /**
+     * Method used to connect to data center and clone a virtual machine identified by the inputs provided.
+     *
+     * @param httpInputs Object that has all the inputs necessary to made a connection to data center
+     * @param vmInputs   Object that has all the specific inputs necessary to identify the virtual machine that will be
+     *                   cloned
+     * @return Map with String as key and value that contains returnCode of the operation, success message with task id
+     * of the execution or failure message and the exception if there is one
+     * @throws Exception
+     */
+    public Map<String, String> cloneVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ManagedObjectReference vmMor = getSpecificMorObject(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(),
+                vmInputs.getVirtualMachineName());
+
+        Map<String, String> results = new HashMap<>();
+        VmUtils utils = new VmUtils();
+        if (vmMor != null) {
+            ManagedObjectReference folder = utils.getMorFolder(vmInputs.getFolderName(), connectionResources);
+            ManagedObjectReference resourcePool = utils.getMorResourcePool(vmInputs.getCloneResourcePool(), connectionResources);
+            ManagedObjectReference host = utils.getMorHost(vmInputs.getHostname(), connectionResources, vmMor);
+            ManagedObjectReference dataStore = utils.getMorDataStore(vmInputs.getCloneDataStore(), connectionResources, vmMor);
+
+            VirtualMachineRelocateSpec vmRelocateSpec = utils.getVirtualMachineRelocateSpec(resourcePool, host, dataStore, vmInputs);
+
+            VmConfigSpecs helper = new VmConfigSpecs();
+            VirtualMachineCloneSpec cloneSpec = helper.getCloneSpec(vmInputs, vmRelocateSpec);
+
+            ManagedObjectReference taskMor = connectionResources.getVimPortType()
+                    .cloneVMTask(vmMor, folder, vmInputs.getCloneName(), cloneSpec);
+
+            setTaskResults(results, connectionResources, taskMor, "Success: The [" + vmInputs.getVirtualMachineName() +
+                            "] VM was successfully cloned. The taskId is: " + taskMor.getValue(),
+                    "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be cloned.");
+        } else {
+            ResponseUtils.setResults(results, "Could not find the [" + vmInputs.getVirtualMachineName() + "] VM.",
+                    Outputs.RETURN_CODE_FAILURE);
+        }
+        connectionResources.getConnection().disconnect();
+
+        return results;
+    }
+
+    private ManagedObjectReference getSpecificMorObject(ConnectionResources connectionResources, String objectType,
+                                                        String objectName) throws Exception {
+        ServiceContent serviceContent = getServiceContent(connectionResources);
+        return FindObjects.findObject(connectionResources.getVimPortType(), serviceContent, objectType, objectName);
+    }
+
     private ServiceContent getServiceContent(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg {
         ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
         return connectionResources.getVimPortType().retrieveServiceContent(serviceInstance);
-    }
-
-    private ManagedObjectReference getVmMor(ConnectionResources connectionResources, VmInputs vmInputs) throws Exception {
-        ServiceContent serviceContent = getServiceContent(connectionResources);
-        return FindObjects.findObject(connectionResources.getVimPortType(), serviceContent, VIRTUAL_MACHINE,
-                vmInputs.getVirtualMachineName());
-    }
-
-    private VirtualMachineConfigSpec getUpdateConfigSpec(VmInputs vmInputs, VirtualMachineConfigSpec vmConfigSpec,
-                                                         String device) throws Exception {
-        if (!InputUtils.isUpdateOperation(vmInputs)) {
-            throw new RuntimeException(ErrorMessages.CPU_OR_MEMORY_INVALID_OPERATION);
-        }
-        ResourceAllocationInfo resourceAllocationInfo = getResourceAllocationInfo(vmInputs);
-        if (CPU.equalsIgnoreCase(device)) {
-            vmConfigSpec.setCpuAllocation(resourceAllocationInfo);
-        } else {
-            vmConfigSpec.setMemoryAllocation(resourceAllocationInfo);
-        }
-
-        return vmConfigSpec;
-    }
-
-    private VirtualMachineConfigSpec getAddOrRemoveSpecs(ConnectionResources connectionResources, ManagedObjectReference vmMor,
-                                                         VmInputs vmInputs, VirtualMachineConfigSpec vmConfigSpec, String device)
-            throws Exception {
-        VmConfigSpecs vmConfigSpecs = new VmConfigSpecs();
-        VirtualDeviceConfigSpec deviceConfigSpec = new VirtualDeviceConfigSpec();
-        switch (device) {
-            case DISK:
-                InputUtils.checkValidOperation(vmInputs, device);
-                InputUtils.validateDiskInputs(vmInputs);
-                deviceConfigSpec = vmConfigSpecs.getDiskDeviceConfigSpec(connectionResources, vmMor, vmInputs);
-                break;
-            case CD:
-                InputUtils.checkValidOperation(vmInputs, device);
-                deviceConfigSpec = vmConfigSpecs.getCDDeviceConfigSpec(connectionResources, vmMor, vmInputs);
-                break;
-            case NIC:
-                InputUtils.checkValidOperation(vmInputs, device);
-                deviceConfigSpec = vmConfigSpecs.getNICDeviceConfigSpec(connectionResources, vmMor, vmInputs);
-                break;
-        }
-        List<VirtualDeviceConfigSpec> specs = new ArrayList<>();
-        specs.add(deviceConfigSpec);
-        vmConfigSpec.getDeviceChange().addAll(specs);
-
-        return vmConfigSpec;
-    }
-
-    private ResourceAllocationInfo getResourceAllocationInfo(VmInputs vmInputs) throws Exception {
-        VmUtils vmUtils = new VmUtils();
-        SharesInfo sharesInfo = vmUtils.getSharesInfo(vmInputs.getUpdateValue());
-        ResourceAllocationInfo resourceAllocationInfo = new ResourceAllocationInfo();
-        resourceAllocationInfo.setShares(sharesInfo);
-
-        return resourceAllocationInfo;
     }
 
     private void setTaskResults(Map<String, String> results, ConnectionResources connectionResources,
@@ -363,7 +357,8 @@ public class VmService {
     protected boolean getTaskResultAfterDone(ConnectionResources connectionResources, ManagedObjectReference task)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
         WaitForValues waitForValues = new WaitForValues(connectionResources.getConnection());
-        Object[] result = waitForValues.wait(task, new String[]{INFO_STATE, INFO_ERROR}, new String[]{STATE},
+        Object[] result = waitForValues.wait(task, new String[]{VmParameter.INFO_STATE.getValue(),
+                        VmParameter.INFO_ERROR.getValue()}, new String[]{VmParameter.STATE.getValue()},
                 new Object[][]{new Object[]{TaskInfoState.SUCCESS, TaskInfoState.ERROR}});
 
         if (result[1] instanceof LocalizedMethodFault) {

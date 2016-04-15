@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root someid="5">
+    <element1 attr="ibute">First element</element1>
+    <element2>
+        <subelement attr="toDelete">Sub2</subelement>
+    </element2>
+    <element3>
+        <subelement attr="toDelete">Sub3</subelement>
+    </element3>
+</root>

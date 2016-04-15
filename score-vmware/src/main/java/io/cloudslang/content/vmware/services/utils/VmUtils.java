@@ -1,13 +1,17 @@
 package io.cloudslang.content.vmware.services.utils;
 
 import com.vmware.vim25.*;
-import io.cloudslang.content.vmware.entities.DiskMode;
-import io.cloudslang.content.vmware.entities.Levels;
-import io.cloudslang.content.vmware.entities.Operation;
-import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.connection.ConnectionResources;
+import io.cloudslang.content.vmware.constants.Constants;
+import io.cloudslang.content.vmware.constants.ErrorMessages;
+import io.cloudslang.content.vmware.entities.*;
+import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import io.cloudslang.content.vmware.utils.InputUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
@@ -15,14 +19,26 @@ import java.util.List;
  */
 public class VmUtils {
     private static final String TEST_CD_ISO = "testcd.iso";
-    private static final int DISK_AMOUNT_MULTIPLIER = 1024;
+    private static final String DISK = "disk";
+    private static final String CD = "cd";
+    private static final String NIC = "nic";
 
-    public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs) {
-        vmConfigSpec.setName(vmInputs.getVirtualMachineName());
-        vmConfigSpec.setAnnotation(vmInputs.getDescription());
-        vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
+    private static final int DISK_AMOUNT_MULTIPLIER = 1024;
+    private static final int DEFAULT_CORES_PER_SOCKET = 1;
+
+    public VirtualMachineConfigSpec getPopulatedVmConfigSpec(VirtualMachineConfigSpec vmConfigSpec, VmInputs vmInputs, String name) {
+        vmConfigSpec.setName(name);
         vmConfigSpec.setNumCPUs(vmInputs.getIntNumCPUs());
-        vmConfigSpec.setGuestId(vmInputs.getGuestOsId());
+        vmConfigSpec.setMemoryMB(vmInputs.getLongVmMemorySize());
+        vmConfigSpec.setAnnotation(vmInputs.getDescription());
+
+        if (vmInputs.getCoresPerSocket() != null) {
+            vmConfigSpec.setNumCoresPerSocket(InputUtils.getIntInput(vmInputs.getCoresPerSocket(), DEFAULT_CORES_PER_SOCKET));
+        }
+
+        if (vmInputs.getGuestOsId() != null) {
+            vmConfigSpec.setGuestId(vmInputs.getGuestOsId());
+        }
 
         return vmConfigSpec;
     }
@@ -103,8 +119,195 @@ public class VmUtils {
         return sharesInfo;
     }
 
+    public ManagedObjectReference getMorDataStore(String dataStoreName, ConnectionResources connectionResources,
+                                                  ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference dataStore = null;
+        if (StringUtils.isNotBlank(dataStoreName)) {
+            dataStore = getDataStore(dataStoreName, connectionResources, vmMor);
+            if (dataStore == null) {
+                throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND);
+            }
+        } else {
+            ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
+                    new String[]{VmParameter.SUMMARY.getValue()});
+
+            for (ObjectContent objectItem : objectContents) {
+                List<DynamicProperty> vmProperties = objectItem.getPropSet();
+                for (DynamicProperty propertyItem : vmProperties) {
+                    VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
+                    String vmPathName = virtualMachineSummary.getConfig().getVmPathName();
+                    dataStoreName = vmPathName.substring(1, vmPathName.indexOf(Constants.RIGHT_SQUARE_BRACKET));
+                    dataStore = getDataStore(dataStoreName, connectionResources, vmMor);
+                    break;
+                }
+                break;
+            }
+        }
+        return dataStore;
+    }
+
+    public ManagedObjectReference getMorHost(String hostname, ConnectionResources connectionResources,
+                                             ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference host = null;
+        if (StringUtils.isNotBlank(hostname)) {
+            host = getSpecificMor(connectionResources, hostname, VmParameter.HOST_SYSTEM.getValue());
+            if (host == null) {
+                throw new RuntimeException(ErrorMessages.HOST_NOT_FOUND);
+            }
+        } else if (StringUtils.isBlank(hostname) && vmMor != null) {
+            ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
+                    new String[]{VmParameter.SUMMARY.getValue()});
+
+            for (ObjectContent objectItem : objectContents) {
+                List<DynamicProperty> vmProperties = objectItem.getPropSet();
+                for (DynamicProperty propertyItem : vmProperties) {
+                    VirtualMachineSummary virtualMachineSummary = (VirtualMachineSummary) propertyItem.getVal();
+                    host = virtualMachineSummary.getRuntime().getHost();
+                    break;
+                }
+                break;
+            }
+        } else {
+            host = connectionResources.getHostMor();
+        }
+        return host;
+    }
+
+    public ManagedObjectReference getMorResourcePool(String resourcePoolName, ConnectionResources connectionResources)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference resourcePool;
+        if (StringUtils.isNotBlank(resourcePoolName)) {
+            resourcePool = getSpecificMor(connectionResources, resourcePoolName, VmParameter.RESOURCE_POOL.getValue());
+            if (resourcePool == null) {
+                throw new RuntimeException(ErrorMessages.RESOURCE_POOL_NOT_FOUND);
+            }
+        } else {
+            resourcePool = connectionResources.getResourcePoolMor();
+            if (resourcePool == null) {
+                resourcePool = connectionResources.getGetMOREF()
+                        .inContainerByType(connectionResources.getMorRootFolder(), VmParameter.RESOURCE_POOL.getValue(),
+                                new RetrieveOptions()).get(VmParameter.RESOURCES.getValue());
+            }
+        }
+        return resourcePool;
+    }
+
+    public ManagedObjectReference getMorFolder(String folderName, ConnectionResources connectionResources)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference folder;
+        if (StringUtils.isNotBlank(folderName)) {
+            folder = getSpecificMor(connectionResources, folderName, VmParameter.FOLDER.getValue());
+            if (folder == null) {
+                throw new RuntimeException(ErrorMessages.FOLDER_NOT_FOUND);
+            }
+        } else {
+            folder = connectionResources.getVmFolderMor();
+            if (folder == null) {
+                folder = connectionResources.getMorRootFolder();
+            }
+        }
+        return folder;
+    }
+
+    public VirtualMachineRelocateSpec getVirtualMachineRelocateSpec(ManagedObjectReference resourcePool,
+                                                                    ManagedObjectReference host,
+                                                                    ManagedObjectReference dataStore,
+                                                                    VmInputs vmInputs) {
+        VirtualMachineRelocateSpec vmRelocateSpec = new VirtualMachineRelocateSpec();
+        vmRelocateSpec.setPool(resourcePool);
+        vmRelocateSpec.setHost(host);
+        vmRelocateSpec.setDatastore(dataStore);
+
+        if (vmInputs.isThickProvision()) {
+            vmRelocateSpec.setTransform(VirtualMachineRelocateTransformation.FLAT);
+        } else {
+            vmRelocateSpec.setTransform(VirtualMachineRelocateTransformation.SPARSE);
+        }
+
+        return vmRelocateSpec;
+    }
+
+    public VirtualMachineConfigSpec getUpdateConfigSpec(VmInputs vmInputs, VirtualMachineConfigSpec vmConfigSpec,
+                                                        String device) throws Exception {
+        if (!InputUtils.isUpdateOperation(vmInputs)) {
+            throw new RuntimeException(ErrorMessages.CPU_OR_MEMORY_INVALID_OPERATION);
+        }
+        VmConfigSpecs specs = new VmConfigSpecs();
+        ResourceAllocationInfo resourceAllocationInfo = specs.getResourceAllocationInfo(vmInputs.getUpdateValue());
+        if (Constants.CPU.equalsIgnoreCase(device)) {
+            vmConfigSpec.setCpuAllocation(resourceAllocationInfo);
+        } else {
+            vmConfigSpec.setMemoryAllocation(resourceAllocationInfo);
+        }
+
+        return vmConfigSpec;
+    }
+
+    public VirtualMachineConfigSpec getAddOrRemoveSpecs(ConnectionResources connectionResources, ManagedObjectReference vmMor,
+                                                        VmInputs vmInputs, VirtualMachineConfigSpec vmConfigSpec, String device)
+            throws Exception {
+        VmConfigSpecs vmConfigSpecs = new VmConfigSpecs();
+        VirtualDeviceConfigSpec deviceConfigSpec;
+        switch (device) {
+            case DISK:
+                InputUtils.checkValidOperation(vmInputs, device);
+                InputUtils.validateDiskInputs(vmInputs);
+                deviceConfigSpec = vmConfigSpecs.getDiskDeviceConfigSpec(connectionResources, vmMor, vmInputs);
+                break;
+            case CD:
+                InputUtils.checkValidOperation(vmInputs, device);
+                deviceConfigSpec = vmConfigSpecs.getCDDeviceConfigSpec(connectionResources, vmMor, vmInputs);
+                break;
+            case NIC:
+                InputUtils.checkValidOperation(vmInputs, device);
+                deviceConfigSpec = vmConfigSpecs.getNICDeviceConfigSpec(connectionResources, vmMor, vmInputs);
+                break;
+            default:
+                throw new RuntimeException("Invalid operation specified for " + device + " device. " +
+                        "The " + device + " device can be only added or removed.");
+        }
+        List<VirtualDeviceConfigSpec> specs = new ArrayList<>();
+        specs.add(deviceConfigSpec);
+        vmConfigSpec.getDeviceChange().addAll(specs);
+
+        return vmConfigSpec;
+    }
+
+    public ManagedObjectReference getMorObject(Map<String, ManagedObjectReference> morMap, String input) {
+        for (String key : morMap.keySet()) {
+            if (input.equalsIgnoreCase(key)) {
+                return morMap.get(key);
+            }
+        }
+        return null;
+    }
+
+    private ManagedObjectReference getSpecificMor(ConnectionResources connectionResources, String morName, String parameter)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        Map<String, ManagedObjectReference> morMap = connectionResources.getGetMOREF()
+                .inContainerByType(connectionResources.getMorRootFolder(), parameter, new RetrieveOptions());
+        return getMorObject(morMap, morName);
+    }
+
+    private ManagedObjectReference getDataStore(String dataStoreName, ConnectionResources connectionResources,
+                                                ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        List<ManagedObjectReference> dataStores = ((ArrayOfManagedObjectReference) connectionResources.getGetMOREF()
+                .entityProps(vmMor, new String[]{VmParameter.DATA_STORE.getValue()})
+                .get(VmParameter.DATA_STORE.getValue()))
+                .getManagedObjectReference();
+
+        for (ManagedObjectReference dataStore : dataStores) {
+            DatastoreSummary datastoreSummary = (DatastoreSummary) connectionResources.getGetMOREF()
+                    .entityProps(dataStore, new String[]{VmParameter.SUMMARY.getValue()}).get(VmParameter.SUMMARY.getValue());
+            if (dataStoreName.equalsIgnoreCase(datastoreSummary.getName())) {
+                return dataStore;
+            }
+        }
+        return null;
+    }
+
     private void setSharesInfoLevel(String value, SharesInfo sharesInfo) throws Exception {
-        String level = Levels.getValue(value);
+        String level = Level.getValue(value);
         if (SharesLevel.HIGH.toString().equalsIgnoreCase(level)) {
             sharesInfo.setLevel(SharesLevel.HIGH);
         } else if (SharesLevel.NORMAL.toString().equalsIgnoreCase(level)) {

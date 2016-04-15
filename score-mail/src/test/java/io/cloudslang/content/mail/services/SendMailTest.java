@@ -20,6 +20,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.InvalidParameterException;
 import java.util.*;
 
 import static junit.framework.Assert.assertTrue;
@@ -35,7 +38,7 @@ import static org.mockito.Mockito.*;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Transport.class, Session.class, SMTPMessage.class, SendMail.class})
+@PrepareForTest({Files.class, Transport.class, Session.class, SMTPMessage.class, SendMail.class})
 public class SendMailTest {
 
     // operation inputs
@@ -101,7 +104,8 @@ public class SendMailTest {
             CHARSET_CST = ";charset=",
             DEFAULT_CHARACTERSET = "UTF-8",
             DEFAULT_DELIMITER = ",",
-            CANNOT_ATTACH = "Cannot attach";
+            CANNOT_ATTACH = "Cannot attach",
+            NO_READ_PERMISSION = "HDD:\\FULL_PATH1 don't have read permision";
     private static final String HEADERS_WITH_DEFAULT_DELIMIETRS = "Sensitivity:Company-Confidential\n" +
             "message-type:Multiple Part\n" +
             "Sensitivity:Personal";
@@ -162,6 +166,9 @@ public class SendMailTest {
     private DataHandler dataHandlerMock;
     @Mock
     private File fileMock;
+
+    @Mock
+    private Path mockPath;
     @Spy
     private SendMail sendMailSpy = new SendMail();
 
@@ -470,6 +477,9 @@ public class SendMailTest {
         PowerMockito.whenNew(FileDataSource.class).withArguments(anyString()).thenReturn(fileDataSourceMock);
         Mockito.doReturn(fileMock).when(fileDataSourceMock).getFile();
         Mockito.doReturn(true).when(fileMock).exists();
+        Mockito.doReturn(mockPath).when(fileMock).toPath();
+        PowerMockito.mockStatic(Files.class);
+        when(Files.isReadable(mockPath)).thenReturn(true);
         PowerMockito.whenNew(DataHandler.class).withArguments(fileDataSourceMock).thenReturn(dataHandlerMock);
         doNothing().when(mimeBodyPartMock).setDataHandler(dataHandlerMock);
         doNothing().when(mimeBodyPartMock).setFileName(anyString());
@@ -498,6 +508,40 @@ public class SendMailTest {
         verify(mimeBodyPartMock, times(2)).setFileName(anyString());
         verify(mimeMultipartMock, times(3)).addBodyPart(mimeBodyPartMock);
         verify(smtpMessageMock).setNotifyOptions(SMTPMessage.NOTIFY_DELAY + SMTPMessage.NOTIFY_FAILURE + SMTPMessage.NOTIFY_SUCCESS);
+    }
+
+    /**
+     * Test Execute method when attachment doesn't have read permission.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExecuteWithNoReadPermisionOnAttachedFile() throws Exception {
+        prepareTransportClassForStaticMock();
+        Mockito.doNothing().when(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);
+        PowerMockito.whenNew(FileDataSource.class).withArguments(anyString()).thenReturn(fileDataSourceMock);
+        Mockito.doReturn(fileMock).when(fileDataSourceMock).getFile();
+        Mockito.doReturn(true).when(fileMock).exists();
+        Mockito.doReturn(mockPath).when(fileMock).toPath();
+        PowerMockito.mockStatic(Files.class);
+        when(Files.isReadable(mockPath)).thenReturn(false);
+
+        inputs.setSmtpHostname(SMTP_HOSTANME);
+        inputs.setPort(PORT);
+        inputs.setFrom(FROM);
+        inputs.setTo(TO);
+        inputs.setCc(CC);
+        inputs.setBcc(BCC);
+        inputs.setSubject(SUBJECT);
+        inputs.setBody(BODY);
+        inputs.setAttachments(ATTACHMENTS);
+        inputs.setDelimiter(DELIMITER);
+        inputs.setReadReceipt(READ_RECEIPT_TRUE);
+
+
+        exception.expect(InvalidParameterException.class);
+        exception.expectMessage(NO_READ_PERMISSION);
+        sendMail.execute(inputs);
     }
 
     /**

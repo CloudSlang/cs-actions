@@ -8,6 +8,7 @@ import io.cloudslang.content.vmware.connection.helpers.GetMOREF;
 import io.cloudslang.content.vmware.connection.impl.BasicConnection;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,14 +19,13 @@ import org.apache.commons.lang3.StringUtils;
  * 1/6/2016.
  */
 public class ConnectionResources {
-    private static final String DATA_CENTER = "Datacenter";
-    private static final String HOST_SYSTEM = "HostSystem";
     private static final String RESOURCE_POOL = "resourcePool";
-    private static final String PARENT = "parent";
-    private static final String VM_FOLDER = "vmFolder";
 
     private BasicConnection basicConnection = new BasicConnection();
 
+    private Connection connection;
+    private GetMOREF getMOREF;
+    private VimPortType vimPortType;
     private ManagedObjectReference serviceInstance;
     private ManagedObjectReference morRootFolder;
     private ManagedObjectReference dataCenterMor;
@@ -33,9 +33,6 @@ public class ConnectionResources {
     private ManagedObjectReference computeResourceMor;
     private ManagedObjectReference resourcePoolMor;
     private ManagedObjectReference vmFolderMor;
-    private VimPortType vimPortType;
-    private GetMOREF getMOREF;
-    private Connection connection;
 
     public ManagedObjectReference getServiceInstance() {
         return serviceInstance;
@@ -121,7 +118,8 @@ public class ConnectionResources {
     private void setVmFolderMor() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference vmFolderMor = null;
         if (dataCenterMor != null) {
-            vmFolderMor = (ManagedObjectReference) getMOREF.entityProps(dataCenterMor, new String[]{VM_FOLDER}).get(VM_FOLDER);
+            vmFolderMor = (ManagedObjectReference) getMOREF.entityProps(dataCenterMor,
+                    new String[]{VmParameter.VM_FOLDER.getValue()}).get(VmParameter.VM_FOLDER.getValue());
         }
         this.setVmFolderMor(vmFolderMor);
     }
@@ -162,7 +160,8 @@ public class ConnectionResources {
     private ManagedObjectReference getDataCenterMor(String dataCenterName, ManagedObjectReference mor, GetMOREF getMOREF)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
-        ManagedObjectReference dataCenterMor = getMOREF.inContainerByType(mor, DATA_CENTER).get(dataCenterName);
+        ManagedObjectReference dataCenterMor = getMOREF.inContainerByType(mor, VmParameter.DATA_CENTER.getValue())
+                .get(dataCenterName);
         if (dataCenterMor == null) {
             throw new RuntimeException("Datacenter [" + dataCenterName + "] not found.");
         }
@@ -173,7 +172,8 @@ public class ConnectionResources {
     private ManagedObjectReference getHostMor(String hostname, GetMOREF getMOREF, ManagedObjectReference dataCenterMor)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
-        ManagedObjectReference hostMor = getMOREF.inContainerByType(dataCenterMor, HOST_SYSTEM).get(hostname);
+        ManagedObjectReference hostMor = getMOREF.inContainerByType(dataCenterMor, VmParameter.HOST_SYSTEM.getValue())
+                .get(hostname);
         if (hostMor == null) {
             throw new RuntimeException("Host [" + hostname + "] not found.");
         }
@@ -185,7 +185,7 @@ public class ConnectionResources {
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
         ManagedObjectReference computeResourceMor = (ManagedObjectReference) getMOREF
-                .entityProps(hostMor, new String[]{PARENT}).get(PARENT);
+                .entityProps(hostMor, new String[]{VmParameter.PARENT.getValue()}).get(VmParameter.PARENT.getValue());
 
         if (computeResourceMor == null) {
             throw new RuntimeException(ErrorMessages.COMPUTE_RESOURCE_NOT_FOUND_ON_HOST);
