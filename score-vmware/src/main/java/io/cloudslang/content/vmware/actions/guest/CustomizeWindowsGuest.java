@@ -100,7 +100,7 @@ public class CustomizeWindowsGuest {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    Map<String, String> customizeWindowsGuest(@Param(value = Inputs.HOST, required = true) String host,
+    public Map<String, String> customizeWindowsGuest(@Param(value = Inputs.HOST, required = true) String host,
                                               @Param(Inputs.PORT) String port,
                                               @Param(Inputs.PROTOCOL) String protocol,
                                               @Param(value = Inputs.USERNAME, required = true) String username,
