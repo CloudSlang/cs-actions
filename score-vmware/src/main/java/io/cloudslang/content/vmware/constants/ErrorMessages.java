@@ -36,7 +36,7 @@ public class ErrorMessages {
             "capacity. Please add an additional IDE controller";
 
     public static final String NOT_BYTE = "The input value must be a positive number between 0 and 127 values range.";
-    public static final String NOT_POSITIVE_NUMBER = "The input value must be a positive number.";
+    public static final String NOT_ZERO_OR_POSITIVE_NUMBER = "The input value must be 0 or positive number.";
 
     public static final String DOMAIN_AND_WORKGROUP_BOTH_PRESENT = "The domain and workgroup are mutually exclusive. " +
             "If the workgroup value is supplied, then the domain name and authentication fields must be empty.";

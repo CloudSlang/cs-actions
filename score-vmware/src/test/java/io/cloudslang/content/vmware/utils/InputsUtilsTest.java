@@ -31,9 +31,9 @@ public class InputsUtilsTest {
     @Test
     public void getIntInputException() throws RuntimeException {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a positive number.");
+        exception.expectMessage("The input value must be 0 or positive number.");
 
-        InputUtils.getIntInput("Doesn't work in this way", 0);
+        InputUtils.getIntInput("Doesn't work in this way", -1);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class InputsUtilsTest {
     @Test
     public void getLongInputException() throws RuntimeException {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a positive number.");
+        exception.expectMessage("The input value must be 0 or positive number.");
 
         InputUtils.getLongInput("Still doesn't work in this way", 0);
     }

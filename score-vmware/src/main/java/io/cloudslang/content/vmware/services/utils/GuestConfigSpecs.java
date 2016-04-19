@@ -90,17 +90,19 @@ public class GuestConfigSpecs {
 
     private CustomizationAdapterMapping getCustomizationAdapterMapping(GuestInputs guestInputs) {
         CustomizationAdapterMapping adapterMapping = new CustomizationAdapterMapping();
-        CustomizationIPSettings ipSettings;
 
+        CustomizationIPSettings ipSettings;
         if (StringUtils.isNotBlank(guestInputs.getIpAddress())) {
             ipSettings = getFixedIpSettings(guestInputs);
         } else {
             ipSettings = new CustomizationIPSettings();
             ipSettings.setIp(new CustomizationDhcpIpGenerator());
         }
-
         adapterMapping.setAdapter(ipSettings);
-        adapterMapping.setMacAddress(guestInputs.getMacAddress());
+
+        if (StringUtils.isNotBlank(guestInputs.getMacAddress())) {
+            adapterMapping.setMacAddress(guestInputs.getMacAddress());
+        }
 
         return adapterMapping;
     }

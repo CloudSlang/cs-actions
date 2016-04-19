@@ -74,6 +74,6 @@ public class CreateVMTest {
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
-        assertEquals("The input value must be a positive number.", resultMap.get("returnResult"));
+        assertEquals("The input value must be 0 or positive number.", resultMap.get("returnResult"));
     }
 }

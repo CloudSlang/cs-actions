@@ -9,7 +9,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 public class GuestInputs {
     private static final int DEFAULT_AUTO_LOGON_COUNT = 1;
     private static final int DEFAULT_AUTO_USERS_NUMBER = 1;
-    private static final int DEFAULT_TIME_ZONE = 360;
+    private static final int DEFAULT_TIME_ZONE = 0;
 
     private String rebootOption;
     private String computerName;
@@ -37,7 +37,7 @@ public class GuestInputs {
     private int autoUsers;
     private int timeZone;
 
-    public GuestInputs(GuestInputsBuilder builder) {
+    private GuestInputs(GuestInputsBuilder builder) {
         this.rebootOption = builder.rebootOption;
         this.computerName = builder.computerName;
         this.computerPassword = builder.computerPassword;

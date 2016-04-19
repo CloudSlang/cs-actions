@@ -56,7 +56,7 @@ public class InputUtils {
         try {
             intInput = StringUtils.isBlank(input) ? defaultValue : Integer.parseInt(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_POSITIVE_NUMBER);
+            throw new RuntimeException(ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER);
         }
 
         return intInput;
@@ -67,7 +67,7 @@ public class InputUtils {
         try {
             longInput = StringUtils.isBlank(input) ? defaultValue : Long.parseLong(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_POSITIVE_NUMBER);
+            throw new RuntimeException(ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER);
         }
 
         return longInput;
