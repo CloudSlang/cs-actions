@@ -68,28 +68,4 @@ public class CustomizeWindowsGuestTest {
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }
-
-    @Test
-    public void customizeWindowsGuestRebootException() throws Exception {
-        Map<String, String> resultMap = windowsGuest.customizeWindowsGuest("", "", "", "", "", "", "", "myIncorrectOption",
-                "", "", "", "", "", "", "", "", "", "perServer", "", "", "", "", "", "", "", "", "", "", "");
-
-        verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
-
-        assertNotNull(resultMap);
-        assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
-        assertEquals("No enum constant io.cloudslang.content.vmware.entities.RebootOption.MYINCORRECTOPTION", resultMap.get("returnResult"));
-    }
-
-    @Test
-    public void customizeWindowsGuestLicenseException() throws Exception {
-        Map<String, String> resultMap = windowsGuest.customizeWindowsGuest("", "", "", "", "", "", "", "reboot",
-                "", "", "", "", "", "", "", "", "", "myIncorrectOption", "", "", "", "", "", "", "", "", "", "", "");
-
-        verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
-
-        assertNotNull(resultMap);
-        assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
-        assertEquals("No enum constant io.cloudslang.content.vmware.entities.LicenseDataMode.MYINCORRECTOPTION", resultMap.get("returnResult"));
-    }
 }

@@ -7,7 +7,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
  * 3/21/2016.
  */
 public class GuestInputs {
-    private static final int DEFAULT_AUTO_LOGON_COUNT = 1;
+    private static final int DEFAULT_AUTO_LOGON_COUNT = 0;
     private static final int DEFAULT_AUTO_USERS_NUMBER = 1;
     private static final int DEFAULT_TIME_ZONE = 0;
 
@@ -188,8 +188,8 @@ public class GuestInputs {
             return new GuestInputs(this);
         }
 
-        public GuestInputsBuilder withRebootOption(String inputValue) throws Exception {
-            rebootOption = RebootOption.valueOf(inputValue.toUpperCase()).getValue();
+        public GuestInputsBuilder withRebootOption(String inputValue) {
+            rebootOption = inputValue;
             return this;
         }
 
@@ -238,8 +238,8 @@ public class GuestInputs {
             return this;
         }
 
-        public GuestInputsBuilder withLicenseDataMode(String inputValue) throws Exception {
-            licenseDataMode = LicenseDataMode.valueOf(inputValue.toUpperCase()).getValue();
+        public GuestInputsBuilder withLicenseDataMode(String inputValue) {
+            licenseDataMode = inputValue;
             return this;
         }
 
@@ -284,7 +284,7 @@ public class GuestInputs {
         }
 
         public GuestInputsBuilder withChangeSID(String inputValue) {
-            changeSID = Boolean.parseBoolean(inputValue);
+            changeSID = InputUtils.getBooleanInput(inputValue, true);
             return this;
         }
 

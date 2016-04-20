@@ -3,7 +3,6 @@ package io.cloudslang.content.vmware.services.utils;
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.GuestInputs;
-import io.cloudslang.content.vmware.entities.LicenseDataMode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -13,6 +12,8 @@ import java.util.List;
  * 3/21/2016.
  */
 public class GuestConfigSpecs {
+    private static final String PER_SERVER = "perServer";
+
     public CustomizationSpec getWinCustomizationSpec(GuestInputs guestInputs) {
         CustomizationSpec customizationSpec = new CustomizationSpec();
 
@@ -76,8 +77,11 @@ public class GuestConfigSpecs {
         winOptions.setDeleteAccounts(guestInputs.isDeleteAccounts());
         winOptions.setChangeSID(guestInputs.isChangeSID());
 
-        CustomizationSysprepRebootOption rebootOption = CustomizationSysprepRebootOption.fromValue(guestInputs.getRebootOption());
-        winOptions.setReboot(rebootOption);
+        if (StringUtils.isNotBlank(guestInputs.getRebootOption())) {
+            CustomizationSysprepRebootOption rebootOption = CustomizationSysprepRebootOption
+                    .fromValue(guestInputs.getRebootOption());
+            winOptions.setReboot(rebootOption);
+        }
 
         return winOptions;
     }
@@ -138,8 +142,10 @@ public class GuestConfigSpecs {
         CustomizationIdentification identification = getCustomizationIdentification(guestInputs);
         customizationSysprep.setIdentification(identification);
 
-        CustomizationLicenseFilePrintData licenseFilePrintData = getCustomizationLicenseFilePrintData(guestInputs);
-        customizationSysprep.setLicenseFilePrintData(licenseFilePrintData);
+        if (StringUtils.isNotBlank(guestInputs.getLicenseDataMode())) {
+            CustomizationLicenseFilePrintData licenseFilePrintData = getCustomizationLicenseFilePrintData(guestInputs);
+            customizationSysprep.setLicenseFilePrintData(licenseFilePrintData);
+        }
 
         return customizationSysprep;
     }
@@ -191,11 +197,12 @@ public class GuestConfigSpecs {
 
     private CustomizationLicenseFilePrintData getCustomizationLicenseFilePrintData(GuestInputs guestInputs) {
         CustomizationLicenseFilePrintData licenseFilePrintData = new CustomizationLicenseFilePrintData();
-        if (LicenseDataMode.PERSERVER.getValue().equals(guestInputs.getLicenseDataMode())) {
+        if (PER_SERVER.equals(guestInputs.getLicenseDataMode())) {
             licenseFilePrintData.setAutoUsers(guestInputs.getAutoUsers());
         }
 
-        CustomizationLicenseDataMode licenseDataMode = CustomizationLicenseDataMode.fromValue(guestInputs.getLicenseDataMode());
+        CustomizationLicenseDataMode licenseDataMode = CustomizationLicenseDataMode
+                .fromValue(guestInputs.getLicenseDataMode());
         licenseFilePrintData.setAutoMode(licenseDataMode);
 
         return licenseFilePrintData;
