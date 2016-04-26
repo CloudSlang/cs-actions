@@ -18,6 +18,7 @@ import java.util.Map;
  * Created by stcu on 21.04.2016.
  */
 public class GetCurrentDateTime {
+    private final String DATE_PATERN = "EEEEE MMMMM yyyy HH:mm:ss";
 
     /**
      * Check the current date and time, and returns a java DateAndTime formatted string of it.
@@ -69,9 +70,9 @@ public class GetCurrentDateTime {
                 } else {
                     locale = new Locale(localeLang);
                 }
-                formatter = new SimpleDateFormat("EEEEE MMMMM yyyy HH:mm:ss", locale);
+                formatter = new SimpleDateFormat(DATE_PATERN, locale);
             } else {
-                formatter = new SimpleDateFormat("EEEEE MMMMM yyyy HH:mm:ss");
+                formatter = new SimpleDateFormat(DATE_PATERN);
             }
             returnResult.put(Constants.OutputNames.RETURN_RESULT, formatter.format(calendar.getTime()));
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
