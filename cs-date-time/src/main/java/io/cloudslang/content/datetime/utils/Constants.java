@@ -25,5 +25,7 @@ public class Constants {
     public class InputNames {
         public static final String LOCALE_LANG = "localeLang";
         public static final String LOCALE_COUNTRY = "localeCountry";
+        public static final String LOCALE_DATE = "date";
+        public static final String LOCALE_OFFSET = "offset";
     }
 }
