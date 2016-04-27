@@ -8,6 +8,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.datetime.utils.Constants;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -18,8 +19,6 @@ import java.util.Map;
  * Created by stcu on 21.04.2016.
  */
 public class GetCurrentDateTime {
-    private final String DATE_PATERN = "EEEEE MMMMM yyyy HH:mm:ss";
-
     /**
      * Check the current date and time, and returns a java DateAndTime formatted string of it.
      * If locale is specified, it will return the date and time string based on the locale.
@@ -48,11 +47,11 @@ public class GetCurrentDateTime {
             })
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.LOCALE_LANG, required = true) String localeLang,
-            @Param(value = Constants.InputNames.LOCALE_COUNTRY, required = true) String localeCountry) {
+            @Param(value = Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
 
         Map<String, String> returnResult = new HashMap<>();
         Locale locale;
-        SimpleDateFormat formatter;
+        DateFormat formatter;
         try {
             Calendar calendar = Calendar.getInstance();
 
@@ -70,9 +69,10 @@ public class GetCurrentDateTime {
                 } else {
                     locale = new Locale(localeLang);
                 }
-                formatter = new SimpleDateFormat(DATE_PATERN, locale);
+
+                formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, locale);
             } else {
-                formatter = new SimpleDateFormat(DATE_PATERN);
+                formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
             }
             returnResult.put(Constants.OutputNames.RETURN_RESULT, formatter.format(calendar.getTime()));
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);

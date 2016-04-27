@@ -16,8 +16,8 @@ public class GetCurrentDateTimeTest {
 
     @Test
     public void testExecuteAllValid() {
-        String localeLang = "da";
-        String localeCountry = "DK";
+        String localeLang = "fr";
+        String localeCountry = "FR";
 
         final Map<String, String> result = getCurrentDateTime.execute(localeLang, localeCountry);
         assertTrue(!result.get(Constants.OutputNames.RETURN_RESULT).isEmpty());
