@@ -43,7 +43,7 @@ public class OffsetTimeBy {
 
     public Map<String, String> OffsetTimeBy(
             @Param(value = Constants.InputNames.LOCALE_DATE,   required = true) String date,
-            @Param(value = Constants.InputNames.LOCALE_OFFSET, required = true) int offset,
+            @Param(value = Constants.InputNames.LOCALE_OFFSET, required = true) String offset,
             @Param(value = Constants.InputNames.LOCALE_LANG,      required = true) String localeLang,
             @Param(value = Constants.InputNames.LOCALE_COUNTRY,   required = true) String localeCountry) {
 
@@ -51,12 +51,13 @@ public class OffsetTimeBy {
         Locale locale;
         DateFormat dateFormatter;
         Date parsedDate;
+        int parsedOffset = Integer.parseInt(offset);
 
         try {
 
             if(localeLang != null && localeLang.toLowerCase() == "unix") {
 
-                int offsetedTimestamp = Integer.parseInt(date) + offset;
+                int offsetedTimestamp = Integer.parseInt(date) + parsedOffset;
                 resultMap.put(Constants.OutputNames.RETURN_RESULT, "" + offsetedTimestamp);
                 resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
             }
@@ -81,8 +82,8 @@ public class OffsetTimeBy {
                 }
 
                 parsedDate = dateFormatter.parse(date);
-                offset *= 1000;
-                parsedDate.setTime(parsedDate.getTime() + offset);
+                parsedOffset *= 1000;
+                parsedDate.setTime(parsedDate.getTime() + parsedOffset);
 
                 resultMap.put(Constants.OutputNames.RETURN_RESULT, "" + dateFormatter.format(parsedDate));
                 resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
@@ -99,7 +100,7 @@ public class OffsetTimeBy {
     public static void main(String[] args) {
 
         OffsetTimeBy offset = new OffsetTimeBy();
-        Map<String, String> result = offset.OffsetTimeBy("April 26, 2016 1:32:20 PM EEST", 5, "en", "US");
+        Map<String, String> result = offset.OffsetTimeBy("April 26, 2016 1:32:20 PM EEST", "5", "en", "US");
         System.out.println("main() over");
     }
 }
