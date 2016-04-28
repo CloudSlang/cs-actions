@@ -41,7 +41,7 @@ public class RunServerAction {
      * @param maxCount         Optional - The maximum number of launched instances - Default: '1'
      * @return
      */
-    @Action(name = "Create Server",
+    @Action(name = "Run Server",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
