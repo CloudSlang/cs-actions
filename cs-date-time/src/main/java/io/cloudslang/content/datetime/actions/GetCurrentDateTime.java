@@ -7,6 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.datetime.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -55,16 +56,16 @@ public class GetCurrentDateTime {
         try {
             Calendar calendar = Calendar.getInstance();
 
-            if (localeLang != null && !localeLang.isEmpty()) {
+            if (StringUtils.isNotEmpty(localeLang)) {
                 if ("unix".equals(localeLang)) {
-                    long timestamp = Math.round(calendar.getTimeInMillis()/1000);
+                    long timestamp = Math.round(calendar.getTimeInMillis() / 1000);
                     returnResult.put(Constants.OutputNames.RETURN_RESULT, "" + timestamp);
                     returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
 
                     return returnResult;
                 }
 
-                if (localeCountry != null && !localeCountry.isEmpty()) {
+                if (StringUtils.isNotEmpty(localeCountry)) {
                     locale = new Locale(localeLang, localeCountry);
                 } else {
                     locale = new Locale(localeLang);

@@ -11,6 +11,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 
 import io.cloudslang.content.datetime.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.DateFormat;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class OffsetTimeBy {
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
 
-    public Map<String, String> OffsetTimeBy(
+    public Map<String, String> execute(
             @Param(value = Constants.InputNames.LOCALE_DATE,   required = true) String date,
             @Param(value = Constants.InputNames.LOCALE_OFFSET, required = true) String offset,
             @Param(value = Constants.InputNames.LOCALE_LANG,      required = true) String localeLang,
@@ -51,21 +52,24 @@ public class OffsetTimeBy {
         Locale locale;
         DateFormat dateFormatter;
         Date parsedDate;
-        int parsedOffset = Integer.parseInt(offset);
+        int parsedOffset = 0;
+        int offsetedTimestamp = 0;
 
         try {
 
             if(localeLang != null && localeLang.toLowerCase() == "unix") {
 
-                int offsetedTimestamp = Integer.parseInt(date) + parsedOffset;
+                parsedOffset = Integer.parseInt(offset);
+                offsetedTimestamp = Integer.parseInt(date) + parsedOffset;
+
                 resultMap.put(Constants.OutputNames.RETURN_RESULT, "" + offsetedTimestamp);
                 resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
             }
             else
             {
-                if(localeLang != null && localeLang.length() > 0)
+                if(StringUtils.isNotEmpty(localeLang))
                 {
-                    if(localeCountry != null && localeCountry.length() > 0)
+                    if(StringUtils.isNotEmpty(localeCountry))
                     {
                         locale = new Locale(localeLang, localeCountry);
                     }
@@ -100,7 +104,7 @@ public class OffsetTimeBy {
     public static void main(String[] args) {
 
         OffsetTimeBy offset = new OffsetTimeBy();
-        Map<String, String> result = offset.OffsetTimeBy("April 26, 2016 1:32:20 PM EEST", "5", "en", "US");
+        Map<String, String> result = offset.execute("April 26, 2016 1:32:20 PM EEST", "5", "en", "US");
         System.out.println("main() over");
     }
 }
