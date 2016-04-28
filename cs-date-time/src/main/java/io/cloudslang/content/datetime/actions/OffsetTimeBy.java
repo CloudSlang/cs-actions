@@ -10,14 +10,10 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 
+import io.cloudslang.content.datetime.services.DateTimeService;
 import io.cloudslang.content.datetime.utils.Constants;
-import org.apache.commons.lang3.StringUtils;
-
-import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Locale;
-import java.util.Date;
 
 public class OffsetTimeBy {
 
@@ -45,53 +41,12 @@ public class OffsetTimeBy {
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.LOCALE_DATE,   required = true) String date,
             @Param(value = Constants.InputNames.LOCALE_OFFSET, required = true) String offset,
-            @Param(value = Constants.InputNames.LOCALE_LANG,      required = true) String localeLang,
-            @Param(value = Constants.InputNames.LOCALE_COUNTRY,   required = true) String localeCountry) {
+            @Param(value = Constants.InputNames.LOCALE_LANG,   required = true) String localeLang,
+            @Param(value = Constants.InputNames.LOCALE_COUNTRY,required = true) String localeCountry) {
 
-        Map<String, String> resultMap = new HashMap<String, String>();
-        Locale locale;
-        DateFormat dateFormatter;
-        Date parsedDate;
-        int parsedOffset = 0;
-        int offsetedTimestamp = 0;
-
+        Map<String, String> resultMap = new HashMap<>();
         try {
-
-            if(localeLang != null && localeLang.toLowerCase() == "unix") {
-
-                parsedOffset = Integer.parseInt(offset);
-                offsetedTimestamp = Integer.parseInt(date) + parsedOffset;
-
-                resultMap.put(Constants.OutputNames.RETURN_RESULT, "" + offsetedTimestamp);
-                resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-            }
-            else
-            {
-                if(StringUtils.isNotEmpty(localeLang))
-                {
-                    if(StringUtils.isNotEmpty(localeCountry))
-                    {
-                        locale = new Locale(localeLang, localeCountry);
-                    }
-                    else
-                    {
-                        locale = new Locale(localeLang);
-                    }
-
-                    dateFormatter = DateFormat.getDateTimeInstance(java.text.DateFormat.LONG, java.text.DateFormat.LONG, locale);
-                }
-                else // use the default locale
-                {
-                    dateFormatter = DateFormat.getDateTimeInstance();
-                }
-
-                parsedDate = dateFormatter.parse(date);
-                parsedOffset *= 1000;
-                parsedDate.setTime(parsedDate.getTime() + parsedOffset);
-
-                resultMap.put(Constants.OutputNames.RETURN_RESULT, "" + dateFormatter.format(parsedDate));
-                resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-            }
+            resultMap = new DateTimeService().offsetTimeBy(date, offset, localeLang, localeCountry);
         }
         catch(Exception e) {
             resultMap.put(Constants.OutputNames.EXCEPTION, e.getMessage());
@@ -105,6 +60,7 @@ public class OffsetTimeBy {
 
         OffsetTimeBy offset = new OffsetTimeBy();
         Map<String, String> result = offset.execute("April 26, 2016 1:32:20 PM EEST", "5", "en", "US");
+        //Map<String, String> result2 = offset.execute("2300", "15", "unix", "");
         System.out.println("main() over");
     }
 }
