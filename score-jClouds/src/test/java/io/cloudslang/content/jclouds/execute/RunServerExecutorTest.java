@@ -29,9 +29,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
  * 2/26/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CreateServerExecutor.class, ComputeFactory.class})
-public class CreateServerExecutorTest {
-    private CreateServerExecutor toTest;
+@PrepareForTest({RunServerExecutor.class, ComputeFactory.class})
+public class RunServerExecutorTest {
+    private RunServerExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -44,7 +44,7 @@ public class CreateServerExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new CreateServerExecutor();
+        toTest = new RunServerExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 

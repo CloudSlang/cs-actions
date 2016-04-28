@@ -27,7 +27,7 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
     private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
     private static final String OPENSTACK_PROVIDER = "openstack-nova";
 
-    protected NovaApi novaApi = null;
+    NovaApi novaApi = null;
     private String region;
 
     public void setRegion(String region) {
@@ -45,13 +45,13 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
                 .buildApi(NovaApi.class);
     }
 
-    protected void lazyInit() {
+    void lazyInit() {
         if(null == novaApi) {
             this.init();
         }
     }
 
-    protected void lazyInit(String region) {
+    void lazyInit(String region) {
         if(this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
@@ -145,14 +145,6 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
         return res;
     }
 
-    public String createServer(String region, String name, String imageRef, String flavorRef) {
-        lazyInit(region);
-        ServerApi serverApi = novaApi.getServerApi(region);
-
-        ServerCreated serverCreated = serverApi.create(name, imageRef, flavorRef);
-        return serverCreated.toString();
-    }
-
     @Override
     public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
@@ -161,5 +153,13 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
     @Override
     public String updateInstanceType(CustomInputs customInputs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
+
+    String createServer(String region, String name, String imageRef, String flavorRef) {
+        lazyInit(region);
+        ServerApi serverApi = novaApi.getServerApi(region);
+
+        ServerCreated serverCreated = serverApi.create(name, imageRef, flavorRef);
+        return serverCreated.toString();
     }
 }

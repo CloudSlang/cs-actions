@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 2/18/2016.
  */
-public class CreateServerExecutor {
+public class RunServerExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
 

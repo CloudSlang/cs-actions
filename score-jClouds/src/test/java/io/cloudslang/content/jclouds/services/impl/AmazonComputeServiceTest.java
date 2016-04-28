@@ -617,34 +617,6 @@ public class AmazonComputeServiceTest {
         verify(instanceApiMock, atMost(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
     }
 
-    /**
-     * Test list images in region method. Positive scenario.
-     */
-    @Test
-    public void testListImages() {
-        doNothing().when(amazonComputeServiceSpy).lazyInit(REGION);
-        amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
-        doReturn(optionalAmiApiMock).when(ec2ApiMock).getAMIApi();
-        doReturn(amiApiMock).when(optionalAmiApiMock).get();
-        doReturn(imagesSetMock).when(amiApiMock).describeImagesInRegion(REGION);
-        doReturn(imageIteratorMock).when(imagesSetMock).iterator();
-        doReturn(true).doReturn(false).when(imageIteratorMock).hasNext();
-        doReturn(imageMock).when(imageIteratorMock).next();
-
-        Set<String> result = amazonComputeServiceSpy.listImagesInRegion(REGION);
-
-        assertEquals("[image]", result.toString());
-        verify(amazonComputeServiceSpy).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getAMIApi();
-        verify(optionalAmiApiMock, atMost(1)).get();
-        verify(amiApiMock).describeImagesInRegion(REGION);
-        verifyNoMoreInteractions(instanceApiMock);
-        verify(imagesSetMock).iterator();
-        verifyNoMoreInteractions(instancesInRegion);
-        verify(imageIteratorMock, times(2)).hasNext();
-        verify(imageIteratorMock).next();
-    }
-
     private Set<InstanceStateChange> getInstanceStateChanges() {
         Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
         InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.STOPPED, InstanceState.RUNNING);

@@ -10,7 +10,7 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.CreateServerExecutor;
+import io.cloudslang.content.jclouds.execute.RunServerExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -19,9 +19,9 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 2/18/2016.
  */
-public class CreateServerAction {
+public class RunServerAction {
     /**
-     * Launches (creates) one ore more instances in a region based on specified "imageRef".
+     * Launches one ore more instances in a region based on specified "imageRef".
      *
      * @param provider         The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
      * @param identityEndpoint The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com"
@@ -85,7 +85,7 @@ public class CreateServerAction {
                 .build();
 
         try {
-            return new CreateServerExecutor().execute(inputs, customInputs);
+            return new RunServerExecutor().execute(inputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

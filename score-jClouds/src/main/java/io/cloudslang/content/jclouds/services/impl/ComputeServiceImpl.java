@@ -36,13 +36,13 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
         computeService = context.getComputeService();
     }
 
-    protected void lazyInit() {
+    void lazyInit() {
         if (computeService == null) {
             this.init();
         }
     }
 
-    protected void lazyInit(String region) {
+    void lazyInit(String region) {
         if (this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
@@ -70,12 +70,6 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
         computeService.suspendNode(region + "/" + serverId);
 
         return "";
-    }
-
-
-    protected void reboot(String region, String serverId) {
-        lazyInit(region);
-        computeService.rebootNode(region + "/" + serverId);
     }
 
     @Override
@@ -118,16 +112,6 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
         return result;
     }
 
-    public Set<String> listNodes() {
-        lazyInit();
-        Set<? extends ComputeMetadata> locations = computeService.listNodes();
-        Set<String> res = new HashSet<>();
-        for (ComputeMetadata cm : locations) {
-            res.add(cm.toString());
-        }
-        return res;
-    }
-
     @Override
     public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
@@ -136,5 +120,20 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     @Override
     public String updateInstanceType(CustomInputs customInputs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
+
+    protected void reboot(String region, String serverId) {
+        lazyInit(region);
+        computeService.rebootNode(region + "/" + serverId);
+    }
+
+    Set<String> listNodes() {
+        lazyInit();
+        Set<? extends ComputeMetadata> locations = computeService.listNodes();
+        Set<String> res = new HashSet<>();
+        for (ComputeMetadata cm : locations) {
+            res.add(cm.toString());
+        }
+        return res;
     }
 }
