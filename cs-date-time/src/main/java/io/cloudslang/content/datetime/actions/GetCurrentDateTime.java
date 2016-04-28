@@ -6,14 +6,10 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.datetime.services.DateTimeService;
 import io.cloudslang.content.datetime.utils.Constants;
-import org.apache.commons.lang3.StringUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -48,35 +44,11 @@ public class GetCurrentDateTime {
             })
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.LOCALE_LANG, required = true) String localeLang,
-            @Param(value = Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
+            @Param(Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
 
         Map<String, String> returnResult = new HashMap<>();
-        Locale locale;
-        DateFormat formatter;
         try {
-            Calendar calendar = Calendar.getInstance();
-
-            if (StringUtils.isNotEmpty(localeLang)) {
-                if ("unix".equals(localeLang)) {
-                    long timestamp = Math.round(calendar.getTimeInMillis() / 1000);
-                    returnResult.put(Constants.OutputNames.RETURN_RESULT, "" + timestamp);
-                    returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-
-                    return returnResult;
-                }
-
-                if (StringUtils.isNotEmpty(localeCountry)) {
-                    locale = new Locale(localeLang, localeCountry);
-                } else {
-                    locale = new Locale(localeLang);
-                }
-
-                formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, locale);
-            } else {
-                formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
-            }
-            returnResult.put(Constants.OutputNames.RETURN_RESULT, formatter.format(calendar.getTime()));
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+            returnResult = new DateTimeService().getCurrentDateTime(localeLang, localeCountry);
         } catch (Exception exception) {
             returnResult.put(Constants.OutputNames.EXCEPTION, exception.getMessage());
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
