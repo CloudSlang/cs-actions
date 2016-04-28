@@ -2,9 +2,10 @@ package io.cloudslang.content.datetime.services;
 
 import io.cloudslang.content.datetime.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -16,13 +17,13 @@ public class DateTimeService {
 
     public Map<String, String> getCurrentDateTime(String localeLang, String localeCountry) {
         Locale locale;
-        DateFormat formatter;
-        Calendar calendar = Calendar.getInstance();
+        DateTimeFormatter formatter;
+        DateTime datetime = DateTime.now();
         Map<String, String> returnResult = new HashMap<>();
 
         if (StringUtils.isNotEmpty(localeLang)) {
             if ("unix".equals(localeLang)) {
-                long timestamp = Math.round(calendar.getTimeInMillis() / 1000);
+                long timestamp = Math.round(datetime.getMillis() / 1000);
                 addReturnValues(returnResult, Constants.OutputNames.RETURN_RESULT, "" + timestamp);
 
                 return returnResult;
@@ -34,11 +35,11 @@ public class DateTimeService {
                 locale = new Locale(localeLang);
             }
 
-            formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, locale);
+            formatter = DateTimeFormat.fullDateTime().withLocale(locale);
         } else {
-            formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
+            formatter = DateTimeFormat.fullDateTime();
         }
-        addReturnValues(returnResult, Constants.OutputNames.RETURN_RESULT, formatter.format(calendar.getTime()));
+        addReturnValues(returnResult, Constants.OutputNames.RETURN_RESULT, formatter.print(datetime));
 
         return returnResult;
     }

@@ -47,6 +47,20 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+    <developers>
+        <developer>
+            <name>Curelea Stefan</name>
+            <email>curelea.stefan@hpe.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Catalin Demergian</name>
+            <email>demergian@hpe.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+    </developers>
     <profiles>
         <profile>
             <id>default-profile</id>
@@ -135,7 +149,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9.3</version>
+        </dependency>
     </dependencies>
-
     <modelVersion>4.0.0</modelVersion>
 </project>
