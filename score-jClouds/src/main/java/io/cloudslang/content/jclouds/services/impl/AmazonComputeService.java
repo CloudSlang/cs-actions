@@ -95,7 +95,7 @@ public class AmazonComputeService extends JCloudsComputeService implements Compu
     }
 
     @Override
-    public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) {
+    public Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) {
         InstanceApi instanceApi = getInstanceApi(customInputs.getRegion(), false);
         RunInstancesOptions runInstancesOptions = RunInstancesOptions.NONE;
 

@@ -685,10 +685,10 @@ public class OpenstackComputeServiceTest {
     }
 
     /**
-     * Test createServer method. Positive scenario.
+     * Test runServer method. Positive scenario.
      */
     @Test
-    public void testCreateServer() {
+    public void testRunServer() {
         String exceptedResult = "server created, details: ...";
         doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
         openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit

@@ -62,10 +62,10 @@ public class RunServerExecutorTest {
     @Test
     public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn(reservationsMock).when(computeServiceMock).createServer(any(CommonInputs.class), any(CustomInputs.class));
+        doReturn(reservationsMock).when(computeServiceMock).runServer(any(CommonInputs.class), any(CustomInputs.class));
         Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock, times(1)).createServer(any(CommonInputs.class), any(CustomInputs.class));
+        verify(computeServiceMock, times(1)).runServer(any(CommonInputs.class), any(CustomInputs.class));
 
         assertNotNull(results);
         assertEquals("0", results.get(Outputs.RETURN_CODE));

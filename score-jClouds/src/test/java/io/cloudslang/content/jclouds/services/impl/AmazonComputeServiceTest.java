@@ -96,57 +96,52 @@ public class AmazonComputeServiceTest {
     private Optional<? extends InstanceApi> optionalInstanceApi;
 
     @Mock
-    Optional<? extends AMIApi> optionalAmiApiMock;
+    private Optional<? extends AMIApi> optionalAmiApiMock;
 
     @Mock
-    AMIApi amiApiMock;
+    private AMIApi amiApiMock;
 
     @Mock
     private InstanceApi instanceApiMock;
 
     @Mock
-    Optional<ServerAdminApi> optionalServerAdminApiMock;
+    private Optional<ServerAdminApi> optionalServerAdminApiMock;
 
     @Mock
-    ServerAdminApi serverAdminApiMock;
+    private ServerAdminApi serverAdminApiMock;
 
     @Mock
-    Set<RunningInstance> instancesInRegion;
+    private Set<RunningInstance> instancesInRegion;
 
     @Mock
-    Iterator<RunningInstance> iterableWithMarkerIteratorMock;
+    private Iterator<RunningInstance> iterableWithMarkerIteratorMock;
 
     @Mock
-    Iterator<Image> imageIteratorMock;
+    private Iterator<Image> imageIteratorMock;
 
     @Mock
-    IterableWithMarker<Server> iterableWithMarkerServersMock;
+    private IterableWithMarker<Server> iterableWithMarkerServersMock;
 
     @Mock
-    Iterator<Server> serverIteratorMock;
+    private Iterator<Server> serverIteratorMock;
 
     @Mock
-    Reservation<RunningInstance> serverMock;
+    private Reservation<RunningInstance> serverMock;
 
     @Mock
-    Reservation<RunningInstance> serverCreatedMock;
+    private Reservation<RunningInstance> serverCreatedMock;
 
     @Mock
-    Set<Image> imagesSetMock;
+    private Set<Image> imagesSetMock;
 
     @Mock
-    Image imageMock;
+    private Image imageMock;
 
     @Mock
-    AmazonComputeServiceHelper helperMock;
+    private AmazonComputeServiceHelper helperMock;
 
     @Spy
     private AmazonComputeService amazonComputeServiceSpy = new AmazonComputeService(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
-
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     /**
      * Add common mocks for all tests on init() method.
@@ -233,7 +228,7 @@ public class AmazonComputeServiceTest {
         toTest.init();
 
         PowerMockito.verifyNew(Properties.class).withNoArguments();
-        verify(propertiesMock, atMost(1)).setProperty(eq(PROPERTY_REGIONS), eq(REGION));
+        verify(propertiesMock, times(1)).setProperty(eq(PROPERTY_REGIONS), eq(REGION));
         verify(contextBuilderMock).endpoint(ENDPOINT);
         verify(contextBuilderMock).credentials(IDENTITY, PASSWORD);
         verify(contextBuilderMock).overrides(propertiesMock);
@@ -345,11 +340,12 @@ public class AmazonComputeServiceTest {
 
         String result = amazonComputeServiceSpy.start(REGION, SERVER_ID);
 
-        assertEquals(SERVER_START_SUCCESS_MESSAGE, result);
         verify(amazonComputeServiceSpy).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getInstanceApiForRegion(REGION);
-        verify(optionalInstanceApi, atMost(1)).get();
-        verify(instanceApiMock, atMost(1)).startInstancesInRegion(REGION, SERVER_ID);
+        verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
+        verify(optionalInstanceApi, times(1)).get();
+        verify(instanceApiMock, times(1)).startInstancesInRegion(REGION, SERVER_ID);
+
+        assertEquals(SERVER_START_SUCCESS_MESSAGE, result);
     }
 
     /**
@@ -359,6 +355,7 @@ public class AmazonComputeServiceTest {
     public void testStartWithInvalidServerId() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+
         doNothing().when(amazonComputeServiceSpy).lazyInit(REGION);
         amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
@@ -385,11 +382,12 @@ public class AmazonComputeServiceTest {
 
         String result = amazonComputeServiceSpy.stop(REGION, SERVER_ID);
 
-        assertEquals(SERVER_STOP_SUCCESS_MESSAGE, result);
         verify(amazonComputeServiceSpy).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getInstanceApiForRegion(REGION);
-        verify(optionalInstanceApi, atMost(1)).get();
+        verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
+        verify(optionalInstanceApi, times(1)).get();
         verify(instanceApiMock).stopInstancesInRegion(REGION, false, SERVER_ID);
+
+        assertEquals(SERVER_STOP_SUCCESS_MESSAGE, result);
     }
 
     /**
@@ -426,8 +424,8 @@ public class AmazonComputeServiceTest {
         amazonComputeServiceSpy.softReboot(REGION, SERVER_ID);
 
         verify(amazonComputeServiceSpy).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getInstanceApiForRegion(REGION);
-        verify(optionalInstanceApi, atMost(1)).get();
+        verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
+        verify(optionalInstanceApi, times(1)).get();
         verify(instanceApiMock).rebootInstancesInRegion(REGION, SERVER_ID);
     }
 
@@ -501,11 +499,12 @@ public class AmazonComputeServiceTest {
 
         String result = amazonComputeServiceSpy.removeServer(REGION, SERVER_ID);
 
-        assertEquals(REMOVE_SERVER_SUCCESS_MESSAGE, result);
         verify(amazonComputeServiceSpy).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getInstanceApiForRegion(REGION);
-        verify(optionalInstanceApi, atMost(1)).get();
+        verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
+        verify(optionalInstanceApi, times(1)).get();
         verify(instanceApiMock).terminateInstancesInRegion(REGION, SERVER_ID);
+
+        assertEquals(REMOVE_SERVER_SUCCESS_MESSAGE, result);
     }
 
     /**
@@ -521,10 +520,11 @@ public class AmazonComputeServiceTest {
 
         Set<String> returnedRegions = amazonComputeServiceSpy.listRegions();
 
-        assertEquals(1, returnedRegions.size());
         assertTrue(returnedRegions.contains(REGION));
         verify(amazonComputeServiceSpy).lazyInit();
-        verify(ec2ApiMock, atMost(1)).getConfiguredRegions();
+        verify(ec2ApiMock, times(1)).getConfiguredRegions();
+
+        assertEquals(1, returnedRegions.size());
     }
 
     /**
@@ -535,6 +535,7 @@ public class AmazonComputeServiceTest {
     public void testListRegionsOnInvalidEndpoint() {
         exception.expect(HttpResponseException.class);
         exception.expectMessage(CONNECTION_REFUSE_EXCEPTION_MESSAGE);
+
         doNothing().when(amazonComputeServiceSpy).lazyInit();
         amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
@@ -559,19 +560,20 @@ public class AmazonComputeServiceTest {
 
         Set<String> res = amazonComputeServiceSpy.listNodes(REGION);
 
-        assertEquals(1, res.size());
-        assertTrue(res.contains("reservation"));
         verify(amazonComputeServiceSpy).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getInstanceApi();
-        verify(optionalInstanceApi, atMost(1)).get();
-        verify(instanceApiMock, atMost(1)).describeInstancesInRegion(REGION);
-        verify(instancesInRegion, atMost(1)).iterator();
+        verify(ec2ApiMock, times(1)).getInstanceApi();
+        verify(optionalInstanceApi, times(1)).get();
+        verify(instanceApiMock, times(1)).describeInstancesInRegion(REGION);
+        verify(instancesInRegion, times(1)).iterator();
         verify(iterableWithMarkerIteratorMock, times(2)).hasNext();
         verify(iterableWithMarkerIteratorMock).next();
+
+        assertEquals(1, res.size());
+        assertTrue(res.contains("reservation"));
     }
 
     /**
-     * Test createServer method. Positive scenario.
+     * Test runServer method. Positive scenario.
      */
     @Test
     public void testCreateServer() throws Exception {
@@ -583,12 +585,12 @@ public class AmazonComputeServiceTest {
         doReturn(serverCreatedMock).when(instanceApiMock)
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
 
-        amazonComputeServiceSpy.createServer(getCommonInputs(), getCustomInputs());
+        amazonComputeServiceSpy.runServer(getCommonInputs(), getCustomInputs());
 
-        verify(amazonComputeServiceSpy, atMost(1)).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getInstanceApi();
-        verify(optionalInstanceApi, atMost(1)).get();
-        verify(instanceApiMock, atMost(1))
+        verify(amazonComputeServiceSpy, times(1)).lazyInit(REGION);
+        verify(ec2ApiMock, times(1)).getInstanceApi();
+        verify(optionalInstanceApi, times(1)).get();
+        verify(instanceApiMock, times(1))
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
     }
 
@@ -611,10 +613,10 @@ public class AmazonComputeServiceTest {
 
         amazonComputeServiceSpy.updateInstanceType(getCustomInputs());
 
-        verify(amazonComputeServiceSpy, atMost(1)).lazyInit(REGION);
-        verify(ec2ApiMock, atMost(1)).getInstanceApi();
-        verify(optionalInstanceApi, atMost(1)).get();
-        verify(instanceApiMock, atMost(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
+        verify(amazonComputeServiceSpy, times(1)).lazyInit(REGION);
+        verify(ec2ApiMock, times(1)).getInstanceApi();
+        verify(optionalInstanceApi, times(1)).get();
+        verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
     }
 
     private Set<InstanceStateChange> getInstanceStateChanges() {

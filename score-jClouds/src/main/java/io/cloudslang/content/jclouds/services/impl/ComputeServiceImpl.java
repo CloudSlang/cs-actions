@@ -113,7 +113,7 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     }
 
     @Override
-    public Reservation<? extends RunningInstance> createServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+    public Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 

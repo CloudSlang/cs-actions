@@ -21,7 +21,7 @@ public class RunServerExecutor {
         InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
 
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        Reservation<? extends RunningInstance> result = cs.createServer(inputs, customInputs);
+        Reservation<? extends RunningInstance> result = cs.runServer(inputs, customInputs);
 
         return OutputsUtil.getResultsMap(result.toString());
     }
