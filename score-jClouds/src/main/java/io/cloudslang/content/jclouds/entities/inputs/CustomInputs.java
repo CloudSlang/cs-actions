@@ -1,6 +1,5 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.InstanceType;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,32 +8,39 @@ import org.apache.commons.lang3.StringUtils;
  * 2/18/2016.
  */
 public class CustomInputs {
-    private static final String AMAZON_DEFAULT_REGION = "us-east-1";
+    private static final String DEFAULT_AMAZON_REGION = "us-east-1";
+    private static final long DEFAULT_TIMING = 20000;
 
+    private String instanceType;
     private String region;
     private String serverId;
     private String availabilityZone;
     private String imageRef;
-    private String instanceType;
-    private long checkStateTimeout;
-    private long polingInterval;
+
     private int minCount;
     private int maxCount;
+    private long checkStateTimeout;
+    private long polingInterval;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
+        this.instanceType = builder.instanceType;
         this.serverId = builder.serverId;
         this.availabilityZone = builder.availabilityZone;
         this.imageRef = builder.imageRef;
-        this.instanceType = builder.instanceType;
-        this.checkStateTimeout = builder.checkStateTimeout;
-        this.polingInterval = builder.polingInterval;
+
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
+        this.checkStateTimeout = builder.checkStateTimeout;
+        this.polingInterval = builder.polingInterval;
     }
 
     public String getRegion() {
         return region;
+    }
+
+    public String getInstanceType() {
+        return instanceType;
     }
 
     public String getServerId() {
@@ -49,8 +55,12 @@ public class CustomInputs {
         return imageRef;
     }
 
-    public String getInstanceType() {
-        return instanceType;
+    public int getMinCount() {
+        return minCount;
+    }
+
+    public int getMaxCount() {
+        return maxCount;
     }
 
     public long getCheckStateTimeout() {
@@ -61,31 +71,29 @@ public class CustomInputs {
         return polingInterval;
     }
 
-    public int getMinCount() {
-        return minCount;
-    }
-
-    public int getMaxCount() {
-        return maxCount;
-    }
-
     public static class CustomInputsBuilder {
         private String region;
+        private String instanceType;
         private String serverId;
         private String availabilityZone;
         private String imageRef;
-        private String instanceType;
-        private long checkStateTimeout;
-        private long polingInterval;
+
         private int minCount;
         private int maxCount;
+        private long checkStateTimeout;
+        private long polingInterval;
 
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? AMAZON_DEFAULT_REGION : inputValue;
+            region = (StringUtils.isBlank(inputValue)) ? DEFAULT_AMAZON_REGION : inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withInstanceType(String inputValue) {
+            instanceType = inputValue;
             return this;
         }
 
@@ -104,21 +112,6 @@ public class CustomInputs {
             return this;
         }
 
-        public CustomInputsBuilder withInstanceType(String inputValue) {
-            instanceType = InstanceType.getInstanceType(inputValue);
-            return this;
-        }
-
-        public CustomInputsBuilder withCheckStateTimeout(String inputValue) {
-            checkStateTimeout = InputsUtil.getValidLong(inputValue);
-            return this;
-        }
-
-        public CustomInputsBuilder withPolingInterval(String inputValue) {
-            polingInterval = InputsUtil.getValidLong(inputValue);
-            return this;
-        }
-
         public CustomInputsBuilder withMinCount(String inputValue) {
             minCount = InputsUtil.getMinInstancesCount(inputValue);
             return this;
@@ -126,6 +119,16 @@ public class CustomInputs {
 
         public CustomInputsBuilder withMaxCount(String inputValue) {
             maxCount = InputsUtil.getMaxInstancesCount(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withCheckStateTimeout(String inputValue) {
+            checkStateTimeout = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
+            return this;
+        }
+
+        public CustomInputsBuilder withPolingInterval(String inputValue) {
+            polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
             return this;
         }
     }

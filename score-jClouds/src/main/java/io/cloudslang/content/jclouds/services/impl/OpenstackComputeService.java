@@ -2,12 +2,14 @@ package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CreateServerCustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
@@ -46,16 +48,16 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
     }
 
     void lazyInit() {
-        if(null == novaApi) {
+        if (null == novaApi) {
             this.init();
         }
     }
 
     void lazyInit(String region) {
-        if(this.region == null || !this.region.equals(region)) {
+        if (this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
-        } else if(novaApi == null) {
+        } else if (novaApi == null) {
             this.init();
         }
     }
@@ -137,8 +139,8 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
         PagedIterable<Server> servers = serverApi.listInDetail();
         Set<String> res = new HashSet<>();
 
-        for(IterableWithMarker<Server> iterableWithMarker : servers) {
-            for(Server s : iterableWithMarker) {
+        for (IterableWithMarker<Server> iterableWithMarker : servers) {
+            for (Server s : iterableWithMarker) {
                 res.add(s.toString());
             }
         }
@@ -161,5 +163,11 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
 
         ServerCreated serverCreated = serverApi.create(name, imageRef, flavorRef);
         return serverCreated.toString();
+    }
+
+    @Override
+    public Set<? extends NodeMetadata> createNodesInGroup(CommonInputs commonInputs, CreateServerCustomInputs createServerInputs)
+            throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 }

@@ -55,18 +55,18 @@ public class UpdateServerTypeAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
-                                       @Param(value = Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.PROXY_PORT) String proxyPort,
+    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
+                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String identityEndpoint,
+                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
-                                       @Param(Inputs.REGION) String region,
-                                       @Param(value = Inputs.SERVER_ID, required = true) String serverId,
-                                       @Param(Inputs.SERVER_TYPE) String serverType,
-                                       @Param(Inputs.OPERATION_TIMEOUT) String operationTimeout,
-                                       @Param(Inputs.POOLING_INTERVAl) String poolingInterval) throws Exception {
+                                       @Param(Inputs.CustomInputs.REGION) String region,
+                                       @Param(value = Inputs.CustomInputs.SERVER_ID, required = true) String serverId,
+                                       @Param(Inputs.CustomInputs.SERVER_TYPE) String serverType,
+                                       @Param(Inputs.CustomInputs.OPERATION_TIMEOUT) String operationTimeout,
+                                       @Param(Inputs.CustomInputs.POOLING_INTERVAl) String poolingInterval) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

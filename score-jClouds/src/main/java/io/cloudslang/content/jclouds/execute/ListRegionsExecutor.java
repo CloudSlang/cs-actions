@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.execute;
 
+import io.cloudslang.content.jclouds.actions.ListRegionsAction;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
@@ -15,21 +16,13 @@ import java.util.Set;
  */
 public class ListRegionsExecutor {
     public Map<String, String> execute(CommonInputs inputs) throws Exception {
-        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
+        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.CommonInputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        ComputeService cs = ComputeFactory.getComputeService(inputs, ListRegionsAction.class);
         Set<String> availableRegions = cs.listRegions();
 
-        int index = 0;
-        StringBuilder sb = new StringBuilder();
-        for (String region : availableRegions) {
-            sb.append(region);
-            if (index < availableRegions.size() - 1) {
-                sb.append(inputs.getDelimiter());
-            }
-            index++;
-        }
+        String regionsString = OutputsUtil.getElementsString(availableRegions, inputs.getDelimiter());
 
-        return OutputsUtil.getResultsMap(sb.toString());
+        return OutputsUtil.getResultsMap(regionsString);
     }
 }

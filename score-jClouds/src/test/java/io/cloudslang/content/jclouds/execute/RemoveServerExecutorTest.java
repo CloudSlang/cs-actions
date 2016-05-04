@@ -33,7 +33,7 @@ public class RemoveServerExecutorTest {
     private AmazonInputs inputs;
 
     @Mock
-    ComputeService computeServiceMock;
+    private ComputeService computeServiceMock;
 
     @Before
     public void init() {
@@ -56,7 +56,7 @@ public class RemoveServerExecutorTest {
      */
     @Test
     public void testExecute() throws Exception {
-        when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
+        when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
         doReturn("removed").when(computeServiceMock).removeServer(anyString(), anyString());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));

@@ -18,7 +18,6 @@ import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.rest.ResourceNotFoundException;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -99,7 +98,7 @@ public class AmazonComputeServiceTest {
     private Optional<? extends AMIApi> optionalAmiApiMock;
 
     @Mock
-    private AMIApi amiApiMock;
+    AMIApi amiApiMock;
 
     @Mock
     private InstanceApi instanceApiMock;
@@ -492,9 +491,11 @@ public class AmazonComputeServiceTest {
         amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
+
         Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
         InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.TERMINATED, InstanceState.STOPPED);
         instanceStateChangeSet.add(instanceStateChange);
+
         doReturn(instanceStateChangeSet).when(instanceApiMock).terminateInstancesInRegion(REGION, SERVER_ID);
 
         String result = amazonComputeServiceSpy.removeServer(REGION, SERVER_ID);
@@ -514,8 +515,10 @@ public class AmazonComputeServiceTest {
     public void testListRegions() {
         doNothing().when(amazonComputeServiceSpy).lazyInit();
         amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
+
         Set<String> regions = Sets.newIdentityHashSet();
         regions.add(REGION);
+
         doReturn(regions).when(ec2ApiMock).getConfiguredRegions();
 
         Set<String> returnedRegions = amazonComputeServiceSpy.listRegions();
@@ -576,7 +579,7 @@ public class AmazonComputeServiceTest {
      * Test runServer method. Positive scenario.
      */
     @Test
-    public void testCreateServer() throws Exception {
+    public void testRunServer() throws Exception {
         doNothing().when(amazonComputeServiceSpy).lazyInit(anyString());
         amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(anyString());
@@ -593,6 +596,24 @@ public class AmazonComputeServiceTest {
         verify(instanceApiMock, times(1))
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
     }
+//    @Test
+//    public void testCreateServer() throws Exception {
+//        doNothing().when(amazonComputeServiceSpy).lazyInit(anyString());
+//        amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
+//        doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(anyString());
+//        doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
+//        doReturn(instanceApiMock).when(optionalInstanceApi).get();
+//        doReturn(serverCreatedMock).when(instanceApiMock)
+//                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
+//
+//        amazonComputeServiceSpy.createNodesInGroup(getCommonInputs(), getCustomInputs());
+//
+//        verify(amazonComputeServiceSpy, atMost(1)).lazyInit(REGION);
+//        verify(ec2ApiMock, atMost(1)).getInstanceApi();
+//        verify(optionalInstanceApi, atMost(1)).get();
+//        verify(instanceApiMock, atMost(1))
+//                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
+//    }
 
     /**
      * Test updateServer method. Positive scenario.
@@ -621,8 +642,10 @@ public class AmazonComputeServiceTest {
 
     private Set<InstanceStateChange> getInstanceStateChanges() {
         Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
-        InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.STOPPED, InstanceState.RUNNING);
+        InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.STOPPED,
+                InstanceState.RUNNING);
         instanceStateChangeSet.add(instanceStateChange);
+
         return instanceStateChangeSet;
     }
 
@@ -631,9 +654,6 @@ public class AmazonComputeServiceTest {
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder()
-                .withRegion(REGION)
-                .withServerId(SERVER_ID)
-                .build();
+        return new CustomInputs.CustomInputsBuilder().withRegion(REGION).withServerId(SERVER_ID).build();
     }
 }

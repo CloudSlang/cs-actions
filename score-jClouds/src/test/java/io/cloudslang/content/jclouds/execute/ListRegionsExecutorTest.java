@@ -33,7 +33,7 @@ public class ListRegionsExecutorTest {
     private AmazonInputs inputs;
 
     @Mock
-    ComputeService computeServiceMock;
+    private ComputeService computeServiceMock;
 
     @Before
     public void init() {
@@ -56,11 +56,9 @@ public class ListRegionsExecutorTest {
      */
     @Test
     public void testExecute() throws Exception {
-        when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
+        when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
 
-        Set<String> regions = new HashSet<>();
-        regions.add("reg1");
-        regions.add("reg2");
+        Set<String> regions = getRegions();
         doReturn(regions).when(computeServiceMock).listRegions();
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs));
@@ -70,6 +68,13 @@ public class ListRegionsExecutorTest {
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
         assertEquals("reg1;;reg2", result.get(Outputs.RETURN_RESULT));
+    }
+
+    private Set<String> getRegions() {
+        Set<String> regions = new HashSet<>();
+        regions.add("reg1");
+        regions.add("reg2");
+        return regions;
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {

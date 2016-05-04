@@ -54,18 +54,18 @@ public class RunServerAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
-                                       @Param(Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.PROXY_PORT) String proxyPort,
+    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
+                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String identityEndpoint,
+                                       @Param(Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
-                                       @Param(Inputs.REGION) String region,
-                                       @Param(Inputs.AVAILABILITY_ZONE) String availabilityZone,
-                                       @Param(value = Inputs.IMAGE_REF, required = true) String imageRef,
-                                       @Param(Inputs.MIN_COUNT) String minCount,
-                                       @Param(Inputs.MAX_COUNT) String maxCount) throws Exception {
+                                       @Param(Inputs.CustomInputs.REGION) String region,
+                                       @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(value = Inputs.CustomInputs.IMAGE_REF, required = true) String imageRef,
+                                       @Param(Inputs.CustomInputs.MIN_COUNT) String minCount,
+                                       @Param(Inputs.CustomInputs.MAX_COUNT) String maxCount) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -89,5 +89,12 @@ public class RunServerAction {
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        RunServerAction runServer = new RunServerAction();
+        Map<String, String> results = runServer.execute("amazon", "https://ec2.amazonaws.com", "AKIAIXTNUGGYBYFYZR2A",
+                "6othnN8+PE5+8UVsirHqJkTE2BvanmtZvTKZzhqu", "proxy.houston.hp.com", "8080", "", "", "ami-c8a9baa2", "1", "1");
+        System.out.println(results.get("returnResult"));
     }
 }

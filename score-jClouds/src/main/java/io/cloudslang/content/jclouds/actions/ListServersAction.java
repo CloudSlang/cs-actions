@@ -45,14 +45,15 @@ public class ListServersAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.ENDPOINT, required = true) String identityEndpoint,
-                                       @Param(Inputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.REGION) String region,
-                                       @Param(Inputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.DELIMITER) String delimiter) throws Exception {
+    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
+                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String identityEndpoint,
+                                       @Param(Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
+
+                                       @Param(Inputs.CustomInputs.REGION) String region) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

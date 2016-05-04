@@ -33,7 +33,7 @@ public class UpdateServerTypeExecutorTest {
     private AmazonInputs inputs;
 
     @Mock
-    ComputeService computeServiceMock;
+    private ComputeService computeServiceMock;
 
     @Before
     public void init() {
@@ -56,7 +56,7 @@ public class UpdateServerTypeExecutorTest {
      */
     @Test
     public void execute() throws Exception {
-        when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
+        when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
         doReturn("Server updated successfully.").when(computeServiceMock).updateInstanceType(any(CustomInputs.class));
         Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
@@ -81,10 +81,6 @@ public class UpdateServerTypeExecutorTest {
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
-                .withAvailabilityZone("")
-                .withImageRef("ami-4b91bb21")
-                .withMinCount("")
-                .withMaxCount("")
                 .build();
     }
 }

@@ -34,7 +34,7 @@ public class ListServersExecutorTest {
     private AmazonInputs inputs;
 
     @Mock
-    ComputeService computeServiceMock;
+    private ComputeService computeServiceMock;
 
     @Before
     public void init() {
@@ -57,11 +57,9 @@ public class ListServersExecutorTest {
      */
     @Test
     public void testExecute() throws Exception {
-        when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
+        when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
 
-        Set<String> nodes = new HashSet<>();
-        nodes.add("nod1");
-        nodes.add("nod2");
+        Set<String> nodes = getNodes();
         doReturn(nodes).when(computeServiceMock).listNodes(inputs.getRegion());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
@@ -71,6 +69,13 @@ public class ListServersExecutorTest {
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
         assertEquals("nod2;;nod1", result.get(Outputs.RETURN_RESULT));
+    }
+
+    private Set<String> getNodes() {
+        Set<String> nodes = new HashSet<>();
+        nodes.add("nod1");
+        nodes.add("nod2");
+        return nodes;
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {

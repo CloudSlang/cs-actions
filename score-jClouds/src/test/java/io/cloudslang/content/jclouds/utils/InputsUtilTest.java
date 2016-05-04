@@ -65,7 +65,7 @@ public class InputsUtilTest {
 
     @Test
     public void getValidLongBlank() {
-        long testLong = InputsUtil.getValidLong("");
+        long testLong = InputsUtil.getValidLong("", 20000L);
         assertEquals(20000, testLong);
     }
 
@@ -74,7 +74,7 @@ public class InputsUtilTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Incorrect provided value: -1. Valid values are positive longs.");
 
-        InputsUtil.getValidLong("-1");
+        InputsUtil.getValidLong("-1", 0L);
     }
 
     @Test
@@ -82,12 +82,12 @@ public class InputsUtilTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("The provided value: [anything_here] input must be long.");
 
-        InputsUtil.getValidLong("[anything_here]");
+        InputsUtil.getValidLong("[anything_here]", 0L);
     }
 
     @Test
     public void getValidLong() {
-        long testLong = InputsUtil.getValidLong("60000");
+        long testLong = InputsUtil.getValidLong("60000", 20000L);
         assertEquals(60000, testLong);
     }
 }

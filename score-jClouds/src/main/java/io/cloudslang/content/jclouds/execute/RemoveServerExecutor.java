@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.execute;
 
+import io.cloudslang.content.jclouds.actions.RemoveServerAction;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
@@ -15,9 +16,9 @@ import java.util.Map;
  */
 public class RemoveServerExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
-        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.ENDPOINT);
+        InputsUtil.validateInput(inputs.getEndpoint(), Inputs.CommonInputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        ComputeService cs = ComputeFactory.getComputeService(inputs, RemoveServerAction.class);
         String resultStr = cs.removeServer(customInputs.getRegion(), customInputs.getServerId());
 
         return OutputsUtil.getResultsMap(resultStr);

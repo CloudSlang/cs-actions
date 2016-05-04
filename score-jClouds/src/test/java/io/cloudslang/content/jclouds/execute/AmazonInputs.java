@@ -63,43 +63,43 @@ public class AmazonInputs {
         this.delimiter = commonInputs.getDelimiter();
     }
 
-    public String getProvider() {
+    String getProvider() {
         return provider;
     }
 
-    public String getIdentity() {
+    String getIdentity() {
         return identity;
     }
 
-    public String getCredential() {
+    String getCredential() {
         return credential;
     }
 
-    public String getEndpoint() {
+    String getEndpoint() {
         return endpoint;
     }
 
-    public String getProxyHost() {
+    String getProxyHost() {
         return proxyHost;
     }
 
-    public String getProxyPort() {
+    String getProxyPort() {
         return proxyPort;
     }
 
-    public String getRegion() {
+    String getRegion() {
         return region;
     }
 
-    public String getServerId() {
+    String getServerId() {
         return serverId;
     }
 
-    public String getDelimiter() {
+    String getDelimiter() {
         return delimiter;
     }
 
-    public static AmazonInputs getAmazonInstance() {
+    static AmazonInputs getAmazonInstance() {
         return new AmazonInputs(commonInputs, customInputs);
     }
 }
