@@ -161,22 +161,4 @@ public class CreateNodesInGroupAction {
             return ExceptionProcessor.getExceptionResult(e);
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        CreateNodesInGroupAction createNodesInGroup = new CreateNodesInGroupAction();
-        Map<String, String> results = createNodesInGroup.execute("amazon",
-                "https://ec2.us-east-1.amazonaws.com",
-                "AKIAIXTNUGGYBYFYZR2A",
-                "6othnN8+PE5+8UVsirHqJkTE2BvanmtZvTKZzhqu",
-                "proxy.houston.hp.com",
-                "8080",
-                "",
-                "",
-                "", "", "", "", "default", "", "", "", "", "",
-                "", "ubuntu", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "",
-                "", "testIntelliJ", "", "", "", "", "1", "1", "2", "0",
-                "0", "", "", "", "", "");
-        System.out.println(results.get("returnResult"));
-    }
 }
