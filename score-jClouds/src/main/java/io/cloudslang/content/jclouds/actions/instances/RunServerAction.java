@@ -90,11 +90,4 @@ public class RunServerAction {
             return ExceptionProcessor.getExceptionResult(e);
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        RunServerAction runServer = new RunServerAction();
-        Map<String, String> results = runServer.execute("amazon", "https://ec2.amazonaws.com", "AKIAIXTNUGGYBYFYZR2A",
-                "6othnN8+PE5+8UVsirHqJkTE2BvanmtZvTKZzhqu", "proxy.houston.hp.com", "8080", "", "", "ami-c8a9baa2", "1", "1");
-        System.out.println(results.get("returnResult"));
-    }
 }
