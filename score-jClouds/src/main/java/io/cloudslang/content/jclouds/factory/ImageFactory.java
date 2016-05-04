@@ -4,7 +4,7 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.impl.imagesImpl.AmazonImageService;
-import io.cloudslang.content.jclouds.services.impl.imagesImpl.OpenStackImageService;
+import io.cloudslang.content.jclouds.services.impl.imagesImpl.OpenstackImageService;
 
 /**
  * Created by Mihai Tusa.
@@ -23,7 +23,7 @@ public class ImageFactory {
                         commonInputs.getProxyPort());
                 break;
             case Constants.Providers.OPENSTACK:
-                imageService = new OpenStackImageService(
+                imageService = new OpenstackImageService(
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),
                         commonInputs.getCredential(),
