@@ -36,7 +36,7 @@ public class DateTimeService {
 
         if (StringUtils.isNotEmpty(localeLang)) {
             if (LocaleUtils.isUnix(localeLang)) {
-                long timestamp = Math.round(datetime.toDateTime().getMillis() / 1000);
+                long timestamp = (long)Math.floor(datetime.toDateTime().getMillis()/ 1000);
                 addReturnValues(returnResult, "" + timestamp);
 
                 return returnResult;
