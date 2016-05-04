@@ -65,7 +65,11 @@ public class ResponseUtils {
         inputMap.put(VmParameter.VM_IS_TEMPLATE.getValue(), Boolean.toString(virtualMachineConfigSummary.isTemplate()));
 
         if (virtualMachineSummary.getGuest() != null) {
-            inputMap.put(VmParameter.VM_IP_ADDRESS.getValue(), virtualMachineSummary.getGuest().getIpAddress());
+            if (virtualMachineSummary.getGuest().getIpAddress() != null) {
+                inputMap.put(VmParameter.VM_IP_ADDRESS.getValue(), virtualMachineSummary.getGuest().getIpAddress());
+            } else {
+                inputMap.put(VmParameter.VM_IP_ADDRESS.getValue(), Constants.EMPTY);
+            }
         }
     }
 
