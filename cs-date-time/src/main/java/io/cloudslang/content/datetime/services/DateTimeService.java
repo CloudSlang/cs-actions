@@ -4,15 +4,13 @@ import io.cloudslang.content.datetime.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by stcu on 28.04.2016.
@@ -33,20 +31,20 @@ public class DateTimeService {
      */
     public Map<String, String> getCurrentDateTime(String localeLang, String localeCountry) throws Exception {
         DateTimeFormatter formatter;
-        DateTime datetime = DateTime.now();
+        LocalDateTime datetime = LocalDateTime.now();
         Map<String, String> returnResult = new HashMap<>();
 
         if (StringUtils.isNotEmpty(localeLang)) {
             if (LocaleUtils.isUnix(localeLang)) {
-                long timestamp = Math.round(datetime.getMillis() / 1000);
+                long timestamp = Math.round(datetime.toDateTime().getMillis() / 1000);
                 addReturnValues(returnResult, "" + timestamp);
 
                 return returnResult;
             }
 
-            formatter = DateTimeFormat.fullDateTime().withLocale(getLocaleByCountry(localeLang, localeCountry));
+            formatter = DateTimeFormat.longDateTime().withLocale(getLocaleByCountry(localeLang, localeCountry));
         } else {
-            formatter = DateTimeFormat.fullDateTime();
+            formatter = DateTimeFormat.longDateTime();
         }
         addReturnValues(returnResult, formatter.print(datetime));
 
@@ -77,7 +75,7 @@ public class DateTimeService {
      */
     public Map<String, String> parseDate(String date, String dateFormat, String dateLocaleLang,
                                          String dateLocaleCountry, String outFormat, String outLocaleLang,
-                                         String outLocaleCountry) throws NullPointerException {
+                                         String outLocaleCountry) throws Exception {
         DateTime inputDateTime;
         DateTimeFormatter dateFormatter, outFormatter;
         Map<String, String> returnResult = new HashMap<>();
@@ -98,16 +96,12 @@ public class DateTimeService {
             }
         } else {
             dateFormatter = formatWithDefault(dateLocaleLang, dateLocaleCountry);
-
-            if (LocaleUtils.isUnix(outFormat))
-                dateFormatter.withZone(DateTimeZone.getDefault());
-
-            inputDateTime = dateFormatter.parseDateTime(date);
+            inputDateTime = getJodaOrJavaDate(dateFormatter, dateFormat, date);
         }
 
         if (StringUtils.isNotEmpty(outFormat)) {
             if (LocaleUtils.isUnix(outFormat)) {
-                long timestamp = Math.round(inputDateTime.getMillis() / 1000);
+                long timestamp = Math.round(inputDateTime.toDateTime().getMillis() / 1000);
                 addReturnValues(returnResult, "" + timestamp);
                 return returnResult;
             } else {
@@ -224,13 +218,56 @@ public class DateTimeService {
     private DateTimeFormatter formatWithDefault(String lang, String country) {
         DateTimeFormatter dateFormatter;
         if (StringUtils.isNotEmpty(lang)) {
-            dateFormatter = DateTimeFormat.fullDateTime()
+            dateFormatter = DateTimeFormat.longDateTime()
                     .withLocale(getLocaleByCountry(lang, country));
         } else {
-            dateFormatter = DateTimeFormat.fullDateTime();
+            dateFormatter = DateTimeFormat.longDateTime();
         }
 
         return dateFormatter;
+    }
+
+    /**
+     * Because the date passed as argument can be in java format, and because not all formats are compatible
+     * with joda-time, this method checks if the date string is valid with java. In this way we can use the
+     * proper DateTime without alterating the output.
+     * @param date date passed as argument
+     * @return true if is a java date
+     */
+    private boolean isDateValid(String date, Locale locale) {
+        try {
+            DateFormat format = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, locale);
+            format.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Returns a LocalDateTime depending on how the date passes as argument is formatted.
+     * @see {@link #isDateValid}
+     * @param date date passed as argument
+     * @return true if is a java date
+     */
+    private DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String outFormat, String date) throws Exception {
+        DateTime datetime;
+        if (!isDateValid(date, dateFormatter.getLocale())) {
+            if (LocaleUtils.isUnix(outFormat))
+                dateFormatter.withZone(DateTimeZone.getDefault());
+
+            datetime = new DateTime(date);
+        } else {
+            DateFormat format = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
+                    dateFormatter.getLocale());
+
+            Calendar dateCalendar = GregorianCalendar.getInstance();
+            dateCalendar.setTime(format.parse(date));
+
+            datetime = new DateTime(dateCalendar.getTime());
+        }
+
+        return datetime;
     }
 }
 

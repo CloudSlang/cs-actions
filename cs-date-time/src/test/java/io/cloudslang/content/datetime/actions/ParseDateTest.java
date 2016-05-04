@@ -7,6 +7,7 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by stcu on 29.04.2016.
@@ -28,7 +29,7 @@ public class ParseDateTest {
 
         final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
                 outFormat, outLocaleLang, outLocaleCountry);
-        assertFalse(result.get(Constants.OutputNames.RETURN_RESULT).isEmpty());
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals("0", result.get(RETURN_CODE));
     }
 
@@ -52,7 +53,7 @@ public class ParseDateTest {
         final Map<String, String> result = parseDate.execute(date, dateFormat, null, null,
                 null, null, null);
         assertEquals("0", result.get(RETURN_CODE));
-        assertEquals("Tuesday, May 3, 2016 8:54:08 AM MSK", result.get(RETURN_RESULT));
+        assertTrue(result.get(RETURN_RESULT).contains("May 3, 2016 8:54:08"));
     }
 
     @Test
@@ -72,7 +73,7 @@ public class ParseDateTest {
 
         final Map<String, String> result = parseDate.execute(date, dateFormat, null, null,
                 null, null, null);
-        assertFalse(result.get(Constants.OutputNames.RETURN_RESULT).isEmpty());
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals("-1", result.get(RETURN_CODE));
     }
 
@@ -88,7 +89,7 @@ public class ParseDateTest {
 
         final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
                 outFormat, outLocaleLang, outLocaleCountry);
-        assertFalse(result.get(Constants.OutputNames.RETURN_RESULT).isEmpty());
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals("0", result.get(RETURN_CODE));
     }
 
@@ -104,7 +105,42 @@ public class ParseDateTest {
 
         final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
                 outFormat, outLocaleLang, outLocaleCountry);
-        assertFalse(result.get(Constants.OutputNames.RETURN_RESULT).isEmpty());
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals("-1", result.get(RETURN_CODE));
+    }
+
+    @Test
+    public void testGetCurrentDateValid() {
+        GetCurrentDateTime currentDateTime = new GetCurrentDateTime();
+        String date = currentDateTime.execute("en", "US").get(RETURN_RESULT);
+        String dateFormat = "";
+        String dateLocaleLang = "en";
+        String dateLocaleCountry = "US";
+        String outFormat = "";
+        String outLocaleLang = "fr";
+        String outLocaleCountry = "FR";
+
+        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
+                outFormat, outLocaleLang, outLocaleCountry);
+
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
+        assertEquals("0", result.get(RETURN_CODE));
+    }
+
+    @Test
+    public void testFormatsNullValid() {
+        String date = "2001-07-04T12:08:56.235+0700";
+        String dateFormat = "";
+        String dateLocaleLang = "en";
+        String dateLocaleCountry = "US";
+        String outFormat = "";
+        String outLocaleLang = "fr";
+        String outLocaleCountry = "FR";
+
+        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
+                outFormat, outLocaleLang, outLocaleCountry);
+
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
+        assertEquals("0", result.get(RETURN_CODE));
     }
 }
