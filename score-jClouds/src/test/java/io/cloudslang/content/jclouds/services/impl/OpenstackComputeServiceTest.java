@@ -14,7 +14,6 @@ import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 import org.jclouds.rest.ResourceNotFoundException;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -113,13 +112,9 @@ public class OpenstackComputeServiceTest {
     @Spy
     private OpenstackComputeService openstackComputeServiceSpy = new OpenstackComputeService(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
     /**
      * Add common mocks for all tests on init() method.
+     *
      * @throws Exception
      */
     private void addCommonMocksForInitMethod() throws Exception {
@@ -135,6 +130,7 @@ public class OpenstackComputeServiceTest {
 
     /**
      * Add common verifiers for tests on init() method.
+     *
      * @throws Exception
      */
     private void commonVerifiersFirInitMethod() throws Exception {
@@ -149,6 +145,7 @@ public class OpenstackComputeServiceTest {
 
     /**
      * Tests the init method.
+     *
      * @throws Exception
      */
     @Test
@@ -164,6 +161,7 @@ public class OpenstackComputeServiceTest {
 
     /**
      * Test init method when proxy and region are not null.
+     *
      * @throws Exception
      */
     @Test
@@ -186,6 +184,7 @@ public class OpenstackComputeServiceTest {
 
     /**
      * Test init method with null proxy parameters and not null region.
+     *
      * @throws Exception
      */
     @Test

@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.utils;
 
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 
 import java.util.HashMap;
@@ -11,8 +12,6 @@ import java.util.Set;
  * 2/18/2016.
  */
 public class OutputsUtil {
-    private static final String EMPTY = "";
-
     private OutputsUtil() {
     }
 
@@ -37,6 +36,6 @@ public class OutputsUtil {
             }
             return sb.toString();
         }
-        return EMPTY;
+        return Constants.Miscellaneous.EMPTY;
     }
 }

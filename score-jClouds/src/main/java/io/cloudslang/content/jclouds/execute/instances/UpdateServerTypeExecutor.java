@@ -1,6 +1,5 @@
-package io.cloudslang.content.jclouds.execute;
+package io.cloudslang.content.jclouds.execute.instances;
 
-import io.cloudslang.content.jclouds.actions.ResumeServerAction;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
@@ -12,17 +11,16 @@ import io.cloudslang.content.jclouds.utils.OutputsUtil;
 import java.util.Map;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by Mihai Tusa.
+ * 2/24/2016.
  */
-public class ResumeServerExecutor {
-    private static final String SERVER_RESUMED = "server resumed";
-
+public class UpdateServerTypeExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         InputsUtil.validateInput(inputs.getEndpoint(), Inputs.CommonInputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(inputs, ResumeServerAction.class);
-        cs.resume(customInputs.getRegion(), customInputs.getServerId());
+        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        String result = cs.updateInstanceType(customInputs);
 
-        return OutputsUtil.getResultsMap(SERVER_RESUMED);
+        return OutputsUtil.getResultsMap(result);
     }
 }

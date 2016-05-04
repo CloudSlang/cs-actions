@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.actions;
+package io.cloudslang.content.jclouds.actions.instances;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -10,7 +10,7 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.HardRebootExecutor;
+import io.cloudslang.content.jclouds.execute.instances.SoftRebootExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -18,9 +18,9 @@ import java.util.Map;
 /**
  * Created by persdana on 6/22/2015.
  */
-public class HardRebootAction {
+public class SoftRebootAction {
     /**
-     * Perform a hard reboot of a server.  A hard reboot (HARD) is equivalent to power cycling the server.
+     * Perform a soft reboot of a server.  In a soft reboot (SOFT), the operating system is signaled to restart, which allows for a graceful shutdown of all processes.
      *
      * @param provider         The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
      * @param identityEndpoint The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon or "http://hostOrIp:5000/v2.0" for openstack.
@@ -32,7 +32,7 @@ public class HardRebootAction {
      * @param proxyPort        The proxy server port.
      * @return
      */
-    @Action(name = "Hard Reboot",
+    @Action(name = "Soft Reboot",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -70,7 +70,7 @@ public class HardRebootAction {
                 .build();
 
         try {
-            return new HardRebootExecutor().execute(inputs, customInputs);
+            return new SoftRebootExecutor().execute(inputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

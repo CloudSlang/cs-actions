@@ -92,16 +92,16 @@ public class AmazonComputeServiceTest {
     private EC2Api ec2ApiMock;
 
     @Mock
+    private AMIApi amiApiMock;
+
+    @Mock
+    private InstanceApi instanceApiMock;
+
+    @Mock
     private Optional<? extends InstanceApi> optionalInstanceApi;
 
     @Mock
     private Optional<? extends AMIApi> optionalAmiApiMock;
-
-    @Mock
-    AMIApi amiApiMock;
-
-    @Mock
-    private InstanceApi instanceApiMock;
 
     @Mock
     private Optional<ServerAdminApi> optionalServerAdminApiMock;
@@ -596,24 +596,6 @@ public class AmazonComputeServiceTest {
         verify(instanceApiMock, times(1))
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
     }
-//    @Test
-//    public void testCreateServer() throws Exception {
-//        doNothing().when(amazonComputeServiceSpy).lazyInit(anyString());
-//        amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
-//        doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(anyString());
-//        doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
-//        doReturn(instanceApiMock).when(optionalInstanceApi).get();
-//        doReturn(serverCreatedMock).when(instanceApiMock)
-//                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
-//
-//        amazonComputeServiceSpy.createNodesInGroup(getCommonInputs(), getCustomInputs());
-//
-//        verify(amazonComputeServiceSpy, atMost(1)).lazyInit(REGION);
-//        verify(ec2ApiMock, atMost(1)).getInstanceApi();
-//        verify(optionalInstanceApi, atMost(1)).get();
-//        verify(instanceApiMock, atMost(1))
-//                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
-//    }
 
     /**
      * Test updateServer method. Positive scenario.

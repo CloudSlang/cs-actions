@@ -1,10 +1,7 @@
 package io.cloudslang.content.jclouds.services;
 
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CreateServerCustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 
@@ -34,8 +31,6 @@ public interface ComputeService {
     Set<String> listNodes(String region);
 
     Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception;
-
-    Set<? extends NodeMetadata> createNodesInGroup(CommonInputs commonInputs, CreateServerCustomInputs createServerInputs) throws Exception;
 
     String updateInstanceType(CustomInputs customInputs) throws Exception;
 }

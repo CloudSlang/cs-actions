@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,19 +9,20 @@ import org.apache.commons.lang3.StringUtils;
  * 2/18/2016.
  */
 public class CustomInputs {
-    private static final String DEFAULT_AMAZON_REGION = "us-east-1";
-    private static final long DEFAULT_TIMING = 20000;
-
     private String instanceType;
     private String region;
     private String serverId;
     private String availabilityZone;
     private String imageRef;
+    private String imageDescription;
+    private String imageName;
 
     private int minCount;
     private int maxCount;
     private long checkStateTimeout;
     private long polingInterval;
+
+    private boolean imageNoReboot;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -28,11 +30,15 @@ public class CustomInputs {
         this.serverId = builder.serverId;
         this.availabilityZone = builder.availabilityZone;
         this.imageRef = builder.imageRef;
+        this.imageDescription = builder.imageDescription;
+        this.imageName = builder.imageName;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
         this.checkStateTimeout = builder.checkStateTimeout;
         this.polingInterval = builder.polingInterval;
+
+        this.imageNoReboot = builder.imageNoReboot;
     }
 
     public String getRegion() {
@@ -55,6 +61,14 @@ public class CustomInputs {
         return imageRef;
     }
 
+    public String getImageDescription() {
+        return imageDescription;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -71,24 +85,32 @@ public class CustomInputs {
         return polingInterval;
     }
 
+    public boolean isImageNoReboot() {
+        return imageNoReboot;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceType;
         private String serverId;
         private String availabilityZone;
         private String imageRef;
+        private String imageDescription;
+        private String imageName;
 
         private int minCount;
         private int maxCount;
         private long checkStateTimeout;
         private long polingInterval;
 
+        private boolean imageNoReboot;
+
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? DEFAULT_AMAZON_REGION : inputValue;
+            region = (StringUtils.isBlank(inputValue)) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : inputValue;
             return this;
         }
 
@@ -112,6 +134,16 @@ public class CustomInputs {
             return this;
         }
 
+        public CustomInputsBuilder withImageDescription(String inputValue) {
+            imageDescription = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withImageName(String inputValue) {
+            imageName = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            return this;
+        }
+
         public CustomInputsBuilder withMinCount(String inputValue) {
             minCount = InputsUtil.getMinInstancesCount(inputValue);
             return this;
@@ -123,12 +155,17 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withCheckStateTimeout(String inputValue) {
-            checkStateTimeout = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
+            checkStateTimeout = InputsUtil.getValidLong(inputValue, Constants.Miscellaneous.DEFAULT_TIMING);
             return this;
         }
 
         public CustomInputsBuilder withPolingInterval(String inputValue) {
-            polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
+            polingInterval = InputsUtil.getValidLong(inputValue, Constants.Miscellaneous.DEFAULT_TIMING);
+            return this;
+        }
+
+        public CustomInputsBuilder withImageNoReboot(String inputValue) {
+            imageNoReboot = InputsUtil.getBoolean(inputValue);
             return this;
         }
     }

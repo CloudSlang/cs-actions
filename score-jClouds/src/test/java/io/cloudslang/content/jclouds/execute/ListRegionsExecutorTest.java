@@ -2,6 +2,7 @@ package io.cloudslang.content.jclouds.execute;
 
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.execute.regions.ListRegionsExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -56,7 +57,7 @@ public class ListRegionsExecutorTest {
      */
     @Test
     public void testExecute() throws Exception {
-        when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
+        when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
 
         Set<String> regions = getRegions();
         doReturn(regions).when(computeServiceMock).listRegions();

@@ -1,15 +1,14 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CreateServerCustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
@@ -26,9 +25,6 @@ import java.util.Set;
  * Created by persdana on 5/27/2015.
  */
 public class OpenstackComputeService extends JCloudsComputeService implements ComputeService {
-    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
-    private static final String OPENSTACK_PROVIDER = "openstack-nova";
-
     NovaApi novaApi = null;
     private String region;
 
@@ -41,7 +37,7 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
     }
 
     protected void init() {
-        ContextBuilder contextBuilder = super.init(region, OPENSTACK_PROVIDER);
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.OPENSTACK_PROVIDER);
 
         novaApi = contextBuilder
                 .buildApi(NovaApi.class);
@@ -149,12 +145,12 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
 
     @Override
     public Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
     public String updateInstanceType(CustomInputs customInputs) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     String createServer(String region, String name, String imageRef, String flavorRef) {
@@ -163,11 +159,5 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
 
         ServerCreated serverCreated = serverApi.create(name, imageRef, flavorRef);
         return serverCreated.toString();
-    }
-
-    @Override
-    public Set<? extends NodeMetadata> createNodesInGroup(CommonInputs commonInputs, CreateServerCustomInputs createServerInputs)
-            throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 }

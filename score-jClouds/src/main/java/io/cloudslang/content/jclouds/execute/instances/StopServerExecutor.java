@@ -1,6 +1,5 @@
-package io.cloudslang.content.jclouds.execute;
+package io.cloudslang.content.jclouds.execute.instances;
 
-import io.cloudslang.content.jclouds.actions.StartServerAction;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
@@ -13,18 +12,18 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
 
 /**
- * Created by persdana on 5/25/2015.
+ * Created by persdana on 6/18/2015.
  */
-public class StartServerExecutor {
-    private static final String SERVER_STARTED = "server started";
+public class StopServerExecutor {
+    private static final String SERVER_STOPPED = "server stopped";
     private static final String EMPTY = "";
 
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         InputsUtil.validateInput(inputs.getEndpoint(), Inputs.CommonInputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(inputs, StartServerAction.class);
-        String resultStr = cs.start(customInputs.getRegion(), customInputs.getServerId());
+        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        String resultStr = cs.stop(customInputs.getRegion(), customInputs.getServerId());
 
-        return OutputsUtil.getResultsMap((StringUtils.isBlank(resultStr)) ? SERVER_STARTED : EMPTY);
+        return OutputsUtil.getResultsMap(StringUtils.isBlank(resultStr) ? SERVER_STOPPED : EMPTY);
     }
 }

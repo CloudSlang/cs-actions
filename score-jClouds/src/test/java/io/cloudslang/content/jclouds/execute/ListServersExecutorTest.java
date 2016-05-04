@@ -3,6 +3,7 @@ package io.cloudslang.content.jclouds.execute;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.execute.instances.ListServersExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -57,7 +58,7 @@ public class ListServersExecutorTest {
      */
     @Test
     public void testExecute() throws Exception {
-        when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
+        when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
 
         Set<String> nodes = getNodes();
         doReturn(nodes).when(computeServiceMock).listNodes(inputs.getRegion());

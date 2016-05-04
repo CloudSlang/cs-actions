@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.actions;
+package io.cloudslang.content.jclouds.actions.instances;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -10,7 +10,7 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.RunServerExecutor;
+import io.cloudslang.content.jclouds.execute.instances.RunServerExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;

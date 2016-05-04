@@ -1,13 +1,12 @@
 package io.cloudslang.content.jclouds.services.impl;
 
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CreateServerCustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
 import org.jclouds.ContextBuilder;
-import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.InstanceState;
 import org.jclouds.ec2.domain.InstanceStateChange;
@@ -23,10 +22,6 @@ import java.util.Set;
  * Created by persdana on 5/27/2015.
  */
 public class AmazonComputeService extends JCloudsComputeService implements ComputeService {
-    private static final String AMAZON_PROVIDER = "ec2";
-    private static final String SERVER_UPDATED = "Server updated successfully.";
-    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented.";
-
     EC2Api ec2Api = null;
 
     protected String region;
@@ -36,7 +31,7 @@ public class AmazonComputeService extends JCloudsComputeService implements Compu
     }
 
     protected void init() {
-        ContextBuilder contextBuilder = super.init(region, AMAZON_PROVIDER);
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
         ec2Api = contextBuilder.buildApi(EC2Api.class);
     }
 
@@ -124,7 +119,7 @@ public class AmazonComputeService extends JCloudsComputeService implements Compu
             return instanceChanged.toString();
         }
 
-        return SERVER_UPDATED;
+        return Constants.Messages.SERVER_UPDATED;
     }
 
     @Override
@@ -147,11 +142,6 @@ public class AmazonComputeService extends JCloudsComputeService implements Compu
     @Override
     public void resume(String region, String serverId) throws Exception {
         throw new Exception("Resume is not supported on Amazon. Use start server operation to resume an amazon Instance");
-    }
-
-    @Override
-    public Set<? extends NodeMetadata> createNodesInGroup(CommonInputs commonInputs, CreateServerCustomInputs createServerInputs) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     private InstanceApi getEC2InstanceApi(String region, boolean isForRegion) {
