@@ -13,7 +13,6 @@ public class CustomInputs {
     private String region;
     private String serverId;
     private String availabilityZone;
-    private String imageRef;
     private String imageName;
     private String imageId;
     private String imageDescription;
@@ -30,7 +29,6 @@ public class CustomInputs {
         this.instanceType = builder.instanceType;
         this.serverId = builder.serverId;
         this.availabilityZone = builder.availabilityZone;
-        this.imageRef = builder.imageRef;
         this.imageName = builder.imageName;
         this.imageId = builder.imageId;
         this.imageDescription = builder.imageDescription;
@@ -57,10 +55,6 @@ public class CustomInputs {
 
     public String getAvailabilityZone() {
         return availabilityZone;
-    }
-
-    public String getImageRef() {
-        return imageRef;
     }
 
     public String getImageName() {
@@ -100,7 +94,6 @@ public class CustomInputs {
         private String instanceType;
         private String serverId;
         private String availabilityZone;
-        private String imageRef;
         private String imageName;
         private String imageId;
         private String imageDescription;
@@ -133,11 +126,6 @@ public class CustomInputs {
 
         public CustomInputsBuilder withAvailabilityZone(String inputValue) {
             availabilityZone = inputValue;
-            return this;
-        }
-
-        public CustomInputsBuilder withImageRef(String inputValue) {
-            imageRef = inputValue;
             return this;
         }
 

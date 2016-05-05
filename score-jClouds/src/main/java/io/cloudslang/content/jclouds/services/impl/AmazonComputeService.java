@@ -1,8 +1,6 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
@@ -94,28 +92,28 @@ public class AmazonComputeService extends JCloudsComputeService implements Compu
     }
 
     @Override
-    public Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
-        InstanceApi instanceApi = getEC2InstanceApi(customInputs.getRegion(), false);
+    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
+                                                                       int minCount, int maxCount, RunInstancesOptions... options)
+            throws Exception {
+        InstanceApi instanceApi = getEC2InstanceApi(region, false);
         RunInstancesOptions runInstancesOptions = RunInstancesOptions.NONE;
 
-        return instanceApi.runInstancesInRegion(customInputs.getRegion(), customInputs.getAvailabilityZone(),
-                customInputs.getImageRef(), customInputs.getMinCount(), customInputs.getMaxCount(), runInstancesOptions);
+        return instanceApi.runInstancesInRegion(region, availabilityZone, imageId, minCount, maxCount, runInstancesOptions);
     }
 
     @Override
-    public String updateInstanceType(CustomInputs customInputs) throws Exception {
-        InstanceApi instanceApi = getEC2InstanceApi(customInputs.getRegion(), false);
+    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
+            throws Exception {
+        InstanceApi instanceApi = getEC2InstanceApi(region, false);
 
         AmazonComputeServiceHelper helper = new AmazonComputeServiceHelper();
-        InstanceState previousState = helper.getInstanceState(instanceApi, customInputs);
-        helper.stopAndWaitToStopInstance(instanceApi, previousState, customInputs);
+        InstanceState previousState = helper.getInstanceState(instanceApi, region, serverId);
+        helper.stopAndWaitToStopInstance(instanceApi, previousState, region, serverId, checkStateTimeout, polingInterval);
 
-        instanceApi.setInstanceTypeForInstanceInRegion(customInputs.getRegion(), customInputs.getServerId(),
-                customInputs.getInstanceType());
+        instanceApi.setInstanceTypeForInstanceInRegion(region, serverId, instanceType);
 
         if (InstanceState.RUNNING.equals(previousState)) {
-            Set<? extends InstanceStateChange> instanceChanged = instanceApi
-                    .startInstancesInRegion(customInputs.getRegion(), customInputs.getServerId());
+            Set<? extends InstanceStateChange> instanceChanged = instanceApi.startInstancesInRegion(region, serverId);
             return instanceChanged.toString();
         }
 

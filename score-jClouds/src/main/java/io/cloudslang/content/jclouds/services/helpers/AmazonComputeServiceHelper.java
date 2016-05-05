@@ -1,7 +1,6 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import org.jclouds.ec2.domain.InstanceState;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
@@ -14,9 +13,9 @@ import java.util.Set;
  * 2/23/2016.
  */
 public class AmazonComputeServiceHelper {
-    public InstanceState getInstanceState(InstanceApi instanceApi, CustomInputs customInputs) throws Exception {
+    public InstanceState getInstanceState(InstanceApi instanceApi, String region, String serverId) throws Exception {
         Set<? extends Reservation<? extends RunningInstance>> reservationSet = instanceApi
-                .describeInstancesInRegion(customInputs.getRegion(), customInputs.getServerId());
+                .describeInstancesInRegion(region, serverId);
         if (reservationSet.iterator().hasNext()) {
             Reservation<? extends RunningInstance> reservation = reservationSet.iterator().next();
             if (reservation.iterator().hasNext()) {
@@ -27,20 +26,21 @@ public class AmazonComputeServiceHelper {
         throw new Exception(Constants.ErrorMessages.SERVER_NOT_FOUND);
     }
 
-    public void stopAndWaitToStopInstance(InstanceApi instanceApi, InstanceState instanceState, CustomInputs customInputs)
-            throws Exception {
+    public void stopAndWaitToStopInstance(InstanceApi instanceApi, InstanceState instanceState, String region,
+                                          String serverId, long checkStateTimeout, long polingInterval) throws Exception {
         if (!InstanceState.STOPPED.equals(instanceState)) {
-            instanceApi.stopInstancesInRegion(customInputs.getRegion(), true, customInputs.getServerId());
-            waitLoop(instanceApi, instanceState, customInputs);
+            instanceApi.stopInstancesInRegion(region, true, serverId);
+            waitLoop(instanceApi, instanceState, region, serverId, checkStateTimeout, polingInterval);
         }
     }
 
-    private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, CustomInputs customInputs) throws Exception {
+    private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
+                          String serverId, long checkStateTimeout, long polingInterval) throws Exception {
         long waitTime = 0;
-        while (!InstanceState.STOPPED.equals(instanceState) && waitTime <= customInputs.getCheckStateTimeout()) {
-            Thread.sleep(customInputs.getPolingInterval());
+        while (!InstanceState.STOPPED.equals(instanceState) && waitTime <= checkStateTimeout) {
+            Thread.sleep(polingInterval);
             waitTime += 4000;
-            instanceState = getInstanceState(instanceApi, customInputs);
+            instanceState = getInstanceState(instanceApi, region, serverId);
         }
     }
 }

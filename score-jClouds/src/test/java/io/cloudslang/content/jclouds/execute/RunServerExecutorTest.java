@@ -8,6 +8,7 @@ import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
+import org.jclouds.ec2.options.RunInstancesOptions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,8 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -63,10 +66,12 @@ public class RunServerExecutorTest {
     @Test
     public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn(reservationsMock).when(computeServiceMock).runServer(any(CommonInputs.class), any(CustomInputs.class));
+        doReturn(reservationsMock).when(computeServiceMock)
+                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
         Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock, times(1)).runServer(any(CommonInputs.class), any(CustomInputs.class));
+        verify(computeServiceMock, times(1))
+                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
 
         assertNotNull(results);
         assertEquals("0", results.get(Outputs.RETURN_CODE));
@@ -87,10 +92,6 @@ public class RunServerExecutorTest {
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
-                .withAvailabilityZone("")
-                .withImageRef("ami-4b91bb21")
-                .withMinCount("")
-                .withMaxCount("")
                 .build();
     }
 }

@@ -15,7 +15,8 @@ import java.util.Map;
 public class UpdateServerTypeExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        String result = cs.updateInstanceType(customInputs);
+        String result = cs.updateInstanceType(customInputs.getRegion(), customInputs.getServerId(),
+                customInputs.getInstanceType(), customInputs.getCheckStateTimeout(), customInputs.getPolingInterval());
 
         return OutputsUtil.getResultsMap(result);
     }

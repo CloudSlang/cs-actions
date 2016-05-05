@@ -1,8 +1,6 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
@@ -11,6 +9,7 @@ import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.domain.Location;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
+import org.jclouds.ec2.options.RunInstancesOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -112,12 +111,14 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     }
 
     @Override
-    public String updateInstanceType(CustomInputs customInputs) throws Exception {
+    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
+            throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs)
+    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
+                                                                       int minCount, int maxCount, RunInstancesOptions... options)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
     }

@@ -1,9 +1,8 @@
 package io.cloudslang.content.jclouds.services;
 
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
+import org.jclouds.ec2.options.RunInstancesOptions;
 
 import java.util.Set;
 
@@ -30,7 +29,10 @@ public interface ComputeService {
 
     Set<String> listNodes(String region);
 
-    Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception;
+    Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
+                                                                int minCount, int maxCount, RunInstancesOptions... options)
+            throws Exception;
 
-    String updateInstanceType(CustomInputs customInputs) throws Exception;
+    String updateInstanceType(String region, String instanceId, String instanceType, long checkStateTimeout, long polingInterval)
+            throws Exception;
 }

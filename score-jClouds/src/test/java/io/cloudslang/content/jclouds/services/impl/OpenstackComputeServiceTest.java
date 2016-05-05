@@ -684,7 +684,7 @@ public class OpenstackComputeServiceTest {
     }
 
     /**
-     * Test runServer method. Positive scenario.
+     * Test runInstancesInRegion method. Positive scenario.
      */
     @Test
     public void testRunServer() {

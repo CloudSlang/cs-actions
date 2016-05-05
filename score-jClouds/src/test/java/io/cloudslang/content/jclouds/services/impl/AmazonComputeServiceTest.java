@@ -576,10 +576,10 @@ public class AmazonComputeServiceTest {
     }
 
     /**
-     * Test runServer method. Positive scenario.
+     * Test runInstancesInRegion method. Positive scenario.
      */
     @Test
-    public void testRunServer() throws Exception {
+    public void runInstancesInRegion() throws Exception {
         doNothing().when(amazonComputeServiceSpy).lazyInit(anyString());
         amazonComputeServiceSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(anyString());
@@ -588,7 +588,7 @@ public class AmazonComputeServiceTest {
         doReturn(serverCreatedMock).when(instanceApiMock)
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
 
-        amazonComputeServiceSpy.runServer(getCommonInputs(), getCustomInputs());
+        amazonComputeServiceSpy.runInstancesInRegion("us-east-1", "", "", 1, 1, new RunInstancesOptions());
 
         verify(amazonComputeServiceSpy, times(1)).lazyInit(REGION);
         verify(ec2ApiMock, times(1)).getInstanceApi();
@@ -607,14 +607,15 @@ public class AmazonComputeServiceTest {
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
         whenNew(AmazonComputeServiceHelper.class).withNoArguments().thenReturn(helperMock);
-        doReturn(InstanceState.RUNNING).when(helperMock).getInstanceState(instanceApiMock, getCustomInputs());
-        doNothing().when(helperMock).stopAndWaitToStopInstance(instanceApiMock, InstanceState.RUNNING, getCustomInputs());
+        doReturn(InstanceState.RUNNING).when(helperMock).getInstanceState(any(InstanceApi.class), anyString(), anyString());
+        doNothing().when(helperMock)
+                .stopAndWaitToStopInstance(any(InstanceApi.class), eq(InstanceState.RUNNING), anyString(), anyString(), anyLong(), anyLong());
         doNothing().when(instanceApiMock).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
         Set<InstanceStateChange> instanceStateChangeSet = getInstanceStateChanges();
 
         doReturn(instanceStateChangeSet).when(instanceApiMock).startInstancesInRegion(anyString(), anyString());
 
-        amazonComputeServiceSpy.updateInstanceType(getCustomInputs());
+        amazonComputeServiceSpy.updateInstanceType("us-east-1", "", "", 20000, 20000);
 
         verify(amazonComputeServiceSpy, times(1)).lazyInit(REGION);
         verify(ec2ApiMock, times(1)).getInstanceApi();
@@ -629,13 +630,5 @@ public class AmazonComputeServiceTest {
         instanceStateChangeSet.add(instanceStateChange);
 
         return instanceStateChangeSet;
-    }
-
-    private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
-    }
-
-    private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder().withRegion(REGION).withServerId(SERVER_ID).build();
     }
 }

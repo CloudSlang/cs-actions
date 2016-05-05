@@ -35,7 +35,7 @@ public class RunServerAction {
      *                         listRegionsAction can be used in order to get all regions - Default: 'us-east-1'
      * @param availabilityZone Optional - specifies the placement constraints for launching instance. Amazon automatically
      *                         selects an availability zone by default - Default: ''
-     * @param imageRef         The ID of the AMI. For more information go to: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html
+     * @param imageId          The ID of the AMI. For more information go to: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html
      *                         - Examples: 'ami-fce3c696', 'ami-4b91bb21'
      * @param minCount         Optional - The minimum number of launched instances - Default: '1'
      * @param maxCount         Optional - The maximum number of launched instances - Default: '1'
@@ -63,7 +63,7 @@ public class RunServerAction {
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
-                                       @Param(value = Inputs.CustomInputs.IMAGE_REF, required = true) String imageRef,
+                                       @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
                                        @Param(Inputs.CustomInputs.MIN_COUNT) String minCount,
                                        @Param(Inputs.CustomInputs.MAX_COUNT) String maxCount) throws Exception {
 
@@ -79,7 +79,7 @@ public class RunServerAction {
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withAvailabilityZone(availabilityZone)
-                .withImageRef(imageRef)
+                .withImageId(imageId)
                 .withMinCount(minCount)
                 .withMaxCount(maxCount)
                 .build();
