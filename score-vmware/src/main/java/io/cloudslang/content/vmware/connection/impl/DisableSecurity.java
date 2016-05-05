@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-public class DisableSecurity {
+class DisableSecurity {
     private static final String SSL = "SSL";
 
     /*

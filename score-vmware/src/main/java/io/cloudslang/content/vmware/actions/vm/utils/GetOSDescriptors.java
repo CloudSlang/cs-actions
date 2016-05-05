@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.vm.conf;
+package io.cloudslang.content.vmware.actions.vm.utils;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;

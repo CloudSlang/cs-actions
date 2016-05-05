@@ -3,6 +3,8 @@ package io.cloudslang.content.vmware.actions.vm;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,7 +27,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CreateVM.class)
 public class CreateVMTest {
-    private CreateVM createVM = new CreateVM();
+    private CreateVM createVM;
+
+    @Before
+    public void init() {
+        createVM = new CreateVM();
+    }
+
+    @After
+    public void tearDown() {
+        createVM = null;
+    }
 
     @Mock
     private VmService vmServiceMock;
@@ -38,16 +50,18 @@ public class CreateVMTest {
 
         resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
+        verify(vmServiceMock, times(1)).createVM(any(HttpInputs.class), any(VmInputs.class));
+
         assertNotNull(resultMap);
-        verify(vmServiceMock).createVM(any(HttpInputs.class), any(VmInputs.class));
     }
 
     @Test
     public void testCreatesVMProtocolException() throws Exception {
         Map<String, String> resultMap = createVM.createVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).createVM(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }
@@ -56,9 +70,10 @@ public class CreateVMTest {
     public void testCreatesVMIntException() throws Exception {
         Map<String, String> resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).createVM(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
-        assertEquals("The input value must be a int number.", resultMap.get("returnResult"));
+        assertEquals("The input value must be 0 or positive number.", resultMap.get("returnResult"));
     }
 }
