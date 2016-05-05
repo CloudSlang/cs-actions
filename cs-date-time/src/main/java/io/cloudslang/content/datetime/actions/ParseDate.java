@@ -53,7 +53,7 @@ public class ParseDate {
                             responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = Constants.InputNames.LOCALE_DATE, required = true) String date,
-                                       @Param(value = Constants.InputNames.DATE_FORMAT, required = true) String dateFormat,
+                                       @Param(Constants.InputNames.DATE_FORMAT) String dateFormat,
                                        @Param(Constants.InputNames.DATE_LOCALE_LANG) String dateLocaleLang,
                                        @Param(Constants.InputNames.DATE_LOCALE_COUNTRY) String dateLocaleCountry,
                                        @Param(Constants.InputNames.OUT_FORMAT) String outFormat,
