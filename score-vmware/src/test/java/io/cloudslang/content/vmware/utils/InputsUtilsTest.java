@@ -31,9 +31,9 @@ public class InputsUtilsTest {
     @Test
     public void getIntInputException() throws RuntimeException {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a int number.");
+        exception.expectMessage("The input value must be 0 or positive number.");
 
-        InputUtils.getIntInput("Doesn't work in this way", 0);
+        InputUtils.getIntInput("Doesn't work in this way", -1);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class InputsUtilsTest {
     @Test
     public void getLongInputException() throws RuntimeException {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a long number.");
+        exception.expectMessage("The input value must be 0 or positive number.");
 
         InputUtils.getLongInput("Still doesn't work in this way", 0);
     }
@@ -88,14 +88,12 @@ public class InputsUtilsTest {
     @Test
     public void getSuccessfullyDefaultDelimiter() {
         String testDelimiter = InputUtils.getDefaultDelimiter("", ",");
-
         assertEquals(",", testDelimiter);
     }
 
     @Test
     public void getDiskFileNameString() {
         String testDiskFileNameString = InputUtils.getDiskFileNameString("someDataStore", "testVM", "Renamed");
-
         assertEquals("[someDataStore] testVM/Renamed.vmdk", testDiskFileNameString);
     }
 
@@ -104,35 +102,24 @@ public class InputsUtilsTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Invalid operation specified for disk device. The disk device can be only added or removed.");
 
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withDevice("disk")
-                .withOperation("update")
-                .build();
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withDevice("disk").withOperation("update").build();
         InputUtils.checkValidOperation(vmInputs, "disk");
     }
 
     @Test
     public void isUpdateOperation() throws Exception {
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withOperation("add")
-                .build();
-        boolean isUpdate = InputUtils.isUpdateOperation(vmInputs);
-
-        assertFalse(isUpdate);
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder().withOperation("add").build();
+        assertFalse(InputUtils.isUpdateOperation(vmInputs));
     }
 
     @Test
     public void isIntFalse() {
-        boolean isUpdate = InputUtils.isInt("2147483648");
-
-        assertFalse(isUpdate);
+        assertFalse(InputUtils.isInt("2147483648"));
     }
 
     @Test
     public void isIntTrue() {
-        boolean isUpdate = InputUtils.isInt("2147483647");
-
-        assertTrue(isUpdate);
+        assertTrue(InputUtils.isInt("2147483647"));
     }
 
     @Test
@@ -162,5 +149,45 @@ public class InputsUtilsTest {
                 .withUpdateValue("")
                 .build();
         InputUtils.validateDiskInputs(vmInputs);
+    }
+
+    @Test
+    public void getByteInputSuccess() {
+        byte test = 0;
+        InputUtils.getByteInput("-128", test);
+
+        assertEquals(0, test);
+    }
+
+    @Test
+    public void getByteInputNotByte() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("The input value must be a positive number between 0 and 127 values range.");
+
+        byte test = 0;
+        InputUtils.getByteInput("128", test);
+    }
+
+    @Test
+    public void getByteInputDefault() {
+        byte test = 0;
+        InputUtils.getByteInput("", test);
+
+        assertEquals(0, test);
+    }
+
+    @Test
+    public void getBooleanInputFalse() {
+        assertFalse(InputUtils.getBooleanInput("anything", true));
+    }
+
+    @Test
+    public void getBooleanInputDefault() {
+        assertTrue(InputUtils.getBooleanInput("", true));
+    }
+
+    @Test
+    public void getBooleanInputTrue() {
+        assertTrue(InputUtils.getBooleanInput("TrUe", false));
     }
 }

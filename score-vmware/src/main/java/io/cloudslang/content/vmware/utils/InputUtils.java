@@ -34,11 +34,6 @@ public class InputUtils {
         return Operation.UPDATE.toString().equalsIgnoreCase(vmInputs.getOperation());
     }
 
-    public static boolean isValidUpdateOperation(VmInputs vmInputs) {
-        return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())
-                || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
-    }
-
     public static void checkValidOperation(VmInputs vmInputs, String device) {
         if (!InputUtils.isValidUpdateOperation(vmInputs)) {
             throw new RuntimeException("Invalid operation specified for " + device + " device. " +
@@ -61,7 +56,7 @@ public class InputUtils {
         try {
             intInput = StringUtils.isBlank(input) ? defaultValue : Integer.parseInt(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_INTEGER);
+            throw new RuntimeException(ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER);
         }
 
         return intInput;
@@ -72,14 +67,14 @@ public class InputUtils {
         try {
             longInput = StringUtils.isBlank(input) ? defaultValue : Long.parseLong(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_LONG);
+            throw new RuntimeException(ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER);
         }
 
         return longInput;
     }
 
-    public static String getDefaultDelimiter(String input, String defaultValue) {
-        return StringUtils.isBlank(input) ? defaultValue : input;
+    public static boolean getBooleanInput(String input, boolean defaultValue) {
+        return StringUtils.isBlank(input) ? defaultValue : Boolean.parseBoolean(input);
     }
 
     public static boolean isInt(String input) {
@@ -90,5 +85,25 @@ public class InputUtils {
         }
 
         return true;
+    }
+
+    static byte getByteInput(String input, byte defaultValue) {
+        byte byteInput;
+        try {
+            byteInput = StringUtils.isBlank(input) ? defaultValue : Byte.parseByte(input);
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException(ErrorMessages.NOT_BYTE);
+        }
+
+        return byteInput;
+    }
+
+    static String getDefaultDelimiter(String input, String defaultValue) {
+        return StringUtils.isBlank(input) ? defaultValue : input;
+    }
+
+    private static boolean isValidUpdateOperation(VmInputs vmInputs) {
+        return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())
+                || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
     }
 }

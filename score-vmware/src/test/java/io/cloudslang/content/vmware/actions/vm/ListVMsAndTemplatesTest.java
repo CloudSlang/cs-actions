@@ -8,6 +8,8 @@ package io.cloudslang.content.vmware.actions.vm;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -21,15 +23,23 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ListVMsAndTemplates.class)
 public class ListVMsAndTemplatesTest {
-    private ListVMsAndTemplates listVMsAndTemplates = new ListVMsAndTemplates();
+    private ListVMsAndTemplates listVMsAndTemplates;
+
+    @Before
+    public void init() {
+        listVMsAndTemplates = new ListVMsAndTemplates();
+    }
+
+    @After
+    public void tearDown() {
+        listVMsAndTemplates = null;
+    }
 
     @Mock
     private VmService vmServiceMock;
@@ -39,23 +49,22 @@ public class ListVMsAndTemplatesTest {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
 
-        when(vmServiceMock.listVMsAndTemplates(any(HttpInputs.class),
-                any(VmInputs.class),
-                anyString()))
-                .thenReturn(resultMap);
+        when(vmServiceMock.listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString())).thenReturn(resultMap);
 
         resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "");
 
+        verify(vmServiceMock, times(1)).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
+
         assertNotNull(resultMap);
-        verify(vmServiceMock).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
     }
 
     @Test
     public void testListVMsAndTemplatesProtocolException() throws Exception {
         Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }
