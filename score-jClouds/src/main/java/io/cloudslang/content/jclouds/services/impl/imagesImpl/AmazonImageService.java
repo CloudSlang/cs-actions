@@ -1,7 +1,6 @@
 package io.cloudslang.content.jclouds.services.impl.imagesImpl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
@@ -23,22 +22,22 @@ public class AmazonImageService extends JCloudsComputeService implements ImageSe
     }
 
     @Override
-    public String createImageInRegion(CustomInputs customInputs) {
-        AMIApi amiApi = getAMIApi(customInputs.getRegion(), true);
+    public String createImageInRegion(String region, String name, String serverId, String imageDescription, boolean imageNoReboot) {
+        AMIApi amiApi = getAMIApi(region, true);
 
-        CreateImageOptions options = new CreateImageOptions().withDescription(customInputs.getImageDescription());
-        if (customInputs.isImageNoReboot()) {
+        CreateImageOptions options = new CreateImageOptions().withDescription(imageDescription);
+        if (imageNoReboot) {
             options.noReboot();
         }
 
-        return amiApi.createImageInRegion(customInputs.getRegion(), customInputs.getImageName(), customInputs.getServerId(), options);
+        return amiApi.createImageInRegion(region, name, serverId, options);
     }
 
     @Override
-    public String deregisterImageInRegion(CustomInputs customInputs) {
-        AMIApi amiApi = getAMIApi(customInputs.getRegion(), true);
+    public String deregisterImageInRegion(String region, String imageId) {
+        AMIApi amiApi = getAMIApi(region, true);
 
-        amiApi.deregisterImageInRegion(customInputs.getRegion(), customInputs.getImageId());
+        amiApi.deregisterImageInRegion(region, imageId);
 
         return Constants.Messages.IMAGE_SUCCESSFULLY_DEREGISTER;
     }

@@ -24,12 +24,13 @@ public class OpenstackImageService extends JCloudsComputeService implements Imag
     }
 
     @Override
-    public String createImageInRegion(CustomInputs customInputs) throws Exception {
+    public String createImageInRegion(String region, String name, String serverId, String imageDescription, boolean imageNoReboot)
+            throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public String deregisterImageInRegion(CustomInputs customInputs) throws Exception {
+    public String deregisterImageInRegion(String region, String imageId) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
