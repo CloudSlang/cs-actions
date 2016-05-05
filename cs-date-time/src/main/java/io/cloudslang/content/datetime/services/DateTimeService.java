@@ -4,7 +4,6 @@ import io.cloudslang.content.datetime.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -31,12 +30,12 @@ public class DateTimeService {
      */
     public Map<String, String> getCurrentDateTime(String localeLang, String localeCountry) throws Exception {
         DateTimeFormatter formatter;
-        LocalDateTime datetime = LocalDateTime.now();
+        DateTime datetime = DateTime.now();
         Map<String, String> returnResult = new HashMap<>();
 
         if (StringUtils.isNotEmpty(localeLang)) {
             if (LocaleUtils.isUnix(localeLang)) {
-                long timestamp = (long)Math.floor(datetime.toDateTime().getMillis()/ 1000);
+                long timestamp = (long)Math.floor(datetime.getMillis()/ 1000);
                 addReturnValues(returnResult, "" + timestamp);
 
                 return returnResult;
@@ -79,6 +78,7 @@ public class DateTimeService {
         DateTime inputDateTime;
         DateTimeFormatter dateFormatter, outFormatter;
         Map<String, String> returnResult = new HashMap<>();
+        DateTimeZone timeZone = DateTimeZone.forID("GMT");
 
         if (StringUtils.isEmpty(date))
             throw new NullPointerException("Date is either Null or Empty");
@@ -98,7 +98,7 @@ public class DateTimeService {
             dateFormatter = formatWithDefault(dateLocaleLang, dateLocaleCountry);
 
             if (LocaleUtils.isUnix(dateFormat))
-                dateFormatter.withZone(DateTimeZone.getDefault());
+                dateFormatter.withZone(timeZone);
 
             inputDateTime = getJodaOrJavaDate(dateFormatter, date);
         }
@@ -112,7 +112,7 @@ public class DateTimeService {
                 outFormatter = formatWithPattern(outFormat, outLocaleLang, outLocaleCountry);
 
                 if (StringUtils.isNotEmpty(dateFormat) && LocaleUtils.isUnix(outFormat))
-                    outFormatter.withZone(DateTimeZone.getDefault());
+                    outFormatter.withZone(timeZone);
 
                 addReturnValues(returnResult, outFormatter.print(inputDateTime));
             }
@@ -142,7 +142,7 @@ public class DateTimeService {
         else {
             dateFormatter = formatWithDefault(localeLang, localeCountry);
             dateTime = getJodaOrJavaDate(dateFormatter, date);
-            addReturnValues(resultMap, dateFormatter.print(dateTime.plusSeconds(30)));
+            addReturnValues(resultMap, dateFormatter.print(dateTime.plusSeconds(parsedOffset)));
         }
 
         return resultMap;

@@ -1,6 +1,5 @@
 package io.cloudslang.content.datetime.actions;
 
-import io.cloudslang.content.datetime.utils.Constants;
 import org.junit.Test;
 
 import java.util.Map;
