@@ -42,6 +42,7 @@ public class CreateImageInRegionAction {
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.SERVER_ID, required = true) String serverId,
+                                       @Param(value = Inputs.CustomInputs.IMAGE_NAME, required = true) String imageName,
                                        @Param(Inputs.CustomInputs.IMAGE_DESCRIPTION) String imageDescription,
                                        @Param(Inputs.CustomInputs.IMAGE_NO_REBOOT) String imageNoReboot) throws Exception {
 
@@ -57,6 +58,7 @@ public class CreateImageInRegionAction {
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withServerId(serverId)
+                .withImageName(imageName)
                 .withImageDescription(imageDescription)
                 .withImageNoReboot(imageNoReboot)
                 .build();
