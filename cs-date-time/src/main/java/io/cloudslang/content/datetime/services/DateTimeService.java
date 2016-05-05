@@ -105,7 +105,7 @@ public class DateTimeService {
 
         if (StringUtils.isNotEmpty(outFormat)) {
             if (LocaleUtils.isUnix(outFormat)) {
-                long timestamp = Math.round(inputDateTime.toDateTime().getMillis() / 1000);
+                long timestamp = (long)Math.floor(inputDateTime.toDateTime().getMillis() / 1000);
                 addReturnValues(returnResult, "" + timestamp);
                 return returnResult;
             } else {
