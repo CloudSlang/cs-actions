@@ -26,6 +26,7 @@ public class Inputs {
         public static final String OPERATION_TIMEOUT = "operationTimeout";
         public static final String POOLING_INTERVAL = "poolingInterval";
         public static final String IMAGE_NAME = "imageName";
+        public static final String IMAGE_ID = "imageId";
         public static final String IMAGE_DESCRIPTION = "imageDescription";
         public static final String IMAGE_NO_REBOOT = "imageNoReboot";
     }

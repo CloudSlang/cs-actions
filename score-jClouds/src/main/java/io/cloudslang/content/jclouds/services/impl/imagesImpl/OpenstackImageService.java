@@ -1,7 +1,6 @@
 package io.cloudslang.content.jclouds.services.impl.imagesImpl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
@@ -25,7 +24,12 @@ public class OpenstackImageService extends JCloudsComputeService implements Imag
     }
 
     @Override
-    public String createImageInRegion(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+    public String createImageInRegion(CustomInputs customInputs) throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
+    }
+
+    @Override
+    public String deregisterImageInRegion(CustomInputs customInputs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 

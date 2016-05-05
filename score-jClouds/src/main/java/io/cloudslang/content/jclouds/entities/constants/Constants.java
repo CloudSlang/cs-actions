@@ -23,6 +23,7 @@ public class Constants {
         public static final String SERVER_SUSPENDED = "Server suspended.";
         public static final String SERVER_RESUMED = "Server resumed.";
         public static final String SERVER_UPDATED = "Server updated successfully.";
+        public static final String IMAGE_SUCCESSFULLY_DEREGISTER = "The image was successfully deregister.";
     }
 
     public static final class Miscellaneous {

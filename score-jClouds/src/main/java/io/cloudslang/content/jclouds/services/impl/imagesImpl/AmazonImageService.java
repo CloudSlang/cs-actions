@@ -23,7 +23,7 @@ public class AmazonImageService extends JCloudsComputeService implements ImageSe
     }
 
     @Override
-    public String createImageInRegion(CommonInputs commonInputs, CustomInputs customInputs) {
+    public String createImageInRegion(CustomInputs customInputs) {
         AMIApi amiApi = getAMIApi(customInputs.getRegion(), true);
 
         CreateImageOptions options = new CreateImageOptions().withDescription(customInputs.getImageDescription());
@@ -34,9 +34,18 @@ public class AmazonImageService extends JCloudsComputeService implements ImageSe
         return amiApi.createImageInRegion(customInputs.getRegion(), customInputs.getImageName(), customInputs.getServerId(), options);
     }
 
-    private void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = contextBuilder.buildApi(EC2Api.class);
+    @Override
+    public String deregisterImageInRegion(CustomInputs customInputs) {
+        AMIApi amiApi = getAMIApi(customInputs.getRegion(), true);
+
+        amiApi.deregisterImageInRegion(customInputs.getRegion(), customInputs.getImageId());
+
+        return Constants.Messages.IMAGE_SUCCESSFULLY_DEREGISTER;
+    }
+
+    private AMIApi getAMIApi(String region, boolean isForRegion) {
+        lazyInit(region);
+        return isForRegion ? ec2Api.getAMIApiForRegion(region).get() : ec2Api.getAMIApi().get();
     }
 
     private void lazyInit(String region) {
@@ -48,8 +57,8 @@ public class AmazonImageService extends JCloudsComputeService implements ImageSe
         }
     }
 
-    private AMIApi getAMIApi(String region, boolean isForRegion) {
-        lazyInit(region);
-        return isForRegion ? ec2Api.getAMIApiForRegion(region).get() : ec2Api.getAMIApi().get();
+    private void init() {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
+        ec2Api = contextBuilder.buildApi(EC2Api.class);
     }
 }

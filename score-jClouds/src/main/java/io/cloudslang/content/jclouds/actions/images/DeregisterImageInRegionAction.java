@@ -10,17 +10,17 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.images.CreateImageInRegionExecutor;
+import io.cloudslang.content.jclouds.execute.images.DeregisterImageInRegionExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 5/4/2016.
+ * 5/5/2016.
  */
-public class CreateImageInRegionAction {
-    @Action(name = "Create Image In Region",
+public class DeregisterImageInRegionAction {
+    @Action(name = "Deregister Image In Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -41,10 +41,7 @@ public class CreateImageInRegionAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.CustomInputs.SERVER_ID, required = true) String serverId,
-                                       @Param(value = Inputs.CustomInputs.IMAGE_NAME, required = true) String imageName,
-                                       @Param(Inputs.CustomInputs.IMAGE_DESCRIPTION) String imageDescription,
-                                       @Param(Inputs.CustomInputs.IMAGE_NO_REBOOT) String imageNoReboot) throws Exception {
+                                       @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -57,14 +54,11 @@ public class CreateImageInRegionAction {
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
-                .withServerId(serverId)
-                .withImageName(imageName)
-                .withImageDescription(imageDescription)
-                .withImageNoReboot(imageNoReboot)
+                .withImageId(imageId)
                 .build();
 
         try {
-            return new CreateImageInRegionExecutor().execute(inputs, customInputs);
+            return new DeregisterImageInRegionExecutor().execute(inputs, customInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

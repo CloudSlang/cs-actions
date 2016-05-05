@@ -10,12 +10,12 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 5/4/2016.
+ * 5/5/2016.
  */
-public class CreateImageInRegionExecutor {
+public class DeregisterImageInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
-        String response = imageService.createImageInRegion(customInputs);
+        String response = imageService.deregisterImageInRegion(customInputs);
 
         return OutputsUtil.getResultsMap(response);
     }

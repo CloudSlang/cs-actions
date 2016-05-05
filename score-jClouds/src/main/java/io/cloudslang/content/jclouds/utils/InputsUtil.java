@@ -60,6 +60,14 @@ public final class InputsUtil {
         return StringUtils.isBlank(input) || Boolean.parseBoolean(input);
     }
 
+    private static Map<String, Integer> getValidLimits() {
+        Map<String, Integer> validLimits = new HashMap<>();
+        validLimits.put(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY, Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER);
+        validLimits.put(Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER_KEY, Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER);
+
+        return validLimits;
+    }
+
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {
         if (!isInt(input)) {
             throw new RuntimeException(noIntError);
@@ -78,14 +86,6 @@ public final class InputsUtil {
             return false;
         }
         return true;
-    }
-
-    private static Map<String, Integer> getValidLimits() {
-        Map<String, Integer> validLimits = new HashMap<>();
-        validLimits.put(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY, Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER);
-        validLimits.put(Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER_KEY, Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER);
-
-        return validLimits;
     }
 
     private static String getValidationException(String input, boolean invalid) {
