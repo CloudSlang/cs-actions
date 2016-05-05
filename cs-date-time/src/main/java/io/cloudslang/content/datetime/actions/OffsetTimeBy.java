@@ -40,7 +40,7 @@ public class OffsetTimeBy {
 
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.LOCALE_DATE,   required = true) String date,
-            @Param(Constants.InputNames.LOCALE_OFFSET) String offset,
+            @Param(value = Constants.InputNames.LOCALE_OFFSET, required = true) String offset,
             @Param(Constants.InputNames.LOCALE_LANG) String localeLang,
             @Param(Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
         Map<String, String> resultMap = new HashMap<>();

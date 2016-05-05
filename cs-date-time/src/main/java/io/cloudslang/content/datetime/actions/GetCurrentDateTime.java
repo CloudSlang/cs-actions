@@ -43,7 +43,7 @@ public class GetCurrentDateTime {
                             responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(
-            @Param(value = Constants.InputNames.LOCALE_LANG, required = true) String localeLang,
+            @Param(Constants.InputNames.LOCALE_LANG) String localeLang,
             @Param(Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
 
         Map<String, String> returnResult = new HashMap<>();
