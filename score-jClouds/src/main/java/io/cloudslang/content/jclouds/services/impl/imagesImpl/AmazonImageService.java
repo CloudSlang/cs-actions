@@ -16,7 +16,7 @@ import org.jclouds.ec2.options.CreateImageOptions;
  */
 public class AmazonImageService extends JCloudsComputeService implements ImageService {
     private String region;
-    private EC2Api ec2Api = null;
+    private EC2Api ec2Api;
 
     public AmazonImageService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);

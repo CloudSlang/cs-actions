@@ -66,7 +66,7 @@ public class SoftRebootExecutorTest {
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
-        assertEquals("Soft reboot started successfully", result.get(Outputs.RETURN_RESULT));
+        assertEquals("Soft reboot started successfully.", result.get(Outputs.RETURN_RESULT));
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {

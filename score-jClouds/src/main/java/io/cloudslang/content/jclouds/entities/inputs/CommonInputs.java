@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.Providers;
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 import java.net.MalformedURLException;
@@ -76,6 +77,7 @@ public class CommonInputs {
 
         public CommonInputsBuilder withEndpoint(String inputValue) throws MalformedURLException {
             URL url = new URL(inputValue.toLowerCase());
+            InputsUtil.validateInput(url.toString(), Inputs.CommonInputs.ENDPOINT);
             endpoint = url.toString();
             return this;
         }

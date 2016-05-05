@@ -16,8 +16,6 @@ import java.util.Map;
  */
 public class CreateImageInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
-        InputsUtil.validateInput(commonInputs.getEndpoint(), Inputs.CommonInputs.ENDPOINT);
-
         ImageService cs = ImageFactory.getImageService(commonInputs);
         String response = cs.createImageInRegion(commonInputs, customInputs);
 
