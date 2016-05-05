@@ -96,7 +96,11 @@ public class DateTimeService {
             }
         } else {
             dateFormatter = formatWithDefault(dateLocaleLang, dateLocaleCountry);
-            inputDateTime = getJodaOrJavaDate(dateFormatter, dateFormat, date);
+
+            if (LocaleUtils.isUnix(dateFormat))
+                dateFormatter.withZone(DateTimeZone.getDefault());
+
+            inputDateTime = getJodaOrJavaDate(dateFormatter, date);
         }
 
         if (StringUtils.isNotEmpty(outFormat)) {
@@ -124,43 +128,21 @@ public class DateTimeService {
         return returnResult;
     }
 
-    public Map<String, String> offsetTimeBy(String date, String offset, String localeLang, String localeCountry) throws ParseException {
-        Map<String, String> resultMap = new HashMap<String, String>();
-        Locale locale;
-        DateFormat dateFormatter;
-        Date parsedDate;
+    public Map<String, String> offsetTimeBy(String date, String offset, String localeLang, String localeCountry) throws Exception {
+        Map<String, String> resultMap = new HashMap<>();
+        DateTime dateTime;
+        DateTimeFormatter dateFormatter;
         int parsedOffset = Integer.parseInt(offset);
         int offsetTimestamp;
 
         if(LocaleUtils.isUnix(localeLang)) {
-
             offsetTimestamp = Integer.parseInt(date) + parsedOffset;
             addReturnValues(resultMap, "" + offsetTimestamp);
         }
         else {
-            if(StringUtils.isNotEmpty(localeLang))
-            {
-                if(StringUtils.isNotEmpty(localeCountry))
-                {
-                    locale = new Locale(localeLang, localeCountry);
-                }
-                else
-                {
-                    locale = new Locale(localeLang);
-                }
-
-                dateFormatter = DateFormat.getDateTimeInstance(java.text.DateFormat.LONG, java.text.DateFormat.LONG, locale);
-            }
-            else // use the default locale
-            {
-                dateFormatter = DateFormat.getDateTimeInstance();
-            }
-
-            parsedDate = dateFormatter.parse(date);
-            parsedOffset *= 1000;
-            parsedDate.setTime(parsedDate.getTime() + parsedOffset);
-
-            addReturnValues(resultMap, "" + dateFormatter.format(parsedDate));
+            dateFormatter = formatWithDefault(localeLang, localeCountry);
+            dateTime = getJodaOrJavaDate(dateFormatter, date);
+            addReturnValues(resultMap, dateFormatter.print(dateTime.plusSeconds(30)));
         }
 
         return resultMap;
@@ -221,7 +203,8 @@ public class DateTimeService {
             dateFormatter = DateTimeFormat.longDateTime()
                     .withLocale(getLocaleByCountry(lang, country));
         } else {
-            dateFormatter = DateTimeFormat.longDateTime();
+            dateFormatter = DateTimeFormat.longDateTime()
+                    .withLocale(Locale.getDefault());
         }
 
         return dateFormatter;
@@ -250,19 +233,17 @@ public class DateTimeService {
      * @param date date passed as argument
      * @return true if is a java date
      */
-    private DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String outFormat, String date) throws Exception {
+    private DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String date) throws Exception {
+
         DateTime datetime;
         if (!isDateValid(date, dateFormatter.getLocale())) {
-            if (LocaleUtils.isUnix(outFormat))
-                dateFormatter.withZone(DateTimeZone.getDefault());
-
             datetime = new DateTime(date);
         } else {
-            DateFormat format = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
+            DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
                     dateFormatter.getLocale());
 
             Calendar dateCalendar = GregorianCalendar.getInstance();
-            dateCalendar.setTime(format.parse(date));
+            dateCalendar.setTime(dateFormat.parse(date));
 
             datetime = new DateTime(dateCalendar.getTime());
         }

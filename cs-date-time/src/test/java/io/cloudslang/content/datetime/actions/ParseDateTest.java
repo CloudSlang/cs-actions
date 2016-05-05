@@ -114,8 +114,8 @@ public class ParseDateTest {
         GetCurrentDateTime currentDateTime = new GetCurrentDateTime();
         String date = currentDateTime.execute("en", "US").get(RETURN_RESULT);
         String dateFormat = "";
-        String dateLocaleLang = "en";
-        String dateLocaleCountry = "US";
+        String dateLocaleLang = "";
+        String dateLocaleCountry = "";
         String outFormat = "";
         String outLocaleLang = "fr";
         String outLocaleCountry = "FR";

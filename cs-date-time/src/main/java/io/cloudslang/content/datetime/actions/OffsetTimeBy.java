@@ -40,27 +40,19 @@ public class OffsetTimeBy {
 
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.LOCALE_DATE,   required = true) String date,
-            @Param(value = Constants.InputNames.LOCALE_OFFSET, required = true) String offset,
-            @Param(value = Constants.InputNames.LOCALE_LANG,   required = true) String localeLang,
-            @Param(value = Constants.InputNames.LOCALE_COUNTRY,required = true) String localeCountry) {
-
+            @Param(Constants.InputNames.LOCALE_OFFSET) String offset,
+            @Param(Constants.InputNames.LOCALE_LANG) String localeLang,
+            @Param(Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
         Map<String, String> resultMap = new HashMap<>();
         try {
             resultMap = new DateTimeService().offsetTimeBy(date, offset, localeLang, localeCountry);
         }
-        catch(Exception e) {
-            resultMap.put(Constants.OutputNames.EXCEPTION, e.getMessage());
+        catch(Exception exception) {
+            resultMap.put(Constants.OutputNames.EXCEPTION, exception.toString());
+            resultMap.put(Constants.OutputNames.RETURN_RESULT, exception.getMessage());
             resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
         }
 
         return resultMap;
-    }
-
-    public static void main(String[] args) {
-
-        OffsetTimeBy offset = new OffsetTimeBy();
-        Map<String, String> result = offset.execute("April 26, 2016 1:32:20 PM EEST", "5", "en", "US");
-        //Map<String, String> result2 = offset.execute("2300", "15", "unix", "");
-        System.out.println("main() over");
     }
 }
