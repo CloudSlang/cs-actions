@@ -35,7 +35,7 @@ public class DateTimeService {
 
         if (StringUtils.isNotEmpty(localeLang)) {
             if (LocaleUtils.isUnix(localeLang)) {
-                long timestamp = (long)Math.floor(datetime.getMillis()/ 1000);
+                long timestamp = (long)Math.floor(datetime.getMillis() / 1000);
                 addReturnValues(returnResult, "" + timestamp);
 
                 return returnResult;
@@ -85,7 +85,7 @@ public class DateTimeService {
 
         if (StringUtils.isNotEmpty(dateFormat)) {
             if (LocaleUtils.isUnix(dateFormat)) {
-                inputDateTime = new DateTime(Long.parseLong(date) * 1000).withZone(timeZone);
+                inputDateTime = new DateTime(Long.parseLong(date) * 1000);
             } else if (dateFormat.equals("S")) {
                 inputDateTime = new DateTime(new Date(Long.parseLong(date))).withZone(timeZone);
             } else {
