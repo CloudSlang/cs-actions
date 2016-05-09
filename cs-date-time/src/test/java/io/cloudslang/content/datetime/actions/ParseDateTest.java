@@ -49,13 +49,14 @@ public class ParseDateTest {
     public void testExecuteUnixValid() {
         String date = "1462254848";
         String dateFormat = "unix";
+        String outFormat = "yyyy-MM-dd";
         String outLocaleLang = "en";
         String outLocaleCountry = "US";
 
         final Map<String, String> result = parseDate.execute(date, dateFormat, null, null,
-                null, outLocaleLang, outLocaleCountry);
+                outFormat, outLocaleLang, outLocaleCountry);
         assertEquals("0", result.get(RETURN_CODE));
-        assertTrue(result.get(RETURN_RESULT).contains("May 3, 2016 8:54:08"));
+        assertTrue(result.get(RETURN_RESULT).contains("2016-05-03"));
     }
 
     @Test
