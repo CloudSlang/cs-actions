@@ -2,7 +2,8 @@ package io.cloudslang.content.datetime.actions;
 
 import org.junit.Test;
 
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -142,4 +143,25 @@ public class ParseDateTest {
         assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals("0", result.get(RETURN_CODE));
     }
+
+    @Test
+    public void testUnixBug() {
+        String date = "1000";
+        String dateFormat = "S";
+        String dateLocaleLang = "en";
+        String dateLocaleCountry = "US";
+        String outFormat = "HH:mm:ss";
+        String outLocaleLang = "en";
+        String outLocaleCountry = "US";
+
+        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
+                outFormat, outLocaleLang, outLocaleCountry);
+
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
+        assertEquals("00:00:01", result.get(RETURN_RESULT));
+
+        assertEquals("0", result.get(RETURN_CODE));
+    }
+
+
 }

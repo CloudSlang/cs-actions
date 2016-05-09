@@ -85,14 +85,16 @@ public class DateTimeService {
 
         if (StringUtils.isNotEmpty(dateFormat)) {
             if (LocaleUtils.isUnix(dateFormat)) {
-                inputDateTime = new DateTime(Long.parseLong(date) * 1000);
+                inputDateTime = new DateTime(Long.parseLong(date) * 1000).withZone(timeZone);
+            } else if (dateFormat.equals("S")) {
+                inputDateTime = new DateTime(new Date(Long.parseLong(date))).withZone(timeZone);
             } else {
                 dateFormatter = formatWithPattern(dateFormat, dateLocaleLang, dateLocaleCountry);
 
                 if (LocaleUtils.isUnix(outFormat))
-                    dateFormatter.withZone(DateTimeZone.getDefault());
+                    dateFormatter.withZone(timeZone);
 
-                inputDateTime = dateFormatter.parseDateTime(date);
+                inputDateTime = dateFormatter.parseDateTime(date).withZone(timeZone);
             }
         } else {
             dateFormatter = formatWithDefault(dateLocaleLang, dateLocaleCountry);
@@ -120,7 +122,7 @@ public class DateTimeService {
             outFormatter = formatWithDefault(outLocaleLang, outLocaleCountry);
 
             if (StringUtils.isNotEmpty(dateFormat) && LocaleUtils.isUnix(outFormat))
-                outFormatter.withZone(DateTimeZone.getDefault());
+                outFormatter.withZone(timeZone);
 
             addReturnValues(returnResult, outFormatter.print(inputDateTime));
         }
@@ -234,7 +236,6 @@ public class DateTimeService {
      * @return true if is a java date
      */
     private DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String date) throws Exception {
-
         DateTime datetime;
         if (!isDateValid(date, dateFormatter.getLocale())) {
             datetime = new DateTime(date);
