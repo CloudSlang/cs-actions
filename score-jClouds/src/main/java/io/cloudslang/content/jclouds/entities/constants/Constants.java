@@ -32,6 +32,7 @@ public class Constants {
         public static final String EMPTY = "";
         public static final String MAXIMUM_INSTANCES_NUMBER_KEY = "maximumInstancesNumber";
         public static final String MINIMUM_INSTANCES_NUMBER_KEY = "minimumInstancesNumber";
+        public static final String SELF = "self";
 
         public static final long DEFAULT_TIMING = 20000;
         public static final int MAXIMUM_INSTANCES_NUMBER = 50;

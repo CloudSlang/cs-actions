@@ -20,6 +20,32 @@ import java.util.Map;
  * 5/4/2016.
  */
 public class CreateImageInRegionAction {
+    /**
+     * Creates an Amazon EBS-backed AMI from an Amazon EBS-backed instance that is either running or stopped.
+     *
+     * @param provider         Cloud provider on which you have the instance.
+     *                         Default: "amazon"
+     * @param identityEndpoint Endpoint to which first request will be sent.
+     *                         Example: "https://ec2.amazonaws.com"
+     * @param identity         Username of your account or the Access Key ID.
+     * @param credential       Password of the user or the Secret Access Key that correspond to the identity input.
+     * @param proxyHost        Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort        Proxy server port.
+     * @param region           Optional - Region where image will be created. ListRegionAction can be used in order to
+     *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+     *                         Default: "us-east-1".
+     * @param serverId         ID of the server (instance) to be used to create image.
+     * @param imageName        A name for the new image.
+     * @param imageDescription Optional - A description for the new image.
+     *                         Default: ""
+     * @param imageNoReboot    Optional - By default, Amazon EC2 attempts to shut down and reboot the instance before
+     *                         creating the image. If the 'No Reboot' option is set, Amazon EC2 doesn't shut down the
+     *                         instance before creating the image. When this option is used, file system integrity on
+     *                         the created image can't be guaranteed.
+     *                         Default: "true"
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
+     */
     @Action(name = "Create Image In Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

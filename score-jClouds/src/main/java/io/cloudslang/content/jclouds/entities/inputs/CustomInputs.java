@@ -166,7 +166,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withOwnersString(String inputValue) {
-            ownersString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            ownersString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.SELF : inputValue;
             return this;
         }
 
@@ -176,7 +176,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withIdentityId(String inputValue) {
-            identityId = inputValue;
+            identityId = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.SELF : inputValue;
             return this;
         }
 

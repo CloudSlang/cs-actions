@@ -20,6 +20,39 @@ import java.util.Map;
  * 5/6/2016.
  */
 public class DescribeImagesInRegionAction {
+    /**
+     * Describes one or more of the images (AMIs, AKIs, and ARIs) available to you. Images available to you include
+     * public images, private images that you own, and private images owned by other AWS accounts but for which you have
+     * explicit launch permissions.
+     * Note:
+     * De-registered images are included in the returned results for an unspecified interval after de-registration.
+     *
+     * @param provider         Cloud provider on which you have the instance.
+     *                         Default: "amazon"
+     * @param identityEndpoint Endpoint to which first request will be sent.
+     *                         Example: "https://ec2.amazonaws.com"
+     * @param identity         Username of your account or the Access Key ID.
+     * @param credential       Password of the user or the Secret Access Key that correspond to the identity input.
+     * @param proxyHost        Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort        Proxy server port.
+     * @param region           Optional - Region where image will be created. ListRegionAction can be used in order to
+     *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+     *                         Default: "us-east-1".
+     * @param identityId       Scopes the images by users with explicit launch permissions. Specify an AWS account ID,
+     *                         "self" (the sender of the request), or "all" (public AMIs).
+     *                         Valid: "self", "all" or AWS account ID
+     *                         Default: "self"
+     * @param imageIdsString   A string that contains: none, one or more image IDs separated by delimiter.
+     *                         Default: ""
+     * @param ownersString     Filters the images by the owner. Specify an AWS account ID, "amazon" (owner is Amazon),
+     *                         "aws-marketplace" (owner is AWS Marketplace), "self" (owner is the sender of the request).
+     *                         Omitting this option returns all images for which you have launch permissions, regardless
+     *                         of ownership.
+     *                         Valid: "amazon", "aws-marketplace", or "self"
+     *                         Default: "self"
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
+     */
     @Action(name = "Describe Images In Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

@@ -20,6 +20,25 @@ import java.util.Map;
  * 5/5/2016.
  */
 public class DeregisterImageInRegionAction {
+    /**
+     * De-register the specified AMI. After you de-register an AMI, it can't be used to launch new instances.
+     * This command does not delete the AMI.
+     *
+     * @param provider         Cloud provider on which you have the instance.
+     *                         Default: "amazon"
+     * @param identityEndpoint Endpoint to which first request will be sent.
+     *                         Example: "https://ec2.amazonaws.com"
+     * @param identity         Username of your account or the Access Key ID.
+     * @param credential       Password of the user or the Secret Access Key that correspond to the identity input.
+     * @param proxyHost        Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort        Proxy server port.
+     * @param region           Optional - Region where image will be created. ListRegionAction can be used in order to
+     *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+     *                         Default: "us-east-1".
+     * @param imageId          A name for the new image.
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
+     */
     @Action(name = "Deregister Image In Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
