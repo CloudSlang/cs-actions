@@ -5,12 +5,20 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by persdana on 7/13/2015.
  */
 public final class InputsUtil {
     private InputsUtil() {
+    }
+
+    public static String[] getStringsArray(String input, String condition, String delimiter) {
+        if (condition.equals(input)) {
+            return null;
+        }
+        return input.split(Pattern.quote(delimiter));
     }
 
     public static void validateInput(String input, String inputName) {

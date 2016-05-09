@@ -1,17 +1,19 @@
 package io.cloudslang.content.jclouds.services.impl.imagesImpl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
+import org.jclouds.ec2.domain.Image;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
+
+import java.util.Set;
 
 /**
  * Created by Mihai Tusa.
  * 5/4/2016.
  */
-public class OpenstackImageService extends JCloudsComputeService implements ImageService {
+public class OpenstackImageServiceImpl extends JCloudsComputeService implements ImageService {
     private NovaApi novaApi = null;
     private String region;
 
@@ -19,7 +21,7 @@ public class OpenstackImageService extends JCloudsComputeService implements Imag
         this.region = region;
     }
 
-    public OpenstackImageService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    public OpenstackImageServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
@@ -31,6 +33,11 @@ public class OpenstackImageService extends JCloudsComputeService implements Imag
 
     @Override
     public String deregisterImageInRegion(String region, String imageId) throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
+    }
+
+    @Override
+    public Set<? extends Image> describeImagesInRegion(String region, String identityId, String[] imageIds, String[] owners) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 

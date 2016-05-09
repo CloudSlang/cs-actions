@@ -16,6 +16,9 @@ public class CustomInputs {
     private String imageName;
     private String imageId;
     private String imageDescription;
+    private String identityId;
+    private String imageIdsString;
+    private String ownersString;
 
     private int minCount;
     private int maxCount;
@@ -32,6 +35,9 @@ public class CustomInputs {
         this.imageName = builder.imageName;
         this.imageId = builder.imageId;
         this.imageDescription = builder.imageDescription;
+        this.identityId = builder.identityId;
+        this.imageIdsString = builder.imageIdsString;
+        this.ownersString = builder.ownersString;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -69,6 +75,18 @@ public class CustomInputs {
         return imageDescription;
     }
 
+    public String getIdentityId() {
+        return identityId;
+    }
+
+    public String getImageIdsString() {
+        return imageIdsString;
+    }
+
+    public String getOwnersString() {
+        return ownersString;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -97,6 +115,9 @@ public class CustomInputs {
         private String imageName;
         private String imageId;
         private String imageDescription;
+        private String identityId;
+        private String imageIdsString;
+        private String ownersString;
 
         private int minCount;
         private int maxCount;
@@ -139,8 +160,23 @@ public class CustomInputs {
             return this;
         }
 
+        public CustomInputsBuilder withImageIdsString(String inputValue) {
+            imageIdsString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withOwnersString(String inputValue) {
+            ownersString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            return this;
+        }
+
         public CustomInputsBuilder withImageDescription(String inputValue) {
             imageDescription = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withIdentityId(String inputValue) {
+            identityId = inputValue;
             return this;
         }
 

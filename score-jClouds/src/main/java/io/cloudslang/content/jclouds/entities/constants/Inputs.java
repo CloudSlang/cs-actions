@@ -18,7 +18,6 @@ public class Inputs {
     public static final class CustomInputs {
         public static final String REGION = "region";
         public static final String SERVER_ID = "serverId";
-        public static final String IMAGE_REF = "imageRef";
         public static final String AVAILABILITY_ZONE = "availabilityZone";
         public static final String MIN_COUNT = "minCount";
         public static final String MAX_COUNT = "maxCount";
@@ -29,5 +28,8 @@ public class Inputs {
         public static final String IMAGE_ID = "imageId";
         public static final String IMAGE_DESCRIPTION = "imageDescription";
         public static final String IMAGE_NO_REBOOT = "imageNoReboot";
+        public static final String IDENTITY_ID = "identityId";
+        public static final String IMAGE_IDS_STRING = "imageIdsString";
+        public static final String OWNERS_STRING = "ownersString";
     }
 }
