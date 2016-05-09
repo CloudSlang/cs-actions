@@ -53,27 +53,6 @@ public class BasicConnection implements Connection {
         return this;
     }
 
-    @SuppressWarnings("rawtypes")
-    private void makeConnection(String url, String username, String password, boolean trustEveryone)
-            throws RuntimeFaultFaultMsg,
-            InvalidLocaleFaultMsg,
-            InvalidLoginFaultMsg,
-            KeyManagementException,
-            NoSuchAlgorithmException {
-
-        vimService = new VimService();
-        vimPort = vimService.getVimPort();
-
-        populateContextMap(url, username, password);
-
-        if (Boolean.TRUE.equals(trustEveryone)) {
-            DisableSecurity.trustEveryone();
-        }
-
-        serviceContent = vimPort.retrieveServiceContent(this.getServiceInstanceReference());
-        userSession = vimPort.login(serviceContent.getSessionManager(), username, password, null);
-    }
-
     public Connection disconnect() {
         if (this.isConnected()) {
             try {
@@ -103,6 +82,27 @@ public class BasicConnection implements Connection {
         return System.currentTimeMillis() < startTime + THIRTY * SIXTY * THOUSAND;
     }
 
+    @SuppressWarnings("rawtypes")
+    private void makeConnection(String url, String username, String password, boolean trustEveryone)
+            throws RuntimeFaultFaultMsg,
+            InvalidLocaleFaultMsg,
+            InvalidLoginFaultMsg,
+            KeyManagementException,
+            NoSuchAlgorithmException {
+
+        vimService = new VimService();
+        vimPort = vimService.getVimPort();
+
+        populateContextMap(url, username, password);
+
+        if (Boolean.TRUE.equals(trustEveryone)) {
+            DisableSecurity.trustEveryone();
+        }
+
+        serviceContent = vimPort.retrieveServiceContent(this.getServiceInstanceReference());
+        userSession = vimPort.login(serviceContent.getSessionManager(), username, password, null);
+    }
+
     private void populateContextMap(String url, String username, String password) {
         Map<String, Object> context = ((BindingProvider) vimPort).getRequestContext();
         context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, url);
@@ -114,7 +114,7 @@ public class BasicConnection implements Connection {
     private class BasicConnectionException extends ConnectionException {
         private static final long serialVersionUID = 1L;
 
-        public BasicConnectionException(String s, Throwable t) {
+        BasicConnectionException(String s, Throwable t) {
             super(s, t);
         }
     }

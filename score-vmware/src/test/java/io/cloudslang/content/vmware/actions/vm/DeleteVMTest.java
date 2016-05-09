@@ -3,6 +3,8 @@ package io.cloudslang.content.vmware.actions.vm;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,7 +27,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(DeleteVM.class)
 public class DeleteVMTest {
-    private DeleteVM deleteVM = new DeleteVM();
+    private DeleteVM deleteVM;
+
+    @Before
+    public void init() {
+        deleteVM = new DeleteVM();
+    }
+
+    @After
+    public void tearDown() {
+        deleteVM = null;
+    }
 
     @Mock
     private VmService vmServiceMock;
@@ -38,16 +50,18 @@ public class DeleteVMTest {
 
         resultMap = deleteVM.deleteVM("", "", "", "", "", "", "");
 
+        verify(vmServiceMock, times(1)).deleteVM(any(HttpInputs.class), any(VmInputs.class));
+
         assertNotNull(resultMap);
-        verify(vmServiceMock).deleteVM(any(HttpInputs.class), any(VmInputs.class));
     }
 
     @Test
     public void testDeletesVMProtocolException() throws Exception {
         Map<String, String> resultMap = deleteVM.deleteVM("", "", "myProtocol", "", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).deleteVM(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }

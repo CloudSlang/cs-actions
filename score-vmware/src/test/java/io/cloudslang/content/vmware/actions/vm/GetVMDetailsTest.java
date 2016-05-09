@@ -3,6 +3,8 @@ package io.cloudslang.content.vmware.actions.vm;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,7 +27,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(GetVMDetails.class)
 public class GetVMDetailsTest {
-    private GetVMDetails getVMDetails = new GetVMDetails();
+    private GetVMDetails getVMDetails;
+
+    @Before
+    public void init() {
+        getVMDetails = new GetVMDetails();
+    }
+
+    @After
+    public void tearDown() {
+        getVMDetails = null;
+    }
 
     @Mock
     private VmService vmServiceMock;
@@ -39,16 +51,18 @@ public class GetVMDetailsTest {
 
         resultMap = getVMDetails.getVMDetails("", "", "", "", "", "", "", "");
 
+        verify(vmServiceMock, times(1)).getVMDetails(any(HttpInputs.class), any(VmInputs.class));
+
         assertNotNull(resultMap);
-        verify(vmServiceMock).getVMDetails(any(HttpInputs.class), any(VmInputs.class));
     }
 
     @Test
     public void testGetVMDetailsProtocolException() throws Exception {
         Map<String, String> resultMap = getVMDetails.getVMDetails("", "", "myProtocol", "", "", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).getVMDetails(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }

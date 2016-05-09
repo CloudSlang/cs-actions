@@ -3,6 +3,8 @@ package io.cloudslang.content.vmware.actions.vm;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,7 +27,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PowerOnVM.class)
 public class PowerOnVMTest {
-    private PowerOnVM powerOnVM = new PowerOnVM();
+    private PowerOnVM powerOnVM;
+
+    @Before
+    public void init() {
+        powerOnVM = new PowerOnVM();
+    }
+
+    @After
+    public void tearDown() {
+        powerOnVM = null;
+    }
 
     @Mock
     private VmService vmServiceMock;
@@ -38,16 +50,18 @@ public class PowerOnVMTest {
 
         resultMap = powerOnVM.powerOnVM("", "", "", "", "", "", "");
 
+        verify(vmServiceMock, times(1)).powerOnVM(any(HttpInputs.class), any(VmInputs.class));
+
         assertNotNull(resultMap);
-        verify(vmServiceMock).powerOnVM(any(HttpInputs.class), any(VmInputs.class));
     }
 
     @Test
     public void testPowerOnVMProtocolException() throws Exception {
         Map<String, String> resultMap = powerOnVM.powerOnVM("", "", "myProtocol", "", "", "", "");
 
-        assertNotNull(resultMap);
         verify(vmServiceMock, never()).powerOnVM(any(HttpInputs.class), any(VmInputs.class));
+
+        assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get("returnCode")));
         assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", resultMap.get("returnResult"));
     }

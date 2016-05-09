@@ -61,7 +61,7 @@ public class GetObjectProperties {
      * @return list of object content
      * @throws Exception
      */
-    public static List<ObjectContent> retrievePropertiesAllObjects(ConnectionResources connectionResources,
+    private static List<ObjectContent> retrievePropertiesAllObjects(ConnectionResources connectionResources,
                                                                    List<PropertyFilterSpec> propertyFilterSpecList)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
 
