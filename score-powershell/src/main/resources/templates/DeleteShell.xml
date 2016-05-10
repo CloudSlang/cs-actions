@@ -1,0 +1,27 @@
+<s:Envelope
+        xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+        xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+        xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+    <s:Header>
+        <wsa:To>$PLACEHOLDER_FOR_SERVICE_NETWORK_ADDRESS</wsa:To>
+        <wsa:ReplyTo>
+            <wsa:Address s:mustUnderstand="true">
+                http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+            </wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:Action s:mustUnderstand="true">
+            http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete
+        </wsa:Action>
+        <wsman:MaxEnvelopeSize s:mustUnderstand="true">$PLACEHOLDER_FOR_MAX_ENVELOPE_SIZE</wsman:MaxEnvelopeSize>
+        <wsa:MessageID>$PLACEHOLDER_FOR_MESSAGE_ID</wsa:MessageID>
+        <wsman:Locale xml:lang="$PLACEHOLDER_FOR_LOCALE" s:mustUnderstand="false"/>
+        <wsman:ResourceURI>
+            http://schemas.microsoft.com/wbem/wsman/1/windows/shell/cmd
+        </wsman:ResourceURI>
+        <wsman:SelectorSet>
+            <wsman:Selector Name="ShellId">$PLACEHOLDER_FOR_SHELL_ID</wsman:Selector>
+        </wsman:SelectorSet>
+        <wsman:OperationTimeout>PT$PLACEHOLDER_FOR_OPERATION_TIMEOUT.000S</wsman:OperationTimeout>
+    </s:Header>
+    <s:Body></s:Body>
+</s:Envelope>

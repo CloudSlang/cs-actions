@@ -17,16 +17,17 @@
                 http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
             </wsa:Address>
         </wsa:ReplyTo>
-        <wsman:MaxEnvelopeSize s:mustUnderstand="true">153600</wsman:MaxEnvelopeSize>
-        <wsman:Locale xml:lang="en-US" s:mustUnderstand="false" />
+        <wsman:MaxEnvelopeSize s:mustUnderstand="true">$PLACEHOLDER_FOR_MAX_ENVELOPE_SIZE</wsman:MaxEnvelopeSize>
+        <wsman:Locale xml:lang="$PLACEHOLDER_FOR_LOCALE" s:mustUnderstand="false"/>
         <wsman:SelectorSet>
             <wsman:Selector Name="ShellId">
                 $PLACEHOLDER_FOR_SHELL_ID
             </wsman:Selector>
         </wsman:SelectorSet>
-        <wsman:OptionSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <wsman:OptionSet>
             <wsman:Option Name="WSMAN_CMDSHELL_OPTION_KEEPALIVE">TRUE</wsman:Option>
         </wsman:OptionSet>
+        <wsman:OperationTimeout>PT$PLACEHOLDER_FOR_OPERATION_TIMEOUT.000S</wsman:OperationTimeout>
     </s:Header>
     <s:Body>
         <rsp:Receive>
