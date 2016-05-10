@@ -13,38 +13,26 @@ public class CustomInputs {
     private String region;
     private String serverId;
     private String availabilityZone;
-    private String imageName;
     private String imageId;
-    private String imageDescription;
     private String identityId;
-    private String imageIdsString;
-    private String ownersString;
 
     private int minCount;
     private int maxCount;
     private long checkStateTimeout;
     private long polingInterval;
 
-    private boolean imageNoReboot;
-
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
         this.instanceType = builder.instanceType;
         this.serverId = builder.serverId;
         this.availabilityZone = builder.availabilityZone;
-        this.imageName = builder.imageName;
         this.imageId = builder.imageId;
-        this.imageDescription = builder.imageDescription;
         this.identityId = builder.identityId;
-        this.imageIdsString = builder.imageIdsString;
-        this.ownersString = builder.ownersString;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
         this.checkStateTimeout = builder.checkStateTimeout;
         this.polingInterval = builder.polingInterval;
-
-        this.imageNoReboot = builder.imageNoReboot;
     }
 
     public String getRegion() {
@@ -63,28 +51,12 @@ public class CustomInputs {
         return availabilityZone;
     }
 
-    public String getImageName() {
-        return imageName;
-    }
-
     public String getImageId() {
         return imageId;
     }
 
-    public String getImageDescription() {
-        return imageDescription;
-    }
-
     public String getIdentityId() {
         return identityId;
-    }
-
-    public String getImageIdsString() {
-        return imageIdsString;
-    }
-
-    public String getOwnersString() {
-        return ownersString;
     }
 
     public int getMinCount() {
@@ -103,28 +75,19 @@ public class CustomInputs {
         return polingInterval;
     }
 
-    public boolean isImageNoReboot() {
-        return imageNoReboot;
-    }
-
     public static class CustomInputsBuilder {
         private String region;
         private String instanceType;
         private String serverId;
         private String availabilityZone;
-        private String imageName;
         private String imageId;
-        private String imageDescription;
         private String identityId;
-        private String imageIdsString;
-        private String ownersString;
 
         private int minCount;
         private int maxCount;
         private long checkStateTimeout;
-        private long polingInterval;
 
-        private boolean imageNoReboot;
+        private long polingInterval;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -150,28 +113,8 @@ public class CustomInputs {
             return this;
         }
 
-        public CustomInputsBuilder withImageName(String inputValue) {
-            imageName = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
-            return this;
-        }
-
         public CustomInputsBuilder withImageId(String inputValue) {
             imageId = inputValue;
-            return this;
-        }
-
-        public CustomInputsBuilder withImageIdsString(String inputValue) {
-            imageIdsString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
-            return this;
-        }
-
-        public CustomInputsBuilder withOwnersString(String inputValue) {
-            ownersString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.SELF : inputValue;
-            return this;
-        }
-
-        public CustomInputsBuilder withImageDescription(String inputValue) {
-            imageDescription = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
             return this;
         }
 
@@ -197,11 +140,6 @@ public class CustomInputs {
 
         public CustomInputsBuilder withPolingInterval(String inputValue) {
             polingInterval = InputsUtil.getValidLong(inputValue, Constants.Miscellaneous.DEFAULT_TIMING);
-            return this;
-        }
-
-        public CustomInputsBuilder withImageNoReboot(String inputValue) {
-            imageNoReboot = InputsUtil.getBoolean(inputValue);
             return this;
         }
     }

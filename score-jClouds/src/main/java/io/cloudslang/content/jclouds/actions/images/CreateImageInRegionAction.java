@@ -10,6 +10,7 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.execute.images.CreateImageInRegionExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -68,9 +69,9 @@ public class CreateImageInRegionAction {
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.SERVER_ID, required = true) String serverId,
-                                       @Param(value = Inputs.CustomInputs.IMAGE_NAME, required = true) String imageName,
-                                       @Param(Inputs.CustomInputs.IMAGE_DESCRIPTION) String imageDescription,
-                                       @Param(Inputs.CustomInputs.IMAGE_NO_REBOOT) String imageNoReboot) throws Exception {
+                                       @Param(value = Inputs.ImageInputs.IMAGE_NAME, required = true) String imageName,
+                                       @Param(Inputs.ImageInputs.IMAGE_DESCRIPTION) String imageDescription,
+                                       @Param(Inputs.ImageInputs.IMAGE_NO_REBOOT) String imageNoReboot) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -84,13 +85,17 @@ public class CreateImageInRegionAction {
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withServerId(serverId)
+                .build();
+
+        ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+                .withCustomInputs(customInputs)
                 .withImageName(imageName)
                 .withImageDescription(imageDescription)
                 .withImageNoReboot(imageNoReboot)
                 .build();
 
         try {
-            return new CreateImageInRegionExecutor().execute(inputs, customInputs);
+            return new CreateImageInRegionExecutor().execute(inputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

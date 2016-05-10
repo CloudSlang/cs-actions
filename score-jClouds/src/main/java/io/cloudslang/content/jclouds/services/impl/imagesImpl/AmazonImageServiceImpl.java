@@ -3,9 +3,11 @@ package io.cloudslang.content.jclouds.services.impl.imagesImpl;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
+import io.cloudslang.content.jclouds.services.helpers.AmazonImageServiceHelper;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Image;
+import org.jclouds.ec2.domain.Permission;
 import org.jclouds.ec2.features.AMIApi;
 import org.jclouds.ec2.options.CreateImageOptions;
 import org.jclouds.ec2.options.DescribeImagesOptions;
@@ -48,25 +50,25 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
     @Override
     public Set<? extends Image> describeImagesInRegion(String region, String identityId, String[] imageIds, String[] owners) {
         AMIApi amiApi = getAMIApi(region, true);
-        DescribeImagesOptions options = getDescribeImagesOptions(identityId, imageIds, owners);
+        DescribeImagesOptions options = new AmazonImageServiceHelper().getDescribeImagesOptions(identityId, imageIds, owners);
 
         return amiApi.describeImagesInRegion(region, options);
     }
 
-    private DescribeImagesOptions getDescribeImagesOptions(String identityId, String[] imageIds, String[] owners) {
-        if (Constants.Miscellaneous.EMPTY.equals(identityId) && imageIds == null && owners == null) {
-            return DescribeImagesOptions.NONE;
-        }
+    @Override
+    public Permission getLaunchPermissionForImage(String region, String imageId) {
+        AMIApi amiApi = getAMIApi(region, true);
 
-        DescribeImagesOptions options = new DescribeImagesOptions().executableBy(identityId);
-        if (imageIds != null) {
-            options.imageIds(imageIds);
-        }
-        if (owners != null) {
-            options.ownedBy(owners);
-        }
+        return amiApi.getLaunchPermissionForImageInRegion(region, imageId);
+    }
 
-        return options;
+    @Override
+    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) {
+        AMIApi amiApi = getAMIApi(region, true);
+
+        amiApi.addLaunchPermissionsToImageInRegion(region, userIds, userGroups, imageId);
+
+        return Constants.Messages.LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED;
     }
 
     private AMIApi getAMIApi(String region, boolean isForRegion) {

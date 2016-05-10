@@ -41,6 +41,16 @@ public class OpenstackImageServiceImpl extends JCloudsComputeService implements 
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
+    @Override
+    public org.jclouds.ec2.domain.Permission getLaunchPermissionForImage(String region, String imageId) throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
+    }
+
+    @Override
+    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
+    };
+
     private void init() {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.OPENSTACK_PROVIDER);
         novaApi = contextBuilder.buildApi(NovaApi.class);

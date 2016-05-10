@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.services;
 
 import org.jclouds.ec2.domain.Image;
+import org.jclouds.ec2.domain.Permission;
 
 import java.util.Set;
 
@@ -16,4 +17,8 @@ public interface ImageService {
 
     Set<? extends Image> describeImagesInRegion(String region, String identityId, String[] imageIds, String[] owners)
             throws Exception;
+
+    Permission getLaunchPermissionForImage(String region, String imageId) throws Exception;
+
+    String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) throws Exception;
 }
