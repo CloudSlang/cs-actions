@@ -38,6 +38,10 @@ public class AddLaunchPermissionsToImageInRegionAction {
      *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
      *                         Default: "us-east-1".
      * @param imageId          ID of the specified image to add launch permission for.
+     * @param userIds          Optional - A string that contains: none, one or more user IDs separated by delimiter.
+     *                         Default: ""
+     * @param userGroups       Optional - A string that contains: none, one or more user groups separated by delimiter.
+     *                         Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */

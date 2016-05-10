@@ -43,9 +43,9 @@ public class DescribeImagesInRegionAction {
      *                         "self" (the sender of the request), or "all" (public AMIs).
      *                         Valid: "self", "all" or AWS account ID
      *                         Default: "self"
-     * @param imageIdsString   A string that contains: none, one or more image IDs separated by delimiter.
+     * @param imageIdsString   Optional - A string that contains: none, one or more image IDs separated by delimiter.
      *                         Default: ""
-     * @param ownersString     Filters the images by the owner. Specify an AWS account ID, "amazon" (owner is Amazon),
+     * @param ownersString     Optional - Filters the images by the owner. Specify an AWS account ID, "amazon" (owner is Amazon),
      *                         "aws-marketplace" (owner is AWS Marketplace), "self" (owner is the sender of the request).
      *                         Omitting this option returns all images for which you have launch permissions, regardless
      *                         of ownership.

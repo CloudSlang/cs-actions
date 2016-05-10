@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Created by persdana on 5/27/2015.
  */
-public class OpenstackComputeService extends JCloudsComputeService implements ComputeService {
+public class OpenstackComputeServiceImpl extends JCloudsComputeService implements ComputeService {
     NovaApi novaApi = null;
     private String region;
 
@@ -31,7 +31,7 @@ public class OpenstackComputeService extends JCloudsComputeService implements Co
         this.region = region;
     }
 
-    public OpenstackComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    public OpenstackComputeServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 

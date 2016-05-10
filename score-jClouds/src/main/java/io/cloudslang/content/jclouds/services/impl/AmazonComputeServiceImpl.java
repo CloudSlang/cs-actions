@@ -19,12 +19,12 @@ import java.util.Set;
 /**
  * Created by persdana on 5/27/2015.
  */
-public class AmazonComputeService extends JCloudsComputeService implements ComputeService {
+public class AmazonComputeServiceImpl extends JCloudsComputeService implements ComputeService {
     EC2Api ec2Api = null;
 
     protected String region;
 
-    public AmazonComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    public AmazonComputeServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 

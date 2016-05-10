@@ -38,9 +38,9 @@ import static org.mockito.Mockito.*;
  * Created by persdana on 6/23/2015.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({OpenstackComputeService.class, ContextBuilder.class})
-public class OpenstackComputeServiceTest {
-    private OpenstackComputeService toTest;
+@PrepareForTest({OpenstackComputeServiceImpl.class, ContextBuilder.class})
+public class OpenstackComputeServiceImplTest {
+    private OpenstackComputeServiceImpl toTest;
     private static final String REGION = "RegionOne";
     private static final String INVALID_REGION = "RegionOneTwo";
     private static final String SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e5";
@@ -110,7 +110,7 @@ public class OpenstackComputeServiceTest {
     private ServerCreated serverCreatedMock;
 
     @Spy
-    private OpenstackComputeService openstackComputeServiceSpy = new OpenstackComputeService(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
+    private OpenstackComputeServiceImpl openstackComputeServiceImplSpy = new OpenstackComputeServiceImpl(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
 
     /**
      * Add common mocks for all tests on init() method.
@@ -150,7 +150,7 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testInit() throws Exception {
-        toTest = new OpenstackComputeService(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
+        toTest = new OpenstackComputeServiceImpl(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
         addCommonMocksForInitMethod();
 
         toTest.init();
@@ -166,7 +166,7 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testInitWithProxyAndRegionSet() throws Exception {
-        toTest = new OpenstackComputeService(ENDPOINT, IDENTITY, PASSWORD, PROXY_HOST, PROXY_PORT);
+        toTest = new OpenstackComputeServiceImpl(ENDPOINT, IDENTITY, PASSWORD, PROXY_HOST, PROXY_PORT);
         addCommonMocksForInitMethod();
         Mockito.doReturn(PROXY_HOST).when(propertiesMock).put(PROPERTY_PROXY_HOST, PROXY_HOST);
         Mockito.doReturn(PROXY_PORT).when(propertiesMock).put(PROPERTY_PROXY_PORT, PROXY_PORT);
@@ -189,7 +189,7 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testInitWithNoProxyAndWithRegionSet() throws Exception {
-        toTest = new OpenstackComputeService(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
+        toTest = new OpenstackComputeServiceImpl(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
         addCommonMocksForInitMethod();
         Mockito.doReturn(REGION).when(propertiesMock).put(PROPERTY_REGIONS, REGION);
 
@@ -212,13 +212,13 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testLazyInit() {
-        doNothing().when(openstackComputeServiceSpy).init();
+        doNothing().when(openstackComputeServiceImplSpy).init();
 
-        openstackComputeServiceSpy.lazyInit();
+        openstackComputeServiceImplSpy.lazyInit();
 
-        verify(openstackComputeServiceSpy).lazyInit();
-        verify(openstackComputeServiceSpy).init();
-        verifyNoMoreInteractions(openstackComputeServiceSpy);
+        verify(openstackComputeServiceImplSpy).lazyInit();
+        verify(openstackComputeServiceImplSpy).init();
+        verifyNoMoreInteractions(openstackComputeServiceImplSpy);
     }
 
     /**
@@ -226,12 +226,12 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testLazyInitNotNullNovaApi() {
-        openstackComputeServiceSpy.novaApi = novaApiMock;
+        openstackComputeServiceImplSpy.novaApi = novaApiMock;
 
-        openstackComputeServiceSpy.lazyInit();
+        openstackComputeServiceImplSpy.lazyInit();
 
-        verify(openstackComputeServiceSpy).lazyInit();
-        verifyNoMoreInteractions(openstackComputeServiceSpy);
+        verify(openstackComputeServiceImplSpy).lazyInit();
+        verifyNoMoreInteractions(openstackComputeServiceImplSpy);
     }
 
     /**
@@ -239,13 +239,13 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testLazyInitWithRegion() {
-        doNothing().when(openstackComputeServiceSpy).init();
+        doNothing().when(openstackComputeServiceImplSpy).init();
 
-        openstackComputeServiceSpy.lazyInit(REGION);
+        openstackComputeServiceImplSpy.lazyInit(REGION);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
-        verify(openstackComputeServiceSpy).init();
-        verifyNoMoreInteractions(openstackComputeServiceSpy);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).init();
+        verifyNoMoreInteractions(openstackComputeServiceImplSpy);
     }
 
     /**
@@ -254,14 +254,14 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testLazyInitWithSameRegion() {
-        openstackComputeServiceSpy.novaApi = novaApiMock;
-        openstackComputeServiceSpy.setRegion(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock;
+        openstackComputeServiceImplSpy.setRegion(REGION);
 
-        openstackComputeServiceSpy.lazyInit(REGION);
+        openstackComputeServiceImplSpy.lazyInit(REGION);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
-        verify(openstackComputeServiceSpy).setRegion(REGION);
-        verifyNoMoreInteractions(openstackComputeServiceSpy);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).setRegion(REGION);
+        verifyNoMoreInteractions(openstackComputeServiceImplSpy);
     }
 
     /**
@@ -270,15 +270,15 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testLazyInitWithSameRegionAndNullNovaApi() {
-        doNothing().when(openstackComputeServiceSpy).init();
-        openstackComputeServiceSpy.setRegion(REGION);
+        doNothing().when(openstackComputeServiceImplSpy).init();
+        openstackComputeServiceImplSpy.setRegion(REGION);
 
-        openstackComputeServiceSpy.lazyInit(REGION);
+        openstackComputeServiceImplSpy.lazyInit(REGION);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
-        verify(openstackComputeServiceSpy).init();
-        verify(openstackComputeServiceSpy).setRegion(REGION);
-        verifyNoMoreInteractions(openstackComputeServiceSpy);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).init();
+        verify(openstackComputeServiceImplSpy).setRegion(REGION);
+        verifyNoMoreInteractions(openstackComputeServiceImplSpy);
     }
 
     /**
@@ -287,15 +287,15 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testLazyInitWithDifferentRegion() {
-        doNothing().when(openstackComputeServiceSpy).init();
-        openstackComputeServiceSpy.setRegion(REGION + " dasda");
+        doNothing().when(openstackComputeServiceImplSpy).init();
+        openstackComputeServiceImplSpy.setRegion(REGION + " dasda");
 
-        openstackComputeServiceSpy.lazyInit(REGION);
+        openstackComputeServiceImplSpy.lazyInit(REGION);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
-        verify(openstackComputeServiceSpy).setRegion(REGION + " dasda");
-        verify(openstackComputeServiceSpy).init();
-        verifyNoMoreInteractions(openstackComputeServiceSpy);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).setRegion(REGION + " dasda");
+        verify(openstackComputeServiceImplSpy).init();
+        verifyNoMoreInteractions(openstackComputeServiceImplSpy);
     }
 
 
@@ -304,15 +304,15 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testStart() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         Mockito.doNothing().when(serverApiMock).start(SERVER_ID);
 
-        String result = openstackComputeServiceSpy.start(REGION, SERVER_ID);
+        String result = openstackComputeServiceImplSpy.start(REGION, SERVER_ID);
 
         assertEquals(SERVER_START_SUCCESS_MESSAGE, result);
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(serverApiMock).start(SERVER_ID);
@@ -326,13 +326,13 @@ public class OpenstackComputeServiceTest {
     public void testStartWithInvalidServerId() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverApiMock).start(INVALID_SERVER_ID);
 
-        openstackComputeServiceSpy.start(REGION, INVALID_SERVER_ID);
+        openstackComputeServiceImplSpy.start(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -340,15 +340,15 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testStop() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         Mockito.doNothing().when(serverApiMock).stop(SERVER_ID);
 
-        String result = openstackComputeServiceSpy.stop(REGION, SERVER_ID);
+        String result = openstackComputeServiceImplSpy.stop(REGION, SERVER_ID);
 
         assertEquals(SERVER_STOP_SUCCESS_MESSAGE, result);
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(serverApiMock).stop(SERVER_ID);
@@ -365,13 +365,13 @@ public class OpenstackComputeServiceTest {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverApiMock).stop(INVALID_SERVER_ID);
 
-        openstackComputeServiceSpy.stop(REGION, INVALID_SERVER_ID);
+        openstackComputeServiceImplSpy.stop(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -379,14 +379,14 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testSoftReboot() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         Mockito.doNothing().when(serverApiMock).reboot(SERVER_ID, RebootType.SOFT);
 
-        openstackComputeServiceSpy.softReboot(REGION, SERVER_ID);
+        openstackComputeServiceImplSpy.softReboot(REGION, SERVER_ID);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(serverApiMock).reboot(SERVER_ID, RebootType.SOFT);
@@ -403,13 +403,13 @@ public class OpenstackComputeServiceTest {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverApiMock).reboot(INVALID_SERVER_ID, RebootType.SOFT);
 
-        openstackComputeServiceSpy.softReboot(REGION, INVALID_SERVER_ID);
+        openstackComputeServiceImplSpy.softReboot(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -417,14 +417,14 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testHardReboot() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         Mockito.doNothing().when(serverApiMock).reboot(SERVER_ID, RebootType.HARD);
 
-        openstackComputeServiceSpy.hardReboot(REGION, SERVER_ID);
+        openstackComputeServiceImplSpy.hardReboot(REGION, SERVER_ID);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(serverApiMock).reboot(SERVER_ID, RebootType.HARD);
@@ -441,13 +441,13 @@ public class OpenstackComputeServiceTest {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverApiMock).reboot(INVALID_SERVER_ID, RebootType.HARD);
 
-        openstackComputeServiceSpy.hardReboot(REGION, INVALID_SERVER_ID);
+        openstackComputeServiceImplSpy.hardReboot(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -455,16 +455,16 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testSuspend() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(optionalServerAdminApiMock).when(novaApiMock).getServerAdminApi(REGION);
         Mockito.doReturn(serverAdminApiMock).when(optionalServerAdminApiMock).get();
         Mockito.doReturn(true).when(serverAdminApiMock).suspend(SERVER_ID);
 
-        String result = openstackComputeServiceSpy.suspend(REGION, SERVER_ID);
+        String result = openstackComputeServiceImplSpy.suspend(REGION, SERVER_ID);
 
         assertEquals(SUSPEND_SERVER_SUCCESS_MESSAGE, result);
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerAdminApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(optionalServerAdminApiMock).get();
@@ -478,16 +478,16 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testSuspendNegativeScenario() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(optionalServerAdminApiMock).when(novaApiMock).getServerAdminApi(REGION);
         Mockito.doReturn(serverAdminApiMock).when(optionalServerAdminApiMock).get();
         Mockito.doReturn(false).when(serverAdminApiMock).suspend(SERVER_ID);
 
-        String result = openstackComputeServiceSpy.suspend(REGION, SERVER_ID);
+        String result = openstackComputeServiceImplSpy.suspend(REGION, SERVER_ID);
 
         assertEquals(SUSPEND_SERVER_FAIL_MESSAGE, result);
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerAdminApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(optionalServerAdminApiMock).get();
@@ -506,14 +506,14 @@ public class OpenstackComputeServiceTest {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(optionalServerAdminApiMock).when(novaApiMock).getServerAdminApi(REGION);
         Mockito.doReturn(serverAdminApiMock).when(optionalServerAdminApiMock).get();
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverAdminApiMock).suspend(INVALID_SERVER_ID);
 
-        openstackComputeServiceSpy.suspend(REGION, INVALID_SERVER_ID);
+        openstackComputeServiceImplSpy.suspend(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -521,15 +521,15 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testResume() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(optionalServerAdminApiMock).when(novaApiMock).getServerAdminApi(REGION);
         Mockito.doReturn(serverAdminApiMock).when(optionalServerAdminApiMock).get();
         Mockito.doReturn(true).when(serverAdminApiMock).resume(SERVER_ID);
 
-        openstackComputeServiceSpy.resume(REGION, SERVER_ID);
+        openstackComputeServiceImplSpy.resume(REGION, SERVER_ID);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerAdminApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(optionalServerAdminApiMock).get();
@@ -548,14 +548,14 @@ public class OpenstackComputeServiceTest {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(optionalServerAdminApiMock).when(novaApiMock).getServerAdminApi(REGION);
         Mockito.doReturn(serverAdminApiMock).when(optionalServerAdminApiMock).get();
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverAdminApiMock).resume(INVALID_SERVER_ID);
 
-        openstackComputeServiceSpy.resume(REGION, INVALID_SERVER_ID);
+        openstackComputeServiceImplSpy.resume(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -563,14 +563,14 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testRemoveServer() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         Mockito.doReturn(true).when(serverApiMock).delete(SERVER_ID);
 
-        openstackComputeServiceSpy.removeServer(REGION, SERVER_ID);
+        openstackComputeServiceImplSpy.removeServer(REGION, SERVER_ID);
 
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(serverApiMock).delete(SERVER_ID);
@@ -587,13 +587,13 @@ public class OpenstackComputeServiceTest {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverApiMock).delete(INVALID_SERVER_ID);
 
-        openstackComputeServiceSpy.removeServer(REGION, INVALID_SERVER_ID);
+        openstackComputeServiceImplSpy.removeServer(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -601,17 +601,17 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testListRegions() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit();
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit();
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Set<String> regions = Sets.newIdentityHashSet();
         regions.add(REGION);
         Mockito.doReturn(regions).when(novaApiMock).getConfiguredRegions();
 
-        Set<String> returnedRegions = openstackComputeServiceSpy.listRegions();
+        Set<String> returnedRegions = openstackComputeServiceImplSpy.listRegions();
 
         assertEquals(1, returnedRegions.size());
         assertTrue(returnedRegions.contains(REGION));
-        verify(openstackComputeServiceSpy).lazyInit();
+        verify(openstackComputeServiceImplSpy).lazyInit();
         verify(novaApiMock).getConfiguredRegions();
         verifyNoMoreInteractions(novaApiMock);
     }
@@ -624,12 +624,12 @@ public class OpenstackComputeServiceTest {
     public void testListRegionsOnInvalidEndpoint() {
         exception.expect(HttpResponseException.class);
         exception.expectMessage(CONNECTION_REFUSE_EXCEPTION_MESSAGE);
-        doNothing().when(openstackComputeServiceSpy).lazyInit();
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit();
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
         Mockito.doThrow(toThrow).when(novaApiMock).getConfiguredRegions();
 
-        openstackComputeServiceSpy.listRegions();
+        openstackComputeServiceImplSpy.listRegions();
     }
 
     /**
@@ -637,8 +637,8 @@ public class OpenstackComputeServiceTest {
      */
     @Test
     public void testListNodes() {
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         Mockito.doReturn(pagedIterableServersMock).when(serverApiMock).listInDetail();
         Mockito.doReturn(iterableWithMarkerIteratorMock).when(pagedIterableServersMock).iterator();
@@ -648,11 +648,11 @@ public class OpenstackComputeServiceTest {
         Mockito.doReturn(true).doReturn(false).when(serverIteratorMock).hasNext();
         Mockito.doReturn(serverMock).when(serverIteratorMock).next();
 
-        Set<String> res = openstackComputeServiceSpy.listNodes(REGION);
+        Set<String> res = openstackComputeServiceImplSpy.listNodes(REGION);
 
         assertEquals(1, res.size());
         assertTrue(res.contains("server"));
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(serverApiMock).listInDetail();
@@ -674,13 +674,13 @@ public class OpenstackComputeServiceTest {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage(INVALID_REGION_EXCEPTION_MESSAGE);
 
-        doNothing().when(openstackComputeServiceSpy).lazyInit(INVALID_REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(INVALID_REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(INVALID_REGION);
         IllegalArgumentException toThrow = new IllegalArgumentException(INVALID_REGION_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(serverApiMock).listInDetail();
 
-        openstackComputeServiceSpy.listNodes(INVALID_REGION);
+        openstackComputeServiceImplSpy.listNodes(INVALID_REGION);
     }
 
     /**
@@ -689,16 +689,16 @@ public class OpenstackComputeServiceTest {
     @Test
     public void testRunServer() {
         String exceptedResult = "server created, details: ...";
-        doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
-        openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
+        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
+        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
         Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
         Mockito.doReturn(serverCreatedMock).when(serverApiMock).create("name", "imageRef", "flavorRef");
         Mockito.doReturn(exceptedResult).when(serverCreatedMock).toString();
 
-        String result = openstackComputeServiceSpy.createServer(REGION, "name", "imageRef", "flavorRef");
+        String result = openstackComputeServiceImplSpy.createServer(REGION, "name", "imageRef", "flavorRef");
 
         assertEquals(exceptedResult, result);
-        verify(openstackComputeServiceSpy).lazyInit(REGION);
+        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
         verify(novaApiMock).getServerApi(REGION);
         verifyNoMoreInteractions(novaApiMock);
         verify(serverApiMock).create("name", "imageRef", "flavorRef");
