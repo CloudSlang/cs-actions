@@ -44,7 +44,7 @@ public class WSManUtils {
     }
 
     public static boolean commandExecutionIsDone(String response) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
-        return !StringUtils.containsIgnoreCase(XMLUtils.parseXml(response, COMMAND_STATE_XPATH), DONE_COMMAND_STATE_ACTION);
+        return StringUtils.containsIgnoreCase(XMLUtils.parseXml(response, COMMAND_STATE_XPATH), DONE_COMMAND_STATE_ACTION);
     }
 
     public static int countStreamElements(String response) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {

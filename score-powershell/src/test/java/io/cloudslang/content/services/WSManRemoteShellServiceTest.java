@@ -1,5 +1,6 @@
 package io.cloudslang.content.services;
 
+import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.ScoreHttpClient;
 import io.cloudslang.content.utils.WSManUtils;
@@ -15,23 +16,15 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.xml.sax.SAXException;
+import org.powermock.reflect.Whitebox;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by giloan on 5/9/2016.
@@ -56,9 +49,6 @@ public class WSManRemoteShellServiceTest {
     private static final String WINRM_LOCALE_EN_US = "en-US";
     private static final String OPERATION_TIMEOUT = "60";
     private static final String SHELL_UUID = "19034e02-69a7-46e2-9da9-7d95d8096054";
-    private static final String SHELL_ID = "shellId";
-    private static final String COMMAND_UUID = "C0DE9575-6E2D-4C79-9367-676071BDE404";
-    private static final String COMMAND_ID = "commandId";
     private static final String URL_STR = "http://winrmserver:5985/wsman";
     private static final String REQUEST_BODY = "request body";
     private static final String RETURN_RESULT = "returnResult";
@@ -69,7 +59,7 @@ public class WSManRemoteShellServiceTest {
     private static final String FAULT_MESSAGE = "fault message";
 
 
-    private WSManRemoteShellService wsManRemoteShellService;
+    private WSManRequestInputs wsManRequestInputs;
     @Mock
     private ScoreHttpClient scoreHttpClientMock;
     @Mock
@@ -83,66 +73,44 @@ public class WSManRemoteShellServiceTest {
 
     @Before
     public void setUp() {
-        wsManRemoteShellService = new WSManRemoteShellService();
+        wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
+                .withHost(LOCALHOST)
+                .withPort(PORT)
+                .withProtocol(HTTPS)
+                .withUsername(USER)
+                .withPassword(PASS)
+                .withProxyHost(PROXY_HOST)
+                .withProxyPort(PROXY_PORT)
+                .withProxyUsername(PROXY_USER)
+                .withProxyPassword(PASS)
+                .withMaxEnvelopeSize(MAX_ENVELOPE_SIZE)
+                .withTrustAllRoots(Boolean.TRUE.toString())
+                .withX509HostnameVerifier(X_509_HOSTNAME_VERIFIER_STRICT)
+                .withKeystore(KEYSTORE)
+                .withKeystorePassword(PASS)
+                .withTrustKeystore(TRUST_KEYSTORE)
+                .withTrustPassword(PASS)
+                .withScript(SCRIPT)
+                .withWinrmLocale(WINRM_LOCALE_EN_US)
+                .withOperationTimeout(OPERATION_TIMEOUT)
+                .build();
     }
 
     @After
     public void tearDown() {
-        wsManRemoteShellService = null;
         scoreHttpClientMock = null;
         httpClientInputsMock = null;
         urlMock = null;
         resultMock = null;
+        wsManRequestInputs = null;
     }
 
     @Test
-    public void testRunCommand() throws Exception {
-        wsManRemoteShellService = new WSManRemoteShellService() {
-            @Override
-            protected String createShell(ScoreHttpClient scoreHttpClient, HttpClientInputs httpClientInputs, String resourceName, String url, String maxEnvelopeSize, String winrmLocale, String operationTimeout) throws RuntimeException, IOException, URISyntaxException, TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
-                return SHELL_UUID;
-            }
-
-            @Override
-            protected String executeCommand(ScoreHttpClient scoreHttpClient, HttpClientInputs httpClientInputs, String resourceName, String url, String shellId, String command, String maxEnvelopeSize, String winrmLocale, String operationTimeout) throws RuntimeException, IOException, URISyntaxException, TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
-                return COMMAND_UUID;
-            }
-
-            @Override
-            protected Map<String, String> receiveCommandResult(ScoreHttpClient scoreHttpClient, HttpClientInputs httpClientInputs, String resourceName, String url, String shellId, String commandId, String maxEnvelopeSize, String winrmLocale, int operationTimeout) throws RuntimeException, IOException, URISyntaxException, TransformerException, TimeoutException, XPathExpressionException, SAXException, ParserConfigurationException, InterruptedException {
-                return resultMock;
-            }
-
-            @Override
-            protected void deleteShell(ScoreHttpClient scoreHttpClient, HttpClientInputs httpClientInputs, String resourceName, String url, String shellId, String maxEnvelopeSize, String winrmLocale, String operationTimeout) throws RuntimeException, IOException, URISyntaxException, TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
-
-            }
-        };
-        whenNew(ScoreHttpClient.class).withNoArguments().thenReturn(scoreHttpClientMock);
-        whenNew(HttpClientInputs.class).withNoArguments().thenReturn(httpClientInputsMock);
-        mockStatic(WSManUtils.class);
-        PowerMockito.doNothing().when(WSManUtils.class);
-        WSManUtils.validateUUID(SHELL_UUID, SHELL_ID);
-        WSManUtils.validateUUID(COMMAND_UUID, COMMAND_ID);
-
-        Map<String, String> result = wsManRemoteShellService.runCommand(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, MAX_ENVELOPE_SIZE, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, KEYSTORE, PASS,
-                TRUST_KEYSTORE, PASS, SCRIPT, WINRM_LOCALE_EN_US, Integer.parseInt(OPERATION_TIMEOUT));
-
-        verifyNew(ScoreHttpClient.class).withNoArguments();
-        verifyNew(HttpClientInputs.class).withNoArguments();
-        verifyStatic();
-        WSManUtils.validateUUID(SHELL_UUID, SHELL_ID);
-        WSManUtils.validateUUID(COMMAND_UUID, COMMAND_ID);
-        assertEquals(resultMock, result);
-    }
-
-    @Test
-    public void testExecuteRequest() throws TransformerException {
+    public void testExecuteRequest() throws Exception {
         doNothing().when(httpClientInputsMock).setBody(REQUEST_BODY);
         doReturn(resultMock).when(scoreHttpClientMock).execute(httpClientInputsMock);
 
-        Map<String, String> result = wsManRemoteShellService.executeRequest(scoreHttpClientMock, httpClientInputsMock, REQUEST_BODY);
+        Map<String, String> result = Whitebox.invokeMethod(new WSManRemoteShellService(), "executeRequest", scoreHttpClientMock, httpClientInputsMock, REQUEST_BODY);
 
         verify(httpClientInputsMock).setBody(REQUEST_BODY);
         verify(scoreHttpClientMock).execute(httpClientInputsMock);
@@ -150,14 +118,14 @@ public class WSManRemoteShellServiceTest {
     }
 
     @Test
-    public void testCreateShell() throws ParserConfigurationException, TransformerException, IOException, XPathExpressionException, URISyntaxException, SAXException {
-        configureServiceForTesting();
+    public void testCreateShell() throws Exception {
+        mockExecuteRequest();
         PowerMockito.mockStatic(WSManUtils.class);
         Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION)).thenReturn(true);
         PowerMockito.mockStatic(XMLUtils.class);
         Mockito.when(XMLUtils.parseXml(REQUEST_BODY, CREATE_RESPONSE_SHELL_ID_XPATH)).thenReturn(SHELL_UUID);
 
-        String result = wsManRemoteShellService.createShell(scoreHttpClientMock, httpClientInputsMock, CREATE_SHELL_REQUEST_XML, URL_STR, MAX_ENVELOPE_SIZE, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
+        String result = Whitebox.invokeMethod(new WSManRemoteShellService(), "createShell", scoreHttpClientMock, httpClientInputsMock, CREATE_SHELL_REQUEST_XML, URL_STR, wsManRequestInputs);
 
         assertEquals(SHELL_UUID, result);
         verifyStatic();
@@ -165,32 +133,34 @@ public class WSManRemoteShellServiceTest {
         XMLUtils.parseXml(REQUEST_BODY, CREATE_RESPONSE_SHELL_ID_XPATH);
     }
 
+
     @Test
-    public void testCreateShellThrowsNullShellIdException() throws ParserConfigurationException, TransformerException, IOException, XPathExpressionException, URISyntaxException, SAXException {
-        configureServiceForTesting();
+    public void testCreateShellThrowsNullShellIdException() throws Exception {
+        mockExecuteRequest();
         PowerMockito.mockStatic(WSManUtils.class);
         Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION)).thenReturn(true);
         PowerMockito.mockStatic(XMLUtils.class);
         Mockito.when(XMLUtils.parseXml(REQUEST_BODY, CREATE_RESPONSE_SHELL_ID_XPATH)).thenReturn(null);
 
         thrownException.expectMessage(SHELL_ID_NOT_RETRIEVED);
-        wsManRemoteShellService.createShell(scoreHttpClientMock, httpClientInputsMock, CREATE_SHELL_REQUEST_XML, URL_STR, MAX_ENVELOPE_SIZE, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
+        Whitebox.invokeMethod(new WSManRemoteShellService(), "createShell", scoreHttpClientMock, httpClientInputsMock, CREATE_SHELL_REQUEST_XML, URL_STR, wsManRequestInputs);
 
         verifyStatic();
         WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION);
         XMLUtils.parseXml(REQUEST_BODY, CREATE_RESPONSE_SHELL_ID_XPATH);
+        verify(scoreHttpClientMock).execute(httpClientInputsMock);
     }
 
     @Test
-    public void testCreateShellThrowsFaultException() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException, TransformerException, URISyntaxException {
-        configureServiceForTesting();
+    public void testCreateShellThrowsFaultException() throws Exception {
+        mockExecuteRequest();
         PowerMockito.mockStatic(WSManUtils.class);
         Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION)).thenReturn(false);
         Mockito.when(WSManUtils.isFaultResponse(REQUEST_BODY)).thenReturn(true);
         Mockito.when(WSManUtils.getResponseFault(REQUEST_BODY)).thenReturn(FAULT_MESSAGE);
 
         thrownException.expectMessage(FAULT_MESSAGE);
-        wsManRemoteShellService.createShell(scoreHttpClientMock, httpClientInputsMock, CREATE_SHELL_REQUEST_XML, URL_STR, MAX_ENVELOPE_SIZE, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
+        Whitebox.invokeMethod(new WSManRemoteShellService(), "createShell", scoreHttpClientMock, httpClientInputsMock, CREATE_SHELL_REQUEST_XML, URL_STR, wsManRequestInputs);
 
         verifyStatic();
         WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION);
@@ -198,14 +168,9 @@ public class WSManRemoteShellServiceTest {
         WSManUtils.getResponseFault(REQUEST_BODY);
     }
 
-    private void configureServiceForTesting() {
-        wsManRemoteShellService = new WSManRemoteShellService() {
-            @Override
-            protected Map<String, String> executeRequest(ScoreHttpClient scoreHttpClient, HttpClientInputs httpClientInputs, String requestMessage) {
-                Map<String, String> result = new HashMap<>();
-                result.put(RETURN_RESULT, REQUEST_BODY);
-                return result;
-            }
-        };
+    private void mockExecuteRequest() {
+        Map<String, String> result = new HashMap<>();
+        result.put(RETURN_RESULT, REQUEST_BODY);
+        doReturn(result).when(scoreHttpClientMock).execute(httpClientInputsMock);
     }
 }

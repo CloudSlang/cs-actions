@@ -1,5 +1,6 @@
 package io.cloudslang.content.actions;
 
+import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import org.junit.After;
 import org.junit.Before;
@@ -13,8 +14,8 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -53,6 +54,10 @@ public class PowerShellScriptActionTest {
     private WSManRemoteShellService serviceMock;
     @Mock
     private Map<String, String> resultMock;
+    @Mock
+    private WSManRequestInputs wsManRequestInputsMock;
+    @Mock
+    private WSManRequestInputs.WSManRequestInputsBuilder wsManRequestInputsBuilderMock;
 
     @Before
     public void setUp() {
@@ -64,14 +69,14 @@ public class PowerShellScriptActionTest {
         powerShellScriptAction = null;
         serviceMock = null;
         resultMock = null;
+        wsManRequestInputsMock = null;
+        wsManRequestInputsBuilderMock = null;
     }
 
     @Test
     public void testExecute() throws Exception {
         whenNew(WSManRemoteShellService.class).withNoArguments().thenReturn(serviceMock);
-        doReturn(resultMock).when(serviceMock).runCommand(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, MAX_ENVELOPE_SIZE, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, KEYSTORE, PASS,
-                TRUST_KEYSTORE, PASS, SCRIPT, WINRM_LOCALE_EN_US, Integer.parseInt(OPERATION_TIMEOUT));
+        doReturn(resultMock).when(serviceMock).runCommand(any(WSManRequestInputs.class));
         doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
@@ -79,9 +84,7 @@ public class PowerShellScriptActionTest {
                 MAX_ENVELOPE_SIZE, SCRIPT, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
-        verify(serviceMock, times(1)).runCommand(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, MAX_ENVELOPE_SIZE, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, KEYSTORE, PASS,
-                TRUST_KEYSTORE, PASS, SCRIPT, WINRM_LOCALE_EN_US, Integer.parseInt(OPERATION_TIMEOUT));
+        verify(serviceMock, times(1)).runCommand(any(WSManRequestInputs.class));
         verify(resultMock, times(1)).put(RETURN_CODE, RETURN_CODE_SUCCESS);
         assertEquals(resultMock, result);
     }
@@ -89,9 +92,7 @@ public class PowerShellScriptActionTest {
     @Test
     public void testExecuteWithInputDefaultValues() throws Exception {
         whenNew(WSManRemoteShellService.class).withNoArguments().thenReturn(serviceMock);
-        doReturn(resultMock).when(serviceMock).runCommand(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, MAX_ENVELOPE_SIZE, Boolean.FALSE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, KEYSTORE, PASS,
-                TRUST_KEYSTORE, PASS, SCRIPT, WINRM_LOCALE_EN_US, Integer.parseInt(OPERATION_TIMEOUT));
+        doReturn(resultMock).when(serviceMock).runCommand(any(WSManRequestInputs.class));
         doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, PROXY_HOST, PROXY_PORT,
@@ -99,9 +100,7 @@ public class PowerShellScriptActionTest {
                 EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
-        verify(serviceMock, times(1)).runCommand(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, MAX_ENVELOPE_SIZE, Boolean.FALSE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, KEYSTORE, PASS,
-                TRUST_KEYSTORE, PASS, SCRIPT, WINRM_LOCALE_EN_US, Integer.parseInt(OPERATION_TIMEOUT));
+        verify(serviceMock, times(1)).runCommand(any(WSManRequestInputs.class));
         verify(resultMock, times(1)).put(RETURN_CODE, RETURN_CODE_SUCCESS);
         assertEquals(resultMock, result);
     }
@@ -109,9 +108,7 @@ public class PowerShellScriptActionTest {
     @Test
     public void testExecuteThrowsException() throws Exception {
         whenNew(WSManRemoteShellService.class).withNoArguments().thenReturn(serviceMock);
-        doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(serviceMock).runCommand(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, MAX_ENVELOPE_SIZE, Boolean.FALSE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, KEYSTORE, PASS,
-                TRUST_KEYSTORE, PASS, SCRIPT, WINRM_LOCALE_EN_US, Integer.parseInt(OPERATION_TIMEOUT));
+        doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(serviceMock).runCommand(any(WSManRequestInputs.class));
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,

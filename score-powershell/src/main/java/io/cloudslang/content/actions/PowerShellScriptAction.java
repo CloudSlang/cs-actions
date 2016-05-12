@@ -6,10 +6,9 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.entities.InputDefaults;
+import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.HashMap;
@@ -111,18 +110,30 @@ public class PowerShellScriptAction {
         Map<String, String> resultMap = new HashMap<>();
         try {
             WSManRemoteShellService wsManRemoteShellService = new WSManRemoteShellService();
-            protocol = StringUtils.isBlank(protocol) ? InputDefaults.PROTOCOL.getValue() : protocol;
-            port = StringUtils.isBlank(port) ? InputDefaults.PORT.getValue() : port;
-            maxEnvelopeSize = StringUtils.isBlank(maxEnvelopeSize) ? InputDefaults.MAX_ENVELOPE_SIZE.getValue() : maxEnvelopeSize;
-            Integer.parseInt(maxEnvelopeSize);
-            trustAllRoots = StringUtils.isBlank(trustAllRoots) ? InputDefaults.TRUST_ALL_ROOTS.getValue() : trustAllRoots;
-            x509HostnameVerifier = StringUtils.isBlank(x509HostnameVerifier) ? InputDefaults.X_509_HOSTNAME_VERIFIER.getValue() : x509HostnameVerifier;
-            operationTimeout = StringUtils.isBlank(operationTimeout) ? InputDefaults.OPERATION_TIMEOUT.getValue() : operationTimeout;
-            winrmLocale = StringUtils.isBlank(winrmLocale) ? InputDefaults.WINRM_LOCALE.getValue() : winrmLocale;
 
-            resultMap = wsManRemoteShellService.runCommand(host, port, protocol, username, password, proxyHost,
-                    proxyPort, proxyUsername, proxyPassword, maxEnvelopeSize, trustAllRoots, x509HostnameVerifier, keystore, keystorePassword,
-                    trustKeystore, trustPassword, script, winrmLocale, Integer.parseInt(operationTimeout));
+            WSManRequestInputs wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
+                    .withHost(host)
+                    .withPort(port)
+                    .withProtocol(protocol)
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withProxyHost(proxyHost)
+                    .withProxyPort(proxyPort)
+                    .withProxyUsername(proxyUsername)
+                    .withProxyPassword(proxyPassword)
+                    .withMaxEnvelopeSize(maxEnvelopeSize)
+                    .withTrustAllRoots(trustAllRoots)
+                    .withX509HostnameVerifier(x509HostnameVerifier)
+                    .withKeystore(keystore)
+                    .withKeystorePassword(keystorePassword)
+                    .withTrustKeystore(trustKeystore)
+                    .withTrustPassword(trustPassword)
+                    .withScript(script)
+                    .withWinrmLocale(winrmLocale)
+                    .withOperationTimeout(operationTimeout)
+                    .build();
+
+            resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
             resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
         } catch (NumberFormatException nfe) {
             resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));
