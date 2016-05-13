@@ -49,6 +49,9 @@ public class WSManRemoteShellServiceTest {
     private static final String WINRM_LOCALE_EN_US = "en-US";
     private static final String OPERATION_TIMEOUT = "60";
     private static final String SHELL_UUID = "19034e02-69a7-46e2-9da9-7d95d8096054";
+    private static final String SHELL_ID = "shellId";
+    private static final String COMMAND_ID = "commandId";
+    private static final String COMMAND_UUID = "C0DE9575-6E2D-4C79-9367-676071BDE404";
     private static final String URL_STR = "http://winrmserver:5985/wsman";
     private static final String REQUEST_BODY = "request body";
     private static final String RETURN_RESULT = "returnResult";
@@ -103,6 +106,42 @@ public class WSManRemoteShellServiceTest {
         urlMock = null;
         resultMock = null;
         wsManRequestInputs = null;
+    }
+
+    @Test
+    public void testRunCommand() throws Exception {
+        WSManRemoteShellService wsManRemoteShellService = PowerMockito.spy(new WSManRemoteShellService());
+
+        PowerMockito.doReturn(SHELL_UUID).when(wsManRemoteShellService, "createShell", any(ScoreHttpClient.class), any(HttpClientInputs.class),
+                any(String.class), any(String.class),
+                any(WSManRequestInputs.class));
+
+        PowerMockito.doReturn(COMMAND_UUID).when(wsManRemoteShellService, "executeCommand", any(ScoreHttpClient.class),
+                any(HttpClientInputs.class), any(String.class), any(String.class),
+                any(String.class), any(WSManRequestInputs.class), any(String.class));
+
+        PowerMockito.doReturn(resultMock).when(wsManRemoteShellService, "receiveCommandResult", any(ScoreHttpClient.class), any(HttpClientInputs.class),
+                any(String.class), any(String.class), any(String.class),
+                any(String.class), any(WSManRequestInputs.class));
+
+        PowerMockito.doNothing().when(wsManRemoteShellService, "deleteShell", any(ScoreHttpClient.class), any(HttpClientInputs.class),
+                any(String.class), any(String.class), any(String.class), any(WSManRequestInputs.class));
+
+        PowerMockito.whenNew(ScoreHttpClient.class).withNoArguments().thenReturn(scoreHttpClientMock);
+        PowerMockito.whenNew(HttpClientInputs.class).withNoArguments().thenReturn(httpClientInputsMock);
+        PowerMockito.mockStatic(WSManUtils.class);
+        PowerMockito.doNothing().when(WSManUtils.class);
+        WSManUtils.validateUUID(SHELL_UUID, SHELL_ID);
+        WSManUtils.validateUUID(COMMAND_UUID, COMMAND_ID);
+
+        Map<String, String> result = wsManRemoteShellService.runCommand(wsManRequestInputs);
+
+        PowerMockito.verifyNew(ScoreHttpClient.class).withNoArguments();
+        PowerMockito.verifyNew(HttpClientInputs.class).withNoArguments();
+        verifyStatic();
+        WSManUtils.validateUUID(SHELL_UUID, SHELL_ID);
+        WSManUtils.validateUUID(COMMAND_UUID, COMMAND_ID);
+        assertEquals(resultMock, result);
     }
 
     @Test
