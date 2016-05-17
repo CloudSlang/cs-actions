@@ -60,7 +60,15 @@ public class WSManRemoteShellServiceTest {
     private static final String CREATE_RESPONSE_ACTION = "http://schemas.xmlsoap.org/ws/2004/09/transfer/CreateResponse";
     private static final String CREATE_RESPONSE_SHELL_ID_XPATH = "/Envelope/Body/ResourceCreated/ReferenceParameters/SelectorSet/Selector[@Name='ShellId']/text()";
     private static final String FAULT_MESSAGE = "fault message";
-
+    private static final String COMMAND_RESPONSE_ACTION = "http://schemas.microsoft.com/wbem/wsman/1/windows/shell/CommandResponse";
+    private static final String COMMAND_RESULT_COMMAND_ID_XPATH = "/Envelope/Body/CommandResponse/CommandId";
+    private static final String EXECUTE_COMMAND_REQUEST_XML = "templates/ExecuteCommand.xml";
+    private static final String COMMAND = "get-host";
+    private static final String COMMAND_ID_NOT_RETRIEVED = "The command id could not be retrieved.";
+    private static final String UNEXPECTED_SERVICE_RESPONSE = "Unexpected service response: ";
+    private static final String RECEIVE_RESPONSE_ACTION = "http://schemas.microsoft.com/wbem/wsman/1/windows/shell/ReceiveResponse";
+    private static final String RECEIVE_REQUEST_XML = "templates/Receive.xml";
+    private static final String EXECUTION_TIMED_OUT = "The script execution timed out!";
 
     private WSManRequestInputs wsManRequestInputs;
     @Mock
@@ -73,6 +81,7 @@ public class WSManRemoteShellServiceTest {
     private Map<String, String> resultMock;
     @Rule
     private ExpectedException thrownException = ExpectedException.none();
+    private WSManRemoteShellService wsManRemoteShellServiceSpy;
 
     @Before
     public void setUp() {
@@ -97,6 +106,7 @@ public class WSManRemoteShellServiceTest {
                 .withWinrmLocale(WINRM_LOCALE_EN_US)
                 .withOperationTimeout(OPERATION_TIMEOUT)
                 .build();
+        wsManRemoteShellServiceSpy = PowerMockito.spy(new WSManRemoteShellService());
     }
 
     @After
@@ -106,25 +116,24 @@ public class WSManRemoteShellServiceTest {
         urlMock = null;
         resultMock = null;
         wsManRequestInputs = null;
+        wsManRemoteShellServiceSpy = null;
     }
 
     @Test
     public void testRunCommand() throws Exception {
-        WSManRemoteShellService wsManRemoteShellService = PowerMockito.spy(new WSManRemoteShellService());
-
-        PowerMockito.doReturn(SHELL_UUID).when(wsManRemoteShellService, "createShell", any(ScoreHttpClient.class), any(HttpClientInputs.class),
+        PowerMockito.doReturn(SHELL_UUID).when(wsManRemoteShellServiceSpy, "createShell", any(ScoreHttpClient.class), any(HttpClientInputs.class),
                 any(String.class), any(String.class),
                 any(WSManRequestInputs.class));
 
-        PowerMockito.doReturn(COMMAND_UUID).when(wsManRemoteShellService, "executeCommand", any(ScoreHttpClient.class),
+        PowerMockito.doReturn(COMMAND_UUID).when(wsManRemoteShellServiceSpy, "executeCommand", any(ScoreHttpClient.class),
                 any(HttpClientInputs.class), any(String.class), any(String.class),
                 any(String.class), any(WSManRequestInputs.class), any(String.class));
 
-        PowerMockito.doReturn(resultMock).when(wsManRemoteShellService, "receiveCommandResult", any(ScoreHttpClient.class), any(HttpClientInputs.class),
+        PowerMockito.doReturn(resultMock).when(wsManRemoteShellServiceSpy, "receiveCommandResult", any(ScoreHttpClient.class), any(HttpClientInputs.class),
                 any(String.class), any(String.class), any(String.class),
                 any(String.class), any(WSManRequestInputs.class));
 
-        PowerMockito.doNothing().when(wsManRemoteShellService, "deleteShell", any(ScoreHttpClient.class), any(HttpClientInputs.class),
+        PowerMockito.doNothing().when(wsManRemoteShellServiceSpy, "deleteShell", any(ScoreHttpClient.class), any(HttpClientInputs.class),
                 any(String.class), any(String.class), any(String.class), any(WSManRequestInputs.class));
 
         PowerMockito.whenNew(ScoreHttpClient.class).withNoArguments().thenReturn(scoreHttpClientMock);
@@ -134,7 +143,7 @@ public class WSManRemoteShellServiceTest {
         WSManUtils.validateUUID(SHELL_UUID, SHELL_ID);
         WSManUtils.validateUUID(COMMAND_UUID, COMMAND_ID);
 
-        Map<String, String> result = wsManRemoteShellService.runCommand(wsManRequestInputs);
+        Map<String, String> result = wsManRemoteShellServiceSpy.runCommand(wsManRequestInputs);
 
         PowerMockito.verifyNew(ScoreHttpClient.class).withNoArguments();
         PowerMockito.verifyNew(HttpClientInputs.class).withNoArguments();
@@ -142,6 +151,19 @@ public class WSManRemoteShellServiceTest {
         WSManUtils.validateUUID(SHELL_UUID, SHELL_ID);
         WSManUtils.validateUUID(COMMAND_UUID, COMMAND_ID);
         assertEquals(resultMock, result);
+    }
+
+    @Test
+    public void testRunCommandThrowsException() throws Exception {
+        PowerMockito.doThrow(new RuntimeException(SHELL_ID_NOT_RETRIEVED)).when(wsManRemoteShellServiceSpy, "createShell", any(ScoreHttpClient.class), any(HttpClientInputs.class),
+                any(String.class), any(String.class),
+                any(WSManRequestInputs.class));
+
+        thrownException.expectMessage(SHELL_ID_NOT_RETRIEVED);
+        wsManRemoteShellServiceSpy.runCommand(wsManRequestInputs);
+
+        PowerMockito.verifyNew(ScoreHttpClient.class).withNoArguments();
+        PowerMockito.verifyNew(HttpClientInputs.class).withNoArguments();
     }
 
     @Test
@@ -174,7 +196,7 @@ public class WSManRemoteShellServiceTest {
 
 
     @Test
-    public void testCreateShellThrowsNullShellIdException() throws Exception {
+    public void testCreateShellThrowsShellIdNotRetrievedException() throws Exception {
         mockExecuteRequest();
         PowerMockito.mockStatic(WSManUtils.class);
         Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION)).thenReturn(true);
@@ -205,6 +227,134 @@ public class WSManRemoteShellServiceTest {
         WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION);
         WSManUtils.isFaultResponse(REQUEST_BODY);
         WSManUtils.getResponseFault(REQUEST_BODY);
+    }
+
+    @Test
+    public void testCreateShellThrowsUnexpectedResponseException() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.mockStatic(WSManUtils.class);
+        Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION)).thenReturn(false);
+        Mockito.when(WSManUtils.isFaultResponse(REQUEST_BODY)).thenReturn(false);
+
+        thrownException.expectMessage(UNEXPECTED_SERVICE_RESPONSE);
+        Whitebox.invokeMethod(new WSManRemoteShellService(), "createShell", scoreHttpClientMock, httpClientInputsMock, CREATE_SHELL_REQUEST_XML, URL_STR, wsManRequestInputs);
+
+        verifyStatic();
+        WSManUtils.isSpecificResponseAction(REQUEST_BODY, CREATE_RESPONSE_ACTION);
+        WSManUtils.isFaultResponse(REQUEST_BODY);
+    }
+
+    @Test
+    public void testExecuteCommand() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.mockStatic(WSManUtils.class);
+        Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION)).thenReturn(true);
+        PowerMockito.mockStatic(XMLUtils.class);
+        Mockito.when(XMLUtils.parseXml(REQUEST_BODY, COMMAND_RESULT_COMMAND_ID_XPATH)).thenReturn(COMMAND_UUID);
+
+        String result = Whitebox.invokeMethod(new WSManRemoteShellService(), "executeCommand", scoreHttpClientMock, httpClientInputsMock, EXECUTE_COMMAND_REQUEST_XML, URL_STR, SHELL_UUID, wsManRequestInputs, COMMAND);
+
+        assertEquals(COMMAND_UUID, result);
+        verifyStatic();
+        WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION);
+        XMLUtils.parseXml(REQUEST_BODY, COMMAND_RESULT_COMMAND_ID_XPATH);
+    }
+
+    @Test
+    public void testExecuteCommandThrowsFaultException() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.mockStatic(WSManUtils.class);
+        Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION)).thenReturn(false);
+        Mockito.when(WSManUtils.isFaultResponse(REQUEST_BODY)).thenReturn(true);
+        Mockito.when(WSManUtils.getResponseFault(REQUEST_BODY)).thenReturn(FAULT_MESSAGE);
+
+        thrownException.expectMessage(FAULT_MESSAGE);
+        Whitebox.invokeMethod(new WSManRemoteShellService(), "executeCommand", scoreHttpClientMock, httpClientInputsMock, EXECUTE_COMMAND_REQUEST_XML, URL_STR, SHELL_UUID, wsManRequestInputs, COMMAND);
+
+        verifyStatic();
+        WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION);
+    }
+
+    @Test
+    public void testExecuteCommandThrowsCommandIdNotRetrievedException() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.mockStatic(WSManUtils.class);
+        Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION)).thenReturn(true);
+        PowerMockito.mockStatic(XMLUtils.class);
+        Mockito.when(XMLUtils.parseXml(REQUEST_BODY, COMMAND_RESULT_COMMAND_ID_XPATH)).thenReturn("");
+
+        thrownException.expectMessage(COMMAND_ID_NOT_RETRIEVED);
+        Whitebox.invokeMethod(new WSManRemoteShellService(), "executeCommand", scoreHttpClientMock, httpClientInputsMock, EXECUTE_COMMAND_REQUEST_XML, URL_STR, SHELL_UUID, wsManRequestInputs, COMMAND);
+
+        verifyStatic();
+        WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION);
+        XMLUtils.parseXml(REQUEST_BODY, COMMAND_RESULT_COMMAND_ID_XPATH);
+    }
+
+    @Test
+    public void testExecuteCommandThrowsUnexpectedResponseException() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.mockStatic(WSManUtils.class);
+        Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION)).thenReturn(false);
+        Mockito.when(WSManUtils.isFaultResponse(REQUEST_BODY)).thenReturn(false);
+
+        thrownException.expectMessage(UNEXPECTED_SERVICE_RESPONSE);
+        Whitebox.invokeMethod(new WSManRemoteShellService(), "executeCommand", scoreHttpClientMock, httpClientInputsMock, EXECUTE_COMMAND_REQUEST_XML, URL_STR, SHELL_UUID, wsManRequestInputs, COMMAND);
+
+        verifyStatic();
+        WSManUtils.isSpecificResponseAction(REQUEST_BODY, COMMAND_RESPONSE_ACTION);
+        WSManUtils.isFaultResponse(REQUEST_BODY);
+    }
+
+    @Test
+    public void testReceiveCommandResult() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.doReturn(false).when(wsManRemoteShellServiceSpy, "executionIsTimedOut", anyLong(), anyInt());
+        PowerMockito.mockStatic(WSManUtils.class);
+        Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, RECEIVE_RESPONSE_ACTION)).thenReturn(true);
+        Mockito.when(WSManUtils.commandExecutionIsDone(REQUEST_BODY)).thenReturn(true);
+        PowerMockito.doReturn(resultMock).when(wsManRemoteShellServiceSpy, "processCommandExecutionResponse", any(String.class));
+
+        Map<String, String> result = Whitebox.invokeMethod(wsManRemoteShellServiceSpy, "receiveCommandResult", scoreHttpClientMock, httpClientInputsMock,
+                RECEIVE_REQUEST_XML, URL_STR, SHELL_UUID, COMMAND_UUID, wsManRequestInputs);
+
+        assertEquals(resultMock, result);
+        verifyStatic();
+        WSManUtils.isSpecificResponseAction(REQUEST_BODY, RECEIVE_RESPONSE_ACTION);
+        WSManUtils.commandExecutionIsDone(REQUEST_BODY);
+        PowerMockito.verifyPrivate(wsManRemoteShellServiceSpy).invoke("processCommandExecutionResponse", any(String.class));
+    }
+
+    @Test
+    public void testReceiveCommandResultThrowsFaultException() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.doReturn(false).when(wsManRemoteShellServiceSpy, "executionIsTimedOut", anyLong(), anyInt());
+        PowerMockito.mockStatic(WSManUtils.class);
+        Mockito.when(WSManUtils.isSpecificResponseAction(REQUEST_BODY, RECEIVE_RESPONSE_ACTION)).thenReturn(true);
+        Mockito.when(WSManUtils.commandExecutionIsDone(REQUEST_BODY)).thenReturn(false);
+        Mockito.when(WSManUtils.isFaultResponse(REQUEST_BODY)).thenReturn(true);
+        Mockito.when(WSManUtils.getResponseFault(REQUEST_BODY)).thenReturn(FAULT_MESSAGE);
+
+        thrownException.expectMessage(FAULT_MESSAGE);
+        Whitebox.invokeMethod(wsManRemoteShellServiceSpy, "receiveCommandResult", scoreHttpClientMock, httpClientInputsMock,
+                RECEIVE_REQUEST_XML, URL_STR, SHELL_UUID, COMMAND_UUID, wsManRequestInputs);
+
+        verifyStatic();
+        WSManUtils.isSpecificResponseAction(REQUEST_BODY, RECEIVE_RESPONSE_ACTION);
+        WSManUtils.commandExecutionIsDone(REQUEST_BODY);
+        WSManUtils.isFaultResponse(REQUEST_BODY);
+        WSManUtils.getResponseFault(REQUEST_BODY);
+    }
+
+    @Test
+    public void testReceiveCommandResultThrowsTimeoutException() throws Exception {
+        mockExecuteRequest();
+        PowerMockito.mockStatic(WSManUtils.class);
+        PowerMockito.doReturn(true).when(wsManRemoteShellServiceSpy, "executionIsTimedOut", anyLong(), anyInt());
+
+        thrownException.expectMessage(EXECUTION_TIMED_OUT);
+        Whitebox.invokeMethod(wsManRemoteShellServiceSpy, "receiveCommandResult", scoreHttpClientMock, httpClientInputsMock,
+                RECEIVE_REQUEST_XML, URL_STR, SHELL_UUID, COMMAND_UUID, wsManRequestInputs);
     }
 
     private void mockExecuteRequest() {

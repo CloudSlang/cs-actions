@@ -66,39 +66,9 @@ public class WSManRemoteShellService {
     private static final String EXECUTION_TIMED_OUT = "The script execution timed out!";
     private static final String COMMAND_ID_NOT_RETRIEVED = "The command id could not be retrieved.";
     private static final String SHELL_ID_NOT_RETRIEVED = "The shell id could not be retrieved.";
+    private static final String POWERSHELL_SCRIPT_PREFIX = "PowerShell -NonInteractive -EncodedCommand";
 
     private long commandExecutionStartTime;
-
-    /**
-     * Executes a command on a remote shell by communicating with the WinRM server from the remote host.
-     * Method creates a shell, runs a command on the shell, waits for the command execution to finnish, retrieves the result then deletes the shell.
-     *
-     * @param wsManRequestInputs
-     * @return a map with the result of the command and the exit code of the command execution.
-     * @throws RuntimeException
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ParserConfigurationException
-     * @throws TransformerException
-     * @throws XPathExpressionException
-     * @throws TimeoutException
-     * @throws URISyntaxException
-     * @throws SAXException
-     */
-    public Map<String, String> runCommand(WSManRequestInputs wsManRequestInputs) throws RuntimeException, IOException, InterruptedException, ParserConfigurationException, TransformerException, XPathExpressionException, TimeoutException, URISyntaxException, SAXException {
-        ScoreHttpClient scoreHttpClient = new ScoreHttpClient();
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-        URL url = buildURL(wsManRequestInputs, WSMAN_RESOURCE_URI);
-        httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
-        String shellId = createShell(scoreHttpClient, httpClientInputs, CREATE_SHELL_REQUEST_XML, url.toString(), wsManRequestInputs);
-        WSManUtils.validateUUID(shellId, SHELL_ID);
-        String commandStr = "PowerShell" + " " + "-NonInteractive" + " " + "-EncodedCommand" + " " + EncoderDecoder.encodeStringInBase64(wsManRequestInputs.getScript(), Charsets.UTF_16LE);
-        String commandId = executeCommand(scoreHttpClient, httpClientInputs, EXECUTE_COMMAND_REQUEST_XML, url.toString(), shellId, wsManRequestInputs, commandStr);
-        WSManUtils.validateUUID(commandId, COMMAND_ID);
-        Map<String, String> scriptResults = receiveCommandResult(scoreHttpClient, httpClientInputs, RECEIVE_REQUEST_XML, url.toString(), shellId, commandId, wsManRequestInputs);
-        deleteShell(scoreHttpClient, httpClientInputs, DELETE_SHELL_REQUEST_XML, url.toString(), shellId, wsManRequestInputs);
-        return scriptResults;
-    }
 
     /**
      * Configures the HttpClientInputs object with the most common http parameters.
@@ -132,6 +102,37 @@ public class WSManRemoteShellService {
         }
         httpClientInputs.setMethod(HttpPost.METHOD_NAME);
         return httpClientInputs;
+    }
+
+    /**
+     * Executes a command on a remote shell by communicating with the WinRM server from the remote host.
+     * Method creates a shell, runs a command on the shell, waits for the command execution to finnish, retrieves the result then deletes the shell.
+     *
+     * @param wsManRequestInputs
+     * @return a map with the result of the command and the exit code of the command execution.
+     * @throws RuntimeException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ParserConfigurationException
+     * @throws TransformerException
+     * @throws XPathExpressionException
+     * @throws TimeoutException
+     * @throws URISyntaxException
+     * @throws SAXException
+     */
+    public Map<String, String> runCommand(WSManRequestInputs wsManRequestInputs) throws RuntimeException, IOException, InterruptedException, ParserConfigurationException, TransformerException, XPathExpressionException, TimeoutException, URISyntaxException, SAXException {
+        ScoreHttpClient scoreHttpClient = new ScoreHttpClient();
+        HttpClientInputs httpClientInputs = new HttpClientInputs();
+        URL url = buildURL(wsManRequestInputs, WSMAN_RESOURCE_URI);
+        httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
+        String shellId = createShell(scoreHttpClient, httpClientInputs, CREATE_SHELL_REQUEST_XML, url.toString(), wsManRequestInputs);
+        WSManUtils.validateUUID(shellId, SHELL_ID);
+        String commandStr = POWERSHELL_SCRIPT_PREFIX + " " + EncoderDecoder.encodeStringInBase64(wsManRequestInputs.getScript(), Charsets.UTF_16LE);
+        String commandId = executeCommand(scoreHttpClient, httpClientInputs, EXECUTE_COMMAND_REQUEST_XML, url.toString(), shellId, wsManRequestInputs, commandStr);
+        WSManUtils.validateUUID(commandId, COMMAND_ID);
+        Map<String, String> scriptResults = receiveCommandResult(scoreHttpClient, httpClientInputs, RECEIVE_REQUEST_XML, url.toString(), shellId, commandId, wsManRequestInputs);
+        deleteShell(scoreHttpClient, httpClientInputs, DELETE_SHELL_REQUEST_XML, url.toString(), shellId, wsManRequestInputs);
+        return scriptResults;
     }
 
     /**
@@ -171,18 +172,9 @@ public class WSManRemoteShellService {
         document = createCreateShellRequestBody(document, url, String.valueOf(wsManRequestInputs.getMaxEnvelopeSize()),
                 wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
         Map<String, String> createShellResult = executeRequest(scoreHttpClient, httpClientInputs, document);
-        if (WSManUtils.isSpecificResponseAction(createShellResult.get(RETURN_RESULT), CREATE_RESPONSE_ACTION)) {
-            String shellId = XMLUtils.parseXml(createShellResult.get(RETURN_RESULT), CREATE_RESPONSE_SHELL_ID_XPATH);
-            if (StringUtils.isNotBlank(shellId)) {
-                return shellId;
-            } else {
-                throw new RuntimeException(SHELL_ID_NOT_RETRIEVED);
-            }
-        } else if (WSManUtils.isFaultResponse(createShellResult.get(RETURN_RESULT))) {
-            throw new RuntimeException(WSManUtils.getResponseFault(createShellResult.get(RETURN_RESULT)));
-        } else {
-            throw new RuntimeException(UNEXPECTED_SERVICE_RESPONSE + createShellResult.get(RETURN_RESULT));
-        }
+        return getResourceId(createShellResult.get(RETURN_RESULT), CREATE_RESPONSE_ACTION, CREATE_RESPONSE_SHELL_ID_XPATH,
+                SHELL_ID_NOT_RETRIEVED, WSManUtils.getResponseFault(createShellResult.get(RETURN_RESULT)),
+                UNEXPECTED_SERVICE_RESPONSE + createShellResult.get(RETURN_RESULT));
     }
 
     /**
@@ -211,18 +203,9 @@ public class WSManRemoteShellService {
                 wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
         commandExecutionStartTime = System.currentTimeMillis() / 1000;
         Map<String, String> executeCommandResult = executeRequest(scoreHttpClient, httpClientInputs, documentStr);
-        if (WSManUtils.isSpecificResponseAction(executeCommandResult.get(RETURN_RESULT), COMMAND_RESPONSE_ACTION)) {
-            String commandId = XMLUtils.parseXml(executeCommandResult.get(RETURN_RESULT), COMMAND_RESULT_COMMAND_ID_XPATH);
-            if (StringUtils.isNotBlank(commandId)) {
-                return commandId;
-            } else {
-                throw new RuntimeException(COMMAND_ID_NOT_RETRIEVED);
-            }
-        } else if (WSManUtils.isFaultResponse(executeCommandResult.get(RETURN_RESULT))) {
-            throw new RuntimeException(WSManUtils.getResponseFault(executeCommandResult.get(RETURN_RESULT)));
-        } else {
-            throw new RuntimeException(UNEXPECTED_SERVICE_RESPONSE + executeCommandResult.get(RETURN_RESULT));
-        }
+        return getResourceId(executeCommandResult.get(RETURN_RESULT), COMMAND_RESPONSE_ACTION, COMMAND_RESULT_COMMAND_ID_XPATH,
+                COMMAND_ID_NOT_RETRIEVED, WSManUtils.getResponseFault(executeCommandResult.get(RETURN_RESULT)),
+                UNEXPECTED_SERVICE_RESPONSE + executeCommandResult.get(RETURN_RESULT));
     }
 
     /**
@@ -260,7 +243,9 @@ public class WSManRemoteShellService {
                 throw new TimeoutException(EXECUTION_TIMED_OUT);
             } else if (WSManUtils.isSpecificResponseAction(receiveResult.get(RETURN_RESULT), RECEIVE_RESPONSE_ACTION) &&
                     WSManUtils.commandExecutionIsDone(receiveResult.get(RETURN_RESULT))) {
-                break;
+                return processCommandExecutionResponse(receiveResult);
+            } else if (WSManUtils.isFaultResponse(receiveResult.get(RETURN_RESULT))) {
+                throw new RuntimeException(WSManUtils.getResponseFault(receiveResult.get(RETURN_RESULT)));
             }
 
             try {
@@ -270,14 +255,43 @@ public class WSManRemoteShellService {
             }
         }
 
-        if (WSManUtils.isSpecificResponseAction(receiveResult.get(RETURN_RESULT), RECEIVE_RESPONSE_ACTION)) {
-            Map<String, String> scriptResults = new HashMap<>();
-            scriptResults.put(RETURN_RESULT, buildResultFromResponseStreams(receiveResult.get(RETURN_RESULT)));
-            scriptResults.put(Constants.OutputNames.SCRIPT_EXIT_CODE, WSManUtils.getScriptExitCode(receiveResult.get(RETURN_RESULT)));
-            return scriptResults;
+    }
+
+    /**
+     * This method retrieves the resource id from the create resource request response and throws the appropriate exceptions in case of failure.
+     * @param response
+     * @param resourceResponseAction
+     * @param resourceIdXpath
+     * @param resourceIdExceptionMessage
+     * @param responseFault
+     * @param unexpectedResponseExceptionMessage
+     * @return
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws XPathExpressionException
+     * @throws IOException
+     */
+    private String getResourceId(String response, String resourceResponseAction, String resourceIdXpath, String resourceIdExceptionMessage,
+                                 String responseFault, String unexpectedResponseExceptionMessage) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+        if (WSManUtils.isSpecificResponseAction(response, resourceResponseAction)) {
+            String shellId = XMLUtils.parseXml(response, resourceIdXpath);
+            if (StringUtils.isNotBlank(shellId)) {
+                return shellId;
+            } else {
+                throw new RuntimeException(resourceIdExceptionMessage);
+            }
+        } else if (WSManUtils.isFaultResponse(response)) {
+            throw new RuntimeException(responseFault);
         } else {
-            throw new RuntimeException(WSManUtils.getResponseFault(receiveResult.get(RETURN_RESULT)));
+            throw new RuntimeException(unexpectedResponseExceptionMessage);
         }
+    }
+
+    private Map<String, String> processCommandExecutionResponse(Map<String, String> receiveResult) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+        Map<String, String> scriptResults = new HashMap<>();
+        scriptResults.put(RETURN_RESULT, buildResultFromResponseStreams(receiveResult.get(RETURN_RESULT)));
+        scriptResults.put(Constants.OutputNames.SCRIPT_EXIT_CODE, WSManUtils.getScriptExitCode(receiveResult.get(RETURN_RESULT)));
+        return scriptResults;
     }
 
     /**
@@ -328,10 +342,10 @@ public class WSManRemoteShellService {
         for (int streamNo = 1; streamNo <= noOfStreams; streamNo++) {
             String stream = XMLUtils.parseXml(response, String.format(RECEIVE_RESPONSE_XPATH, streamNo));
             if (!"DQo=".equals(stream)) {
-                commandResult.append(stream);
+                commandResult.append(EncoderDecoder.decodeBase64String(stream));
             }
         }
-        return EncoderDecoder.decodeBase64String(commandResult.toString());
+        return commandResult.toString();
     }
 
     /**
