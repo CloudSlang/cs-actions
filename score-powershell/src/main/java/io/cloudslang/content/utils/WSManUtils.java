@@ -28,7 +28,7 @@ public class WSManUtils {
     }
 
     public static boolean isSpecificResponseAction(String response, String responseType) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
-        return StringUtils.containsIgnoreCase(XMLUtils.parseXml(response, HEADER_XPATH), responseType);
+        return StringUtils.isNotEmpty(response) && StringUtils.containsIgnoreCase(XMLUtils.parseXml(response, HEADER_XPATH), responseType);
     }
 
     public static String getResponseFault(String response) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
@@ -52,7 +52,8 @@ public class WSManUtils {
     }
 
     public static boolean isFaultResponse(String response) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
-        return isSpecificResponseAction(response, WSMAN_FAULT_RESPONSE_ACTION) || isSpecificResponseAction(response, ADDRESSING_FAULT_RESPONSE_ACTION);
+        return StringUtils.isNotEmpty(response) &&
+                (isSpecificResponseAction(response, WSMAN_FAULT_RESPONSE_ACTION) || isSpecificResponseAction(response, ADDRESSING_FAULT_RESPONSE_ACTION));
     }
 
     public static String getScriptExitCode(String response) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {

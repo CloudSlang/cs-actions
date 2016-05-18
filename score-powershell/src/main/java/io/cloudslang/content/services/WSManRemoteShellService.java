@@ -50,6 +50,8 @@ public class WSManRemoteShellService {
     private static final String RECEIVE_RESPONSE_ACTION = "http://schemas.microsoft.com/wbem/wsman/1/windows/shell/ReceiveResponse";
     private static final String DELETE_RESPONSE_ACTION = "http://schemas.xmlsoap.org/ws/2004/09/transfer/DeleteResponse";
     private static final String CONTENT_TYPE_HEADER = "Content-Type:application/soap+xml;charset=UTF-8";
+    private static final String STATUS_CODE = "statusCode";
+    private static final String UNAUTHORIZED_STATUS_CODE = "401";
 
     private static final String BASIC_AUTH_TYPE = "Basic";
     private static final String WSMAN_RESOURCE_URI = "/wsman";
@@ -67,6 +69,7 @@ public class WSManRemoteShellService {
     private static final String COMMAND_ID_NOT_RETRIEVED = "The command id could not be retrieved.";
     private static final String SHELL_ID_NOT_RETRIEVED = "The shell id could not be retrieved.";
     private static final String POWERSHELL_SCRIPT_PREFIX = "PowerShell -NonInteractive -EncodedCommand";
+    private static final String UNAUTHORIZED_EXCEPTION_MESSAGE = "Unauthorized! Service responded with 401 status code!";
 
     private long commandExecutionStartTime;
 
@@ -145,7 +148,11 @@ public class WSManRemoteShellService {
      */
     private Map<String, String> executeRequest(ScoreHttpClient scoreHttpClient, HttpClientInputs httpClientInputs, String requestMessage) {
         httpClientInputs.setBody(requestMessage);
-        return scoreHttpClient.execute(httpClientInputs);
+        Map<String, String> requestResponse = scoreHttpClient.execute(httpClientInputs);
+        if (UNAUTHORIZED_STATUS_CODE.equals(requestResponse.get(STATUS_CODE))) {
+            throw new RuntimeException(UNAUTHORIZED_EXCEPTION_MESSAGE);
+        }
+        return requestResponse;
     }
 
     /**
@@ -173,8 +180,7 @@ public class WSManRemoteShellService {
                 wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
         Map<String, String> createShellResult = executeRequest(scoreHttpClient, httpClientInputs, document);
         return getResourceId(createShellResult.get(RETURN_RESULT), CREATE_RESPONSE_ACTION, CREATE_RESPONSE_SHELL_ID_XPATH,
-                SHELL_ID_NOT_RETRIEVED, WSManUtils.getResponseFault(createShellResult.get(RETURN_RESULT)),
-                UNEXPECTED_SERVICE_RESPONSE + createShellResult.get(RETURN_RESULT));
+                SHELL_ID_NOT_RETRIEVED);
     }
 
     /**
@@ -204,8 +210,7 @@ public class WSManRemoteShellService {
         commandExecutionStartTime = System.currentTimeMillis() / 1000;
         Map<String, String> executeCommandResult = executeRequest(scoreHttpClient, httpClientInputs, documentStr);
         return getResourceId(executeCommandResult.get(RETURN_RESULT), COMMAND_RESPONSE_ACTION, COMMAND_RESULT_COMMAND_ID_XPATH,
-                COMMAND_ID_NOT_RETRIEVED, WSManUtils.getResponseFault(executeCommandResult.get(RETURN_RESULT)),
-                UNEXPECTED_SERVICE_RESPONSE + executeCommandResult.get(RETURN_RESULT));
+                COMMAND_ID_NOT_RETRIEVED);
     }
 
     /**
@@ -259,20 +264,18 @@ public class WSManRemoteShellService {
 
     /**
      * This method retrieves the resource id from the create resource request response and throws the appropriate exceptions in case of failure.
+     *
      * @param response
      * @param resourceResponseAction
      * @param resourceIdXpath
      * @param resourceIdExceptionMessage
-     * @param responseFault
-     * @param unexpectedResponseExceptionMessage
      * @return
      * @throws ParserConfigurationException
      * @throws SAXException
      * @throws XPathExpressionException
      * @throws IOException
      */
-    private String getResourceId(String response, String resourceResponseAction, String resourceIdXpath, String resourceIdExceptionMessage,
-                                 String responseFault, String unexpectedResponseExceptionMessage) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+    private String getResourceId(String response, String resourceResponseAction, String resourceIdXpath, String resourceIdExceptionMessage) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
         if (WSManUtils.isSpecificResponseAction(response, resourceResponseAction)) {
             String shellId = XMLUtils.parseXml(response, resourceIdXpath);
             if (StringUtils.isNotBlank(shellId)) {
@@ -281,9 +284,9 @@ public class WSManRemoteShellService {
                 throw new RuntimeException(resourceIdExceptionMessage);
             }
         } else if (WSManUtils.isFaultResponse(response)) {
-            throw new RuntimeException(responseFault);
+            throw new RuntimeException(WSManUtils.getResponseFault(response));
         } else {
-            throw new RuntimeException(unexpectedResponseExceptionMessage);
+            throw new RuntimeException(UNEXPECTED_SERVICE_RESPONSE + response);
         }
     }
 
