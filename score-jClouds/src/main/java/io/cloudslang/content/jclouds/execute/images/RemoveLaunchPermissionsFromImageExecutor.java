@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Mihai Tusa.
- * 5/10/2016.
+ * 5/18/2016.
  */
-public class AddLaunchPermissionsToImageInRegionExecutor {
+public class RemoveLaunchPermissionsFromImageExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, ImageInputs imageInputs) throws Exception {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
 
@@ -29,7 +29,7 @@ public class AddLaunchPermissionsToImageInRegionExecutor {
             throw new RuntimeException(Constants.ErrorMessages.BOTH_PERMISSIONS_INPUTS_EMPTY);
         }
 
-        String response = imageService.addLaunchPermissionsToImage(imageInputs.getCustomInputs().getRegion(), userIds,
+        String response = imageService.removeLaunchPermissionsFromImage(imageInputs.getCustomInputs().getRegion(), userIds,
                 userGroups, imageInputs.getCustomInputs().getImageId());
 
         return OutputsUtil.getResultsMap(response);

@@ -71,6 +71,24 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
         return Constants.Messages.LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED;
     }
 
+    @Override
+    public String removeLaunchPermissionsFromImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) {
+        AMIApi amiApi = getAMIApi(region, true);
+
+        amiApi.removeLaunchPermissionsFromImageInRegion(region, userIds, userGroups, imageId);
+
+        return Constants.Messages.LAUNCH_PERMISSIONS_SUCCESSFULLY_REMOVED;
+    }
+
+    @Override
+    public String resetLaunchPermissionsOnImage(String region, String imageId) {
+        AMIApi amiApi = getAMIApi(region, true);
+
+        amiApi.resetLaunchPermissionsOnImageInRegion(region, imageId);
+
+        return Constants.Messages.LAUNCH_PERMISSIONS_SUCCESSFULLY_RESET;
+    }
+
     private AMIApi getAMIApi(String region, boolean isForRegion) {
         lazyInit(region);
         return isForRegion ? ec2Api.getAMIApiForRegion(region).get() : ec2Api.getAMIApi().get();

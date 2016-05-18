@@ -24,7 +24,9 @@ public class Constants {
         public static final String SERVER_RESUMED = "Server resumed.";
         public static final String SERVER_UPDATED = "Server updated successfully.";
         public static final String IMAGE_SUCCESSFULLY_DEREGISTER = "The image was successfully deregister.";
-        public static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED = "The launch permissions were successfully added.";
+        public static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED = "Launch permissions were successfully added.";
+        public static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_REMOVED = "Launch permissions were successfully removed.";
+        public static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_RESET = "Launch permissions were successfully reset.";
     }
 
     public static final class Miscellaneous {
@@ -45,7 +47,7 @@ public class Constants {
                 "providers in the provider input";
         public static final String NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
         public static final String SERVER_NOT_FOUND = "Server not found.";
-        public static final String BOTH_ADD_PERMISSIONS_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
-                " cannot be both empty in order to add permission launch on specified image.";
+        public static final String BOTH_PERMISSIONS_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
+                " cannot be both empty in order to add/remove permission launch on specified image.";
     }
 }

@@ -10,12 +10,12 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 5/5/2016.
+ * 5/18/2016.
  */
-public class DeregisterImageInRegionExecutor {
+public class ResetLaunchPermissionsOnImageExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
-        String response = imageService.deregisterImageInRegion(customInputs.getRegion(), customInputs.getImageId());
+        String response = imageService.resetLaunchPermissionsOnImage(customInputs.getRegion(), customInputs.getImageId());
 
         return OutputsUtil.getResultsMap(response);
     }

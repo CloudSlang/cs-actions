@@ -10,15 +10,17 @@ import java.util.Set;
  * 5/4/2016.
  */
 public interface ImageService {
-    String createImageInRegion(String region, String name, String serverId, String imageDescription, boolean imageNoReboot)
-            throws Exception;
+    String createImageInRegion(String region, String name, String serverId, String imageDescription, boolean imageNoReboot) throws Exception;
 
     String deregisterImageInRegion(String region, String imageId) throws Exception;
 
-    Set<? extends Image> describeImagesInRegion(String region, String identityId, String[] imageIds, String[] owners)
-            throws Exception;
+    Set<? extends Image> describeImagesInRegion(String region, String identityId, String[] imageIds, String[] owners) throws Exception;
 
     Permission getLaunchPermissionForImage(String region, String imageId) throws Exception;
 
     String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) throws Exception;
+
+    String removeLaunchPermissionsFromImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) throws Exception;
+
+    String resetLaunchPermissionsOnImage(String region, String imageId) throws Exception;
 }
