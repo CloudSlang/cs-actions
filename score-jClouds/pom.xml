@@ -42,6 +42,12 @@
             <organization>HP Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
+        <developer>
+            <name>Mihail Cristian Tusa</name>
+            <email>mihail-cristian.tusa@hpe.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
     </developers>
     <build>
         <pluginManagement>
@@ -185,6 +191,11 @@
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>1.10.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
         </dependency>
         <!-- jclouds dependencies -->
         <dependency>

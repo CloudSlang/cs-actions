@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.execute;
 
-import io.cloudslang.content.jclouds.actions.HardRebootAction;
+import io.cloudslang.content.jclouds.actions.UpdateServerTypeAction;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
@@ -12,17 +12,16 @@ import io.cloudslang.content.jclouds.utils.OutputsUtil;
 import java.util.Map;
 
 /**
- * Created by persdana on 6/22/2015.
+ * Created by Mihai Tusa.
+ * 2/24/2016.
  */
-public class HardRebootExecutor {
-    private static final String REBOOT_SUCCESS = "Hard Reboot started successfully";
-
+public class UpdateServerTypeExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         InputsUtil.validateInput(inputs.getEndpoint(), Inputs.CommonInputs.ENDPOINT);
 
-        ComputeService cs = ComputeFactory.getComputeService(inputs, HardRebootAction.class);
-        cs.hardReboot(customInputs.getRegion(), customInputs.getServerId());
+        ComputeService cs = ComputeFactory.getComputeService(inputs, UpdateServerTypeAction.class);
+        String result = cs.updateInstanceType(customInputs);
 
-        return OutputsUtil.getResultsMap(REBOOT_SUCCESS);
+        return OutputsUtil.getResultsMap(result);
     }
 }

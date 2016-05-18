@@ -1,5 +1,13 @@
 package io.cloudslang.content.jclouds.services;
 
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CreateServerCustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
+
 import java.util.Set;
 
 /**
@@ -7,22 +15,27 @@ import java.util.Set;
  */
 public interface ComputeService {
 
-    public String start(String region, String serverId) throws Exception;
+    String start(String region, String serverId) throws Exception;
 
-    public String stop(String region, String serverId) throws Exception;
+    String stop(String region, String serverId) throws Exception;
 
-    public void softReboot(String region, String serverId);
+    void softReboot(String region, String serverId);
 
-    public void hardReboot(String region, String serverId) throws Exception;
+    void hardReboot(String region, String serverId) throws Exception;
 
-    public String suspend(String region, String serverId) throws Exception;
+    String suspend(String region, String serverId) throws Exception;
 
-    public void resume(String region, String serverId) throws Exception;
+    void resume(String region, String serverId) throws Exception;
 
-    public String removeServer(String region, String serverId);
+    String removeServer(String region, String serverId);
 
-    public Set<String> listRegions();
+    Set<String> listRegions();
 
-    public Set<String> listNodes(String region);
+    Set<String> listNodes(String region);
 
+    Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception;
+
+    Set<? extends NodeMetadata> createNodesInGroup(CommonInputs commonInputs, CreateServerCustomInputs createServerInputs) throws Exception;
+
+    String updateInstanceType(CustomInputs customInputs) throws Exception;
 }

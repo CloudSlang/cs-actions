@@ -5,6 +5,8 @@ import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,34 +15,36 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Created by persdana on 7/7/2015.
+ * Created by Mihai Tusa.
+ * 2/26/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ListServersExecutor.class, ComputeFactory.class})
-public class ListServersExecutorTest {
-    private ListServersExecutor toTest;
+@PrepareForTest({RunServerExecutor.class, ComputeFactory.class})
+public class RunServerExecutorTest {
+    private RunServerExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
-    private ComputeService computeServiceMock;
+    ComputeService computeServiceMock;
+
+    @Mock
+    Reservation<? extends RunningInstance> reservationsMock;
 
     @Before
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new ListServersExecutor();
+        toTest = new RunServerExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -56,26 +60,16 @@ public class ListServersExecutorTest {
      * @throws Exception
      */
     @Test
-    public void testExecute() throws Exception {
+    public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
+        doReturn(reservationsMock).when(computeServiceMock).runServer(any(CommonInputs.class), any(CustomInputs.class));
+        Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        Set<String> nodes = getNodes();
-        doReturn(nodes).when(computeServiceMock).listNodes(inputs.getRegion());
+        verify(computeServiceMock, times(1)).runServer(any(CommonInputs.class), any(CustomInputs.class));
 
-        Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
-
-        verify(computeServiceMock, times(1)).listNodes(inputs.getRegion());
-
-        assertNotNull(result);
-        assertEquals("0", result.get(Outputs.RETURN_CODE));
-        assertEquals("nod2;;nod1", result.get(Outputs.RETURN_RESULT));
-    }
-
-    private Set<String> getNodes() {
-        Set<String> nodes = new HashSet<>();
-        nodes.add("nod1");
-        nodes.add("nod2");
-        return nodes;
+        assertNotNull(results);
+        assertEquals("0", results.get(Outputs.RETURN_CODE));
+        assertEquals("reservation", results.get(Outputs.RETURN_RESULT));
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
@@ -86,14 +80,16 @@ public class ListServersExecutorTest {
                 .withCredential(inputs.getCredential())
                 .withProxyHost(inputs.getProxyHost())
                 .withProxyPort(inputs.getProxyPort())
-                .withDelimiter(inputs.getDelimiter())
                 .build();
     }
 
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
-                .withServerId(inputs.getServerId())
+                .withAvailabilityZone("")
+                .withImageRef("ami-4b91bb21")
+                .withMinCount("")
+                .withMaxCount("")
                 .build();
     }
 }

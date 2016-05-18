@@ -87,28 +87,28 @@ public class OpenstackComputeServiceTest {
     private ServerApi serverApiMock;
 
     @Mock
-    Optional<ServerAdminApi> optionalServerAdminApiMock;
+    private Optional<ServerAdminApi> optionalServerAdminApiMock;
 
     @Mock
-    ServerAdminApi serverAdminApiMock;
+    private ServerAdminApi serverAdminApiMock;
 
     @Mock
-    PagedIterable<Server> pagedIterableServersMock;
+    private PagedIterable<Server> pagedIterableServersMock;
 
     @Mock
-    Iterator<IterableWithMarker<Server>> iterableWithMarkerIteratorMock;
+    private Iterator<IterableWithMarker<Server>> iterableWithMarkerIteratorMock;
 
     @Mock
-    IterableWithMarker<Server> iterableWithMarkerServersMock;
+    private IterableWithMarker<Server> iterableWithMarkerServersMock;
 
     @Mock
-    Iterator<Server> serverIteratorMock;
+    private Iterator<Server> serverIteratorMock;
 
     @Mock
-    Server serverMock;
+    private Server serverMock;
 
     @Mock
-    ServerCreated serverCreatedMock;
+    private ServerCreated serverCreatedMock;
 
     @Spy
     private OpenstackComputeService openstackComputeServiceSpy = new OpenstackComputeService(ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
@@ -685,10 +685,10 @@ public class OpenstackComputeServiceTest {
     }
 
     /**
-     * Test createServer method. Positive scenario.
+     * Test runServer method. Positive scenario.
      */
     @Test
-    public void testCreateServer() {
+    public void testRunServer() {
         String exceptedResult = "server created, details: ...";
         doNothing().when(openstackComputeServiceSpy).lazyInit(REGION);
         openstackComputeServiceSpy.novaApi = novaApiMock; //this wold be setted by lazyInit

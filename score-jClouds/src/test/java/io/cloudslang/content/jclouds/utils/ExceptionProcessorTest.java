@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.utilities;
+package io.cloudslang.content.jclouds.utils;
 
 import org.junit.Test;
 
@@ -15,12 +15,11 @@ public class ExceptionProcessorTest {
 
     @Test
     public void testGetExceptionResult() {
+        Map<String, String> result = ExceptionProcessor.getExceptionResult(new Exception("abc"));
+        String exception = result.get("exception");
 
-        Map<String, String> result =
-                ExceptionProcessor.getExceptionResult(new Exception("abc"));
         assertEquals("abc", result.get("returnResult"));
         assertEquals("-1", result.get("returnCode"));
-        String exception = result.get("exception");
         assertTrue(exception.contains(STACK_TRACE));
     }
 }

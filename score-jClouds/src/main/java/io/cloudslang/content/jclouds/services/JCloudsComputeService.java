@@ -2,6 +2,7 @@ package io.cloudslang.content.jclouds.services;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
+import org.apache.commons.lang3.StringUtils;
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
 import org.jclouds.location.reference.LocationConstants;
@@ -12,14 +13,14 @@ import java.util.Properties;
 /**
  * Created by persdana on 7/13/2015.
  */
-public class JcloudsComputeService {
+public class JCloudsComputeService {
     private String endpoint;
     private String identity;
     private String credential;
     private String proxyHost;
     private String proxyPort;
 
-    public JcloudsComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    public JCloudsComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         this.endpoint = endpoint;
         this.identity = identity;
         this.credential = credential;
@@ -31,20 +32,18 @@ public class JcloudsComputeService {
         Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
 
         Properties overrides = new Properties();
-        if (proxyHost != null && !proxyHost.isEmpty()) {
+        if (StringUtils.isNotBlank(proxyHost)) {
             overrides.setProperty(Constants.PROPERTY_PROXY_HOST, proxyHost);
             overrides.setProperty(Constants.PROPERTY_PROXY_PORT, proxyPort);
         }
-        if(region != null && !region.isEmpty()) {
+        if (StringUtils.isNotBlank(region)) {
             overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
         }
 
-        ContextBuilder contextBuilder = ContextBuilder.newBuilder(provider)
+        return ContextBuilder.newBuilder(provider)
                 .endpoint(endpoint)
                 .credentials(identity, credential)
                 .overrides(overrides)
                 .modules(modules);
-
-        return contextBuilder;
     }
 }

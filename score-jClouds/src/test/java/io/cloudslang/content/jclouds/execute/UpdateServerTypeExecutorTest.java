@@ -13,24 +13,23 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Created by persdana on 7/7/2015.
+ * Created by Mihai Tusa.
+ * 3/15/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ListServersExecutor.class, ComputeFactory.class})
-public class ListServersExecutorTest {
-    private ListServersExecutor toTest;
+@PrepareForTest({UpdateServerTypeExecutor.class, ComputeFactory.class})
+public class UpdateServerTypeExecutorTest {
+    private UpdateServerTypeExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -40,7 +39,7 @@ public class ListServersExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new ListServersExecutor();
+        toTest = new UpdateServerTypeExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -56,26 +55,16 @@ public class ListServersExecutorTest {
      * @throws Exception
      */
     @Test
-    public void testExecute() throws Exception {
+    public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class), (Class<?>) any(Class.class))).thenReturn(computeServiceMock);
+        doReturn("Server updated successfully.").when(computeServiceMock).updateInstanceType(any(CustomInputs.class));
+        Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        Set<String> nodes = getNodes();
-        doReturn(nodes).when(computeServiceMock).listNodes(inputs.getRegion());
+        verify(computeServiceMock, times(1)).updateInstanceType(any(CustomInputs.class));
 
-        Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
-
-        verify(computeServiceMock, times(1)).listNodes(inputs.getRegion());
-
-        assertNotNull(result);
-        assertEquals("0", result.get(Outputs.RETURN_CODE));
-        assertEquals("nod2;;nod1", result.get(Outputs.RETURN_RESULT));
-    }
-
-    private Set<String> getNodes() {
-        Set<String> nodes = new HashSet<>();
-        nodes.add("nod1");
-        nodes.add("nod2");
-        return nodes;
+        assertNotNull(results);
+        assertEquals("0", results.get(Outputs.RETURN_CODE));
+        assertEquals("Server updated successfully.", results.get(Outputs.RETURN_RESULT));
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
@@ -86,14 +75,12 @@ public class ListServersExecutorTest {
                 .withCredential(inputs.getCredential())
                 .withProxyHost(inputs.getProxyHost())
                 .withProxyPort(inputs.getProxyPort())
-                .withDelimiter(inputs.getDelimiter())
                 .build();
     }
 
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
-                .withServerId(inputs.getServerId())
                 .build();
     }
 }

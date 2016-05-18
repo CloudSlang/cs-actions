@@ -1,11 +1,17 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CreateServerCustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.JcloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
@@ -19,10 +25,11 @@ import java.util.Set;
 /**
  * Created by persdana on 5/27/2015.
  */
-public class OpenstackComputeService extends JcloudsComputeService implements ComputeService {
+public class OpenstackComputeService extends JCloudsComputeService implements ComputeService {
+    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
     private static final String OPENSTACK_PROVIDER = "openstack-nova";
 
-    protected NovaApi novaApi = null;
+    NovaApi novaApi = null;
     private String region;
 
     public void setRegion(String region) {
@@ -40,17 +47,17 @@ public class OpenstackComputeService extends JcloudsComputeService implements Co
                 .buildApi(NovaApi.class);
     }
 
-    protected void lazyInit() {
-        if(null == novaApi) {
+    void lazyInit() {
+        if (null == novaApi) {
             this.init();
         }
     }
 
-    protected void lazyInit(String region) {
-        if(this.region == null || !this.region.equals(region)) {
+    void lazyInit(String region) {
+        if (this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
-        } else if(novaApi == null) {
+        } else if (novaApi == null) {
             this.init();
         }
     }
@@ -132,15 +139,25 @@ public class OpenstackComputeService extends JcloudsComputeService implements Co
         PagedIterable<Server> servers = serverApi.listInDetail();
         Set<String> res = new HashSet<>();
 
-        for(IterableWithMarker<Server> iterableWithMarker : servers) {
-            for(Server s : iterableWithMarker) {
+        for (IterableWithMarker<Server> iterableWithMarker : servers) {
+            for (Server s : iterableWithMarker) {
                 res.add(s.toString());
             }
         }
         return res;
     }
 
-    public String createServer(String region, String name, String imageRef, String flavorRef) {
+    @Override
+    public Reservation<? extends RunningInstance> runServer(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
+
+    @Override
+    public String updateInstanceType(CustomInputs customInputs) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
+
+    String createServer(String region, String name, String imageRef, String flavorRef) {
         lazyInit(region);
         ServerApi serverApi = novaApi.getServerApi(region);
 
@@ -148,4 +165,9 @@ public class OpenstackComputeService extends JcloudsComputeService implements Co
         return serverCreated.toString();
     }
 
+    @Override
+    public Set<? extends NodeMetadata> createNodesInGroup(CommonInputs commonInputs, CreateServerCustomInputs createServerInputs)
+            throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
 }
