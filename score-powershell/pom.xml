@@ -19,6 +19,13 @@
         </license>
     </licenses>
 
+    <scm>
+        <connection>scm:git:https://CloudSlang/score-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:CloudSlang/score-actions.git</developerConnection>
+        <url>https://github.com/CloudSlang/score-actions.git</url>
+        <tag>master</tag>
+    </scm>
+
     <developers>
         <developer>
             <name>George Giloan</name>
