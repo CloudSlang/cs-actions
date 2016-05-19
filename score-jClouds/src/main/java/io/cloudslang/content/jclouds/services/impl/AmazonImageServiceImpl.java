@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.services.impl.imagesImpl;
+package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.ImageService;
@@ -19,11 +19,16 @@ import java.util.Set;
  * 5/4/2016.
  */
 public class AmazonImageServiceImpl extends JCloudsComputeService implements ImageService {
+    EC2Api ec2Api;
     private String region;
-    private EC2Api ec2Api;
 
     public AmazonImageServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
+    }
+
+    void init() {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
+        ec2Api = contextBuilder.buildApi(EC2Api.class);
     }
 
     @Override
@@ -94,17 +99,12 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
         return isForRegion ? ec2Api.getAMIApiForRegion(region).get() : ec2Api.getAMIApi().get();
     }
 
-    private void lazyInit(String region) {
+    void lazyInit(String region) {
         if (this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
         } else if (ec2Api == null) {
             this.init();
         }
-    }
-
-    private void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = contextBuilder.buildApi(EC2Api.class);
     }
 }

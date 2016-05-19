@@ -3,8 +3,8 @@ package io.cloudslang.content.jclouds.factory;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
-import io.cloudslang.content.jclouds.services.impl.imagesImpl.AmazonImageServiceImpl;
-import io.cloudslang.content.jclouds.services.impl.imagesImpl.OpenstackImageServiceImpl;
+import io.cloudslang.content.jclouds.services.impl.AmazonImageServiceImpl;
+import io.cloudslang.content.jclouds.services.impl.OpenstackImageServiceImpl;
 
 /**
  * Created by Mihai Tusa.

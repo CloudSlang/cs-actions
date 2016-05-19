@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.services.impl.imagesImpl;
+package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.ImageService;
