@@ -20,7 +20,9 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anySetOf;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -28,12 +30,12 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by Mihai Tusa.
- * 5/18/2016.
+ * 5/19/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({AddLaunchPermissionsToImageInRegionExecutor.class, ImageFactory.class})
-public class AddLaunchPermissionsToImageInRegionExecutorTest {
-    private AddLaunchPermissionsToImageInRegionExecutor toTest;
+@PrepareForTest({RemoveLaunchPermissionsFromImageExecutor.class, ImageFactory.class})
+public class RemoveLaunchPermissionsFromImageExecutorTest {
+    private RemoveLaunchPermissionsFromImageExecutor toTest;
 
     @Mock
     private ImageService imageServiceMock;
@@ -45,7 +47,7 @@ public class AddLaunchPermissionsToImageInRegionExecutorTest {
     public void init() {
         mockStatic(ImageFactory.class);
 
-        toTest = new AddLaunchPermissionsToImageInRegionExecutor();
+        toTest = new RemoveLaunchPermissionsFromImageExecutor();
     }
 
     @After
@@ -59,7 +61,7 @@ public class AddLaunchPermissionsToImageInRegionExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getPopulatedImageInputs());
 
-        verify(imageServiceMock, times(1)).addLaunchPermissionsToImage(anyString(), anySetOf(String.class), anySetOf(String.class), anyString());
+        verify(imageServiceMock, times(1)).removeLaunchPermissionsFromImage(anyString(), anySetOf(String.class), anySetOf(String.class), anyString());
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

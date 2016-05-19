@@ -97,7 +97,7 @@ public class ImageInputs {
         }
 
         public ImageInputs.ImageInputsBuilder withOwnersString(String inputValue) {
-            ownersString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.SELF : inputValue;
+            ownersString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
             return this;
         }
 

@@ -3,8 +3,7 @@ package io.cloudslang.content.jclouds.utils;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -19,6 +18,14 @@ public final class InputsUtil {
             return null;
         }
         return input.split(Pattern.quote(delimiter));
+    }
+
+    public static Set<String> getStringsSet(String input, String delimiter) {
+        if (StringUtils.isBlank(input)) {
+            return null;
+        }
+
+        return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultDelimiter(delimiter)))));
     }
 
     public static void validateInput(String input, String inputName) {

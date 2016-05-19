@@ -49,8 +49,8 @@ public class DescribeImagesInRegionAction {
      *                         "aws-marketplace" (owner is AWS Marketplace), "self" (owner is the sender of the request).
      *                         Omitting this option returns all images for which you have launch permissions, regardless
      *                         of ownership.
-     *                         Valid: "amazon", "aws-marketplace", or "self"
-     *                         Default: "self"
+     *                         Valid: "", "amazon", "aws-marketplace", or "self"
+     *                         Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */

@@ -8,9 +8,7 @@ import io.cloudslang.content.jclouds.factory.ImageFactory;
 import io.cloudslang.content.jclouds.services.ImageService;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -20,7 +18,8 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -28,24 +27,21 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by Mihai Tusa.
- * 5/18/2016.
+ * 5/19/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({AddLaunchPermissionsToImageInRegionExecutor.class, ImageFactory.class})
-public class AddLaunchPermissionsToImageInRegionExecutorTest {
-    private AddLaunchPermissionsToImageInRegionExecutor toTest;
+@PrepareForTest({DescribeImagesInRegionExecutor.class, ImageFactory.class})
+public class DescribeImagesInRegionExecutorTest {
+    private DescribeImagesInRegionExecutor toTest;
 
     @Mock
     private ImageService imageServiceMock;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void init() {
         mockStatic(ImageFactory.class);
 
-        toTest = new AddLaunchPermissionsToImageInRegionExecutor();
+        toTest = new DescribeImagesInRegionExecutor();
     }
 
     @After
@@ -57,42 +53,28 @@ public class AddLaunchPermissionsToImageInRegionExecutorTest {
     public void testExecute() throws Exception {
         when(ImageFactory.getImageService(any(CommonInputs.class))).thenReturn(imageServiceMock);
 
-        Map<String, String> result = toTest.execute(getCommonInputs(), getPopulatedImageInputs());
+        Map<String, String> result = toTest.execute(getCommonInputs(), getImageInputs());
 
-        verify(imageServiceMock, times(1)).addLaunchPermissionsToImage(anyString(), anySetOf(String.class), anySetOf(String.class), anyString());
+        verify(imageServiceMock, times(1)).describeImagesInRegion(anyString(), anyString(), any(String[].class), any(String[].class));
 
         assertNotNull(result);
+        assertNotNull(result.get(Outputs.RETURN_RESULT));
         assertEquals("0", result.get(Outputs.RETURN_CODE));
     }
 
-    @Test
-    public void testExecuteException() throws Exception {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The [userIdsString] and [userGroupsString] inputs" +
-                " cannot be both empty in order to add/remove permission launch on specified image.");
-
-        when(ImageFactory.getImageService(any(CommonInputs.class))).thenReturn(imageServiceMock);
-
-        toTest.execute(getCommonInputs(), getImageInputs());
-    }
-
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").build();
+        return new CommonInputs.CommonInputsBuilder().build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().withRegion("").withImageId("ami-4cfc1121").build();
+        return new CustomInputs.CustomInputsBuilder().build();
     }
 
     private ImageInputs getImageInputs() {
-        return new ImageInputs.ImageInputsBuilder().withCustomInputs(getCustomInputs()).build();
-    }
-
-    private ImageInputs getPopulatedImageInputs() {
         return new ImageInputs.ImageInputsBuilder()
                 .withCustomInputs(getCustomInputs())
-                .withUserIdsString("firstId,secondId")
-                .withUserGroupsString("firstGroup,secondGroup")
+                .withImageIdsString("")
+                .withOwnersString("")
                 .build();
     }
 }
