@@ -2,20 +2,20 @@ package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.impl.AmazonComputeServiceImpl;
-import io.cloudslang.content.jclouds.services.impl.ComputeServiceImpl;
-import io.cloudslang.content.jclouds.services.impl.OpenstackComputeServiceImpl;
+import io.cloudslang.content.jclouds.services.ImageService;
+import io.cloudslang.content.jclouds.services.impl.AmazonImageServiceImpl;
+import io.cloudslang.content.jclouds.services.impl.OpenstackImageServiceImpl;
 
 /**
- * Created by persdana on 5/27/2015.
+ * Created by Mihai Tusa.
+ * 5/4/2016.
  */
-public class ComputeFactory {
-    public static ComputeService getComputeService(CommonInputs commonInputs) throws Exception {
-        ComputeService computeService;
+public class ImageFactory {
+    public static ImageService getImageService(CommonInputs commonInputs) throws Exception {
+        ImageService imageService;
         switch (commonInputs.getProvider().toLowerCase()) {
             case Constants.Providers.AMAZON:
-                computeService = new AmazonComputeServiceImpl(
+                imageService = new AmazonImageServiceImpl(
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),
                         commonInputs.getCredential(),
@@ -23,7 +23,7 @@ public class ComputeFactory {
                         commonInputs.getProxyPort());
                 break;
             case Constants.Providers.OPENSTACK:
-                computeService = new OpenstackComputeServiceImpl(
+                imageService = new OpenstackImageServiceImpl(
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),
                         commonInputs.getCredential(),
@@ -31,8 +31,7 @@ public class ComputeFactory {
                         commonInputs.getProxyPort());
                 break;
             default:
-                computeService = new ComputeServiceImpl(
-                        commonInputs.getProvider(),
+                imageService = new AmazonImageServiceImpl(
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),
                         commonInputs.getCredential(),
@@ -40,6 +39,6 @@ public class ComputeFactory {
                         commonInputs.getProxyPort());
         }
 
-        return computeService;
+        return imageService;
     }
 }

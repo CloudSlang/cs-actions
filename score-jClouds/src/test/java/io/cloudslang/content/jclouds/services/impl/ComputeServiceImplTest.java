@@ -9,7 +9,6 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.domain.Location;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.rest.ResourceNotFoundException;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -76,39 +75,35 @@ public class ComputeServiceImplTest {
     private ComputeService computeServiceMock;
 
     @Mock
-    Iterator<Location> locationIteratorMock;
+    private Iterator<Location> locationIteratorMock;
 
     @Mock
-    Set<? extends Location> locationsSetMock;
+    private Set<? extends Location> locationsSetMock;
 
     @Mock
-    Location locationMock;
+    private Location locationMock;
 
     @Mock
-    Set<ComputeMetadata> computeMetadataSetMock;
+    private Set<ComputeMetadata> computeMetadataSetMock;
 
     @Mock
-    Iterator<ComputeMetadata> computeMetadataIteratorMock;
+    private Iterator<ComputeMetadata> computeMetadataIteratorMock;
 
     @Mock
-    ComputeMetadata computeMetadataMock;
+    private ComputeMetadata computeMetadataMock;
 
     @Mock
-    TemplateBuilder templateBuilder;
+    private TemplateBuilder templateBuilder;
 
     @Mock
-    Template template;
+    private Template template;
 
     @Spy
     private ComputeServiceImpl ComputeServiceImplSpy = new ComputeServiceImpl(OPENSTACK_PROVIDER, ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
     /**
      * Add common mocks for all tests on init() method.
+     *
      * @throws Exception
      */
     private void addCommonMocksForInitMethod() throws Exception {
@@ -125,6 +120,7 @@ public class ComputeServiceImplTest {
 
     /**
      * Add common verifiers for tests on init() method.
+     *
      * @throws Exception
      */
     private void commonVerifiersFirInitMethod() throws Exception {
@@ -141,6 +137,7 @@ public class ComputeServiceImplTest {
 
     /**
      * Tests the init method.
+     *
      * @throws Exception
      */
     @Test
@@ -156,6 +153,7 @@ public class ComputeServiceImplTest {
 
     /**
      * Test init method when proxy and region are not null.
+     *
      * @throws Exception
      */
     @Test
@@ -178,6 +176,7 @@ public class ComputeServiceImplTest {
 
     /**
      * Test init method with null proxy parameters and not null region.
+     *
      * @throws Exception
      */
     @Test
@@ -213,7 +212,7 @@ public class ComputeServiceImplTest {
      * test lazy init when computeService is not null.
      */
     @Test
-    public void testLazyInitNotNullcomputeService() {
+    public void testLazyInitNotNullComputeService() {
         ComputeServiceImplSpy.computeService = computeServiceMock;
 
         ComputeServiceImplSpy.lazyInit();
@@ -256,7 +255,7 @@ public class ComputeServiceImplTest {
      * In this case init() method will be invoked although region didn't changed.
      */
     @Test
-    public void testLazyInitWithSameRegionAndNullcomputeService() {
+    public void testLazyInitWithSameRegionAndNullComputeService() {
         doNothing().when(ComputeServiceImplSpy).init();
         ComputeServiceImplSpy.region = REGION;
 
@@ -534,41 +533,5 @@ public class ComputeServiceImplTest {
         verifyNoMoreInteractions(computeMetadataSetMock);
         verify(computeMetadataIteratorMock, times(2)).hasNext();
         verify(computeMetadataIteratorMock).next();
-    }
-
-    /**
-     * Test list nodes method. Positive scenario. 1 node returned.
-     */
-    @Test
-    public void testListNodes() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit();
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doReturn(computeMetadataSetMock).when(computeServiceMock).listNodes();
-        Mockito.doReturn(computeMetadataIteratorMock).when(computeMetadataSetMock).iterator();
-        Mockito.doReturn(true).doReturn(false).when(computeMetadataIteratorMock).hasNext();
-        Mockito.doReturn(computeMetadataMock).when(computeMetadataIteratorMock).next();
-
-        Set<String> result = ComputeServiceImplSpy.listNodes();
-
-        assertEquals("[computeMetadata]", result.toString());
-        verify(ComputeServiceImplSpy).lazyInit();
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).listNodes();
-        verifyNoMoreInteractions(computeServiceMock);
-        verify(computeMetadataSetMock).iterator();
-        verifyNoMoreInteractions(computeMetadataSetMock);
-        verify(computeMetadataIteratorMock, times(2)).hasNext();
-        verify(computeMetadataIteratorMock).next();
-    }
-
-    /**
-     * Test create server method. Positive scenario.
-     */
-    @Test
-    public void testCreateServer() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("not implemented yet");
-
-        ComputeServiceImplSpy.createServer(null, null, null, null);
     }
 }

@@ -1,78 +1,110 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.Providers;
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by persdana on 5/27/2015.
  */
 public class CommonInputs {
-
-    public static final String PROVIDER = "provider";
-    public static final String ENDPOINT = "endpoint";
-    public static final String IDENTITY = "identity";
-    public static final String CREDENTIAL = "credential";
-    public static final String PROXY_HOST = "proxyHost";
-    public static final String PROXY_PORT = "proxyPort";
-
-    private ProvidersEnum provider;
+    private String provider;
+    private String endpoint;
     private String identity;
     private String credential;
-    private String endpoint;
     private String proxyHost;
     private String proxyPort;
+    private String delimiter;
 
-    public CommonInputs(String provider, String identity, String credential, String endpoint, String proxyHost, String proxyPort) {
-        this.provider = ProvidersEnum.getProvider(provider);
-        this.identity = identity;
-        this.credential = credential;
-        this.endpoint = endpoint;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
+    public CommonInputs(CommonInputsBuilder builder) {
+        this.provider = builder.provider;
+        this.endpoint = builder.endpoint;
+        this.identity = builder.identity;
+        this.credential = builder.credential;
+        this.proxyHost = builder.proxyHost;
+        this.proxyPort = builder.proxyPort;
+        this.delimiter = builder.delimiter;
+    }
+
+    public String getProvider() {
+        return provider;
     }
 
     public String getEndpoint() {
         return endpoint;
     }
 
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public ProvidersEnum getProvider() {
-        return provider;
-    }
-
-    public void setProvider(ProvidersEnum provider) {
-        this.provider = provider;
-    }
-
     public String getIdentity() {
         return identity;
-    }
-
-    public void setIdentity(String identity) {
-        this.identity = identity;
     }
 
     public String getCredential() {
         return credential;
     }
 
-    public void setCredential(String credential) {
-        this.credential = credential;
-    }
-
     public String getProxyHost() {
         return proxyHost;
-    }
-
-    public void setProxyHost(String proxyHost) {
-        this.proxyHost = proxyHost;
     }
 
     public String getProxyPort() {
         return proxyPort;
     }
 
-    public void setProxyPort(String proxyPort) {
-        this.proxyPort = proxyPort;
+    public String getDelimiter() {
+        return delimiter;
+    }
+
+    public static class CommonInputsBuilder {
+        private String provider;
+        private String endpoint;
+        private String identity;
+        private String credential;
+        private String proxyHost;
+        private String proxyPort;
+        private String delimiter;
+
+        public CommonInputs build() {
+            return new CommonInputs(this);
+        }
+
+        public CommonInputsBuilder withProvider(String inputValue) throws Exception {
+            provider = Providers.getValue(inputValue);
+            return this;
+        }
+
+        public CommonInputsBuilder withEndpoint(String inputValue) throws MalformedURLException {
+            URL url = new URL(inputValue.toLowerCase());
+            InputsUtil.validateInput(url.toString(), Inputs.CommonInputs.ENDPOINT);
+            endpoint = url.toString();
+            return this;
+        }
+
+        public CommonInputsBuilder withIdentity(String inputValue) {
+            identity = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withCredential(String inputValue) {
+            credential = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withProxyHost(String inputValue) {
+            proxyHost = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withProxyPort(String inputValue) {
+            proxyPort = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withDelimiter(String inputValue) {
+            delimiter = InputsUtil.getDefaultDelimiter(inputValue);
+            return this;
+        }
     }
 }

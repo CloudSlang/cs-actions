@@ -1,26 +1,28 @@
 package io.cloudslang.content.jclouds.execute;
 
-import io.cloudslang.content.jclouds.entities.inputs.ServerIdentificationInputs;
-import io.cloudslang.content.jclouds.entities.outputs.Outputs;
+import io.cloudslang.content.jclouds.entities.constants.Outputs;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.execute.instances.RemoveServerExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import org.jclouds.rest.ResourceNotFoundException;
-import org.junit.Assert;
-import org.junit.Rule;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Map;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by persdana on 7/7/2015.
@@ -28,49 +30,60 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({RemoveServerExecutor.class, ComputeFactory.class})
 public class RemoveServerExecutorTest {
-    private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "{\"itemNotFound\": {\"message\": \"Instance not found\", \"code\": 404}}";
-    private static final String REGION = "us-east-1";
-    private static final String SERVER_ID = "i-578dde87";
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Spy
-    private RemoveServerExecutor toTest = new RemoveServerExecutor();
+    private RemoveServerExecutor toTest;
+    private AmazonInputs inputs;
 
     @Mock
-    ComputeService computeServiceMock;
+    private ComputeService computeServiceMock;
+
+    @Before
+    public void init() {
+        mockStatic(ComputeFactory.class);
+
+        toTest = new RemoveServerExecutor();
+        inputs = AmazonInputs.getAmazonInstance();
+    }
+
+    @After
+    public void tearDown() {
+        toTest = null;
+        inputs = null;
+    }
 
     /**
      * Tests the execute method. Positive scenario.
+     *
      * @throws Exception
      */
     @Test
     public void testExecute() throws Exception {
-        ServerIdentificationInputs intputs = Inputs.getServerIdentificationInputsForAmazon();
-        PowerMockito.mockStatic(ComputeFactory.class);
-        PowerMockito.doReturn(computeServiceMock).when(ComputeFactory.class, "getComputeService", intputs);
-        Mockito.doReturn("removed").when(computeServiceMock).removeServer(REGION, SERVER_ID);
+        when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
+        doReturn("removed").when(computeServiceMock).removeServer(anyString(), anyString());
 
-        Map<String, String> result = toTest.execute(intputs);
+        Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        Assert.assertEquals(result.get(Outputs.RETURN_CODE), "0");
-        Assert.assertEquals(result.get(Outputs.RETURN_RESULT), "removed");
-        verify(computeServiceMock).removeServer(REGION, SERVER_ID);
-        verifyNoMoreInteractions(computeServiceMock);
+        verify(computeServiceMock, times(1)).removeServer(eq(inputs.getRegion()), eq(inputs.getServerId()));
+
+        assertNotNull(result);
+        assertEquals("0", result.get(Outputs.RETURN_CODE));
+        assertEquals("removed", result.get(Outputs.RETURN_RESULT));
     }
 
-    @Test
-    public void testExecuteNegativeScenario() throws Exception {
-        exception.expect(ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+    private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
+        return new CommonInputs.CommonInputsBuilder()
+                .withProvider(inputs.getProvider())
+                .withEndpoint(inputs.getEndpoint())
+                .withIdentity(inputs.getIdentity())
+                .withCredential(inputs.getCredential())
+                .withProxyHost(inputs.getProxyHost())
+                .withProxyPort(inputs.getProxyPort())
+                .build();
+    }
 
-        ServerIdentificationInputs intputs = Inputs.getServerIdentificationInputsForAmazon();
-        PowerMockito.mockStatic(ComputeFactory.class);
-        PowerMockito.doReturn(computeServiceMock).when(ComputeFactory.class, "getComputeService", intputs);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).removeServer(REGION, SERVER_ID);
-
-        toTest.execute(intputs);
+    private CustomInputs getCustomInputs(AmazonInputs inputs) {
+        return new CustomInputs.CustomInputsBuilder()
+                .withRegion(inputs.getRegion())
+                .withServerId(inputs.getServerId())
+                .build();
     }
 }

@@ -2,7 +2,8 @@ package io.cloudslang.content.jclouds.execute;
 
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.execute.regions.ListRegionsExecutor;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.execute.instances.UpdateServerTypeExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -13,24 +14,25 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Created by persdana on 7/7/2015.
+ * Created by Mihai Tusa.
+ * 3/15/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ListRegionsExecutor.class, ComputeFactory.class})
-public class ListRegionsExecutorTest {
-    private ListRegionsExecutor toTest;
+@PrepareForTest({UpdateServerTypeExecutor.class, ComputeFactory.class})
+public class UpdateServerTypeExecutorTest {
+    private UpdateServerTypeExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -40,7 +42,7 @@ public class ListRegionsExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new ListRegionsExecutor();
+        toTest = new UpdateServerTypeExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -56,26 +58,17 @@ public class ListRegionsExecutorTest {
      * @throws Exception
      */
     @Test
-    public void testExecute() throws Exception {
+    public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
+        doReturn("Server updated successfully.").when(computeServiceMock)
+                .updateInstanceType(anyString(), anyString(), anyString(), anyLong(), anyLong());
+        Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        Set<String> regions = getRegions();
-        doReturn(regions).when(computeServiceMock).listRegions();
+        verify(computeServiceMock, times(1)).updateInstanceType(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
-        Map<String, String> result = toTest.execute(getCommonInputs(inputs));
-
-        verify(computeServiceMock, times(1)).listRegions();
-
-        assertNotNull(result);
-        assertEquals("0", result.get(Outputs.RETURN_CODE));
-        assertEquals("reg1;;reg2", result.get(Outputs.RETURN_RESULT));
-    }
-
-    private Set<String> getRegions() {
-        Set<String> regions = new HashSet<>();
-        regions.add("reg1");
-        regions.add("reg2");
-        return regions;
+        assertNotNull(results);
+        assertEquals("0", results.get(Outputs.RETURN_CODE));
+        assertEquals("Server updated successfully.", results.get(Outputs.RETURN_RESULT));
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
@@ -86,7 +79,12 @@ public class ListRegionsExecutorTest {
                 .withCredential(inputs.getCredential())
                 .withProxyHost(inputs.getProxyHost())
                 .withProxyPort(inputs.getProxyPort())
-                .withDelimiter(inputs.getDelimiter())
+                .build();
+    }
+
+    private CustomInputs getCustomInputs(AmazonInputs inputs) {
+        return new CustomInputs.CustomInputsBuilder()
+                .withRegion(inputs.getRegion())
                 .build();
     }
 }

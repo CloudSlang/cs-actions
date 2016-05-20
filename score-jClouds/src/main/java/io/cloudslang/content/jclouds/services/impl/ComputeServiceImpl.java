@@ -1,11 +1,15 @@
 package io.cloudslang.content.jclouds.services.impl;
 
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.JcloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.domain.Location;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
+import org.jclouds.ec2.options.RunInstancesOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,9 +17,7 @@ import java.util.Set;
 /**
  * Created by persdana on 6/5/2015.
  */
-public class ComputeServiceImpl extends JcloudsComputeService implements ComputeService{
-    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' providers in the provider input";
-
+public class ComputeServiceImpl extends JCloudsComputeService implements ComputeService {
     org.jclouds.compute.ComputeService computeService = null;
 
     private String provider;
@@ -32,17 +34,17 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
         computeService = context.getComputeService();
     }
 
-    protected void lazyInit() {
-        if(computeService == null) {
+    void lazyInit() {
+        if (computeService == null) {
             this.init();
         }
     }
 
-    protected void lazyInit(String region) {
-        if(this.region == null || !this.region.equals(region)) {
+    void lazyInit(String region) {
+        if (this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
-        } else if(computeService == null) {
+        } else if (computeService == null) {
             this.init();
         }
     }
@@ -68,20 +70,14 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
         return "";
     }
 
-
-    protected void reboot(String region, String serverId) {
-        lazyInit(region);
-        computeService.rebootNode(region + "/" + serverId);
-    }
-
     @Override
     public String start(String region, String serverId) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
     public String stop(String region, String serverId) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     public void softReboot(String region, String serverId) {
@@ -96,7 +92,7 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
         lazyInit();
         Set<? extends Location> locations = computeService.listAssignableLocations();
         Set<String> res = new HashSet<>();
-        for(Location l : locations) {
+        for (Location l : locations) {
             res.add(l.getDescription());
         }
 
@@ -108,35 +104,27 @@ public class ComputeServiceImpl extends JcloudsComputeService implements Compute
         lazyInit(region);
         Set<? extends ComputeMetadata> nodes = computeService.listNodes();
         Set<String> result = new HashSet<>();
-        for(ComputeMetadata cm: nodes) {
+        for (ComputeMetadata cm : nodes) {
             result.add(cm.toString());
         }
         return result;
     }
 
-    public Set<String> listNodes() {
-        lazyInit();
-        Set<? extends ComputeMetadata> locations = computeService.listNodes();
-        Set<String> res = new HashSet<>();
-        for(ComputeMetadata cm : locations) {
-            res.add(cm.toString());
-        }
-        return res;
+    @Override
+    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
+            throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
-    public String createServer(String region, String name, String imageRef, String flavorRef) throws Exception {
+    @Override
+    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
+                                                                       int minCount, int maxCount, RunInstancesOptions... options)
+            throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
 
-        throw new Exception("not implemented yet");
-//        String res = null;
-//        lazyInit(region);
-//
-//        Template template = computeService.templateBuilder().build();
-//
-//        template.getOptions().as(EC2TemplateOptions.class)
-//                .authorizePublicKey("aaa");
-//
-//        computeService.createNodesInGroup(region, 1);
-//
-//        return res;
+    protected void reboot(String region, String serverId) {
+        lazyInit(region);
+        computeService.rebootNode(region + "/" + serverId);
     }
 }
