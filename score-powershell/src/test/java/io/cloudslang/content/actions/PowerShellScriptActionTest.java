@@ -47,6 +47,10 @@ public class PowerShellScriptActionTest {
     private static final String EXCEPTION_MESSAGE = "exceptionMessage";
     private static final String EXCEPTION = "exception";
     private static final String RETURN_CODE_FAILURE = "-1";
+    private static final String BASIC_AUTH_TYPE = "Basic";
+    private static final String KERBEROS_CONF_FILE = "/kerberosConfFile";
+    private static final String KERBEROS_LOGIN_CONF_FILE = "/kerberosLoginConfFile";
+    private static final String KERBEROS_SKIP_PORT_FOR_LOOKUP = "true";
 
     private PowerShellScriptAction powerShellScriptAction;
 
@@ -79,8 +83,8 @@ public class PowerShellScriptActionTest {
         doReturn(resultMock).when(serviceMock).runCommand(any(WSManRequestInputs.class));
         doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,
+        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
+                PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
                 MAX_ENVELOPE_SIZE, SCRIPT, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
@@ -95,8 +99,8 @@ public class PowerShellScriptActionTest {
         doReturn(resultMock).when(serviceMock).runCommand(any(WSManRequestInputs.class));
         doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,
+        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
+                PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
                 EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
@@ -110,8 +114,8 @@ public class PowerShellScriptActionTest {
         whenNew(WSManRemoteShellService.class).withNoArguments().thenReturn(serviceMock);
         doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(serviceMock).runCommand(any(WSManRequestInputs.class));
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,
+        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, BASIC_AUTH_TYPE, PASS, PROXY_HOST, PROXY_PORT,
+                PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
                 EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING);
 
         assertTrue(result.get(EXCEPTION).contains(EXCEPTION_MESSAGE));

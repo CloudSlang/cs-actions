@@ -53,7 +53,6 @@ public class WSManRemoteShellService {
     private static final String STATUS_CODE = "statusCode";
     private static final String UNAUTHORIZED_STATUS_CODE = "401";
 
-    private static final String BASIC_AUTH_TYPE = "Basic";
     private static final String WSMAN_RESOURCE_URI = "/wsman";
     private static final String NEW_LINE_SEPARATOR = "\\n";
     private static final String UUID_LABEL = "uuid:";
@@ -115,9 +114,12 @@ public class WSManRemoteShellService {
      */
     private static HttpClientInputs setCommonHttpInputs(HttpClientInputs httpClientInputs, URL url, WSManRequestInputs wsManRequestInputs) throws MalformedURLException {
         httpClientInputs.setUrl(url.toString());
-        httpClientInputs.setAuthType(BASIC_AUTH_TYPE);
         httpClientInputs.setUsername(wsManRequestInputs.getUsername());
         httpClientInputs.setPassword(wsManRequestInputs.getPassword());
+        httpClientInputs.setAuthType(wsManRequestInputs.getAuthType());
+        httpClientInputs.setKerberosConfFile(wsManRequestInputs.getKerberosConfFile());
+        httpClientInputs.setKerberosLoginConfFile(wsManRequestInputs.getKerberosLoginConfFile());
+        httpClientInputs.setKerberosSkipPortCheck(wsManRequestInputs.getKerberosSkipPortForLookup());
         httpClientInputs.setTrustAllRoots(wsManRequestInputs.getTrustAllRoots());
         httpClientInputs.setX509HostnameVerifier(wsManRequestInputs.getX509HostnameVerifier());
         httpClientInputs.setProxyHost(wsManRequestInputs.getProxyHost());

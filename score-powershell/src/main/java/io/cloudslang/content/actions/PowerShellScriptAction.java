@@ -90,8 +90,9 @@ public class PowerShellScriptAction {
             @Param(value = INPUT_HOST, required = true) String host,
             @Param(value = INPUT_PORT) String port,
             @Param(value = PROTOCOL) String protocol,
-            @Param(value = USERNAME, required = true) String username,
-            @Param(value = PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = USERNAME) String username,
+            @Param(value = PASSWORD, encrypted = true) String password,
+            @Param(value = AUTH_TYPE) String authType,
             @Param(value = PROXY_HOST) String proxyHost,
             @Param(value = PROXY_PORT) String proxyPort,
             @Param(value = PROXY_USERNAME) String proxyUsername,
@@ -100,6 +101,9 @@ public class PowerShellScriptAction {
             @Param(value = X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE) String trustKeystore,
             @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = KERBEROS_CONFIG_FILE) String kerberosConfFile,
+            @Param(value = KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
+            @Param(value = KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
             @Param(value = KEYSTORE) String keystore,
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
@@ -117,6 +121,10 @@ public class PowerShellScriptAction {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
+                    .withAuthType(authType)
+                    .withKerberosConfFile(kerberosConfFile)
+                    .withKerberosLoginConfFile(kerberosLoginConfFile)
+                    .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
                     .withProxyUsername(proxyUsername)
