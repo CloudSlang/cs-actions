@@ -38,9 +38,9 @@ public class RemoveLaunchPermissionsFromImageAction {
      *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
      *                         Default: "us-east-1".
      * @param imageId          ID of the specified image to remove launch permission for.
-     * @param userIds          Optional - A string that contains: none, one or more user IDs separated by delimiter.
+     * @param userIdsString    Optional - A string that contains: none, one or more user IDs separated by delimiter.
      *                         Default: ""
-     * @param userGroups       Optional - A string that contains: none, one or more user groups separated by delimiter.
+     * @param userGroupsString Optional - A string that contains: none, one or more user groups separated by delimiter.
      *                         Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
@@ -68,8 +68,8 @@ public class RemoveLaunchPermissionsFromImageAction {
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
-                                       @Param(Inputs.ImageInputs.USER_IDS_STRING) String userIds,
-                                       @Param(Inputs.ImageInputs.USER_GROUPS_STRING) String userGroups) throws Exception {
+                                       @Param(Inputs.ImageInputs.USER_IDS_STRING) String userIdsString,
+                                       @Param(Inputs.ImageInputs.USER_GROUPS_STRING) String userGroupsString) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -88,8 +88,8 @@ public class RemoveLaunchPermissionsFromImageAction {
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
                 .withCustomInputs(customInputs)
-                .withUserIdsString(userIds)
-                .withUserGroupsString(userGroups)
+                .withUserIdsString(userIdsString)
+                .withUserGroupsString(userGroupsString)
                 .build();
 
         try {
