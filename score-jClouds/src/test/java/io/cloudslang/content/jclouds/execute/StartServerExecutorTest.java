@@ -66,7 +66,6 @@ public class StartServerExecutorTest {
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
-        assertEquals("Server started.", result.get(Outputs.RETURN_RESULT));
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
