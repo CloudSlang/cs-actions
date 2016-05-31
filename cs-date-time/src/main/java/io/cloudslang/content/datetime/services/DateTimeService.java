@@ -31,191 +31,156 @@ public class DateTimeService {
     public Map<String, String> getCurrentDateTime(String localeLang, String localeCountry) throws Exception {
         DateTimeFormatter formatter;
         DateTime datetime = DateTime.now();
-        Map<String, String> returnResult = new HashMap<>();
 
-        if (StringUtils.isNotEmpty(localeLang)) {
-            if (LocaleUtils.isUnix(localeLang)) {
-                long timestamp = (long)Math.floor(datetime.getMillis() / 1000);
-                addReturnValues(returnResult, "" + timestamp);
+        if (StringUtils.isNotBlank(localeLang)) {
+            if (isUnix(localeLang)) {
+                long timestamp = (long) Math.floor(datetime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
 
-                return returnResult;
+                return getReturnValues(Constants.Miscellaneous.EMPTY + timestamp);
             }
-
             formatter = DateTimeFormat.longDateTime().withLocale(getLocaleByCountry(localeLang, localeCountry));
         } else {
             formatter = DateTimeFormat.longDateTime();
         }
-        addReturnValues(returnResult, formatter.print(datetime));
 
-        return returnResult;
+        return getReturnValues(formatter.print(datetime));
     }
 
     /**
      * This operation converts the date input value from one date/time format (specified by dateFormat)
      * to another date/time format (specified by outFormat) using locale settings (language and country).
      * You can use the flow "Get Current Date and Time" to check upon the default date/time format from
-     * the Java environement.
+     * the Java environment.
      *
-     * @param date the date to parse/convert
-     * @param dateFormat the format of the input date
-     * @param dateLocaleLang the locale language for input dateFormat string. It will be ignored if
-     *                       dateFormat is empty. default locale language from the Java environement
-     *                       (which is dependent on the OS locale language)
+     * @param date              the date to parse/convert
+     * @param dateFormat        the format of the input date
+     * @param dateLocaleLang    the locale language for input dateFormat string. It will be ignored if
+     *                          dateFormat is empty. default locale language from the Java environment
+     *                          (which is dependent on the OS locale language)
      * @param dateLocaleCountry the locale country for input dateFormat string. It will be ignored
      *                          if dateFormat is empty or dateLocaleLang is empty. Default locale country
-     *                          from the Java environement (which is dependent on the OS locale country)
-     * @param outFormat The format of the output date/time. Default date/time format from the Java
-     *                  environement (which is dependent on the OS date/time format)
-     * @param outLocaleLang The locale language for output string. It will be ignored if outFormat is
-     *                      empty.
-     * @param outLocaleCountry The locale country for output string. It will be ignored if outFormat
-     *                         is empty or outLocaleLang is empty.
+     *                          from the Java environment (which is dependent on the OS locale country)
+     * @param outFormat         The format of the output date/time. Default date/time format from the Java
+     *                          environment (which is dependent on the OS date/time format)
+     * @param outLocaleLang     The locale language for output string. It will be ignored if outFormat is
+     *                          empty.
+     * @param outLocaleCountry  The locale country for output string. It will be ignored if outFormat
+     *                          is empty or outLocaleLang is empty.
      * @return The date in the new format
      */
     public Map<String, String> parseDate(String date, String dateFormat, String dateLocaleLang,
                                          String dateLocaleCountry, String outFormat, String outLocaleLang,
                                          String outLocaleCountry) throws Exception {
+        if (StringUtils.isBlank(date)) {
+            throw new RuntimeException(Constants.ErrorMessages.DATE_NULL_OR_EMPTY);
+        }
+
         DateTime inputDateTime;
         DateTimeFormatter dateFormatter, outFormatter;
-        Map<String, String> returnResult = new HashMap<>();
-        DateTimeZone timeZone = DateTimeZone.forID("GMT");
+        DateTimeZone timeZone = DateTimeZone.forID(Constants.Miscellaneous.GMT);
 
-        if (StringUtils.isEmpty(date))
-            throw new NullPointerException("Date is either Null or Empty");
-
-        if (StringUtils.isNotEmpty(dateFormat)) {
-            if (LocaleUtils.isUnix(dateFormat)) {
-                inputDateTime = new DateTime(Long.parseLong(date) * 1000);
-            } else if (dateFormat.equals("S")) {
+        if (StringUtils.isNotBlank(dateFormat)) {
+            if (isUnix(dateFormat)) {
+                inputDateTime = new DateTime(Long.parseLong(date) * Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+            } else if (dateFormat.equals(Constants.Miscellaneous.S_CAPS_CHAR)) {
                 inputDateTime = new DateTime(new Date(Long.parseLong(date))).withZone(timeZone);
             } else {
                 dateFormatter = formatWithPattern(dateFormat, dateLocaleLang, dateLocaleCountry);
-
-                if (LocaleUtils.isUnix(outFormat))
+                if (isUnix(outFormat)) {
                     dateFormatter.withZone(timeZone);
+                }
 
                 inputDateTime = dateFormatter.parseDateTime(date).withZone(timeZone);
             }
         } else {
             dateFormatter = formatWithDefault(dateLocaleLang, dateLocaleCountry);
-
-            if (LocaleUtils.isUnix(dateFormat))
+            if (isUnix(dateFormat)) {
                 dateFormatter.withZone(timeZone);
+            }
 
             inputDateTime = getJodaOrJavaDate(dateFormatter, date);
         }
 
-        if (StringUtils.isNotEmpty(outFormat)) {
-            if (LocaleUtils.isUnix(outFormat)) {
-                long timestamp = (long)Math.floor(inputDateTime.toDateTime().getMillis() / 1000);
-                addReturnValues(returnResult, "" + timestamp);
-                return returnResult;
+        Map<String, String> returnResult;
+        if (StringUtils.isNotBlank(outFormat)) {
+            if (isUnix(outFormat)) {
+                long timestamp = (long) Math.floor(inputDateTime.toDateTime().getMillis()
+                        / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+
+                return getReturnValues(Constants.Miscellaneous.EMPTY + timestamp);
             } else {
                 outFormatter = formatWithPattern(outFormat, outLocaleLang, outLocaleCountry);
-
-                if (StringUtils.isNotEmpty(dateFormat) && LocaleUtils.isUnix(outFormat))
+                if (StringUtils.isNotBlank(dateFormat) && isUnix(outFormat)) {
                     outFormatter.withZone(timeZone);
+                }
 
-                addReturnValues(returnResult, outFormatter.print(inputDateTime));
+                returnResult = getReturnValues(outFormatter.print(inputDateTime));
             }
         } else {
             outFormatter = formatWithDefault(outLocaleLang, outLocaleCountry);
-
-            if (StringUtils.isNotEmpty(dateFormat) && LocaleUtils.isUnix(outFormat))
+            if (StringUtils.isNotEmpty(dateFormat) && isUnix(outFormat)) {
                 outFormatter.withZone(timeZone);
+            }
 
-            addReturnValues(returnResult, outFormatter.print(inputDateTime));
+            returnResult = getReturnValues(outFormatter.print(inputDateTime));
         }
 
         return returnResult;
     }
 
     public Map<String, String> offsetTimeBy(String date, String offset, String localeLang, String localeCountry) throws Exception {
-        Map<String, String> resultMap = new HashMap<>();
         DateTime dateTime;
         DateTimeFormatter dateFormatter;
         int parsedOffset = Integer.parseInt(offset);
         int offsetTimestamp;
 
-        if(LocaleUtils.isUnix(localeLang)) {
+        if (isUnix(localeLang)) {
             offsetTimestamp = Integer.parseInt(date) + parsedOffset;
-            addReturnValues(resultMap, "" + offsetTimestamp);
-        }
-        else {
+
+            return getReturnValues(Constants.Miscellaneous.EMPTY + offsetTimestamp);
+        } else {
             dateFormatter = formatWithDefault(localeLang, localeCountry);
             dateTime = getJodaOrJavaDate(dateFormatter, date);
-            addReturnValues(resultMap, dateFormatter.print(dateTime.plusSeconds(parsedOffset)));
+
+            return getReturnValues(dateFormatter.print(dateTime.plusSeconds(parsedOffset)));
         }
+    }
+
+    private Map<String, String> getReturnValues(String value) {
+        Map<String, String> resultMap = new HashMap<>();
+
+        resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+        resultMap.put(Constants.OutputNames.RETURN_RESULT, value);
 
         return resultMap;
     }
 
-    private void addReturnValues(Map<String, String> resultMap , String value) {
-        resultMap.put(Constants.OutputNames.RETURN_RESULT, value);
-        resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-    }
-
     /**
-     * Generates the locale
-     * @param lang the language
-     * @param country the country
-     * @return the locale
+     * Returns a LocalDateTime depending on how the date passes as argument is formatted.
+     *
+     * @param date date passed as argument
+     * @return true if is a java date
+     * @see {@link #isDateValid}
      */
-    private Locale getLocaleByCountry(String lang, String country) {
-        Locale locale;
-        if (StringUtils.isNotEmpty(country)) {
-            locale = new Locale(lang, country);
-        } else {
-            locale = new Locale(lang);
+    private DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String date) throws Exception {
+        if (isDateValid(date, dateFormatter.getLocale())) {
+            DateFormat dateFormat = DateFormat
+                    .getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, dateFormatter.getLocale());
+
+            Calendar dateCalendar = GregorianCalendar.getInstance();
+            dateCalendar.setTime(dateFormat.parse(date));
+
+            return new DateTime(dateCalendar.getTime());
         }
 
-        return locale;
-    }
-
-    /**
-     * Generates a DateTimeFormatter using a custom pattern with the default locale or a new one
-     * according to what language and country are provided as params.
-     * @param format
-     * @param lang
-     * @param country
-     * @return the DateTimeFormatter generated
-     */
-    private DateTimeFormatter formatWithPattern(String format, String lang, String country) {
-        DateTimeFormatter dateFormatter;
-        if (StringUtils.isNotEmpty(lang)) {
-            dateFormatter = DateTimeFormat.forPattern(format)
-                    .withLocale(getLocaleByCountry(lang, country));
-        } else {
-            dateFormatter = DateTimeFormat.forPattern(format);
-        }
-
-        return dateFormatter;
-    }
-
-    /**
-     * Generates a DateTimeFormatter using full date pattern with the default locale or a new one
-     * according to what language and country are provided as params.
-     * @param lang
-     * @param country
-     * @return the DateTimeFormatter generated
-     */
-    private DateTimeFormatter formatWithDefault(String lang, String country) {
-        DateTimeFormatter dateFormatter;
-        if (StringUtils.isNotEmpty(lang)) {
-            dateFormatter = DateTimeFormat.longDateTime()
-                    .withLocale(getLocaleByCountry(lang, country));
-        } else {
-            dateFormatter = DateTimeFormat.longDateTime()
-                    .withLocale(Locale.getDefault());
-        }
-
-        return dateFormatter;
+        return new DateTime(date);
     }
 
     /**
      * Because the date passed as argument can be in java format, and because not all formats are compatible
      * with joda-time, this method checks if the date string is valid with java. In this way we can use the
-     * proper DateTime without alterating the output.
+     * proper DateTime without changing the output.
+     *
      * @param date date passed as argument
      * @return true if is a java date
      */
@@ -223,6 +188,7 @@ public class DateTimeService {
         try {
             DateFormat format = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, locale);
             format.parse(date);
+
             return true;
         } catch (ParseException e) {
             return false;
@@ -230,26 +196,44 @@ public class DateTimeService {
     }
 
     /**
-     * Returns a LocalDateTime depending on how the date passes as argument is formatted.
-     * @see {@link #isDateValid}
-     * @param date date passed as argument
-     * @return true if is a java date
+     * Generates the locale
+     *
+     * @param lang    the language
+     * @param country the country
+     * @return the locale
      */
-    private DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String date) throws Exception {
-        DateTime datetime;
-        if (!isDateValid(date, dateFormatter.getLocale())) {
-            datetime = new DateTime(date);
-        } else {
-            DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
-                    dateFormatter.getLocale());
+    private Locale getLocaleByCountry(String lang, String country) {
+        return StringUtils.isNotBlank(country) ? new Locale(lang, country) : new Locale(lang);
+    }
 
-            Calendar dateCalendar = GregorianCalendar.getInstance();
-            dateCalendar.setTime(dateFormat.parse(date));
+    /**
+     * Generates a DateTimeFormatter using a custom pattern with the default locale or a new one
+     * according to what language and country are provided as params.
+     *
+     * @param format  the pattern
+     * @param lang    the language
+     * @param country the country
+     * @return the DateTimeFormatter generated
+     */
+    private DateTimeFormatter formatWithPattern(String format, String lang, String country) {
+        return (StringUtils.isNotBlank(lang)) ? DateTimeFormat.forPattern(format).withLocale(getLocaleByCountry(lang, country)) :
+                DateTimeFormat.forPattern(format);
+    }
 
-            datetime = new DateTime(dateCalendar.getTime());
-        }
+    /**
+     * Generates a DateTimeFormatter using full date pattern with the default locale or a new one
+     * according to what language and country are provided as params.
+     *
+     * @param lang    the language
+     * @param country the country
+     * @return the DateTimeFormatter generated
+     */
+    private DateTimeFormatter formatWithDefault(String lang, String country) {
+        return (StringUtils.isNotBlank(lang)) ? DateTimeFormat.longDateTime().withLocale(getLocaleByCountry(lang, country)) :
+                DateTimeFormat.longDateTime().withLocale(Locale.getDefault());
+    }
 
-        return datetime;
+    private boolean isUnix(String locale) {
+        return Constants.Miscellaneous.UNIX.equals(locale);
     }
 }
-

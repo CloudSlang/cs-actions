@@ -1,9 +1,11 @@
 package io.cloudslang.content.datetime.actions;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -13,158 +15,103 @@ import static org.junit.Assert.assertTrue;
  * Created by stcu on 29.04.2016.
  */
 public class ParseDateTest {
-    private final ParseDate parseDate = new ParseDate();
-    private final String RETURN_CODE = "returnCode";
-    private final String RETURN_RESULT = "returnResult";
+    private ParseDate parseDate;
+    private Map<String, String> result;
+
+    @Before
+    public void init() {
+        parseDate = new ParseDate();
+        result = new HashMap<>();
+    }
+
+    @After
+    public void tearDown() {
+        parseDate = null;
+        result = null;
+    }
+
 
     @Test
     public void testExecuteAllValid() {
-        String date = "2001-07-04T12:08:56.235+0700";
-        String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-        String dateLocaleLang = "en";
-        String dateLocaleCountry = "US";
-        String outFormat = "yyyy-MM-dd";
-        String outLocaleLang = "fr";
-        String outLocaleCountry = "FR";
+        result = parseDate
+                .execute("2001-07-04T12:08:56.235+0700", "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "en", "US", "yyyy-MM-dd", "fr", "FR");
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
-                outFormat, outLocaleLang, outLocaleCountry);
-        assertFalse(result.get(RETURN_RESULT).isEmpty());
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("0", result.get("returnCode"));
+        assertFalse(result.get("returnResult").isEmpty());
     }
 
     @Test
     public void testExecuteDateFormatValid() {
-        String date = "2001-07-04T12:08:56.235+0700";
-        String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-        String outFormat = "yyyy-MM-dd";
+        result = parseDate
+                .execute("2001-07-04T12:08:56.235+0700", "yyyy-MM-dd'T'HH:mm:ss.SSSZ", null, null, "yyyy-MM-dd", null, null);
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, null, null,
-                outFormat, null, null);
-        assertEquals("0", result.get(RETURN_CODE));
-        assertEquals("2001-07-04", result.get(RETURN_RESULT));
+        assertEquals("0", result.get("returnCode"));
+        assertEquals("2001-07-04", result.get("returnResult"));
     }
 
     @Test
     public void testExecuteUnixValid() {
-        String date = "1462254848";
-        String dateFormat = "unix";
-        String outFormat = "yyyy-MM-dd";
-        String outLocaleLang = "en";
-        String outLocaleCountry = "US";
+        result = parseDate.execute("1462254848", "unix", null, null, "yyyy-MM-dd", "en", "US");
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, null, null,
-                outFormat, outLocaleLang, outLocaleCountry);
-        assertEquals("0", result.get(RETURN_CODE));
-        assertTrue(result.get(RETURN_RESULT).contains("2016-05-03"));
+        assertEquals("0", result.get("returnCode"));
+        assertTrue(result.get("returnResult").contains("2016-05-03"));
     }
 
     @Test
     public void testExecuteUnixFailed() {
-        String date = "2001-07-04T12:08:56.235+0700";
-        String dateFormat = "unix";
+        result = parseDate.execute("2001-07-04T12:08:56.235+0700", "unix", null, null, null, null, null);
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, null, null,
-                null, null, null);
-        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("-1", result.get("returnCode"));
     }
 
     @Test
     public void testDateFormatFailed() {
-        String date = "2001-07-04T12:08:56.235+0700";
-        String dateFormat = "222";
+        result = parseDate.execute("2001-07-04T12:08:56.235+0700", "222", null, null, null, null, null);
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, null, null,
-                null, null, null);
-        assertFalse(result.get(RETURN_RESULT).isEmpty());
-        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("-1", result.get("returnCode"));
+        assertFalse(result.get("returnResult").isEmpty());
     }
 
     @Test
     public void testSimpleDateFormatValid() {
-        String date = "Wed, Jul 4, '01";
-        String dateFormat = "EEE, MMM d, ''yy";
-        String dateLocaleLang = "en";
-        String dateLocaleCountry = "US";
-        String outFormat = "yyyy-MM-dd";
-        String outLocaleLang = "fr";
-        String outLocaleCountry = "FR";
+        result = parseDate.execute("Wed, Jul 4, '01", "EEE, MMM d, ''yy", "en", "US", "yyyy-MM-dd", "fr", "FR");
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
-                outFormat, outLocaleLang, outLocaleCountry);
-        assertFalse(result.get(RETURN_RESULT).isEmpty());
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("0", result.get("returnCode"));
+        assertFalse(result.get("returnResult").isEmpty());
     }
 
     @Test
     public void testDateNull() {
-        String date = null;
-        String dateFormat = "EEE, MMM d, ''yy";
-        String dateLocaleLang = "en";
-        String dateLocaleCountry = "US";
-        String outFormat = "yyyy-MM-dd";
-        String outLocaleLang = "fr";
-        String outLocaleCountry = "FR";
+        result = parseDate.execute(null, "EEE, MMM d, ''yy", "en", "US", "yyyy-MM-dd", "fr", "FR");
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
-                outFormat, outLocaleLang, outLocaleCountry);
-        assertFalse(result.get(RETURN_RESULT).isEmpty());
-        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("-1", result.get("returnCode"));
+        assertFalse(result.get("returnResult").isEmpty());
     }
 
     @Test
     public void testGetCurrentDateValid() {
-        GetCurrentDateTime currentDateTime = new GetCurrentDateTime();
-        String date = currentDateTime.execute("en", "US").get(RETURN_RESULT);
-        String dateFormat = "";
-        String dateLocaleLang = "";
-        String dateLocaleCountry = "";
-        String outFormat = "";
-        String outLocaleLang = "fr";
-        String outLocaleCountry = "FR";
+        String date = new GetCurrentDateTime().execute("en", "US").get("returnResult");
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
-                outFormat, outLocaleLang, outLocaleCountry);
+        result = parseDate.execute(date, "", "", "", "", "fr", "FR");
 
-        assertFalse(result.get(RETURN_RESULT).isEmpty());
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("0", result.get("returnCode"));
+        assertFalse(result.get("returnResult").isEmpty());
     }
 
     @Test
     public void testFormatsNullValid() {
-        String date = "2001-07-04T12:08:56.235+0700";
-        String dateFormat = "";
-        String dateLocaleLang = "en";
-        String dateLocaleCountry = "US";
-        String outFormat = "";
-        String outLocaleLang = "fr";
-        String outLocaleCountry = "FR";
+        result = parseDate.execute("2001-07-04T12:08:56.235+0700", "", "en", "US", "", "fr", "FR");
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
-                outFormat, outLocaleLang, outLocaleCountry);
-
-        assertFalse(result.get(RETURN_RESULT).isEmpty());
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("0", result.get("returnCode"));
+        assertFalse(result.get("returnResult").isEmpty());
     }
 
     @Test
     public void testUnixBug() {
-        String date = "1000";
-        String dateFormat = "S";
-        String dateLocaleLang = "en";
-        String dateLocaleCountry = "US";
-        String outFormat = "HH:mm:ss";
-        String outLocaleLang = "en";
-        String outLocaleCountry = "US";
+        result = parseDate.execute("1000", "S", "en", "US", "HH:mm:ss", "en", "US");
 
-        final Map<String, String> result = parseDate.execute(date, dateFormat, dateLocaleLang, dateLocaleCountry,
-                outFormat, outLocaleLang, outLocaleCountry);
-
-        assertFalse(result.get(RETURN_RESULT).isEmpty());
-        assertEquals("00:00:01", result.get(RETURN_RESULT));
-
-        assertEquals("0", result.get(RETURN_CODE));
+        assertFalse(result.get("returnResult").isEmpty());
+        assertEquals("00:00:01", result.get("returnResult"));
+        assertEquals("0", result.get("returnCode"));
     }
-
-
 }

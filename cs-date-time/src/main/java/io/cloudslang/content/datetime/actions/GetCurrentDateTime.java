@@ -40,8 +40,8 @@ public class GetCurrentDateTime {
                             responseType = ResponseType.RESOLVED),
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE,
                             value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL,
-                            responseType = ResponseType.ERROR, isOnFail = true)
-            })
+                            responseType = ResponseType.ERROR, isOnFail = true)})
+
     public Map<String, String> execute(
             @Param(Constants.InputNames.LOCALE_LANG) String localeLang,
             @Param(Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
