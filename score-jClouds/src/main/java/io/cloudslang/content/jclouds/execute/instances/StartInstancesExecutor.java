@@ -5,23 +5,17 @@ import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
-import org.jclouds.ec2.domain.Reservation;
-import org.jclouds.ec2.domain.RunningInstance;
-import org.jclouds.ec2.options.RunInstancesOptions;
 
 import java.util.Map;
 
 /**
- * Created by Mihai Tusa.
- * 2/18/2016.
+ * Created by persdana on 5/25/2015.
  */
-public class RunServerExecutor {
+public class StartInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        Reservation<? extends RunningInstance> result = cs.runInstancesInRegion(customInputs.getRegion(),
-                customInputs.getAvailabilityZone(), customInputs.getImageId(), customInputs.getMinCount(),
-                customInputs.getMaxCount(), RunInstancesOptions.NONE);
+        String resultStr = cs.startInstances(customInputs.getRegion(), customInputs.getServerId());
 
-        return OutputsUtil.getResultsMap(result.toString());
+        return OutputsUtil.getResultsMap(resultStr);
     }
 }

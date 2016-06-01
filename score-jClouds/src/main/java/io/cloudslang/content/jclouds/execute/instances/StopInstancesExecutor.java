@@ -11,10 +11,10 @@ import java.util.Map;
 /**
  * Created by persdana on 6/18/2015.
  */
-public class StopServerExecutor {
+public class StopInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        String resultStr = cs.stop(customInputs.getRegion(), customInputs.getServerId());
+        String resultStr = cs.stopInstances(customInputs.getRegion(), customInputs.getServerId());
 
         return OutputsUtil.getResultsMap(resultStr);
     }

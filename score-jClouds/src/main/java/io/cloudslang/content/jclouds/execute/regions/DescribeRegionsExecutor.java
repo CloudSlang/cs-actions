@@ -12,10 +12,10 @@ import java.util.Set;
  * Created by Mihai Tusa.
  * 5/4/2016.
  */
-public class ListRegionsExecutor {
+public class DescribeRegionsExecutor {
     public Map<String, String> execute(CommonInputs inputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        Set<String> availableRegions = cs.listRegions();
+        Set<String> availableRegions = cs.describeRegions();
 
         String regionsString = OutputsUtil.getElementsString(availableRegions, inputs.getDelimiter());
 

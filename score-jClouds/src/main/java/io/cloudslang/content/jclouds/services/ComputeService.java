@@ -11,21 +11,15 @@ import java.util.Set;
  */
 public interface ComputeService {
 
-    String start(String region, String serverId) throws Exception;
+    String startInstances(String region, String serverId) throws Exception;
 
-    String stop(String region, String serverId) throws Exception;
+    String stopInstances(String region, String serverId) throws Exception;
 
-    void softReboot(String region, String serverId);
+    void rebootInstances(String region, String serverId);
 
-    void hardReboot(String region, String serverId) throws Exception;
+    String terminateInstances(String region, String serverId);
 
-    String suspend(String region, String serverId) throws Exception;
-
-    void resume(String region, String serverId) throws Exception;
-
-    String removeServer(String region, String serverId);
-
-    Set<String> listRegions();
+    Set<String> describeRegions();
 
     Set<String> listNodes(String region);
 

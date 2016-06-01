@@ -3,7 +3,7 @@ package io.cloudslang.content.jclouds.execute;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.RemoveServerExecutor;
+import io.cloudslang.content.jclouds.execute.instances.TerminateInstancesExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -28,9 +28,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created by persdana on 7/7/2015.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({RemoveServerExecutor.class, ComputeFactory.class})
+@PrepareForTest({TerminateInstancesExecutor.class, ComputeFactory.class})
 public class RemoveServerExecutorTest {
-    private RemoveServerExecutor toTest;
+    private TerminateInstancesExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -40,7 +40,7 @@ public class RemoveServerExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new RemoveServerExecutor();
+        toTest = new TerminateInstancesExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -58,11 +58,11 @@ public class RemoveServerExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn("removed").when(computeServiceMock).removeServer(anyString(), anyString());
+        doReturn("removed").when(computeServiceMock).terminateInstances(anyString(), anyString());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock, times(1)).removeServer(eq(inputs.getRegion()), eq(inputs.getServerId()));
+        verify(computeServiceMock, times(1)).terminateInstances(eq(inputs.getRegion()), eq(inputs.getServerId()));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

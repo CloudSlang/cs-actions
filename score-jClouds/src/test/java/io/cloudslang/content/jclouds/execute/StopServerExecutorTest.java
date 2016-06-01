@@ -3,7 +3,7 @@ package io.cloudslang.content.jclouds.execute;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.StopServerExecutor;
+import io.cloudslang.content.jclouds.execute.instances.StopInstancesExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -29,9 +29,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created by persdana on 7/6/2015.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({StopServerExecutor.class, ComputeFactory.class})
+@PrepareForTest({StopInstancesExecutor.class, ComputeFactory.class})
 public class StopServerExecutorTest {
-    private StopServerExecutor toTest;
+    private StopInstancesExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -41,7 +41,7 @@ public class StopServerExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new StopServerExecutor();
+        toTest = new StopInstancesExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -59,11 +59,11 @@ public class StopServerExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn("").when(computeServiceMock).stop(anyString(), anyString());
+        doReturn("").when(computeServiceMock).stopInstances(anyString(), anyString());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock).stop(inputs.getRegion(), inputs.getServerId());
+        verify(computeServiceMock).stopInstances(inputs.getRegion(), inputs.getServerId());
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

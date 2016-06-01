@@ -59,7 +59,8 @@ public class AmazonImageServiceImplTest {
     private Optional<? extends InstanceApi> optionalInstanceApi;
 
     @Spy
-    private AmazonImageServiceImpl imageSpy = new AmazonImageServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
+    private AmazonImageServiceImpl imageSpy = new AmazonImageServiceImpl("https://ec2.amazonaws.com",
+            "AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
 
     private AmazonImageServiceImpl toTest;
 
@@ -68,7 +69,8 @@ public class AmazonImageServiceImplTest {
         mockStatic(ContextBuilder.class);
         addCommonMocksForMethods();
 
-        toTest = new AmazonImageServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
+        toTest = new AmazonImageServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW",
+                "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
     }
 
     @After

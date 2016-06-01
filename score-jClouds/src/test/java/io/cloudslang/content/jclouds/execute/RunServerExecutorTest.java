@@ -3,7 +3,8 @@ package io.cloudslang.content.jclouds.execute;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.RunServerExecutor;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
+import io.cloudslang.content.jclouds.execute.instances.RunInstancesExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.jclouds.ec2.domain.Reservation;
@@ -33,9 +34,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
  * 2/26/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({RunServerExecutor.class, ComputeFactory.class})
+@PrepareForTest({RunInstancesExecutor.class, ComputeFactory.class})
 public class RunServerExecutorTest {
-    private RunServerExecutor toTest;
+    private RunInstancesExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -48,7 +49,7 @@ public class RunServerExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new RunServerExecutor();
+        toTest = new RunInstancesExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -68,7 +69,7 @@ public class RunServerExecutorTest {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
         doReturn(reservationsMock).when(computeServiceMock)
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
-        Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
+        Map<String, String> results = toTest.execute(getCommonInputs(inputs), getInstanceInputs(inputs));
 
         verify(computeServiceMock, times(1))
                 .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
@@ -92,6 +93,12 @@ public class RunServerExecutorTest {
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
+                .build();
+    }
+
+    private InstanceInputs getInstanceInputs(AmazonInputs inputs) {
+        return new InstanceInputs.InstanceInputsBuilder()
+                .withCustomInputs(getCustomInputs(inputs))
                 .build();
     }
 }

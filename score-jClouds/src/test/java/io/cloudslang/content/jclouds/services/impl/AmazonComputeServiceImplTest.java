@@ -324,10 +324,10 @@ public class AmazonComputeServiceImplTest {
 
 
     /**
-     * Test start server method. Positive scenario.
+     * Test startInstances server method. Positive scenario.
      */
     @Test
-    public void testStart() {
+    public void testStartInstances() {
         doNothing().when(amazonComputeServiceImplSpy).lazyInit(REGION);
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
@@ -335,7 +335,7 @@ public class AmazonComputeServiceImplTest {
         Set<InstanceStateChange> instanceStateChangeSet = getInstanceStateChanges();
         doReturn(instanceStateChangeSet).when(instanceApiMock).startInstancesInRegion(REGION, SERVER_ID);
 
-        String result = amazonComputeServiceImplSpy.start(REGION, SERVER_ID);
+        String result = amazonComputeServiceImplSpy.startInstances(REGION, SERVER_ID);
 
         verify(amazonComputeServiceImplSpy).lazyInit(REGION);
         verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
@@ -346,10 +346,10 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test start server method with invalid server id.
+     * Test startInstances server method with invalid server id.
      */
     @Test
-    public void testStartWithInvalidServerId() {
+    public void testStartInstancesWithInvalidServerId() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
@@ -360,14 +360,14 @@ public class AmazonComputeServiceImplTest {
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         doThrow(toThrow).when(instanceApiMock).startInstancesInRegion(REGION, SERVER_ID);
 
-        amazonComputeServiceImplSpy.start(REGION, SERVER_ID);
+        amazonComputeServiceImplSpy.startInstances(REGION, SERVER_ID);
     }
 
     /**
-     * Test stop server method. Positive scenario.
+     * Test stopInstances server method. Positive scenario.
      */
     @Test
-    public void testStop() {
+    public void testStopInstances() {
         doNothing().when(amazonComputeServiceImplSpy).lazyInit(REGION);
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
@@ -377,7 +377,7 @@ public class AmazonComputeServiceImplTest {
         instanceStateChangeSet.add(instanceStateChange);
         doReturn(instanceStateChangeSet).when(instanceApiMock).stopInstancesInRegion(REGION, false, SERVER_ID);
 
-        String result = amazonComputeServiceImplSpy.stop(REGION, SERVER_ID);
+        String result = amazonComputeServiceImplSpy.stopInstances(REGION, SERVER_ID);
 
         verify(amazonComputeServiceImplSpy).lazyInit(REGION);
         verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
@@ -388,12 +388,12 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test stop server method with invalid server id.
+     * Test stopInstances server method with invalid server id.
      * this should throw an "org.jclouds.rest.ResourceNotFoundException"
      * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
      */
     @Test
-    public void testStopWithInvalidServerId() {
+    public void testStopInstancesWithInvalidServerId() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
@@ -404,21 +404,21 @@ public class AmazonComputeServiceImplTest {
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         doThrow(toThrow).when(instanceApiMock).stopInstancesInRegion(REGION, false, SERVER_ID);
 
-        amazonComputeServiceImplSpy.stop(REGION, SERVER_ID);
+        amazonComputeServiceImplSpy.stopInstances(REGION, SERVER_ID);
     }
 
     /**
      * Test soft reboot server method. Positive scenario.
      */
     @Test
-    public void testSoftReboot() {
+    public void testRebootInstances() {
         doNothing().when(amazonComputeServiceImplSpy).lazyInit(REGION);
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
         doNothing().when(instanceApiMock).rebootInstancesInRegion(REGION, SERVER_ID);
 
-        amazonComputeServiceImplSpy.softReboot(REGION, SERVER_ID);
+        amazonComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID);
 
         verify(amazonComputeServiceImplSpy).lazyInit(REGION);
         verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
@@ -432,7 +432,7 @@ public class AmazonComputeServiceImplTest {
      * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
      */
     @Test
-    public void testSoftRebootWithInvalidServerId() {
+    public void testRebootInstancesWithInvalidServerId() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
 
@@ -443,48 +443,15 @@ public class AmazonComputeServiceImplTest {
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         doThrow(toThrow).when(instanceApiMock).rebootInstancesInRegion(REGION, INVALID_SERVER_ID);
 
-        amazonComputeServiceImplSpy.softReboot(REGION, INVALID_SERVER_ID);
+        amazonComputeServiceImplSpy.rebootInstances(REGION, INVALID_SERVER_ID);
     }
 
-    /**
-     * Test hard reboot server method. This method always throw exception because hard reboot is not available for amazon.
-     */
-    @Test
-    public void testHardReboot() throws Exception {
-        exception.expect(java.lang.Exception.class);
-        exception.expectMessage("Use soft reboot and if a Linux/UNIX instance does not cleanly shut down within four minutes, " +
-                "Amazon EC2 will perform a hard reboot\n");
-
-        amazonComputeServiceImplSpy.hardReboot(REGION, INVALID_SERVER_ID);
-    }
-
-    /**
-     * Test suspend server method. This method always throw exception because suspend is not available for amazon.
-     */
-    @Test
-    public void testSuspend() throws Exception {
-        exception.expect(java.lang.Exception.class);
-        exception.expectMessage("Use stop server operation to suspend an amazon Instance");
-
-        amazonComputeServiceImplSpy.suspend(REGION, INVALID_SERVER_ID);
-    }
-
-    /**
-     * Test resume server method. This method always throw exception because resume is not available for amazon.
-     */
-    @Test
-    public void testResume() throws Exception {
-        exception.expect(java.lang.Exception.class);
-        exception.expectMessage("Resume is not supported on Amazon. Use start server operation to resume an amazon Instance");
-
-        amazonComputeServiceImplSpy.resume(REGION, INVALID_SERVER_ID);
-    }
 
     /**
      * Test remove server method. Positive scenario.
      */
     @Test
-    public void testRemoveServer() {
+    public void testTerminateInstances() {
         doNothing().when(amazonComputeServiceImplSpy).lazyInit(REGION);
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
@@ -496,7 +463,7 @@ public class AmazonComputeServiceImplTest {
 
         doReturn(instanceStateChangeSet).when(instanceApiMock).terminateInstancesInRegion(REGION, SERVER_ID);
 
-        String result = amazonComputeServiceImplSpy.removeServer(REGION, SERVER_ID);
+        String result = amazonComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID);
 
         verify(amazonComputeServiceImplSpy).lazyInit(REGION);
         verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
@@ -507,7 +474,7 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test listRegions method. Positive scenario.
+     * Test describeRegions method. Positive scenario.
      */
     @Test
     public void testListRegions() {
@@ -519,7 +486,7 @@ public class AmazonComputeServiceImplTest {
 
         doReturn(regions).when(ec2ApiMock).getConfiguredRegions();
 
-        Set<String> returnedRegions = amazonComputeServiceImplSpy.listRegions();
+        Set<String> returnedRegions = amazonComputeServiceImplSpy.describeRegions();
 
         assertTrue(returnedRegions.contains(REGION));
         verify(amazonComputeServiceImplSpy).lazyInit();
@@ -529,7 +496,7 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test listRegions method with invalid endpoint set in init().
+     * Test describeRegions method with invalid endpoint set in init().
      * This scenario is equivalent to invalid credentials.
      */
     @Test
@@ -542,7 +509,7 @@ public class AmazonComputeServiceImplTest {
         HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
         doThrow(toThrow).when(ec2ApiMock).getConfiguredRegions();
 
-        amazonComputeServiceImplSpy.listRegions();
+        amazonComputeServiceImplSpy.describeRegions();
     }
 
     /**
@@ -577,7 +544,7 @@ public class AmazonComputeServiceImplTest {
      * Test runInstancesInRegion method. Positive scenario.
      */
     @Test
-    public void runInstancesInRegion() throws Exception {
+    public void testRunInstancesInRegion() throws Exception {
         doNothing().when(amazonComputeServiceImplSpy).lazyInit(anyString());
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(anyString());
@@ -599,7 +566,7 @@ public class AmazonComputeServiceImplTest {
      * Test updateServer method. Positive scenario.
      */
     @Test
-    public void testUpdateServer() throws Exception {
+    public void testUpdateInstanceTypeRunning() throws Exception {
         doNothing().when(amazonComputeServiceImplSpy).lazyInit(anyString());
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
@@ -619,6 +586,26 @@ public class AmazonComputeServiceImplTest {
         verify(ec2ApiMock, times(1)).getInstanceApi();
         verify(optionalInstanceApi, times(1)).get();
         verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    public void testUpdateInstanceType() throws Exception {
+        doNothing().when(amazonComputeServiceImplSpy).lazyInit(anyString());
+        amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this would be set by lazyInit
+        doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
+        doReturn(instanceApiMock).when(optionalInstanceApi).get();
+        whenNew(AmazonComputeServiceHelper.class).withNoArguments().thenReturn(helperMock);
+        doReturn(InstanceState.STOPPED).when(helperMock).getInstanceState(any(InstanceApi.class), anyString(), anyString());
+        doNothing().when(instanceApiMock).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
+
+        String result = amazonComputeServiceImplSpy.updateInstanceType("us-east-1", "", "", 20000, 20000);
+
+        verify(amazonComputeServiceImplSpy, times(1)).lazyInit(REGION);
+        verify(ec2ApiMock, times(1)).getInstanceApi();
+        verify(optionalInstanceApi, times(1)).get();
+        verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
+
+        assertEquals("Server updated successfully.", result);
     }
 
     private Set<InstanceStateChange> getInstanceStateChanges() {

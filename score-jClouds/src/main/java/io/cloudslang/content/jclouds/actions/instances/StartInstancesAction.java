@@ -10,7 +10,7 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.StartServerExecutor;
+import io.cloudslang.content.jclouds.execute.instances.StartInstancesExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by persdana on 5/25/2015.
  */
-public class StartServerAction {
+public class StartInstancesAction {
     /**
      * Starts a STOPPED server and changes its status to ACTIVE. Paused and suspended servers cannot be started.
      *
@@ -30,9 +30,10 @@ public class StartServerAction {
      * @param serverId   The ID of the instance you want to reboot.
      * @param proxyHost  The proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort  The proxy server port.
-     * @return
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Start Server",
+    @Action(name = "Start Instances",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -70,7 +71,7 @@ public class StartServerAction {
                 .build();
 
         try {
-            return new StartServerExecutor().execute(inputs, customInputs);
+            return new StartInstancesExecutor().execute(inputs, customInputs);
 
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);

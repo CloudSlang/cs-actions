@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.actions.instances;
+package io.cloudslang.content.jclouds.actions.regions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -9,30 +9,28 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.SoftRebootExecutor;
+import io.cloudslang.content.jclouds.execute.regions.DescribeRegionsExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
 
 /**
- * Created by persdana on 6/22/2015.
+ * Created by persdana on 6/23/2015.
  */
-public class SoftRebootAction {
+public class DescribeRegionsAction {
     /**
-     * Perform a soft reboot of a server.  In a soft reboot (SOFT), the operating system is signaled to restart, which allows for a graceful shutdown of all processes.
+     * Lists the regions from a cloud endpoint.
      *
      * @param provider         The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
      * @param identityEndpoint The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon or "http://hostOrIp:5000/v2.0" for openstack.
      * @param identity         The username of your account or the Access Key ID. For openstack provider the required format is 'alias:username'.
      * @param credential       The password of the user or the Secret Access Key that correspond to the identity input.
-     * @param region           The region where the server to reboot can be find. Ex: "RegionOne", "us-east-1". ListRegionAction can be used in order to get all regions.
-     * @param serverId         The ID of the instance you want to reboot.
      * @param proxyHost        The proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        The proxy server port.
+     * @param delimiter        A delimiter separating the region elements.
      * @return
      */
-    @Action(name = "Soft Reboot",
+    @Action(name = "Describe Regions",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -51,9 +49,7 @@ public class SoftRebootAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-
-                                       @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(Inputs.CustomInputs.SERVER_ID) String serverId) throws Exception {
+                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -62,15 +58,11 @@ public class SoftRebootAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
-                .build();
-
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
-                .withRegion(region)
-                .withServerId(serverId)
+                .withDelimiter(delimiter)
                 .build();
 
         try {
-            return new SoftRebootExecutor().execute(inputs, customInputs);
+            return new DescribeRegionsExecutor().execute(inputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

@@ -21,7 +21,7 @@ public class Inputs {
         public static final String AVAILABILITY_ZONE = "availabilityZone";
         public static final String MIN_COUNT = "minCount";
         public static final String MAX_COUNT = "maxCount";
-        public static final String SERVER_TYPE = "serverType";
+        public static final String INSTANCE_TYPE = "serverType";
         public static final String OPERATION_TIMEOUT = "operationTimeout";
         public static final String POOLING_INTERVAL = "poolingInterval";
         public static final String IMAGE_ID = "imageId";

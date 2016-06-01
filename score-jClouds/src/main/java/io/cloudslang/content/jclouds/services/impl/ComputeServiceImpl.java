@@ -50,45 +50,27 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     }
 
     @Override
-    public void resume(String region, String serverId) {
-        lazyInit(region);
-        computeService.resumeNode(region + "/" + serverId);
-    }
-
-    @Override
-    public String removeServer(String region, String serverId) {
+    public String terminateInstances(String region, String serverId) {
         lazyInit(region);
         computeService.destroyNode(serverId);
         return "Server Removed";
     }
 
     @Override
-    public String suspend(String region, String serverId) {
-        lazyInit(region);
-        computeService.suspendNode(region + "/" + serverId);
-
-        return "";
-    }
-
-    @Override
-    public String start(String region, String serverId) throws Exception {
+    public String startInstances(String region, String serverId) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public String stop(String region, String serverId) throws Exception {
+    public String stopInstances(String region, String serverId) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
-    public void softReboot(String region, String serverId) {
+    public void rebootInstances(String region, String serverId) {
         reboot(region, serverId);
     }
 
-    public void hardReboot(String region, String serverId) {
-        reboot(region, serverId);
-    }
-
-    public Set<String> listRegions() {
+    public Set<String> describeRegions() {
         lazyInit();
         Set<? extends Location> locations = computeService.listAssignableLocations();
         Set<String> res = new HashSet<>();

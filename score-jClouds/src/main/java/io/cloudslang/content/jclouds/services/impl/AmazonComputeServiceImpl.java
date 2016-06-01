@@ -62,7 +62,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public String start(String region, String serverId) {
+    public String startInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.startInstancesInRegion(region, serverId);
 
@@ -70,7 +70,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public String stop(String region, String serverId) {
+    public String stopInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.stopInstancesInRegion(region, false, serverId);
 
@@ -78,7 +78,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public String removeServer(String region, String serverId) {
+    public String terminateInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.terminateInstancesInRegion(region, serverId);
 
@@ -86,7 +86,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public Set<String> listRegions() {
+    public Set<String> describeRegions() {
         lazyInit();
         return ec2Api.getConfiguredRegions();
     }
@@ -121,25 +121,9 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public void softReboot(String region, String serverId) {
+    public void rebootInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         instanceApi.rebootInstancesInRegion(region, serverId);
-    }
-
-    @Override
-    public void hardReboot(String region, String serverId) throws Exception {
-        throw new Exception("Use soft reboot and if a Linux/UNIX instance does not cleanly shut down within four minutes, " +
-                "Amazon EC2 will perform a hard reboot\n");
-    }
-
-    @Override
-    public String suspend(String region, String serverId) throws Exception {
-        throw new Exception("Use stop server operation to suspend an amazon Instance");
-    }
-
-    @Override
-    public void resume(String region, String serverId) throws Exception {
-        throw new Exception("Resume is not supported on Amazon. Use start server operation to resume an amazon Instance");
     }
 
     private InstanceApi getEC2InstanceApi(String region, boolean isForRegion) {

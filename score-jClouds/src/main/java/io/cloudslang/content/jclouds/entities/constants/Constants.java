@@ -16,10 +16,7 @@ public class Constants {
     }
 
     public static final class Messages {
-        public static final String HARD_REBOOT_SUCCESS = "Hard reboot started successfully.";
         public static final String SOFT_REBOOT_SUCCESS = "Soft reboot started successfully.";
-        public static final String SERVER_SUSPENDED = "Server suspended.";
-        public static final String SERVER_RESUMED = "Server resumed.";
         public static final String SERVER_UPDATED = "Server updated successfully.";
         public static final String IMAGE_SUCCESSFULLY_DEREGISTER = "The image was successfully deregister.";
         public static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED = "Launch permissions were successfully added.";
