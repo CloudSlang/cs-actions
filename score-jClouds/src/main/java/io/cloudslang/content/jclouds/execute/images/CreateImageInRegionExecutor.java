@@ -16,7 +16,7 @@ public class CreateImageInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, ImageInputs imageInputs) throws Exception {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
         String response = imageService.createImageInRegion(imageInputs.getCustomInputs().getRegion(),
-                imageInputs.getImageName(), imageInputs.getCustomInputs().getServerId(), imageInputs.getImageDescription(),
+                imageInputs.getImageName(), imageInputs.getCustomInputs().getInstanceId(), imageInputs.getImageDescription(),
                 imageInputs.isImageNoReboot());
 
         return OutputsUtil.getResultsMap(response);

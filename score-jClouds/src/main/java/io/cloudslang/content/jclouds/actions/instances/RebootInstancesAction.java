@@ -69,7 +69,7 @@ public class RebootInstancesAction {
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
-                .withServerId(serverId)
+                .withInstanceId(serverId)
                 .build();
 
         try {

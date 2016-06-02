@@ -1,6 +1,8 @@
 package io.cloudslang.content.jclouds.services.impl;
 
+import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
@@ -59,6 +61,19 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
         }
 
         return nodesList;
+    }
+
+    @Override
+    public Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs) {
+        InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(), true);
+
+        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper().getInstanceFilterMap(instanceInputs);
+
+        if (filtersMap.isEmpty()) {
+            return instanceApi.describeInstancesInRegion(instanceInputs.getCustomInputs().getRegion());
+        }
+
+        return instanceApi.describeInstancesInRegionWithFilter(instanceInputs.getCustomInputs().getRegion(), filtersMap);
     }
 
     @Override

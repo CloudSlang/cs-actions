@@ -1,6 +1,8 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
@@ -103,6 +105,12 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
                                                                        int minCount, int maxCount, RunInstancesOptions... options)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
+
+    @Override
+    public Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs)
+            throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     protected void reboot(String region, String serverId) {

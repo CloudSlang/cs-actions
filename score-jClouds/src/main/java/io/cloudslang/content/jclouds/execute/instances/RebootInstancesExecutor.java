@@ -15,7 +15,7 @@ import java.util.Map;
 public class RebootInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        cs.rebootInstances(customInputs.getRegion(), customInputs.getServerId());
+        cs.rebootInstances(customInputs.getRegion(), customInputs.getInstanceId());
 
         return OutputsUtil.getResultsMap(Constants.Messages.SOFT_REBOOT_SUCCESS);
     }

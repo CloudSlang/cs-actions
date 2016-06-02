@@ -12,6 +12,15 @@ public class InstanceInputs {
 
     private String instanceType;
     private String availabilityZone;
+    private String affinity;
+    private String architecture;
+    private String attachTime;
+    private String deleteOnTermination;
+    private String deviceName;
+    private String status;
+    private String clientToken;
+    private String dnsName;
+    private String groupName;
 
     private int minCount;
     private int maxCount;
@@ -23,6 +32,15 @@ public class InstanceInputs {
 
         this.instanceType = builder.instanceType;
         this.availabilityZone = builder.availabilityZone;
+        this.affinity = builder.affinity;
+        this.architecture = builder.architecture;
+        this.attachTime = builder.attachTime;
+        this.deviceName = builder.deviceName;
+        this.deleteOnTermination = builder.deleteOnTermination;
+        this.status = builder.status;
+        this.clientToken = builder.clientToken;
+        this.dnsName = builder.dnsName;
+        this.groupName = builder.groupName;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -40,6 +58,42 @@ public class InstanceInputs {
 
     public String getAvailabilityZone() {
         return availabilityZone;
+    }
+
+    public String getAffinity() {
+        return affinity;
+    }
+
+    public String getArchitecture() {
+        return architecture;
+    }
+
+    public String getAttachTime() {
+        return attachTime;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public String getDeleteOnTermination() {
+        return deleteOnTermination;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getClientToken() {
+        return clientToken;
+    }
+
+    public String getDnsName() {
+        return dnsName;
+    }
+
+    public String getGroupName() {
+        return groupName;
     }
 
     public int getMinCount() {
@@ -63,6 +117,15 @@ public class InstanceInputs {
 
         private String instanceType;
         private String availabilityZone;
+        private String affinity;
+        private String architecture;
+        private String attachTime;
+        private String deviceName;
+        private String deleteOnTermination;
+        private String status;
+        private String clientToken;
+        private String dnsName;
+        private String groupName;
 
         private int minCount;
         private int maxCount;
@@ -85,6 +148,51 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withAvailabilityZone(String inputValue) {
             availabilityZone = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withAffinity(String inputValue) {
+            affinity = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withArchitecture(String inputValue) {
+            architecture = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withAttachTime(String inputValue) {
+            attachTime = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withDeviceName(String inputValue) {
+            deviceName = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withDeleteOnTermination(String inputValue) {
+            deleteOnTermination = InputsUtil.getValidBooleanString(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withStatus(String inputValue) {
+            status = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withClientToken(String inputValue) {
+            clientToken = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withDnsName(String inputValue) {
+            dnsName = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withGroupName(String inputValue) {
+            groupName = inputValue;
             return this;
         }
 

@@ -14,7 +14,7 @@ import java.util.Map;
 public class StopInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        String resultStr = cs.stopInstances(customInputs.getRegion(), customInputs.getServerId());
+        String resultStr = cs.stopInstances(customInputs.getRegion(), customInputs.getInstanceId());
 
         return OutputsUtil.getResultsMap(resultStr);
     }

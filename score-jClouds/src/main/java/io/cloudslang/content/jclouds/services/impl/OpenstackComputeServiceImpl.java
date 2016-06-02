@@ -1,6 +1,8 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
@@ -121,6 +123,12 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
 
     @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
+            throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
+    }
+
+    @Override
+    public Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }

@@ -82,7 +82,7 @@ public class StartServerExecutorTest {
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
-                .withServerId(inputs.getServerId())
+                .withInstanceId(inputs.getServerId())
                 .build();
     }
 }

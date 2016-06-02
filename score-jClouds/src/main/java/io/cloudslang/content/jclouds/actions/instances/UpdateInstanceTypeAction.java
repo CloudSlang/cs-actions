@@ -66,9 +66,9 @@ public class UpdateInstanceTypeAction {
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.SERVER_ID, required = true) String serverId,
-                                       @Param(Inputs.CustomInputs.INSTANCE_TYPE) String instanceType,
-                                       @Param(Inputs.CustomInputs.OPERATION_TIMEOUT) String operationTimeout,
-                                       @Param(Inputs.CustomInputs.POOLING_INTERVAL) String poolingInterval) throws Exception {
+                                       @Param(Inputs.InstanceInputs.INSTANCE_TYPE) String instanceType,
+                                       @Param(Inputs.InstanceInputs.OPERATION_TIMEOUT) String operationTimeout,
+                                       @Param(Inputs.InstanceInputs.POOLING_INTERVAL) String poolingInterval) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -81,7 +81,7 @@ public class UpdateInstanceTypeAction {
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
-                .withServerId(serverId)
+                .withInstanceId(serverId)
                 .build();
 
         InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()

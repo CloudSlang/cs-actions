@@ -1,5 +1,7 @@
 package io.cloudslang.content.jclouds.services;
 
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.options.RunInstancesOptions;
@@ -22,6 +24,8 @@ public interface ComputeService {
     Set<String> describeRegions();
 
     Set<String> listNodes(String region);
+
+    Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs) throws Exception;
 
     Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
                                                                 int minCount, int maxCount, RunInstancesOptions... options)

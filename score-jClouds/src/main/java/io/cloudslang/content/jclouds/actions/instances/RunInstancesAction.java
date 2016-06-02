@@ -64,10 +64,10 @@ public class RunInstancesAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
-                                       @Param(Inputs.CustomInputs.MIN_COUNT) String minCount,
-                                       @Param(Inputs.CustomInputs.MAX_COUNT) String maxCount) throws Exception {
+                                       @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(Inputs.InstanceInputs.MIN_COUNT) String minCount,
+                                       @Param(Inputs.InstanceInputs.MAX_COUNT) String maxCount) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

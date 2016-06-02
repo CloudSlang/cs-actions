@@ -1,6 +1,11 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import io.cloudslang.content.jclouds.entities.InstanceFilters;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ec2.domain.InstanceState;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
@@ -34,6 +39,32 @@ public class AmazonComputeServiceHelper {
         }
     }
 
+    public Multimap<String, String> getInstanceFilterMap(InstanceInputs instanceInputs) {
+        Multimap<String, String> filtersMap = ArrayListMultimap.create();
+
+        if (!Constants.Miscellaneous.EMPTY.equalsIgnoreCase(instanceInputs.getDeleteOnTermination())) {
+            updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION.getValue(),
+                    instanceInputs.getDeleteOnTermination());
+        }
+
+        updateFiltersMap(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
+        updateFiltersMap(filtersMap, InstanceFilters.ARCHITECTURE.getValue(), instanceInputs.getArchitecture());
+        updateFiltersMap(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
+        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_ATTACH_TIME.getValue(), instanceInputs.getAttachTime());
+        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DEVICE_NAME.getValue(), instanceInputs.getDeviceName());
+        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_STATUS.getValue(), instanceInputs.getStatus());
+        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_VOLUME_ID.getValue(),
+                instanceInputs.getCustomInputs().getVolumeId());
+        updateFiltersMap(filtersMap, InstanceFilters.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
+        updateFiltersMap(filtersMap, InstanceFilters.DNS_NAME.getValue(), instanceInputs.getDnsName());
+        updateFiltersMap(filtersMap, InstanceFilters.GROUP_ID.getValue(), instanceInputs.getCustomInputs().getGroupId());
+        updateFiltersMap(filtersMap, InstanceFilters.GROUP_NAME.getValue(), instanceInputs.getGroupName());
+
+
+
+        return filtersMap;
+    }
+
     private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
                           String serverId, long checkStateTimeout, long polingInterval) throws Exception {
         long waitTime = 0;
@@ -41,6 +72,12 @@ public class AmazonComputeServiceHelper {
             Thread.sleep(polingInterval);
             waitTime += 4000;
             instanceState = getInstanceState(instanceApi, region, serverId);
+        }
+    }
+
+    private void updateFiltersMap(Multimap<String, String> map, String key, String value) {
+        if (StringUtils.isNotBlank(value)) {
+            map.put(key, value);
         }
     }
 }

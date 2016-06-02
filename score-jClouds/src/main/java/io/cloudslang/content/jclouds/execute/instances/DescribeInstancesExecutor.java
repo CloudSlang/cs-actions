@@ -5,20 +5,21 @@ import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Mihai Tusa.
- * 2/24/2016.
+ * 6/1/2016.
  */
-public class UpdateInstanceTypeExecutor {
+public class DescribeInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        String result = cs.updateInstanceType(instanceInputs.getCustomInputs().getRegion(),
-                instanceInputs.getCustomInputs().getInstanceId(), instanceInputs.getInstanceType(),
-                instanceInputs.getCheckStateTimeout(), instanceInputs.getPolingInterval());
+        Set<? extends Reservation<? extends RunningInstance>> instancesSet = cs.describeInstancesInRegion(instanceInputs);
 
-        return OutputsUtil.getResultsMap(result);
+        return OutputsUtil.getResultsMap("");
     }
 }

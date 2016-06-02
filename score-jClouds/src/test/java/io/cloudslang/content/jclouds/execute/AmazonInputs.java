@@ -48,7 +48,7 @@ public class AmazonInputs {
 
             customInputs = new CustomInputs.CustomInputsBuilder()
                     .withRegion(REGION)
-                    .withServerId(SERVER_ID)
+                    .withInstanceId(SERVER_ID)
                     .withImageId(IMAGE_ID)
                     .build();
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class AmazonInputs {
         this.delimiter = commonInputs.getDelimiter();
 
         this.region = customInputs.getRegion();
-        this.serverId = customInputs.getServerId();
+        this.serverId = customInputs.getInstanceId();
         this.imageId = customInputs.getImageId();
     }
 

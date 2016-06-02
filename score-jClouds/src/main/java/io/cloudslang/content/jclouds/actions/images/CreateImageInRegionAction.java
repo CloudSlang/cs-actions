@@ -84,7 +84,7 @@ public class CreateImageInRegionAction {
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
-                .withServerId(serverId)
+                .withInstanceId(serverId)
                 .build();
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()

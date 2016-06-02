@@ -75,6 +75,14 @@ public final class InputsUtil {
         return StringUtils.isBlank(input) || Boolean.parseBoolean(input);
     }
 
+    public static String getValidBooleanString(String input) {
+        if (StringUtils.isNotBlank(input)
+                && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
+                return input.toLowerCase();
+        }
+        return Constants.Miscellaneous.EMPTY;
+    }
+
     private static Map<String, Integer> getValidLimits() {
         Map<String, Integer> validLimits = new HashMap<>();
         validLimits.put(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY, Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER);
