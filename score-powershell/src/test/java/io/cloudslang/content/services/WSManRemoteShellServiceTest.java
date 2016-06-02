@@ -55,7 +55,6 @@ public class WSManRemoteShellServiceTest {
     private static final String URL_STR = "http://winrmserver:5985/wsman";
     private static final String RESPONSE_BODY = "request body";
     private static final String RETURN_RESULT = "returnResult";
-    private static final String STATUS_CODE = "statusCode";
     private static final String OK_STATUS_CODE = "200";
     private static final String SHELL_ID_NOT_RETRIEVED = "The shell id could not be retrieved.";
     private static final String CREATE_SHELL_REQUEST_XML = "templates/CreateShell.xml";
@@ -71,6 +70,9 @@ public class WSManRemoteShellServiceTest {
     private static final String RECEIVE_RESPONSE_ACTION = "http://schemas.microsoft.com/wbem/wsman/1/windows/shell/ReceiveResponse";
     private static final String RECEIVE_REQUEST_XML = "templates/Receive.xml";
     private static final String EXECUTION_TIMED_OUT = "The script execution timed out!";
+    private static final String STATUS_CODE = "statusCode";
+    private static final String UNAUTHORIZED_STATUS_CODE = "401";
+    private static final String UNAUTHORIZED_EXCEPTION_MESSAGE = "Unauthorized! Service responded with 401 status code!";
 
     private WSManRequestInputs wsManRequestInputs;
     @Mock
@@ -178,6 +180,20 @@ public class WSManRemoteShellServiceTest {
         verify(httpClientInputsMock).setBody(RESPONSE_BODY);
         verify(scoreHttpClientMock).execute(httpClientInputsMock);
         assertEquals(resultMock, result);
+    }
+
+    @Test
+    public void testExecuteRequestThrowsException() throws Exception {
+        doNothing().when(httpClientInputsMock).setBody(RESPONSE_BODY);
+        doReturn(resultMock).when(scoreHttpClientMock).execute(httpClientInputsMock);
+        doReturn(UNAUTHORIZED_STATUS_CODE).when(resultMock).get(STATUS_CODE);
+
+        thrownException.expectMessage(UNAUTHORIZED_EXCEPTION_MESSAGE);
+        Whitebox.invokeMethod(new WSManRemoteShellService(), "executeRequest", scoreHttpClientMock, httpClientInputsMock, RESPONSE_BODY);
+
+        verify(httpClientInputsMock).setBody(RESPONSE_BODY);
+        verify(scoreHttpClientMock).execute(httpClientInputsMock);
+        verify(resultMock).get(STATUS_CODE);
     }
 
     @Test
@@ -393,17 +409,18 @@ public class WSManRemoteShellServiceTest {
     @Test
     public void testGetResourceIdThrowsFaultException() throws Exception {
         PowerMockito.mockStatic(WSManUtils.class);
-        Mockito.when(WSManUtils.isSpecificResponseAction(RESPONSE_BODY, RECEIVE_RESPONSE_ACTION)).thenReturn(true);
-        PowerMockito.mockStatic(XMLUtils.class);
-        Mockito.when(XMLUtils.parseXml(RESPONSE_BODY, CREATE_RESPONSE_SHELL_ID_XPATH)).thenReturn("");
+        Mockito.when(WSManUtils.isSpecificResponseAction(RESPONSE_BODY, RECEIVE_RESPONSE_ACTION)).thenReturn(false);
+        Mockito.when(WSManUtils.isFaultResponse(RESPONSE_BODY)).thenReturn(true);
+        Mockito.when(WSManUtils.getResponseFault(RESPONSE_BODY)).thenReturn(FAULT_MESSAGE);
 
-        thrownException.expectMessage(SHELL_ID_NOT_RETRIEVED);
+        thrownException.expectMessage(FAULT_MESSAGE);
         Whitebox.invokeMethod(wsManRemoteShellServiceSpy, "getResourceId", RESPONSE_BODY, RECEIVE_RESPONSE_ACTION,
                 CREATE_RESPONSE_SHELL_ID_XPATH, SHELL_ID_NOT_RETRIEVED);
 
         verifyStatic();
         WSManUtils.isSpecificResponseAction(RESPONSE_BODY, RECEIVE_RESPONSE_ACTION);
-        XMLUtils.parseXml(RESPONSE_BODY, CREATE_RESPONSE_SHELL_ID_XPATH);
+        WSManUtils.isFaultResponse(RESPONSE_BODY);
+        WSManUtils.getResponseFault(RESPONSE_BODY);
     }
 
     @Test

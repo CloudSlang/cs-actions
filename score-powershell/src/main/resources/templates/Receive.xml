@@ -32,7 +32,7 @@
     <s:Body>
         <rsp:Receive>
             <rsp:DesiredStream CommandId="$PLACEHOLDER_FOR_COMMAND_ID">
-                stdout
+                stdout stderr
             </rsp:DesiredStream>
         </rsp:Receive>
     </s:Body>
