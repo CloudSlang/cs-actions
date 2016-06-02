@@ -57,6 +57,7 @@ public class SSHServiceImpl implements SSHService {
         try {
             JSch jsch = new JSch();
             session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
+            session.setConfig("PreferredAuthentications", "publickey,password");
 
             String policy = knownHostsFile.getPolicy();
             Path knownHostsFilePath = knownHostsFile.getPath();
