@@ -428,29 +428,4 @@ public class ComputeServiceImplTest {
 
         ComputeServiceImplSpy.describeRegions();
     }
-
-    /**
-     * Test list nodes method. Positive scenario. 1 node returned.
-     */
-    @Test
-    public void testListNodesInRegion() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doReturn(computeMetadataSetMock).when(computeServiceMock).listNodes();
-        Mockito.doReturn(computeMetadataIteratorMock).when(computeMetadataSetMock).iterator();
-        Mockito.doReturn(true).doReturn(false).when(computeMetadataIteratorMock).hasNext();
-        Mockito.doReturn(computeMetadataMock).when(computeMetadataIteratorMock).next();
-
-        Set<String> result = ComputeServiceImplSpy.listNodes(REGION);
-
-        assertEquals("[computeMetadata]", result.toString());
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).listNodes();
-        verifyNoMoreInteractions(computeServiceMock);
-        verify(computeMetadataSetMock).iterator();
-        verifyNoMoreInteractions(computeMetadataSetMock);
-        verify(computeMetadataIteratorMock, times(2)).hasNext();
-        verify(computeMetadataIteratorMock).next();
-    }
 }

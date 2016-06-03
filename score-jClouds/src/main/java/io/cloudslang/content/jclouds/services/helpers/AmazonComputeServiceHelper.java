@@ -18,6 +18,8 @@ import java.util.Set;
  * 2/23/2016.
  */
 public class AmazonComputeServiceHelper {
+    private static final String SERVER_NOT_FOUND = "Server not found.";
+
     public InstanceState getInstanceState(InstanceApi instanceApi, String region, String serverId) throws Exception {
         Set<? extends Reservation<? extends RunningInstance>> reservationSet = instanceApi
                 .describeInstancesInRegion(region, serverId);
@@ -28,7 +30,7 @@ public class AmazonComputeServiceHelper {
                 return runningInstance.getInstanceState();
             }
         }
-        throw new Exception(Constants.ErrorMessages.SERVER_NOT_FOUND);
+        throw new Exception(SERVER_NOT_FOUND);
     }
 
     public void stopAndWaitToStopInstance(InstanceApi instanceApi, InstanceState instanceState, String region,
@@ -41,28 +43,43 @@ public class AmazonComputeServiceHelper {
 
     public Multimap<String, String> getInstanceFilterMap(InstanceInputs instanceInputs) {
         Multimap<String, String> filtersMap = ArrayListMultimap.create();
-
-        if (!Constants.Miscellaneous.EMPTY.equalsIgnoreCase(instanceInputs.getDeleteOnTermination())) {
-            updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION.getValue(),
-                    instanceInputs.getDeleteOnTermination());
-        }
-
-        updateFiltersMap(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
-        updateFiltersMap(filtersMap, InstanceFilters.ARCHITECTURE.getValue(), instanceInputs.getArchitecture());
-        updateFiltersMap(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
-        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_ATTACH_TIME.getValue(), instanceInputs.getAttachTime());
-        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DEVICE_NAME.getValue(), instanceInputs.getDeviceName());
-        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_STATUS.getValue(), instanceInputs.getStatus());
-        updateFiltersMap(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_VOLUME_ID.getValue(),
-                instanceInputs.getCustomInputs().getVolumeId());
-        updateFiltersMap(filtersMap, InstanceFilters.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
-        updateFiltersMap(filtersMap, InstanceFilters.DNS_NAME.getValue(), instanceInputs.getDnsName());
-        updateFiltersMap(filtersMap, InstanceFilters.GROUP_ID.getValue(), instanceInputs.getCustomInputs().getGroupId());
-        updateFiltersMap(filtersMap, InstanceFilters.GROUP_NAME.getValue(), instanceInputs.getGroupName());
-
-
+        updateFiltersMap(instanceInputs, filtersMap);
 
         return filtersMap;
+    }
+
+    private void updateFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
+        if (!Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(instanceInputs.getDeleteOnTermination())) {
+            updateFiltersMapEntry(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION.getValue(), instanceInputs.getDeleteOnTermination());
+        }
+
+        updateFiltersMapEntry(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.ARCHITECTURE.getValue(), instanceInputs.getArchitecture());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_ATTACH_TIME.getValue(), instanceInputs.getAttachTime());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DEVICE_NAME.getValue(), instanceInputs.getDeviceName());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_STATUS.getValue(), instanceInputs.getStatus());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_VOLUME_ID.getValue(), instanceInputs.getCustomInputs().getVolumeId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.DNS_NAME.getValue(), instanceInputs.getDnsName());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.GROUP_ID.getValue(), instanceInputs.getCustomInputs().getGroupId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.GROUP_NAME.getValue(), instanceInputs.getGroupName());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.HOST_ID.getValue(), instanceInputs.getCustomInputs().getHostId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.HYPERVISOR.getValue(), instanceInputs.getHypervisor());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.IAM_INSTANCE_PROFILE_ARN.getValue(), instanceInputs.getIamArn());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.IMAGE_ID.getValue(), instanceInputs.getCustomInputs().getImageId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_ID.getValue(), instanceInputs.getCustomInputs().getInstanceId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_LIFECYCLE.getValue(), instanceInputs.getInstanceLifecycle());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_STATE_CODE.getValue(), instanceInputs.getInstanceStateCode());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_STATE_NAME.getValue(), instanceInputs.getInstanceStateName());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_TYPE.getValue(), instanceInputs.getInstanceType());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_GROUP_ID.getValue(), instanceInputs.getInstanceGroupId());
+    }
+
+    private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {
+        if (StringUtils.isNotBlank(value)) {
+            map.put(key, value);
+        }
     }
 
     private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
@@ -72,12 +89,6 @@ public class AmazonComputeServiceHelper {
             Thread.sleep(polingInterval);
             waitTime += 4000;
             instanceState = getInstanceState(instanceApi, region, serverId);
-        }
-    }
-
-    private void updateFiltersMap(Multimap<String, String> map, String key, String value) {
-        if (StringUtils.isNotBlank(value)) {
-            map.put(key, value);
         }
     }
 }

@@ -22,6 +22,8 @@ import java.util.Set;
  * Created by persdana on 5/27/2015.
  */
 public class AmazonComputeServiceImpl extends JCloudsComputeService implements ComputeService {
+    private static final String INSTANCE_SUCCESSFULLY_UPDATED = "Instance successfully updated.";
+
     EC2Api ec2Api = null;
 
     protected String region;
@@ -51,29 +53,25 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public Set<String> listNodes(String region) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, false);
-        Set<? extends Reservation<? extends RunningInstance>> instancesInRegion = instanceApi.describeInstancesInRegion(region);
-
-        Set<String> nodesList = new HashSet<>();
-        for (Reservation<? extends RunningInstance> reservation : instancesInRegion) {
-            nodesList.add(reservation.toString());
-        }
-
-        return nodesList;
-    }
-
-    @Override
-    public Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs) {
+    public Set<String> describeInstancesInRegion(InstanceInputs instanceInputs) {
         InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(), true);
 
         Multimap<String, String> filtersMap = new AmazonComputeServiceHelper().getInstanceFilterMap(instanceInputs);
 
+        Set<? extends Reservation<? extends RunningInstance>> instancesInRegion;
+        Set<String> nodesSet = new HashSet<>();
+
         if (filtersMap.isEmpty()) {
-            return instanceApi.describeInstancesInRegion(instanceInputs.getCustomInputs().getRegion());
+            instancesInRegion = instanceApi.describeInstancesInRegion(instanceInputs.getCustomInputs().getRegion());
+            populateNodesSet(instancesInRegion, nodesSet);
+
+            return nodesSet;
         }
 
-        return instanceApi.describeInstancesInRegionWithFilter(instanceInputs.getCustomInputs().getRegion(), filtersMap);
+        instancesInRegion = instanceApi.describeInstancesInRegionWithFilter(instanceInputs.getCustomInputs().getRegion(), filtersMap);
+        populateNodesSet(instancesInRegion, nodesSet);
+
+        return nodesSet;
     }
 
     @Override
@@ -132,7 +130,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
             return instanceChanged.toString();
         }
 
-        return Constants.Messages.SERVER_UPDATED;
+        return INSTANCE_SUCCESSFULLY_UPDATED;
     }
 
     @Override
@@ -144,5 +142,11 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     private InstanceApi getEC2InstanceApi(String region, boolean isForRegion) {
         lazyInit(region);
         return isForRegion ? ec2Api.getInstanceApiForRegion(region).get() : ec2Api.getInstanceApi().get();
+    }
+
+    private void populateNodesSet(Set<? extends Reservation<? extends RunningInstance>> instancesInRegion, Set<String> nodesSet) {
+        for (Reservation<? extends RunningInstance> reservation : instancesInRegion) {
+            nodesSet.add(reservation.toString());
+        }
     }
 }

@@ -16,7 +16,17 @@ public enum InstanceFilters {
     CLIENT_TOKEN("client-token"),
     DNS_NAME("dns-name"),
     GROUP_ID("group-id"),
-    GROUP_NAME("group-name");
+    GROUP_NAME("group-name"),
+    HOST_ID("host-Id"),
+    HYPERVISOR("hypervisor"),
+    IAM_INSTANCE_PROFILE_ARN("iam-instance-profile.arn"),
+    IMAGE_ID("image-id"),
+    INSTANCE_ID("instance-id"),
+    INSTANCE_LIFECYCLE("instance-lifecycle"),
+    INSTANCE_STATE_CODE("instance-state-code"),
+    INSTANCE_STATE_NAME("instance-state-name"),
+    INSTANCE_TYPE("instance-type"),
+    INSTANCE_GROUP_ID("instance.group-id");
 
     private String parameter;
 

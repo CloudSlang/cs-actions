@@ -18,8 +18,8 @@ import java.util.Set;
 public class DescribeInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        Set<? extends Reservation<? extends RunningInstance>> instancesSet = cs.describeInstancesInRegion(instanceInputs);
+        Set<String> instancesSet = cs.describeInstancesInRegion(instanceInputs);
 
-        return OutputsUtil.getResultsMap("");
+        return OutputsUtil.getResultsMap(instancesSet.toString());
     }
 }

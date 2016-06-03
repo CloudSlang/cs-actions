@@ -100,21 +100,6 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public Set<String> listNodes(String region) {
-        lazyInit(region);
-        ServerApi serverApi = novaApi.getServerApi(region);
-        PagedIterable<Server> servers = serverApi.listInDetail();
-        Set<String> res = new HashSet<>();
-
-        for (IterableWithMarker<Server> iterableWithMarker : servers) {
-            for (Server s : iterableWithMarker) {
-                res.add(s.toString());
-            }
-        }
-        return res;
-    }
-
-    @Override
     public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
                                                                        int minCount, int maxCount, RunInstancesOptions... options)
             throws Exception {
@@ -128,7 +113,7 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs)
+    public Set<String> describeInstancesInRegion(InstanceInputs instanceInputs)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }

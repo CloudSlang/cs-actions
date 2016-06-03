@@ -458,57 +458,6 @@ public class OpenstackComputeServiceImplTest {
     }
 
     /**
-     * Test list nodes method. Positive scenario. 1 node returned.
-     */
-    @Test
-    public void testListNodes() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doReturn(pagedIterableServersMock).when(serverApiMock).listInDetail();
-        Mockito.doReturn(iterableWithMarkerIteratorMock).when(pagedIterableServersMock).iterator();
-        Mockito.doReturn(true).doReturn(false).when(iterableWithMarkerIteratorMock).hasNext();
-        Mockito.doReturn(iterableWithMarkerServersMock).when(iterableWithMarkerIteratorMock).next();
-        Mockito.doReturn(serverIteratorMock).when(iterableWithMarkerServersMock).iterator();
-        Mockito.doReturn(true).doReturn(false).when(serverIteratorMock).hasNext();
-        Mockito.doReturn(serverMock).when(serverIteratorMock).next();
-
-        Set<String> res = openstackComputeServiceImplSpy.listNodes(REGION);
-
-        assertEquals(1, res.size());
-        assertTrue(res.contains("server"));
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).listInDetail();
-        verifyNoMoreInteractions(serverApiMock);
-        verify(pagedIterableServersMock).iterator();
-        verifyNoMoreInteractions(pagedIterableServersMock);
-        verify(iterableWithMarkerIteratorMock, Mockito.times(2)).hasNext();
-        verify(iterableWithMarkerIteratorMock).next();
-        verify(iterableWithMarkerServersMock).iterator();
-        verify(serverIteratorMock, Mockito.times(2)).hasNext();
-        verify(serverIteratorMock).next();
-    }
-
-    /**
-     * Test list nodes method with invalid region.
-     */
-    @Test
-    public void testListNodesWithInvalidRegion() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(INVALID_REGION_EXCEPTION_MESSAGE);
-
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(INVALID_REGION);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this wold be setted by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(INVALID_REGION);
-        IllegalArgumentException toThrow = new IllegalArgumentException(INVALID_REGION_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).listInDetail();
-
-        openstackComputeServiceImplSpy.listNodes(INVALID_REGION);
-    }
-
-    /**
      * Test runInstancesInRegion method. Positive scenario.
      */
     @Test

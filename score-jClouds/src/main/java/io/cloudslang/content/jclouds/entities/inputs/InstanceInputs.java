@@ -1,6 +1,9 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.Architecture;
+import io.cloudslang.content.jclouds.entities.BlockDeviceMappingStatus;
+import io.cloudslang.content.jclouds.entities.Hypervisor;
+import io.cloudslang.content.jclouds.entities.InstanceState;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
@@ -8,6 +11,8 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * 6/1/2016.
  */
 public class InstanceInputs {
+    private static final long DEFAULT_TIMING = 20000;
+
     private CustomInputs customInputs;
 
     private String instanceType;
@@ -21,6 +26,12 @@ public class InstanceInputs {
     private String clientToken;
     private String dnsName;
     private String groupName;
+    private String hypervisor;
+    private String iamArn;
+    private String instanceLifecycle;
+    private String instanceStateCode;
+    private String instanceStateName;
+    private String instanceGroupId;
 
     private int minCount;
     private int maxCount;
@@ -41,6 +52,12 @@ public class InstanceInputs {
         this.clientToken = builder.clientToken;
         this.dnsName = builder.dnsName;
         this.groupName = builder.groupName;
+        this.hypervisor = builder.hypervisor;
+        this.iamArn = builder.iamArn;
+        this.instanceLifecycle = builder.instanceLifecycle;
+        this.instanceStateCode = builder.instanceStateCode;
+        this.instanceStateName = builder.instanceStateName;
+        this.instanceGroupId = builder.instanceGroupId;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -96,6 +113,30 @@ public class InstanceInputs {
         return groupName;
     }
 
+    public String getHypervisor() {
+        return hypervisor;
+    }
+
+    public String getIamArn() {
+        return iamArn;
+    }
+
+    public String getInstanceLifecycle() {
+        return instanceLifecycle;
+    }
+
+    public String getInstanceStateCode() {
+        return instanceStateCode;
+    }
+
+    public String getInstanceStateName() {
+        return instanceStateName;
+    }
+
+    public String getInstanceGroupId() {
+        return instanceGroupId;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -126,6 +167,12 @@ public class InstanceInputs {
         private String clientToken;
         private String dnsName;
         private String groupName;
+        private String hypervisor;
+        private String iamArn;
+        private String instanceLifecycle;
+        private String instanceStateCode;
+        private String instanceStateName;
+        private String instanceGroupId;
 
         private int minCount;
         private int maxCount;
@@ -157,7 +204,7 @@ public class InstanceInputs {
         }
 
         public InstanceInputs.InstanceInputsBuilder withArchitecture(String inputValue) {
-            architecture = inputValue;
+            architecture = Architecture.getValue(inputValue);
             return this;
         }
 
@@ -172,12 +219,12 @@ public class InstanceInputs {
         }
 
         public InstanceInputs.InstanceInputsBuilder withDeleteOnTermination(String inputValue) {
-            deleteOnTermination = InputsUtil.getValidBooleanString(inputValue);
+            deleteOnTermination = InputsUtil.getRelevantBooleanString(inputValue);
             return this;
         }
 
         public InstanceInputs.InstanceInputsBuilder withStatus(String inputValue) {
-            status = inputValue;
+            status = BlockDeviceMappingStatus.getValue(inputValue);
             return this;
         }
 
@@ -191,28 +238,58 @@ public class InstanceInputs {
             return this;
         }
 
+        public InstanceInputs.InstanceInputsBuilder withHypervisor(String inputValue) {
+            hypervisor = Hypervisor.getValue(inputValue);
+            return this;
+        }
+
         public InstanceInputs.InstanceInputsBuilder withGroupName(String inputValue) {
             groupName = inputValue;
             return this;
         }
 
+        public InstanceInputs.InstanceInputsBuilder withIamArn(String inputValue) {
+            iamArn = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withInstanceLifecycle(String inputValue) {
+            instanceLifecycle = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withInstanceStateCode(String inputValue) {
+            instanceStateCode = String.valueOf(InputsUtil.getValidInstanceStateCode(inputValue));
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withInstanceStateName(String inputValue) {
+            instanceStateName = InstanceState.getValue(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withInstanceGroupId(String inputValue) {
+            instanceGroupId = InstanceState.getValue(inputValue);
+            return this;
+        }
+
         public InstanceInputs.InstanceInputsBuilder withMinCount(String inputValue) {
-            minCount = InputsUtil.getMinInstancesCount(inputValue);
+            minCount = InputsUtil.getValidInstancesCount(inputValue);
             return this;
         }
 
         public InstanceInputs.InstanceInputsBuilder withMaxCount(String inputValue) {
-            maxCount = InputsUtil.getMaxInstancesCount(inputValue);
+            maxCount = InputsUtil.getValidInstancesCount(inputValue);
             return this;
         }
 
         public InstanceInputs.InstanceInputsBuilder withCheckStateTimeout(String inputValue) {
-            checkStateTimeout = InputsUtil.getValidLong(inputValue, Constants.Miscellaneous.DEFAULT_TIMING);
+            checkStateTimeout = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
             return this;
         }
 
         public InstanceInputs.InstanceInputsBuilder withPolingInterval(String inputValue) {
-            polingInterval = InputsUtil.getValidLong(inputValue, Constants.Miscellaneous.DEFAULT_TIMING);
+            polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
             return this;
         }
     }

@@ -35,7 +35,7 @@ public class UpdateInstanceTypeAction {
      * @param region           Optional - the region where the server (instance) to be started can be found.
      *                         listRegionsAction can be used in order to get all regions - Default: 'us-east-1'
      * @param serverId         The ID of the server (instance) you want to update
-     * @param instanceType       The new server type to be used when updating the instance. The complete list of instance
+     * @param instanceType     The new server type to be used when updating the instance. The complete list of instance
      *                         types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
      *                         - Example: 't2.medium', 'm3.large' - Default: 't2.micro'
      * @param operationTimeout Optional - the total time (in milliseconds) that operation will wait to complete the execution
@@ -65,7 +65,7 @@ public class UpdateInstanceTypeAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.CustomInputs.SERVER_ID, required = true) String serverId,
+                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String serverId,
                                        @Param(Inputs.InstanceInputs.INSTANCE_TYPE) String instanceType,
                                        @Param(Inputs.InstanceInputs.OPERATION_TIMEOUT) String operationTimeout,
                                        @Param(Inputs.InstanceInputs.POOLING_INTERVAL) String poolingInterval) throws Exception {

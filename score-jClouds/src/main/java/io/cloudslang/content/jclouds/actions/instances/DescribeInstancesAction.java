@@ -40,6 +40,9 @@ public class DescribeInstancesAction {
      *                            be used in order to get all regions.
      * @param volumeId            The volume ID of the EBS volume.
      * @param groupId             The ID of the security group for the instance. EC2-Classic only.
+     * @param hostId              The ID of the Dedicated host on which the instance is running, if applicable.
+     * @param imageId             The ID of the image used to launch the instance.
+     * @param instanceId          The ID of the instance.
      * @param affinity            The affinity setting for an instance running on a dedicated host.
      *                            Valid values: "default" or "host".
      * @param architecture        The instance architecture. Valid values: "i386" or "x86_64".
@@ -51,6 +54,20 @@ public class DescribeInstancesAction {
      * @param clientToken         The idem-potency token that was provided when the instance was launched.
      * @param dnsName             The public DNS name of the instance.
      * @param groupName           The name of the security group for the instance. EC2-Classic only.
+     * @param hypervisor          The hypervisor type of the instance. Valid values: "ovm", "xen".
+     * @param iamArn              The instance profile associated with the instance. Specified as an ARN.
+     * @param instanceLifecycle   Indicates whether this is a Spot Instance or a Scheduled Instance.
+     *                            Valid values: "spot", "scheduled".
+     * @param instanceStateCode   The state of the instance, as a 16-bit unsigned integer. The high byte is an opaque
+     *                            internal value and should be ignored. The low byte is set based on the state represented.
+     *                            Valid values: "0" (pending), "16" (running), "32" (shutting-down), "48" (terminated),
+     *                            "64" (stopping) and "80" (stopped).
+     * @param instanceStateName   The state of the instance. Valid values: "pending", "running", "shutting-down", "terminated",
+     *                            "stopping", "stopped".
+     * @param instanceType        The new server type to be used when updating the instance. The complete list of instance
+     *                            types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
+     *                            Examples: "t2.micro", "t2.medium", "m3.large"...
+     * @param instanceGroupId     The ID of the security group for the instance.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -73,11 +90,13 @@ public class DescribeInstancesAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(Inputs.CustomInputs.VOLUME_ID) String volumeId,
                                        @Param(Inputs.CustomInputs.GROUP_ID) String groupId,
+                                       @Param(Inputs.CustomInputs.HOST_ID) String hostId,
+                                       @Param(Inputs.CustomInputs.IMAGE_ID) String imageId,
+                                       @Param(Inputs.CustomInputs.INSTANCE_ID) String instanceId,
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.ARCHITECTURE) String architecture,
                                        @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
@@ -87,7 +106,14 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.STATUS) String status,
                                        @Param(Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
                                        @Param(Inputs.InstanceInputs.DNS_NAME) String dnsName,
-                                       @Param(Inputs.InstanceInputs.GROUP_NAME) String groupName) throws Exception {
+                                       @Param(Inputs.InstanceInputs.GROUP_NAME) String groupName,
+                                       @Param(Inputs.InstanceInputs.HYPERVISOR) String hypervisor,
+                                       @Param(Inputs.InstanceInputs.IAM_ARN) String iamArn,
+                                       @Param(Inputs.InstanceInputs.INSTANCE_LIFECYCLE) String instanceLifecycle,
+                                       @Param(Inputs.InstanceInputs.INSTANCE_STATE_CODE) String instanceStateCode,
+                                       @Param(Inputs.InstanceInputs.INSTANCE_STATE_NAME) String instanceStateName,
+                                       @Param(Inputs.InstanceInputs.INSTANCE_TYPE) String instanceType,
+                                       @Param(Inputs.InstanceInputs.INSTANCE_GROUP_ID) String instanceGroupId) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -96,13 +122,15 @@ public class DescribeInstancesAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
-                .withDelimiter(delimiter)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withVolumeId(volumeId)
                 .withGroupId(groupId)
+                .withHostId(hostId)
+                .withImageId(imageId)
+                .withInstanceId(instanceId)
                 .build();
 
         InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
@@ -117,6 +145,13 @@ public class DescribeInstancesAction {
                 .withClientToken(clientToken)
                 .withDnsName(dnsName)
                 .withGroupName(groupName)
+                .withHypervisor(hypervisor)
+                .withIamArn(iamArn)
+                .withInstanceLifecycle(instanceLifecycle)
+                .withInstanceStateCode(instanceStateCode)
+                .withInstanceStateName(instanceStateName)
+                .withInstanceType(instanceType)
+                .withInstanceGroupId(instanceGroupId)
                 .build();
 
         try {

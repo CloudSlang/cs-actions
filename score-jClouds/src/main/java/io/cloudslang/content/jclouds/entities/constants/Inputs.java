@@ -17,11 +17,12 @@ public class Inputs {
 
     public static final class CustomInputs {
         public static final String REGION = "region";
-        public static final String SERVER_ID = "serverId";
+        public static final String INSTANCE_ID = "serverId";
         public static final String IMAGE_ID = "imageId";
         public static final String IDENTITY_ID = "identityId";
         public static final String VOLUME_ID = "volumeId";
         public static final String GROUP_ID = "groupId";
+        public static final String HOST_ID = "hostId";
     }
 
     public static final class ImageInputs {
@@ -35,7 +36,7 @@ public class Inputs {
     }
 
     public static final class InstanceInputs {
-        public static final String INSTANCE_TYPE = "serverType";
+        public static final String INSTANCE_TYPE = "instanceType";
         public static final String AVAILABILITY_ZONE = "availabilityZone";
         public static final String MIN_COUNT = "minCount";
         public static final String MAX_COUNT = "maxCount";
@@ -50,5 +51,11 @@ public class Inputs {
         public static final String CLIENT_TOKEN = "clientToken";
         public static final String DNS_NAME = "dnsName";
         public static final String GROUP_NAME = "groupName";
+        public static final String HYPERVISOR = "hypervisor";
+        public static final String IAM_ARN = "iamArn";
+        public static final String INSTANCE_LIFECYCLE = "instanceLifecycle";
+        public static final String INSTANCE_STATE_CODE = "instanceStateCode";
+        public static final String INSTANCE_STATE_NAME = "instanceStateName";
+        public static final String INSTANCE_GROUP_ID = "instanceGroupId";
     }
 }

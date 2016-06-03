@@ -7,7 +7,8 @@ import org.junit.rules.ExpectedException;
 import static junit.framework.TestCase.assertEquals;
 
 /**
- * Created by persdana on 7/13/2015.
+ * Created by Mihai Tusa.
+ * 2/24/2016.
  */
 public class InputsUtilTest {
     @Rule
@@ -23,7 +24,7 @@ public class InputsUtilTest {
 
     @Test
     public void getMinInstancesCountBlank() {
-        int testMinInstanceCount = InputsUtil.getMinInstancesCount("");
+        int testMinInstanceCount = InputsUtil.getValidInstancesCount("");
         assertEquals(1, testMinInstanceCount);
     }
 
@@ -32,7 +33,7 @@ public class InputsUtilTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Incorrect provided value: -1 input. The value doesn't meet conditions for general purpose usage.");
 
-        InputsUtil.getMinInstancesCount("-1");
+        InputsUtil.getValidInstancesCount("-1");
     }
 
     @Test
@@ -40,18 +41,18 @@ public class InputsUtilTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("The provided value: [abracadabra] input must be integer.");
 
-        InputsUtil.getMinInstancesCount("[abracadabra]");
+        InputsUtil.getValidInstancesCount("[abracadabra]");
     }
 
     @Test
     public void getMinInstancesCount() {
-        int testMinInstanceCount = InputsUtil.getMinInstancesCount("3");
+        int testMinInstanceCount = InputsUtil.getValidInstancesCount("3");
         assertEquals(3, testMinInstanceCount);
     }
 
     @Test
     public void getMaxInstancesCountBlank() {
-        int testGetMaxInstancesCount = InputsUtil.getMaxInstancesCount("");
+        int testGetMaxInstancesCount = InputsUtil.getValidInstancesCount("");
         assertEquals(1, testGetMaxInstancesCount);
     }
 
@@ -60,7 +61,7 @@ public class InputsUtilTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Incorrect provided value: 51 input. The value doesn't meet conditions for general purpose usage.");
 
-        InputsUtil.getMaxInstancesCount("51");
+        InputsUtil.getValidInstancesCount("51");
     }
 
     @Test

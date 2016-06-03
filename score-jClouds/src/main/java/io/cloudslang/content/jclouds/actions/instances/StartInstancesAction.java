@@ -54,7 +54,7 @@ public class StartInstancesAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(Inputs.CustomInputs.SERVER_ID) String serverId) throws Exception {
+                                       @Param(Inputs.CustomInputs.INSTANCE_ID) String serverId) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

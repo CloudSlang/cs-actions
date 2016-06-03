@@ -20,6 +20,9 @@ import java.util.Set;
  * Created by persdana on 6/5/2015.
  */
 public class ComputeServiceImpl extends JCloudsComputeService implements ComputeService {
+    public static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
+            "providers in the provider input";
+
     org.jclouds.compute.ComputeService computeService = null;
 
     private String provider;
@@ -60,12 +63,12 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
 
     @Override
     public String startInstances(String region, String serverId) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
     public String stopInstances(String region, String serverId) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     public void rebootInstances(String region, String serverId) {
@@ -84,31 +87,20 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     }
 
     @Override
-    public Set<String> listNodes(String region) {
-        lazyInit(region);
-        Set<? extends ComputeMetadata> nodes = computeService.listNodes();
-        Set<String> result = new HashSet<>();
-        for (ComputeMetadata cm : nodes) {
-            result.add(cm.toString());
-        }
-        return result;
-    }
-
-    @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
             throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
     public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
                                                                        int minCount, int maxCount, RunInstancesOptions... options)
             throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs)
+    public Set<String> describeInstancesInRegion(InstanceInputs instanceInputs)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }

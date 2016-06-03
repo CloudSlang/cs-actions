@@ -8,12 +8,16 @@ import org.apache.commons.lang3.StringUtils;
  * 2/18/2016.
  */
 public class CustomInputs {
+    private static final String DEFAULT_AMAZON_REGION = "us-east-1";
+    private static final String SELF = "self";
+
     private String region;
     private String instanceId;
     private String imageId;
     private String identityId;
     private String volumeId;
     private String groupId;
+    private String hostId;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -22,6 +26,7 @@ public class CustomInputs {
         this.identityId = builder.identityId;
         this.volumeId = builder.volumeId;
         this.groupId = builder.groupId;
+        this.hostId = builder.hostId;
     }
 
     public String getRegion() {
@@ -48,6 +53,10 @@ public class CustomInputs {
         return groupId;
     }
 
+    public String getHostId() {
+        return hostId;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -55,13 +64,14 @@ public class CustomInputs {
         private String identityId;
         private String volumeId;
         private String groupId;
+        private String hostId;
 
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : inputValue;
+            region = (StringUtils.isBlank(inputValue)) ? DEFAULT_AMAZON_REGION : inputValue;
             return this;
         }
 
@@ -76,7 +86,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withIdentityId(String inputValue) {
-            identityId = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.SELF : inputValue;
+            identityId = StringUtils.isBlank(inputValue) ? SELF : inputValue;
             return this;
         }
 
@@ -87,6 +97,11 @@ public class CustomInputs {
 
         public CustomInputsBuilder withGroupId(String inputValue) {
             groupId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withHostId(String inputValue) {
+            hostId = inputValue;
             return this;
         }
     }

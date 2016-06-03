@@ -513,34 +513,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test list nodes method. Positive scenario. 1 node returned.
-     */
-    @Test
-    public void testListNodes() {
-        doNothing().when(amazonComputeServiceImplSpy).lazyInit(REGION);
-        amazonComputeServiceImplSpy.ec2Api = ec2ApiMock; //this wold be set by lazyInit
-        doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
-        doReturn(instanceApiMock).when(optionalInstanceApi).get();
-        doReturn(instancesInRegion).when(instanceApiMock).describeInstancesInRegion(REGION);
-        doReturn(iterableWithMarkerIteratorMock).when(instancesInRegion).iterator();
-        doReturn(true).doReturn(false).when(iterableWithMarkerIteratorMock).hasNext();
-        doReturn(serverMock).when(iterableWithMarkerIteratorMock).next();
-
-        Set<String> res = amazonComputeServiceImplSpy.listNodes(REGION);
-
-        verify(amazonComputeServiceImplSpy).lazyInit(REGION);
-        verify(ec2ApiMock, times(1)).getInstanceApi();
-        verify(optionalInstanceApi, times(1)).get();
-        verify(instanceApiMock, times(1)).describeInstancesInRegion(REGION);
-        verify(instancesInRegion, times(1)).iterator();
-        verify(iterableWithMarkerIteratorMock, times(2)).hasNext();
-        verify(iterableWithMarkerIteratorMock).next();
-
-        assertEquals(1, res.size());
-        assertTrue(res.contains("reservation"));
-    }
-
-    /**
      * Test runInstancesInRegion method. Positive scenario.
      */
     @Test
@@ -605,7 +577,7 @@ public class AmazonComputeServiceImplTest {
         verify(optionalInstanceApi, times(1)).get();
         verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
 
-        assertEquals("Server updated successfully.", result);
+        assertEquals("Instance successfully updated.", result);
     }
 
     private Set<InstanceStateChange> getInstanceStateChanges() {

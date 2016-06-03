@@ -68,7 +68,7 @@ public class CreateImageInRegionAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.CustomInputs.SERVER_ID, required = true) String serverId,
+                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String serverId,
                                        @Param(value = Inputs.ImageInputs.IMAGE_NAME, required = true) String imageName,
                                        @Param(Inputs.ImageInputs.IMAGE_DESCRIPTION) String imageDescription,
                                        @Param(Inputs.ImageInputs.IMAGE_NO_REBOOT) String imageNoReboot) throws Exception {

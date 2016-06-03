@@ -13,10 +13,12 @@ import java.util.Map;
  * Created by persdana on 6/22/2015.
  */
 public class RebootInstancesExecutor {
+    public static final String SOFT_REBOOT_SUCCESS = "Soft reboot started successfully.";
+
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
         cs.rebootInstances(customInputs.getRegion(), customInputs.getInstanceId());
 
-        return OutputsUtil.getResultsMap(Constants.Messages.SOFT_REBOOT_SUCCESS);
+        return OutputsUtil.getResultsMap(SOFT_REBOOT_SUCCESS);
     }
 }

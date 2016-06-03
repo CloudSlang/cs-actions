@@ -23,9 +23,7 @@ public interface ComputeService {
 
     Set<String> describeRegions();
 
-    Set<String> listNodes(String region);
-
-    Set<? extends Reservation<? extends RunningInstance>> describeInstancesInRegion(InstanceInputs instanceInputs) throws Exception;
+    Set<String> describeInstancesInRegion(InstanceInputs instanceInputs) throws Exception;
 
     Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
                                                                 int minCount, int maxCount, RunInstancesOptions... options)
