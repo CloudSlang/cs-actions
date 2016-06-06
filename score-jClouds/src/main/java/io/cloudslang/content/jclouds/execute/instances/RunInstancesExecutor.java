@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.execute.instances;
 
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
@@ -17,6 +18,10 @@ import java.util.Map;
  */
 public class RunInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
+        if (instanceInputs.getMinCount() > instanceInputs.getMaxCount()) {
+            throw new RuntimeException(Constants.ErrorMessages.MIN_COUNT_MAX_COUNT_VALIDATION);
+        }
+
         ComputeService cs = ComputeFactory.getComputeService(inputs);
         Reservation<? extends RunningInstance> result = cs.runInstancesInRegion(instanceInputs.getCustomInputs().getRegion(),
                 instanceInputs.getAvailabilityZone(), instanceInputs.getCustomInputs().getImageId(), instanceInputs.getMinCount(),

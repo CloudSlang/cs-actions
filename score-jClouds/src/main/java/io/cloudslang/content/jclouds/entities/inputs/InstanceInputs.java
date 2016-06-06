@@ -11,7 +11,8 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * 6/1/2016.
  */
 public class InstanceInputs {
-    private static final long DEFAULT_TIMING = 20000;
+    private static final long DEFAULT_CHECK_STATE_TIMEOUT = 20000;
+    private static final long DEFAULT_POLING_INTERVAL = 20000;
 
     private CustomInputs customInputs;
 
@@ -284,12 +285,12 @@ public class InstanceInputs {
         }
 
         public InstanceInputs.InstanceInputsBuilder withCheckStateTimeout(String inputValue) {
-            checkStateTimeout = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
+            checkStateTimeout = InputsUtil.getValidLong(inputValue, DEFAULT_CHECK_STATE_TIMEOUT);
             return this;
         }
 
         public InstanceInputs.InstanceInputsBuilder withPolingInterval(String inputValue) {
-            polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_TIMING);
+            polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_POLING_INTERVAL);
             return this;
         }
     }
