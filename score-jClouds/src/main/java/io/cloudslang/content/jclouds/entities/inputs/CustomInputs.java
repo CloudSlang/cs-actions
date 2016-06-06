@@ -22,6 +22,7 @@ public class CustomInputs {
     private String ownerId;
     private String ramdiskId;
     private String reservationId;
+    private String subnetId;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -81,6 +82,10 @@ public class CustomInputs {
         return reservationId;
     }
 
+    public String getSubnetId() {
+        return subnetId;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -93,6 +98,7 @@ public class CustomInputs {
         private String ownerId;
         private String ramdiskId;
         private String reservationId;
+        private String subnetId;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -150,6 +156,11 @@ public class CustomInputs {
 
         public CustomInputsBuilder withReservationId(String inputValue) {
             reservationId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withSubnetId(String inputValue) {
+            subnetId = inputValue;
             return this;
         }
     }

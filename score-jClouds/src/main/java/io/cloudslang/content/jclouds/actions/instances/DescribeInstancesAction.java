@@ -52,6 +52,7 @@ public class DescribeInstancesAction {
      *                               instances using the same launch request. For example, if we launch one instance,
      *                               we'll get one reservation ID. If will launch ten instances using the same launch
      *                               request, we'll also get one reservation ID.
+     * @param subnetId               The ID of the subnet for the instance.
      * @param affinity               The affinity setting for an instance running on a dedicated host.
      *                               Valid values: "default" or "host".
      * @param architecture           The instance architecture. Valid values: "i386" or "x86_64".
@@ -102,6 +103,9 @@ public class DescribeInstancesAction {
      * @param sourceDestinationCheck Indicates whether the instance performs source/destination checking. A value of "true"
      *                               means that checking is enabled, and "false" means checking is disabled. The value must
      *                               be "false" for the instance to perform network address translation (NAT) in your VPC.
+     * @param spotInstanceRequestId  The ID of the Spot instance request.
+     * @param stateReasonCode        The reason code for the state change.
+     * @param stateReasonMessage     A message that describes the state change.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -135,6 +139,7 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.OWNER_ID) String ownerId,
                                        @Param(Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
                                        @Param(Inputs.CustomInputs.RESERVATION_ID) String reservationId,
+                                       @Param(Inputs.CustomInputs.SUBNET_ID) String subnetId,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.ARCHITECTURE) String architecture,
@@ -169,7 +174,10 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.REQUESTER_ID) String requesterId,
                                        @Param(Inputs.InstanceInputs.ROOT_DEVICE_NAME) String rootDeviceName,
                                        @Param(Inputs.InstanceInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
-                                       @Param(Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck) throws Exception {
+                                       @Param(Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
+                                       @Param(Inputs.InstanceInputs.SPOT_INSTANCE_REQUEST_ID) String spotInstanceRequestId,
+                                       @Param(Inputs.InstanceInputs.STATE_REASON_CODE) String stateReasonCode,
+                                       @Param(Inputs.InstanceInputs.STATE_REASON_MESSAGE) String stateReasonMessage) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -191,6 +199,7 @@ public class DescribeInstancesAction {
                 .withOwnerId(ownerId)
                 .withRamdiskId(ramdiskId)
                 .withReservationId(reservationId)
+                .withSubnetId(subnetId)
                 .build();
 
         InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
@@ -229,6 +238,9 @@ public class DescribeInstancesAction {
                 .withRootDeviceName(rootDeviceName)
                 .withRootDeviceType(rootDeviceType)
                 .withSourceDestinationCheck(sourceDestinationCheck)
+                .withSpotInstanceRequestId(spotInstanceRequestId)
+                .withStateReasonCode(stateReasonCode)
+                .withStateReasonMessage(stateReasonMessage)
                 .build();
 
         try {

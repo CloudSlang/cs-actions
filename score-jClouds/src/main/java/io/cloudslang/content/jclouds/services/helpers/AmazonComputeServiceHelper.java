@@ -50,7 +50,12 @@ public class AmazonComputeServiceHelper {
 
     private void updateFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
         if (!Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(instanceInputs.getDeleteOnTermination())) {
-            updateFiltersMapEntry(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION.getValue(), instanceInputs.getDeleteOnTermination());
+            updateFiltersMapEntry(filtersMap, InstanceFilters.BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION.getValue(),
+                    instanceInputs.getDeleteOnTermination());
+        }
+        if (!Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(instanceInputs.getSourceDestinationCheck())) {
+            updateFiltersMapEntry(filtersMap, InstanceFilters.SOURCE_DESTINATION_CHECK.getValue(),
+                    instanceInputs.getSourceDestinationCheck());
         }
 
         updateFiltersMapEntry(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
@@ -94,7 +99,10 @@ public class AmazonComputeServiceHelper {
         updateFiltersMapEntry(filtersMap, InstanceFilters.RESERVATION_ID.getValue(), instanceInputs.getCustomInputs().getReservationId());
         updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_NAME.getValue(), instanceInputs.getRootDeviceName());
         updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getRootDeviceType());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.SOURCE_DESTINATION_CHECK.getValue(), instanceInputs.getSourceDestinationCheck());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.SPOT_INSTANCE_REQUEST_ID.getValue(), instanceInputs.getSpotInstanceRequestId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_CODE.getValue(), instanceInputs.getStateReasonCode());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_MESSAGE.getValue(), instanceInputs.getStateReasonMessage());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.SUBNET_ID.getValue(), instanceInputs.getCustomInputs().getSubnetId());
     }
 
     private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {

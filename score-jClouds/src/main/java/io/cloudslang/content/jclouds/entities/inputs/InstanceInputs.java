@@ -47,6 +47,9 @@ public class InstanceInputs {
     private String rootDeviceName;
     private String rootDeviceType;
     private String sourceDestinationCheck;
+    private String spotInstanceRequestId;
+    private String stateReasonCode;
+    private String stateReasonMessage;
 
     private int minCount;
     private int maxCount;
@@ -90,6 +93,9 @@ public class InstanceInputs {
         this.rootDeviceName = builder.rootDeviceName;
         this.rootDeviceType = builder.rootDeviceType;
         this.sourceDestinationCheck = builder.sourceDestinationCheck;
+        this.spotInstanceRequestId = builder.spotInstanceRequestId;
+        this.stateReasonCode = builder.stateReasonCode;
+        this.stateReasonMessage = builder.stateReasonMessage;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -237,6 +243,18 @@ public class InstanceInputs {
         return sourceDestinationCheck;
     }
 
+    public String getSpotInstanceRequestId() {
+        return spotInstanceRequestId;
+    }
+
+    public String getStateReasonCode() {
+        return stateReasonCode;
+    }
+
+    public String getStateReasonMessage() {
+        return stateReasonMessage;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -290,6 +308,9 @@ public class InstanceInputs {
         private String rootDeviceName;
         private String rootDeviceType;
         private String sourceDestinationCheck;
+        private String spotInstanceRequestId;
+        private String stateReasonCode;
+        private String stateReasonMessage;
 
         private int minCount;
         private int maxCount;
@@ -471,7 +492,22 @@ public class InstanceInputs {
         }
 
         public InstanceInputs.InstanceInputsBuilder withSourceDestinationCheck(String inputValue) throws Exception {
-            sourceDestinationCheck = inputValue;
+            sourceDestinationCheck = InputsUtil.getRelevantBooleanString(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withSpotInstanceRequestId(String inputValue) throws Exception {
+            spotInstanceRequestId = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withStateReasonCode(String inputValue) throws Exception {
+            stateReasonCode = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withStateReasonMessage(String inputValue) throws Exception {
+            stateReasonMessage = inputValue;
             return this;
         }
 

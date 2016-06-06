@@ -27,6 +27,7 @@ public class Inputs {
         public static final String OWNER_ID = "ownerId";
         public static final String RAMDISK_ID = "ramdiskId";
         public static final String RESERVATION_ID = "reservationId";
+        public static final String SUBNET_ID = "subnetId";
     }
 
     public static final class ImageInputs {
@@ -78,5 +79,8 @@ public class Inputs {
         public static final String ROOT_DEVICE_NAME = "rootDeviceName";
         public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";
+        public static final String SPOT_INSTANCE_REQUEST_ID = "spotInstanceRequestId";
+        public static final String STATE_REASON_CODE = "stateReasonCode";
+        public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
     }
 }
