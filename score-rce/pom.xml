@@ -1,20 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--
-        (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-        All rights reserved. This program and the accompanying materials
-        are made available under the terms of the Apache License v2.0 which accompany this distribution.
 
-        The Apache License is available at
-        http://www.apache.org/licenses/LICENSE-2.0
-    -->
-    <groupId>io.cloudslang.content</groupId>
-    <artifactId>score-actions</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <groupId>groupId</groupId>
+    <artifactId>score-rce</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Precompiled flows for Cloudslang</description>
+    <description>Remote execution</description>
     <url>https://github.com/CloudSlang/score-actions</url>
     <licenses>
         <license>
@@ -30,30 +25,69 @@
     </scm>
     <developers>
         <developer>
-            <name>Mihai David</name>
-            <email>mihai.david@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Adina Tusa</name>
-            <email>adina.tusa@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Avi Moradi</name>
-            <email>avi.moradi@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Mihail Cristian Tusa</name>
-            <email>mihail-cristian.tusa@hpe.com</email>
-            <organization>HPE Software</organization>
+            <name>Pasternak Daria</name>
+            <email>daria.pasternak@hpe.com</email>
+            <organization>HP Enterprise</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
     </developers>
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Maven Central staging repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Maven Central snapshots repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+            <version>1.10.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.52</version>
+        </dependency>
+
+        <!-- testing dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.18.1-GA</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- end of testing dependencies -->
+    </dependencies>
     <build>
         <pluginManagement>
             <plugins>
@@ -83,20 +117,16 @@
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>Maven Central staging repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>Maven Central snapshots repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
     <profiles>
         <profile>
             <id>default-profile</id>
@@ -168,18 +198,5 @@
             </build>
         </profile>
     </profiles>
-    <modules>
-        <module>score-http-client</module>
-        <module>score-ssh</module>
-        <module>score-mail</module>
-		<module>score-powershell</module>
-        <module>score-data-format</module>
-        <module>score-utilities</module>
-        <module>score-rft</module>
-        <module>score-jClouds</module>
-        <module>score-xml</module>
-        <module>cs-date-time</module>
-        <module>score-vmware</module>
-        <module>score-rce</module>
-    </modules>
+    
 </project>
