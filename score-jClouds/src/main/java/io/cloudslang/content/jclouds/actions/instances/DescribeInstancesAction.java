@@ -78,6 +78,11 @@ public class DescribeInstancesAction {
      * @param launchTime          The time when the instance was launched.
      * @param monitoringState     Indicates whether monitoring is enabled for the instance. Valid values: "disabled", "enabled".
      * @param placementGroupName  The name of the placement group for the instance.
+     * @param platform            The platform. Use "windows" if you have Windows instances; otherwise, leave blank.
+     *                            Valid values: "", "windows".
+     * @param privateDnsName      The private DNS name of the instance.
+     * @param privateIpAddress    The private IP address of the instance.
+     * @param productCode         The product code associated with the AMI used to launch the instance.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -132,7 +137,11 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.LAUNCH_INDEX) String launchIndex,
                                        @Param(Inputs.InstanceInputs.LAUNCH_TIME) String launchTime,
                                        @Param(Inputs.InstanceInputs.MONITORING_STATE) String monitoringState,
-                                       @Param(Inputs.InstanceInputs.PLACEMENT_GROUP_NAME) String placementGroupName) throws Exception {
+                                       @Param(Inputs.InstanceInputs.PLACEMENT_GROUP_NAME) String placementGroupName,
+                                       @Param(Inputs.InstanceInputs.PLATFORM) String platform,
+                                       @Param(Inputs.InstanceInputs.PRIVATE_DNS_NAME) String privateDnsName,
+                                       @Param(Inputs.InstanceInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
+                                       @Param(Inputs.InstanceInputs.PRODUCT_CODE) String productCode) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -180,6 +189,10 @@ public class DescribeInstancesAction {
                 .withLaunchTime(launchTime)
                 .withMonitoringState(monitoringState)
                 .withPlacementGroupName(placementGroupName)
+                .withPlatform(platform)
+                .withPrivateDnsName(privateDnsName)
+                .withPrivateIpAddress(privateIpAddress)
+                .withProductCode(productCode)
                 .build();
 
         try {

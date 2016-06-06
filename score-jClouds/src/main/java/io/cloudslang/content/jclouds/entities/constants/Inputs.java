@@ -66,5 +66,9 @@ public class Inputs {
         public static final String LAUNCH_TIME = "launchTime";
         public static final String MONITORING_STATE = "monitoringState";
         public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
+        public static final String PLATFORM = "platform";
+        public static final String PRIVATE_DNS_NAME = "privateDnsName";
+        public static final String PRIVATE_IP_ADDRESS = "privateIpAddress";
+        public static final String PRODUCT_CODE = "productCode";
     }
 }

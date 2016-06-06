@@ -24,8 +24,7 @@ public enum InstanceState {
 
     public static int getKey(String input) throws RuntimeException {
         try {
-            InstanceState instanceState = InstanceState.valueOf(input.toUpperCase());
-            return instanceState.getKey();
+            return InstanceState.valueOf(input.toUpperCase()).getKey();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Invalid instanceStateCode value: [" + input + "]. Valid values: " +
                     "0, 16, 32, 48, 64, 80.");

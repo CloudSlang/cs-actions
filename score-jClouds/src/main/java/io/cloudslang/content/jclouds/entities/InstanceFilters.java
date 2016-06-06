@@ -35,15 +35,19 @@ public enum InstanceFilters {
     LAUNCH_TIME("launch-time"),
     MONITORING_STATE("monitoring-state"),
     OWNER_ID("owner-id"),
-    PLACEMENT_GROUP_NAME("placement-group-name");
+    PLACEMENT_GROUP_NAME("placement-group-name"),
+    PLATFORM("platform"),
+    PRIVATE_DNS_NAME("private-dns-name"),
+    PRIVATE_IP_ADDRESS("private-ip-address"),
+    PRODUCT_CODE("product-code");
 
-    private String parameter;
+    private String value;
 
     InstanceFilters(String input) {
-        this.parameter = input;
+        this.value = input;
     }
 
     public String getValue() {
-        return parameter;
+        return value;
     }
 }

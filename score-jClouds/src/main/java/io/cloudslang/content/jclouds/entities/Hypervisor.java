@@ -8,13 +8,11 @@ public enum Hypervisor {
     OVM,
     XEN;
 
-    public static final String UNSUPPORTED_HYPERVISOR = "Invalid hypervisor value. Valid values: ovm, xen.";
-
     public static String getValue(String input) throws RuntimeException {
         try {
             return Hypervisor.valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException(UNSUPPORTED_HYPERVISOR);
+            throw new RuntimeException("Invalid hypervisor value: [" + input + "]. Valid values: ovm, xen.");
         }
     }
 }

@@ -37,6 +37,10 @@ public class InstanceInputs {
     private String launchTime;
     private String monitoringState;
     private String placementGroupName;
+    private String platform;
+    private String privateDnsName;
+    private String privateIpAddress;
+    private String productCode;
 
     private int minCount;
     private int maxCount;
@@ -70,6 +74,10 @@ public class InstanceInputs {
         this.launchTime = builder.launchTime;
         this.monitoringState = builder.monitoringState;
         this.placementGroupName = builder.placementGroupName;
+        this.platform = builder.platform;
+        this.privateDnsName = builder.privateDnsName;
+        this.privateIpAddress = builder.privateIpAddress;
+        this.productCode = builder.productCode;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -177,6 +185,22 @@ public class InstanceInputs {
         return placementGroupName;
     }
 
+    public String getPlatform() {
+        return platform;
+    }
+
+    public String getPrivateDnsName() {
+        return privateDnsName;
+    }
+
+    public String getPrivateIpAddress() {
+        return privateIpAddress;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -220,6 +244,10 @@ public class InstanceInputs {
         private String launchTime;
         private String monitoringState;
         private String placementGroupName;
+        private String platform;
+        private String privateDnsName;
+        private String privateIpAddress;
+        private String productCode;
 
         private int minCount;
         private int maxCount;
@@ -351,7 +379,27 @@ public class InstanceInputs {
         }
 
         public InstanceInputs.InstanceInputsBuilder withPlacementGroupName(String inputValue) throws Exception {
-            placementGroupName = MonitoringState.getValue(inputValue);
+            placementGroupName = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withPlatform(String inputValue) throws Exception {
+            platform = Platform.getValue(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withPrivateDnsName(String inputValue) throws Exception {
+            privateDnsName = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withPrivateIpAddress(String inputValue) throws Exception {
+            privateIpAddress = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withProductCode(String inputValue) throws Exception {
+            productCode = inputValue;
             return this;
         }
 
