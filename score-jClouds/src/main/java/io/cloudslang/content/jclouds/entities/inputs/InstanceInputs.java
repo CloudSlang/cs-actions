@@ -1,9 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.Architecture;
-import io.cloudslang.content.jclouds.entities.BlockDeviceMappingStatus;
-import io.cloudslang.content.jclouds.entities.Hypervisor;
-import io.cloudslang.content.jclouds.entities.InstanceState;
+import io.cloudslang.content.jclouds.entities.*;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
@@ -33,6 +30,13 @@ public class InstanceInputs {
     private String instanceStateCode;
     private String instanceStateName;
     private String instanceGroupId;
+    private String instanceGroupName;
+    private String ipAddress;
+    private String keyName;
+    private String launchIndex;
+    private String launchTime;
+    private String monitoringState;
+    private String placementGroupName;
 
     private int minCount;
     private int maxCount;
@@ -59,6 +63,13 @@ public class InstanceInputs {
         this.instanceStateCode = builder.instanceStateCode;
         this.instanceStateName = builder.instanceStateName;
         this.instanceGroupId = builder.instanceGroupId;
+        this.instanceGroupName = builder.instanceGroupName;
+        this.ipAddress = builder.ipAddress;
+        this.keyName = builder.keyName;
+        this.launchIndex = builder.launchIndex;
+        this.launchTime = builder.launchTime;
+        this.monitoringState = builder.monitoringState;
+        this.placementGroupName = builder.placementGroupName;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -138,6 +149,34 @@ public class InstanceInputs {
         return instanceGroupId;
     }
 
+    public String getInstanceGroupName() {
+        return instanceGroupName;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public String getKeyName() {
+        return keyName;
+    }
+
+    public String getLaunchIndex() {
+        return launchIndex;
+    }
+
+    public String getLaunchTime() {
+        return launchTime;
+    }
+
+    public String getMonitoringState() {
+        return monitoringState;
+    }
+
+    public String getPlacementGroupName() {
+        return placementGroupName;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -174,6 +213,13 @@ public class InstanceInputs {
         private String instanceStateCode;
         private String instanceStateName;
         private String instanceGroupId;
+        private String instanceGroupName;
+        private String ipAddress;
+        private String keyName;
+        private String launchIndex;
+        private String launchTime;
+        private String monitoringState;
+        private String placementGroupName;
 
         private int minCount;
         private int maxCount;
@@ -270,7 +316,42 @@ public class InstanceInputs {
         }
 
         public InstanceInputs.InstanceInputsBuilder withInstanceGroupId(String inputValue) {
-            instanceGroupId = InstanceState.getValue(inputValue);
+            instanceGroupId = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withInstanceGroupName(String inputValue) {
+            instanceGroupName = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withIpAddress(String inputValue) {
+            ipAddress = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withKeyName(String inputValue) {
+            keyName = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withLaunchIndex(String inputValue) {
+            launchIndex = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withLaunchTime(String inputValue) {
+            launchTime = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withMonitoringState(String inputValue) throws Exception {
+            monitoringState = MonitoringState.getValue(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withPlacementGroupName(String inputValue) throws Exception {
+            placementGroupName = MonitoringState.getValue(inputValue);
             return this;
         }
 

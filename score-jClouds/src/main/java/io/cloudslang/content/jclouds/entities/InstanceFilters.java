@@ -26,7 +26,16 @@ public enum InstanceFilters {
     INSTANCE_STATE_CODE("instance-state-code"),
     INSTANCE_STATE_NAME("instance-state-name"),
     INSTANCE_TYPE("instance-type"),
-    INSTANCE_GROUP_ID("instance.group-id");
+    INSTANCE_GROUP_ID("instance.group-id"),
+    INSTANCE_GROUP_NAME("instance.group-name"),
+    IP_ADDRESS("ip-address"),
+    KERNEL_ID("kernel-id"),
+    KEY_NAME("key-name"),
+    LAUNCH_INDEX("launch-index"),
+    LAUNCH_TIME("launch-time"),
+    MONITORING_STATE("monitoring-state"),
+    OWNER_ID("owner-id"),
+    PLACEMENT_GROUP_NAME("placement-group-name");
 
     private String parameter;
 

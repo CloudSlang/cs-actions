@@ -43,6 +43,8 @@ public class DescribeInstancesAction {
      * @param hostId              The ID of the Dedicated host on which the instance is running, if applicable.
      * @param imageId             The ID of the image used to launch the instance.
      * @param instanceId          The ID of the instance.
+     * @param kernelId            The kernel ID.
+     * @param ownerId             The AWS account ID of the instance owner.
      * @param affinity            The affinity setting for an instance running on a dedicated host.
      *                            Valid values: "default" or "host".
      * @param architecture        The instance architecture. Valid values: "i386" or "x86_64".
@@ -66,8 +68,16 @@ public class DescribeInstancesAction {
      *                            "stopping", "stopped".
      * @param instanceType        The new server type to be used when updating the instance. The complete list of instance
      *                            types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
-     *                            Examples: "t2.micro", "t2.medium", "m3.large"...
+     *                            Examples: "t2.micro", "t2.medium", "m3.large".
      * @param instanceGroupId     The ID of the security group for the instance.
+     * @param instanceGroupName   The name of the security group for the instance.
+     * @param ipAddress           The public IP address of the instance.
+     * @param keyName             The name of the key pair used when the instance was launched.
+     * @param launchIndex         When launching multiple instances, this is the index for the instance in the launch group
+     *                            Ex: 0, 1, 2, and so on.
+     * @param launchTime          The time when the instance was launched.
+     * @param monitoringState     Indicates whether monitoring is enabled for the instance. Valid values: "disabled", "enabled".
+     * @param placementGroupName  The name of the placement group for the instance.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -97,6 +107,8 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.HOST_ID) String hostId,
                                        @Param(Inputs.CustomInputs.IMAGE_ID) String imageId,
                                        @Param(Inputs.CustomInputs.INSTANCE_ID) String instanceId,
+                                       @Param(Inputs.CustomInputs.KERNEL_ID) String kernelId,
+                                       @Param(Inputs.CustomInputs.OWNER_ID) String ownerId,
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.ARCHITECTURE) String architecture,
                                        @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
@@ -113,7 +125,14 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.INSTANCE_STATE_CODE) String instanceStateCode,
                                        @Param(Inputs.InstanceInputs.INSTANCE_STATE_NAME) String instanceStateName,
                                        @Param(Inputs.InstanceInputs.INSTANCE_TYPE) String instanceType,
-                                       @Param(Inputs.InstanceInputs.INSTANCE_GROUP_ID) String instanceGroupId) throws Exception {
+                                       @Param(Inputs.InstanceInputs.INSTANCE_GROUP_ID) String instanceGroupId,
+                                       @Param(Inputs.InstanceInputs.INSTANCE_GROUP_NAME) String instanceGroupName,
+                                       @Param(Inputs.InstanceInputs.IP_ADDRESS) String ipAddress,
+                                       @Param(Inputs.InstanceInputs.KEY_NAME) String keyName,
+                                       @Param(Inputs.InstanceInputs.LAUNCH_INDEX) String launchIndex,
+                                       @Param(Inputs.InstanceInputs.LAUNCH_TIME) String launchTime,
+                                       @Param(Inputs.InstanceInputs.MONITORING_STATE) String monitoringState,
+                                       @Param(Inputs.InstanceInputs.PLACEMENT_GROUP_NAME) String placementGroupName) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -131,6 +150,8 @@ public class DescribeInstancesAction {
                 .withHostId(hostId)
                 .withImageId(imageId)
                 .withInstanceId(instanceId)
+                .withKernelId(kernelId)
+                .withOwnerId(ownerId)
                 .build();
 
         InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
@@ -152,6 +173,13 @@ public class DescribeInstancesAction {
                 .withInstanceStateName(instanceStateName)
                 .withInstanceType(instanceType)
                 .withInstanceGroupId(instanceGroupId)
+                .withInstanceGroupName(instanceGroupName)
+                .withIpAddress(ipAddress)
+                .withKeyName(keyName)
+                .withLaunchIndex(launchIndex)
+                .withLaunchTime(launchTime)
+                .withMonitoringState(monitoringState)
+                .withPlacementGroupName(placementGroupName)
                 .build();
 
         try {

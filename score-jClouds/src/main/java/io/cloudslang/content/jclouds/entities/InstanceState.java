@@ -12,9 +12,6 @@ public enum InstanceState {
     STOPPING(64),
     STOPPED(80);
 
-    public static final String UNSUPPORTED_INSTANCE_STATE = "Invalid instanceStateCode value. Valid values: " +
-            "pending, running, shutting-down, terminated, stopping, stopped.";
-
     private final int key;
 
     InstanceState(int key) {
@@ -25,12 +22,13 @@ public enum InstanceState {
         return key;
     }
 
-    public static int getKey(String input) throws IllegalArgumentException {
+    public static int getKey(String input) throws RuntimeException {
         try {
             InstanceState instanceState = InstanceState.valueOf(input.toUpperCase());
             return instanceState.getKey();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException(UNSUPPORTED_INSTANCE_STATE);
+            throw new RuntimeException("Invalid instanceStateCode value: [" + input + "]. Valid values: " +
+                    "0, 16, 32, 48, 64, 80.");
         }
     }
 
@@ -38,7 +36,8 @@ public enum InstanceState {
         try {
             return InstanceState.valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException(UNSUPPORTED_INSTANCE_STATE);
+            throw new RuntimeException("Invalid instanceStateName value: [" + input + "]. Valid values: " +
+                    "pending, running, shutting-down, terminated, stopping, stopped.");
         }
     }
 }

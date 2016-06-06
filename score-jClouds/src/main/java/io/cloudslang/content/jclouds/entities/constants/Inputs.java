@@ -23,6 +23,8 @@ public class Inputs {
         public static final String VOLUME_ID = "volumeId";
         public static final String GROUP_ID = "groupId";
         public static final String HOST_ID = "hostId";
+        public static final String KERNEL_ID = "kernelId";
+        public static final String OWNER_ID = "ownerId";
     }
 
     public static final class ImageInputs {
@@ -57,5 +59,12 @@ public class Inputs {
         public static final String INSTANCE_STATE_CODE = "instanceStateCode";
         public static final String INSTANCE_STATE_NAME = "instanceStateName";
         public static final String INSTANCE_GROUP_ID = "instanceGroupId";
+        public static final String INSTANCE_GROUP_NAME = "instanceGroupName";
+        public static final String IP_ADDRESS = "ipAddress";
+        public static final String KEY_NAME = "keyName";
+        public static final String LAUNCH_INDEX = "launchIndex";
+        public static final String LAUNCH_TIME = "launchTime";
+        public static final String MONITORING_STATE = "monitoringState";
+        public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
     }
 }

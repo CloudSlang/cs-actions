@@ -18,6 +18,8 @@ public class CustomInputs {
     private String volumeId;
     private String groupId;
     private String hostId;
+    private String kernelId;
+    private String ownerId;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -27,6 +29,8 @@ public class CustomInputs {
         this.volumeId = builder.volumeId;
         this.groupId = builder.groupId;
         this.hostId = builder.hostId;
+        this.kernelId = builder.kernelId;
+        this.ownerId = builder.ownerId;
     }
 
     public String getRegion() {
@@ -57,6 +61,14 @@ public class CustomInputs {
         return hostId;
     }
 
+    public String getKernelId() {
+        return kernelId;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -65,6 +77,8 @@ public class CustomInputs {
         private String volumeId;
         private String groupId;
         private String hostId;
+        private String kernelId;
+        private String ownerId;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -102,6 +116,16 @@ public class CustomInputs {
 
         public CustomInputsBuilder withHostId(String inputValue) {
             hostId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withKernelId(String inputValue) {
+            kernelId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withOwnerId(String inputValue) {
+            ownerId = inputValue;
             return this;
         }
     }
