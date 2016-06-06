@@ -87,6 +87,14 @@ public class AmazonComputeServiceHelper {
         updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_DNS_NAME.getValue(), instanceInputs.getPrivateDnsName());
         updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_IP_ADDRESS.getValue(), instanceInputs.getPrivateIpAddress());
         updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE.getValue(), instanceInputs.getProductCode());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getProductCodeType());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.RAMDISK_ID.getValue(), instanceInputs.getCustomInputs().getRamdiskId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.REASON.getValue(), instanceInputs.getReason());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.REQUESTER_ID.getValue(), instanceInputs.getRequesterId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.RESERVATION_ID.getValue(), instanceInputs.getCustomInputs().getReservationId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_NAME.getValue(), instanceInputs.getRootDeviceName());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getRootDeviceType());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.SOURCE_DESTINATION_CHECK.getValue(), instanceInputs.getSourceDestinationCheck());
     }
 
     private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {

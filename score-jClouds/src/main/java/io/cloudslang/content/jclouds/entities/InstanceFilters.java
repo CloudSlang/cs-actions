@@ -39,7 +39,15 @@ public enum InstanceFilters {
     PLATFORM("platform"),
     PRIVATE_DNS_NAME("private-dns-name"),
     PRIVATE_IP_ADDRESS("private-ip-address"),
-    PRODUCT_CODE("product-code");
+    PRODUCT_CODE("product-code"),
+    PRODUCT_CODE_TYPE("product-code.type"),
+    RAMDISK_ID("ramdiskId"),
+    REASON("reason"),
+    REQUESTER_ID("requester-id"),
+    RESERVATION_ID("reservation-id"),
+    ROOT_DEVICE_NAME("root-device-name"),
+    ROOT_DEVICE_TYPE("root-device-type"),
+    SOURCE_DESTINATION_CHECK("source-dest-check");
 
     private String value;
 

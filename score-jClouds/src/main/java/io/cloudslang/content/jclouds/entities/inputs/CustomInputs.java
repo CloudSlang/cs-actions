@@ -20,6 +20,8 @@ public class CustomInputs {
     private String hostId;
     private String kernelId;
     private String ownerId;
+    private String ramdiskId;
+    private String reservationId;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -31,6 +33,8 @@ public class CustomInputs {
         this.hostId = builder.hostId;
         this.kernelId = builder.kernelId;
         this.ownerId = builder.ownerId;
+        this.ramdiskId = builder.ramdiskId;
+        this.reservationId = builder.reservationId;
     }
 
     public String getRegion() {
@@ -69,6 +73,14 @@ public class CustomInputs {
         return ownerId;
     }
 
+    public String getRamdiskId() {
+        return ramdiskId;
+    }
+
+    public String getReservationId() {
+        return reservationId;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -79,6 +91,8 @@ public class CustomInputs {
         private String hostId;
         private String kernelId;
         private String ownerId;
+        private String ramdiskId;
+        private String reservationId;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -126,6 +140,16 @@ public class CustomInputs {
 
         public CustomInputsBuilder withOwnerId(String inputValue) {
             ownerId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withRamdiskId(String inputValue) {
+            ramdiskId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withReservationId(String inputValue) {
+            reservationId = inputValue;
             return this;
         }
     }

@@ -41,6 +41,12 @@ public class InstanceInputs {
     private String privateDnsName;
     private String privateIpAddress;
     private String productCode;
+    private String productCodeType;
+    private String reason;
+    private String requesterId;
+    private String rootDeviceName;
+    private String rootDeviceType;
+    private String sourceDestinationCheck;
 
     private int minCount;
     private int maxCount;
@@ -78,6 +84,12 @@ public class InstanceInputs {
         this.privateDnsName = builder.privateDnsName;
         this.privateIpAddress = builder.privateIpAddress;
         this.productCode = builder.productCode;
+        this.productCodeType = builder.productCodeType;
+        this.reason = builder.reason;
+        this.requesterId = builder.requesterId;
+        this.rootDeviceName = builder.rootDeviceName;
+        this.rootDeviceType = builder.rootDeviceType;
+        this.sourceDestinationCheck = builder.sourceDestinationCheck;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -201,6 +213,30 @@ public class InstanceInputs {
         return productCode;
     }
 
+    public String getProductCodeType() {
+        return productCodeType;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public String getRequesterId() {
+        return requesterId;
+    }
+
+    public String getRootDeviceName() {
+        return rootDeviceName;
+    }
+
+    public String getRootDeviceType() {
+        return rootDeviceType;
+    }
+
+    public String getSourceDestinationCheck() {
+        return sourceDestinationCheck;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -248,6 +284,12 @@ public class InstanceInputs {
         private String privateDnsName;
         private String privateIpAddress;
         private String productCode;
+        private String productCodeType;
+        private String reason;
+        private String requesterId;
+        private String rootDeviceName;
+        private String rootDeviceType;
+        private String sourceDestinationCheck;
 
         private int minCount;
         private int maxCount;
@@ -400,6 +442,36 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withProductCode(String inputValue) throws Exception {
             productCode = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withProductCodeType(String inputValue) throws Exception {
+            productCodeType = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withReason(String inputValue) throws Exception {
+            reason = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withRequesterId(String inputValue) throws Exception {
+            requesterId = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withRootDeviceName(String inputValue) throws Exception {
+            rootDeviceName = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withRootDeviceType(String inputValue) throws Exception {
+            rootDeviceType = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withSourceDestinationCheck(String inputValue) throws Exception {
+            sourceDestinationCheck = inputValue;
             return this;
         }
 

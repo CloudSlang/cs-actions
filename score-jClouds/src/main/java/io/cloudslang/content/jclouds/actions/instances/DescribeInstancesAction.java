@@ -28,61 +28,80 @@ public class DescribeInstancesAction {
      * If you specify an instance that you do not own, it's not included in the output.
      * Recently terminated instances might appear in the output. This interval is usually less than one hour.
      *
-     * @param provider            The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
-     * @param identityEndpoint    The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com"
-     *                            for Amazon AWS or "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity            The username of your account or the Access Key ID. For openstack provider the required
-     *                            format is 'alias:username'.
-     * @param credential          The password of the user or the Secret Access Key that correspond to the identity input.
-     * @param proxyHost           The proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort           The proxy server port.
-     * @param region              The region from which to list servers. Ex: "RegionOne", "us-east-1". ListRegionAction can
-     *                            be used in order to get all regions.
-     * @param volumeId            The volume ID of the EBS volume.
-     * @param groupId             The ID of the security group for the instance. EC2-Classic only.
-     * @param hostId              The ID of the Dedicated host on which the instance is running, if applicable.
-     * @param imageId             The ID of the image used to launch the instance.
-     * @param instanceId          The ID of the instance.
-     * @param kernelId            The kernel ID.
-     * @param ownerId             The AWS account ID of the instance owner.
-     * @param affinity            The affinity setting for an instance running on a dedicated host.
-     *                            Valid values: "default" or "host".
-     * @param architecture        The instance architecture. Valid values: "i386" or "x86_64".
-     * @param availabilityZone    The Availability Zone of the instance.
-     * @param attachTime          The attach time for an EBS volume mapped to the instance. Ex: "2010-09-15T17:15:20.000Z"
-     * @param deleteOnTermination A Boolean that indicates whether the EBS volume is deleted on instance termination.
-     * @param deviceName          The device name for the EBS volume. Ex: "/dev/sdh" or "xvdh".
-     * @param status              The status for the EBS volume. Valid values: "attaching", "attached", "detaching", "detached".
-     * @param clientToken         The idem-potency token that was provided when the instance was launched.
-     * @param dnsName             The public DNS name of the instance.
-     * @param groupName           The name of the security group for the instance. EC2-Classic only.
-     * @param hypervisor          The hypervisor type of the instance. Valid values: "ovm", "xen".
-     * @param iamArn              The instance profile associated with the instance. Specified as an ARN.
-     * @param instanceLifecycle   Indicates whether this is a Spot Instance or a Scheduled Instance.
-     *                            Valid values: "spot", "scheduled".
-     * @param instanceStateCode   The state of the instance, as a 16-bit unsigned integer. The high byte is an opaque
-     *                            internal value and should be ignored. The low byte is set based on the state represented.
-     *                            Valid values: "0" (pending), "16" (running), "32" (shutting-down), "48" (terminated),
-     *                            "64" (stopping) and "80" (stopped).
-     * @param instanceStateName   The state of the instance. Valid values: "pending", "running", "shutting-down", "terminated",
-     *                            "stopping", "stopped".
-     * @param instanceType        The new server type to be used when updating the instance. The complete list of instance
-     *                            types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
-     *                            Examples: "t2.micro", "t2.medium", "m3.large".
-     * @param instanceGroupId     The ID of the security group for the instance.
-     * @param instanceGroupName   The name of the security group for the instance.
-     * @param ipAddress           The public IP address of the instance.
-     * @param keyName             The name of the key pair used when the instance was launched.
-     * @param launchIndex         When launching multiple instances, this is the index for the instance in the launch group
-     *                            Ex: 0, 1, 2, and so on.
-     * @param launchTime          The time when the instance was launched.
-     * @param monitoringState     Indicates whether monitoring is enabled for the instance. Valid values: "disabled", "enabled".
-     * @param placementGroupName  The name of the placement group for the instance.
-     * @param platform            The platform. Use "windows" if you have Windows instances; otherwise, leave blank.
-     *                            Valid values: "", "windows".
-     * @param privateDnsName      The private DNS name of the instance.
-     * @param privateIpAddress    The private IP address of the instance.
-     * @param productCode         The product code associated with the AMI used to launch the instance.
+     * @param provider               The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
+     * @param identityEndpoint       The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com"
+     *                               for Amazon AWS or "http://hostOrIp:5000/v2.0" for OpenStack.
+     * @param identity               The username of your account or the Access Key ID. For openstack provider the required
+     *                               format is 'alias:username'.
+     * @param credential             The password of the user or the Secret Access Key that correspond to the identity input.
+     * @param proxyHost              The proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort              The proxy server port.
+     * @param region                 The region from which to list servers. Ex: "RegionOne", "us-east-1". ListRegionAction
+     *                               can be used in order to get all regions.
+     * @param volumeId               The volume ID of the EBS volume.
+     * @param groupId                The ID of the security group for the instance. EC2-Classic only.
+     * @param hostId                 The ID of the Dedicated host on which the instance is running, if applicable.
+     * @param imageId                The ID of the image used to launch the instance.
+     * @param instanceId             The ID of the instance.
+     * @param kernelId               The kernel ID.
+     * @param ownerId                The AWS account ID of the instance owner.
+     * @param ramdiskId              The RAM disk ID.
+     * @param reservationId          The ID of the instance's reservation. A reservation ID is created any time you launch
+     *                               an instance. A reservation ID has a one-to-one relationship with an instance launch
+     *                               request, but can be associated with more than one instance if you launch multiple
+     *                               instances using the same launch request. For example, if we launch one instance,
+     *                               we'll get one reservation ID. If will launch ten instances using the same launch
+     *                               request, we'll also get one reservation ID.
+     * @param affinity               The affinity setting for an instance running on a dedicated host.
+     *                               Valid values: "default" or "host".
+     * @param architecture           The instance architecture. Valid values: "i386" or "x86_64".
+     * @param availabilityZone       The Availability Zone of the instance.
+     * @param attachTime             The attach time for an EBS volume mapped to the instance. Ex: "2010-09-15T17:15:20.000Z"
+     * @param deleteOnTermination    A Boolean that indicates whether the EBS volume is deleted on instance termination.
+     * @param deviceName             The device name for the EBS volume. Ex: "/dev/sdh" or "xvdh".
+     * @param status                 The status for the EBS volume. Valid values: "attaching", "attached", "detaching",
+     *                               "detached".
+     * @param clientToken            The idem-potency token that was provided when the instance was launched.
+     * @param dnsName                The public DNS name of the instance.
+     * @param groupName              The name of the security group for the instance. EC2-Classic only.
+     * @param hypervisor             The hypervisor type of the instance. Valid values: "ovm", "xen".
+     * @param iamArn                 The instance profile associated with the instance. Specified as an ARN.
+     * @param instanceLifecycle      Indicates whether this is a Spot Instance or a Scheduled Instance.
+     *                               Valid values: "spot", "scheduled".
+     * @param instanceStateCode      The state of the instance, as a 16-bit unsigned integer. The high byte is an opaque
+     *                               internal value and should be ignored. The low byte is set based on the state represented.
+     *                               Valid values: "0" (pending), "16" (running), "32" (shutting-down), "48" (terminated),
+     *                               "64" (stopping) and "80" (stopped).
+     * @param instanceStateName      The state of the instance. Valid values: "pending", "running", "shutting-down",
+     *                               "terminated", "stopping", "stopped".
+     * @param instanceType           The new server type to be used when updating the instance. The complete list of instance
+     *                               types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
+     *                               Examples: "t2.micro", "t2.medium", "m3.large".
+     * @param instanceGroupId        The ID of the security group for the instance.
+     * @param instanceGroupName      The name of the security group for the instance.
+     * @param ipAddress              The public IP address of the instance.
+     * @param keyName                The name of the key pair used when the instance was launched.
+     * @param launchIndex            When launching multiple instances, this is the index for the instance in the launch
+     *                               group. Ex: 0, 1, 2, and so on.
+     * @param launchTime             The time when the instance was launched.
+     * @param monitoringState        Indicates whether monitoring is enabled for the instance. Valid values: "disabled",
+     *                               "enabled".
+     * @param placementGroupName     The name of the placement group for the instance.
+     * @param platform               The platform. Use "windows" if you have Windows instances; otherwise, leave blank.
+     *                               Valid values: "", "windows".
+     * @param privateDnsName         The private DNS name of the instance.
+     * @param privateIpAddress       The private IP address of the instance.
+     * @param productCode            The product code associated with the AMI used to launch the instance.
+     * @param productCodeType        The type of product code. Valid values: "devpay", "marketplace".
+     * @param reason                 The reason for the current state of the instance. For e.g.: shows "User Initiated [date]"
+     *                               when user stops or terminates the instance. Similar to the state-reason-code filter.
+     * @param requesterId            The ID of the entity that launched the instance on your behalf (for e.g.:
+     *                               "AWS Management Console", "Auto Scaling", and so on).
+     * @param rootDeviceName         The name of the root device for the instance. Ex: "/dev/sda1", "/dev/xvda".
+     * @param rootDeviceType         The type of root device that the instance uses. Valid values: "ebs", "instance-store".
+     * @param sourceDestinationCheck Indicates whether the instance performs source/destination checking. A value of "true"
+     *                               means that checking is enabled, and "false" means checking is disabled. The value must
+     *                               be "false" for the instance to perform network address translation (NAT) in your VPC.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -114,6 +133,9 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.INSTANCE_ID) String instanceId,
                                        @Param(Inputs.CustomInputs.KERNEL_ID) String kernelId,
                                        @Param(Inputs.CustomInputs.OWNER_ID) String ownerId,
+                                       @Param(Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
+                                       @Param(Inputs.CustomInputs.RESERVATION_ID) String reservationId,
+
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.ARCHITECTURE) String architecture,
                                        @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
@@ -141,7 +163,13 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.PLATFORM) String platform,
                                        @Param(Inputs.InstanceInputs.PRIVATE_DNS_NAME) String privateDnsName,
                                        @Param(Inputs.InstanceInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
-                                       @Param(Inputs.InstanceInputs.PRODUCT_CODE) String productCode) throws Exception {
+                                       @Param(Inputs.InstanceInputs.PRODUCT_CODE) String productCode,
+                                       @Param(Inputs.InstanceInputs.PRODUCT_CODE_TYPE) String productCodeType,
+                                       @Param(Inputs.InstanceInputs.REASON) String reason,
+                                       @Param(Inputs.InstanceInputs.REQUESTER_ID) String requesterId,
+                                       @Param(Inputs.InstanceInputs.ROOT_DEVICE_NAME) String rootDeviceName,
+                                       @Param(Inputs.InstanceInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
+                                       @Param(Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -161,6 +189,8 @@ public class DescribeInstancesAction {
                 .withInstanceId(instanceId)
                 .withKernelId(kernelId)
                 .withOwnerId(ownerId)
+                .withRamdiskId(ramdiskId)
+                .withReservationId(reservationId)
                 .build();
 
         InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
@@ -193,6 +223,12 @@ public class DescribeInstancesAction {
                 .withPrivateDnsName(privateDnsName)
                 .withPrivateIpAddress(privateIpAddress)
                 .withProductCode(productCode)
+                .withProductCodeType(productCodeType)
+                .withReason(reason)
+                .withRequesterId(requesterId)
+                .withRootDeviceName(rootDeviceName)
+                .withRootDeviceType(rootDeviceType)
+                .withSourceDestinationCheck(sourceDestinationCheck)
                 .build();
 
         try {

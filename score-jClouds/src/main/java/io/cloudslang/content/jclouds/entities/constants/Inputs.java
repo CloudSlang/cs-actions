@@ -25,6 +25,8 @@ public class Inputs {
         public static final String HOST_ID = "hostId";
         public static final String KERNEL_ID = "kernelId";
         public static final String OWNER_ID = "ownerId";
+        public static final String RAMDISK_ID = "ramdiskId";
+        public static final String RESERVATION_ID = "reservationId";
     }
 
     public static final class ImageInputs {
@@ -70,5 +72,11 @@ public class Inputs {
         public static final String PRIVATE_DNS_NAME = "privateDnsName";
         public static final String PRIVATE_IP_ADDRESS = "privateIpAddress";
         public static final String PRODUCT_CODE = "productCode";
+        public static final String PRODUCT_CODE_TYPE = "productCodeType";
+        public static final String REASON = "reason";
+        public static final String REQUESTER_ID = "requesterId";
+        public static final String ROOT_DEVICE_NAME = "rootDeviceName";
+        public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
+        public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";
     }
 }
