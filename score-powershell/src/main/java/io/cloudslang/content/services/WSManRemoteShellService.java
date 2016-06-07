@@ -74,6 +74,37 @@ public class WSManRemoteShellService {
     private long commandExecutionStartTime;
 
     /**
+     * Executes a command on a remote shell by communicating with the WinRM server from the remote host.
+     * Method creates a shell, runs a command on the shell, waits for the command execution to finnish, retrieves the result then deletes the shell.
+     *
+     * @param wsManRequestInputs
+     * @return a map with the result of the command and the exit code of the command execution.
+     * @throws RuntimeException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ParserConfigurationException
+     * @throws TransformerException
+     * @throws XPathExpressionException
+     * @throws TimeoutException
+     * @throws URISyntaxException
+     * @throws SAXException
+     */
+    public Map<String, String> runCommand(WSManRequestInputs wsManRequestInputs) throws RuntimeException, IOException, InterruptedException, ParserConfigurationException, TransformerException, XPathExpressionException, TimeoutException, URISyntaxException, SAXException {
+        ScoreHttpClient scoreHttpClient = new ScoreHttpClient();
+        HttpClientInputs httpClientInputs = new HttpClientInputs();
+        URL url = buildURL(wsManRequestInputs, WSMAN_RESOURCE_URI);
+        httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
+        String shellId = createShell(scoreHttpClient, httpClientInputs, wsManRequestInputs);
+        WSManUtils.validateUUID(shellId, SHELL_ID);
+        String commandStr = POWERSHELL_SCRIPT_PREFIX + " " + EncoderDecoder.encodeStringInBase64(wsManRequestInputs.getScript(), Charsets.UTF_16LE);
+        String commandId = executeCommand(scoreHttpClient, httpClientInputs, shellId, wsManRequestInputs, commandStr);
+        WSManUtils.validateUUID(commandId, COMMAND_ID);
+        Map<String, String> scriptResults = receiveCommandResult(scoreHttpClient, httpClientInputs, shellId, commandId, wsManRequestInputs);
+        deleteShell(scoreHttpClient, httpClientInputs, shellId, wsManRequestInputs);
+        return scriptResults;
+    }
+
+    /**
      * Configures the HttpClientInputs object with the most common http parameters.
      *
      * @param httpClientInputs
@@ -108,37 +139,6 @@ public class WSManRemoteShellService {
         }
         httpClientInputs.setMethod(HttpPost.METHOD_NAME);
         return httpClientInputs;
-    }
-
-    /**
-     * Executes a command on a remote shell by communicating with the WinRM server from the remote host.
-     * Method creates a shell, runs a command on the shell, waits for the command execution to finnish, retrieves the result then deletes the shell.
-     *
-     * @param wsManRequestInputs
-     * @return a map with the result of the command and the exit code of the command execution.
-     * @throws RuntimeException
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ParserConfigurationException
-     * @throws TransformerException
-     * @throws XPathExpressionException
-     * @throws TimeoutException
-     * @throws URISyntaxException
-     * @throws SAXException
-     */
-    public Map<String, String> runCommand(WSManRequestInputs wsManRequestInputs) throws RuntimeException, IOException, InterruptedException, ParserConfigurationException, TransformerException, XPathExpressionException, TimeoutException, URISyntaxException, SAXException {
-        ScoreHttpClient scoreHttpClient = new ScoreHttpClient();
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-        URL url = buildURL(wsManRequestInputs, WSMAN_RESOURCE_URI);
-        httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
-        String shellId = createShell(scoreHttpClient, httpClientInputs, wsManRequestInputs);
-        WSManUtils.validateUUID(shellId, SHELL_ID);
-        String commandStr = POWERSHELL_SCRIPT_PREFIX + " " + EncoderDecoder.encodeStringInBase64(wsManRequestInputs.getScript(), Charsets.UTF_16LE);
-        String commandId = executeCommand(scoreHttpClient, httpClientInputs, shellId, wsManRequestInputs, commandStr);
-        WSManUtils.validateUUID(commandId, COMMAND_ID);
-        Map<String, String> scriptResults = receiveCommandResult(scoreHttpClient, httpClientInputs, shellId, commandId, wsManRequestInputs);
-        deleteShell(scoreHttpClient, httpClientInputs, shellId, wsManRequestInputs);
-        return scriptResults;
     }
 
     /**

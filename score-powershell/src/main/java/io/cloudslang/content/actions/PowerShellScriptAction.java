@@ -145,11 +145,7 @@ public class PowerShellScriptAction {
                     .build();
 
             resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
-            if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
-                resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
-            } else {
-                resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
-            }
+            verifyScriptExecutionStatus(resultMap);
         } catch (NumberFormatException nfe) {
             resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));
             resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
@@ -158,5 +154,17 @@ public class PowerShellScriptAction {
             resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
         }
         return resultMap;
+    }
+
+    /**
+     * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
+     * @param resultMap
+     */
+    private void verifyScriptExecutionStatus(Map<String, String> resultMap) {
+        if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
+            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+        } else {
+            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+        }
     }
 }
