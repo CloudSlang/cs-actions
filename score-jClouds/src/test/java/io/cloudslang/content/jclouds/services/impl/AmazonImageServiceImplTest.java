@@ -40,9 +40,6 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({AmazonImageServiceImpl.class, ContextBuilder.class})
 public class AmazonImageServiceImplTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Mock
     private Properties propertiesMock;
 

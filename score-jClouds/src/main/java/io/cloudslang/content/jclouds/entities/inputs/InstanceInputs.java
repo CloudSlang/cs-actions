@@ -12,6 +12,7 @@ public class InstanceInputs {
     private static final long DEFAULT_POLING_INTERVAL = 20000;
 
     private CustomInputs customInputs;
+    private NetworkInputs networkInputs;
 
     private String instanceType;
     private String availabilityZone;
@@ -60,6 +61,7 @@ public class InstanceInputs {
 
     public InstanceInputs(InstanceInputs.InstanceInputsBuilder builder) {
         this.customInputs = builder.customInputs;
+        this.networkInputs = builder.networkInputs;
 
         this.instanceType = builder.instanceType;
         this.availabilityZone = builder.availabilityZone;
@@ -109,6 +111,10 @@ public class InstanceInputs {
 
     public CustomInputs getCustomInputs() {
         return customInputs;
+    }
+
+    public NetworkInputs getNetworkInputs() {
+        return networkInputs;
     }
 
     public String getInstanceType() {
@@ -285,6 +291,7 @@ public class InstanceInputs {
 
     public static class InstanceInputsBuilder {
         private CustomInputs customInputs;
+        private NetworkInputs networkInputs;
 
         private String instanceType;
         private String availabilityZone;
@@ -337,6 +344,11 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withCustomInputs(CustomInputs inputs) {
             customInputs = inputs;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withNetworkInputs(NetworkInputs inputs) {
+            networkInputs = inputs;
             return this;
         }
 

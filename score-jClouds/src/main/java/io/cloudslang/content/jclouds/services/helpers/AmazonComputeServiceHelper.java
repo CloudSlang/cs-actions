@@ -3,6 +3,7 @@ package io.cloudslang.content.jclouds.services.helpers;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.InstanceFilters;
+import io.cloudslang.content.jclouds.entities.NetworkInterfaceFilters;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +47,22 @@ public class AmazonComputeServiceHelper {
         updateFiltersMap(instanceInputs, filtersMap);
 
         return filtersMap;
+    }
+
+    private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
+                          String serverId, long checkStateTimeout, long polingInterval) throws Exception {
+        long waitTime = 0;
+        while (!InstanceState.STOPPED.equals(instanceState) && waitTime <= checkStateTimeout) {
+            Thread.sleep(polingInterval);
+            waitTime += 4000;
+            instanceState = getInstanceState(instanceApi, region, serverId);
+        }
+    }
+
+    private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {
+        if (StringUtils.isNotBlank(value)) {
+            map.put(key, value);
+        }
     }
 
     private void updateFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
@@ -106,21 +123,20 @@ public class AmazonComputeServiceHelper {
         updateFiltersMapEntry(filtersMap, InstanceFilters.TENANCY.getValue(), instanceInputs.getTenancy());
         updateFiltersMapEntry(filtersMap, InstanceFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getVirtualizationType());
         updateFiltersMapEntry(filtersMap, InstanceFilters.VPC_ID.getValue(), instanceInputs.getCustomInputs().getVpcId());
-    }
 
-    private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {
-        if (StringUtils.isNotBlank(value)) {
-            map.put(key, value);
-        }
-    }
-
-    private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
-                          String serverId, long checkStateTimeout, long polingInterval) throws Exception {
-        long waitTime = 0;
-        while (!InstanceState.STOPPED.equals(instanceState) && waitTime <= checkStateTimeout) {
-            Thread.sleep(polingInterval);
-            waitTime += 4000;
-            instanceState = getInstanceState(instanceApi, region, serverId);
-        }
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_DESCRIPTION.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceDescription());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_SUBNET_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceSubnetId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_VPC_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceVpcId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_OWNER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceOwnerId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_AVAILABILITY_ZONE.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAvailabilityZone());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_REQUESTER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterId());
     }
 }
