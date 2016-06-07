@@ -4,7 +4,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>score-powershell</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A WinRM client for executing PowerShell Commands.</description>
