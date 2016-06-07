@@ -10,7 +10,8 @@ public enum InputDefaults {
     MAX_ENVELOPE_SIZE("153600"),
     X_509_HOSTNAME_VERIFIER("strict"),
     WINRM_LOCALE("en-US"),
-    OPERATION_TIMEOUT("60");
+    OPERATION_TIMEOUT("60"),
+    AUTH_TYPE("Basic");
 
     private String defaultValue;
 
