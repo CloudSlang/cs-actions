@@ -25,6 +25,8 @@ import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCC
  */
 public class PowerShellScriptAction {
 
+    private static final String ZERO_SCRIPT_EXIT_CODE = "0";
+
     /**
      * Executes a PowerShell script on a remote host.
      *
@@ -78,6 +80,7 @@ public class PowerShellScriptAction {
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
+                    @Output(STDERR),
                     @Output(SCRIPT_EXIT_CODE),
                     @Output(EXCEPTION)
             },
@@ -142,7 +145,11 @@ public class PowerShellScriptAction {
                     .build();
 
             resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
-            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+            if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
+                resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+            } else {
+                resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            }
         } catch (NumberFormatException nfe) {
             resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));
             resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
