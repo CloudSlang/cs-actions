@@ -10,7 +10,7 @@ public enum Architecture {
 
     public static String getValue(String input) throws RuntimeException {
         try {
-            return Architecture.valueOf(input.toUpperCase()).toString().toLowerCase();
+            return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Invalid architecture value: [" + input + "]. Valid values: i386, x86_64.");
         }

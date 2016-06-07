@@ -53,6 +53,7 @@ public class DescribeInstancesAction {
      *                               we'll get one reservation ID. If will launch ten instances using the same launch
      *                               request, we'll also get one reservation ID.
      * @param subnetId               The ID of the subnet for the instance.
+     * @param vpcId                  The ID of the VPC that the instance is running in.
      * @param affinity               The affinity setting for an instance running on a dedicated host.
      *                               Valid values: "default" or "host".
      * @param architecture           The instance architecture. Valid values: "i386" or "x86_64".
@@ -106,6 +107,8 @@ public class DescribeInstancesAction {
      * @param spotInstanceRequestId  The ID of the Spot instance request.
      * @param stateReasonCode        The reason code for the state change.
      * @param stateReasonMessage     A message that describes the state change.
+     * @param tenancy                The tenancy of an instance. Valid values: "dedicated", "default", "host".
+     * @param virtualizationType     The virtualization type of the instance. Valid values: "paravirtual", "hvm".
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -140,6 +143,7 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
                                        @Param(Inputs.CustomInputs.RESERVATION_ID) String reservationId,
                                        @Param(Inputs.CustomInputs.SUBNET_ID) String subnetId,
+                                       @Param(Inputs.CustomInputs.VPC_ID) String vpcId,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.ARCHITECTURE) String architecture,
@@ -177,7 +181,9 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
                                        @Param(Inputs.InstanceInputs.SPOT_INSTANCE_REQUEST_ID) String spotInstanceRequestId,
                                        @Param(Inputs.InstanceInputs.STATE_REASON_CODE) String stateReasonCode,
-                                       @Param(Inputs.InstanceInputs.STATE_REASON_MESSAGE) String stateReasonMessage) throws Exception {
+                                       @Param(Inputs.InstanceInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
+                                       @Param(Inputs.InstanceInputs.TENANCY) String tenancy,
+                                       @Param(Inputs.InstanceInputs.VIRTUALIZATION_TYPE) String virtualizationType) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -200,6 +206,7 @@ public class DescribeInstancesAction {
                 .withRamdiskId(ramdiskId)
                 .withReservationId(reservationId)
                 .withSubnetId(subnetId)
+                .withVpcId(vpcId)
                 .build();
 
         InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
@@ -241,6 +248,8 @@ public class DescribeInstancesAction {
                 .withSpotInstanceRequestId(spotInstanceRequestId)
                 .withStateReasonCode(stateReasonCode)
                 .withStateReasonMessage(stateReasonMessage)
+                .withTenancy(tenancy)
+                .withVirtualizationType(virtualizationType)
                 .build();
 
         try {

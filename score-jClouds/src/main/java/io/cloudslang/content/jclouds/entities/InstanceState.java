@@ -33,7 +33,7 @@ public enum InstanceState {
 
     public static String getValue(String input) throws RuntimeException {
         try {
-            return InstanceState.valueOf(input.toUpperCase()).toString().toLowerCase();
+            return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Invalid instanceStateName value: [" + input + "]. Valid values: " +
                     "pending, running, shutting-down, terminated, stopping, stopped.");

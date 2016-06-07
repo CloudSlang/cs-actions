@@ -12,7 +12,7 @@ public enum BlockDeviceMappingStatus {
 
     public static String getValue(String input) throws RuntimeException {
         try {
-            return Architecture.valueOf(input.toUpperCase()).toString().toLowerCase();
+            return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Invalid status value: [" + input + "]. Valid values: attaching, attached, detaching, detached.");
         }

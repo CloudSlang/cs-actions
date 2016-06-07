@@ -50,6 +50,8 @@ public class InstanceInputs {
     private String spotInstanceRequestId;
     private String stateReasonCode;
     private String stateReasonMessage;
+    private String tenancy;
+    private String virtualizationType;
 
     private int minCount;
     private int maxCount;
@@ -96,6 +98,8 @@ public class InstanceInputs {
         this.spotInstanceRequestId = builder.spotInstanceRequestId;
         this.stateReasonCode = builder.stateReasonCode;
         this.stateReasonMessage = builder.stateReasonMessage;
+        this.tenancy = builder.tenancy;
+        this.virtualizationType = builder.virtualizationType;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -255,6 +259,14 @@ public class InstanceInputs {
         return stateReasonMessage;
     }
 
+    public String getTenancy() {
+        return tenancy;
+    }
+
+    public String getVirtualizationType() {
+        return virtualizationType;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -311,6 +323,8 @@ public class InstanceInputs {
         private String spotInstanceRequestId;
         private String stateReasonCode;
         private String stateReasonMessage;
+        private String tenancy;
+        private String virtualizationType;
 
         private int minCount;
         private int maxCount;
@@ -508,6 +522,16 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withStateReasonMessage(String inputValue) throws Exception {
             stateReasonMessage = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withTenancy(String inputValue) throws Exception {
+            tenancy = Tenancy.getValue(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withVirtualizationType(String inputValue) throws Exception {
+            virtualizationType = VirtualizationType.getValue(inputValue);
             return this;
         }
 

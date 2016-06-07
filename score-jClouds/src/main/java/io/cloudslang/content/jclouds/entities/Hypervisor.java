@@ -10,7 +10,7 @@ public enum Hypervisor {
 
     public static String getValue(String input) throws RuntimeException {
         try {
-            return Hypervisor.valueOf(input.toUpperCase()).toString().toLowerCase();
+            return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Invalid hypervisor value: [" + input + "]. Valid values: ovm, xen.");
         }

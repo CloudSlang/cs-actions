@@ -28,6 +28,7 @@ public class Inputs {
         public static final String RAMDISK_ID = "ramdiskId";
         public static final String RESERVATION_ID = "reservationId";
         public static final String SUBNET_ID = "subnetId";
+        public static final String VPC_ID = "vpcId";
     }
 
     public static final class ImageInputs {
@@ -82,5 +83,7 @@ public class Inputs {
         public static final String SPOT_INSTANCE_REQUEST_ID = "spotInstanceRequestId";
         public static final String STATE_REASON_CODE = "stateReasonCode";
         public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
+        public static final String TENANCY = "tenancy";
+        public static final String VIRTUALIZATION_TYPE = "virtualizationType";
     }
 }
