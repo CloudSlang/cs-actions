@@ -61,6 +61,10 @@ public class DescribeInstancesAction {
      *                                               launch request, we'll also get one reservation ID.
      * @param subnetId                               The ID of the subnet for the instance.
      * @param vpcId                                  The ID of the VPC that the instance is running in.
+     * @param allocationId                           The allocation ID returned when you allocated the Elastic IP address
+     *                                               for your network interface.
+     * @param associationId                          The association ID returned when the network interface was associated
+     *                                               with an IP address.
      * @param affinity                               The affinity setting for an instance running on a dedicated host.
      *                                               Valid values: "default" or "host".
      * @param architecture                           The instance architecture. Valid values: "i386" or "x86_64".
@@ -122,6 +126,8 @@ public class DescribeInstancesAction {
      * @param stateReasonMessage                     A message that describes the state change.
      * @param tenancy                                The tenancy of an instance. Valid values: "dedicated", "default", "host".
      * @param virtualizationType                     The virtualization type of the instance. Valid values: "paravirtual", "hvm".
+     * @param publicIp                               The address of the Elastic IP address bound to the network interface.
+     * @param ipOwnerId                              The owner of the Elastic IP address associated with the network interface.
      * @param networkInterfaceDescription            The description of the network interface.
      * @param networkInterfaceSubnetId               The ID of the subnet for the network interface.
      * @param networkInterfaceVpcId                  The ID of the VPC for the network interface.
@@ -187,6 +193,8 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.RESERVATION_ID) String reservationId,
                                        @Param(Inputs.CustomInputs.SUBNET_ID) String subnetId,
                                        @Param(Inputs.CustomInputs.VPC_ID) String vpcId,
+                                       @Param(Inputs.CustomInputs.ALLOCATION_ID) String allocationId,
+                                       @Param(Inputs.CustomInputs.ASSOCIATION_ID) String associationId,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.ARCHITECTURE) String architecture,
@@ -227,6 +235,8 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
                                        @Param(Inputs.InstanceInputs.TENANCY) String tenancy,
                                        @Param(Inputs.InstanceInputs.VIRTUALIZATION_TYPE) String virtualizationType,
+                                       @Param(Inputs.InstanceInputs.PUBLIC_IP) String publicIp,
+                                       @Param(Inputs.InstanceInputs.IP_OWNER_ID) String ipOwnerId,
 
                                        @Param(Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
                                        @Param(Inputs.NetworkInputs.NETWORK_INTERFACE_SUBNET_ID) String networkInterfaceSubnetId,
@@ -277,6 +287,8 @@ public class DescribeInstancesAction {
                 .withReservationId(reservationId)
                 .withSubnetId(subnetId)
                 .withVpcId(vpcId)
+                .withAllocationId(allocationId)
+                .withAssociationId(associationId)
                 .build();
 
         NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
@@ -349,6 +361,8 @@ public class DescribeInstancesAction {
                 .withStateReasonMessage(stateReasonMessage)
                 .withTenancy(tenancy)
                 .withVirtualizationType(virtualizationType)
+                .withPublicIp(publicIp)
+                .withIpOwnerId(ipOwnerId)
                 .build();
 
         try {

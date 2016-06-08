@@ -53,6 +53,8 @@ public class InstanceInputs {
     private String stateReasonMessage;
     private String tenancy;
     private String virtualizationType;
+    private String publicIp;
+    private String ipOwnerId;
 
     private int minCount;
     private int maxCount;
@@ -102,6 +104,8 @@ public class InstanceInputs {
         this.stateReasonMessage = builder.stateReasonMessage;
         this.tenancy = builder.tenancy;
         this.virtualizationType = builder.virtualizationType;
+        this.publicIp = builder.publicIp;
+        this.ipOwnerId = builder.ipOwnerId;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -273,6 +277,14 @@ public class InstanceInputs {
         return virtualizationType;
     }
 
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public String getIpOwnerId() {
+        return ipOwnerId;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -332,6 +344,8 @@ public class InstanceInputs {
         private String stateReasonMessage;
         private String tenancy;
         private String virtualizationType;
+        private String publicIp;
+        private String ipOwnerId;
 
         private int minCount;
         private int maxCount;
@@ -544,6 +558,16 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withVirtualizationType(String inputValue) throws Exception {
             virtualizationType = VirtualizationType.getValue(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withPublicIp(String inputValue) throws Exception {
+            publicIp = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withIpOwnerId(String inputValue) throws Exception {
+            ipOwnerId = inputValue;
             return this;
         }
 

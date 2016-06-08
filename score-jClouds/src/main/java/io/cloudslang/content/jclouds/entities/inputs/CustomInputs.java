@@ -1,6 +1,5 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -24,6 +23,8 @@ public class CustomInputs {
     private String reservationId;
     private String subnetId;
     private String vpcId;
+    private String allocationId;
+    private String associationId;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -39,6 +40,8 @@ public class CustomInputs {
         this.reservationId = builder.reservationId;
         this.subnetId = builder.subnetId;
         this.vpcId = builder.vpcId;
+        this.allocationId = builder.allocationId;
+        this.associationId = builder.associationId;
     }
 
     public String getRegion() {
@@ -93,6 +96,14 @@ public class CustomInputs {
         return vpcId;
     }
 
+    public String getAllocationId() {
+        return allocationId;
+    }
+
+    public String getAssociationId() {
+        return associationId;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -107,6 +118,8 @@ public class CustomInputs {
         private String reservationId;
         private String subnetId;
         private String vpcId;
+        private String allocationId;
+        private String associationId;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -174,6 +187,16 @@ public class CustomInputs {
 
         public CustomInputsBuilder withVpcId(String inputValue) {
             vpcId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withAllocationId(String inputValue) {
+            allocationId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withAssociationId(String inputValue) {
+            associationId = inputValue;
             return this;
         }
     }

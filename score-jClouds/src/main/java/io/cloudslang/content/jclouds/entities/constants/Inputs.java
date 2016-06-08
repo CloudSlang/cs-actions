@@ -29,6 +29,8 @@ public class Inputs {
         public static final String RESERVATION_ID = "reservationId";
         public static final String SUBNET_ID = "subnetId";
         public static final String VPC_ID = "vpcId";
+        public static final String ALLOCATION_ID = "allocationId";
+        public static final String ASSOCIATION_ID = "associationId";
     }
 
     public static final class ImageInputs {
@@ -85,6 +87,8 @@ public class Inputs {
         public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
         public static final String TENANCY = "tenancy";
         public static final String VIRTUALIZATION_TYPE = "virtualizationType";
+        public static final String PUBLIC_IP = "publicIp";
+        public static final String IP_OWNER_ID = "ipOwnerId";
     }
 
     public static final class NetworkInputs {

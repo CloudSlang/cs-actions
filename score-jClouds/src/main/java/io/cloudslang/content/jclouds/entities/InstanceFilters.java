@@ -54,7 +54,11 @@ public enum InstanceFilters {
     SUBNET_ID("subnet-id"),
     TENANCY("tenancy"),
     VIRTUALIZATION_TYPE("virtualization-type"),
-    VPC_ID("vpc-id");
+    VPC_ID("vpc-id"),
+    PUBLIC_IP("association.public-ip"),
+    IP_OWNER_ID("association.ip-owner-id"),
+    ALLOCATION_ID("association.allocation-id"),
+    ASSOCIATION_ID("association.association-id");
 
     private String value;
 

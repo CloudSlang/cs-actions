@@ -123,6 +123,10 @@ public class AmazonComputeServiceHelper {
         updateFiltersMapEntry(filtersMap, InstanceFilters.TENANCY.getValue(), instanceInputs.getTenancy());
         updateFiltersMapEntry(filtersMap, InstanceFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getVirtualizationType());
         updateFiltersMapEntry(filtersMap, InstanceFilters.VPC_ID.getValue(), instanceInputs.getCustomInputs().getVpcId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.PUBLIC_IP.getValue(), instanceInputs.getPublicIp());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.IP_OWNER_ID.getValue(), instanceInputs.getIpOwnerId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.ALLOCATION_ID.getValue(), instanceInputs.getCustomInputs().getAllocationId());
+        updateFiltersMapEntry(filtersMap, InstanceFilters.ASSOCIATION_ID.getValue(), instanceInputs.getCustomInputs().getAssociationId());
 
         updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_DESCRIPTION.getValue(),
                 instanceInputs.getNetworkInputs().getNetworkInterfaceDescription());
