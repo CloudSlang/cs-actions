@@ -107,7 +107,7 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_INSTANCE_OWNER_ID = "networkInterfaceInstanceOwnerId";
         public static final String NETWORK_INTERFACE_PRIVATE_IP_ADDRESS = "networkInterfacePrivateIpAddress";
         public static final String NETWORK_INTERFACE_DEVICE_INDEX = "networkInterfaceDeviceIndex";
-        public static final String NETWORK_INTERFACE_ATTACHMENT_STATUS = "networkInterfaceStatus";
+        public static final String NETWORK_INTERFACE_ATTACHMENT_STATUS = "networkInterfaceAttachmentStatus";
         public static final String NETWORK_INTERFACE_ATTACH_TIME = "networkInterfaceAttachTime";
         public static final String NETWORK_INTERFACE_DELETE_ON_TERMINATION = "networkInterfaceDeleteOnTermination";
         public static final String NETWORK_INTERFACE_ADDRESSES_PRIMARY = "networkInterfaceAddressesPrimary";

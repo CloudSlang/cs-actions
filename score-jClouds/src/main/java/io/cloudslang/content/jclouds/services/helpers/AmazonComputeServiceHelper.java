@@ -148,5 +148,31 @@ public class AmazonComputeServiceHelper {
                 instanceInputs.getNetworkInputs().getNetworkInterfacePrivateDnsName());
         updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_SOURCE_DESTINATION_CHECK.getValue(),
                 instanceInputs.getNetworkInputs().getNetworkInterfaceSourceDestinationCheck());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_GROUP_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceGroupId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_GROUP_NAME.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceGroupName());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_ATTACHMENT_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_INSTANCE_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_INSTANCE_OWNER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceOwnerId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_PRIVATE_IP_ADDRESS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfacePrivateIpAddress());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_DEVICE_INDEX.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceDeviceIndex());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_ATTACHMENT_STATUS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentStatus());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_ATTACH_TIME.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachTime());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_DELETE_ON_TERMINATION.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceDeleteOnTermination());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_ADDRESSES_PRIMARY.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAddressesPrimary());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_PUBLIC_IP.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfacePublicIp());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_IP_OWNER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceIpOwnerId());
     }
 }

@@ -13,7 +13,7 @@ public enum Tenancy {
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized provider value: [" + input + "]. Valid values are: dedicated, default, host.");
+            throw new RuntimeException("Unrecognized tenancy value: [" + input + "]. Valid values are: dedicated, default, host.");
         }
     }
 }
