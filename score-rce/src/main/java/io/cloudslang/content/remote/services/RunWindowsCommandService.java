@@ -1,62 +1,31 @@
 package io.cloudslang.content.remote.services;
 
 import io.cloudslang.content.remote.utils.RunWindowsCommandInputs;
-import io.cloudslang.content.remote.utils.StringUtils;
+import io.cloudslang.content.remote.utils.CommandUtils;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Created by pasternd on 07/06/2016.
  */
 public class RunWindowsCommandService {
 
-    private int executeCommand(String command){
-        try {
-            Runtime r = Runtime.getRuntime();
-            Process p = r.exec(command);
-            p.waitFor();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-
-    private String getResult(File file) throws IOException {
-        String result ="";
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            result = sb.toString();
-
-        } finally {
-            br.close();
-            file.delete();
-        }
-        return result;
-    }
+    RunWindowsCommandHelper runWindowsCommandHelper = new RunWindowsCommandHelper();
 
     public String launchCmdWinCommand(RunWindowsCommandInputs runWindowsCommandInputs) throws IOException {
 
-        String tempFileForResults = StringUtils.getTempFileForResults(runWindowsCommandInputs.getHostname());
-        String wmiComCreateFile = StringUtils.getWmiComCreateFile(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getUsername(),runWindowsCommandInputs.getPassword(),tempFileForResults);
-        String wmiComExecuteWindCom = StringUtils.getWmiComExecuteWindCom(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getCommand(),tempFileForResults);
+        String tempFileForResults = CommandUtils.getTempFileForResults(runWindowsCommandInputs.getHostname());
+        String wmiComCreateFile = CommandUtils.getWmiComCreateFile(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getUsername(),runWindowsCommandInputs.getPassword(),tempFileForResults);
+        String wmiComExecuteWindCom = CommandUtils.getWmiComExecuteWindCom(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getCommand(),tempFileForResults);
 
         // create file for results
-        this.executeCommand(wmiComCreateFile);
+        runWindowsCommandHelper.executeCommand(wmiComCreateFile);
         // execute command and put result to file
-        executeCommand(wmiComExecuteWindCom);
+        runWindowsCommandHelper.executeCommand(wmiComExecuteWindCom);
         // get file for results
-        String command_result = getResult(new File(tempFileForResults));
+        String command_result = runWindowsCommandHelper.getCommandResult(new File(tempFileForResults));
 
         return command_result;
     }

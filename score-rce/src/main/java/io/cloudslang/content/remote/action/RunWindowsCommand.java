@@ -1,16 +1,13 @@
 package io.cloudslang.content.remote.action;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.remote.constants.Inputs;
 import io.cloudslang.content.remote.services.RunWindowsCommandService;
 import io.cloudslang.content.remote.utils.RunWindowsCommandInputs;
 
@@ -38,14 +35,21 @@ public class RunWindowsCommand {
             }
     )
 
-    public Map<String, String> run(@Param(value = "hostname", required = true) String hostname, @Param(value = "command", required = true) String command, @Param(value = "username", required = true) String username, @Param(value = "password", required = true) String password) {
+    public Map<String, String> run(@Param(value = Inputs.HOSTNAME, required = true) String hostname, @Param(value = Inputs.COMMAND, required = true) String command, @Param(value = Inputs.USERNAME, required = true) String username, @Param(value = Inputs.PASSWORD, required = true) String password) {
 
-        RunWindowsCommandInputs runWindowsCommandInputs = new RunWindowsCommandInputs(hostname,  username, password, command);
-        runWindowsCommandInputs.setHostname(hostname);
-        runWindowsCommandInputs.setUsername(username);
-        runWindowsCommandInputs.setPassword(password);
-        runWindowsCommandInputs.setCommand(command);
+        RunWindowsCommandInputs runWindowsCommandInputs = null;
+        try {
 
+            runWindowsCommandInputs = new RunWindowsCommandInputs.RunWindowsCommandInputsBuilder()
+                    .withHostname(hostname)
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withCommand(command)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return new RunWindowsCommandService().execute(runWindowsCommandInputs);
     }

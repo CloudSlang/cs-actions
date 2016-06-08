@@ -10,42 +10,58 @@ public class RunWindowsCommandInputs {
     private String username;
     private String password;
 
-    public RunWindowsCommandInputs(String hostname,  String username, String password, String command) {
-        this.hostname = hostname;
-        this.command = command;
-        this.username = username;
-        this.password = password;
+    public RunWindowsCommandInputs(RunWindowsCommandInputsBuilder builder) {
+        this.hostname = builder.host;
+        this.command = builder.command;
+        this.username = builder.username;
+        this.password = builder.password;
     }
 
     public String getHostname() {
         return hostname;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
     public String getCommand() {
         return command;
-    }
-
-    public void setCommand(String command) {
-        this.command = command;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public static class RunWindowsCommandInputsBuilder {
+        private String host;
+        private String username;
+        private String password;
+        private String command;
+
+        public RunWindowsCommandInputs build() {
+            return new RunWindowsCommandInputs(this);
+        }
+
+        public RunWindowsCommandInputsBuilder withHostname(String inputValue) {
+            host = inputValue;
+            return this;
+        }
+
+        public RunWindowsCommandInputsBuilder withUsername(String inputValue) throws Exception {
+            username = inputValue;
+            return this;
+        }
+
+        public RunWindowsCommandInputsBuilder withPassword(String inputValue) throws Exception {
+            password = inputValue;
+            return this;
+        }
+
+        public RunWindowsCommandInputsBuilder withCommand(String inputValue) throws Exception {
+            command = inputValue;
+            return this;
+        }
     }
+
 }
