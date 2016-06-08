@@ -27,7 +27,7 @@ public enum InstanceState {
             return InstanceState.valueOf(input.toUpperCase()).getKey();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Invalid instanceStateCode value: [" + input + "]. Valid values: " +
-                    "0, 16, 32, 48, 64, 80.");
+                    "pending, running, shutting-down, terminated, stopping, stopped.");
         }
     }
 

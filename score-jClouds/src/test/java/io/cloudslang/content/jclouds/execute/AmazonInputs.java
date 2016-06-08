@@ -29,7 +29,6 @@ public class AmazonInputs {
 
     private String region;
     private String serverId;
-    private String imageId;
 
     private static CommonInputs commonInputs;
     private static CustomInputs customInputs;
@@ -67,43 +66,38 @@ public class AmazonInputs {
 
         this.region = customInputs.getRegion();
         this.serverId = customInputs.getInstanceId();
-        this.imageId = customInputs.getImageId();
     }
 
-    public static AmazonInputs getAmazonInstance() {
+    static AmazonInputs getAmazonInstance() {
         return new AmazonInputs(commonInputs, customInputs);
     }
 
-    public String getProvider() {
+    String getProvider() {
         return provider;
     }
 
-    public String getIdentity() {
+    String getIdentity() {
         return identity;
     }
 
-    public String getCredential() {
+    String getCredential() {
         return credential;
     }
 
-    public String getEndpoint() {
+    String getEndpoint() {
         return endpoint;
     }
 
-    public String getProxyHost() {
+    String getProxyHost() {
         return proxyHost;
     }
 
-    public String getProxyPort() {
+    String getProxyPort() {
         return proxyPort;
     }
 
-    public String getRegion() {
+    String getRegion() {
         return region;
-    }
-
-    public String getImageId() {
-        return imageId;
     }
 
     String getServerId() {

@@ -1,7 +1,11 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Sets;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
+import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
@@ -32,8 +36,7 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
@@ -498,6 +501,26 @@ public class AmazonComputeServiceImplTest {
         assertEquals("Instance successfully updated.", result);
     }
 
+    @Test
+    public void testDescribeInstancesInRegion() throws Exception {
+        addCommonMocksForInstanceApi();
+
+        amazonComputeServiceImplSpy.describeInstancesInRegion(getInstanceInputs());
+
+        verifyMocksInteractionInstanceApiForRegion();
+        verify(instanceApiMock, times(1)).describeInstancesInRegion(eq(REGION));
+    }
+
+    @Test
+    public void testDescribeInstancesInRegionWithFilters() throws Exception {
+        addCommonMocksForInstanceApi();
+
+        amazonComputeServiceImplSpy.describeInstancesInRegion(getInstanceInputs("1.1.1.1"));
+
+        verifyMocksInteractionInstanceApiForRegion();
+        verify(instanceApiMock, times(1)).describeInstancesInRegionWithFilter(eq(REGION), any(ArrayListMultimap.class));
+    }
+
     /**
      * Add common mocks for all tests on init() method.
      *
@@ -534,14 +557,14 @@ public class AmazonComputeServiceImplTest {
         verify(ec2ApiMock, times(1)).getInstanceApi();
     }
 
-    private void verifyCommonMocksInteraction() {
-        verify(amazonComputeServiceImplSpy, times(1)).lazyInit(REGION);
-        verify(optionalInstanceApi, times(1)).get();
-    }
-
     private void verifyMocksInteractionInstanceApiForRegion() {
         verifyCommonMocksInteraction();
         verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
+    }
+
+    private void verifyCommonMocksInteraction() {
+        verify(amazonComputeServiceImplSpy, times(1)).lazyInit(REGION);
+        verify(optionalInstanceApi, times(1)).get();
     }
 
     private void addCommonMocksForInstanceApi() {
@@ -565,5 +588,17 @@ public class AmazonComputeServiceImplTest {
         instanceStateChangeSet.add(instanceStateChange);
 
         return instanceStateChangeSet;
+    }
+
+    private InstanceInputs getInstanceInputs(String... filter) throws Exception {
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withRegion(REGION).build();
+        NetworkInputs networkInputs = (filter.length > 0) ?
+                new NetworkInputs.NetworkInputsBuilder().withNetworkInterfacePublicIp(filter[0]).build() :
+                new NetworkInputs.NetworkInputsBuilder().build();
+
+        return new InstanceInputs.InstanceInputsBuilder()
+                .withCustomInputs(customInputs)
+                .withNetworkInputs(networkInputs)
+                .build();
     }
 }

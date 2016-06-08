@@ -2,7 +2,6 @@ package io.cloudslang.content.jclouds.utils;
 
 import io.cloudslang.content.jclouds.entities.InstanceState;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -81,10 +80,6 @@ public final class InputsUtil {
     }
 
     public static int getValidInstanceStateCode(String input) {
-        if (!isInt(input)) {
-            throw new RuntimeException(getValidationException(Inputs.InstanceInputs.INSTANCE_STATE_CODE, true));
-        }
-
         return InstanceState.getKey(input);
     }
 
