@@ -138,5 +138,15 @@ public class AmazonComputeServiceHelper {
                 instanceInputs.getNetworkInputs().getNetworkInterfaceAvailabilityZone());
         updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_REQUESTER_ID.getValue(),
                 instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_REQUESTER_MANAGED.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterManaged());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_STATUS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_MAC_ADDRESS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceMacAddress());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_PRIVATE_DNS_NAME.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfacePrivateDnsName());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_SOURCE_DESTINATION_CHECK.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceSourceDestinationCheck());
     }
 }
