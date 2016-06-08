@@ -17,6 +17,7 @@ public class Constants {
 
     public static final class OutputNames {
         public static final String RETURN_RESULT = "returnResult";
+        public static final String STDERR = "stderr";
         public static final String SCRIPT_EXIT_CODE = "scriptExitCode";
         public static final String EXCEPTION = "exception";
         public static final String RETURN_CODE = "returnCode";

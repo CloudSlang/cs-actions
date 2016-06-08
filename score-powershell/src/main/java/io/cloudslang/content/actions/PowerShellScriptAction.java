@@ -25,6 +25,8 @@ import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCC
  */
 public class PowerShellScriptAction {
 
+    private static final String ZERO_SCRIPT_EXIT_CODE = "0";
+
     /**
      * Executes a PowerShell script on a remote host.
      *
@@ -78,6 +80,7 @@ public class PowerShellScriptAction {
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
+                    @Output(STDERR),
                     @Output(SCRIPT_EXIT_CODE),
                     @Output(EXCEPTION)
             },
@@ -90,8 +93,9 @@ public class PowerShellScriptAction {
             @Param(value = INPUT_HOST, required = true) String host,
             @Param(value = INPUT_PORT) String port,
             @Param(value = PROTOCOL) String protocol,
-            @Param(value = USERNAME, required = true) String username,
-            @Param(value = PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = USERNAME) String username,
+            @Param(value = PASSWORD, encrypted = true) String password,
+            @Param(value = AUTH_TYPE) String authType,
             @Param(value = PROXY_HOST) String proxyHost,
             @Param(value = PROXY_PORT) String proxyPort,
             @Param(value = PROXY_USERNAME) String proxyUsername,
@@ -100,6 +104,9 @@ public class PowerShellScriptAction {
             @Param(value = X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE) String trustKeystore,
             @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = KERBEROS_CONFIG_FILE) String kerberosConfFile,
+            @Param(value = KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
+            @Param(value = KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
             @Param(value = KEYSTORE) String keystore,
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
@@ -117,6 +124,10 @@ public class PowerShellScriptAction {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
+                    .withAuthType(authType)
+                    .withKerberosConfFile(kerberosConfFile)
+                    .withKerberosLoginConfFile(kerberosLoginConfFile)
+                    .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
                     .withProxyUsername(proxyUsername)
@@ -134,7 +145,7 @@ public class PowerShellScriptAction {
                     .build();
 
             resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
-            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+            verifyScriptExecutionStatus(resultMap);
         } catch (NumberFormatException nfe) {
             resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));
             resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
@@ -143,5 +154,17 @@ public class PowerShellScriptAction {
             resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
         }
         return resultMap;
+    }
+
+    /**
+     * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
+     * @param resultMap
+     */
+    private void verifyScriptExecutionStatus(Map<String, String> resultMap) {
+        if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
+            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+        } else {
+            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+        }
     }
 }

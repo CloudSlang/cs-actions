@@ -12,6 +12,10 @@ public class WSManRequestInputs {
     private String protocol;
     private String username;
     private String password;
+    private String authType;
+    private String kerberosConfFile;
+    private String kerberosLoginConfFile;
+    private String kerberosSkipPortForLookup;
     private String proxyHost;
     private String proxyPort;
     private String proxyUsername;
@@ -33,6 +37,10 @@ public class WSManRequestInputs {
         this.protocol = builder.protocol;
         this.username = builder.username;
         this.password = builder.password;
+        this.authType = builder.authType;
+        this.kerberosConfFile = builder.kerberosConfFile;
+        this.kerberosLoginConfFile = builder.kerberosLoginConfFile;
+        this.kerberosSkipPortForLookup = builder.kerberosSkipPortForLookup;
         this.proxyHost = builder.proxyHost;
         this.proxyPort = builder.proxyPort;
         this.proxyUsername = builder.proxyUsername;
@@ -67,6 +75,22 @@ public class WSManRequestInputs {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getAuthType() {
+        return authType;
+    }
+
+    public String getKerberosConfFile() {
+        return kerberosConfFile;
+    }
+
+    public String getKerberosLoginConfFile() {
+        return kerberosLoginConfFile;
+    }
+
+    public String getKerberosSkipPortForLookup() {
+        return kerberosSkipPortForLookup;
     }
 
     public String getProxyHost() {
@@ -131,6 +155,10 @@ public class WSManRequestInputs {
         private String protocol;
         private String username;
         private String password;
+        private String authType;
+        private String kerberosConfFile;
+        private String kerberosLoginConfFile;
+        private String kerberosSkipPortForLookup;
         private String proxyHost;
         private String proxyPort;
         private String proxyUsername;
@@ -244,6 +272,27 @@ public class WSManRequestInputs {
         public WSManRequestInputsBuilder withOperationTimeout(String operationTimeout) {
             operationTimeout = StringUtils.isBlank(operationTimeout) ? InputDefaults.OPERATION_TIMEOUT.getValue() : operationTimeout;
             this.operationTimeout = Integer.parseInt(operationTimeout);
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withAuthType(String authType) {
+            authType = StringUtils.isBlank(authType) ? InputDefaults.AUTH_TYPE.getValue() : authType;
+            this.authType = authType;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKerberosConfFile(String kerberosConfFile) {
+            this.kerberosConfFile = kerberosConfFile;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKerberosLoginConfFile(String kerberosLoginConfFile) {
+            this.kerberosLoginConfFile = kerberosLoginConfFile;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
+            this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
             return this;
         }
     }

@@ -25,10 +25,11 @@ public class ResourceLoader {
      * @throws URISyntaxException
      */
     public static String loadAsString(String resourceFileName) throws IOException, URISyntaxException {
-        InputStream is = ResourceLoader.class.getClassLoader().getResourceAsStream(resourceFileName);
-        StringWriter stringWriter = new StringWriter();
-        IOUtils.copy(is, stringWriter, StandardCharsets.UTF_8);
-        return stringWriter.toString();
+        try (InputStream is = ResourceLoader.class.getClassLoader().getResourceAsStream(resourceFileName)) {
+            StringWriter stringWriter = new StringWriter();
+            IOUtils.copy(is, stringWriter, StandardCharsets.UTF_8);
+            return stringWriter.toString();
+        }
     }
 
     public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
