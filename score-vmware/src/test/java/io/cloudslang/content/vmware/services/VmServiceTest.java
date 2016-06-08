@@ -284,7 +284,7 @@ public class VmServiceTest {
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).destroyTask(any(ManagedObjectReference.class));
         verify(taskMorMock, never()).getValue();
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
@@ -306,7 +306,7 @@ public class VmServiceTest {
         verify(morObjectHandlerMock, never()).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).destroyTask(any(ManagedObjectReference.class));
         verify(taskMorMock, never()).getValue();
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
@@ -388,11 +388,11 @@ public class VmServiceTest {
         Map<String, String> results = new VmService().powerOnVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOnNameToBeTested").build());
 
-        verify(connectionResourcesMock).getConnection();
+        verify(connectionResourcesMock, times(1)).getConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).powerOnVMTask(any(ManagedObjectReference.class), any(ManagedObjectReference.class));
         verify(taskMorMock, never()).getValue();
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
@@ -451,11 +451,11 @@ public class VmServiceTest {
         Map<String, String> results = new VmService().powerOffVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOffNameToBeTested").build());
 
-        verify(connectionResourcesMock).getConnection();
+        verify(connectionResourcesMock, times(1)).getConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).powerOffVMTask(any(ManagedObjectReference.class));
         verify(taskMorMock, never()).getValue();
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
@@ -473,11 +473,11 @@ public class VmServiceTest {
         Map<String, String> results = new VmService().powerOffVM(httpInputsMock,
                 new VmInputs.VmInputsBuilder().withVirtualMachineName("powerOffNameToBeTested").build());
 
-        verify(connectionResourcesMock).getConnection();
+        verify(connectionResourcesMock, times(1)).getConnection();
         verify(morObjectHandlerMock, never()).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).powerOffVMTask(any(ManagedObjectReference.class));
         verify(taskMorMock, never()).getValue();
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
@@ -1272,9 +1272,9 @@ public class VmServiceTest {
 
     private void verifyConnection() {
         verify(connectionResourcesMock, atMost(3)).getVimPortType();
-        verify(taskMorMock).getValue();
-        verify(connectionResourcesMock).getConnection();
-        verify(connectionMock).disconnect();
+        verify(taskMorMock, times(1)).getValue();
+        verify(connectionResourcesMock, times(1)).getConnection();
+        verify(connectionMock, times(1)).disconnect();
     }
 
     private void populateOsDescriptorsList(List<GuestOsDescriptor> guestOSDescriptorsList, String guestOsId) {
