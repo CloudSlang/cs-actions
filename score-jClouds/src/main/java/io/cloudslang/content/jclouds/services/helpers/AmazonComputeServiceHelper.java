@@ -208,8 +208,7 @@ public class AmazonComputeServiceHelper {
                 throw new RuntimeException(Constants.ErrorMessages.TAG_KEYS_TAG_VALUES_MISMATCH);
             }
 
-            int counter;
-            for (counter = 0; counter < tagKeys.length - 1; counter++) {
+            for (int counter = 0; counter < tagKeys.length - 1; counter++) {
                 filtersMap.put(Constants.Miscellaneous.TAG, tagKeys[counter] + Constants.Miscellaneous.EQUAL + tagValues[counter]);
             }
         }
