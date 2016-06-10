@@ -95,10 +95,9 @@ public class InputsUtilTest {
 
     @Test
     public void getValidInstanceStateInvalid() {
-        setExpectedExceptions(RuntimeException.class, "Invalid instanceStateCode value: []. " +
-                "Valid values: pending, running, shutting-down, terminated, stopping, stopped.");
+        int testedValue = InputsUtil.getValidInstanceStateCode("");
 
-        InputsUtil.getValidInstanceStateCode("");
+        assertEquals(-1, testedValue);
     }
 
     @Test
