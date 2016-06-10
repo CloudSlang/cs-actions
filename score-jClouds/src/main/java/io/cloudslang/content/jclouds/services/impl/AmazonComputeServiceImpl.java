@@ -2,6 +2,7 @@ package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
@@ -53,10 +54,10 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public Set<String> describeInstancesInRegion(InstanceInputs instanceInputs) {
+    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) {
         InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(), true);
 
-        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper().getInstanceFilterMap(instanceInputs);
+        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper().getInstanceFilterMap(instanceInputs, commonInputs.getDelimiter());
 
         Set<? extends Reservation<? extends RunningInstance>> instancesInRegion;
         Set<String> nodesSet = new HashSet<>();

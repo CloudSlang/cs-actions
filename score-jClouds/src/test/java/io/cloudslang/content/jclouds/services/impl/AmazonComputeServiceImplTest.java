@@ -3,6 +3,7 @@ package io.cloudslang.content.jclouds.services.impl;
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Sets;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
@@ -505,17 +506,39 @@ public class AmazonComputeServiceImplTest {
     public void testDescribeInstancesInRegion() throws Exception {
         addCommonMocksForInstanceApi();
 
-        amazonComputeServiceImplSpy.describeInstancesInRegion(getInstanceInputs());
+        amazonComputeServiceImplSpy.describeInstancesInRegion(getCommonInputs(), getInstanceInputs("", ""));
 
         verifyMocksInteractionInstanceApiForRegion();
         verify(instanceApiMock, times(1)).describeInstancesInRegion(eq(REGION));
     }
 
     @Test
-    public void testDescribeInstancesInRegionWithFilters() throws Exception {
+    public void testDescribeInstancesInRegionWithFiltersNoTags() throws Exception {
         addCommonMocksForInstanceApi();
 
-        amazonComputeServiceImplSpy.describeInstancesInRegion(getInstanceInputs("1.1.1.1"));
+        amazonComputeServiceImplSpy.describeInstancesInRegion(getCommonInputs(), getInstanceInputs("", "", "1.1.1.1"));
+
+        verifyMocksInteractionInstanceApiForRegion();
+        verify(instanceApiMock, times(1)).describeInstancesInRegionWithFilter(eq(REGION), any(ArrayListMultimap.class));
+    }
+
+    @Test
+    public void testDescribeInstancesInRegionWithFiltersWithTags() throws Exception {
+        addCommonMocksForInstanceApi();
+
+        amazonComputeServiceImplSpy.describeInstancesInRegion(getCommonInputs(), getInstanceInputs("a,b,c", "x,y,z", "1.1.1.1"));
+
+        verifyMocksInteractionInstanceApiForRegion();
+        verify(instanceApiMock, times(1)).describeInstancesInRegionWithFilter(eq(REGION), any(ArrayListMultimap.class));
+    }
+
+    @Test
+    public void testDescribeInstancesInRegionWithFiltersInvalidTags() throws Exception {
+        setExpectedExceptions(RuntimeException.class, "Incorrect supplied values for: [keyTagsString] and/or " +
+                "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.");
+        addCommonMocksForInstanceApi();
+
+        amazonComputeServiceImplSpy.describeInstancesInRegion(getCommonInputs(), getInstanceInputs("d,e,f,g", "1,2", "1.1.1.1"));
 
         verifyMocksInteractionInstanceApiForRegion();
         verify(instanceApiMock, times(1)).describeInstancesInRegionWithFilter(eq(REGION), any(ArrayListMultimap.class));
@@ -590,7 +613,7 @@ public class AmazonComputeServiceImplTest {
         return instanceStateChangeSet;
     }
 
-    private InstanceInputs getInstanceInputs(String... filter) throws Exception {
+    private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) throws Exception {
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withRegion(REGION).build();
         NetworkInputs networkInputs = (filter.length > 0) ?
                 new NetworkInputs.NetworkInputsBuilder().withNetworkInterfacePublicIp(filter[0]).build() :
@@ -599,6 +622,12 @@ public class AmazonComputeServiceImplTest {
         return new InstanceInputs.InstanceInputsBuilder()
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
+                .withKeyTagsString(tagKeys)
+                .withValueTagsString(tagValues)
                 .build();
+    }
+
+    private CommonInputs getCommonInputs() throws Exception {
+        return new CommonInputs.CommonInputsBuilder().withDelimiter(",").build();
     }
 }

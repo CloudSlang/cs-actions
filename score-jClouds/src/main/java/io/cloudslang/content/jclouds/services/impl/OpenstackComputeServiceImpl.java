@@ -113,7 +113,7 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public Set<String> describeInstancesInRegion(InstanceInputs instanceInputs)
+    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }

@@ -18,7 +18,7 @@ import java.util.Set;
 public class DescribeInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        Set<String> instancesSet = cs.describeInstancesInRegion(instanceInputs);
+        Set<String> instancesSet = cs.describeInstancesInRegion(inputs, instanceInputs);
 
         return OutputsUtil.getResultsMap(instancesSet.toString());
     }

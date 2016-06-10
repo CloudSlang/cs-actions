@@ -41,6 +41,7 @@ public class DescribeInstancesAction {
      * @param proxyHost                              The proxy server used to access the web site. If empty no proxy will
      *                                               be used.
      * @param proxyPort                              The proxy server port.
+     * @param delimiter                              The delimiter that will be used - Default: ","
      * @param region                                 The region from which to list servers. Ex: "RegionOne", "us-east-1".
      *                                               ListRegionAction can be used in order to get all regions.
      * @param volumeId                               The volume ID of the EBS volume.
@@ -180,6 +181,7 @@ public class DescribeInstancesAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(Inputs.CustomInputs.VOLUME_ID) String volumeId,
@@ -237,6 +239,8 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.VIRTUALIZATION_TYPE) String virtualizationType,
                                        @Param(Inputs.InstanceInputs.PUBLIC_IP) String publicIp,
                                        @Param(Inputs.InstanceInputs.IP_OWNER_ID) String ipOwnerId,
+                                       @Param(Inputs.InstanceInputs.KEY_TAGS_STRING) String keyTagsString,
+                                       @Param(Inputs.InstanceInputs.VALUE_TAGS_STRING) String valueTagsString,
 
                                        @Param(Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
                                        @Param(Inputs.NetworkInputs.NETWORK_INTERFACE_SUBNET_ID) String networkInterfaceSubnetId,
@@ -272,6 +276,7 @@ public class DescribeInstancesAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
+                .withDelimiter(delimiter)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
@@ -363,6 +368,8 @@ public class DescribeInstancesAction {
                 .withVirtualizationType(virtualizationType)
                 .withPublicIp(publicIp)
                 .withIpOwnerId(ipOwnerId)
+                .withKeyTagsString(keyTagsString)
+                .withValueTagsString(valueTagsString)
                 .build();
 
         try {

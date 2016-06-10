@@ -89,6 +89,8 @@ public class Inputs {
         public static final String VIRTUALIZATION_TYPE = "virtualizationType";
         public static final String PUBLIC_IP = "publicIp";
         public static final String IP_OWNER_ID = "ipOwnerId";
+        public static final String KEY_TAGS_STRING = "keyTagsString";
+        public static final String VALUE_TAGS_STRING = "valueTagsString";
     }
 
     public static final class NetworkInputs {

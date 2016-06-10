@@ -37,6 +37,7 @@ public class RemoveLaunchPermissionsFromImageAction {
      * @param region           Optional - Region where the targeted image reside. ListRegionAction can be used in order to
      *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
      *                         Default: "us-east-1".
+     * @param delimiter        The delimiter that will be used - Default: ","
      * @param imageId          ID of the specified image to remove launch permission for.
      * @param userIdsString    Optional - A string that contains: none, one or more user IDs separated by delimiter.
      *                         Default: ""

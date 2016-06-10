@@ -61,11 +61,11 @@ public class DescribeInstancesExecutorTest {
     public void testExecute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
 
-        doReturn(new HashSet<>()).when(computeServiceMock).describeInstancesInRegion(getInstanceInputs());
+        doReturn(new HashSet<>()).when(computeServiceMock).describeInstancesInRegion(getCommonInputs(inputs), getInstanceInputs());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getInstanceInputs());
 
-        verify(computeServiceMock, times(1)).describeInstancesInRegion(any(InstanceInputs.class));
+        verify(computeServiceMock, times(1)).describeInstancesInRegion(any(CommonInputs.class), any(InstanceInputs.class));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

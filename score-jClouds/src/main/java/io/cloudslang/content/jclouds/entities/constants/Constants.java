@@ -19,6 +19,8 @@ public class Constants {
         public static final String EMPTY = "";
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String NOT_RELEVANT_INT_CODE = "-1";
+        public static final String TAG = "tag";
+        public static final String EQUAL = "=";
     }
 
     public static final class ErrorMessages {
@@ -27,5 +29,7 @@ public class Constants {
                 " cannot be both empty in order to add/remove permission launch on specified image.";
         public static final String MIN_COUNT_MAX_COUNT_VALIDATION = "The value provided for [maxCount] input should be " +
                 "greater or equal than the value provided for [minxCount] input.";
+        public static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
+                "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
     }
 }

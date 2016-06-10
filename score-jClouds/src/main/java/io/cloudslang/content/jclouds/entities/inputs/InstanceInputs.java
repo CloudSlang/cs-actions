@@ -55,6 +55,8 @@ public class InstanceInputs {
     private String virtualizationType;
     private String publicIp;
     private String ipOwnerId;
+    private String keyTagsString;
+    private String valueTagsString;
 
     private int minCount;
     private int maxCount;
@@ -106,6 +108,8 @@ public class InstanceInputs {
         this.virtualizationType = builder.virtualizationType;
         this.publicIp = builder.publicIp;
         this.ipOwnerId = builder.ipOwnerId;
+        this.keyTagsString = builder.keyTagsString;
+        this.valueTagsString = builder.valueTagsString;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -285,6 +289,14 @@ public class InstanceInputs {
         return ipOwnerId;
     }
 
+    public String getKeyTagsString() {
+        return keyTagsString;
+    }
+
+    public String getValueTagsString() {
+        return valueTagsString;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -346,6 +358,8 @@ public class InstanceInputs {
         private String virtualizationType;
         private String publicIp;
         private String ipOwnerId;
+        private String keyTagsString;
+        private String valueTagsString;
 
         private int minCount;
         private int maxCount;
@@ -568,6 +582,16 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withIpOwnerId(String inputValue) throws Exception {
             ipOwnerId = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withKeyTagsString(String inputValue) throws Exception {
+            keyTagsString = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withValueTagsString(String inputValue) throws Exception {
+            valueTagsString = inputValue;
             return this;
         }
 

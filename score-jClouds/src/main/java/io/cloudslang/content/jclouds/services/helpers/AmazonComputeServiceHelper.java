@@ -6,6 +6,7 @@ import io.cloudslang.content.jclouds.entities.InstanceFilters;
 import io.cloudslang.content.jclouds.entities.NetworkInterfaceFilters;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ec2.domain.InstanceState;
 import org.jclouds.ec2.domain.Reservation;
@@ -42,21 +43,11 @@ public class AmazonComputeServiceHelper {
         }
     }
 
-    public Multimap<String, String> getInstanceFilterMap(InstanceInputs instanceInputs) {
+    public Multimap<String, String> getInstanceFilterMap(InstanceInputs instanceInputs, String delimiter) {
         Multimap<String, String> filtersMap = ArrayListMultimap.create();
-        updateFiltersMap(instanceInputs, filtersMap);
+        updateFiltersMap(instanceInputs, filtersMap, delimiter);
 
         return filtersMap;
-    }
-
-    private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
-                          String serverId, long checkStateTimeout, long polingInterval) throws Exception {
-        long waitTime = 0;
-        while (!InstanceState.STOPPED.equals(instanceState) && waitTime <= checkStateTimeout) {
-            Thread.sleep(polingInterval);
-            waitTime += 4000;
-            instanceState = getInstanceState(instanceApi, region, serverId);
-        }
     }
 
     private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {
@@ -65,8 +56,9 @@ public class AmazonComputeServiceHelper {
         }
     }
 
-    private void updateFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
+    private void updateFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
         setRelevantFilters(instanceInputs, filtersMap);
+        setTagFilters(instanceInputs, filtersMap, delimiter);
 
         updateFiltersMapEntry(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
         updateFiltersMapEntry(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
@@ -204,6 +196,36 @@ public class AmazonComputeServiceHelper {
         if (!Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(instanceInputs.getNetworkInputs().getNetworkInterfaceStatus())) {
             updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.NETWORK_INTERFACE_STATUS.getValue(),
                     instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
+        }
+    }
+
+    private void setTagFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
+        String[] tagKeys = getTagStringArray(instanceInputs.getKeyTagsString(), delimiter);
+        String[] tagValues = getTagStringArray(instanceInputs.getValueTagsString(), delimiter);
+
+        if (tagKeys != null && tagValues != null) {
+            if (tagKeys.length != tagValues.length) {
+                throw new RuntimeException(Constants.ErrorMessages.TAG_KEYS_TAG_VALUES_MISMATCH);
+            }
+
+            int counter;
+            for (counter = 0; counter < tagKeys.length - 1; counter++) {
+                filtersMap.put(Constants.Miscellaneous.TAG, tagKeys[counter] + Constants.Miscellaneous.EQUAL + tagValues[counter]);
+            }
+        }
+    }
+
+    private String[] getTagStringArray(String input, String delimiter) {
+        return InputsUtil.getStringsArray(input, Constants.Miscellaneous.EMPTY, delimiter);
+    }
+
+    private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
+                          String serverId, long checkStateTimeout, long polingInterval) throws Exception {
+        long waitTime = 0;
+        while (!InstanceState.STOPPED.equals(instanceState) && waitTime <= checkStateTimeout) {
+            Thread.sleep(polingInterval);
+            waitTime += 4000;
+            instanceState = getInstanceState(instanceApi, region, serverId);
         }
     }
 }
