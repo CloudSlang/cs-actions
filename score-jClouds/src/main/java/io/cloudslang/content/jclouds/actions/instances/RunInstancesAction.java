@@ -10,7 +10,8 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.RunServerExecutor;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
+import io.cloudslang.content.jclouds.execute.instances.RunInstancesExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 2/18/2016.
  */
-public class RunServerAction {
+public class RunInstancesAction {
     /**
      * Launches one ore more instances in a region based on specified "imageRef".
      *
@@ -39,9 +40,10 @@ public class RunServerAction {
      *                         - Examples: 'ami-fce3c696', 'ami-4b91bb21'
      * @param minCount         Optional - The minimum number of launched instances - Default: '1'
      * @param maxCount         Optional - The maximum number of launched instances - Default: '1'
-     * @return
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Run Server",
+    @Action(name = "Run Instances",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -62,10 +64,10 @@ public class RunServerAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
-                                       @Param(Inputs.CustomInputs.MIN_COUNT) String minCount,
-                                       @Param(Inputs.CustomInputs.MAX_COUNT) String maxCount) throws Exception {
+                                       @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(Inputs.InstanceInputs.MIN_COUNT) String minCount,
+                                       @Param(Inputs.InstanceInputs.MAX_COUNT) String maxCount) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -78,14 +80,18 @@ public class RunServerAction {
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
-                .withAvailabilityZone(availabilityZone)
                 .withImageId(imageId)
+                .build();
+
+        InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
+                .withCustomInputs(customInputs)
+                .withAvailabilityZone(availabilityZone)
                 .withMinCount(minCount)
                 .withMaxCount(maxCount)
                 .build();
 
         try {
-            return new RunServerExecutor().execute(inputs, customInputs);
+            return new RunInstancesExecutor().execute(inputs, instanceInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

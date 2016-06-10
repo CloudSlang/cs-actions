@@ -3,7 +3,7 @@ package io.cloudslang.content.jclouds.execute;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.StartServerExecutor;
+import io.cloudslang.content.jclouds.execute.instances.StartInstancesExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -28,9 +28,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created by persdana on 6/22/2015.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({StartServerExecutor.class, ComputeFactory.class})
+@PrepareForTest({StartInstancesExecutor.class, ComputeFactory.class})
 public class StartServerExecutorTest {
-    private StartServerExecutor toTest;
+    private StartInstancesExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -40,7 +40,7 @@ public class StartServerExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new StartServerExecutor();
+        toTest = new StartInstancesExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -58,11 +58,11 @@ public class StartServerExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn("").when(computeServiceMock).start(anyString(), anyString());
+        doReturn("").when(computeServiceMock).startInstances(anyString(), anyString());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock, times(1)).start(inputs.getRegion(), inputs.getServerId());
+        verify(computeServiceMock, times(1)).startInstances(inputs.getRegion(), inputs.getServerId());
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
@@ -82,7 +82,7 @@ public class StartServerExecutorTest {
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
-                .withServerId(inputs.getServerId())
+                .withInstanceId(inputs.getServerId())
                 .build();
     }
 }

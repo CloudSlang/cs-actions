@@ -1,7 +1,5 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -9,46 +7,49 @@ import org.apache.commons.lang3.StringUtils;
  * 2/18/2016.
  */
 public class CustomInputs {
-    private String instanceType;
+    private static final String DEFAULT_AMAZON_REGION = "us-east-1";
+    private static final String SELF = "self";
+
     private String region;
-    private String serverId;
-    private String availabilityZone;
+    private String instanceId;
     private String imageId;
     private String identityId;
-
-    private int minCount;
-    private int maxCount;
-    private long checkStateTimeout;
-    private long polingInterval;
+    private String volumeId;
+    private String groupId;
+    private String hostId;
+    private String kernelId;
+    private String ownerId;
+    private String ramdiskId;
+    private String reservationId;
+    private String subnetId;
+    private String vpcId;
+    private String allocationId;
+    private String associationId;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
-        this.instanceType = builder.instanceType;
-        this.serverId = builder.serverId;
-        this.availabilityZone = builder.availabilityZone;
+        this.instanceId = builder.instanceId;
         this.imageId = builder.imageId;
         this.identityId = builder.identityId;
-
-        this.minCount = builder.minCount;
-        this.maxCount = builder.maxCount;
-        this.checkStateTimeout = builder.checkStateTimeout;
-        this.polingInterval = builder.polingInterval;
+        this.volumeId = builder.volumeId;
+        this.groupId = builder.groupId;
+        this.hostId = builder.hostId;
+        this.kernelId = builder.kernelId;
+        this.ownerId = builder.ownerId;
+        this.ramdiskId = builder.ramdiskId;
+        this.reservationId = builder.reservationId;
+        this.subnetId = builder.subnetId;
+        this.vpcId = builder.vpcId;
+        this.allocationId = builder.allocationId;
+        this.associationId = builder.associationId;
     }
 
     public String getRegion() {
         return region;
     }
 
-    public String getInstanceType() {
-        return instanceType;
-    }
-
-    public String getServerId() {
-        return serverId;
-    }
-
-    public String getAvailabilityZone() {
-        return availabilityZone;
+    public String getInstanceId() {
+        return instanceId;
     }
 
     public String getImageId() {
@@ -59,57 +60,78 @@ public class CustomInputs {
         return identityId;
     }
 
-    public int getMinCount() {
-        return minCount;
+    public String getVolumeId() {
+        return volumeId;
     }
 
-    public int getMaxCount() {
-        return maxCount;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public long getCheckStateTimeout() {
-        return checkStateTimeout;
+    public String getHostId() {
+        return hostId;
     }
 
-    public long getPolingInterval() {
-        return polingInterval;
+    public String getKernelId() {
+        return kernelId;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public String getRamdiskId() {
+        return ramdiskId;
+    }
+
+    public String getReservationId() {
+        return reservationId;
+    }
+
+    public String getSubnetId() {
+        return subnetId;
+    }
+
+    public String getVpcId() {
+        return vpcId;
+    }
+
+    public String getAllocationId() {
+        return allocationId;
+    }
+
+    public String getAssociationId() {
+        return associationId;
     }
 
     public static class CustomInputsBuilder {
         private String region;
-        private String instanceType;
-        private String serverId;
-        private String availabilityZone;
+        private String instanceId;
         private String imageId;
         private String identityId;
-
-        private int minCount;
-        private int maxCount;
-        private long checkStateTimeout;
-
-        private long polingInterval;
+        private String volumeId;
+        private String groupId;
+        private String hostId;
+        private String kernelId;
+        private String ownerId;
+        private String ramdiskId;
+        private String reservationId;
+        private String subnetId;
+        private String vpcId;
+        private String allocationId;
+        private String associationId;
 
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : inputValue;
+            region = (StringUtils.isBlank(inputValue)) ? DEFAULT_AMAZON_REGION : inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withInstanceType(String inputValue) {
-            instanceType = inputValue;
-            return this;
-        }
-
-        public CustomInputsBuilder withServerId(String inputValue) {
-            serverId = inputValue;
-            return this;
-        }
-
-        public CustomInputsBuilder withAvailabilityZone(String inputValue) {
-            availabilityZone = inputValue;
+        public CustomInputsBuilder withInstanceId(String inputValue) {
+            instanceId = inputValue;
             return this;
         }
 
@@ -119,27 +141,62 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withIdentityId(String inputValue) {
-            identityId = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.SELF : inputValue;
+            identityId = StringUtils.isBlank(inputValue) ? SELF : inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withMinCount(String inputValue) {
-            minCount = InputsUtil.getMinInstancesCount(inputValue);
+        public CustomInputsBuilder withVolumeId(String inputValue) {
+            volumeId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withMaxCount(String inputValue) {
-            maxCount = InputsUtil.getMaxInstancesCount(inputValue);
+        public CustomInputsBuilder withGroupId(String inputValue) {
+            groupId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withCheckStateTimeout(String inputValue) {
-            checkStateTimeout = InputsUtil.getValidLong(inputValue, Constants.Miscellaneous.DEFAULT_TIMING);
+        public CustomInputsBuilder withHostId(String inputValue) {
+            hostId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withPolingInterval(String inputValue) {
-            polingInterval = InputsUtil.getValidLong(inputValue, Constants.Miscellaneous.DEFAULT_TIMING);
+        public CustomInputsBuilder withKernelId(String inputValue) {
+            kernelId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withOwnerId(String inputValue) {
+            ownerId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withRamdiskId(String inputValue) {
+            ramdiskId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withReservationId(String inputValue) {
+            reservationId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withSubnetId(String inputValue) {
+            subnetId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withVpcId(String inputValue) {
+            vpcId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withAllocationId(String inputValue) {
+            allocationId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withAssociationId(String inputValue) {
+            associationId = inputValue;
             return this;
         }
     }

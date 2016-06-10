@@ -284,25 +284,25 @@ public class ComputeServiceImplTest {
 
 
     /**
-     * Test start server method.
+     * Test startInstances server method.
      */
     @Test
     public void testStart() throws Exception {
         exception.expect(java.lang.Exception.class);
         exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
 
-        ComputeServiceImplSpy.start(REGION, INVALID_SERVER_ID);
+        ComputeServiceImplSpy.startInstances(REGION, INVALID_SERVER_ID);
     }
 
     /**
-     * Test stop server method.
+     * Test stopInstances server method.
      */
     @Test
     public void testStop() throws Exception {
         exception.expect(java.lang.Exception.class);
         exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
 
-        ComputeServiceImplSpy.stop(REGION, INVALID_SERVER_ID);
+        ComputeServiceImplSpy.stopInstances(REGION, INVALID_SERVER_ID);
     }
 
     /**
@@ -340,96 +340,15 @@ public class ComputeServiceImplTest {
     }
 
     /**
-     * Test hard reboot server method.
-     */
-    @Test
-    public void testHardReboot() {
-        doNothing().when(ComputeServiceImplSpy).reboot(REGION, SERVER_ID);
-
-        ComputeServiceImplSpy.hardReboot(REGION, SERVER_ID);
-
-        verify(ComputeServiceImplSpy).reboot(REGION, SERVER_ID);
-    }
-
-    /**
      * Test soft reboot server method.
      */
     @Test
     public void testSoftReboot() {
         doNothing().when(ComputeServiceImplSpy).reboot(REGION, SERVER_ID);
 
-        ComputeServiceImplSpy.softReboot(REGION, SERVER_ID);
+        ComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID);
 
         verify(ComputeServiceImplSpy).reboot(REGION, SERVER_ID);
-    }
-
-
-    /**
-     * Test suspend server method. Positive scenario.
-     */
-    @Test
-    public void testSuspend() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doNothing().when(computeServiceMock).suspendNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.suspend(REGION, SERVER_ID);
-
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).suspendNode(REGION + "/" + SERVER_ID);
-        verifyNoMoreInteractions(computeServiceMock);
-    }
-
-    /**
-     * Test suspende server method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testSuspendWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).suspendNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.suspend(REGION, SERVER_ID);
-    }
-
-    /**
-     * Test resume server method. Positive scenario.
-     */
-    @Test
-    public void testResume() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doNothing().when(computeServiceMock).resumeNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.resume(REGION, SERVER_ID);
-
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).resumeNode(REGION + "/" + SERVER_ID);
-        verifyNoMoreInteractions(computeServiceMock);
-    }
-
-    /**
-     * Test resume server method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testResumeWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).resumeNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.resume(REGION, SERVER_ID);
     }
 
     /**
@@ -441,7 +360,7 @@ public class ComputeServiceImplTest {
         ComputeServiceImplSpy.computeService = computeServiceMock;
         Mockito.doNothing().when(computeServiceMock).destroyNode(SERVER_ID);
 
-        String result = ComputeServiceImplSpy.removeServer(REGION, SERVER_ID);
+        String result = ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID);
 
         assertEquals("Server Removed", result);
         verify(ComputeServiceImplSpy).lazyInit(REGION);
@@ -451,7 +370,7 @@ public class ComputeServiceImplTest {
     }
 
     /**
-     * Test removeServer method with invalid server id.
+     * Test terminateInstances method with invalid server id.
      * this should throw an "org.jclouds.rest.ResourceNotFoundException"
      * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
      */
@@ -464,11 +383,11 @@ public class ComputeServiceImplTest {
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(computeServiceMock).destroyNode(SERVER_ID);
 
-        ComputeServiceImplSpy.removeServer(REGION, SERVER_ID);
+        ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID);
     }
 
     /**
-     * Test listRegions method. Positive scenario.
+     * Test describeRegions method. Positive scenario.
      */
     @Test
     public void testListRegions() {
@@ -480,7 +399,7 @@ public class ComputeServiceImplTest {
         Mockito.doReturn(locationMock).when(locationIteratorMock).next();
         Mockito.doReturn("locationDrescription").when(locationMock).getDescription();
 
-        Set<String> result = ComputeServiceImplSpy.listRegions();
+        Set<String> result = ComputeServiceImplSpy.describeRegions();
 
         assertEquals("[locationDrescription]", result.toString());
         verify(ComputeServiceImplSpy).lazyInit();
@@ -495,7 +414,7 @@ public class ComputeServiceImplTest {
     }
 
     /**
-     * Test listRegions method with invalid endpoint set in init().
+     * Test describeRegions method with invalid endpoint set in init().
      * This scenario is equivalent to invalid credentials.
      */
     @Test
@@ -507,31 +426,6 @@ public class ComputeServiceImplTest {
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(computeServiceMock).listAssignableLocations();
 
-        ComputeServiceImplSpy.listRegions();
-    }
-
-    /**
-     * Test list nodes method. Positive scenario. 1 node returned.
-     */
-    @Test
-    public void testListNodesInRegion() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doReturn(computeMetadataSetMock).when(computeServiceMock).listNodes();
-        Mockito.doReturn(computeMetadataIteratorMock).when(computeMetadataSetMock).iterator();
-        Mockito.doReturn(true).doReturn(false).when(computeMetadataIteratorMock).hasNext();
-        Mockito.doReturn(computeMetadataMock).when(computeMetadataIteratorMock).next();
-
-        Set<String> result = ComputeServiceImplSpy.listNodes(REGION);
-
-        assertEquals("[computeMetadata]", result.toString());
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).listNodes();
-        verifyNoMoreInteractions(computeServiceMock);
-        verify(computeMetadataSetMock).iterator();
-        verifyNoMoreInteractions(computeMetadataSetMock);
-        verify(computeMetadataIteratorMock, times(2)).hasNext();
-        verify(computeMetadataIteratorMock).next();
+        ComputeServiceImplSpy.describeRegions();
     }
 }

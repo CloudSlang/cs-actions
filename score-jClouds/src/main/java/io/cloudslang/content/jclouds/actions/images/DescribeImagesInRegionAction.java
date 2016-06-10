@@ -36,6 +36,7 @@ public class DescribeImagesInRegionAction {
      * @param credential       Password of the user or the Secret Access Key that correspond to the identity input.
      * @param proxyHost        Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        Proxy server port.
+     * @param delimiter        The delimiter that will be used - Default: ","
      * @param region           Optional - Region where image will be created. ListRegionAction can be used in order to
      *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
      *                         Default: "us-east-1".

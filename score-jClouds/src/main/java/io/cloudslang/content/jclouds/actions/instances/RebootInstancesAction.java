@@ -10,17 +10,19 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.ResumeServerExecutor;
+import io.cloudslang.content.jclouds.execute.instances.RebootInstancesExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by persdana on 6/22/2015.
  */
-public class ResumeServerAction {
+public class RebootInstancesAction {
     /**
-     * Resumes a SUSPENDED server and changes its status to ACTIVE. Paused servers cannot be resumed. This operation works on Openstack providers.
+     * Requests a reboot of one or more instances. This operation is asynchronous; it only queues a request to reboot
+     * the specified instances. The operation succeeds if the instances are valid and belong to you. Requests to reboot
+     * terminated instances are ignored.
      *
      * @param provider         The cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
      * @param identityEndpoint The endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon or "http://hostOrIp:5000/v2.0" for openstack.
@@ -30,9 +32,10 @@ public class ResumeServerAction {
      * @param serverId         The ID of the instance you want to reboot.
      * @param proxyHost        The proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        The proxy server port.
-     * @return
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Resume Server",
+    @Action(name = "Reboot Instances",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -53,7 +56,7 @@ public class ResumeServerAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(Inputs.CustomInputs.SERVER_ID) String serverId) throws Exception {
+                                       @Param(Inputs.CustomInputs.INSTANCE_ID) String serverId) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -66,11 +69,11 @@ public class ResumeServerAction {
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
-                .withServerId(serverId)
+                .withInstanceId(serverId)
                 .build();
 
         try {
-            return new ResumeServerExecutor().execute(inputs, customInputs);
+            return new RebootInstancesExecutor().execute(inputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

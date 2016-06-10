@@ -1,6 +1,9 @@
 package io.cloudslang.content.jclouds.services.impl;
 
+import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
@@ -20,6 +23,8 @@ import java.util.Set;
  * Created by persdana on 5/27/2015.
  */
 public class AmazonComputeServiceImpl extends JCloudsComputeService implements ComputeService {
+    private static final String INSTANCE_SUCCESSFULLY_UPDATED = "Instance successfully updated.";
+
     EC2Api ec2Api = null;
 
     protected String region;
@@ -49,20 +54,29 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public Set<String> listNodes(String region) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, false);
-        Set<? extends Reservation<? extends RunningInstance>> instancesInRegion = instanceApi.describeInstancesInRegion(region);
+    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) {
+        InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(), true);
 
-        Set<String> nodesList = new HashSet<>();
-        for (Reservation<? extends RunningInstance> reservation : instancesInRegion) {
-            nodesList.add(reservation.toString());
+        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper().getInstanceFilterMap(instanceInputs, commonInputs.getDelimiter());
+
+        Set<? extends Reservation<? extends RunningInstance>> instancesInRegion;
+        Set<String> nodesSet = new HashSet<>();
+
+        if (filtersMap.isEmpty()) {
+            instancesInRegion = instanceApi.describeInstancesInRegion(instanceInputs.getCustomInputs().getRegion());
+            populateNodesSet(instancesInRegion, nodesSet);
+
+            return nodesSet;
         }
 
-        return nodesList;
+        instancesInRegion = instanceApi.describeInstancesInRegionWithFilter(instanceInputs.getCustomInputs().getRegion(), filtersMap);
+        populateNodesSet(instancesInRegion, nodesSet);
+
+        return nodesSet;
     }
 
     @Override
-    public String start(String region, String serverId) {
+    public String startInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.startInstancesInRegion(region, serverId);
 
@@ -70,7 +84,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public String stop(String region, String serverId) {
+    public String stopInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.stopInstancesInRegion(region, false, serverId);
 
@@ -78,7 +92,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public String removeServer(String region, String serverId) {
+    public String terminateInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.terminateInstancesInRegion(region, serverId);
 
@@ -86,7 +100,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public Set<String> listRegions() {
+    public Set<String> describeRegions() {
         lazyInit();
         return ec2Api.getConfiguredRegions();
     }
@@ -117,33 +131,23 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
             return instanceChanged.toString();
         }
 
-        return Constants.Messages.SERVER_UPDATED;
+        return INSTANCE_SUCCESSFULLY_UPDATED;
     }
 
     @Override
-    public void softReboot(String region, String serverId) {
+    public void rebootInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         instanceApi.rebootInstancesInRegion(region, serverId);
-    }
-
-    @Override
-    public void hardReboot(String region, String serverId) throws Exception {
-        throw new Exception("Use soft reboot and if a Linux/UNIX instance does not cleanly shut down within four minutes, " +
-                "Amazon EC2 will perform a hard reboot\n");
-    }
-
-    @Override
-    public String suspend(String region, String serverId) throws Exception {
-        throw new Exception("Use stop server operation to suspend an amazon Instance");
-    }
-
-    @Override
-    public void resume(String region, String serverId) throws Exception {
-        throw new Exception("Resume is not supported on Amazon. Use start server operation to resume an amazon Instance");
     }
 
     private InstanceApi getEC2InstanceApi(String region, boolean isForRegion) {
         lazyInit(region);
         return isForRegion ? ec2Api.getInstanceApiForRegion(region).get() : ec2Api.getInstanceApi().get();
+    }
+
+    private void populateNodesSet(Set<? extends Reservation<? extends RunningInstance>> instancesInRegion, Set<String> nodesSet) {
+        for (Reservation<? extends RunningInstance> reservation : instancesInRegion) {
+            nodesSet.add(reservation.toString());
+        }
     }
 }

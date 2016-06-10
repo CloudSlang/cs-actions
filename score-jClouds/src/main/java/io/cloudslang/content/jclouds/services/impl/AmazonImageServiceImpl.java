@@ -19,6 +19,11 @@ import java.util.Set;
  * 5/4/2016.
  */
 public class AmazonImageServiceImpl extends JCloudsComputeService implements ImageService {
+    private static final String IMAGE_SUCCESSFULLY_DEREGISTER = "The image was successfully deregister.";
+    private static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED = "Launch permissions were successfully added.";
+    private static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_REMOVED = "Launch permissions were successfully removed.";
+    private static final String LAUNCH_PERMISSIONS_SUCCESSFULLY_RESET = "Launch permissions were successfully reset.";
+
     EC2Api ec2Api;
     private String region;
 
@@ -49,7 +54,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
         amiApi.deregisterImageInRegion(region, imageId);
 
-        return Constants.Messages.IMAGE_SUCCESSFULLY_DEREGISTER;
+        return IMAGE_SUCCESSFULLY_DEREGISTER;
     }
 
     @Override
@@ -73,7 +78,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
         amiApi.addLaunchPermissionsToImageInRegion(region, userIds, userGroups, imageId);
 
-        return Constants.Messages.LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED;
+        return LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED;
     }
 
     @Override
@@ -82,7 +87,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
         amiApi.removeLaunchPermissionsFromImageInRegion(region, userIds, userGroups, imageId);
 
-        return Constants.Messages.LAUNCH_PERMISSIONS_SUCCESSFULLY_REMOVED;
+        return LAUNCH_PERMISSIONS_SUCCESSFULLY_REMOVED;
     }
 
     @Override
@@ -91,7 +96,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
         amiApi.resetLaunchPermissionsOnImageInRegion(region, imageId);
 
-        return Constants.Messages.LAUNCH_PERMISSIONS_SUCCESSFULLY_RESET;
+        return LAUNCH_PERMISSIONS_SUCCESSFULLY_RESET;
     }
 
     private AMIApi getAMIApi(String region, boolean isForRegion) {

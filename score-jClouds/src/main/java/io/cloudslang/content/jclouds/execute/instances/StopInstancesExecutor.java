@@ -7,17 +7,15 @@ import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by persdana on 6/18/2015.
  */
-public class ListServersExecutor {
+public class StopInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        Set<String> nodesInRegion = cs.listNodes(customInputs.getRegion());
-        String nodesString = OutputsUtil.getElementsString(nodesInRegion, inputs.getDelimiter());
+        String resultStr = cs.stopInstances(customInputs.getRegion(), customInputs.getInstanceId());
 
-        return OutputsUtil.getResultsMap(nodesString);
+        return OutputsUtil.getResultsMap(resultStr);
     }
 }
