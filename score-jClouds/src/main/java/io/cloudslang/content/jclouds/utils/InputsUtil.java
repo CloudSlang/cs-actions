@@ -25,7 +25,7 @@ public final class InputsUtil {
         if (condition.equals(input)) {
             return null;
         }
-        return input.split(Pattern.quote(delimiter));
+        return StringUtils.split(input, delimiter);
     }
 
     public static Set<String> getStringsSet(String input, String delimiter) {

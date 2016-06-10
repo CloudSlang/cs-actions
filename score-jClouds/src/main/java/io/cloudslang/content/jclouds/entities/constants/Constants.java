@@ -19,7 +19,7 @@ public class Constants {
         public static final String EMPTY = "";
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String NOT_RELEVANT_INT_CODE = "-1";
-        public static final String TAG = "tag";
+        public static final String TAG = "tag:";
         public static final String EQUAL = "=";
     }
 
