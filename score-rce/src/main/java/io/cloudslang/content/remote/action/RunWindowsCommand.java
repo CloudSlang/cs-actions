@@ -37,19 +37,18 @@ public class RunWindowsCommand {
             }
     )
 
-    public Map<String, String> run(@Param(value = Inputs.HOSTNAME, required = true) String hostname, @Param(value = Inputs.COMMAND, required = true) String command, @Param(value = Inputs.USERNAME, required = true) String username, @Param(value = Inputs.PASSWORD, required = true) String password) {
+    public Map<String, String> run(@Param(value = Inputs.HOSTNAME, required = true) String hostname, @Param(value = Inputs.COMMAND, required = true) String command, @Param(value = Inputs.USERNAME, required = true) String username, @Param(value = Inputs.PASSWORD, required = true) String password) throws Exception {
 
-        RunWindowsCommandInputs runWindowsCommandInputs = null;
+        RunWindowsCommandInputs runWindowsCommandInputs;
         Map<String, String> resultMap = new HashMap<>();
+        runWindowsCommandInputs = new RunWindowsCommandInputs.RunWindowsCommandInputsBuilder()
+                .withHostname(hostname)
+                .withUsername(username)
+                .withPassword(password)
+                .withCommand(command)
+                .build();
+
         try {
-
-            runWindowsCommandInputs = new RunWindowsCommandInputs.RunWindowsCommandInputsBuilder()
-                    .withHostname(hostname)
-                    .withUsername(username)
-                    .withPassword(password)
-                    .withCommand(command)
-                    .build();
-
             resultMap = new RunWindowsCommandService().execute(runWindowsCommandInputs);
 
         } catch (Exception e) {
