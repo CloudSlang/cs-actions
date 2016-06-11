@@ -1,5 +1,6 @@
 package io.cloudslang.content.remote.action;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -8,6 +9,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.remote.constants.Inputs;
+import io.cloudslang.content.remote.constants.Outputs;
 import io.cloudslang.content.remote.services.RunWindowsCommandService;
 import io.cloudslang.content.remote.utils.RunWindowsCommandInputs;
 
@@ -25,8 +27,8 @@ public class RunWindowsCommand {
 
     @Action(name = "Run Windows Command",
             outputs = {
-                    @Output("error_massage"),
-                    @Output("command_result"),
+                    @Output(Outputs.ERROR_MASSAGE),
+                    @Output(Outputs.COMMAND_RESULT),
 
             },
             responses = {
@@ -38,6 +40,7 @@ public class RunWindowsCommand {
     public Map<String, String> run(@Param(value = Inputs.HOSTNAME, required = true) String hostname, @Param(value = Inputs.COMMAND, required = true) String command, @Param(value = Inputs.USERNAME, required = true) String username, @Param(value = Inputs.PASSWORD, required = true) String password) {
 
         RunWindowsCommandInputs runWindowsCommandInputs = null;
+        Map<String, String> resultMap = new HashMap<>();
         try {
 
             runWindowsCommandInputs = new RunWindowsCommandInputs.RunWindowsCommandInputsBuilder()
@@ -47,10 +50,12 @@ public class RunWindowsCommand {
                     .withCommand(command)
                     .build();
 
+            resultMap = new RunWindowsCommandService().execute(runWindowsCommandInputs);
+
         } catch (Exception e) {
-            e.printStackTrace();
+            resultMap.put(Outputs.ERROR_MASSAGE, e.getMessage());
         }
 
-        return new RunWindowsCommandService().execute(runWindowsCommandInputs);
+        return resultMap;
     }
 }

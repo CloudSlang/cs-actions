@@ -16,5 +16,6 @@ public class Constants {
     public static final String START_PATH_FILE = "\\\\";
     public static final String FILENAME = "\\C$\\Temp\\emptyfile.txt";
     public static final String WMI_RES_PUT_COM = " > ";
+    public static final String INVALIDE_PARAMETERS  = "Invalid parameters";
 
 }

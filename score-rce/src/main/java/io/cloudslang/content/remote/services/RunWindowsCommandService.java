@@ -1,5 +1,7 @@
 package io.cloudslang.content.remote.services;
 
+import io.cloudslang.content.remote.constants.Constants;
+import io.cloudslang.content.remote.constants.Outputs;
 import io.cloudslang.content.remote.utils.RunWindowsCommandInputs;
 import io.cloudslang.content.remote.utils.CommandUtils;
 
@@ -38,11 +40,11 @@ public class RunWindowsCommandService {
 
         try {
             command_result = launchCmdWinCommand(runWindowsCommandInputs);
-            results.put("command_result", command_result);
-            results.put("error_message", "");
+            results.put(Outputs.COMMAND_RESULT, command_result);
+            results.put(Outputs.ERROR_MASSAGE, Constants.EMPTY_STR);
         } catch (Exception e) {
-            error_message = "Invalid parameters";
-            results.put("error_message", error_message);
+            error_message = Constants.INVALIDE_PARAMETERS;
+            results.put(Outputs.ERROR_MASSAGE, error_message);
         }
 
         return  results;
