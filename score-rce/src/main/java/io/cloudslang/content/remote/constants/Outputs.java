@@ -5,6 +5,6 @@ package io.cloudslang.content.remote.constants;
  */
 public class Outputs {
 
-    public static final String ERROR_MASSAGE = "error_massage";
+    public static final String ERROR_MESSAGE = "error_message";
     public static final String COMMAND_RESULT = "command_result";
 }

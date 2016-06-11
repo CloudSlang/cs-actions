@@ -27,7 +27,7 @@ public class RunWindowsCommand {
 
     @Action(name = "Run Windows Command",
             outputs = {
-                    @Output(Outputs.ERROR_MASSAGE),
+                    @Output(Outputs.ERROR_MESSAGE),
                     @Output(Outputs.COMMAND_RESULT),
 
             },
@@ -52,7 +52,7 @@ public class RunWindowsCommand {
             resultMap = new RunWindowsCommandService().execute(runWindowsCommandInputs);
 
         } catch (Exception e) {
-            resultMap.put(Outputs.ERROR_MASSAGE, e.getMessage());
+            resultMap.put(Outputs.ERROR_MESSAGE, e.getMessage());
         }
 
         return resultMap;

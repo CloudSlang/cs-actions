@@ -41,10 +41,10 @@ public class RunWindowsCommandService {
         try {
             command_result = launchCmdWinCommand(runWindowsCommandInputs);
             results.put(Outputs.COMMAND_RESULT, command_result);
-            results.put(Outputs.ERROR_MASSAGE, Constants.EMPTY_STR);
+            results.put(Outputs.ERROR_MESSAGE, Constants.EMPTY_STR);
         } catch (Exception e) {
             error_message = Constants.INVALIDE_PARAMETERS;
-            results.put(Outputs.ERROR_MASSAGE, error_message);
+            results.put(Outputs.ERROR_MESSAGE, error_message);
         }
 
         return  results;
