@@ -165,8 +165,8 @@ public class GuestServiceTest {
 
         Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, true);
 
-        verify(connectionResourcesMock).getConnection();
-        verify(connectionMock).disconnect();
+        verify(connectionResourcesMock, times(1)).getConnection();
+        verify(connectionMock, times(1)).disconnect();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(connectionResourcesMock, never()).getVimPortType();
         verify(guestConfigSpecsMock, never()).getWinCustomizationSpec(any(GuestInputs.class));
@@ -251,8 +251,8 @@ public class GuestServiceTest {
 
         Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
 
-        verify(connectionResourcesMock).getConnection();
-        verify(connectionMock).disconnect();
+        verify(connectionResourcesMock, times(1)).getConnection();
+        verify(connectionMock, times(1)).disconnect();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(connectionResourcesMock, never()).getVimPortType();
         verify(guestConfigSpecsMock, never()).getLinuxCustomizationSpec(any(GuestInputs.class));
@@ -281,8 +281,8 @@ public class GuestServiceTest {
 
         Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
 
-        verify(connectionResourcesMock).getConnection();
-        verify(connectionMock).disconnect();
+        verify(connectionResourcesMock, times(1)).getConnection();
+        verify(connectionMock, times(1)).disconnect();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(connectionResourcesMock, times(2)).getVimPortType();
         verify(guestConfigSpecsMock, times(1)).getLinuxCustomizationSpec(any(GuestInputs.class));
@@ -305,11 +305,11 @@ public class GuestServiceTest {
 
         Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
 
-        verify(connectionResourcesMock).getConnection();
+        verify(connectionResourcesMock, times(1)).getConnection();
         verify(connectionResourcesMock, times(1)).getVimPortType();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, times(1)).mountToolsInstaller(any(ManagedObjectReference.class));
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(0, Integer.parseInt(results.get("returnCode")));
@@ -326,10 +326,10 @@ public class GuestServiceTest {
 
         Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
 
-        verify(connectionResourcesMock).getConnection();
+        verify(connectionResourcesMock, times(1)).getConnection();
         verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).mountToolsInstaller(any(ManagedObjectReference.class));
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
@@ -346,10 +346,10 @@ public class GuestServiceTest {
 
         Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
 
-        verify(connectionResourcesMock).getConnection();
+        verify(connectionResourcesMock, times(1)).getConnection();
         verify(morObjectHandlerMock, never()).getVmMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).mountToolsInstaller(any(ManagedObjectReference.class));
-        verify(connectionMock).disconnect();
+        verify(connectionMock, times(1)).disconnect();
 
         assertNotNull(results);
         assertEquals(-1, Integer.parseInt(results.get("returnCode")));
@@ -369,8 +369,8 @@ public class GuestServiceTest {
 
     private void verifyConnection() {
         verify(connectionResourcesMock, atMost(2)).getVimPortType();
-        verify(taskMock).getValue();
-        verify(connectionResourcesMock).getConnection();
-        verify(connectionMock).disconnect();
+        verify(taskMock, times(1)).getValue();
+        verify(connectionResourcesMock, times(1)).getConnection();
+        verify(connectionMock, times(1)).disconnect();
     }
 }

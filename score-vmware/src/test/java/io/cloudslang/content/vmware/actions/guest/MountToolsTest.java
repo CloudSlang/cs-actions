@@ -43,7 +43,7 @@ public class MountToolsTest {
     private GuestService guestServiceMock;
 
     @Test
-    public void MountToolsSuccess() throws Exception {
+    public void mountToolsSuccess() throws Exception {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
@@ -56,7 +56,7 @@ public class MountToolsTest {
     }
 
     @Test
-    public void MountToolsProtocolFailure() throws Exception {
+    public void mountToolsProtocolFailure() throws Exception {
         Map<String, String> resultMap = new HashMap<>();
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
