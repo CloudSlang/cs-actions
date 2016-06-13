@@ -2,7 +2,6 @@ language: java
 
 env:
   - MVN_EXCLUDE_MODULES='-pl !score-vmware'
-  - cloudslang.maven.repo.local='${env.USERPROFILE}\.m2\repository\'
 
 install:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
