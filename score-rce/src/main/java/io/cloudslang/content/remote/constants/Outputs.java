@@ -7,4 +7,5 @@ public class Outputs {
 
     public static final String ERROR_MESSAGE = "error_message";
     public static final String COMMAND_RESULT = "command_result";
+
 }

@@ -12,36 +12,10 @@ import java.io.IOException;
  */
 public class RunWindowsCommandHelper {
 
-    public String getCommandResult(File file) throws IOException {
-        String result = Constants.EMPTY_STR;
-
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            result = sb.toString();
-
-        } finally {
-            br.close();
-            file.delete();
-        }
-        return result;
-    }
-
-    public int executeCommand(String command){
-        try {
-            Runtime r = Runtime.getRuntime();
-            Process p = r.exec(command);
-            p.waitFor();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+    public int executeCommand(String command) throws IOException, InterruptedException {
+        Runtime r = Runtime.getRuntime();
+        Process p = r.exec(command);
+        p.waitFor();
         return 0;
     }
 

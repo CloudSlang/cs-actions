@@ -16,22 +16,6 @@ public class RunWindowsCommandService {
 
     RunWindowsCommandHelper runWindowsCommandHelper = new RunWindowsCommandHelper();
 
-    public String launchCmdWinCommand(RunWindowsCommandInputs runWindowsCommandInputs) throws IOException {
-
-        String tempFileForResults = CommandUtils.getTempFileForResults(runWindowsCommandInputs.getHostname());
-        String wmiComCreateFile = CommandUtils.getWmiComCreateFile(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getUsername(),runWindowsCommandInputs.getPassword(),tempFileForResults);
-        String wmiComExecuteWindCom = CommandUtils.getWmiComExecuteWindCom(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getCommand(),tempFileForResults);
-
-        // create file for results
-        runWindowsCommandHelper.executeCommand(wmiComCreateFile);
-        // execute command and put result to file
-        runWindowsCommandHelper.executeCommand(wmiComExecuteWindCom);
-        // get file for results
-        String command_result = runWindowsCommandHelper.getCommandResult(new File(tempFileForResults));
-
-        return command_result;
-    }
-
     public Map<String, String> execute(RunWindowsCommandInputs runWindowsCommandInputs) {
         String command_result;
         String error_message;
@@ -48,6 +32,21 @@ public class RunWindowsCommandService {
         }
 
         return  results;
+    }
+    private String launchCmdWinCommand(RunWindowsCommandInputs runWindowsCommandInputs) throws IOException, InterruptedException {
+
+        String tempFileForResults = CommandUtils.getTempFileForResults(runWindowsCommandInputs.getHostname());
+        String wmiComCreateFile = CommandUtils.getWmiComCreateFile(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getUsername(),runWindowsCommandInputs.getPassword(),tempFileForResults);
+        String wmiComExecuteWindCom = CommandUtils.getWmiComExecuteWindCom(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getCommand(),tempFileForResults);
+
+        // create file for results
+        runWindowsCommandHelper.executeCommand(wmiComCreateFile);
+        // execute command and put result to file
+        runWindowsCommandHelper.executeCommand(wmiComExecuteWindCom);
+        // get file for results
+        String command_result = CommandUtils.getCommandResultFromFile(new File(tempFileForResults));
+
+        return command_result;
     }
 
 
