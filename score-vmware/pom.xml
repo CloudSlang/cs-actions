@@ -155,8 +155,8 @@
             <properties>
                 <!-- Value for Windows based OSes vmware_path variable -->
                 <!-- ${cloudslang.maven.repo.local} points to the root of private local Maven repository used for CloudSlang -->
-                <cloudslang.maven.repo.local>${env.USERPROFILE}\.m2\repository\com\vmware\vim25\1.0\</cloudslang.maven.repo.local>
-                <vmware_path>${cloudslang.maven.repo.local}</vmware_path>
+                <cloudslang.maven.repo.local>${env.USERPROFILE}\.m2\repository</cloudslang.maven.repo.local>
+                <vmware_path>${cloudslang.maven.repo.local}\com\vmware\vim25\1.0\</vmware_path>
             </properties>
             <build>
                 <plugins>
@@ -179,8 +179,8 @@
             <properties>
                 <!-- Value for Unix based OSes vmware_path variable -->
                 <!-- ${cloudslang.maven.repo.local} points to the root of private local Maven repository used for CloudSlang -->
-                <cloudslang.maven.repo.local>${env.HOME}/.m2/repository/com/vmware/vim25/1.0/</cloudslang.maven.repo.local>
-                <vmware_path>${cloudslang.maven.repo.local}</vmware_path>
+                <cloudslang.maven.repo.local>${env.HOME}/.m2/repository</cloudslang.maven.repo.local>
+                <vmware_path>${cloudslang.maven.repo.local}/com/vmware/vim25/1.0/</vmware_path>
             </properties>
             <build>
                 <plugins>
