@@ -9,12 +9,12 @@ import io.cloudslang.content.jclouds.utils.OutputsUtil;
 import java.util.Map;
 
 /**
- * Created by persdana on 6/18/2015.
+ * Created by persdana on 6/23/2015.
  */
-public class StopServerExecutor {
+public class TerminateInstancesExecutor {
     public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
-        String resultStr = cs.stop(customInputs.getRegion(), customInputs.getServerId());
+        String resultStr = cs.terminateInstances(customInputs.getRegion(), customInputs.getInstanceId());
 
         return OutputsUtil.getResultsMap(resultStr);
     }

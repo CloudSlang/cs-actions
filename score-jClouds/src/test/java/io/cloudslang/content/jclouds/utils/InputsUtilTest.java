@@ -7,7 +7,8 @@ import org.junit.rules.ExpectedException;
 import static junit.framework.TestCase.assertEquals;
 
 /**
- * Created by persdana on 7/13/2015.
+ * Created by Mihai Tusa.
+ * 2/24/2016.
  */
 public class InputsUtilTest {
     @Rule
@@ -15,72 +16,72 @@ public class InputsUtilTest {
 
     @Test
     public void validateInput() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The required endpoint input is not specified!");
+        setExpectedExceptions(RuntimeException.class, "The required endpoint input is not specified!");
 
         InputsUtil.validateInput("", "endpoint");
     }
 
     @Test
     public void getMinInstancesCountBlank() {
-        int testMinInstanceCount = InputsUtil.getMinInstancesCount("");
+        int testMinInstanceCount = InputsUtil.getValidInstancesCount("");
+
         assertEquals(1, testMinInstanceCount);
     }
 
     @Test
     public void getMinInstancesCountNegative() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Incorrect provided value: -1 input. The value doesn't meet conditions for general purpose usage.");
+        setExpectedExceptions(RuntimeException.class, "Incorrect provided value: -1 input. The value doesn't meet " +
+                "conditions for general purpose usage.");
 
-        InputsUtil.getMinInstancesCount("-1");
+        InputsUtil.getValidInstancesCount("-1");
     }
 
     @Test
     public void getMinInstancesCountNotInt() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The provided value: [abracadabra] input must be integer.");
+        setExpectedExceptions(RuntimeException.class, "The provided value: [abracadabra] input must be integer.");
 
-        InputsUtil.getMinInstancesCount("[abracadabra]");
+        InputsUtil.getValidInstancesCount("[abracadabra]");
     }
 
     @Test
     public void getMinInstancesCount() {
-        int testMinInstanceCount = InputsUtil.getMinInstancesCount("3");
+        int testMinInstanceCount = InputsUtil.getValidInstancesCount("3");
+
         assertEquals(3, testMinInstanceCount);
     }
 
     @Test
     public void getMaxInstancesCountBlank() {
-        int testGetMaxInstancesCount = InputsUtil.getMaxInstancesCount("");
+        int testGetMaxInstancesCount = InputsUtil.getValidInstancesCount("");
+
         assertEquals(1, testGetMaxInstancesCount);
     }
 
     @Test
     public void getMaxInstancesCountOver() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Incorrect provided value: 51 input. The value doesn't meet conditions for general purpose usage.");
+        setExpectedExceptions(RuntimeException.class, "Incorrect provided value: 51 input. The value doesn't meet " +
+                "conditions for general purpose usage.");
 
-        InputsUtil.getMaxInstancesCount("51");
+        InputsUtil.getValidInstancesCount("51");
     }
 
     @Test
     public void getValidLongBlank() {
         long testLong = InputsUtil.getValidLong("", 20000L);
+
         assertEquals(20000, testLong);
     }
 
     @Test
     public void getValidLongNegative() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Incorrect provided value: -1. Valid values are positive longs.");
+        setExpectedExceptions(RuntimeException.class, "Incorrect provided value: -1. Valid values are positive longs.");
 
         InputsUtil.getValidLong("-1", 0L);
     }
 
     @Test
     public void getValidLongNotLong() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The provided value: [anything_here] input must be long.");
+        setExpectedExceptions(RuntimeException.class, "The provided value: [anything_here] input must be long.");
 
         InputsUtil.getValidLong("[anything_here]", 0L);
     }
@@ -88,6 +89,47 @@ public class InputsUtilTest {
     @Test
     public void getValidLong() {
         long testLong = InputsUtil.getValidLong("60000", 20000L);
+
         assertEquals(60000, testLong);
+    }
+
+    @Test
+    public void getValidInstanceStateInvalid() {
+        int testedValue = InputsUtil.getValidInstanceStateCode("");
+
+        assertEquals(-1, testedValue);
+    }
+
+    @Test
+    public void getValidInstanceState() {
+        int testedValue = InputsUtil.getValidInstanceStateCode("running");
+
+        assertEquals(16, testedValue);
+    }
+
+    @Test
+    public void getRelevantBooleanStringNotRelevant() {
+        String testedString = InputsUtil.getRelevantBooleanString("anything but true or false");
+
+        assertEquals("Not relevant", testedString);
+    }
+
+    @Test
+    public void getRelevantBooleanStringTrue() {
+        String testedString = InputsUtil.getRelevantBooleanString("true");
+
+        assertEquals("true", testedString);
+    }
+
+    @Test
+    public void getRelevantBooleanStringFalse() {
+        String testedString = InputsUtil.getRelevantBooleanString("false");
+
+        assertEquals("false", testedString);
+    }
+
+    private void setExpectedExceptions(Class<?> type, String message) {
+        exception.expect((Class<? extends Throwable>) type);
+        exception.expectMessage(message);
     }
 }

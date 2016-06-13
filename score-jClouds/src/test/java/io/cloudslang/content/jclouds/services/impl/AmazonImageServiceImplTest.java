@@ -10,9 +10,7 @@ import org.jclouds.ec2.options.CreateImageOptions;
 import org.jclouds.ec2.options.DescribeImagesOptions;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -40,9 +38,6 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({AmazonImageServiceImpl.class, ContextBuilder.class})
 public class AmazonImageServiceImplTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Mock
     private Properties propertiesMock;
 
@@ -59,7 +54,8 @@ public class AmazonImageServiceImplTest {
     private Optional<? extends InstanceApi> optionalInstanceApi;
 
     @Spy
-    private AmazonImageServiceImpl imageSpy = new AmazonImageServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
+    private AmazonImageServiceImpl imageSpy = new AmazonImageServiceImpl("https://ec2.amazonaws.com",
+            "AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
 
     private AmazonImageServiceImpl toTest;
 
@@ -68,7 +64,8 @@ public class AmazonImageServiceImplTest {
         mockStatic(ContextBuilder.class);
         addCommonMocksForMethods();
 
-        toTest = new AmazonImageServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
+        toTest = new AmazonImageServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW",
+                "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
     }
 
     @After
@@ -160,7 +157,8 @@ public class AmazonImageServiceImplTest {
         imageSpy.addLaunchPermissionsToImage("some_region", userIds, userGroups, "ami-abcdef16");
 
         verify(imageSpy, times(1)).lazyInit(eq("some_region"));
-        verify(amiApiMock, times(1)).addLaunchPermissionsToImageInRegion(eq("some_region"), anySetOf(String.class), anySetOf(String.class), eq("ami-abcdef16"));
+        verify(amiApiMock, times(1)).addLaunchPermissionsToImageInRegion(eq("some_region"), anySetOf(String.class),
+                anySetOf(String.class), eq("ami-abcdef16"));
         commonVerifiersForMethods();
     }
 
@@ -172,7 +170,8 @@ public class AmazonImageServiceImplTest {
         imageSpy.removeLaunchPermissionsFromImage("some_region", userIds, userGroups, "ami-abcdef16");
 
         verify(imageSpy, times(1)).lazyInit(eq("some_region"));
-        verify(amiApiMock, times(1)).removeLaunchPermissionsFromImageInRegion(eq("some_region"), anySetOf(String.class), anySetOf(String.class), eq("ami-abcdef16"));
+        verify(amiApiMock, times(1)).removeLaunchPermissionsFromImageInRegion(eq("some_region"), anySetOf(String.class),
+                anySetOf(String.class), eq("ami-abcdef16"));
         commonVerifiersForMethods();
     }
 
@@ -203,7 +202,8 @@ public class AmazonImageServiceImplTest {
         whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         doReturn(contextBuilderMock).when(ContextBuilder.class, "newBuilder", "ec2");
         doReturn(contextBuilderMock).when(contextBuilderMock).endpoint("https://ec2.amazonaws.com");
-        doReturn(contextBuilderMock).when(contextBuilderMock).credentials("AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z");
+        doReturn(contextBuilderMock).when(contextBuilderMock)
+                .credentials("AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z");
         doReturn(contextBuilderMock).when(contextBuilderMock).overrides(propertiesMock);
         doReturn(contextBuilderMock).when(contextBuilderMock).modules(Matchers.<Iterable>any());
     }

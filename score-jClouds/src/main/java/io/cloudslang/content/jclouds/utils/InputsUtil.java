@@ -1,15 +1,23 @@
 package io.cloudslang.content.jclouds.utils;
 
+import io.cloudslang.content.jclouds.entities.InstanceState;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Created by persdana on 7/13/2015.
+ * Created by Mihai Tusa.
+ * 2/24/2016.
  */
 public final class InputsUtil {
+    private static final String COMMA_DELIMITER = ",";
+    private static final int MAXIMUM_INSTANCES_NUMBER = 50;
+    private static final int MINIMUM_INSTANCES_NUMBER = 1;
+
     private InputsUtil() {
     }
 
@@ -17,7 +25,7 @@ public final class InputsUtil {
         if (condition.equals(input)) {
             return null;
         }
-        return input.split(Pattern.quote(delimiter));
+        return StringUtils.split(input, delimiter);
     }
 
     public static Set<String> getStringsSet(String input, String delimiter) {
@@ -50,24 +58,12 @@ public final class InputsUtil {
     }
 
     public static String getDefaultDelimiter(String delimiter) {
-        return StringUtils.isBlank(delimiter) ? Constants.Miscellaneous.COMMA_DELIMITER : delimiter;
+        return StringUtils.isBlank(delimiter) ? COMMA_DELIMITER : delimiter;
     }
 
-    public static int getMinInstancesCount(String input) {
-        Map<String, Integer> validValues = getValidLimits();
-
-        return StringUtils.isBlank(input) ? validValues.get(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY) :
-                getValidInt(input, validValues.get(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY),
-                        validValues.get(Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER_KEY), getValidationException(input, true),
-                        getValidationException(input, false));
-    }
-
-    public static int getMaxInstancesCount(String input) {
-        Map<String, Integer> validValues = getValidLimits();
-
-        return StringUtils.isBlank(input) ? validValues.get(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY) :
-                getValidInt(input, validValues.get(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY),
-                        validValues.get(Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER_KEY), getValidationException(input, true),
+    public static int getValidInstancesCount(String input) {
+        return StringUtils.isBlank(input) ? MINIMUM_INSTANCES_NUMBER :
+                getValidInt(input, MINIMUM_INSTANCES_NUMBER, MAXIMUM_INSTANCES_NUMBER, getValidationException(input, true),
                         getValidationException(input, false));
     }
 
@@ -75,12 +71,16 @@ public final class InputsUtil {
         return StringUtils.isBlank(input) || Boolean.parseBoolean(input);
     }
 
-    private static Map<String, Integer> getValidLimits() {
-        Map<String, Integer> validLimits = new HashMap<>();
-        validLimits.put(Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER_KEY, Constants.Miscellaneous.MINIMUM_INSTANCES_NUMBER);
-        validLimits.put(Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER_KEY, Constants.Miscellaneous.MAXIMUM_INSTANCES_NUMBER);
+    public static String getRelevantBooleanString(String input) {
+        if (StringUtils.isNotBlank(input)
+                && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
+            return input.toLowerCase();
+        }
+        return Constants.Miscellaneous.NOT_RELEVANT;
+    }
 
-        return validLimits;
+    public static int getValidInstanceStateCode(String input) {
+        return InstanceState.getKey(input);
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {
@@ -94,6 +94,13 @@ public final class InputsUtil {
         return intInput;
     }
 
+    private static String getValidationException(String input, boolean invalid) {
+        if (invalid) {
+            return "The provided value: " + input + " input must be integer.";
+        }
+        return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
+    }
+
     private static boolean isInt(String input) {
         try {
             Integer.parseInt(input);
@@ -101,12 +108,5 @@ public final class InputsUtil {
             return false;
         }
         return true;
-    }
-
-    private static String getValidationException(String input, boolean invalid) {
-        if (invalid) {
-            return "The provided value: " + input + " input must be integer.";
-        }
-        return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
     }
 }

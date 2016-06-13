@@ -1,7 +1,8 @@
 package io.cloudslang.content.jclouds.services.impl;
 
-import com.google.common.base.Optional;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
@@ -14,7 +15,6 @@ import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
-import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 
 import java.util.HashSet;
@@ -58,7 +58,7 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public String start(String region, String serverId) {
+    public String startInstances(String region, String serverId) {
         lazyInit(region);
 
         ServerApi serverApi = novaApi.getServerApi(region);
@@ -69,7 +69,7 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public String stop(String region, String serverId) {
+    public String stopInstances(String region, String serverId) {
         lazyInit(region);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.stop(serverId);
@@ -78,42 +78,14 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public void softReboot(String region, String serverId) {
+    public void rebootInstances(String region, String serverId) {
         lazyInit(region);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.reboot(serverId, RebootType.SOFT);
     }
 
     @Override
-    public void hardReboot(String region, String serverId) {
-        lazyInit(region);
-        ServerApi serverApi = novaApi.getServerApi(region);
-        serverApi.reboot(serverId, RebootType.HARD);
-    }
-
-    @Override
-    public String suspend(String region, String serverId) {
-        lazyInit(region);
-        Optional<ServerAdminApi> optionalServerAdminApi = novaApi.getServerAdminApi(region);
-        ServerAdminApi serverAdminApi = optionalServerAdminApi.get();
-        boolean isSuspended = serverAdminApi.suspend(serverId);
-
-        if (isSuspended) {
-            return "OpenStack instance is suspending";
-        }
-        return "Can't suspend instance";
-    }
-
-    @Override
-    public void resume(String region, String serverId) {
-        lazyInit(region);
-        Optional<ServerAdminApi> optionalServerAdminApi = novaApi.getServerAdminApi(region);
-        ServerAdminApi serverAdminApi = optionalServerAdminApi.get();
-        serverAdminApi.resume(serverId);
-    }
-
-    @Override
-    public String removeServer(String region, String serverId) {
+    public String terminateInstances(String region, String serverId) {
         lazyInit(region);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.delete(serverId);
@@ -122,24 +94,9 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public Set<String> listRegions() {
+    public Set<String> describeRegions() {
         lazyInit();
         return novaApi.getConfiguredRegions();
-    }
-
-    @Override
-    public Set<String> listNodes(String region) {
-        lazyInit(region);
-        ServerApi serverApi = novaApi.getServerApi(region);
-        PagedIterable<Server> servers = serverApi.listInDetail();
-        Set<String> res = new HashSet<>();
-
-        for (IterableWithMarker<Server> iterableWithMarker : servers) {
-            for (Server s : iterableWithMarker) {
-                res.add(s.toString());
-            }
-        }
-        return res;
     }
 
     @Override
@@ -151,6 +108,12 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
 
     @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
+            throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
+    }
+
+    @Override
+    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
