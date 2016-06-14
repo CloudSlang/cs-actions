@@ -8,11 +8,6 @@ public enum InstanceFilters {
     AFFINITY("affinity"),
     ARCHITECTURE("architecture"),
     AVAILABILITY_ZONE("availability-zone"),
-    BLOCK_DEVICE_MAPPING_ATTACH_TIME("block-device-mapping.attach-time"),
-    BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION("block-device-mapping.delete-on-termination"),
-    BLOCK_DEVICE_MAPPING_DEVICE_NAME("block-device-mapping.device-name"),
-    BLOCK_DEVICE_MAPPING_STATUS("block-device-mapping.status"),
-    BLOCK_DEVICE_MAPPING_VOLUME_ID("block-device-mapping.volume-id"),
     CLIENT_TOKEN("client-token"),
     DNS_NAME("dns-name"),
     GROUP_ID("group-id"),
@@ -54,11 +49,7 @@ public enum InstanceFilters {
     SUBNET_ID("subnet-id"),
     TENANCY("tenancy"),
     VIRTUALIZATION_TYPE("virtualization-type"),
-    VPC_ID("vpc-id"),
-    PUBLIC_IP("association.public-ip"),
-    IP_OWNER_ID("association.ip-owner-id"),
-    ALLOCATION_ID("association.allocation-id"),
-    ASSOCIATION_ID("association.association-id");
+    VPC_ID("vpc-id");
 
     private String value;
 
