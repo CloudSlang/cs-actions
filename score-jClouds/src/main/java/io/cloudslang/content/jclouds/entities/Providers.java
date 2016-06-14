@@ -11,8 +11,7 @@ public enum Providers {
         try {
             return valueOf(input.toUpperCase()).toString();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized provider value: [" + input + "]. " +
-                    "Valid values are: openstack, amazon.");
+            throw new RuntimeException("Unrecognized provider value: [" + input + "]. Valid values are: openstack, amazon.");
         }
     }
 }

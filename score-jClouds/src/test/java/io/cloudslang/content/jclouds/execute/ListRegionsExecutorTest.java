@@ -2,7 +2,7 @@ package io.cloudslang.content.jclouds.execute;
 
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.execute.regions.ListRegionsExecutor;
+import io.cloudslang.content.jclouds.execute.regions.DescribeRegionsExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -28,9 +28,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created by persdana on 7/7/2015.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ListRegionsExecutor.class, ComputeFactory.class})
+@PrepareForTest({DescribeRegionsExecutor.class, ComputeFactory.class})
 public class ListRegionsExecutorTest {
-    private ListRegionsExecutor toTest;
+    private DescribeRegionsExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -40,7 +40,7 @@ public class ListRegionsExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new ListRegionsExecutor();
+        toTest = new DescribeRegionsExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -60,11 +60,11 @@ public class ListRegionsExecutorTest {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
 
         Set<String> regions = getRegions();
-        doReturn(regions).when(computeServiceMock).listRegions();
+        doReturn(regions).when(computeServiceMock).describeRegions();
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs));
 
-        verify(computeServiceMock, times(1)).listRegions();
+        verify(computeServiceMock, times(1)).describeRegions();
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

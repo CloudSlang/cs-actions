@@ -3,7 +3,8 @@ package io.cloudslang.content.jclouds.execute;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.instances.UpdateServerTypeExecutor;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
+import io.cloudslang.content.jclouds.execute.instances.UpdateInstanceTypeExecutor;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import org.junit.After;
@@ -30,9 +31,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
  * 3/15/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({UpdateServerTypeExecutor.class, ComputeFactory.class})
+@PrepareForTest({UpdateInstanceTypeExecutor.class, ComputeFactory.class})
 public class UpdateServerTypeExecutorTest {
-    private UpdateServerTypeExecutor toTest;
+    private UpdateInstanceTypeExecutor toTest;
     private AmazonInputs inputs;
 
     @Mock
@@ -42,7 +43,7 @@ public class UpdateServerTypeExecutorTest {
     public void init() {
         mockStatic(ComputeFactory.class);
 
-        toTest = new UpdateServerTypeExecutor();
+        toTest = new UpdateInstanceTypeExecutor();
         inputs = AmazonInputs.getAmazonInstance();
     }
 
@@ -62,7 +63,7 @@ public class UpdateServerTypeExecutorTest {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
         doReturn("Server updated successfully.").when(computeServiceMock)
                 .updateInstanceType(anyString(), anyString(), anyString(), anyLong(), anyLong());
-        Map<String, String> results = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
+        Map<String, String> results = toTest.execute(getCommonInputs(inputs), getInstanceInputs(inputs));
 
         verify(computeServiceMock, times(1)).updateInstanceType(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
@@ -85,6 +86,12 @@ public class UpdateServerTypeExecutorTest {
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
         return new CustomInputs.CustomInputsBuilder()
                 .withRegion(inputs.getRegion())
+                .build();
+    }
+
+    private InstanceInputs getInstanceInputs(AmazonInputs inputs) {
+        return new InstanceInputs.InstanceInputsBuilder()
+                .withCustomInputs(getCustomInputs(inputs))
                 .build();
     }
 }

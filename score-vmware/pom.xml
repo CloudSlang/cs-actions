@@ -10,7 +10,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>score-vmware</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>VMware java actions</description>
@@ -154,7 +154,9 @@
             </activation>
             <properties>
                 <!-- Value for Windows based OSes vmware_path variable -->
-                <vmware_path>${env.USERPROFILE}\.m2\repository\com\vmware\vim25\1.0\</vmware_path>
+                <!-- ${cloudslang.maven.repo.local} points to the root of private local Maven repository used for CloudSlang -->
+                <cloudslang.maven.repo.local>${env.USERPROFILE}\.m2\repository</cloudslang.maven.repo.local>
+                <vmware_path>${cloudslang.maven.repo.local}\com\vmware\vim25\1.0\</vmware_path>
             </properties>
             <build>
                 <plugins>
@@ -176,7 +178,9 @@
             </activation>
             <properties>
                 <!-- Value for Unix based OSes vmware_path variable -->
-                <vmware_path>${env.HOME}/.m2/repository/com/vmware/vim25/1.0/</vmware_path>
+                <!-- ${cloudslang.maven.repo.local} points to the root of private local Maven repository used for CloudSlang -->
+                <cloudslang.maven.repo.local>${env.HOME}/.m2/repository</cloudslang.maven.repo.local>
+                <vmware_path>${cloudslang.maven.repo.local}/com/vmware/vim25/1.0/</vmware_path>
             </properties>
             <build>
                 <plugins>

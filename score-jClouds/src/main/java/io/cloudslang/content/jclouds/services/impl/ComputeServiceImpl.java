@@ -1,6 +1,8 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
@@ -18,6 +20,9 @@ import java.util.Set;
  * Created by persdana on 6/5/2015.
  */
 public class ComputeServiceImpl extends JCloudsComputeService implements ComputeService {
+    public static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
+            "providers in the provider input";
+
     org.jclouds.compute.ComputeService computeService = null;
 
     private String provider;
@@ -50,45 +55,27 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     }
 
     @Override
-    public void resume(String region, String serverId) {
-        lazyInit(region);
-        computeService.resumeNode(region + "/" + serverId);
-    }
-
-    @Override
-    public String removeServer(String region, String serverId) {
+    public String terminateInstances(String region, String serverId) {
         lazyInit(region);
         computeService.destroyNode(serverId);
         return "Server Removed";
     }
 
     @Override
-    public String suspend(String region, String serverId) {
-        lazyInit(region);
-        computeService.suspendNode(region + "/" + serverId);
-
-        return "";
+    public String startInstances(String region, String serverId) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public String start(String region, String serverId) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+    public String stopInstances(String region, String serverId) throws Exception {
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
-    @Override
-    public String stop(String region, String serverId) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
-    public void softReboot(String region, String serverId) {
+    public void rebootInstances(String region, String serverId) {
         reboot(region, serverId);
     }
 
-    public void hardReboot(String region, String serverId) {
-        reboot(region, serverId);
-    }
-
-    public Set<String> listRegions() {
+    public Set<String> describeRegions() {
         lazyInit();
         Set<? extends Location> locations = computeService.listAssignableLocations();
         Set<String> res = new HashSet<>();
@@ -100,27 +87,22 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     }
 
     @Override
-    public Set<String> listNodes(String region) {
-        lazyInit(region);
-        Set<? extends ComputeMetadata> nodes = computeService.listNodes();
-        Set<String> result = new HashSet<>();
-        for (ComputeMetadata cm : nodes) {
-            result.add(cm.toString());
-        }
-        return result;
-    }
-
-    @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
             throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
     public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
                                                                        int minCount, int maxCount, RunInstancesOptions... options)
             throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_ERROR_MESSAGE);
+        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
+    }
+
+    @Override
+    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs)
+            throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     protected void reboot(String region, String serverId) {
