@@ -170,16 +170,4 @@ public class SSHServiceImplTest {
         SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
         sshService.removeFromCache(Mockito.any(GlobalSessionObject.class), "sessionId");
     }
-
-    @Test
-    public void testTimeoutExceptionIsThrown() throws Exception {
-        PowerMockito.when(channelShellMock.isClosed()).thenReturn(false);
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Timeout");
-
-        sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, 0, AGENT_FORWARDING_FALSE);
-    }
-
 }
