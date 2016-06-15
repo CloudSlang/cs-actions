@@ -159,7 +159,7 @@ public class SSHServiceImpl implements SSHService {
             // The exit status is only available after the channel was closed (more exactly, just before the channel is closed).
             result.setExitCode(channel.getExitStatus());
 
-            if (timedOut) {
+            if (timedOut && !usePseudoTerminal) {
                 throw new TimeoutException(String.valueOf(result));
             }
 
