@@ -81,11 +81,4 @@ public class GetLaunchPermissionForImageInRegionAction {
             return ExceptionProcessor.getExceptionResult(exception);
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        GetLaunchPermissionForImageInRegionAction action = new GetLaunchPermissionForImageInRegionAction();
-        Map<String, String> results = action.execute("amazon", "https://ec2.amazonaws.com", "AKIAJOX3ZT5RNZ5FMILQ",
-                "JQojbbNd58ihdJIVWMohZ8Ws87flRmk5IJaCYSaZ", "proxy.houston.hp.com", "8080", "", "ami-0cbb4e61");
-        System.out.println(results.get("returnResult"));
-    }
 }
