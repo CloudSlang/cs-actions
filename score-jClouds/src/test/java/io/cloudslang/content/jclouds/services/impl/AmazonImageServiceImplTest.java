@@ -111,36 +111,6 @@ public class AmazonImageServiceImplTest {
     }
 
     @Test
-    public void describeImagesInRegionNoIdentityIdTest() {
-        imageSpy.describeImagesInRegion("", "", null, null);
-
-        verify(imageSpy, times(1)).lazyInit(eq(""));
-        verify(amiApiMock, times(1)).describeImagesInRegion(eq(""), any(DescribeImagesOptions.class));
-        commonVerifiersForMethods();
-    }
-
-    @Test
-    public void describeImagesInRegionWithIdentityIdTest() {
-        imageSpy.describeImagesInRegion("", "123456789", null, null);
-
-        verify(imageSpy, times(1)).lazyInit(eq(""));
-        verify(amiApiMock, times(1)).describeImagesInRegion(eq(""), any(DescribeImagesOptions.class));
-        commonVerifiersForMethods();
-    }
-
-    @Test
-    public void describeImagesInRegionTest() {
-        String[] imageIds = InputsUtil.getStringsArray("firstId|secondId|thirdId", "", ",");
-        String[] owners = InputsUtil.getStringsArray("firstGroup|secondGroup|thirdGroup", "", ",");
-
-        imageSpy.describeImagesInRegion("us-east-1", "123456789", imageIds, owners);
-
-        verify(imageSpy, times(1)).lazyInit(eq("us-east-1"));
-        verify(amiApiMock, times(1)).describeImagesInRegion(eq("us-east-1"), any(DescribeImagesOptions.class));
-        commonVerifiersForMethods();
-    }
-
-    @Test
     public void getLaunchPermissionForImageTest() {
         imageSpy.getLaunchPermissionForImage("us-east-1", "ami-abcdef16");
 

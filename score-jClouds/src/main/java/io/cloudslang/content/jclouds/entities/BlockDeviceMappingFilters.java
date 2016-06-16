@@ -8,6 +8,9 @@ public enum BlockDeviceMappingFilters {
     DEVICE_NAME("block-device-mapping.device-name"),
     STATUS("block-device-mapping.status"),
     VOLUME_ID("block-device-mapping.volume-id"),
+    VOLUME_SIZE("block-device-mapping.volume-size"),
+    VOLUME_TYPE("block-device-mapping.volume-type"),
+    SNAPSHOT_ID("block-device-mapping.snapshot-id"),
     ATTACH_TIME("block-device-mapping.attach-time"),
     DELETE_ON_TERMINATION("block-device-mapping.delete-on-termination");
 

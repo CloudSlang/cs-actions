@@ -6,7 +6,6 @@ package io.cloudslang.content.jclouds.entities;
  */
 public enum InstanceFilters {
     AFFINITY("affinity"),
-    ARCHITECTURE("architecture"),
     AVAILABILITY_ZONE("availability-zone"),
     CLIENT_TOKEN("client-token"),
     DNS_NAME("dns-name"),

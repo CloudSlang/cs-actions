@@ -2,14 +2,10 @@ package io.cloudslang.content.jclouds.services.helpers;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import io.cloudslang.content.jclouds.entities.Association;
-import io.cloudslang.content.jclouds.entities.BlockDeviceMappingFilters;
-import io.cloudslang.content.jclouds.entities.InstanceFilters;
-import io.cloudslang.content.jclouds.entities.NetworkInterfaceFilters;
+import io.cloudslang.content.jclouds.entities.*;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ec2.domain.InstanceState;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
@@ -45,164 +41,11 @@ public class AmazonComputeServiceHelper {
         }
     }
 
-    public Multimap<String, String> getInstanceFilterMap(InstanceInputs instanceInputs, String delimiter) {
+    public Multimap<String, String> getInstanceFiltersMap(InstanceInputs instanceInputs, String delimiter) {
         Multimap<String, String> filtersMap = ArrayListMultimap.create();
         updateFiltersMap(instanceInputs, filtersMap, delimiter);
 
         return filtersMap;
-    }
-
-    private void updateFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
-        setRelevantFilters(instanceInputs, filtersMap);
-        setTagFilters(instanceInputs, filtersMap, delimiter);
-
-        updateFiltersMapEntry(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.DNS_NAME.getValue(), instanceInputs.getDnsName());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.GROUP_ID.getValue(), instanceInputs.getCustomInputs().getGroupId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.GROUP_NAME.getValue(), instanceInputs.getGroupName());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.HOST_ID.getValue(), instanceInputs.getCustomInputs().getHostId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.IAM_INSTANCE_PROFILE_ARN.getValue(), instanceInputs.getIamArn());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.IMAGE_ID.getValue(), instanceInputs.getCustomInputs().getImageId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_ID.getValue(), instanceInputs.getCustomInputs().getInstanceId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_LIFECYCLE.getValue(), instanceInputs.getInstanceLifecycle());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_TYPE.getValue(), instanceInputs.getInstanceType());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_GROUP_ID.getValue(), instanceInputs.getInstanceGroupId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_GROUP_NAME.getValue(), instanceInputs.getInstanceGroupName());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.IP_ADDRESS.getValue(), instanceInputs.getIpAddress());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.KERNEL_ID.getValue(), instanceInputs.getCustomInputs().getKernelId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.KEY_NAME.getValue(), instanceInputs.getKeyName());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_INDEX.getValue(), instanceInputs.getLaunchIndex());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_TIME.getValue(), instanceInputs.getLaunchTime());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.OWNER_ID.getValue(), instanceInputs.getCustomInputs().getOwnerId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.PLACEMENT_GROUP_NAME.getValue(), instanceInputs.getPlacementGroupName());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_DNS_NAME.getValue(), instanceInputs.getPrivateDnsName());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_IP_ADDRESS.getValue(), instanceInputs.getPrivateIpAddress());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE.getValue(), instanceInputs.getProductCode());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getProductCodeType());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.RAMDISK_ID.getValue(), instanceInputs.getCustomInputs().getRamdiskId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.REASON.getValue(), instanceInputs.getReason());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.REQUESTER_ID.getValue(), instanceInputs.getRequesterId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_NAME.getValue(), instanceInputs.getRootDeviceName());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getRootDeviceType());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_CODE.getValue(), instanceInputs.getStateReasonCode());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_MESSAGE.getValue(), instanceInputs.getStateReasonMessage());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.SUBNET_ID.getValue(), instanceInputs.getCustomInputs().getSubnetId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.VPC_ID.getValue(), instanceInputs.getCustomInputs().getVpcId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.RESERVATION_ID.getValue(),
-                instanceInputs.getCustomInputs().getReservationId());
-        updateFiltersMapEntry(filtersMap, InstanceFilters.SPOT_INSTANCE_REQUEST_ID.getValue(),
-                instanceInputs.getSpotInstanceRequestId());
-
-        updateFiltersMapEntry(filtersMap, Association.PUBLIC_IP.getValue(), instanceInputs.getPublicIp());
-        updateFiltersMapEntry(filtersMap, Association.IP_OWNER_ID.getValue(), instanceInputs.getIpOwnerId());
-        updateFiltersMapEntry(filtersMap, Association.ALLOCATION_ID.getValue(), instanceInputs.getCustomInputs().getAllocationId());
-        updateFiltersMapEntry(filtersMap, Association.ASSOCIATION_ID.getValue(), instanceInputs.getCustomInputs().getAssociationId());
-
-        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.ATTACH_TIME.getValue(), instanceInputs.getAttachTime());
-        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.DEVICE_NAME.getValue(), instanceInputs.getDeviceName());
-        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.VOLUME_ID.getValue(),
-                instanceInputs.getCustomInputs().getVolumeId());
-
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.DESCRIPTION.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceDescription());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.SUBNET_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceSubnetId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.VPC_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceVpcId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.INTERFACE_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.OWNER_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceOwnerId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.AVAILABILITY_ZONE.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceAvailabilityZone());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.REQUESTER_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.REQUESTER_MANAGED.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterManaged());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.MAC_ADDRESS.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceMacAddress());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.PRIVATE_DNS_NAME.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfacePrivateDnsName());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.SOURCE_DEST_CHECK.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceSourceDestinationCheck());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.GROUP_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceGroupId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.GROUP_NAME.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceGroupName());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_ATTACHMENT_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_INSTANCE_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_INSTANCE_OWNER_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceOwnerId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_PRIVATE_IP_ADDRESS.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfacePrivateIpAddress());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_DEVICE_INDEX.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceDeviceIndex());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_ATTACH_TIME.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachTime());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_DELETE_ON_TERMINATION.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceDeleteOnTermination());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_PRIMARY.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceAddressesPrimary());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_ASSOCIATION_PUBLIC_IP.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfacePublicIp());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_ASSOCIATION_IP_OWNER_ID.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceIpOwnerId());
-    }
-
-    private void setRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
-        if (!Constants.Miscellaneous.NOT_RELEVANT_INT_CODE.equals(instanceInputs.getInstanceStateCode())) {
-            updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_STATE_CODE.getValue(), instanceInputs.getInstanceStateCode());
-        }
-
-        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.STATUS.getValue(), instanceInputs.getStatus());
-        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.DELETE_ON_TERMINATION.getValue(),
-                instanceInputs.getDeleteOnTermination());
-
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.ARCHITECTURE.getValue(), instanceInputs.getArchitecture());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.HYPERVISOR.getValue(), instanceInputs.getHypervisor());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.PLATFORM.getValue(), instanceInputs.getPlatform());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.TENANCY.getValue(), instanceInputs.getTenancy());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getVirtualizationType());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.INSTANCE_STATE_NAME.getValue(), instanceInputs.getInstanceStateName());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.MONITORING_STATE.getValue(), instanceInputs.getMonitoringState());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.SOURCE_DESTINATION_CHECK.getValue(),
-                instanceInputs.getSourceDestinationCheck());
-
-        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_STATUS.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentStatus());
-        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilters.STATUS.getValue(),
-                instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
-    }
-
-    private void addFiltersMapRelevantEntry(Multimap<String, String> filtersMap, String filterKey, String filterValue) {
-        if (StringUtils.isNotBlank(filterValue) && !Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(filterValue)) {
-            filtersMap.put(filterKey, filterValue);
-        }
-    }
-
-    private void setTagFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
-        String[] tagKeys = InputsUtil.getStringsArray(instanceInputs.getKeyTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
-        String[] tagValues = InputsUtil.getStringsArray(instanceInputs.getValueTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
-
-        if (tagKeys != null && tagValues != null) {
-            if (tagKeys.length != tagValues.length) {
-                throw new RuntimeException(Constants.ErrorMessages.TAG_KEYS_TAG_VALUES_MISMATCH);
-            }
-
-            for (int counter = 0; counter < tagKeys.length - 1; counter++) {
-                filtersMap.put(Constants.Miscellaneous.TAG, tagKeys[counter] + Constants.Miscellaneous.EQUAL + tagValues[counter]);
-            }
-        }
-    }
-
-    private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {
-        if (StringUtils.isNotBlank(value)) {
-            map.put(key, value);
-        }
     }
 
     private void waitLoop(InstanceApi instanceApi, InstanceState instanceState, String region,
@@ -213,5 +56,139 @@ public class AmazonComputeServiceHelper {
             waitTime += 4000;
             instanceState = getInstanceState(instanceApi, region, serverId);
         }
+    }
+
+    private void updateFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
+        setRelevantFilters(instanceInputs, filtersMap);
+        setInstanceTagFilters(instanceInputs, filtersMap, delimiter);
+
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.DNS_NAME.getValue(), instanceInputs.getDnsName());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.GROUP_ID.getValue(), instanceInputs.getCustomInputs().getGroupId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.GROUP_NAME.getValue(), instanceInputs.getGroupName());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.HOST_ID.getValue(), instanceInputs.getCustomInputs().getHostId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.IAM_INSTANCE_PROFILE_ARN.getValue(), instanceInputs.getIamArn());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.IMAGE_ID.getValue(), instanceInputs.getCustomInputs().getImageId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_ID.getValue(), instanceInputs.getCustomInputs().getInstanceId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_LIFECYCLE.getValue(), instanceInputs.getInstanceLifecycle());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_TYPE.getValue(), instanceInputs.getInstanceType());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_GROUP_ID.getValue(), instanceInputs.getInstanceGroupId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_GROUP_NAME.getValue(), instanceInputs.getInstanceGroupName());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.IP_ADDRESS.getValue(), instanceInputs.getIpAddress());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.KERNEL_ID.getValue(), instanceInputs.getCustomInputs().getKernelId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.KEY_NAME.getValue(), instanceInputs.getKeyName());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_INDEX.getValue(), instanceInputs.getLaunchIndex());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_TIME.getValue(), instanceInputs.getLaunchTime());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.OWNER_ID.getValue(), instanceInputs.getCustomInputs().getOwnerId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PLACEMENT_GROUP_NAME.getValue(), instanceInputs.getPlacementGroupName());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_DNS_NAME.getValue(), instanceInputs.getPrivateDnsName());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_IP_ADDRESS.getValue(), instanceInputs.getPrivateIpAddress());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE.getValue(), instanceInputs.getProductCode());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getProductCodeType());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.RAMDISK_ID.getValue(), instanceInputs.getCustomInputs().getRamdiskId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.REASON.getValue(), instanceInputs.getReason());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.REQUESTER_ID.getValue(), instanceInputs.getRequesterId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_NAME.getValue(), instanceInputs.getRootDeviceName());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getRootDeviceType());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_CODE.getValue(), instanceInputs.getStateReasonCode());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_MESSAGE.getValue(), instanceInputs.getStateReasonMessage());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.SUBNET_ID.getValue(), instanceInputs.getCustomInputs().getSubnetId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.VPC_ID.getValue(), instanceInputs.getCustomInputs().getVpcId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.RESERVATION_ID.getValue(),
+                instanceInputs.getCustomInputs().getReservationId());
+        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.SPOT_INSTANCE_REQUEST_ID.getValue(),
+                instanceInputs.getSpotInstanceRequestId());
+
+        Utils.updateFiltersMapEntry(filtersMap, Association.PUBLIC_IP.getValue(), instanceInputs.getPublicIp());
+        Utils.updateFiltersMapEntry(filtersMap, Association.IP_OWNER_ID.getValue(), instanceInputs.getIpOwnerId());
+        Utils.updateFiltersMapEntry(filtersMap, Association.ALLOCATION_ID.getValue(), instanceInputs.getCustomInputs().getAllocationId());
+        Utils.updateFiltersMapEntry(filtersMap, Association.ASSOCIATION_ID.getValue(), instanceInputs.getCustomInputs().getAssociationId());
+
+        Utils.updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.ATTACH_TIME.getValue(), instanceInputs.getCustomInputs().getAttachTime());
+        Utils.updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.DEVICE_NAME.getValue(), instanceInputs.getCustomInputs().getBlockMappingDeviceName());
+        Utils.updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.VOLUME_ID.getValue(), instanceInputs.getCustomInputs().getVolumeId());
+
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.DESCRIPTION.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceDescription());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.SUBNET_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceSubnetId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.VPC_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceVpcId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.INTERFACE_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.OWNER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceOwnerId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.AVAILABILITY_ZONE.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAvailabilityZone());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.REQUESTER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.REQUESTER_MANAGED.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterManaged());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.MAC_ADDRESS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceMacAddress());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.PRIVATE_DNS_NAME.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfacePrivateDnsName());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.SOURCE_DEST_CHECK.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceSourceDestinationCheck());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.GROUP_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceGroupId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.GROUP_NAME.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceGroupName());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_ATTACHMENT_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_INSTANCE_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_INSTANCE_OWNER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceOwnerId());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_PRIVATE_IP_ADDRESS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfacePrivateIpAddress());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_DEVICE_INDEX.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceDeviceIndex());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_ATTACH_TIME.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachTime());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_DELETE_ON_TERMINATION.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceDeleteOnTermination());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_PRIMARY.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAddressesPrimary());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_ASSOCIATION_PUBLIC_IP.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfacePublicIp());
+        Utils.updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_ASSOCIATION_IP_OWNER_ID.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceIpOwnerId());
+    }
+
+    private void setRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
+        if (!Constants.Miscellaneous.NOT_RELEVANT_INT_CODE.equals(instanceInputs.getInstanceStateCode())) {
+            Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_STATE_CODE.getValue(), instanceInputs.getInstanceStateCode());
+        }
+
+        Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.ARCHITECTURE.getValue(), instanceInputs.getCustomInputs().getArchitecture());
+
+        Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.STATUS.getValue(),
+                instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
+        Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.DELETE_ON_TERMINATION.getValue(),
+                instanceInputs.getCustomInputs().getDeleteOnTermination());
+
+        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.HYPERVISOR.getValue(), instanceInputs.getHypervisor());
+        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.PLATFORM.getValue(), instanceInputs.getPlatform());
+        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.TENANCY.getValue(), instanceInputs.getTenancy());
+        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getVirtualizationType());
+        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.INSTANCE_STATE_NAME.getValue(), instanceInputs.getInstanceStateName());
+        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.MONITORING_STATE.getValue(), instanceInputs.getMonitoringState());
+        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.SOURCE_DESTINATION_CHECK.getValue(),
+                instanceInputs.getSourceDestinationCheck());
+
+        Utils.addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_STATUS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentStatus());
+        Utils.addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilters.STATUS.getValue(),
+                instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
+    }
+
+    private void setInstanceTagFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
+        String[] tagKeys = InputsUtil.getStringsArray(instanceInputs.getKeyTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
+        String[] tagValues = InputsUtil.getStringsArray(instanceInputs.getValueTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
+
+        Utils.setTagFilters(filtersMap, tagKeys, tagValues);
     }
 }

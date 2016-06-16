@@ -1,5 +1,9 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.Architecture;
+import io.cloudslang.content.jclouds.entities.BlockDeviceMappingStatus;
+import io.cloudslang.content.jclouds.entities.VolumeType;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -25,6 +29,14 @@ public class CustomInputs {
     private String vpcId;
     private String allocationId;
     private String associationId;
+    private String architecture;
+    private String deleteOnTermination;
+    private String blockMappingDeviceName;
+    private String blockDeviceMappingSnapshotId;
+    private String attachTime;
+    private String blockDeviceMappingStatus;
+    private String volumeSize;
+    private String volumeType;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -42,6 +54,14 @@ public class CustomInputs {
         this.vpcId = builder.vpcId;
         this.allocationId = builder.allocationId;
         this.associationId = builder.associationId;
+        this.architecture = builder.architecture;
+        this.blockMappingDeviceName = builder.blockMappingDeviceName;
+        this.deleteOnTermination = builder.deleteOnTermination;
+        this.blockDeviceMappingSnapshotId = builder.blockDeviceMappingSnapshotId;
+        this.attachTime = builder.attachTime;
+        this.blockDeviceMappingStatus = builder.blockDeviceMappingStatus;
+        this.volumeSize = builder.volumeSize;
+        this.volumeType = builder.volumeType;
     }
 
     public String getRegion() {
@@ -104,6 +124,38 @@ public class CustomInputs {
         return associationId;
     }
 
+    public String getArchitecture() {
+        return architecture;
+    }
+
+    public String getBlockMappingDeviceName() {
+        return blockMappingDeviceName;
+    }
+
+    public String getDeleteOnTermination() {
+        return deleteOnTermination;
+    }
+
+    public String getBlockDeviceMappingSnapshotId() {
+        return blockDeviceMappingSnapshotId;
+    }
+
+    public String getAttachTime() {
+        return attachTime;
+    }
+
+    public String getBlockDeviceMappingStatus() {
+        return blockDeviceMappingStatus;
+    }
+
+    public String getVolumeSize() {
+        return volumeSize;
+    }
+
+    public String getVolumeType() {
+        return volumeType;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -120,6 +172,14 @@ public class CustomInputs {
         private String vpcId;
         private String allocationId;
         private String associationId;
+        private String architecture;
+        private String blockMappingDeviceName;
+        private String deleteOnTermination;
+        private String blockDeviceMappingSnapshotId;
+        private String attachTime;
+        private String blockDeviceMappingStatus;
+        private String volumeSize;
+        private String volumeType;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -197,6 +257,46 @@ public class CustomInputs {
 
         public CustomInputsBuilder withAssociationId(String inputValue) {
             associationId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withArchitecture(String inputValue) {
+            architecture = Architecture.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withBlockMappingDeviceName(String inputValue) {
+            blockMappingDeviceName = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withDeleteOnTermination(String inputValue) {
+            deleteOnTermination = InputsUtil.getRelevantBooleanString(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withBlockDeviceMappingSnapshotId(String inputValue) {
+            blockDeviceMappingSnapshotId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withAttachTime(String inputValue) {
+            attachTime = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withBlockDeviceMappingStatus(String inputValue) {
+            blockDeviceMappingStatus = BlockDeviceMappingStatus.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withVolumeSize(String inputValue) {
+            volumeSize = InputsUtil.getValidVolumeAmount(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withVolumeType(String inputValue) throws Exception {
+            volumeType = VolumeType.getValue(inputValue);
             return this;
         }
     }

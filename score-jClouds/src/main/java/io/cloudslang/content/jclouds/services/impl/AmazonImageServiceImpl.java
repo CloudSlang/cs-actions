@@ -1,9 +1,13 @@
 package io.cloudslang.content.jclouds.services.impl;
 
+import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonImageServiceHelper;
+import io.cloudslang.content.jclouds.services.helpers.Utils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Image;
@@ -33,7 +37,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
     void init() {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = contextBuilder.buildApi(EC2Api.class);
+        ec2Api = Utils.getApi(contextBuilder, EC2Api.class);
     }
 
     @Override
@@ -58,11 +62,18 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
     }
 
     @Override
-    public Set<? extends Image> describeImagesInRegion(String region, String identityId, String[] imageIds, String[] owners) {
+    public Set<? extends Image> describeImagesInRegion(CommonInputs commonInputs, ImageInputs imageInputs) {
         AMIApi amiApi = getAMIApi(region, true);
-        DescribeImagesOptions options = new AmazonImageServiceHelper().getDescribeImagesOptions(identityId, imageIds, owners);
 
-        return amiApi.describeImagesInRegion(region, options);
+        AmazonImageServiceHelper helper = new AmazonImageServiceHelper();
+        DescribeImagesOptions options = helper.getDescribeImagesOptions(imageInputs, commonInputs.getDelimiter());
+        Multimap<String, String> filtersMap = helper.getImageFiltersMap(imageInputs);
+
+        if (filtersMap.isEmpty()) {
+            return amiApi.describeImagesInRegion(region, options);
+        }
+
+        return amiApi.describeImagesInRegionWithFilter(region, filtersMap, options);
     }
 
     @Override
@@ -101,6 +112,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
     private AMIApi getAMIApi(String region, boolean isForRegion) {
         lazyInit(region);
+
         return isForRegion ? ec2Api.getAMIApiForRegion(region).get() : ec2Api.getAMIApi().get();
     }
 

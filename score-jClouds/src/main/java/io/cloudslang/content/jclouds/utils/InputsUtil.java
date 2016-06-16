@@ -17,6 +17,8 @@ public final class InputsUtil {
     private static final String COMMA_DELIMITER = ",";
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
+    private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
+    private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
 
     private InputsUtil() {
     }
@@ -81,6 +83,22 @@ public final class InputsUtil {
 
     public static int getValidInstanceStateCode(String input) {
         return InstanceState.getKey(input);
+    }
+
+    public static String getValidVolumeAmount(String input) {
+        if (StringUtils.isBlank(input)) {
+            return Constants.Miscellaneous.NOT_RELEVANT;
+        }
+        try {
+            float floatInput = Float.parseFloat(input);
+            if (floatInput < MINIMUM_VOLUME_AMOUNT || floatInput > MAXIMUM_VOLUME_AMOUNT) {
+                throw new RuntimeException("Incorrect provided value: " + input + ". Valid values are positive floats " +
+                        "between 0.5f and 16000.0f.");
+            }
+            return String.valueOf(floatInput);
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException("The provided value: " + input + " input must be float.");
+        }
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {

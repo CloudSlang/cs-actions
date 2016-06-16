@@ -74,8 +74,8 @@ public class DescribeInstancesAction {
      *                                               Ex: "2010-09-15T17:15:20.000Z"
      * @param deleteOnTermination                    A Boolean that indicates whether the EBS volume is deleted on instance
      *                                               termination.
-     * @param deviceName                             The device name for the EBS volume. Ex: "/dev/sdh" or "xvdh".
-     * @param status                                 The status for the EBS volume. Valid values: "attaching", "attached",
+     * @param blockMappingDeviceName                 The device name for the EBS volume. Ex: "/dev/sdh" or "xvdh".
+     * @param blockDeviceMappingStatus               The status for the EBS volume. Valid values: "attaching", "attached",
      *                                               "detaching", "detached".
      * @param clientToken                            The idem-potency token that was provided when the instance was launched.
      * @param dnsName                                The public DNS name of the instance.
@@ -197,14 +197,14 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.VPC_ID) String vpcId,
                                        @Param(Inputs.CustomInputs.ALLOCATION_ID) String allocationId,
                                        @Param(Inputs.CustomInputs.ASSOCIATION_ID) String associationId,
+                                       @Param(Inputs.CustomInputs.ARCHITECTURE) String architecture,
+                                       @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_STATUS) String blockDeviceMappingStatus,
+                                       @Param(Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
+                                       @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockMappingDeviceName,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
-                                       @Param(Inputs.InstanceInputs.ARCHITECTURE) String architecture,
                                        @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(Inputs.InstanceInputs.ATTACH_TIME) String attachTime,
-                                       @Param(Inputs.InstanceInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
-                                       @Param(Inputs.InstanceInputs.DEVICE_NAME) String deviceName,
-                                       @Param(Inputs.InstanceInputs.STATUS) String status,
                                        @Param(Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
                                        @Param(Inputs.InstanceInputs.DNS_NAME) String dnsName,
                                        @Param(Inputs.InstanceInputs.GROUP_NAME) String groupName,
@@ -294,6 +294,11 @@ public class DescribeInstancesAction {
                 .withVpcId(vpcId)
                 .withAllocationId(allocationId)
                 .withAssociationId(associationId)
+                .withArchitecture(architecture)
+                .withDeleteOnTermination(deleteOnTermination)
+                .withBlockMappingDeviceName(blockMappingDeviceName)
+                .withBlockDeviceMappingStatus(blockDeviceMappingStatus)
+                .withAttachTime(attachTime)
                 .build();
 
         NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
@@ -328,12 +333,7 @@ public class DescribeInstancesAction {
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
                 .withAffinity(affinity)
-                .withArchitecture(architecture)
                 .withAvailabilityZone(availabilityZone)
-                .withAttachTime(attachTime)
-                .withDeleteOnTermination(deleteOnTermination)
-                .withDeviceName(deviceName)
-                .withStatus(status)
                 .withClientToken(clientToken)
                 .withDnsName(dnsName)
                 .withGroupName(groupName)

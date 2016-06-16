@@ -28,30 +28,40 @@ public class DescribeImagesInRegionAction {
      * Note:
      * De-registered images are included in the returned results for an unspecified interval after de-registration.
      *
-     * @param provider         Cloud provider on which you have the instance.
-     *                         Default: "amazon"
-     * @param identityEndpoint Endpoint to which first request will be sent.
-     *                         Example: "https://ec2.amazonaws.com"
-     * @param identity         Username of your account or the Access Key ID.
-     * @param credential       Password of the user or the Secret Access Key that correspond to the identity input.
-     * @param proxyHost        Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort        Proxy server port.
-     * @param delimiter        The delimiter that will be used - Default: ","
-     * @param region           Optional - Region where image will be created. ListRegionAction can be used in order to
-     *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-     *                         Default: "us-east-1".
-     * @param identityId       Scopes the images by users with explicit launch permissions. Specify an AWS account ID,
-     *                         "self" (the sender of the request), or "all" (public AMIs).
-     *                         Valid: "self", "all" or AWS account ID
-     *                         Default: "self"
-     * @param imageIdsString   Optional - A string that contains: none, one or more image IDs separated by delimiter.
-     *                         Default: ""
-     * @param ownersString     Optional - Filters the images by the owner. Specify an AWS account ID, "amazon" (owner is Amazon),
-     *                         "aws-marketplace" (owner is AWS Marketplace), "self" (owner is the sender of the request).
-     *                         Omitting this option returns all images for which you have launch permissions, regardless
-     *                         of ownership.
-     *                         Valid: "", "amazon", "aws-marketplace", or "self"
-     *                         Default: ""
+     * @param provider                     Cloud provider on which you have the instance - Default: "amazon"
+     * @param identityEndpoint             Endpoint to which first request will be sent - Ex: "https://ec2.amazonaws.com"
+     * @param identity                     Optional - Username of your account or the Access Key ID.
+     * @param credential                   Optional - Password of the user or the Secret Access Key that correspond to
+     *                                     the identity input.
+     * @param proxyHost                    Optional - Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort                    Optional - Proxy server port - Default: "8080"
+     * @param delimiter                    Optional - Delimiter that will be used - Default: ","
+     * @param region                       Optional - Region where image will be created. ListRegionAction can be used
+     *                                     in order to get all regions. For further details check:
+     *                                     http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+     *                                     Default: "us-east-1".
+     * @param identityId                   Optional - Scopes the images by users with explicit launch permissions. Specify
+     *                                     an AWS account ID, "self" (the sender of the request), or "all" (public AMIs).
+     *                                     Valid values: "self", "all" or AWS account ID - Default: "self"
+     * @param architecture                 Optional - Instance architecture - Valid values: "i386" or "x86_64".
+     * @param deleteOnTermination          Optional - A Boolean that indicates whether the EBS volume is deleted on instance
+     *                                     termination.
+     * @param blockMappingDeviceName       Optional - Device name for the EBS volume - Ex: "/dev/sdh".
+     * @param blockDeviceMappingSnapshotId Optional - ID of the snapshot used for the Amazon EBS volume.
+     * @param volumeSize                   Optional - Volume size of the Amazon EBS volume, in GiB.
+     * @param volumeType                   Optional - Volume type of the Amazon EBS volume - Valid values: "gp2" (for General
+     *                                     Purpose SSD volumes), "io1" (for Provisioned IOPS SSD volumes), and "standard"
+     *                                     (for Magnetic volumes).
+     * @param imageId                      Optional - ID of the specified image to search for.
+     * @param idsString                    Optional - A string that contains: none, one or more image IDs separated by
+     *                                     delimiter - Default: ","
+     * @param ownersString                 Optional - Filters the images by the owner. Specify an AWS account ID,
+     *                                     "amazon" (owner is Amazon), "aws-marketplace" (owner is AWS Marketplace),
+     *                                     "self" (owner is the sender of the request). Omitting this option returns all
+     *                                     images for which you have launch permissions, regardless of ownership.
+     *                                     Valid values: "", "amazon", "aws-marketplace", or "self" - Default: ""
+     * @param description                  Optional - Description of the image (provided during image creation).
+     * @param type                         Optional - Image type - Valid values: machine, kernel, ramdisk.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -78,8 +88,18 @@ public class DescribeImagesInRegionAction {
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(Inputs.CustomInputs.IDENTITY_ID) String identityId,
-                                       @Param(Inputs.ImageInputs.IMAGE_IDS_STRING) String imageIdsString,
-                                       @Param(Inputs.ImageInputs.OWNERS_STRING) String ownersString) throws Exception {
+                                       @Param(Inputs.CustomInputs.ARCHITECTURE) String architecture,
+                                       @Param(Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
+                                       @Param(Inputs.CustomInputs.BLOCK_MAPPING_DEVICE_NAME) String blockMappingDeviceName,
+                                       @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockDeviceMappingSnapshotId,
+                                       @Param(Inputs.CustomInputs.VOLUME_SIZE) String volumeSize,
+                                       @Param(Inputs.CustomInputs.VOLUME_TYPE) String volumeType,
+                                       @Param(Inputs.CustomInputs.IMAGE_ID) String imageId,
+
+                                       @Param(Inputs.ImageInputs.IDS_STRING) String idsString,
+                                       @Param(Inputs.ImageInputs.OWNERS_STRING) String ownersString,
+                                       @Param(Inputs.ImageInputs.DESCRIPTION) String description,
+                                       @Param(Inputs.ImageInputs.TYPE) String type) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -94,12 +114,21 @@ public class DescribeImagesInRegionAction {
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withIdentityId(identityId)
+                .withArchitecture(architecture)
+                .withDeleteOnTermination(deleteOnTermination)
+                .withBlockMappingDeviceName(blockMappingDeviceName)
+                .withBlockDeviceMappingSnapshotId(blockDeviceMappingSnapshotId)
+                .withVolumeSize(volumeSize)
+                .withVolumeType(volumeType)
+                .withImageId(imageId)
                 .build();
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
                 .withCustomInputs(customInputs)
-                .withImageIdsString(imageIdsString)
+                .withImageIdsString(idsString)
                 .withOwnersString(ownersString)
+                .withDescription(description)
+                .withType(type)
                 .build();
 
         try {

@@ -35,11 +35,11 @@ public class CreateImageInRegionAction {
      * @param region           Optional - Region where image will be created. ListRegionAction can be used in order to
      *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
      *                         Default: "us-east-1".
-     * @param serverId         ID of the server (instance) to be used to create image.
-     * @param imageName        A name for the new image.
-     * @param imageDescription Optional - A description for the new image.
+     * @param instanceId         ID of the server (instance) to be used to create image.
+     * @param name        A name for the new image.
+     * @param description Optional - A description for the new image.
      *                         Default: ""
-     * @param imageNoReboot    Optional - By default, Amazon EC2 attempts to shut down and reboot the instance before
+     * @param noReboot    Optional - By default, Amazon EC2 attempts to shut down and reboot the instance before
      *                         creating the image. If the 'No Reboot' option is set, Amazon EC2 doesn't shut down the
      *                         instance before creating the image. When this option is used, file system integrity on
      *                         the created image can't be guaranteed.
@@ -68,10 +68,10 @@ public class CreateImageInRegionAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String serverId,
-                                       @Param(value = Inputs.ImageInputs.IMAGE_NAME, required = true) String imageName,
-                                       @Param(Inputs.ImageInputs.IMAGE_DESCRIPTION) String imageDescription,
-                                       @Param(Inputs.ImageInputs.IMAGE_NO_REBOOT) String imageNoReboot) throws Exception {
+                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId,
+                                       @Param(value = Inputs.ImageInputs.NAME, required = true) String name,
+                                       @Param(Inputs.ImageInputs.DESCRIPTION) String description,
+                                       @Param(Inputs.ImageInputs.NO_REBOOT) String noReboot) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -84,14 +84,14 @@ public class CreateImageInRegionAction {
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
-                .withInstanceId(serverId)
+                .withInstanceId(instanceId)
                 .build();
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
                 .withCustomInputs(customInputs)
-                .withImageName(imageName)
-                .withImageDescription(imageDescription)
-                .withImageNoReboot(imageNoReboot)
+                .withImageName(name)
+                .withImageDescription(description)
+                .withImageNoReboot(noReboot)
                 .build();
 
         try {

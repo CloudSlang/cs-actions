@@ -42,7 +42,6 @@ import static org.mockito.Mockito.*;
 public class OpenstackComputeServiceImplTest {
     private OpenstackComputeServiceImpl toTest;
     private static final String REGION = "RegionOne";
-    private static final String INVALID_REGION = "RegionOneTwo";
     private static final String SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e5";
     private static final String INVALID_SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e6";
     private static final String ENDPOINT = "http://11.11.11.11:5000/v2.0";

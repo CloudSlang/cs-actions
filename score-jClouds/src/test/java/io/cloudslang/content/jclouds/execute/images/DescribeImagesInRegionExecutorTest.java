@@ -55,7 +55,7 @@ public class DescribeImagesInRegionExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getImageInputs());
 
-        verify(imageServiceMock, times(1)).describeImagesInRegion(anyString(), anyString(), any(String[].class), any(String[].class));
+        verify(imageServiceMock, times(1)).describeImagesInRegion(any(CommonInputs.class), any(ImageInputs.class));
 
         assertNotNull(result);
         assertNotNull(result.get(Outputs.RETURN_RESULT));
