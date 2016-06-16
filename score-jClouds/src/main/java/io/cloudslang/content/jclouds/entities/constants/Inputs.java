@@ -38,6 +38,7 @@ public class Inputs {
         public static final String BLOCK_MAPPING_DEVICE_NAME = "blockMappingDeviceName";
         public static final String BLOCK_DEVICE_MAPPING_SNAPSHOT_ID = "blockDeviceMappingSnapshotId";
         public static final String VOLUME_TYPE = "volumeType";
+        public static final String HYPERVISOR = "hypervisor";
     }
 
     public static final class ImageInputs {
@@ -64,7 +65,6 @@ public class Inputs {
         public static final String CLIENT_TOKEN = "clientToken";
         public static final String DNS_NAME = "dnsName";
         public static final String GROUP_NAME = "groupName";
-        public static final String HYPERVISOR = "hypervisor";
         public static final String IAM_ARN = "iamArn";
         public static final String INSTANCE_LIFECYCLE = "instanceLifecycle";
         public static final String INSTANCE_STATE_CODE = "instanceStateCode";

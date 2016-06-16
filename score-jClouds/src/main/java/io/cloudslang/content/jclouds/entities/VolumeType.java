@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 public enum VolumeType {
     GP2,
     IO1,
+    ST1,
+    SC1,
     STANDARD;
 
     public static String getValue(String input) throws Exception {
@@ -20,7 +22,8 @@ public enum VolumeType {
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized  volume type value: [" + input + "]. Valid values are: gp2, io1, standard.");
+            throw new RuntimeException("Unrecognized  volume type value: [" + input + "]. " +
+                    "Valid values are: gp2, io1, st1, sc1, standard.");
         }
     }
 }

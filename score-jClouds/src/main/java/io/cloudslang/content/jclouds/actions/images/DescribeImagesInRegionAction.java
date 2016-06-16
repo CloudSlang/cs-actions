@@ -61,7 +61,9 @@ public class DescribeImagesInRegionAction {
      *                                     images for which you have launch permissions, regardless of ownership.
      *                                     Valid values: "", "amazon", "aws-marketplace", or "self" - Default: ""
      * @param description                  Optional - Description of the image (provided during image creation).
-     * @param type                         Optional - Image type - Valid values: machine, kernel, ramdisk.
+     * @param type                         Optional - Image type - Valid values: "machine", "kernel", "ramdisk".
+     * @param isPublic                     Optional - A Boolean that indicates whether the image is public.
+     *                                     Valid values: "true", "false"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -99,7 +101,8 @@ public class DescribeImagesInRegionAction {
                                        @Param(Inputs.ImageInputs.IDS_STRING) String idsString,
                                        @Param(Inputs.ImageInputs.OWNERS_STRING) String ownersString,
                                        @Param(Inputs.ImageInputs.DESCRIPTION) String description,
-                                       @Param(Inputs.ImageInputs.TYPE) String type) throws Exception {
+                                       @Param(Inputs.ImageInputs.TYPE) String type,
+                                       @Param(Inputs.ImageInputs.IS_PUBLIC) String isPublic) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -129,6 +132,7 @@ public class DescribeImagesInRegionAction {
                 .withOwnersString(ownersString)
                 .withDescription(description)
                 .withType(type)
+                .withIsPublic(isPublic)
                 .build();
 
         try {

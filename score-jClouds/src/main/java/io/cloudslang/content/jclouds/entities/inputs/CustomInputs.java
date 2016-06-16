@@ -2,6 +2,7 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.Architecture;
 import io.cloudslang.content.jclouds.entities.BlockDeviceMappingStatus;
+import io.cloudslang.content.jclouds.entities.Hypervisor;
 import io.cloudslang.content.jclouds.entities.VolumeType;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +38,7 @@ public class CustomInputs {
     private String blockDeviceMappingStatus;
     private String volumeSize;
     private String volumeType;
+    private String hypervisor;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -62,6 +64,7 @@ public class CustomInputs {
         this.blockDeviceMappingStatus = builder.blockDeviceMappingStatus;
         this.volumeSize = builder.volumeSize;
         this.volumeType = builder.volumeType;
+        this.hypervisor = builder.hypervisor;
     }
 
     public String getRegion() {
@@ -156,6 +159,10 @@ public class CustomInputs {
         return volumeType;
     }
 
+    public String getHypervisor() {
+        return hypervisor;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -180,6 +187,7 @@ public class CustomInputs {
         private String blockDeviceMappingStatus;
         private String volumeSize;
         private String volumeType;
+        private String hypervisor;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -297,6 +305,11 @@ public class CustomInputs {
 
         public CustomInputsBuilder withVolumeType(String inputValue) throws Exception {
             volumeType = VolumeType.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withHypervisor(String inputValue) {
+            hypervisor = Hypervisor.getValue(inputValue);
             return this;
         }
     }

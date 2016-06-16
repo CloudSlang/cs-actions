@@ -20,6 +20,7 @@ public class ImageInputs {
     private String userGroupsString;
     private String description;
     private String type;
+    private String isPublic;
 
     private boolean imageNoReboot;
 
@@ -36,6 +37,7 @@ public class ImageInputs {
         this.type = builder.type;
 
         this.imageNoReboot = builder.imageNoReboot;
+        this.isPublic = builder.isPublic;
     }
 
     public CustomInputs getCustomInputs() {
@@ -74,6 +76,10 @@ public class ImageInputs {
         return type;
     }
 
+    public String getIsPublic() {
+        return isPublic;
+    }
+
     public boolean isImageNoReboot() {
         return imageNoReboot;
     }
@@ -89,6 +95,7 @@ public class ImageInputs {
         private String userGroupsString;
         private String description;
         private String type;
+        private String isPublic;
 
         private boolean imageNoReboot;
 
@@ -143,6 +150,11 @@ public class ImageInputs {
 
         public ImageInputs.ImageInputsBuilder withImageNoReboot(String inputValue) {
             imageNoReboot = InputsUtil.getBoolean(inputValue);
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withIsPublic(String inputValue) {
+            isPublic = InputsUtil.getRelevantBooleanString(inputValue);
             return this;
         }
     }

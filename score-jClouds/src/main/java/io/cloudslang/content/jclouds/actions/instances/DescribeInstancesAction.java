@@ -201,6 +201,7 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_STATUS) String blockDeviceMappingStatus,
                                        @Param(Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
                                        @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockMappingDeviceName,
+                                       @Param(Inputs.CustomInputs.HYPERVISOR) String hypervisor,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
@@ -208,7 +209,6 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
                                        @Param(Inputs.InstanceInputs.DNS_NAME) String dnsName,
                                        @Param(Inputs.InstanceInputs.GROUP_NAME) String groupName,
-                                       @Param(Inputs.InstanceInputs.HYPERVISOR) String hypervisor,
                                        @Param(Inputs.InstanceInputs.IAM_ARN) String iamArn,
                                        @Param(Inputs.InstanceInputs.INSTANCE_LIFECYCLE) String instanceLifecycle,
                                        @Param(Inputs.InstanceInputs.INSTANCE_STATE_CODE) String instanceStateCode,
@@ -299,6 +299,7 @@ public class DescribeInstancesAction {
                 .withBlockMappingDeviceName(blockMappingDeviceName)
                 .withBlockDeviceMappingStatus(blockDeviceMappingStatus)
                 .withAttachTime(attachTime)
+                .withHypervisor(hypervisor)
                 .build();
 
         NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
@@ -337,7 +338,6 @@ public class DescribeInstancesAction {
                 .withClientToken(clientToken)
                 .withDnsName(dnsName)
                 .withGroupName(groupName)
-                .withHypervisor(hypervisor)
                 .withIamArn(iamArn)
                 .withInstanceLifecycle(instanceLifecycle)
                 .withInstanceStateCode(instanceStateCode)

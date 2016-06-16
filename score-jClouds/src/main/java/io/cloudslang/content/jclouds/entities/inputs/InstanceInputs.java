@@ -20,7 +20,6 @@ public class InstanceInputs {
     private String clientToken;
     private String dnsName;
     private String groupName;
-    private String hypervisor;
     private String iamArn;
     private String instanceLifecycle;
     private String instanceStateCode;
@@ -68,7 +67,6 @@ public class InstanceInputs {
         this.clientToken = builder.clientToken;
         this.dnsName = builder.dnsName;
         this.groupName = builder.groupName;
-        this.hypervisor = builder.hypervisor;
         this.iamArn = builder.iamArn;
         this.instanceLifecycle = builder.instanceLifecycle;
         this.instanceStateCode = builder.instanceStateCode;
@@ -137,10 +135,6 @@ public class InstanceInputs {
 
     public String getGroupName() {
         return groupName;
-    }
-
-    public String getHypervisor() {
-        return hypervisor;
     }
 
     public String getIamArn() {
@@ -293,7 +287,6 @@ public class InstanceInputs {
         private String clientToken;
         private String dnsName;
         private String groupName;
-        private String hypervisor;
         private String iamArn;
         private String instanceLifecycle;
         private String instanceStateCode;
@@ -367,11 +360,6 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withDnsName(String inputValue) {
             dnsName = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withHypervisor(String inputValue) {
-            hypervisor = Hypervisor.getValue(inputValue);
             return this;
         }
 

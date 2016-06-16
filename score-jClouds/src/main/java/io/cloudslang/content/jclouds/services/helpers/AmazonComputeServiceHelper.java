@@ -62,6 +62,8 @@ public class AmazonComputeServiceHelper {
         setRelevantFilters(instanceInputs, filtersMap);
         setInstanceTagFilters(instanceInputs, filtersMap, delimiter);
 
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.KERNEL_ID.getValue(), instanceInputs.getCustomInputs().getKernelId());
+
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
@@ -77,7 +79,6 @@ public class AmazonComputeServiceHelper {
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_GROUP_ID.getValue(), instanceInputs.getInstanceGroupId());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.INSTANCE_GROUP_NAME.getValue(), instanceInputs.getInstanceGroupName());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.IP_ADDRESS.getValue(), instanceInputs.getIpAddress());
-        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.KERNEL_ID.getValue(), instanceInputs.getCustomInputs().getKernelId());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.KEY_NAME.getValue(), instanceInputs.getKeyName());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_INDEX.getValue(), instanceInputs.getLaunchIndex());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_TIME.getValue(), instanceInputs.getLaunchTime());
@@ -164,13 +165,13 @@ public class AmazonComputeServiceHelper {
         }
 
         Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.ARCHITECTURE.getValue(), instanceInputs.getCustomInputs().getArchitecture());
+        Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.HYPERVISOR.getValue(), instanceInputs.getCustomInputs().getHypervisor());
 
         Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.STATUS.getValue(),
                 instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
         Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.DELETE_ON_TERMINATION.getValue(),
                 instanceInputs.getCustomInputs().getDeleteOnTermination());
 
-        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.HYPERVISOR.getValue(), instanceInputs.getHypervisor());
         Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.PLATFORM.getValue(), instanceInputs.getPlatform());
         Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.TENANCY.getValue(), instanceInputs.getTenancy());
         Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getVirtualizationType());

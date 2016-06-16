@@ -37,6 +37,8 @@ public class AmazonImageServiceHelper {
     private void updateFiltersMap(ImageInputs imageInputs, Multimap<String, String> filtersMap) {
         setRelevantFilters(imageInputs, filtersMap);
 
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.HYPERVISOR.getValue(), imageInputs.getCustomInputs().getHypervisor());
+
         Utils.updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.DELETE_ON_TERMINATION.getValue(),
                 imageInputs.getCustomInputs().getDeleteOnTermination());
         Utils.updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.DEVICE_NAME.getValue(),
@@ -57,8 +59,8 @@ public class AmazonImageServiceHelper {
         Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.VOLUME_TYPE.getValue(),
                 imageInputs.getCustomInputs().getVolumeType());
 
-        Utils.addFiltersMapRelevantEntry(filtersMap, ImageFilters.TYPE.getValue(),
-                imageInputs.getCustomInputs().getVolumeType());
+        Utils.addFiltersMapRelevantEntry(filtersMap, ImageFilters.TYPE.getValue(), imageInputs.getCustomInputs().getVolumeType());
+        Utils.addFiltersMapRelevantEntry(filtersMap, ImageFilters.IS_PUBLIC.getValue(), imageInputs.getIsPublic());
     }
 
     private DescribeImagesOptions getPopulatedDescribeImagesOptions(String identityId, String[] imageIds, String[] owners) {
