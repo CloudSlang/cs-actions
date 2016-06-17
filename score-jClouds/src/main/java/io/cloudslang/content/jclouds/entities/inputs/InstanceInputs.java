@@ -1,6 +1,9 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.*;
+import io.cloudslang.content.jclouds.entities.InstanceState;
+import io.cloudslang.content.jclouds.entities.MonitoringState;
+import io.cloudslang.content.jclouds.entities.Tenancy;
+import io.cloudslang.content.jclouds.entities.VirtualizationType;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
@@ -38,14 +41,10 @@ public class InstanceInputs {
     private String requesterId;
     private String sourceDestinationCheck;
     private String spotInstanceRequestId;
-    private String stateReasonCode;
-    private String stateReasonMessage;
     private String tenancy;
     private String virtualizationType;
     private String publicIp;
     private String ipOwnerId;
-    private String keyTagsString;
-    private String valueTagsString;
 
     private int minCount;
     private int maxCount;
@@ -80,14 +79,10 @@ public class InstanceInputs {
         this.requesterId = builder.requesterId;
         this.sourceDestinationCheck = builder.sourceDestinationCheck;
         this.spotInstanceRequestId = builder.spotInstanceRequestId;
-        this.stateReasonCode = builder.stateReasonCode;
-        this.stateReasonMessage = builder.stateReasonMessage;
         this.tenancy = builder.tenancy;
         this.virtualizationType = builder.virtualizationType;
         this.publicIp = builder.publicIp;
         this.ipOwnerId = builder.ipOwnerId;
-        this.keyTagsString = builder.keyTagsString;
-        this.valueTagsString = builder.valueTagsString;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -199,14 +194,6 @@ public class InstanceInputs {
         return spotInstanceRequestId;
     }
 
-    public String getStateReasonCode() {
-        return stateReasonCode;
-    }
-
-    public String getStateReasonMessage() {
-        return stateReasonMessage;
-    }
-
     public String getTenancy() {
         return tenancy;
     }
@@ -221,14 +208,6 @@ public class InstanceInputs {
 
     public String getIpOwnerId() {
         return ipOwnerId;
-    }
-
-    public String getKeyTagsString() {
-        return keyTagsString;
-    }
-
-    public String getValueTagsString() {
-        return valueTagsString;
     }
 
     public int getMinCount() {
@@ -275,14 +254,10 @@ public class InstanceInputs {
         private String requesterId;
         private String sourceDestinationCheck;
         private String spotInstanceRequestId;
-        private String stateReasonCode;
-        private String stateReasonMessage;
         private String tenancy;
         private String virtualizationType;
         private String publicIp;
         private String ipOwnerId;
-        private String keyTagsString;
-        private String valueTagsString;
 
         private int minCount;
         private int maxCount;
@@ -423,16 +398,6 @@ public class InstanceInputs {
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withStateReasonCode(String inputValue) throws Exception {
-            stateReasonCode = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withStateReasonMessage(String inputValue) throws Exception {
-            stateReasonMessage = inputValue;
-            return this;
-        }
-
         public InstanceInputs.InstanceInputsBuilder withTenancy(String inputValue) throws Exception {
             tenancy = Tenancy.getValue(inputValue);
             return this;
@@ -450,16 +415,6 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withIpOwnerId(String inputValue) throws Exception {
             ipOwnerId = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withKeyTagsString(String inputValue) throws Exception {
-            keyTagsString = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withValueTagsString(String inputValue) throws Exception {
-            valueTagsString = inputValue;
             return this;
         }
 

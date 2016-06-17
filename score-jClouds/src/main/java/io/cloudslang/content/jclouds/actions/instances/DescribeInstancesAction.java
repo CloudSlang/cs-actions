@@ -129,6 +129,10 @@ public class DescribeInstancesAction {
      * @param virtualizationType                     The virtualization type of the instance. Valid values: "paravirtual", "hvm".
      * @param publicIp                               The address of the Elastic IP address bound to the network interface.
      * @param ipOwnerId                              The owner of the Elastic IP address associated with the network interface.
+     * @param keyTagsString                          Optional - A string that contains: none, one or more key tags separated
+     *                                               by delimiter - Default: ""
+     * @param valueTagsString                        Optional - A string that contains: none, one or more tag values separated
+     *                                               by delimiter - Default: ""
      * @param networkInterfaceDescription            The description of the network interface.
      * @param networkInterfaceSubnetId               The ID of the subnet for the network interface.
      * @param networkInterfaceVpcId                  The ID of the VPC for the network interface.
@@ -207,6 +211,10 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.PRODUCT_CODE_TYPE) String productCodeType,
                                        @Param(Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
                                        @Param(Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
+                                       @Param(Inputs.CustomInputs.STATE_REASON_CODE) String stateReasonCode,
+                                       @Param(Inputs.CustomInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
+                                       @Param(Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
+                                       @Param(Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
@@ -233,14 +241,10 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.REQUESTER_ID) String requesterId,
                                        @Param(Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
                                        @Param(Inputs.InstanceInputs.SPOT_INSTANCE_REQUEST_ID) String spotInstanceRequestId,
-                                       @Param(Inputs.InstanceInputs.STATE_REASON_CODE) String stateReasonCode,
-                                       @Param(Inputs.InstanceInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
                                        @Param(Inputs.InstanceInputs.TENANCY) String tenancy,
                                        @Param(Inputs.InstanceInputs.VIRTUALIZATION_TYPE) String virtualizationType,
                                        @Param(Inputs.InstanceInputs.PUBLIC_IP) String publicIp,
                                        @Param(Inputs.InstanceInputs.IP_OWNER_ID) String ipOwnerId,
-                                       @Param(Inputs.InstanceInputs.KEY_TAGS_STRING) String keyTagsString,
-                                       @Param(Inputs.InstanceInputs.VALUE_TAGS_STRING) String valueTagsString,
 
                                        @Param(Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
                                        @Param(Inputs.NetworkInputs.NETWORK_INTERFACE_SUBNET_ID) String networkInterfaceSubnetId,
@@ -305,6 +309,10 @@ public class DescribeInstancesAction {
                 .withProductCodeType(productCodeType)
                 .withRootDeviceName(rootDeviceName)
                 .withRootDeviceType(rootDeviceType)
+                .withStateReasonCode(stateReasonCode)
+                .withStateReasonMessage(stateReasonMessage)
+                .withKeyTagsString(keyTagsString)
+                .withValueTagsString(valueTagsString)
                 .build();
 
         NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
@@ -362,14 +370,10 @@ public class DescribeInstancesAction {
                 .withRequesterId(requesterId)
                 .withSourceDestinationCheck(sourceDestinationCheck)
                 .withSpotInstanceRequestId(spotInstanceRequestId)
-                .withStateReasonCode(stateReasonCode)
-                .withStateReasonMessage(stateReasonMessage)
                 .withTenancy(tenancy)
                 .withVirtualizationType(virtualizationType)
                 .withPublicIp(publicIp)
                 .withIpOwnerId(ipOwnerId)
-                .withKeyTagsString(keyTagsString)
-                .withValueTagsString(valueTagsString)
                 .build();
 
         try {

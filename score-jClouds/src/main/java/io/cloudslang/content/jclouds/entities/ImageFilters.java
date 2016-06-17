@@ -10,7 +10,8 @@ public enum ImageFilters {
     DESCRIPTION("description"),
     IS_PUBLIC("is-public"),
     MANIFEST_LOCATION("manifest-location"),
-    NAME("name");
+    NAME("name"),
+    STATE("state");
 
     private String value;
 

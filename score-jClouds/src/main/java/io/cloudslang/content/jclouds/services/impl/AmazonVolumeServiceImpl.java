@@ -31,7 +31,7 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
 
     void init() {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = Utils.getApi(contextBuilder, EC2Api.class);
+        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
     }
 
     private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion) {

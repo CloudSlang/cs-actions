@@ -15,7 +15,9 @@ public enum CommonFilters {
     PRODUCT_CODE_TYPE("product-code.type"),
     RAMDISK_ID("ramdiskId"),
     ROOT_DEVICE_NAME("root-device-name"),
-    ROOT_DEVICE_TYPE("root-device-type");
+    ROOT_DEVICE_TYPE("root-device-type"),
+    STATE_REASON_CODE("state-reason-code"),
+    STATE_REASON_MESSAGE("state-reason-message");
 
     private String value;
 

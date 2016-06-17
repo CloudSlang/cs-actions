@@ -37,7 +37,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
     void init() {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = Utils.getApi(contextBuilder, EC2Api.class);
+        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
         AmazonImageServiceHelper helper = new AmazonImageServiceHelper();
         DescribeImagesOptions options = helper.getDescribeImagesOptions(imageInputs, commonInputs.getDelimiter());
-        Multimap<String, String> filtersMap = helper.getImageFiltersMap(imageInputs);
+        Multimap<String, String> filtersMap = helper.getImageFiltersMap(imageInputs, commonInputs.getDelimiter());
 
         if (filtersMap.isEmpty()) {
             return amiApi.describeImagesInRegion(region, options);

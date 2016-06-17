@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.ImageState;
 import io.cloudslang.content.jclouds.entities.ImageType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -22,6 +23,7 @@ public class ImageInputs {
     private String type;
     private String isPublic;
     private String manifestLocation;
+    private String state;
 
     private boolean imageNoReboot;
 
@@ -38,6 +40,7 @@ public class ImageInputs {
         this.type = builder.type;
         this.isPublic = builder.isPublic;
         this.manifestLocation = builder.manifestLocation;
+        this.state = builder.state;
 
         this.imageNoReboot = builder.imageNoReboot;
     }
@@ -86,6 +89,10 @@ public class ImageInputs {
         return manifestLocation;
     }
 
+    public String getState() {
+        return state;
+    }
+
     public boolean isImageNoReboot() {
         return imageNoReboot;
     }
@@ -103,6 +110,7 @@ public class ImageInputs {
         private String type;
         private String isPublic;
         private String manifestLocation;
+        private String state;
 
         private boolean imageNoReboot;
 
@@ -162,6 +170,11 @@ public class ImageInputs {
 
         public ImageInputs.ImageInputsBuilder withManifestLocation(String inputValue) {
             manifestLocation = inputValue;
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withState(String inputValue) throws Exception {
+            state = ImageState.getValue(inputValue);
             return this;
         }
 

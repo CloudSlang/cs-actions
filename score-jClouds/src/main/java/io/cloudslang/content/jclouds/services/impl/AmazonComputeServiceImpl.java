@@ -36,14 +36,15 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
 
     protected void init() {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = Utils.getApi(contextBuilder, EC2Api.class);
+        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
     }
 
     @Override
     public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) {
         InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(), true);
 
-        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper().getInstanceFiltersMap(instanceInputs, commonInputs.getDelimiter());
+        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper()
+                .getInstanceFiltersMap(instanceInputs, commonInputs.getDelimiter());
 
         Set<? extends Reservation<? extends RunningInstance>> instancesInRegion;
         Set<String> nodesSet = new HashSet<>();

@@ -34,8 +34,6 @@ public enum InstanceFilters {
     RESERVATION_ID("reservation-id"),
     SOURCE_DESTINATION_CHECK("source-dest-check"),
     SPOT_INSTANCE_REQUEST_ID("spot-instance-request-id"),
-    STATE_REASON_CODE("state-reason-code"),
-    STATE_REASON_MESSAGE("state-reason-message"),
     SUBNET_ID("subnet-id"),
     TENANCY("tenancy"),
     VIRTUALIZATION_TYPE("virtualization-type"),

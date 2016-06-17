@@ -42,6 +42,10 @@ public class CustomInputs {
     private String productCodeType;
     private String rootDeviceName;
     private String rootDeviceType;
+    private String stateReasonCode;
+    private String stateReasonMessage;
+    private String keyTagsString;
+    private String valueTagsString;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -74,6 +78,10 @@ public class CustomInputs {
         this.productCodeType = builder.productCodeType;
         this.rootDeviceName = builder.rootDeviceName;
         this.rootDeviceType = builder.rootDeviceType;
+        this.stateReasonCode = builder.stateReasonCode;
+        this.stateReasonMessage = builder.stateReasonMessage;
+        this.keyTagsString = builder.keyTagsString;
+        this.valueTagsString = builder.valueTagsString;
     }
 
     public String getRegion() {
@@ -196,6 +204,22 @@ public class CustomInputs {
         return rootDeviceType;
     }
 
+    public String getStateReasonCode() {
+        return stateReasonCode;
+    }
+
+    public String getStateReasonMessage() {
+        return stateReasonMessage;
+    }
+
+    public String getKeyTagsString() {
+        return keyTagsString;
+    }
+
+    public String getValueTagsString() {
+        return valueTagsString;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -227,6 +251,10 @@ public class CustomInputs {
         private String productCodeType;
         private String rootDeviceName;
         private String rootDeviceType;
+        private String stateReasonCode;
+        private String stateReasonMessage;
+        private String keyTagsString;
+        private String valueTagsString;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -379,6 +407,26 @@ public class CustomInputs {
 
         public CustomInputsBuilder withRootDeviceType(String inputValue) throws Exception {
             rootDeviceType = RootDeviceType.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withStateReasonCode(String inputValue) throws Exception {
+            stateReasonCode = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withStateReasonMessage(String inputValue) throws Exception {
+            stateReasonMessage = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withKeyTagsString(String inputValue) throws Exception {
+            keyTagsString = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withValueTagsString(String inputValue) throws Exception {
+            valueTagsString = inputValue;
             return this;
         }
     }

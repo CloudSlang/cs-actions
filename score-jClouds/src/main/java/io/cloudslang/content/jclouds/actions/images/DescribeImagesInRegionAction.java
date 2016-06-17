@@ -65,6 +65,12 @@ public class DescribeImagesInRegionAction {
      * @param rootDeviceName               Optional - name of the root device for the instance. Ex: "/dev/sda1"
      * @param rootDeviceType               Optional - type of root device that the instance uses.
      *                                     Valid values: "ebs", "instance-store".
+     * @param stateReasonCode              Optional - reason code for the state change.
+     * @param stateReasonMessage           Optional - a message that describes the state change.
+     * @param keyTagsString                Optional - A string that contains: none, one or more key tags separated
+     *                                     by delimiter - Default: ""
+     * @param valueTagsString              Optional - A string that contains: none, one or more tag values separated
+     *                                     by delimiter - Default: ""
      * @param idsString                    Optional - A string that contains: none, one or more image IDs separated by
      *                                     delimiter - Default: ","
      * @param ownersString                 Optional - Filters the images by the owner. Specify an AWS account ID,
@@ -78,6 +84,7 @@ public class DescribeImagesInRegionAction {
      *                                     Valid values: "true", "false"
      * @param manifestLocation             Optional - Location of the image manifest.
      * @param name                         Optional - Name of the AMI (provided during image creation).
+     * @param state                        Optional - State of the image - Valid values: "available", "pending", "failed".
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -121,6 +128,10 @@ public class DescribeImagesInRegionAction {
                                        @Param(Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
                                        @Param(Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
                                        @Param(Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
+                                       @Param(Inputs.CustomInputs.STATE_REASON_CODE) String stateReasonCode,
+                                       @Param(Inputs.CustomInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
+                                       @Param(Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
+                                       @Param(Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
 
                                        @Param(Inputs.ImageInputs.IDS_STRING) String idsString,
                                        @Param(Inputs.ImageInputs.OWNERS_STRING) String ownersString,
@@ -128,7 +139,8 @@ public class DescribeImagesInRegionAction {
                                        @Param(Inputs.ImageInputs.TYPE) String type,
                                        @Param(Inputs.ImageInputs.IS_PUBLIC) String isPublic,
                                        @Param(Inputs.ImageInputs.MANIFEST_LOCATION) String manifestLocation,
-                                       @Param(Inputs.ImageInputs.NAME) String name) throws Exception {
+                                       @Param(Inputs.ImageInputs.NAME) String name,
+                                       @Param(Inputs.ImageInputs.STATE) String state) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -160,6 +172,10 @@ public class DescribeImagesInRegionAction {
                 .withRamdiskId(ramdiskId)
                 .withRootDeviceName(rootDeviceName)
                 .withRootDeviceType(rootDeviceType)
+                .withStateReasonCode(stateReasonCode)
+                .withStateReasonMessage(stateReasonMessage)
+                .withKeyTagsString(keyTagsString)
+                .withValueTagsString(valueTagsString)
                 .build();
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
@@ -171,6 +187,7 @@ public class DescribeImagesInRegionAction {
                 .withIsPublic(isPublic)
                 .withManifestLocation(manifestLocation)
                 .withImageName(name)
+                .withState(state)
                 .build();
 
         try {

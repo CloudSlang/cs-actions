@@ -45,6 +45,10 @@ public class Inputs {
         public static final String PRODUCT_CODE_TYPE = "productCodeType";
         public static final String ROOT_DEVICE_NAME = "rootDeviceName";
         public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
+        public static final String STATE_REASON_CODE = "stateReasonCode";
+        public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
+        public static final String KEY_TAGS_STRING = "keyTagsString";
+        public static final String VALUE_TAGS_STRING = "valueTagsString";
     }
 
     public static final class ImageInputs {
@@ -57,7 +61,8 @@ public class Inputs {
         public static final String USER_GROUPS_STRING = "userGroupsString";
         public static final String TYPE = "type";
         public static final String IS_PUBLIC = "isPublic";
-        public static final String MANIFEST_LOCATION = "manifestLocation ";
+        public static final String MANIFEST_LOCATION = "manifestLocation";
+        public static final String STATE = "state";
     }
 
     public static final class InstanceInputs {
@@ -90,14 +95,10 @@ public class Inputs {
         public static final String REQUESTER_ID = "requesterId";
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";
         public static final String SPOT_INSTANCE_REQUEST_ID = "spotInstanceRequestId";
-        public static final String STATE_REASON_CODE = "stateReasonCode";
-        public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
         public static final String TENANCY = "tenancy";
         public static final String VIRTUALIZATION_TYPE = "virtualizationType";
         public static final String PUBLIC_IP = "publicIp";
         public static final String IP_OWNER_ID = "ipOwnerId";
-        public static final String KEY_TAGS_STRING = "keyTagsString";
-        public static final String VALUE_TAGS_STRING = "valueTagsString";
     }
 
     public static final class NetworkInputs {

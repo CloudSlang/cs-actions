@@ -34,7 +34,7 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
 
     protected void init() {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.OPENSTACK_PROVIDER);
-        novaApi = Utils.getApi(contextBuilder, NovaApi.class);
+        novaApi = new Utils().getApi(contextBuilder, NovaApi.class);
     }
 
     void lazyInit() {
