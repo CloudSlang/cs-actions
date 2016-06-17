@@ -36,7 +36,6 @@ public enum InstanceFilters {
     SPOT_INSTANCE_REQUEST_ID("spot-instance-request-id"),
     SUBNET_ID("subnet-id"),
     TENANCY("tenancy"),
-    VIRTUALIZATION_TYPE("virtualization-type"),
     VPC_ID("vpc-id");
 
     private String value;

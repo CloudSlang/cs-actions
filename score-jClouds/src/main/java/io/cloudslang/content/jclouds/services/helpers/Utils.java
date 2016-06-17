@@ -104,12 +104,12 @@ public class Utils {
         addFiltersMapRelevantEntry(filtersMap, CommonFilters.ARCHITECTURE.getValue(), instanceInputs.getCustomInputs().getArchitecture());
         addFiltersMapRelevantEntry(filtersMap, CommonFilters.HYPERVISOR.getValue(), instanceInputs.getCustomInputs().getHypervisor());
         addFiltersMapRelevantEntry(filtersMap, CommonFilters.PLATFORM.getValue(), instanceInputs.getCustomInputs().getPlatform());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getCustomInputs().getVirtualizationType());
 
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.STATUS.getValue(), instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.DELETE_ON_TERMINATION.getValue(), instanceInputs.getCustomInputs().getDeleteOnTermination());
 
         addFiltersMapRelevantEntry(filtersMap, InstanceFilters.TENANCY.getValue(), instanceInputs.getTenancy());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getVirtualizationType());
         addFiltersMapRelevantEntry(filtersMap, InstanceFilters.INSTANCE_STATE_NAME.getValue(), instanceInputs.getInstanceStateName());
         addFiltersMapRelevantEntry(filtersMap, InstanceFilters.MONITORING_STATE.getValue(), instanceInputs.getMonitoringState());
         addFiltersMapRelevantEntry(filtersMap, InstanceFilters.SOURCE_DESTINATION_CHECK.getValue(),

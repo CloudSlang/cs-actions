@@ -42,7 +42,6 @@ public class InstanceInputs {
     private String sourceDestinationCheck;
     private String spotInstanceRequestId;
     private String tenancy;
-    private String virtualizationType;
     private String publicIp;
     private String ipOwnerId;
 
@@ -80,7 +79,6 @@ public class InstanceInputs {
         this.sourceDestinationCheck = builder.sourceDestinationCheck;
         this.spotInstanceRequestId = builder.spotInstanceRequestId;
         this.tenancy = builder.tenancy;
-        this.virtualizationType = builder.virtualizationType;
         this.publicIp = builder.publicIp;
         this.ipOwnerId = builder.ipOwnerId;
 
@@ -198,10 +196,6 @@ public class InstanceInputs {
         return tenancy;
     }
 
-    public String getVirtualizationType() {
-        return virtualizationType;
-    }
-
     public String getPublicIp() {
         return publicIp;
     }
@@ -255,7 +249,6 @@ public class InstanceInputs {
         private String sourceDestinationCheck;
         private String spotInstanceRequestId;
         private String tenancy;
-        private String virtualizationType;
         private String publicIp;
         private String ipOwnerId;
 
@@ -400,11 +393,6 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withTenancy(String inputValue) throws Exception {
             tenancy = Tenancy.getValue(inputValue);
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withVirtualizationType(String inputValue) throws Exception {
-            virtualizationType = VirtualizationType.getValue(inputValue);
             return this;
         }
 

@@ -17,7 +17,8 @@ public enum CommonFilters {
     ROOT_DEVICE_NAME("root-device-name"),
     ROOT_DEVICE_TYPE("root-device-type"),
     STATE_REASON_CODE("state-reason-code"),
-    STATE_REASON_MESSAGE("state-reason-message");
+    STATE_REASON_MESSAGE("state-reason-message"),
+    VIRTUALIZATION_TYPE("virtualization-type");
 
     private String value;
 

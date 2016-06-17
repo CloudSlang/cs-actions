@@ -18,8 +18,7 @@ public class AmazonComputeServiceHelper {
     private static final String SERVER_NOT_FOUND = "Server not found.";
 
     public InstanceState getInstanceState(InstanceApi instanceApi, String region, String serverId) throws Exception {
-        Set<? extends Reservation<? extends RunningInstance>> reservationSet = instanceApi
-                .describeInstancesInRegion(region, serverId);
+        Set<? extends Reservation<? extends RunningInstance>> reservationSet = instanceApi.describeInstancesInRegion(region, serverId);
         if (reservationSet.iterator().hasNext()) {
             Reservation<? extends RunningInstance> reservation = reservationSet.iterator().next();
             if (reservation.iterator().hasNext()) {

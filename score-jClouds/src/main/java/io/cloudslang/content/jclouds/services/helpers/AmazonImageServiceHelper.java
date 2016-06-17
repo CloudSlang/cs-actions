@@ -20,7 +20,7 @@ public class AmazonImageServiceHelper {
             return DescribeImagesOptions.NONE;
         }
 
-        return getPopulatedDescribeImagesOptions(imageInputs.getCustomInputs().getIdentityId(), imageIds, owners);
+        return getPopulatedImagesOptions(imageInputs.getCustomInputs().getIdentityId(), imageIds, owners);
     }
 
     public Multimap<String, String> getImageFiltersMap(ImageInputs imageInputs, String delimiter) {
@@ -30,7 +30,7 @@ public class AmazonImageServiceHelper {
         return filtersMap;
     }
 
-    private DescribeImagesOptions getPopulatedDescribeImagesOptions(String identityId, String[] imageIds, String[] owners) {
+    private DescribeImagesOptions getPopulatedImagesOptions(String identityId, String[] imageIds, String[] owners) {
         DescribeImagesOptions options = new DescribeImagesOptions().executableBy(identityId);
         if (imageIds != null) {
             options.imageIds(imageIds);

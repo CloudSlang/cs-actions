@@ -71,6 +71,7 @@ public class DescribeImagesInRegionAction {
      *                                     by delimiter - Default: ""
      * @param valueTagsString              Optional - A string that contains: none, one or more tag values separated
      *                                     by delimiter - Default: ""
+     * @param virtualizationType           Optional - virtualization type of the instance - Valid values: "paravirtual", "hvm".
      * @param idsString                    Optional - A string that contains: none, one or more image IDs separated by
      *                                     delimiter - Default: ","
      * @param ownersString                 Optional - Filters the images by the owner. Specify an AWS account ID,
@@ -132,6 +133,7 @@ public class DescribeImagesInRegionAction {
                                        @Param(Inputs.CustomInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
                                        @Param(Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
                                        @Param(Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
+                                       @Param(Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
 
                                        @Param(Inputs.ImageInputs.IDS_STRING) String idsString,
                                        @Param(Inputs.ImageInputs.OWNERS_STRING) String ownersString,
@@ -176,6 +178,7 @@ public class DescribeImagesInRegionAction {
                 .withStateReasonMessage(stateReasonMessage)
                 .withKeyTagsString(keyTagsString)
                 .withValueTagsString(valueTagsString)
+                .withVirtualizationType(virtualizationType)
                 .build();
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
