@@ -63,6 +63,12 @@ public class AmazonComputeServiceHelper {
         setInstanceTagFilters(instanceInputs, filtersMap, delimiter);
 
         Utils.updateFiltersMapEntry(filtersMap, CommonFilters.KERNEL_ID.getValue(), instanceInputs.getCustomInputs().getKernelId());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.OWNER_ID.getValue(), instanceInputs.getCustomInputs().getOwnerId());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.PRODUCT_CODE.getValue(), instanceInputs.getCustomInputs().getProductCode());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getCustomInputs().getProductCodeType());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.RAMDISK_ID.getValue(), instanceInputs.getCustomInputs().getRamdiskId());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.ROOT_DEVICE_NAME.getValue(), instanceInputs.getCustomInputs().getRootDeviceName());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getCustomInputs().getRootDeviceType());
 
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.AFFINITY.getValue(), instanceInputs.getAffinity());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
@@ -82,17 +88,11 @@ public class AmazonComputeServiceHelper {
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.KEY_NAME.getValue(), instanceInputs.getKeyName());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_INDEX.getValue(), instanceInputs.getLaunchIndex());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.LAUNCH_TIME.getValue(), instanceInputs.getLaunchTime());
-        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.OWNER_ID.getValue(), instanceInputs.getCustomInputs().getOwnerId());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PLACEMENT_GROUP_NAME.getValue(), instanceInputs.getPlacementGroupName());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_DNS_NAME.getValue(), instanceInputs.getPrivateDnsName());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRIVATE_IP_ADDRESS.getValue(), instanceInputs.getPrivateIpAddress());
-        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE.getValue(), instanceInputs.getProductCode());
-        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getProductCodeType());
-        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.RAMDISK_ID.getValue(), instanceInputs.getCustomInputs().getRamdiskId());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.REASON.getValue(), instanceInputs.getReason());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.REQUESTER_ID.getValue(), instanceInputs.getRequesterId());
-        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_NAME.getValue(), instanceInputs.getRootDeviceName());
-        Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getRootDeviceType());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_CODE.getValue(), instanceInputs.getStateReasonCode());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.STATE_REASON_MESSAGE.getValue(), instanceInputs.getStateReasonMessage());
         Utils.updateFiltersMapEntry(filtersMap, InstanceFilters.SUBNET_ID.getValue(), instanceInputs.getCustomInputs().getSubnetId());
@@ -166,13 +166,13 @@ public class AmazonComputeServiceHelper {
 
         Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.ARCHITECTURE.getValue(), instanceInputs.getCustomInputs().getArchitecture());
         Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.HYPERVISOR.getValue(), instanceInputs.getCustomInputs().getHypervisor());
+        Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.PLATFORM.getValue(), instanceInputs.getCustomInputs().getPlatform());
 
         Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.STATUS.getValue(),
                 instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
         Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.DELETE_ON_TERMINATION.getValue(),
                 instanceInputs.getCustomInputs().getDeleteOnTermination());
 
-        Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.PLATFORM.getValue(), instanceInputs.getPlatform());
         Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.TENANCY.getValue(), instanceInputs.getTenancy());
         Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getVirtualizationType());
         Utils.addFiltersMapRelevantEntry(filtersMap, InstanceFilters.INSTANCE_STATE_NAME.getValue(), instanceInputs.getInstanceStateName());

@@ -32,15 +32,10 @@ public class InstanceInputs {
     private String launchTime;
     private String monitoringState;
     private String placementGroupName;
-    private String platform;
     private String privateDnsName;
     private String privateIpAddress;
-    private String productCode;
-    private String productCodeType;
     private String reason;
     private String requesterId;
-    private String rootDeviceName;
-    private String rootDeviceType;
     private String sourceDestinationCheck;
     private String spotInstanceRequestId;
     private String stateReasonCode;
@@ -79,15 +74,10 @@ public class InstanceInputs {
         this.launchTime = builder.launchTime;
         this.monitoringState = builder.monitoringState;
         this.placementGroupName = builder.placementGroupName;
-        this.platform = builder.platform;
         this.privateDnsName = builder.privateDnsName;
         this.privateIpAddress = builder.privateIpAddress;
-        this.productCode = builder.productCode;
-        this.productCodeType = builder.productCodeType;
         this.reason = builder.reason;
         this.requesterId = builder.requesterId;
-        this.rootDeviceName = builder.rootDeviceName;
-        this.rootDeviceType = builder.rootDeviceType;
         this.sourceDestinationCheck = builder.sourceDestinationCheck;
         this.spotInstanceRequestId = builder.spotInstanceRequestId;
         this.stateReasonCode = builder.stateReasonCode;
@@ -185,10 +175,6 @@ public class InstanceInputs {
         return placementGroupName;
     }
 
-    public String getPlatform() {
-        return platform;
-    }
-
     public String getPrivateDnsName() {
         return privateDnsName;
     }
@@ -197,28 +183,12 @@ public class InstanceInputs {
         return privateIpAddress;
     }
 
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public String getProductCodeType() {
-        return productCodeType;
-    }
-
     public String getReason() {
         return reason;
     }
 
     public String getRequesterId() {
         return requesterId;
-    }
-
-    public String getRootDeviceName() {
-        return rootDeviceName;
-    }
-
-    public String getRootDeviceType() {
-        return rootDeviceType;
     }
 
     public String getSourceDestinationCheck() {
@@ -299,15 +269,10 @@ public class InstanceInputs {
         private String launchTime;
         private String monitoringState;
         private String placementGroupName;
-        private String platform;
         private String privateDnsName;
         private String privateIpAddress;
-        private String productCode;
-        private String productCodeType;
         private String reason;
         private String requesterId;
-        private String rootDeviceName;
-        private String rootDeviceType;
         private String sourceDestinationCheck;
         private String spotInstanceRequestId;
         private String stateReasonCode;
@@ -428,11 +393,6 @@ public class InstanceInputs {
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPlatform(String inputValue) throws Exception {
-            platform = Platform.getValue(inputValue);
-            return this;
-        }
-
         public InstanceInputs.InstanceInputsBuilder withPrivateDnsName(String inputValue) throws Exception {
             privateDnsName = inputValue;
             return this;
@@ -443,16 +403,6 @@ public class InstanceInputs {
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withProductCode(String inputValue) throws Exception {
-            productCode = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withProductCodeType(String inputValue) throws Exception {
-            productCodeType = inputValue;
-            return this;
-        }
-
         public InstanceInputs.InstanceInputsBuilder withReason(String inputValue) throws Exception {
             reason = inputValue;
             return this;
@@ -460,16 +410,6 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withRequesterId(String inputValue) throws Exception {
             requesterId = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withRootDeviceName(String inputValue) throws Exception {
-            rootDeviceName = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withRootDeviceType(String inputValue) throws Exception {
-            rootDeviceType = inputValue;
             return this;
         }
 

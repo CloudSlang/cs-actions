@@ -202,6 +202,11 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
                                        @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockMappingDeviceName,
                                        @Param(Inputs.CustomInputs.HYPERVISOR) String hypervisor,
+                                       @Param(Inputs.CustomInputs.PLATFORM) String platform,
+                                       @Param(Inputs.CustomInputs.PRODUCT_CODE) String productCode,
+                                       @Param(Inputs.CustomInputs.PRODUCT_CODE_TYPE) String productCodeType,
+                                       @Param(Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
+                                       @Param(Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
@@ -222,15 +227,10 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.LAUNCH_TIME) String launchTime,
                                        @Param(Inputs.InstanceInputs.MONITORING_STATE) String monitoringState,
                                        @Param(Inputs.InstanceInputs.PLACEMENT_GROUP_NAME) String placementGroupName,
-                                       @Param(Inputs.InstanceInputs.PLATFORM) String platform,
                                        @Param(Inputs.InstanceInputs.PRIVATE_DNS_NAME) String privateDnsName,
                                        @Param(Inputs.InstanceInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
-                                       @Param(Inputs.InstanceInputs.PRODUCT_CODE) String productCode,
-                                       @Param(Inputs.InstanceInputs.PRODUCT_CODE_TYPE) String productCodeType,
                                        @Param(Inputs.InstanceInputs.REASON) String reason,
                                        @Param(Inputs.InstanceInputs.REQUESTER_ID) String requesterId,
-                                       @Param(Inputs.InstanceInputs.ROOT_DEVICE_NAME) String rootDeviceName,
-                                       @Param(Inputs.InstanceInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
                                        @Param(Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
                                        @Param(Inputs.InstanceInputs.SPOT_INSTANCE_REQUEST_ID) String spotInstanceRequestId,
                                        @Param(Inputs.InstanceInputs.STATE_REASON_CODE) String stateReasonCode,
@@ -300,6 +300,11 @@ public class DescribeInstancesAction {
                 .withBlockDeviceMappingStatus(blockDeviceMappingStatus)
                 .withAttachTime(attachTime)
                 .withHypervisor(hypervisor)
+                .withPlatform(platform)
+                .withProductCode(productCode)
+                .withProductCodeType(productCodeType)
+                .withRootDeviceName(rootDeviceName)
+                .withRootDeviceType(rootDeviceType)
                 .build();
 
         NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
@@ -351,15 +356,10 @@ public class DescribeInstancesAction {
                 .withLaunchTime(launchTime)
                 .withMonitoringState(monitoringState)
                 .withPlacementGroupName(placementGroupName)
-                .withPlatform(platform)
                 .withPrivateDnsName(privateDnsName)
                 .withPrivateIpAddress(privateIpAddress)
-                .withProductCode(productCode)
-                .withProductCodeType(productCodeType)
                 .withReason(reason)
                 .withRequesterId(requesterId)
-                .withRootDeviceName(rootDeviceName)
-                .withRootDeviceType(rootDeviceType)
                 .withSourceDestinationCheck(sourceDestinationCheck)
                 .withSpotInstanceRequestId(spotInstanceRequestId)
                 .withStateReasonCode(stateReasonCode)

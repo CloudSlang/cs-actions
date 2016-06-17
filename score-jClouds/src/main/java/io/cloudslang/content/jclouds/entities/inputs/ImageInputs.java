@@ -21,6 +21,7 @@ public class ImageInputs {
     private String description;
     private String type;
     private String isPublic;
+    private String manifestLocation;
 
     private boolean imageNoReboot;
 
@@ -35,9 +36,10 @@ public class ImageInputs {
         this.userGroupsString = builder.userGroupsString;
         this.description = builder.description;
         this.type = builder.type;
+        this.isPublic = builder.isPublic;
+        this.manifestLocation = builder.manifestLocation;
 
         this.imageNoReboot = builder.imageNoReboot;
-        this.isPublic = builder.isPublic;
     }
 
     public CustomInputs getCustomInputs() {
@@ -80,6 +82,10 @@ public class ImageInputs {
         return isPublic;
     }
 
+    public String getManifestLocation() {
+        return manifestLocation;
+    }
+
     public boolean isImageNoReboot() {
         return imageNoReboot;
     }
@@ -96,6 +102,7 @@ public class ImageInputs {
         private String description;
         private String type;
         private String isPublic;
+        private String manifestLocation;
 
         private boolean imageNoReboot;
 
@@ -148,13 +155,18 @@ public class ImageInputs {
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withImageNoReboot(String inputValue) {
-            imageNoReboot = InputsUtil.getBoolean(inputValue);
+        public ImageInputs.ImageInputsBuilder withIsPublic(String inputValue) {
+            isPublic = InputsUtil.getRelevantBooleanString(inputValue);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withIsPublic(String inputValue) {
-            isPublic = InputsUtil.getRelevantBooleanString(inputValue);
+        public ImageInputs.ImageInputsBuilder withManifestLocation(String inputValue) {
+            manifestLocation = inputValue;
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withImageNoReboot(String inputValue) {
+            imageNoReboot = InputsUtil.getBoolean(inputValue);
             return this;
         }
     }

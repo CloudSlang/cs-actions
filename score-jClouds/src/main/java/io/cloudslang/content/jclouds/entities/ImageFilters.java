@@ -8,7 +8,9 @@ public enum ImageFilters {
     ID("image-id"),
     TYPE("image-type"),
     DESCRIPTION("description"),
-    IS_PUBLIC("is-public");
+    IS_PUBLIC("is-public"),
+    MANIFEST_LOCATION("manifest-location"),
+    NAME("name");
 
     private String value;
 

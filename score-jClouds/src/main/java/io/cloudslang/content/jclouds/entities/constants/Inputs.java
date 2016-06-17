@@ -39,6 +39,12 @@ public class Inputs {
         public static final String BLOCK_DEVICE_MAPPING_SNAPSHOT_ID = "blockDeviceMappingSnapshotId";
         public static final String VOLUME_TYPE = "volumeType";
         public static final String HYPERVISOR = "hypervisor";
+        public static final String OWNER_ALIAS = " ownerAlias ";
+        public static final String PLATFORM = "platform";
+        public static final String PRODUCT_CODE = "productCode";
+        public static final String PRODUCT_CODE_TYPE = "productCodeType";
+        public static final String ROOT_DEVICE_NAME = "rootDeviceName";
+        public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
     }
 
     public static final class ImageInputs {
@@ -51,6 +57,7 @@ public class Inputs {
         public static final String USER_GROUPS_STRING = "userGroupsString";
         public static final String TYPE = "type";
         public static final String IS_PUBLIC = "isPublic";
+        public static final String MANIFEST_LOCATION = "manifestLocation ";
     }
 
     public static final class InstanceInputs {
@@ -77,15 +84,10 @@ public class Inputs {
         public static final String LAUNCH_TIME = "launchTime";
         public static final String MONITORING_STATE = "monitoringState";
         public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
-        public static final String PLATFORM = "platform";
         public static final String PRIVATE_DNS_NAME = "privateDnsName";
         public static final String PRIVATE_IP_ADDRESS = "privateIpAddress";
-        public static final String PRODUCT_CODE = "productCode";
-        public static final String PRODUCT_CODE_TYPE = "productCodeType";
         public static final String REASON = "reason";
         public static final String REQUESTER_ID = "requesterId";
-        public static final String ROOT_DEVICE_NAME = "rootDeviceName";
-        public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";
         public static final String SPOT_INSTANCE_REQUEST_ID = "spotInstanceRequestId";
         public static final String STATE_REASON_CODE = "stateReasonCode";

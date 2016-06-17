@@ -1,9 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.Architecture;
-import io.cloudslang.content.jclouds.entities.BlockDeviceMappingStatus;
-import io.cloudslang.content.jclouds.entities.Hypervisor;
-import io.cloudslang.content.jclouds.entities.VolumeType;
+import io.cloudslang.content.jclouds.entities.*;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,6 +36,12 @@ public class CustomInputs {
     private String volumeSize;
     private String volumeType;
     private String hypervisor;
+    private String ownerAlias;
+    private String platform;
+    private String productCode;
+    private String productCodeType;
+    private String rootDeviceName;
+    private String rootDeviceType;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -65,6 +68,12 @@ public class CustomInputs {
         this.volumeSize = builder.volumeSize;
         this.volumeType = builder.volumeType;
         this.hypervisor = builder.hypervisor;
+        this.ownerAlias = builder.ownerAlias;
+        this.platform = builder.platform;
+        this.productCode = builder.productCode;
+        this.productCodeType = builder.productCodeType;
+        this.rootDeviceName = builder.rootDeviceName;
+        this.rootDeviceType = builder.rootDeviceType;
     }
 
     public String getRegion() {
@@ -163,6 +172,30 @@ public class CustomInputs {
         return hypervisor;
     }
 
+    public String getOwnerAlias() {
+        return ownerAlias;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public String getProductCodeType() {
+        return productCodeType;
+    }
+
+    public String getRootDeviceName() {
+        return rootDeviceName;
+    }
+
+    public String getRootDeviceType() {
+        return rootDeviceType;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -188,6 +221,12 @@ public class CustomInputs {
         private String volumeSize;
         private String volumeType;
         private String hypervisor;
+        private String ownerAlias;
+        private String platform;
+        private String productCode;
+        private String productCodeType;
+        private String rootDeviceName;
+        private String rootDeviceType;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -310,6 +349,36 @@ public class CustomInputs {
 
         public CustomInputsBuilder withHypervisor(String inputValue) {
             hypervisor = Hypervisor.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withOwnerAlias(String inputValue) {
+            ownerAlias = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withPlatform(String inputValue) throws Exception {
+            platform = Platform.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withProductCode(String inputValue) throws Exception {
+            productCode = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withProductCodeType(String inputValue) throws Exception {
+            productCodeType = ProductCodeType.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withRootDeviceName(String inputValue) throws Exception {
+            rootDeviceName = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withRootDeviceType(String inputValue) throws Exception {
+            rootDeviceType = RootDeviceType.getValue(inputValue);
             return this;
         }
     }

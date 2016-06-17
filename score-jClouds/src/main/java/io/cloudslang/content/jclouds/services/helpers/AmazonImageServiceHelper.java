@@ -38,6 +38,13 @@ public class AmazonImageServiceHelper {
         setRelevantFilters(imageInputs, filtersMap);
 
         Utils.updateFiltersMapEntry(filtersMap, CommonFilters.HYPERVISOR.getValue(), imageInputs.getCustomInputs().getHypervisor());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.KERNEL_ID.getValue(), imageInputs.getCustomInputs().getKernelId());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.OWNER_ALIAS.getValue(), imageInputs.getCustomInputs().getOwnerAlias());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.OWNER_ID.getValue(), imageInputs.getCustomInputs().getOwnerId());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.PLATFORM.getValue(), imageInputs.getCustomInputs().getPlatform());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.PRODUCT_CODE.getValue(), imageInputs.getCustomInputs().getProductCode());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.RAMDISK_ID.getValue(), imageInputs.getCustomInputs().getRamdiskId());
+        Utils.updateFiltersMapEntry(filtersMap, CommonFilters.ROOT_DEVICE_NAME.getValue(), imageInputs.getCustomInputs().getRootDeviceName());
 
         Utils.updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilters.DELETE_ON_TERMINATION.getValue(),
                 imageInputs.getCustomInputs().getDeleteOnTermination());
@@ -48,11 +55,17 @@ public class AmazonImageServiceHelper {
 
         Utils.updateFiltersMapEntry(filtersMap, ImageFilters.DESCRIPTION.getValue(), imageInputs.getDescription());
         Utils.updateFiltersMapEntry(filtersMap, ImageFilters.ID.getValue(), imageInputs.getCustomInputs().getImageId());
+        Utils.updateFiltersMapEntry(filtersMap, ImageFilters.MANIFEST_LOCATION.getValue(), imageInputs.getManifestLocation());
+        Utils.updateFiltersMapEntry(filtersMap, ImageFilters.NAME.getValue(), imageInputs.getImageName());
     }
 
     private void setRelevantFilters(ImageInputs imageInputs, Multimap<String, String> filtersMap) {
         Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.ARCHITECTURE.getValue(),
                 imageInputs.getCustomInputs().getArchitecture());
+        Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.PRODUCT_CODE_TYPE.getValue(),
+                imageInputs.getCustomInputs().getProductCodeType());
+        Utils.addFiltersMapRelevantEntry(filtersMap, CommonFilters.ROOT_DEVICE_TYPE.getValue(),
+                imageInputs.getCustomInputs().getRootDeviceType());
 
         Utils.addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilters.VOLUME_SIZE.getValue(),
                 imageInputs.getCustomInputs().getVolumeSize());

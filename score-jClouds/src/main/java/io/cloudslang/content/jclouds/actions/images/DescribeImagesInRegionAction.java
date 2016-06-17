@@ -52,7 +52,19 @@ public class DescribeImagesInRegionAction {
      * @param volumeType                   Optional - Volume type of the Amazon EBS volume - Valid values: "gp2" (for General
      *                                     Purpose SSD volumes), "io1" (for Provisioned IOPS SSD volumes), and "standard"
      *                                     (for Magnetic volumes).
+     * @param hypervisor                   Optional - Hypervisor type of the instance. Valid values: "ovm", "xen".
      * @param imageId                      Optional - ID of the specified image to search for.
+     * @param kernelId                     The kernel ID.
+     * @param ownerAlias                   Optional - AWS account alias. Ex: "amazon"
+     * @param ownerId                      Optional - AWS account ID of the instance owner.
+     * @param platform                     Optional - platform used. Use "windows" if you have Windows instances; otherwise,
+     *                                     leave blank. Valid values: "", "windows".
+     * @param productCode                  Optional - product code associated with the AMI used to launch the instance.
+     * @param productCodeType              Optional - type of product code. Valid values: "devpay", "marketplace".
+     * @param ramdiskId                    Optional - RAM disk ID.
+     * @param rootDeviceName               Optional - name of the root device for the instance. Ex: "/dev/sda1"
+     * @param rootDeviceType               Optional - type of root device that the instance uses.
+     *                                     Valid values: "ebs", "instance-store".
      * @param idsString                    Optional - A string that contains: none, one or more image IDs separated by
      *                                     delimiter - Default: ","
      * @param ownersString                 Optional - Filters the images by the owner. Specify an AWS account ID,
@@ -64,6 +76,8 @@ public class DescribeImagesInRegionAction {
      * @param type                         Optional - Image type - Valid values: "machine", "kernel", "ramdisk".
      * @param isPublic                     Optional - A Boolean that indicates whether the image is public.
      *                                     Valid values: "true", "false"
+     * @param manifestLocation             Optional - Location of the image manifest.
+     * @param name                         Optional - Name of the AMI (provided during image creation).
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -96,13 +110,25 @@ public class DescribeImagesInRegionAction {
                                        @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockDeviceMappingSnapshotId,
                                        @Param(Inputs.CustomInputs.VOLUME_SIZE) String volumeSize,
                                        @Param(Inputs.CustomInputs.VOLUME_TYPE) String volumeType,
+                                       @Param(Inputs.CustomInputs.HYPERVISOR) String hypervisor,
                                        @Param(Inputs.CustomInputs.IMAGE_ID) String imageId,
+                                       @Param(Inputs.CustomInputs.KERNEL_ID) String kernelId,
+                                       @Param(Inputs.CustomInputs.OWNER_ALIAS) String ownerAlias,
+                                       @Param(Inputs.CustomInputs.OWNER_ID) String ownerId,
+                                       @Param(Inputs.CustomInputs.PLATFORM) String platform,
+                                       @Param(Inputs.CustomInputs.PRODUCT_CODE) String productCode,
+                                       @Param(Inputs.CustomInputs.PRODUCT_CODE_TYPE) String productCodeType,
+                                       @Param(Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
+                                       @Param(Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
+                                       @Param(Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
 
                                        @Param(Inputs.ImageInputs.IDS_STRING) String idsString,
                                        @Param(Inputs.ImageInputs.OWNERS_STRING) String ownersString,
                                        @Param(Inputs.ImageInputs.DESCRIPTION) String description,
                                        @Param(Inputs.ImageInputs.TYPE) String type,
-                                       @Param(Inputs.ImageInputs.IS_PUBLIC) String isPublic) throws Exception {
+                                       @Param(Inputs.ImageInputs.IS_PUBLIC) String isPublic,
+                                       @Param(Inputs.ImageInputs.MANIFEST_LOCATION) String manifestLocation,
+                                       @Param(Inputs.ImageInputs.NAME) String name) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -123,7 +149,17 @@ public class DescribeImagesInRegionAction {
                 .withBlockDeviceMappingSnapshotId(blockDeviceMappingSnapshotId)
                 .withVolumeSize(volumeSize)
                 .withVolumeType(volumeType)
+                .withHypervisor(hypervisor)
                 .withImageId(imageId)
+                .withKernelId(kernelId)
+                .withOwnerAlias(ownerAlias)
+                .withOwnerId(ownerId)
+                .withPlatform(platform)
+                .withProductCode(productCode)
+                .withProductCodeType(productCodeType)
+                .withRamdiskId(ramdiskId)
+                .withRootDeviceName(rootDeviceName)
+                .withRootDeviceType(rootDeviceType)
                 .build();
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
@@ -133,6 +169,8 @@ public class DescribeImagesInRegionAction {
                 .withDescription(description)
                 .withType(type)
                 .withIsPublic(isPublic)
+                .withManifestLocation(manifestLocation)
+                .withImageName(name)
                 .build();
 
         try {
