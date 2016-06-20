@@ -37,7 +37,7 @@ public class RunWindowsCommandService {
 
         String tempFileForResults = CommandUtils.getTempFileForResults(runWindowsCommandInputs.getHostname());
         String wmiComCreateFile = CommandUtils.getWmiComCreateFile(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getUsername(),runWindowsCommandInputs.getPassword(),tempFileForResults);
-        String wmiComExecuteWindCom = CommandUtils.getWmiComExecuteWindCom(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getCommand(),tempFileForResults);
+        String wmiComExecuteWindCom = CommandUtils.getWmiComExecuteWindCom(runWindowsCommandInputs.getHostname(),runWindowsCommandInputs.getUsername(),runWindowsCommandInputs.getPassword(),runWindowsCommandInputs.getCommand(),tempFileForResults);
 
         // create file for results
         runWindowsCommandHelper.executeCommand(wmiComCreateFile);

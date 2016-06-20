@@ -14,11 +14,11 @@ public class CommandUtils {
     }
 
     public static String getWmiComCreateFile(String hostname, String username, String password, String tempFileForResults){
-        return Constants.WMI+ hostname + Constants.USER + username + Constants.PASSWORD + password + Constants.CREATE_FILE_COM + tempFileForResults + Constants.END_FILE_COM;
+        return Constants.WMI+ hostname + Constants.USER + username + Constants.PASSWORD + Constants.BACK_SLASH_WITHOUT_SPACE + password + Constants.BACK_SLASH_WITHOUT_SPACE + Constants.CREATE_FILE_COM + tempFileForResults + Constants.END_FILE_COM;
     }
 
-    public static String getWmiComExecuteWindCom(String hostname, String command, String tempFileForResults){
-        return Constants.WMI + hostname + Constants.CALL_CMD_COM + command + Constants.WMI_RES_PUT_COM + tempFileForResults + Constants.BACK_SLASH;
+    public static String getWmiComExecuteWindCom(String hostname, String username, String password, String command, String tempFileForResults){
+        return Constants.WMI+ hostname + Constants.USER + username + Constants.PASSWORD + Constants.BACK_SLASH_WITHOUT_SPACE + password  + Constants.CALL_CMD_COM + command + Constants.WMI_RES_PUT_COM + tempFileForResults + Constants.BACK_SLASH;
     }
 
     public static String getCommandResultFromFile(File file) throws IOException {

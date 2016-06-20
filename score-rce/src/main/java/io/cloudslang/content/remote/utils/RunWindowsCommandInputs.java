@@ -12,9 +12,9 @@ public class RunWindowsCommandInputs {
 
     public RunWindowsCommandInputs(RunWindowsCommandInputsBuilder builder) {
         this.hostname = builder.host;
-        this.command = builder.command;
         this.username = builder.username;
         this.password = builder.password;
+        this.command = builder.command;
     }
 
     public String getHostname() {

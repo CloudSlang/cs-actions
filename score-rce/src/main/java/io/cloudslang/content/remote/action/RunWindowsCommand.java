@@ -18,7 +18,7 @@ public class RunWindowsCommand {
     /**
      * Executes a windows command on a remote host.
      *
-     * @param host                 The hostname or ip address of the remote host.
+     * @param hostname             The hostname or ip address of the remote machine.
      * @param username             The username used to connect to the remote machine.
      * @param password             The password used to connect to the remote machine.
      * @param command              The windows command.
@@ -37,7 +37,7 @@ public class RunWindowsCommand {
             }
     )
 
-    public Map<String, String> run(@Param(value = Inputs.HOSTNAME, required = true) String hostname, @Param(value = Inputs.COMMAND, required = true) String command, @Param(value = Inputs.USERNAME, required = true) String username, @Param(value = Inputs.PASSWORD, required = true) String password) throws Exception {
+    public Map<String, String> run(@Param(value = Inputs.HOSTNAME, required = true) String hostname,  @Param(value = Inputs.USERNAME, required = true) String username, @Param(value = Inputs.PASSWORD, required = true) String password,@Param(value = Inputs.COMMAND, required = true) String command) throws Exception {
 
         RunWindowsCommandInputs runWindowsCommandInputs;
         Map<String, String> resultMap = new HashMap<>();
