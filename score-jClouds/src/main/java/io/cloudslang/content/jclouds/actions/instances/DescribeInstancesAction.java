@@ -31,7 +31,7 @@ public class DescribeInstancesAction {
      *
      * @param provider                               Cloud provider on which you have the instance.
      *                                               Valid values: "amazon" or "openstack".
-     * @param identityEndpoint                       Endpoint to which first request will be sent.
+     * @param endpoint                               Endpoint to which first request will be sent.
      *                                               Ex: "https://ec2.amazonaws.com" for Amazon AWS or "http://hostOrIp:5000/v2.0"
      *                                               for OpenStack.
      * @param identity                               Optional - username of your account or the Access Key ID. For OpenStack
@@ -191,7 +191,7 @@ public class DescribeInstancesAction {
             }
     )
     public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String identityEndpoint,
+                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
                                        @Param(Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
@@ -286,7 +286,7 @@ public class DescribeInstancesAction {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
-                .withEndpoint(identityEndpoint)
+                .withEndpoint(endpoint)
                 .withIdentity(identity)
                 .withCredential(credential)
                 .withProxyHost(proxyHost)

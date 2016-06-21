@@ -29,7 +29,7 @@ public class DescribeImagesInRegionAction {
      * De-registered images are included in the returned results for an unspecified interval after de-registration.
      *
      * @param provider                     Cloud provider on which you have the instance - Default: "amazon"
-     * @param identityEndpoint             Endpoint to which first request will be sent - Ex: "https://ec2.amazonaws.com"
+     * @param endpoint                     Endpoint to which first request will be sent - Ex: "https://ec2.amazonaws.com"
      * @param identity                     Optional - Username of your account or the Access Key ID.
      * @param credential                   Optional - Password of the user or the Secret Access Key that correspond to
      *                                     the identity input.
@@ -42,7 +42,7 @@ public class DescribeImagesInRegionAction {
      *                                     Default: "us-east-1".
      * @param identityId                   Optional - Scopes the images by users with explicit launch permissions. Specify
      *                                     an AWS account ID, "self" (the sender of the request), or "all" (public AMIs).
-     *                                     Valid values: "self", "all" or AWS account ID - Default: "self"
+     *                                     Valid values: "self", "all" or AWS account ID - Default: ""
      * @param architecture                 Optional - Instance architecture - Valid values: "i386" or "x86_64".
      * @param deleteOnTermination          Optional - A Boolean that indicates whether the EBS volume is deleted on instance
      *                                     termination.
@@ -103,7 +103,7 @@ public class DescribeImagesInRegionAction {
             }
     )
     public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String identityEndpoint,
+                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
                                        @Param(Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
@@ -146,7 +146,7 @@ public class DescribeImagesInRegionAction {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
-                .withEndpoint(identityEndpoint)
+                .withEndpoint(endpoint)
                 .withIdentity(identity)
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
