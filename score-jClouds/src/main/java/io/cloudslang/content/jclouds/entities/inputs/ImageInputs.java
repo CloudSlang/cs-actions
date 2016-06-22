@@ -1,5 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.ImageState;
+import io.cloudslang.content.jclouds.entities.ImageType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +19,11 @@ public class ImageInputs {
     private String ownersString;
     private String userIdsString;
     private String userGroupsString;
+    private String description;
+    private String type;
+    private String isPublic;
+    private String manifestLocation;
+    private String state;
 
     private boolean imageNoReboot;
 
@@ -29,6 +36,11 @@ public class ImageInputs {
         this.ownersString = builder.ownersString;
         this.userIdsString = builder.userIdsString;
         this.userGroupsString = builder.userGroupsString;
+        this.description = builder.description;
+        this.type = builder.type;
+        this.isPublic = builder.isPublic;
+        this.manifestLocation = builder.manifestLocation;
+        this.state = builder.state;
 
         this.imageNoReboot = builder.imageNoReboot;
     }
@@ -61,6 +73,26 @@ public class ImageInputs {
         return userGroupsString;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getIsPublic() {
+        return isPublic;
+    }
+
+    public String getManifestLocation() {
+        return manifestLocation;
+    }
+
+    public String getState() {
+        return state;
+    }
+
     public boolean isImageNoReboot() {
         return imageNoReboot;
     }
@@ -74,6 +106,11 @@ public class ImageInputs {
         private String ownersString;
         private String userIdsString;
         private String userGroupsString;
+        private String description;
+        private String type;
+        private String isPublic;
+        private String manifestLocation;
+        private String state;
 
         private boolean imageNoReboot;
 
@@ -113,6 +150,31 @@ public class ImageInputs {
 
         public ImageInputs.ImageInputsBuilder withUserGroupsString(String inputValue) {
             userGroupsString = inputValue;
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withDescription(String inputValue) {
+            description = inputValue;
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withType(String inputValue) throws Exception {
+            type = ImageType.getValue(inputValue);
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withIsPublic(String inputValue) {
+            isPublic = InputsUtil.getRelevantBooleanString(inputValue);
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withManifestLocation(String inputValue) {
+            manifestLocation = inputValue;
+            return this;
+        }
+
+        public ImageInputs.ImageInputsBuilder withState(String inputValue) throws Exception {
+            state = ImageState.getValue(inputValue);
             return this;
         }
 

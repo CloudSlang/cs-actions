@@ -17,10 +17,11 @@ public class Inputs {
 
     public static final class CustomInputs {
         public static final String REGION = "region";
-        public static final String INSTANCE_ID = "serverId";
+        public static final String INSTANCE_ID = "instanceId";
         public static final String IMAGE_ID = "imageId";
         public static final String IDENTITY_ID = "identityId";
         public static final String VOLUME_ID = "volumeId";
+        public static final String VOLUME_SIZE = "volumeSize";
         public static final String GROUP_ID = "groupId";
         public static final String HOST_ID = "hostId";
         public static final String KERNEL_ID = "kernelId";
@@ -31,16 +32,38 @@ public class Inputs {
         public static final String VPC_ID = "vpcId";
         public static final String ALLOCATION_ID = "allocationId";
         public static final String ASSOCIATION_ID = "associationId";
+        public static final String ARCHITECTURE = "architecture";
+        public static final String DELETE_ON_TERMINATION = "deleteOnTermination";
+        public static final String BLOCK_DEVICE_MAPPING_STATUS = "blockDeviceMappingStatus";
+        public static final String BLOCK_MAPPING_DEVICE_NAME = "blockMappingDeviceName";
+        public static final String BLOCK_DEVICE_MAPPING_SNAPSHOT_ID = "blockDeviceMappingSnapshotId";
+        public static final String VOLUME_TYPE = "volumeType";
+        public static final String HYPERVISOR = "hypervisor";
+        public static final String OWNER_ALIAS = " ownerAlias ";
+        public static final String PLATFORM = "platform";
+        public static final String PRODUCT_CODE = "productCode";
+        public static final String PRODUCT_CODE_TYPE = "productCodeType";
+        public static final String ROOT_DEVICE_NAME = "rootDeviceName";
+        public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
+        public static final String STATE_REASON_CODE = "stateReasonCode";
+        public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
+        public static final String KEY_TAGS_STRING = "keyTagsString";
+        public static final String VALUE_TAGS_STRING = "valueTagsString";
+        public static final String VIRTUALIZATION_TYPE = "virtualizationType";
     }
 
     public static final class ImageInputs {
-        public static final String IMAGE_NAME = "imageName";
-        public static final String IMAGE_DESCRIPTION = "imageDescription";
-        public static final String IMAGE_NO_REBOOT = "imageNoReboot";
-        public static final String IMAGE_IDS_STRING = "imageIdsString";
+        public static final String NAME = "name";
+        public static final String DESCRIPTION = "description";
+        public static final String NO_REBOOT = "noReboot";
+        public static final String IDS_STRING = "idsString";
         public static final String OWNERS_STRING = "ownersString";
         public static final String USER_IDS_STRING = "userIdsString";
         public static final String USER_GROUPS_STRING = "userGroupsString";
+        public static final String TYPE = "type";
+        public static final String IS_PUBLIC = "isPublic";
+        public static final String MANIFEST_LOCATION = "manifestLocation";
+        public static final String STATE = "state";
     }
 
     public static final class InstanceInputs {
@@ -51,15 +74,10 @@ public class Inputs {
         public static final String OPERATION_TIMEOUT = "operationTimeout";
         public static final String POOLING_INTERVAL = "poolingInterval";
         public static final String AFFINITY = "affinity";
-        public static final String ARCHITECTURE = "architecture";
         public static final String ATTACH_TIME = "attachTime";
-        public static final String DELETE_ON_TERMINATION = "deleteOnTermination";
-        public static final String DEVICE_NAME = "deviceName";
-        public static final String STATUS = "status";
         public static final String CLIENT_TOKEN = "clientToken";
         public static final String DNS_NAME = "dnsName";
         public static final String GROUP_NAME = "groupName";
-        public static final String HYPERVISOR = "hypervisor";
         public static final String IAM_ARN = "iamArn";
         public static final String INSTANCE_LIFECYCLE = "instanceLifecycle";
         public static final String INSTANCE_STATE_CODE = "instanceStateCode";
@@ -72,25 +90,15 @@ public class Inputs {
         public static final String LAUNCH_TIME = "launchTime";
         public static final String MONITORING_STATE = "monitoringState";
         public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
-        public static final String PLATFORM = "platform";
         public static final String PRIVATE_DNS_NAME = "privateDnsName";
         public static final String PRIVATE_IP_ADDRESS = "privateIpAddress";
-        public static final String PRODUCT_CODE = "productCode";
-        public static final String PRODUCT_CODE_TYPE = "productCodeType";
         public static final String REASON = "reason";
         public static final String REQUESTER_ID = "requesterId";
-        public static final String ROOT_DEVICE_NAME = "rootDeviceName";
-        public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";
         public static final String SPOT_INSTANCE_REQUEST_ID = "spotInstanceRequestId";
-        public static final String STATE_REASON_CODE = "stateReasonCode";
-        public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
         public static final String TENANCY = "tenancy";
-        public static final String VIRTUALIZATION_TYPE = "virtualizationType";
         public static final String PUBLIC_IP = "publicIp";
         public static final String IP_OWNER_ID = "ipOwnerId";
-        public static final String KEY_TAGS_STRING = "keyTagsString";
-        public static final String VALUE_TAGS_STRING = "valueTagsString";
     }
 
     public static final class NetworkInputs {

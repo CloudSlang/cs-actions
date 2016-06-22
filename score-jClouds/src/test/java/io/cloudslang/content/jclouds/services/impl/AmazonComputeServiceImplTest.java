@@ -37,7 +37,8 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
@@ -614,7 +615,12 @@ public class AmazonComputeServiceImplTest {
     }
 
     private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) throws Exception {
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withRegion(REGION).build();
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withRegion(REGION)
+                .withKeyTagsString(tagKeys)
+                .withValueTagsString(tagValues)
+                .build();
+
         NetworkInputs networkInputs = (filter.length > 0) ?
                 new NetworkInputs.NetworkInputsBuilder().withNetworkInterfacePublicIp(filter[0]).build() :
                 new NetworkInputs.NetworkInputsBuilder().build();
@@ -622,8 +628,6 @@ public class AmazonComputeServiceImplTest {
         return new InstanceInputs.InstanceInputsBuilder()
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
-                .withKeyTagsString(tagKeys)
-                .withValueTagsString(tagValues)
                 .build();
     }
 

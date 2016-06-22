@@ -7,6 +7,7 @@ import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
+import io.cloudslang.content.jclouds.services.helpers.Utils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.InstanceState;
@@ -35,29 +36,15 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
 
     protected void init() {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = contextBuilder.buildApi(EC2Api.class);
-    }
-
-    void lazyInit() {
-        if (ec2Api == null) {
-            this.init();
-        }
-    }
-
-    void lazyInit(String region) {
-        if (this.region == null || !this.region.equals(region)) {
-            this.region = region;
-            this.init();
-        } else if (ec2Api == null) {
-            this.init();
-        }
+        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
     }
 
     @Override
     public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) {
         InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(), true);
 
-        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper().getInstanceFilterMap(instanceInputs, commonInputs.getDelimiter());
+        Multimap<String, String> filtersMap = new AmazonComputeServiceHelper()
+                .getInstanceFiltersMap(instanceInputs, commonInputs.getDelimiter());
 
         Set<? extends Reservation<? extends RunningInstance>> instancesInRegion;
         Set<String> nodesSet = new HashSet<>();
@@ -138,6 +125,21 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     public void rebootInstances(String region, String serverId) {
         InstanceApi instanceApi = getEC2InstanceApi(region, true);
         instanceApi.rebootInstancesInRegion(region, serverId);
+    }
+
+    void lazyInit() {
+        if (ec2Api == null) {
+            this.init();
+        }
+    }
+
+    void lazyInit(String region) {
+        if (this.region == null || !this.region.equals(region)) {
+            this.region = region;
+            this.init();
+        } else if (ec2Api == null) {
+            this.init();
+        }
     }
 
     private InstanceApi getEC2InstanceApi(String region, boolean isForRegion) {

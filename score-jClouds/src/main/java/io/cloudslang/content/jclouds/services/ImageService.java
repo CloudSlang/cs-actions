@@ -1,5 +1,7 @@
 package io.cloudslang.content.jclouds.services;
 
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import org.jclouds.ec2.domain.Image;
 import org.jclouds.ec2.domain.Permission;
 
@@ -14,7 +16,7 @@ public interface ImageService {
 
     String deregisterImageInRegion(String region, String imageId) throws Exception;
 
-    Set<? extends Image> describeImagesInRegion(String region, String identityId, String[] imageIds, String[] owners) throws Exception;
+    Set<? extends Image> describeImagesInRegion(CommonInputs commonInputs, ImageInputs imageInputs) throws Exception;
 
     Permission getLaunchPermissionForImage(String region, String imageId) throws Exception;
 

@@ -1,6 +1,10 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ArrayListMultimap;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
@@ -111,36 +115,6 @@ public class AmazonImageServiceImplTest {
     }
 
     @Test
-    public void describeImagesInRegionNoIdentityIdTest() {
-        imageSpy.describeImagesInRegion("", "", null, null);
-
-        verify(imageSpy, times(1)).lazyInit(eq(""));
-        verify(amiApiMock, times(1)).describeImagesInRegion(eq(""), any(DescribeImagesOptions.class));
-        commonVerifiersForMethods();
-    }
-
-    @Test
-    public void describeImagesInRegionWithIdentityIdTest() {
-        imageSpy.describeImagesInRegion("", "123456789", null, null);
-
-        verify(imageSpy, times(1)).lazyInit(eq(""));
-        verify(amiApiMock, times(1)).describeImagesInRegion(eq(""), any(DescribeImagesOptions.class));
-        commonVerifiersForMethods();
-    }
-
-    @Test
-    public void describeImagesInRegionTest() {
-        String[] imageIds = InputsUtil.getStringsArray("firstId|secondId|thirdId", "", ",");
-        String[] owners = InputsUtil.getStringsArray("firstGroup|secondGroup|thirdGroup", "", ",");
-
-        imageSpy.describeImagesInRegion("us-east-1", "123456789", imageIds, owners);
-
-        verify(imageSpy, times(1)).lazyInit(eq("us-east-1"));
-        verify(amiApiMock, times(1)).describeImagesInRegion(eq("us-east-1"), any(DescribeImagesOptions.class));
-        commonVerifiersForMethods();
-    }
-
-    @Test
     public void getLaunchPermissionForImageTest() {
         imageSpy.getLaunchPermissionForImage("us-east-1", "ami-abcdef16");
 
@@ -184,6 +158,37 @@ public class AmazonImageServiceImplTest {
         commonVerifiersForMethods();
     }
 
+    @Test
+    public void describeImagesInRegionNoOptionsTest() throws Exception {
+        imageSpy.describeImagesInRegion(getCommonInputs(""), getImageInputs("", "", "", "", ""));
+
+        verify(imageSpy, times(1)).lazyInit("us-east-1");
+        verify(amiApiMock, times(1)).describeImagesInRegion(eq("us-east-1"), eq(DescribeImagesOptions.NONE));
+        commonVerifiersForMethods();
+    }
+
+    @Test
+    public void describeImagesInRegionWithoutFiltersTest() throws Exception {
+        imageSpy.describeImagesInRegion(getCommonInputs("|"),
+                getImageInputs("another_region", "", "", "firstImageId|secondImageId|thirdImageId", "firstOwner|secondOwner|thirdOwner"));
+
+        verify(imageSpy, times(1)).lazyInit(eq("another_region"));
+        verify(amiApiMock, times(1)).describeImagesInRegion(eq("another_region"), any(DescribeImagesOptions.class));
+        commonVerifiersForMethods();
+    }
+
+    @Test
+    public void describeImagesInRegionWithFiltersTest() throws Exception {
+        imageSpy.describeImagesInRegion(getCommonInputs("|"),
+                getImageInputs("another_region", "identityOne", "windows", "firstImageId|secondImageId|thirdImageId",
+                        "firstOwner|secondOwner|thirdOwner"));
+
+        verify(imageSpy, times(1)).lazyInit(eq("another_region"));
+        verify(amiApiMock, times(1))
+                .describeImagesInRegionWithFilter(eq("another_region"), any(ArrayListMultimap.class), any(DescribeImagesOptions.class));
+        commonVerifiersForMethods();
+    }
+
     private void commonVerifiersForMethods() {
         verify(optionalInstanceApi, times(1)).get();
         verifyNoMoreInteractions(amiApiMock);
@@ -216,5 +221,24 @@ public class AmazonImageServiceImplTest {
         verify(contextBuilderMock).modules(Matchers.<Iterable>any());
         verify(contextBuilderMock).buildApi(EC2Api.class);
         verifyNoMoreInteractions(contextBuilderMock);
+    }
+
+    private CommonInputs getCommonInputs(String delimiter) {
+        return new CommonInputs.CommonInputsBuilder().withDelimiter(delimiter).build();
+    }
+
+    private ImageInputs getImageInputs(String region, String identityId, String platform, String imageIdsString,
+                                       String ownersString) throws Exception {
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withRegion(region)
+                .withIdentityId(identityId)
+                .withPlatform(platform)
+                .build();
+
+        return new ImageInputs.ImageInputsBuilder()
+                .withCustomInputs(customInputs)
+                .withImageIdsString(imageIdsString)
+                .withOwnersString(ownersString)
+                .build();
     }
 }
