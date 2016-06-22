@@ -71,29 +71,29 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.DEVICE_NAME.getValue(), instanceInputs.getCustomInputs().getBlockMappingDeviceName());
         updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.VOLUME_ID.getValue(), instanceInputs.getCustomInputs().getVolumeId());
 
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.DESCRIPTION.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceDescription());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.SUBNET_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceSubnetId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.VPC_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceVpcId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.INTERFACE_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceOwnerId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.AVAILABILITY_ZONE.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAvailabilityZone());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.REQUESTER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.REQUESTER_MANAGED.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterManaged());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.MAC_ADDRESS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceMacAddress());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.PRIVATE_DNS_NAME.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfacePrivateDnsName());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.SOURCE_DEST_CHECK.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceSourceDestinationCheck());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.GROUP_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceGroupId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.GROUP_NAME.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceGroupName());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_ATTACHMENT_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_INSTANCE_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_INSTANCE_OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceOwnerId());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_PRIVATE_IP_ADDRESS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfacePrivateIpAddress());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_DEVICE_INDEX.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceDeviceIndex());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_ATTACH_TIME.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachTime());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_DELETE_ON_TERMINATION.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceDeleteOnTermination());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_PRIMARY.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAddressesPrimary());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_ASSOCIATION_PUBLIC_IP.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfacePublicIp());
-        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilters.ADDRESSES_ASSOCIATION_IP_OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceIpOwnerId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.DESCRIPTION.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceDescription());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.SUBNET_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceSubnetId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.VPC_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceVpcId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.INTERFACE_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceOwnerId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.AVAILABILITY_ZONE.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAvailabilityZone());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.REQUESTER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.REQUESTER_MANAGED.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceRequesterManaged());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.MAC_ADDRESS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceMacAddress());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.PRIVATE_DNS_NAME.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfacePrivateDnsName());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.SOURCE_DEST_CHECK.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceSourceDestinationCheck());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.GROUP_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceGroupId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.GROUP_NAME.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceGroupName());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_ATTACHMENT_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_INSTANCE_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_INSTANCE_OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceInstanceOwnerId());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ADDRESSES_PRIVATE_IP_ADDRESS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfacePrivateIpAddress());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_DEVICE_INDEX.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceDeviceIndex());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_ATTACH_TIME.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachTime());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_DELETE_ON_TERMINATION.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceDeleteOnTermination());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ADDRESSES_PRIMARY.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAddressesPrimary());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ADDRESSES_ASSOCIATION_PUBLIC_IP.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfacePublicIp());
+        updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ADDRESSES_ASSOCIATION_IP_OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceIpOwnerId());
     }
 
     private void setInstanceRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
@@ -115,8 +115,8 @@ public class Utils {
         addFiltersMapRelevantEntry(filtersMap, InstanceFilter.SOURCE_DESTINATION_CHECK.getValue(),
                 instanceInputs.getSourceDestinationCheck());
 
-        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilters.ATTACHMENT_STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentStatus());
-        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilters.STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
+        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentStatus());
+        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilter.STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
     }
 
     void updateImageFiltersMap(ImageInputs imageInputs, Multimap<String, String> filtersMap, String delimiter) {
