@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class CustomInputs {
     private static final String DEFAULT_AMAZON_REGION = "us-east-1";
-    private static final String SELF = "self";
 
     private String region;
     private String instanceId;
@@ -283,7 +282,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withIdentityId(String inputValue) {
-            identityId = StringUtils.isBlank(inputValue) ? SELF : inputValue;
+            identityId = inputValue;
             return this;
         }
 

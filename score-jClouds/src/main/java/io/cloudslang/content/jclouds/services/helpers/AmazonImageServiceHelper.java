@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ec2.options.DescribeImagesOptions;
 
 /**
@@ -16,7 +17,7 @@ public class AmazonImageServiceHelper {
         String[] imageIds = InputsUtil.getStringsArray(imageInputs.getImageIdsString(), Constants.Miscellaneous.EMPTY, delimiter);
         String[] owners = InputsUtil.getStringsArray(imageInputs.getOwnersString(), Constants.Miscellaneous.EMPTY, delimiter);
 
-        if (Constants.Miscellaneous.EMPTY.equals(imageInputs.getCustomInputs().getIdentityId()) && imageIds == null && owners == null) {
+        if (StringUtils.isBlank(imageInputs.getCustomInputs().getIdentityId()) && imageIds == null && owners == null) {
             return DescribeImagesOptions.NONE;
         }
 

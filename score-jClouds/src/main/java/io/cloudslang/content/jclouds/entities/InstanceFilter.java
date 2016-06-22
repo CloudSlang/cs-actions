@@ -4,7 +4,7 @@ package io.cloudslang.content.jclouds.entities;
  * Created by Mihai Tusa.
  * 6/2/2016.
  */
-public enum InstanceFilters {
+public enum InstanceFilter {
     AFFINITY("affinity"),
     AVAILABILITY_ZONE("availability-zone"),
     CLIENT_TOKEN("client-token"),
@@ -40,7 +40,7 @@ public enum InstanceFilters {
 
     private String value;
 
-    InstanceFilters(String input) {
+    InstanceFilter(String input) {
         this.value = input;
     }
 

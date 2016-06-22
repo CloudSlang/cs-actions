@@ -4,7 +4,7 @@ package io.cloudslang.content.jclouds.entities;
  * Created by Mihai Tusa.
  * 6/14/2016.
  */
-public enum BlockDeviceMappingFilters {
+public enum BlockDeviceMappingFilter {
     DEVICE_NAME("block-device-mapping.device-name"),
     STATUS("block-device-mapping.status"),
     VOLUME_ID("block-device-mapping.volume-id"),
@@ -16,7 +16,7 @@ public enum BlockDeviceMappingFilters {
 
     private String value;
 
-    BlockDeviceMappingFilters(String input) {
+    BlockDeviceMappingFilter(String input) {
         this.value = input;
     }
 

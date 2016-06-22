@@ -63,17 +63,17 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
 
     @Override
     public Set<? extends Image> describeImagesInRegion(CommonInputs commonInputs, ImageInputs imageInputs) {
-        AMIApi amiApi = getAMIApi(region, true);
+        AMIApi amiApi = getAMIApi(imageInputs.getCustomInputs().getRegion(), true);
 
         AmazonImageServiceHelper helper = new AmazonImageServiceHelper();
         DescribeImagesOptions options = helper.getDescribeImagesOptions(imageInputs, commonInputs.getDelimiter());
         Multimap<String, String> filtersMap = helper.getImageFiltersMap(imageInputs, commonInputs.getDelimiter());
 
         if (filtersMap.isEmpty()) {
-            return amiApi.describeImagesInRegion(region, options);
+            return amiApi.describeImagesInRegion(imageInputs.getCustomInputs().getRegion(), options);
         }
 
-        return amiApi.describeImagesInRegionWithFilter(region, filtersMap, options);
+        return amiApi.describeImagesInRegionWithFilter(imageInputs.getCustomInputs().getRegion(), filtersMap, options);
     }
 
     @Override

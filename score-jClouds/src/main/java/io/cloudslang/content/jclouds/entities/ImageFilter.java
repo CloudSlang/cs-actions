@@ -4,7 +4,7 @@ package io.cloudslang.content.jclouds.entities;
  * Created by Mihai Tusa.
  * 6/15/2016.
  */
-public enum ImageFilters {
+public enum ImageFilter {
     ID("image-id"),
     TYPE("image-type"),
     DESCRIPTION("description"),
@@ -15,7 +15,7 @@ public enum ImageFilters {
 
     private String value;
 
-    ImageFilters(String input) {
+    ImageFilter(String input) {
         this.value = input;
     }
 
