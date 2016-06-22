@@ -4,7 +4,7 @@ package io.cloudslang.content.jclouds.entities;
  * Created by Mihai Tusa.
  * 6/7/2016.
  */
-public enum NetworkInterfaceFilters {
+public enum NetworkInterfaceFilter {
     DESCRIPTION("network-interface.description"),
     SUBNET_ID("network-interface.subnet-id"),
     VPC_ID("network-interface.vpc-id"),
@@ -35,7 +35,7 @@ public enum NetworkInterfaceFilters {
 
     private String value;
 
-    NetworkInterfaceFilters(String input) {
+    NetworkInterfaceFilter(String input) {
         this.value = input;
     }
 
