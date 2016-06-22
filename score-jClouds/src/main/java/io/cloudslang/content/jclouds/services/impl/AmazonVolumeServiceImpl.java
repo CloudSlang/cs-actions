@@ -3,11 +3,15 @@ package io.cloudslang.content.jclouds.services.impl;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.VolumeService;
+import io.cloudslang.content.jclouds.services.helpers.AmazonVolumeServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Attachment;
+import org.jclouds.ec2.domain.Volume;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
+import org.jclouds.ec2.options.CreateVolumeOptions;
+import org.jclouds.ec2.options.DetachVolumeOptions;
 
 /**
  * Created by Mihai Tusa.
@@ -27,6 +31,26 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
         ElasticBlockStoreApi ebsApi = getEbsApi(region, true);
 
         return ebsApi.attachVolumeInRegion(region, volumeId, instanceId, device);
+    }
+
+    @Override
+    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
+        ElasticBlockStoreApi ebsApi = getEbsApi(region, true);
+
+        DetachVolumeOptions detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
+
+        ebsApi.detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
+    }
+
+    @Override
+    public Volume createVolumeInAvailabilityZone(String availabilityZone, String snapshotId, String volumeType,
+                                                 int size, int iops, boolean encrypted) {
+        ElasticBlockStoreApi ebsApi = getEbsApi(region, true);
+
+        CreateVolumeOptions createVolumeOptions = new AmazonVolumeServiceHelper()
+                .getCreateVolumeOptions(snapshotId, volumeType, size, iops, encrypted);
+
+        return ebsApi.createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
     }
 
     void init() {
