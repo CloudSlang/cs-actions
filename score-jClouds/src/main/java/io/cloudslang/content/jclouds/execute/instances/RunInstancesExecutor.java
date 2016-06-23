@@ -24,8 +24,8 @@ public class RunInstancesExecutor {
 
         ComputeService cs = ComputeFactory.getComputeService(inputs);
         Reservation<? extends RunningInstance> result = cs.runInstancesInRegion(instanceInputs.getCustomInputs().getRegion(),
-                instanceInputs.getAvailabilityZone(), instanceInputs.getCustomInputs().getImageId(), instanceInputs.getMinCount(),
-                instanceInputs.getMaxCount(), RunInstancesOptions.NONE);
+                instanceInputs.getCustomInputs().getAvailabilityZone(), instanceInputs.getCustomInputs().getImageId(),
+                instanceInputs.getMinCount(), instanceInputs.getMaxCount(), RunInstancesOptions.NONE);
 
         return OutputsUtil.getResultsMap(result.toString());
     }

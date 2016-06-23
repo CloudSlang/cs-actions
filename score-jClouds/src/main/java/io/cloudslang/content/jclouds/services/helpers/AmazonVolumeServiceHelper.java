@@ -1,5 +1,7 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
+import io.cloudslang.content.jclouds.entities.VolumeType;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ec2.options.CreateVolumeOptions;
 import org.jclouds.ec2.options.DetachVolumeOptions;
@@ -15,17 +17,15 @@ public class AmazonVolumeServiceHelper {
     private static final String SC1 = "sc1";
     private static final String STANDARD = "standard";
 
-    private static final int ONE = 1;
     private static final int FOUR = 4;
-    private static final int ONE_HUNDRED = 100;
     private static final int FIVE_HUNDRED = 500;
     private static final int ONE_THOUSAND = 1024;
     private static final int TEN_THOUSANDS = 10000;
-    private static final int COMMON_LARGE_VALUE = 16384;
-    private static final int TWENTY_THOUSANDS = 20000;
 
     public CreateVolumeOptions getCreateVolumeOptions(String snapshotId, String volumeType, int size, int iops, boolean encrypted) {
         validateVolumeTypeSizeIops(volumeType, size, iops);
+
+        volumeType = (Constants.Miscellaneous.NOT_RELEVANT.equals(volumeType)) ? VolumeType.STANDARD.toString() : volumeType;
 
         CreateVolumeOptions createVolumeOptions = CreateVolumeOptions.Builder
                 .volumeType(volumeType)
@@ -59,21 +59,19 @@ public class AmazonVolumeServiceHelper {
     private void validateVolumeTypeSizeIops(String volumeType, int size, int iops) {
         switch (volumeType) {
             case GP2:
-                validateSize(GP2, ONE, COMMON_LARGE_VALUE, size);
-                validateIops(GP2, ONE_HUNDRED, TEN_THOUSANDS, iops);
+                validateIops(GP2, Constants.ValidationValues.ONE_HUNDRED, TEN_THOUSANDS, iops);
                 break;
             case IO1:
-                validateSize(IO1, FOUR, COMMON_LARGE_VALUE, size);
-                validateIops(IO1, ONE_HUNDRED, TWENTY_THOUSANDS, iops);
+                validateSize(IO1, FOUR, Constants.ValidationValues.COMMON_LARGE_VALUE, size);
                 break;
             case ST1:
-                validateSize(ST1, FIVE_HUNDRED, COMMON_LARGE_VALUE, size);
+                validateSize(ST1, FIVE_HUNDRED, Constants.ValidationValues.COMMON_LARGE_VALUE, size);
                 break;
             case SC1:
-                validateSize(SC1, FIVE_HUNDRED, COMMON_LARGE_VALUE, size);
+                validateSize(SC1, FIVE_HUNDRED, Constants.ValidationValues.COMMON_LARGE_VALUE, size);
                 break;
             case STANDARD:
-                validateSize(STANDARD, ONE, ONE_THOUSAND, size);
+                validateSize(STANDARD, Constants.ValidationValues.ONE, ONE_THOUSAND, size);
                 break;
             default:
                 throw new RuntimeException("Unrecognized  volume type value: [" + volumeType + "]. " +

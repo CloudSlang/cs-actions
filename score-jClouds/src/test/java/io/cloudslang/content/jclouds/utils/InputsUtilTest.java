@@ -15,13 +15,6 @@ public class InputsUtilTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void validateInput() {
-        setExpectedExceptions(RuntimeException.class, "The required endpoint input is not specified!");
-
-        InputsUtil.validateInput("", "endpoint");
-    }
-
-    @Test
     public void getMinInstancesCountBlank() {
         int testMinInstanceCount = InputsUtil.getValidInstancesCount("");
 

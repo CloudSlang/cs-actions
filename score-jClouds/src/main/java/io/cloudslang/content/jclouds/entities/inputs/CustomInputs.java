@@ -46,6 +46,7 @@ public class CustomInputs {
     private String keyTagsString;
     private String valueTagsString;
     private String virtualizationType;
+    private String availabilityZone;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -83,6 +84,7 @@ public class CustomInputs {
         this.keyTagsString = builder.keyTagsString;
         this.valueTagsString = builder.valueTagsString;
         this.virtualizationType = builder.virtualizationType;
+        this.availabilityZone = builder.availabilityZone;
     }
 
     public String getRegion() {
@@ -225,6 +227,10 @@ public class CustomInputs {
         return virtualizationType;
     }
 
+    public String getAvailabilityZone() {
+        return availabilityZone;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -261,6 +267,7 @@ public class CustomInputs {
         private String keyTagsString;
         private String valueTagsString;
         private String virtualizationType;
+        private String availabilityZone;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -438,6 +445,11 @@ public class CustomInputs {
 
         public CustomInputsBuilder withVirtualizationType(String inputValue) throws Exception {
             virtualizationType = VirtualizationType.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withAvailabilityZone(String inputValue) {
+            availabilityZone = inputValue;
             return this;
         }
     }

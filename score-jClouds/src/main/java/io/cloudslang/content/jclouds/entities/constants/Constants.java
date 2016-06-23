@@ -32,4 +32,11 @@ public class Constants {
         public static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
                 "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
     }
+
+    public static final class ValidationValues {
+        public static final int ONE = 1;
+        public static final int ONE_HUNDRED = 100;
+        public static final int COMMON_LARGE_VALUE = 16384;
+        public static final int TWENTY_THOUSANDS = 20000;
+    }
 }

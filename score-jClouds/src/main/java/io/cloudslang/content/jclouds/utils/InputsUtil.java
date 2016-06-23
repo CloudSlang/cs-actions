@@ -38,10 +38,8 @@ public final class InputsUtil {
         return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultDelimiter(delimiter)))));
     }
 
-    public static void validateInput(String input, String inputName) {
-        if (StringUtils.isBlank(input)) {
-            throw new RuntimeException("The required " + inputName + " input is not specified!");
-        }
+    public static String getDefaultDelimiter(String delimiter) {
+        return StringUtils.isBlank(delimiter) ? COMMA_DELIMITER : delimiter;
     }
 
     public static long getValidLong(String input, long defaultValue) {
@@ -59,14 +57,22 @@ public final class InputsUtil {
         }
     }
 
-    public static String getDefaultDelimiter(String delimiter) {
-        return StringUtils.isBlank(delimiter) ? COMMA_DELIMITER : delimiter;
-    }
-
     public static int getValidInstancesCount(String input) {
         return StringUtils.isBlank(input) ? MINIMUM_INSTANCES_NUMBER :
                 getValidInt(input, MINIMUM_INSTANCES_NUMBER, MAXIMUM_INSTANCES_NUMBER, getValidationException(input, true),
                         getValidationException(input, false));
+    }
+
+    public static int getValidSize(String input) {
+        return StringUtils.isBlank(input) ? Constants.ValidationValues.ONE :
+                getValidInt(input, Constants.ValidationValues.ONE, Constants.ValidationValues.COMMON_LARGE_VALUE,
+                        getValidationException(input, true), getValidationException(input, false));
+    }
+
+    public static int getValidIops(String input) {
+        return StringUtils.isBlank(input) ? Constants.ValidationValues.ONE_HUNDRED :
+                getValidInt(input, Constants.ValidationValues.ONE_HUNDRED, Constants.ValidationValues.TWENTY_THOUSANDS,
+                        getValidationException(input, true), getValidationException(input, false));
     }
 
     public static boolean getBoolean(String input) {

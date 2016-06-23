@@ -227,9 +227,9 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
                                        @Param(Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
                                        @Param(Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
+                                       @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
-                                       @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(Inputs.InstanceInputs.ATTACH_TIME) String attachTime,
                                        @Param(Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
                                        @Param(Inputs.InstanceInputs.DNS_NAME) String dnsName,
@@ -325,6 +325,7 @@ public class DescribeInstancesAction {
                 .withKeyTagsString(keyTagsString)
                 .withValueTagsString(valueTagsString)
                 .withVirtualizationType(virtualizationType)
+                .withAvailabilityZone(availabilityZone)
                 .build();
 
         NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
@@ -359,7 +360,6 @@ public class DescribeInstancesAction {
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
                 .withAffinity(affinity)
-                .withAvailabilityZone(availabilityZone)
                 .withClientToken(clientToken)
                 .withDnsName(dnsName)
                 .withGroupName(groupName)
