@@ -34,12 +34,19 @@ public final class InputsUtil {
         if (StringUtils.isBlank(input)) {
             return null;
         }
-
         return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultDelimiter(delimiter)))));
     }
 
     public static String getDefaultDelimiter(String delimiter) {
         return StringUtils.isBlank(delimiter) ? COMMA_DELIMITER : delimiter;
+    }
+
+    public static int getValidInstanceStateCode(String input) {
+        return InstanceState.getKey(input);
+    }
+
+    public static boolean getBoolean(String input) {
+        return StringUtils.isBlank(input) || Boolean.parseBoolean(input);
     }
 
     public static long getValidLong(String input, long defaultValue) {
@@ -63,20 +70,8 @@ public final class InputsUtil {
                         getValidationException(input, false));
     }
 
-    public static int getValidSize(String input) {
-        return StringUtils.isBlank(input) ? Constants.ValidationValues.ONE :
-                getValidInt(input, Constants.ValidationValues.ONE, Constants.ValidationValues.COMMON_LARGE_VALUE,
-                        getValidationException(input, true), getValidationException(input, false));
-    }
-
-    public static int getValidIops(String input) {
-        return StringUtils.isBlank(input) ? Constants.ValidationValues.ONE_HUNDRED :
-                getValidInt(input, Constants.ValidationValues.ONE_HUNDRED, Constants.ValidationValues.TWENTY_THOUSANDS,
-                        getValidationException(input, true), getValidationException(input, false));
-    }
-
-    public static boolean getBoolean(String input) {
-        return StringUtils.isBlank(input) || Boolean.parseBoolean(input);
+    public static int getVolumeValidInt(String input, int min, int max, String errorMessage) {
+        return getValidInt(input, min, max, getValidationException(input, true), errorMessage);
     }
 
     public static String getRelevantBooleanString(String input) {
@@ -85,10 +80,6 @@ public final class InputsUtil {
             return input.toLowerCase();
         }
         return Constants.Miscellaneous.NOT_RELEVANT;
-    }
-
-    public static int getValidInstanceStateCode(String input) {
-        return InstanceState.getKey(input);
     }
 
     public static String getValidVolumeAmount(String input) {
@@ -118,13 +109,6 @@ public final class InputsUtil {
         return intInput;
     }
 
-    private static String getValidationException(String input, boolean invalid) {
-        if (invalid) {
-            return "The provided value: " + input + " input must be integer.";
-        }
-        return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
-    }
-
     private static boolean isInt(String input) {
         try {
             Integer.parseInt(input);
@@ -132,5 +116,12 @@ public final class InputsUtil {
             return false;
         }
         return true;
+    }
+
+    private static String getValidationException(String input, boolean invalid) {
+        if (invalid) {
+            return "The provided value: " + input + " input must be integer.";
+        }
+        return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
     }
 }

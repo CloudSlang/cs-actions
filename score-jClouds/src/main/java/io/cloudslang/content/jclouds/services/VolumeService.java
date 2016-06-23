@@ -9,7 +9,7 @@ import org.jclouds.ec2.domain.Volume;
  */
 public interface VolumeService {
     Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
-                                          int size, int iops, boolean encrypted);
+                                          String size, String iops, boolean encrypted);
 
     Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) throws Exception;
 

@@ -1,6 +1,8 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
@@ -10,9 +12,8 @@ public class VolumeInputs {
     private CustomInputs customInputs;
 
     private String snapshotId;
-
-    private int size;
-    private int iops;
+    private String size;
+    private String iops;
 
     private boolean encrypted;
 
@@ -20,7 +21,6 @@ public class VolumeInputs {
         this.customInputs = builder.customInputs;
 
         this.snapshotId = builder.snapshotId;
-
         this.size = builder.size;
         this.iops = builder.iops;
 
@@ -35,11 +35,11 @@ public class VolumeInputs {
         return snapshotId;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 
-    public int getIops() {
+    public String getIops() {
         return iops;
     }
 
@@ -51,9 +51,8 @@ public class VolumeInputs {
         private CustomInputs customInputs;
 
         private String snapshotId;
-
-        private int size;
-        private int iops;
+        private String size;
+        private String iops;
 
         private boolean encrypted;
 
@@ -72,12 +71,12 @@ public class VolumeInputs {
         }
 
         public VolumeInputsBuilder withSize(String inputValue) {
-            size = InputsUtil.getValidSize(inputValue);
+            size = inputValue;
             return this;
         }
 
         public VolumeInputsBuilder withIops(String inputValue) {
-            iops = InputsUtil.getValidIops(inputValue);
+            iops = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.NOT_RELEVANT : inputValue;
             return this;
         }
 

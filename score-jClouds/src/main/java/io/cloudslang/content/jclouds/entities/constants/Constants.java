@@ -21,6 +21,7 @@ public class Constants {
         public static final String NOT_RELEVANT_INT_CODE = "-1";
         public static final String TAG = "tag:";
         public static final String EQUAL = "=";
+        public static final String STANDARD = "standard";
     }
 
     public static final class ErrorMessages {
@@ -36,6 +37,7 @@ public class Constants {
     public static final class ValidationValues {
         public static final int ONE = 1;
         public static final int ONE_HUNDRED = 100;
+        public static final int ONE_THOUSAND = 1024;
         public static final int COMMON_LARGE_VALUE = 16384;
         public static final int TWENTY_THOUSANDS = 20000;
     }

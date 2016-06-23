@@ -153,19 +153,4 @@ public class InputsUtilTest {
 
         assertEquals("0.5", testedString);
     }
-
-    @Test
-    public void getValidIopsEmpty() {
-        int testedInt = InputsUtil.getValidIops("");
-
-        assertEquals(100, testedInt);
-    }
-
-    @Test
-    public void getValidIopsWrong() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "Incorrect provided value: 20001 input. The value doesn't meet conditions for general purpose usage.");
-
-        InputsUtil.getValidIops("20001");
-    }
 }

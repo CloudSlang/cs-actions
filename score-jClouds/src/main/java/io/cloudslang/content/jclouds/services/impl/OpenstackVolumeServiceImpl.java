@@ -27,7 +27,7 @@ public class OpenstackVolumeServiceImpl extends JCloudsComputeService implements
 
     @Override
     public Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
-                                                 int size, int iops, boolean encrypted) {
+                                                 String size, String iops, boolean encrypted) {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 }

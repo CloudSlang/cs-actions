@@ -98,7 +98,25 @@ public class AmazonVolumeServiceImplTest {
 
     @Test
     public void createVolumeInAvailabilityZoneTest() throws Exception {
-        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "snap-c5920f60", "", 1024, 100, true);
+        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "snap-c5920f60", "standard", "", "100", true);
+
+        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), any(CreateVolumeOptions.class));
+        commonVerifiersForMethods();
+    }
+
+    @Test
+    public void createVolumeInAvailabilityZoneWithoutSnapshotTest() throws Exception {
+        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "", "", "1024", "100", true);
+
+        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), anyInt());
+        commonVerifiersForMethods();
+    }
+
+    @Test
+    public void createVolumeInAvailabilityZoneWithSnapshotTest() throws Exception {
+        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "snap-c5920f60", "", "", "", true);
 
         verify(volumeSpy, times(1)).lazyInit("some_region");
         verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), any(CreateVolumeOptions.class));
@@ -108,9 +126,10 @@ public class AmazonVolumeServiceImplTest {
     @Test
     public void createVolumeInAvailabilityZoneValidationErrorNegativeSizeTest() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "Incorrect provided value: -5 input. The value doesn't meet conditions for general purpose usage.");
+                "The size [-5] provided for [standard] volumeType should be greater or equal than [1] GiBs value " +
+                        "and smaller or equal than [1024] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "", -5, 1111, false);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "", "-5", "1111", false);
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
@@ -120,10 +139,10 @@ public class AmazonVolumeServiceImplTest {
     @Test
     public void createVolumeInAvailabilityZoneValidationErrorLowerSizeTest() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "The size [0] provided for [gp2] volumeType should be greater or equal than [1] GiBs value and smaller " +
-                        "or equal than [16384] GiBs value.");
+                "The size [0] provided for [gp2] volumeType should be greater or equal than [1] GiBs value " +
+                        "and smaller or equal than [16384] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", 0, 1111, false);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", "0", "1111", false);
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
@@ -132,10 +151,10 @@ public class AmazonVolumeServiceImplTest {
     @Test
     public void createVolumeInAvailabilityZoneValidationErrorHigherSizeTest() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "The size [16385] provided for [standard] volumeType should be greater or equal than [1] GiBs value " +
-                        "and smaller or equal than [1024] GiBs value.");
+                "The size [16385] provided for [sc1] volumeType should be greater or equal than [500] GiBs value " +
+                        "and smaller or equal than [16384] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "standard", 16385, 1111, false);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "sc1", "16385", "1111", false);
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
@@ -144,10 +163,10 @@ public class AmazonVolumeServiceImplTest {
     @Test
     public void createVolumeInAvailabilityZoneValidationErrorIopsTest1() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "The size [499] provided for [sc1] volumeType should be greater or equal than [500] GiBs value " +
+                "The size [499] provided for [st1] volumeType should be greater or equal than [500] GiBs value " +
                         "and smaller or equal than [16384] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "sc1", 499, 0, true);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "st1", "499", "0", true);
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
@@ -159,7 +178,7 @@ public class AmazonVolumeServiceImplTest {
                 "The iops [10001] provided for [gp2] volumeType should be greater or equal than [100] IOPS value " +
                         "and smaller or equal than [10000] IOPS value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", 3334, 10001, true);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", "3334", "10001", true);
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
@@ -171,7 +190,7 @@ public class AmazonVolumeServiceImplTest {
                 "The iops [99] provided for [io1] volumeType should be greater or equal than [100] IOPS value " +
                         "and smaller or equal than [20000] IOPS value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "io1", 3333, 99, true);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "io1", "3333", "99", true);
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));

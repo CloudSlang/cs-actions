@@ -5,6 +5,7 @@ import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.VolumeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonVolumeServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Attachment;
@@ -34,13 +35,22 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
     @Override
     public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
         DetachVolumeOptions detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
-
-        getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
+        if (detachVolumeOptions != null) {
+            getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
+        }
+        getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force);
     }
 
     @Override
     public Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
-                                                 int size, int iops, boolean encrypted) {
+                                                 String size, String iops, boolean encrypted) {
+        if (StringUtils.isBlank(snapshotId) && StringUtils.isBlank(volumeType)) {
+            int validSize = new AmazonVolumeServiceHelper()
+                    .getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
+                            Constants.ValidationValues.ONE_THOUSAND, size);
+            return getEbsApi(region, true).createVolumeInAvailabilityZone(availabilityZone, validSize);
+        }
+
         CreateVolumeOptions createVolumeOptions = new AmazonVolumeServiceHelper()
                 .getCreateVolumeOptions(snapshotId, volumeType, size, iops, encrypted);
 
