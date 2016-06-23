@@ -23,8 +23,8 @@ public class InsertBeforeService {
         Map<String, String> result = new HashMap<>();
 
         try {
-            Document doc = XmlUtils.parseXML(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
-            NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
+            Document doc = XmlUtils.getDocument(commonInputs);
+            NamespaceContext context = XmlUtils.getNamespaceContext(commonInputs, doc);
 
             Document beforeDoc = XmlUtils.parseXML(customInputs.getXmlElement(), commonInputs.getSecureProcessing());
             Node beforeNode = doc.importNode(beforeDoc.getDocumentElement(), true);

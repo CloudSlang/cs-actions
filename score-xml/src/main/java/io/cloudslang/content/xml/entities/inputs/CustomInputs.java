@@ -11,6 +11,7 @@ public class CustomInputs {
     private String value;
     private String xmlElement;
     private String xsdDocument;
+    private String xsdDocumentSource;
     private String queryType;
     private String delimiter;
 
@@ -19,6 +20,7 @@ public class CustomInputs {
         this.value = builder.value;
         this.xmlElement = builder.xmlElement;
         this.xsdDocument = builder.xsdDocument;
+        this.xsdDocumentSource = builder.xsdDocumentSource;
         this.queryType = builder.queryType;
         this.delimiter = builder.delimiter;
     }
@@ -39,6 +41,10 @@ public class CustomInputs {
         return xsdDocument;
     }
 
+    public String getXsdDocumentSource() {
+        return xsdDocumentSource;
+    }
+
     public String getQueryType() {
         return queryType;
     }
@@ -52,6 +58,7 @@ public class CustomInputs {
         private String value;
         private String xmlElement;
         private String xsdDocument;
+        private String xsdDocumentSource;
         private String queryType;
         private String delimiter;
 
@@ -90,6 +97,17 @@ public class CustomInputs {
             }
             else {
                 delimiter = inputValue;
+            }
+            return this;
+        }
+
+        public CustomInputsBuilder withXsdDocumentSource(String xsdDocumentSource) {
+            if (xsdDocumentSource.isEmpty()) {
+                this.xsdDocumentSource = Constants.Defaults.XSD_DOCUMENT_SOURCE;
+            } else if (Constants.Defaults.XSD_DOCUMENT_SOURCE.equalsIgnoreCase(xsdDocumentSource) || Constants.XSD_PATH.equalsIgnoreCase(xsdDocumentSource)){
+                this.xsdDocumentSource = xsdDocumentSource;
+            } else {
+                throw new RuntimeException(xsdDocumentSource + Constants.INVALID_XSD_DOCUMENT_SOURCE);
             }
             return this;
         }

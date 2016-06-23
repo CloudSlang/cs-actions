@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<t:Definitions id="1" name="Provision" targetNamespace="urn:example:InfrastructureTopology" xsi:schemaLocation="http://docs.oasis-open.org/tosca/ns/2011/12/tosca.xsd" xmlns:eve="urn:x-hp:2012:software:eve:realized-types" xmlns:t="http://docs.oasis-open.org/tosca/ns/2011/12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <t:Import namespace="urn:x-hp:2012:software:eve:realized-types" location="EveRealizedTypes.xml" importType="http://docs.oasis-open.org/tosca/ns/2011/12"/>
+    <t:ServiceTemplate id="service-1" name="Provision">
+        <t:TopologyTemplate id="topology-1">
+            <t:NodeTemplate id="T1-ServerGroup0001" name="Server Group 1" type="eve:realized_server_group_type">
+                <t:Properties>
+                    <eve:realized_server_group modelClass="urn:x-hp:2009:software:data_model:type:ci_collection">
+                        <eve:resource_pool_ref>http://127.0.0.1:21071/1/resource_pool_list/67</eve:resource_pool_ref>
+                        <eve:last_modified_time>2013-11-25T14:05:54.803Z</eve:last_modified_time>
+                        <eve:name>Server Group 1</eve:name>
+                        <eve:global_id>http://172.29.0.202:21051/1/infrastructure_topology_list/1/realized_server_group_list/T1-ServerGroup0001</eve:global_id>
+                        <eve:self>http://172.29.0.202:21051/1/infrastructure_topology_list/1/realized_server_group_list/T1-ServerGroup0001</eve:self>
+                    </eve:realized_server_group>
+                </t:Properties>
+            </t:NodeTemplate>
+        </t:TopologyTemplate>
+    </t:ServiceTemplate>
+</t:Definitions>

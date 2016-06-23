@@ -21,35 +21,36 @@ import java.util.Map;
  * Created by markowis on 03/03/2016.
  */
 public class SelectService {
-    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs){
+    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) {
         Map<String, String> result = new HashMap<>();
 
         try {
-            Document doc = XmlUtils.parseXML(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
-            NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
+            Document doc = XmlUtils.getDocument(commonInputs);
+            NamespaceContext context = XmlUtils.getNamespaceContext(commonInputs, doc);
+
             XPathExpression expr = XmlUtils.createXPathExpression(context, commonInputs.getXPathQuery());
 
             String selection = xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
 
             ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
-                    selection);
+                    selection, Constants.ReturnCodes.SUCCESS);
 
         } catch (XPathExpressionException e) {
             ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING);
+                    Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
         } catch (TransformerException te) {
             ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage(), Constants.EMPTY_STRING);
+                    Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
         } catch (Exception e) {
             ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING);
+                    Constants.ErrorMessages.PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
         }
 
         return result;
     }
 
-    private static String xPathQuery(Document doc, XPathExpression expr, String queryType, String delimiter) throws Exception{
-        switch (queryType){
+    private static String xPathQuery(Document doc, XPathExpression expr, String queryType, String delimiter) throws Exception {
+        switch (queryType) {
             case Constants.QueryTypes.NODE_LIST:
                 return xPathNodeListQuery(doc, expr, delimiter);
             case Constants.QueryTypes.NODE:
@@ -63,7 +64,7 @@ public class SelectService {
 
     private static String xPathNodeListQuery(Document doc, XPathExpression expr, String delimiter) throws Exception {
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-        return nodeListToString(nodeList,delimiter);
+        return nodeListToString(nodeList, delimiter);
     }
 
     private static String xPathNodeQuery(Document doc, XPathExpression expr) throws Exception {
@@ -72,18 +73,16 @@ public class SelectService {
     }
 
     private static String xPathValueQuery(Document doc, XPathExpression expr) throws Exception {
-        return  (String) expr.evaluate(doc, XPathConstants.STRING);
+        return (String) expr.evaluate(doc, XPathConstants.STRING);
     }
 
-    private static String nodeListToString(NodeList nodeList, String delimiter) throws  TransformerException {
+    private static String nodeListToString(NodeList nodeList, String delimiter) throws TransformerException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nodeList.getLength() - 1; i++) {
             sb.append(XmlUtils.nodeToString(nodeList.item(i)));
             sb.append(delimiter);
         }
-        sb.append(XmlUtils.nodeToString(nodeList.item(nodeList.getLength()-1)));
+        sb.append(XmlUtils.nodeToString(nodeList.item(nodeList.getLength() - 1)));
         return sb.toString();
     }
-
-
 }

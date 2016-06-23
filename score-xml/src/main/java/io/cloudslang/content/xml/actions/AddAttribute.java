@@ -20,6 +20,9 @@ public class AddAttribute {
      * Adds an attribute to an XML element or replaces the value if the attribute already exists.
      *
      * @param xmlDocument           XML string in which to add attribute
+     * @param xmlDocumentSource The source type of the xml document.
+     *                          Valid values: xmlString, xmlPath
+     *                          Default value: xmlString
      * @param xPathElementQuery     XPATH query that results in an element or element list, not an attribute
      * @param attributeName         name of attribute to add or replace
      * @param value                 value of attribute to add or replace with
@@ -36,6 +39,7 @@ public class AddAttribute {
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
+            @Param(value = Constants.InputNames.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
             @Param(value = Constants.InputNames.XPATH_ELEMENT_QUERY, required = true) String xPathElementQuery,
             @Param(value = Constants.InputNames.ATTRIBUTE_NAME, required = true) String attributeName,
             @Param(value = Constants.InputNames.VALUE, required = true) String value,
@@ -43,6 +47,7 @@ public class AddAttribute {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
+                .withXmlDocumentSource(xmlDocumentSource)
                 .withXpathQuery(xPathElementQuery)
                 .withSecureProcessing(secureProcessing)
                 .build();

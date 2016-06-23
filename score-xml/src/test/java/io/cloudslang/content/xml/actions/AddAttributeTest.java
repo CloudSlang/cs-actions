@@ -38,7 +38,7 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, "", xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.ADD_ATTRIBUTE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
@@ -50,7 +50,7 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, "", xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
@@ -63,7 +63,7 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        Map<String, String> result = addAttribute.execute(xml, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, "", xPathQuery, attributeName, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ADD_ATTRIBUTE_FAILURE +

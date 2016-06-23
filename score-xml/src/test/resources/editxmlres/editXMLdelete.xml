@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Employees>
+    <Employee emplid="1111" type="admin">
+        <lastname>Watson</lastname>
+        <email>johnwatson@sh.com</email>
+    </Employee>
+    <Employee emplid="2222" type="admin">
+        <lastname>Homes</lastname>
+        <email>sherlock@sh.com</email>
+    </Employee>
+    <Employee emplid="3333" type="user">
+        <lastname>Moriarty</lastname>
+        <email>jim@sh.com</email>
+    </Employee>
+    <Employee emplid="4444" type="user">
+        <lastname>Holmes</lastname>
+        <email>mycroft@sh.com</email>
+    </Employee>
+</Employees>

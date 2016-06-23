@@ -37,7 +37,7 @@ public class InsertBeforeTest {
         String xPathQuery = "//element1";
         String xmlElement = "<element0>Zero</element0>";
 
-        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.INSERT_BEFORE_SUCCESS,
@@ -49,7 +49,7 @@ public class InsertBeforeTest {
         String xPathQuery = "//subelement";
         String xmlElement = "<presub>Zero</presub>";
 
-        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.INSERT_BEFORE_SUCCESS,
@@ -61,7 +61,7 @@ public class InsertBeforeTest {
         String xPathQuery = "/subelement";
         String xmlElement = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
@@ -73,7 +73,7 @@ public class InsertBeforeTest {
         String xPathQuery = "//subelement";
         String xmlElement = "<open>Text</close>";
 
-        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
@@ -86,7 +86,7 @@ public class InsertBeforeTest {
         String xPathQuery = "//element1/@attr";
         String xmlElement = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = insertBefore.execute(xml, xPathQuery, xmlElement, "false");
+        Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +

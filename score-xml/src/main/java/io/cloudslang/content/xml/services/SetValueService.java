@@ -25,8 +25,8 @@ public class SetValueService {
         Map<String, String> result = new HashMap<>();
 
         try {
-            Document doc = XmlUtils.parseXML(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
-            NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
+            Document doc = XmlUtils.getDocument(commonInputs);
+            NamespaceContext context = XmlUtils.getNamespaceContext(commonInputs, doc);
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
             XmlUtils.validateNodeList(nodeList);

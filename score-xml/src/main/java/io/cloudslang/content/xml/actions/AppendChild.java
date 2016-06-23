@@ -20,6 +20,9 @@ public class AppendChild {
      * Appends a child to an XML element.
      *
      * @param xmlDocument       XML string to append a child in
+     * @param xmlDocumentSource The source type of the xml document.
+     *                          Valid values: xmlString, xmlPath
+     *                          Default value: xmlString
      * @param xPathQuery        XPATH query that results in an element or element list, where child element will be
      *                          appended
      * @param xmlElement        child element to append
@@ -36,12 +39,14 @@ public class AppendChild {
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
+            @Param(value = Constants.InputNames.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
             @Param(value = Constants.InputNames.XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
             @Param(value = Constants.InputNames.XML_ELEMENT, required = true) String xmlElement,
             @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
+                .withXmlDocumentSource(xmlDocumentSource)
                 .withXpathQuery(xPathQuery)
                 .withSecureProcessing(secureProcessing)
                 .build();

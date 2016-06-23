@@ -38,7 +38,7 @@ public class SetValueTest {
         String name = null;
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
@@ -50,7 +50,7 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
@@ -62,7 +62,7 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
@@ -75,7 +75,7 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +

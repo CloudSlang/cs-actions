@@ -34,7 +34,7 @@ public class ValidateTest {
     public void testWithWellFormedXML() {
         xml = "<root>toot</root>";
 
-        Map<String, String> result = validate.execute(xml, null, "false");
+        Map<String, String> result = validate.execute(xml, "", "", "", "", "", "", "", "", "", "", "", "", "", "", null, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.PARSING_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
@@ -44,7 +44,7 @@ public class ValidateTest {
     public void testWithNonWellFormedXML() {
         xml = "<root>toot</roo>";
 
-        Map<String, String> result = validate.execute(xml, null, "false");
+        Map<String, String> result = validate.execute(xml, "", "", "", "", "", "", "", "", "", "", "", "", "", "", null, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
@@ -60,7 +60,7 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        Map<String, String> result = validate.execute(xml, xsd, "false");
+        Map<String, String> result = validate.execute(xml, "", xsd, "", "", "", "", "", "", "", "", "", "", "", "", "", "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.VALIDATION_SUCCESS,
@@ -75,7 +75,7 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        Map<String, String> result = validate.execute(xml, xsd, "false");
+        Map<String, String> result = validate.execute(xml, "", xsd, "", "", "", "", "", "", "", "", "", "", "", "", "", "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +

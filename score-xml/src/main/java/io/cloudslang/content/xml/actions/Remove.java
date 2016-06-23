@@ -9,7 +9,9 @@ import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.RemoveService;
 import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.utils.ResultUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,6 +22,9 @@ public class Remove {
      * Removes an element or attribute from an XML document.
      *
      * @param xmlDocument       XML string to remove element or attribute from
+     * @param xmlDocumentSource The source type of the xml document.
+     *                          Valid values: xmlString, xmlPath
+     *                          Default value: xmlString
      * @param xPathQuery        XPATH query that results in an element or element list to remove or the element or
      *                          element list containing the attribute to remove
      * @param attributeName     optional - name of attribute to remove if removing an attribute; leave empty if removing
@@ -37,20 +42,28 @@ public class Remove {
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
+            @Param(value = Constants.InputNames.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
             @Param(value = Constants.InputNames.XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
             @Param(Constants.InputNames.ATTRIBUTE_NAME) String attributeName,
             @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
-                .withXmlDocument(xmlDocument)
-                .withXpathQuery(xPathQuery)
-                .withSecureProcessing(secureProcessing)
-                .build();
+        Map<String, String> result = new HashMap<>();
+        try {
+            CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+                    .withXmlDocument(xmlDocument)
+                    .withXmlDocumentSource(xmlDocumentSource)
+                    .withXpathQuery(xPathQuery)
+                    .withSecureProcessing(secureProcessing)
+                    .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
-                .withAttributeName(attributeName)
-                .build();
+            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                    .withAttributeName(attributeName)
+                    .build();
 
-        return new RemoveService().execute(inputs, customInputs);
+            result =  new RemoveService().execute(inputs, customInputs);
+        } catch (Exception e) {
+            ResultUtils.populateFailureResult(result, e.getMessage() + e);
+        }
+        return result;
     }
 }

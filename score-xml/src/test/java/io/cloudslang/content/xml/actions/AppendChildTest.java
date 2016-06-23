@@ -37,7 +37,7 @@ public class AppendChildTest {
         String xPathQuery = "//element1";
         String xmlChild = "<sub1 attr=\"ibute\">Sub1</sub1>";
 
-        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
@@ -49,7 +49,7 @@ public class AppendChildTest {
         String xPathQuery = "//subelement";
         String xmlChild = "<subsub attr=\"ibute\">Deeply nested</subsub>";
 
-        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
@@ -61,7 +61,7 @@ public class AppendChildTest {
         String xPathQuery = "/subelement";
         String xmlChild = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
@@ -73,7 +73,7 @@ public class AppendChildTest {
         String xPathQuery = "//subelement";
         String xmlChild = "<open>Text</close>";
 
-        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
@@ -86,7 +86,7 @@ public class AppendChildTest {
         String xPathQuery = "//element1/@attr";
         String xmlChild = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = appendChild.execute(xml, xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
         Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.APPEND_CHILD_FAILURE +
