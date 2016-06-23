@@ -92,14 +92,20 @@ public class AmazonVolumeServiceHelper {
                 break;
             case SC1:
                 options.volumeType(SC1);
-                getSize(SC1, FIVE_HUNDRED, Constants.ValidationValues.COMMON_LARGE_VALUE, size);
+                options.withSize(getSize(SC1, FIVE_HUNDRED, Constants.ValidationValues.COMMON_LARGE_VALUE, size));
                 break;
             case Constants.Miscellaneous.STANDARD:
-                options.withSize(getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
-                        Constants.ValidationValues.ONE_THOUSAND, size));
+                setStandardOptions(options, size);
                 break;
             default:
+                setStandardOptions(options, size);
                 break;
         }
+    }
+
+    private void setStandardOptions(CreateVolumeOptions options, String size) {
+        options.volumeType(Constants.Miscellaneous.STANDARD);
+        options.withSize(getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
+                Constants.ValidationValues.ONE_THOUSAND, size));
     }
 }
