@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.utils;
 
+import io.cloudslang.content.jclouds.services.impl.MockingHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,15 +24,16 @@ public class InputsUtilTest {
 
     @Test
     public void getMinInstancesCountNegative() {
-        setExpectedExceptions(RuntimeException.class, "Incorrect provided value: -1 input. The value doesn't meet " +
-                "conditions for general purpose usage.");
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
+                "Incorrect provided value: -1 input. The value doesn't meet conditions for general purpose usage.");
 
         InputsUtil.getValidInstancesCount("-1");
     }
 
     @Test
     public void getMinInstancesCountNotInt() {
-        setExpectedExceptions(RuntimeException.class, "The provided value: [abracadabra] input must be integer.");
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
+                "The provided value: [abracadabra] input must be integer.");
 
         InputsUtil.getValidInstancesCount("[abracadabra]");
     }
@@ -52,8 +54,8 @@ public class InputsUtilTest {
 
     @Test
     public void getMaxInstancesCountOver() {
-        setExpectedExceptions(RuntimeException.class, "Incorrect provided value: 51 input. The value doesn't meet " +
-                "conditions for general purpose usage.");
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
+                "Incorrect provided value: 51 input. The value doesn't meet conditions for general purpose usage.");
 
         InputsUtil.getValidInstancesCount("51");
     }
@@ -67,14 +69,16 @@ public class InputsUtilTest {
 
     @Test
     public void getValidLongNegative() {
-        setExpectedExceptions(RuntimeException.class, "Incorrect provided value: -1. Valid values are positive longs.");
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
+                "Incorrect provided value: -1. Valid values are positive longs.");
 
         InputsUtil.getValidLong("-1", 0L);
     }
 
     @Test
     public void getValidLongNotLong() {
-        setExpectedExceptions(RuntimeException.class, "The provided value: [anything_here] input must be long.");
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
+                "The provided value: [anything_here] input must be long.");
 
         InputsUtil.getValidLong("[anything_here]", 0L);
     }
@@ -121,8 +125,47 @@ public class InputsUtilTest {
         assertEquals("false", testedString);
     }
 
-    private void setExpectedExceptions(Class<?> type, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
+    @Test
+    public void getValidVolumeAmountEmpty() {
+        String testedString = InputsUtil.getValidVolumeAmount("");
+
+        assertEquals("Not relevant", testedString);
+    }
+
+    @Test
+    public void getValidVolumeAmountWrongValue() {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
+                "Incorrect provided value: 16385. Valid values are positive floats between 0.5f and 16000.0f.");
+
+        InputsUtil.getValidVolumeAmount("16385");
+    }
+
+    @Test
+    public void getValidVolumeAmountWrong() {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: blahblah input must be float.");
+
+        InputsUtil.getValidVolumeAmount("blahblah");
+    }
+
+    @Test
+    public void getValidVolumeAmount() {
+        String testedString = InputsUtil.getValidVolumeAmount("0.5");
+
+        assertEquals("0.5", testedString);
+    }
+
+    @Test
+    public void getValidIopsEmpty() {
+        int testedInt = InputsUtil.getValidIops("");
+
+        assertEquals(100, testedInt);
+    }
+
+    @Test
+    public void getValidIopsWrong() {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
+                "Incorrect provided value: 20001 input. The value doesn't meet conditions for general purpose usage.");
+
+        InputsUtil.getValidIops("20001");
     }
 }

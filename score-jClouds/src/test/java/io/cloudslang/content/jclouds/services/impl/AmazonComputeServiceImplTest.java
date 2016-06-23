@@ -317,7 +317,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testStartInstancesWithInvalidServerId() {
-        setExpectedExceptions(ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
@@ -353,7 +353,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testStopInstancesWithInvalidServerId() {
-        setExpectedExceptions(ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
@@ -383,7 +383,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testRebootInstancesWithInvalidServerId() {
-        setExpectedExceptions(ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
@@ -440,7 +440,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testListRegionsOnInvalidEndpoint() {
-        setExpectedExceptions(HttpResponseException.class, CONNECTION_REFUSE_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, HttpResponseException.class, CONNECTION_REFUSE_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
@@ -535,8 +535,8 @@ public class AmazonComputeServiceImplTest {
 
     @Test
     public void testDescribeInstancesInRegionWithFiltersInvalidTags() throws Exception {
-        setExpectedExceptions(RuntimeException.class, "Incorrect supplied values for: [keyTagsString] and/or " +
-                "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.");
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect supplied values for: [keyTagsString] " +
+                "and/or [valueTagsString] inputs. Number of tag keys should be the same with number of tag values.");
         addCommonMocksForInstanceApi();
 
         amazonComputeServiceImplSpy.describeInstancesInRegion(getCommonInputs(), getInstanceInputs("d,e,f,g", "1,2", "1.1.1.1"));
@@ -598,11 +598,6 @@ public class AmazonComputeServiceImplTest {
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
-    }
-
-    private void setExpectedExceptions(Class<?> type, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
     }
 
     private Set<InstanceStateChange> getInstanceStateChanges() {

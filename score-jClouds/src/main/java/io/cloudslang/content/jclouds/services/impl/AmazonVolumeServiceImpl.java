@@ -28,29 +28,23 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
 
     @Override
     public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) {
-        ElasticBlockStoreApi ebsApi = getEbsApi(region, true);
-
-        return ebsApi.attachVolumeInRegion(region, volumeId, instanceId, device);
+        return getEbsApi(region, true).attachVolumeInRegion(region, volumeId, instanceId, device);
     }
 
     @Override
     public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
-        ElasticBlockStoreApi ebsApi = getEbsApi(region, true);
-
         DetachVolumeOptions detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
 
-        ebsApi.detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
+        getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
     }
 
     @Override
-    public Volume createVolumeInAvailabilityZone(String availabilityZone, String snapshotId, String volumeType,
+    public Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
                                                  int size, int iops, boolean encrypted) {
-        ElasticBlockStoreApi ebsApi = getEbsApi(region, true);
-
         CreateVolumeOptions createVolumeOptions = new AmazonVolumeServiceHelper()
                 .getCreateVolumeOptions(snapshotId, volumeType, size, iops, encrypted);
 
-        return ebsApi.createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
+        return getEbsApi(region, true).createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
     }
 
     void init() {
@@ -58,18 +52,18 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
         ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
     }
 
-    private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion) {
-        lazyInit(region);
-
-        return isForRegion ? ec2Api.getElasticBlockStoreApiForRegion(region).get() : ec2Api.getElasticBlockStoreApi().get();
-    }
-
-    private void lazyInit(String region) {
+    void lazyInit(String region) {
         if (this.region == null || !this.region.equals(region)) {
             this.region = region;
             this.init();
         } else if (ec2Api == null) {
             this.init();
         }
+    }
+
+    private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion) {
+        lazyInit(region);
+
+        return isForRegion ? ec2Api.getElasticBlockStoreApiForRegion(region).get() : ec2Api.getElasticBlockStoreApi().get();
     }
 }

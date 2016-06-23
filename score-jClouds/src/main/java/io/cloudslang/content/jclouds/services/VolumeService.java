@@ -8,8 +8,8 @@ import org.jclouds.ec2.domain.Volume;
  * 6/16/2016.
  */
 public interface VolumeService {
-    Volume createVolumeInAvailabilityZone(String availabilityZone, String snapshotId, String volumeType, int size,
-                                          int iops, boolean encrypted);
+    Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
+                                          int size, int iops, boolean encrypted);
 
     Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) throws Exception;
 

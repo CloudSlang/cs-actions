@@ -32,6 +32,8 @@ public class CreateVolumeInAvailabilityZoneAction {
      * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity input.
      * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        Optional - Proxy server port.
+     * @param region           Optional - region from which to list servers. Ex: "RegionOne", "us-east-1".
+     *                         ListRegionAction can be used in order to get all regions - Default: "us-east-1"
      * @param availabilityZone Specifies the placement constraints for launching instance. Amazon automatically
      *                         selects an availability zone by default - Default: ""
      * @param snapshotId       Optional - Snapshot from which to create the volume - Default: ""
@@ -76,6 +78,7 @@ public class CreateVolumeInAvailabilityZoneAction {
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
+                                       @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.AVAILABILITY_ZONE, required = true) String availabilityZone,
                                        @Param(Inputs.CustomInputs.VOLUME_TYPE) String volumeType,
 
@@ -94,6 +97,7 @@ public class CreateVolumeInAvailabilityZoneAction {
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withRegion(region)
                 .withAvailabilityZone(availabilityZone)
                 .withVolumeType(volumeType)
                 .build();

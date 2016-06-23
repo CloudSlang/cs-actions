@@ -16,9 +16,10 @@ import java.util.Map;
 public class CreateVolumeInAvailabilityZoneExecutor {
     public Map<String, String> execute(CommonInputs inputs, VolumeInputs volumeInputs) throws Exception {
         VolumeService volumeService = VolumeFactory.getVolumeService(inputs);
-        Volume volume = volumeService.createVolumeInAvailabilityZone(volumeInputs.getCustomInputs().getAvailabilityZone(),
-                volumeInputs.getSnapshotId(), volumeInputs.getCustomInputs().getVolumeType(), volumeInputs.getSize(),
-                volumeInputs.getIops(), volumeInputs.isEncrypted());
+        Volume volume = volumeService.createVolumeInAvailabilityZone(volumeInputs.getCustomInputs().getRegion(),
+                volumeInputs.getCustomInputs().getAvailabilityZone(), volumeInputs.getSnapshotId(),
+                volumeInputs.getCustomInputs().getVolumeType(), volumeInputs.getSize(), volumeInputs.getIops(),
+                volumeInputs.isEncrypted());
 
         return OutputsUtil.getResultsMap(volume.toString());
     }
