@@ -28,20 +28,6 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
     }
 
     @Override
-    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) {
-        return getEbsApi(region, true).attachVolumeInRegion(region, volumeId, instanceId, device);
-    }
-
-    @Override
-    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
-        DetachVolumeOptions[] detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
-        if (detachVolumeOptions != null && detachVolumeOptions.length > 0) {
-            getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
-        }
-        getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force);
-    }
-
-    @Override
     public Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
                                                  String size, String iops, boolean encrypted) {
         if (StringUtils.isBlank(snapshotId) && StringUtils.isBlank(volumeType)) {
@@ -55,6 +41,21 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
                 .getCreateVolumeOptions(snapshotId, volumeType, size, iops, encrypted);
 
         return getEbsApi(region, true).createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
+    }
+
+    @Override
+    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) {
+        return getEbsApi(region, true).attachVolumeInRegion(region, volumeId, instanceId, device);
+    }
+
+    @Override
+    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
+        DetachVolumeOptions[] detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
+        if (detachVolumeOptions != null && detachVolumeOptions.length > 0) {
+            getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
+        } else {
+            getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force);
+        }
     }
 
     void init() {

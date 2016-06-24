@@ -1,16 +1,12 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ArrayListMultimap;
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
 import org.jclouds.ec2.features.InstanceApi;
 import org.jclouds.ec2.options.CreateVolumeOptions;
-import org.jclouds.ec2.options.DescribeImagesOptions;
+import org.jclouds.ec2.options.DetachVolumeOptions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -194,6 +190,34 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
+    }
+
+    @Test
+    public void attachVolumeInRegionTest() {
+        volumeSpy.attachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh");
+
+        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(ebsApiMock, times(1)).attachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq("i-2b84b0b1"), eq("/dev/sdh"));
+        commonVerifiersForMethods();
+    }
+
+    @Test
+    public void detachVolumeInRegionWithOptionsTest() throws Exception {
+        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh", false);
+
+        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(false),
+                any(DetachVolumeOptions.class), any(DetachVolumeOptions.class));
+        commonVerifiersForMethods();
+    }
+
+    @Test
+    public void detachVolumeInRegionWithoutOptionsTest() throws Exception {
+        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "", "", true);
+
+        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(true));
+        commonVerifiersForMethods();
     }
 
     private void addCommonMocksForMethods() {
