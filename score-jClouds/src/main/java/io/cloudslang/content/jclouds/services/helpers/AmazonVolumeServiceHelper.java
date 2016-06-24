@@ -104,7 +104,6 @@ public class AmazonVolumeServiceHelper {
     }
 
     private void setStandardOptions(CreateVolumeOptions options, String size) {
-        options.volumeType(Constants.Miscellaneous.STANDARD);
         options.withSize(getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
                 Constants.ValidationValues.ONE_THOUSAND, size));
     }
