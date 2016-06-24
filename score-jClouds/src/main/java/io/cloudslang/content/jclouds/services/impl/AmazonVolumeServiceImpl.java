@@ -34,8 +34,8 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
 
     @Override
     public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
-        DetachVolumeOptions detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
-        if (detachVolumeOptions != null) {
+        DetachVolumeOptions[] detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
+        if (detachVolumeOptions != null && detachVolumeOptions.length > 0) {
             getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
         }
         getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force);

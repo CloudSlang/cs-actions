@@ -14,8 +14,10 @@ public class VolumeInputs {
     private String snapshotId;
     private String size;
     private String iops;
+    private String deviceName;
 
     private boolean encrypted;
+    private boolean force;
 
     private VolumeInputs(VolumeInputs.VolumeInputsBuilder builder) {
         this.customInputs = builder.customInputs;
@@ -23,8 +25,10 @@ public class VolumeInputs {
         this.snapshotId = builder.snapshotId;
         this.size = builder.size;
         this.iops = builder.iops;
+        this.deviceName = builder.deviceName;
 
         this.encrypted = builder.encrypted;
+        this.force = builder.force;
     }
 
     public CustomInputs getCustomInputs() {
@@ -43,8 +47,16 @@ public class VolumeInputs {
         return iops;
     }
 
+    public String getDeviceName() {
+        return deviceName;
+    }
+
     public boolean isEncrypted() {
         return encrypted;
+    }
+
+    public boolean isForce() {
+        return force;
     }
 
     public static class VolumeInputsBuilder {
@@ -53,8 +65,10 @@ public class VolumeInputs {
         private String snapshotId;
         private String size;
         private String iops;
+        private String deviceName;
 
         private boolean encrypted;
+        private boolean force;
 
         public VolumeInputs build() {
             return new VolumeInputs(this);
@@ -80,8 +94,18 @@ public class VolumeInputs {
             return this;
         }
 
+        public VolumeInputsBuilder withDeviceName(String inputValue) {
+            deviceName = inputValue;
+            return this;
+        }
+
         public VolumeInputsBuilder withEncrypted(String inputValue) {
             encrypted = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public VolumeInputsBuilder withForce(String inputValue) {
+            force = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

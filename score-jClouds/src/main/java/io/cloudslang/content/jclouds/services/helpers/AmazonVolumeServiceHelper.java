@@ -32,20 +32,24 @@ public class AmazonVolumeServiceHelper {
         return options;
     }
 
-    public DetachVolumeOptions getDetachVolumeOptions(String instanceId, String device) {
+    public DetachVolumeOptions[] getDetachVolumeOptions(String instanceId, String device) {
         if (StringUtils.isBlank(instanceId) && StringUtils.isBlank(device)) {
             return null;
         }
 
-        DetachVolumeOptions detachVolumeOptions = new DetachVolumeOptions();
+        DetachVolumeOptions[] optionsArray = new DetachVolumeOptions[2];
+        DetachVolumeOptions detachVolumeOptions;
+
         if (StringUtils.isNotBlank(instanceId)) {
             detachVolumeOptions = DetachVolumeOptions.Builder.fromInstance(instanceId);
+            optionsArray[0] = detachVolumeOptions;
         }
         if (StringUtils.isNotBlank(device)) {
             detachVolumeOptions = DetachVolumeOptions.Builder.fromDevice(device);
+            optionsArray[1] = detachVolumeOptions;
         }
 
-        return detachVolumeOptions;
+        return optionsArray;
     }
 
     public int getSize(String volumeType, int min, int max, String sizeInput) {
@@ -67,6 +71,11 @@ public class AmazonVolumeServiceHelper {
                 "than [" + String.valueOf(max) + "] IOPS value.";
 
         return InputsUtil.getVolumeValidInt(iopsInput, min, max, errorMessage);
+    }
+
+    private void setStandardOptions(CreateVolumeOptions options, String size) {
+        options.withSize(getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
+                Constants.ValidationValues.ONE_THOUSAND, size));
     }
 
     private void setCreateVolumeOptions(CreateVolumeOptions options, String volumeType, String size, String iops) {
@@ -101,10 +110,5 @@ public class AmazonVolumeServiceHelper {
                 setStandardOptions(options, size);
                 break;
         }
-    }
-
-    private void setStandardOptions(CreateVolumeOptions options, String size) {
-        options.withSize(getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
-                Constants.ValidationValues.ONE_THOUSAND, size));
     }
 }

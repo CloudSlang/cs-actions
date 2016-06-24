@@ -134,5 +134,7 @@ public class Inputs {
         public static final String SIZE = "size";
         public static final String IOPS = "iops";
         public static final String ENCRYPTED = "encrypted";
+        public static final String DEVICE_NAME = "deviceName";
+        public static final String FORCE = "force";
     }
 }

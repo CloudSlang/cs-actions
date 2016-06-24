@@ -32,7 +32,7 @@ public class CreateVolumeInAvailabilityZoneAction {
      * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity input.
      * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        Optional - Proxy server port.
-     * @param region           Optional - region from which to list servers. Ex: "RegionOne", "us-east-1".
+     * @param region           Optional - region where volume will reside. Ex: "RegionOne", "us-east-1".
      *                         ListRegionAction can be used in order to get all regions - Default: "us-east-1"
      * @param availabilityZone Specifies the placement constraints for launching instance. Amazon automatically
      *                         selects an availability zone by default - Default: ""
