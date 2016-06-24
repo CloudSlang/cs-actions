@@ -3,6 +3,7 @@ package io.cloudslang.content.xml.utils;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.ScoreHttpClient;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
+import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -202,14 +203,12 @@ public class XmlUtils {
             httpClientInputs.setProxyPort(commonInputs.getProxyPort());
             httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
             httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
-//            httpClientInputs.setHeaders("Content-Type: application/xml");
-//            httpClientInputs.setHeaders("Accept: application/xml");
 
             Map<String, String> requestResponse = scoreHttpClient.execute(httpClientInputs);
             if (!OK_STATUS_CODE.equals(requestResponse.get(ScoreHttpClient.STATUS_CODE))) {
-                throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(ScoreHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.OutputNames.RETURN_RESULT));
+                throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(ScoreHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
             }
-            return requestResponse.get(Constants.OutputNames.RETURN_RESULT);
+            return requestResponse.get(Constants.Outputs.RETURN_RESULT);
         } else {
             InputStream inputStream = new FileInputStream(new File(commonInputs.getXmlDocument()));
             return IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
@@ -217,26 +216,24 @@ public class XmlUtils {
     }
 
     public static void setFeatures(DocumentBuilderFactory reader, String features) throws ParserConfigurationException {
-        if(!StringUtils.isEmpty(features)) {
+        if(StringUtils.isNotBlank(features)) {
             Map featuresMap = parseFeatures(features);
-            Iterator it = featuresMap.keySet().iterator();
 
-            while(it.hasNext()) {
-                String key = (String)it.next();
-                reader.setFeature(key, ((Boolean)featuresMap.get(key)).booleanValue());
+            for (Object o : featuresMap.keySet()) {
+                String key = (String) o;
+                reader.setFeature(key, (Boolean) featuresMap.get(key));
             }
         }
 
     }
 
     private static Map<String, Boolean> parseFeatures(String features) {
-        HashMap map = new HashMap();
+        Map<String, Boolean> map = new HashMap<>();
         String[] featuresList = features.split("\\n");
-        String[] arr$ = featuresList;
         int len$ = featuresList.length;
 
         for(int i$ = 0; i$ < len$; ++i$) {
-            String element = arr$[i$];
+            String element = featuresList[i$];
             String[] keyValue = element.split("\\s");
             if(keyValue.length != 2) {
                 throw new IllegalArgumentException("Wrong format for \'features\' input field!");

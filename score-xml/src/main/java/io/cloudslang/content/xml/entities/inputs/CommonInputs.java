@@ -1,6 +1,6 @@
 package io.cloudslang.content.xml.entities.inputs;
 
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.utils.InputUtils;
 
 
 /**
@@ -130,28 +130,22 @@ public class CommonInputs {
         }
 
         public CommonInputsBuilder withXmlDocument(String inputValue) {
-            xmlDocument = inputValue;
+            this.xmlDocument = inputValue;
             return this;
         }
 
         public CommonInputsBuilder withXpathQuery(String inputValue) {
-            xPathQuery = inputValue;
+            this.xPathQuery = inputValue;
             return this;
         }
 
         public CommonInputsBuilder withSecureProcessing(String inputValue) {
-            secureProcessing = Boolean.parseBoolean(inputValue);
+            this.secureProcessing = Boolean.parseBoolean(inputValue);
             return this;
         }
 
         public CommonInputsBuilder withXmlDocumentSource(String xmlDocumentSource) {
-            if (xmlDocumentSource.isEmpty()) {
-                this.xmlDocumentSource = Constants.Defaults.XML_DOCUMENT_SOURCE;
-            } else if (Constants.Defaults.XML_DOCUMENT_SOURCE.equalsIgnoreCase(xmlDocumentSource) || Constants.XML_PATH.equalsIgnoreCase(xmlDocumentSource) || Constants.XML_URL.equalsIgnoreCase(xmlDocumentSource)){
-                this.xmlDocumentSource = xmlDocumentSource;
-            } else {
-                throw new RuntimeException(xmlDocumentSource + Constants.INVALID_XML_DOCUMENT_SOURCE);
-            }
+            this.xmlDocumentSource = InputUtils.validateXmlDocumentSource(xmlDocumentSource);
             return this;
         }
 

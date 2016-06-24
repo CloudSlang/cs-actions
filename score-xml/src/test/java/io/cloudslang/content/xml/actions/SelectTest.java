@@ -1,6 +1,6 @@
 package io.cloudslang.content.xml.actions;
 
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.entities.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 
@@ -45,8 +45,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -58,8 +58,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -71,8 +71,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -84,8 +84,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -97,8 +97,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -110,8 +110,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -127,8 +127,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(namespaceXml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -141,22 +141,21 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(path, XML_PATH, xPathQuery, queryType, delimiter, "false");
 
-        assertEquals(expectedResult, result.get(Constants.OutputNames.SELECTED_VALUE));
-        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
         assertEquals(Constants.ReturnCodes.SUCCESS, result.get("returnCode"));
     }
 
     @Test
-    @Ignore
     public void testSelectElementWithWrongXmlPath() throws IOException, URISyntaxException {
-        String path = getClass().getResource("/xml/Wrongtest.xml").toURI().getPath();
+        String path = "/xml/Wrongtest.xml";
         String xPathQuery = "/root/element3/subelement";
         String queryType = Constants.QueryTypes.VALUE;
         String delimiter = null;
 
         Map<String, String> result = select.execute(path, XML_PATH, xPathQuery, queryType, delimiter, "false");
 
-        assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get("returnCode"));
     }
 }

@@ -1,4 +1,4 @@
-package io.cloudslang.content.xml.utils;
+package io.cloudslang.content.xml.entities;
 
 /**
  * Created by markowis on 18/02/2016.
@@ -14,7 +14,7 @@ public class Constants {
     public static final String INVALID_XSD_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xsdString and xsdPath";
     public static final String XSD_PATH = "xsdPath";
 
-    public static final class OutputNames {
+    public static final class Outputs {
         public static final String RETURN_RESULT = "returnResult";
         public static final String RESULT_TEXT = "result";
         public static final String SELECTED_VALUE = "selectedValue";
@@ -23,7 +23,7 @@ public class Constants {
         public static final String EXCEPTION = "exception";
     }
 
-    public static final class InputNames {
+    public static final class Inputs {
         public static final String XML_DOCUMENT = "xmlDocument";
         public static final String XML_DOCUMENT_SOURCE = "xmlDocumentSource";
         public static final String XSD_DOCUMENT = "xsdDocument";
@@ -33,8 +33,8 @@ public class Constants {
         public static final String QUERY_TYPE = "queryType";
         public static final String DELIMITER = "delimiter";
         public static final String ATTRIBUTE_NAME = "attributeName";
-        public static final String VALUE = "value";
         public static final String XML_ELEMENT = "xmlElement";
+
         public static final String SECURE_PROCESSING = "secureProcessing";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
@@ -48,6 +48,29 @@ public class Constants {
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
+
+        public static final String HTTP_PREFIX_STRING = "http://";
+        public static final String HTTPS_PREFIX_STRING = "https://";
+        public static final String FILE_PATH = "filePath";
+        public static final String XML = "xml";
+        public static final String ACTION = "action";
+        public static final String XPATH1 = "xpath1";
+        public static final String XPATH2 = "xpath2";
+        public static final String VALUE = "value";
+        public static final String TYPE = "type";
+        public static final String TYPE_NAME = "name";
+        public static final String FEATURES = "parsingFeatures";
+        public static final String DELETE_ACTION = "delete";
+        public static final String INSERT_ACTION = "insert";
+        public static final String APPEND_ACTION = "append";
+        public static final String SUBNODE_ACTION = "subnode";
+        public static final String MOVE_ACTION = "move";
+        public static final String RENAME_ACTION = "rename";
+        public static final String UPDATE_ACTION = "update";
+        public static final String TYPE_ELEM = "elem";
+        public static final String TYPE_ATTR = "attr";
+        public static final String TYPE_TEXT = "text";
+        public static final String EMPTY_STRING = "";
     }
 
     public static final class ResponseNames {

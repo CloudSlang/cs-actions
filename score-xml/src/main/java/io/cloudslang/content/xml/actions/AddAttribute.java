@@ -8,7 +8,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.AddAttributeService;
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.entities.Constants;
 
 import java.util.Map;
 
@@ -31,19 +31,19 @@ public class AddAttribute {
      */
     @Action(name = "Add Attribute",
             outputs = {
-                    @Output(Constants.OutputNames.RESULT_TEXT),
-                    @Output(Constants.OutputNames.RETURN_RESULT),
-                    @Output(Constants.OutputNames.RESULT_XML)},
+                    @Output(Constants.Outputs.RESULT_TEXT),
+                    @Output(Constants.Outputs.RETURN_RESULT),
+                    @Output(Constants.Outputs.RESULT_XML)},
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RESULT_TEXT, value = Constants.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
+                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RESULT_TEXT, value = Constants.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
+                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
-            @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
-            @Param(value = Constants.InputNames.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
-            @Param(value = Constants.InputNames.XPATH_ELEMENT_QUERY, required = true) String xPathElementQuery,
-            @Param(value = Constants.InputNames.ATTRIBUTE_NAME, required = true) String attributeName,
-            @Param(value = Constants.InputNames.VALUE, required = true) String value,
-            @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
+            @Param(value = Constants.Inputs.XML_DOCUMENT, required = true) String xmlDocument,
+            @Param(value = Constants.Inputs.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
+            @Param(value = Constants.Inputs.XPATH_ELEMENT_QUERY, required = true) String xPathElementQuery,
+            @Param(value = Constants.Inputs.ATTRIBUTE_NAME, required = true) String attributeName,
+            @Param(value = Constants.Inputs.VALUE, required = true) String value,
+            @Param(Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)

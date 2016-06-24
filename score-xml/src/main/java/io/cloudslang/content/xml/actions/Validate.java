@@ -8,7 +8,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.ValidateService;
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.entities.Constants;
 import java.util.Map;
 
 
@@ -68,29 +68,29 @@ public class Validate {
 
     @Action(name = "Validate",
             outputs = {
-                @Output(Constants.OutputNames.RESULT_TEXT),
-                @Output(Constants.OutputNames.RETURN_RESULT)},
+                @Output(Constants.Outputs.RESULT_TEXT),
+                @Output(Constants.Outputs.RETURN_RESULT)},
             responses = {
-                @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RESULT_TEXT, value = Constants.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
-                @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
+                @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RESULT_TEXT, value = Constants.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
+                @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
-            @Param(value = Constants.InputNames.XML_DOCUMENT, required = true) String xmlDocument,
-            @Param(value = Constants.InputNames.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
-            @Param(Constants.InputNames.XSD_DOCUMENT) String xsdDocument,
-            @Param(value = Constants.InputNames.XSD_DOCUMENT_SOURCE) String xsdDocumentSource,
-            @Param(value = Constants.InputNames.USERNAME) String username,
-            @Param(value = Constants.InputNames.PASSWORD) String password,
-            @Param(value = Constants.InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = Constants.InputNames.KEYSTORE) String keystore,
-            @Param(value = Constants.InputNames.KEYSTORE_PASSWORD) String keystorePassword,
-            @Param(value = Constants.InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = Constants.InputNames.TRUST_PASSWORD) String trustPassword,
-            @Param(value = Constants.InputNames.X_509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
-            @Param(value = Constants.InputNames.PROXY_HOST) String proxyHost,
-            @Param(value = Constants.InputNames.PROXY_PORT) String proxyPort,
-            @Param(value = Constants.InputNames.PROXY_USERNAME) String proxyUsername,
-            @Param(value = Constants.InputNames.PROXY_PASSWORD) String proxyPassword,
-            @Param(Constants.InputNames.SECURE_PROCESSING) String secureProcessing) {
+            @Param(value = Constants.Inputs.XML_DOCUMENT, required = true) String xmlDocument,
+            @Param(value = Constants.Inputs.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
+            @Param(Constants.Inputs.XSD_DOCUMENT) String xsdDocument,
+            @Param(value = Constants.Inputs.XSD_DOCUMENT_SOURCE) String xsdDocumentSource,
+            @Param(value = Constants.Inputs.USERNAME) String username,
+            @Param(value = Constants.Inputs.PASSWORD) String password,
+            @Param(value = Constants.Inputs.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(value = Constants.Inputs.KEYSTORE) String keystore,
+            @Param(value = Constants.Inputs.KEYSTORE_PASSWORD) String keystorePassword,
+            @Param(value = Constants.Inputs.TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = Constants.Inputs.TRUST_PASSWORD) String trustPassword,
+            @Param(value = Constants.Inputs.X_509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
+            @Param(value = Constants.Inputs.PROXY_HOST) String proxyHost,
+            @Param(value = Constants.Inputs.PROXY_PORT) String proxyPort,
+            @Param(value = Constants.Inputs.PROXY_USERNAME) String proxyUsername,
+            @Param(value = Constants.Inputs.PROXY_PASSWORD) String proxyPassword,
+            @Param(Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)

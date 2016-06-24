@@ -5,7 +5,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -46,105 +46,105 @@ import java.util.Map;
  */
 public class EditXml {
 
-    public static final String HTTP_PREFIX_STRING = "http://";
-    public static final String HTTPS_PREFIX_STRING = "https://";
-    private static final String FILE_PATH = "filePath";
-    private static final String XML = "xml";
-    private static final String ACTION = "action";
-    private static final String XPATH1 = "xpath1";
-    private static final String XPATH2 = "xpath2";
-    private static final String VALUE = "value";
-    private static final String TYPE = "type";
-    private static final String TYPE_NAME = "name";
-    private static final String FEATURES = "parsingFeatures";
-    private static final String DELETE_ACTION = "delete";
-    private static final String INSERT_ACTION = "insert";
-    private static final String APPEND_ACTION = "append";
-    private static final String SUBNODE_ACTION = "subnode";
-    private static final String MOVE_ACTION = "move";
-    private static final String RENAME_ACTION = "rename";
-    private static final String UPDATE_ACTION = "update";
-
-    private static final String TYPE_ELEM = "elem";
-    private static final String TYPE_ATTR = "attr";
-    private static final String TYPE_TEXT = "text";
-
-    private static final String EMPTY_STRING = "";
     private String features;
 
     /**
-     *
-     * @param xml
-     * @param filePath
-     * @param action
-     * @param xpath1
-     * @param xpath2
-     * @param value
-     * @param type
-     * @param name
-     * @param parsingFeatures
-     * @return
+     * @param xml             The XML (in the form of a String).
+     * @param filePath        Absolute or remote path of the XML file.
+     * @param action          The edit action to take place.
+     *                        Valid values: delete, insert, append, subnode, move, rename, update.
+     * @param xpath1          The XPath Query that is wanted to be run.
+     *                        The changes take place at the resulting elements.
+     * @param xpath2          The XPath Query that is wanted to be run.
+     *                        For the move action the results of xpath1 are moved to the results of xpath2.
+     * @param value           The new value.
+     *                        Examples: <newNode>newNodeValue</newNode> ,
+     *                        <newNode newAttribute="newAttributeValue">newNodeValue</newNode>, new value.
+     * @param type            Defines on what should the changes take effect :
+     *                        the element, the value of the element or the attributes of the element.
+     *                        Valid values: elem, text, attr
+     * @param name            The name of the attribute in case the selected type is 'attr' .
+     * @param parsingFeatures The list of XML parsing features separated by new line (CRLF).
+     *                        The feature name - value must be separated by empty space.
+     *                        Setting specific features this field could be used to avoid XML security issues like
+     *                        "XML Entity Expansion injection" and "XML External Entity injection".
+     *                        To avoid aforementioned security issues we strongly recommend to set this input to the following values:
+     *                        http://apache.org/xml/features/disallow-doctype-decl true
+     *                        http://xml.org/sax/features/external-general-entities false
+     *                        http://xml.org/sax/features/external-parameter-entities false
+     *                        When the "http://apache.org/xml/features/disallow-doctype-decl" feature is set to "true"
+     *                        the parser will throw a FATAL ERROR if the incoming document contains a DOCTYPE declaration.
+     *                        When the "http://xml.org/sax/features/external-general-entities" feature is set to "false"
+     *                        the parser will not include external general entities.
+     *                        When the "http://xml.org/sax/features/external-parameter-entities" feature is set to "false"
+     *                        the parser will not include external parameter entities or the external DTD subset.
+     *                        If any of the validations fails, the operation will fail with an error message describing the problem.
+     *                        Default value:
+     *                        http://apache.org/xml/features/disallow-doctype-decl true
+     *                        http://xml.org/sax/features/external-general-entities false
+     *                        http://xml.org/sax/features/external-parameter-entities false
+     * @return map of results containing success or failure text, a result message, and the value selected
      */
     @Action(name = "Edit XML",
             outputs = {
-                    @Output(Constants.OutputNames.RETURN_RESULT),
-                    @Output(Constants.OutputNames.RETURN_CODE),
-                    @Output(Constants.OutputNames.EXCEPTION)},
+                    @Output(Constants.Outputs.RETURN_RESULT),
+                    @Output(Constants.Outputs.RETURN_CODE),
+                    @Output(Constants.Outputs.EXCEPTION)},
             responses = {
                     @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.ReturnCodes.SUCCESS, value = "0"),
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.ReturnCodes.FAILURE, value = "-1")})
     public Map<String, String> xPathReplaceNode(
-            @Param(XML) String xml,
-            @Param(FILE_PATH) String filePath,
-            @Param(ACTION) String action,
-            @Param(XPATH1) String xpath1,
-            @Param(XPATH2) String xpath2,
-            @Param(VALUE) String value,
-            @Param(TYPE) String type,
-            @Param(TYPE_NAME) String name,
-            @Param(FEATURES) String parsingFeatures) {
-        Map<String, String> result = new HashMap<String, String>();
+            @Param(Constants.Inputs.XML) String xml,
+            @Param(Constants.Inputs.FILE_PATH) String filePath,
+            @Param(Constants.Inputs.ACTION) String action,
+            @Param(Constants.Inputs.XPATH1) String xpath1,
+            @Param(Constants.Inputs.XPATH2) String xpath2,
+            @Param(Constants.Inputs.VALUE) String value,
+            @Param(Constants.Inputs.TYPE) String type,
+            @Param(Constants.Inputs.TYPE_NAME) String name,
+            @Param(Constants.Inputs.FEATURES) String parsingFeatures) {
+        Map<String, String> result = new HashMap<>();
         try {
             validateInputs(xml, filePath, action.toLowerCase(), xpath1, xpath2, type, name, parsingFeatures);
             ActionsEnum myAction = getAction(action);
 
             switch (myAction) {
                 case delete: {
-                    result.put(Constants.OutputNames.RETURN_RESULT, delete(xml, filePath, xpath1, type, name));
+                    result.put(Constants.Outputs.RETURN_RESULT, delete(xml, filePath, xpath1, type, name));
                     break;
                 }
                 case insert: {
-                    result.put(Constants.OutputNames.RETURN_RESULT, insert(xml, filePath, xpath1, value, type, name));
+                    result.put(Constants.Outputs.RETURN_RESULT, insert(xml, filePath, xpath1, value, type, name));
                     break;
                 }
                 case append: {
-                    result.put(Constants.OutputNames.RETURN_RESULT, append(xml, filePath, xpath1, value, type, name));
+                    result.put(Constants.Outputs.RETURN_RESULT, append(xml, filePath, xpath1, value, type, name));
                     break;
                 }
                 case subnode: {
-                    result.put(Constants.OutputNames.RETURN_RESULT, subnode(xml, filePath, xpath1, value));
+                    result.put(Constants.Outputs.RETURN_RESULT, subnode(xml, filePath, xpath1, value));
                     break;
                 }
                 case move: {
-                    result.put(Constants.OutputNames.RETURN_RESULT, move(xml, filePath, xpath1, xpath2));
+                    result.put(Constants.Outputs.RETURN_RESULT, move(xml, filePath, xpath1, xpath2));
                     break;
                 }
                 case rename: {
-                    result.put(Constants.OutputNames.RETURN_RESULT, rename(xml, filePath, xpath1, name, type, value));
+                    result.put(Constants.Outputs.RETURN_RESULT, rename(xml, filePath, xpath1, name, type, value));
                     break;
                 }
                 case update: {
-                    result.put(Constants.OutputNames.RETURN_RESULT, update(xml, filePath, xpath1, value, type, name));
+                    result.put(Constants.Outputs.RETURN_RESULT, update(xml, filePath, xpath1, value, type, name));
                     break;
                 }
             }
-            result.put(Constants.OutputNames.RETURN_CODE, String.valueOf(Constants.ReturnCodes.SUCCESS));
+            result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.SUCCESS));
         } catch (IllegalArgumentException e) {
-            result.put(Constants.OutputNames.EXCEPTION, "Invalid action " + action);
-            result.put(Constants.OutputNames.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
+            result.put(Constants.Outputs.EXCEPTION, "Invalid action " + action);
+            result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
         } catch (Exception e) {
-            result.put(Constants.OutputNames.EXCEPTION, e.getMessage());
-            result.put(Constants.OutputNames.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
+            result.put(Constants.Outputs.EXCEPTION, e.getMessage());
+            result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
         }
         return result;
     }
@@ -166,38 +166,39 @@ public class EditXml {
      * @throws Exception for invalid inputs
      */
     private void validateInputs(String xml, String filePath, String action, String xpath1, String xpath2, String type, String name, String features) throws Exception {
-        if ((filePath == null || StringUtils.isEmpty(filePath)) && (xml == null || StringUtils.isEmpty(xml))) {
+        validateXmlAndFilePathInputs(xml, filePath);
+        validateIsNotEmpty(action, "ACTION input is required.");
+        validateIsNotEmpty(xpath1, "XPATH1 input is required.");
+
+        if (Constants.Inputs.MOVE_ACTION.equals(action)) {
+            validateIsNotEmpty(xpath2, "XPATH2 input is required for action 'move' ");
+        }
+        if (!Constants.Inputs.SUBNODE_ACTION.equals(action) && !Constants.Inputs.MOVE_ACTION.equals(action)) {
+            validateIsNotEmpty(type, "TYPE input is required for action '" + action + "'");
+            if (!Constants.Inputs.TYPE_ELEM.equals(type) && !Constants.Inputs.TYPE_ATTR.equals(type) && !Constants.Inputs.TYPE_TEXT.equals(type)) {
+                throw new Exception("Invalid type. Only supported : " + Constants.Inputs.TYPE_ELEM + ", " + Constants.Inputs.TYPE_ATTR + ", " + Constants.Inputs.TYPE_TEXT);
+            }
+            if (Constants.Inputs.TYPE_ATTR.equals(type)) {
+                validateIsNotEmpty(name, "NAME input is required for type 'attr' ");
+            }
+        }
+
+        setFeatures(features);
+    }
+
+    private void validateIsNotEmpty(String action, String message) throws Exception {
+        if (action == null || StringUtils.isEmpty(action)) {
+            throw new Exception(message);
+        }
+    }
+
+    private void validateXmlAndFilePathInputs(String xml, String filePath) throws Exception {
+        if ((StringUtils.isBlank(filePath)) && (StringUtils.isBlank(xml))) {
             throw new Exception("Supplied parameters: either file path or xml is missing when one is required");
         }
         if ((!StringUtils.isEmpty(filePath)) && (!StringUtils.isEmpty(xml))) {
             throw new Exception("Supplied parameters: file path and xml when only one is required");
         }
-        if (action == null || StringUtils.isEmpty(action)) {
-            throw new Exception("ACTION input is required.");
-        }
-        if (xpath1 == null || StringUtils.isEmpty(xpath1)) {
-            throw new Exception("XPATH1 input is required.");
-        }
-        if (MOVE_ACTION.equals(action)) {
-            if (xpath2 == null || StringUtils.isEmpty(xpath2)) {
-                throw new Exception("XPATH2 input is required for action 'move' ");
-            }
-        }
-        if (!SUBNODE_ACTION.equals(action) && !MOVE_ACTION.equals(action)) {
-            if (type == null || StringUtils.isEmpty(type)) {
-                throw new Exception("TYPE input is required for action '" + action + "'");
-            }
-            if (!TYPE_ELEM.equals(type) && !TYPE_ATTR.equals(type) && !TYPE_TEXT.equals(type)) {
-                throw new Exception("Invalid type. Only supported : " + TYPE_ELEM + ", " + TYPE_ATTR + ", " + TYPE_TEXT);
-            }
-            if (TYPE_ATTR.equals(type)) {
-                if (name == null || StringUtils.isEmpty(name)) {
-                    throw new Exception("NAME input is required for type 'attr' ");
-                }
-            }
-        }
-
-        setFeatures(features);
     }
 
     /**
@@ -218,15 +219,13 @@ public class EditXml {
         Node parentNode;
         for (int i = 0; i < nodeList.getLength(); i++) {
             node = nodeList.item(i);
-            if (TYPE_ELEM.equals(type)) {
+            if (Constants.Inputs.TYPE_ELEM.equals(type) && node != doc.getDocumentElement()) {
                 //check if provided xpath doesn't contain root node
-                if (node != doc.getDocumentElement()) {
-                    parentNode = node.getParentNode();
-                    parentNode.removeChild(node);
-                }
-            } else if (TYPE_TEXT.equals(type)) {
-                node.setTextContent(EMPTY_STRING);
-            } else if (TYPE_ATTR.equals(type)) {
+                parentNode = node.getParentNode();
+                parentNode.removeChild(node);
+            } else if (Constants.Inputs.TYPE_TEXT.equals(type)) {
+                node.setTextContent(Constants.Inputs.EMPTY_STRING);
+            } else if (Constants.Inputs.TYPE_ATTR.equals(type)) {
                 ((Element) node).removeAttribute(name);
             }
         }
@@ -251,20 +250,20 @@ public class EditXml {
         Node childNode = null;
         Node node;
 
-        if (TYPE_ELEM.equals(type)) {
+        if (Constants.Inputs.TYPE_ELEM.equals(type)) {
             childNode = stringToNode(value, doc.getXmlEncoding());
         }
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             node = nodeList.item(i);
 
-            if (TYPE_ELEM.equals(type)) {
+            if (Constants.Inputs.TYPE_ELEM.equals(type)) {
                 childNode = doc.importNode(childNode, true);
-                node.setTextContent(EMPTY_STRING);
+                node.setTextContent(Constants.Inputs.EMPTY_STRING);
                 node.appendChild(childNode);
-            } else if (TYPE_TEXT.equals(type)) {
+            } else if (Constants.Inputs.TYPE_TEXT.equals(type)) {
                 node.setTextContent(value);
-            } else if (TYPE_ATTR.equals(type)) {
+            } else if (Constants.Inputs.TYPE_ATTR.equals(type)) {
                 String attribute = ((Element) node).getAttribute(name);
                 if ((attribute != null) && (!StringUtils.isEmpty(attribute))) {
                     ((Element) node).setAttribute(name, value);
@@ -293,22 +292,22 @@ public class EditXml {
         Node node;
         Node parentNode;
         // create new Node to insert
-        if (TYPE_ELEM.equals(type)) {
+        if (Constants.Inputs.TYPE_ELEM.equals(type)) {
             childNode = stringToNode(value, doc.getXmlEncoding());
         }
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             node = nodeList.item(i);
-            if (TYPE_ELEM.equals(type)) {
+            if (Constants.Inputs.TYPE_ELEM.equals(type)) {
                 //check if provided xpath doesn't contain root node
                 if (node != doc.getDocumentElement()) {
                     childNode = doc.importNode(childNode, true);
                     parentNode = node.getParentNode();
                     parentNode.insertBefore(childNode, node);
                 }
-            } else if (TYPE_TEXT.equals(type)) {
+            } else if (Constants.Inputs.TYPE_TEXT.equals(type)) {
                 node.setTextContent(value + node.getTextContent());
-            } else if (TYPE_ATTR.equals(type)) {
+            } else if (Constants.Inputs.TYPE_ATTR.equals(type)) {
                 ((Element) node).setAttribute(name, value);
             }
         }
@@ -335,22 +334,20 @@ public class EditXml {
         Node parentNode;
         Node nextSiblingNode;
         // create new Node to append
-        if (TYPE_ELEM.equals(type)) {
+        if (Constants.Inputs.TYPE_ELEM.equals(type)) {
             childNode = stringToNode(value, doc.getXmlEncoding());
         }
         for (int i = 0; i < nodeList.getLength(); i++) {
             node = nodeList.item(i);
-            if (TYPE_ELEM.equals(type)) {
+            if (Constants.Inputs.TYPE_ELEM.equals(type) && node != doc.getDocumentElement()) {
                 //check if provided xpath doesn't contain root node
-                if (node != doc.getDocumentElement()) {
-                    childNode = doc.importNode(childNode, true);
-                    parentNode = node.getParentNode();
-                    nextSiblingNode = node.getNextSibling();
-                    parentNode.insertBefore(childNode, nextSiblingNode);
-                }
-            } else if (TYPE_TEXT.equals(type)) {
+                childNode = doc.importNode(childNode, true);
+                parentNode = node.getParentNode();
+                nextSiblingNode = node.getNextSibling();
+                parentNode.insertBefore(childNode, nextSiblingNode);
+            } else if (Constants.Inputs.TYPE_TEXT.equals(type)) {
                 node.setTextContent(node.getTextContent() + value);
-            } else if (TYPE_ATTR.equals(type)) {
+            } else if (Constants.Inputs.TYPE_ATTR.equals(type)) {
                 ((Element) node).setAttribute(name, value);
             }
         }
@@ -375,9 +372,9 @@ public class EditXml {
         Node node;
         for (int i = 0; i < nodeList.getLength(); i++) {
             node = nodeList.item(i);
-            if (TYPE_ELEM.equals(type)) {
+            if (Constants.Inputs.TYPE_ELEM.equals(type)) {
                 doc.renameNode(node, node.getNamespaceURI(), value);
-            } else if (TYPE_ATTR.equals(type)) {
+            } else if (Constants.Inputs.TYPE_ATTR.equals(type)) {
                 String attributeValue = ((Element) node).getAttribute(name);
                 if ((attributeValue != null) && (!StringUtils.isEmpty(attributeValue))) {
                     ((Element) node).removeAttribute(name);
@@ -513,7 +510,7 @@ public class EditXml {
         if (filePath == null || StringUtils.isEmpty(filePath)) {
             inputXML = new ByteArrayInputStream(xml.getBytes());
         } else {
-            if (filePath.startsWith(HTTP_PREFIX_STRING) || filePath.startsWith(HTTPS_PREFIX_STRING)) {
+            if (filePath.startsWith(Constants.Inputs.HTTP_PREFIX_STRING) || filePath.startsWith(Constants.Inputs.HTTPS_PREFIX_STRING)) {
                 inputXML = new java.net.URL(filePath).openStream();
             } else {
                 inputXML = new FileInputStream(new File(filePath));
@@ -535,7 +532,7 @@ public class EditXml {
         InputStream inputXML = getStream(xml, filePath);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(inputXML);
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         while (reader.hasNext()) {
             int evt = reader.next();
             if (evt == XMLStreamConstants.START_ELEMENT) {
@@ -593,13 +590,10 @@ public class EditXml {
         format.setIndenting(true);
         format.setIndent(2);
         format.setEncoding(encoding);
-        Writer out = new StringWriter();
-        try {
+        try (Writer out = new StringWriter()) {
             XMLSerializer serializer = new XMLSerializer(out, format);
             serializer.serialize(xmlDocument);
             return out.toString();
-        } finally {
-            out.close();
         }
     }
 
@@ -637,16 +631,16 @@ public class EditXml {
      * Enum of all possible edit actions of the operation.
      */
     public enum ActionsEnum {
-        delete(EditXml.DELETE_ACTION),
-        insert(EditXml.INSERT_ACTION),
-        append(EditXml.APPEND_ACTION),
-        subnode(EditXml.SUBNODE_ACTION),
-        move(EditXml.MOVE_ACTION),
-        rename(EditXml.RENAME_ACTION),
-        update(EditXml.UPDATE_ACTION);
+        delete(Constants.Inputs.DELETE_ACTION),
+        insert(Constants.Inputs.INSERT_ACTION),
+        append(Constants.Inputs.APPEND_ACTION),
+        subnode(Constants.Inputs.SUBNODE_ACTION),
+        move(Constants.Inputs.MOVE_ACTION),
+        rename(Constants.Inputs.RENAME_ACTION),
+        update(Constants.Inputs.UPDATE_ACTION);
         private String value;
 
-        private ActionsEnum(String value) {
+        ActionsEnum(String value) {
             this.value = value;
         }
 

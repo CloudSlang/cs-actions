@@ -2,7 +2,7 @@ package io.cloudslang.content.xml.services;
 
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
@@ -46,24 +46,24 @@ public class ValidateService {
                 xsdDocument = customInputs.getXsdDocument();
             }
             XmlUtils.parseXML(xmlDocument, commonInputs.getSecureProcessing());
-            result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.PARSING_SUCCESS);
+            result.put(Constants.Outputs.RETURN_RESULT, Constants.SuccessMessages.PARSING_SUCCESS);
 
             if (xsdDocument != null && StringUtils.isNotBlank(xsdDocument)) {
                 validateAgainstXsd(xmlDocument, xsdDocument);
-                result.put(Constants.OutputNames.RETURN_RESULT, Constants.SuccessMessages.VALIDATION_SUCCESS);
+                result.put(Constants.Outputs.RETURN_RESULT, Constants.SuccessMessages.VALIDATION_SUCCESS);
             }
 
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.SUCCESS);
+            result.put(Constants.Outputs.RESULT_TEXT, Constants.SUCCESS);
 
         } catch (SAXParseException e) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
+            result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
+            result.put(Constants.Outputs.RETURN_RESULT, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         } catch (SAXException e) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, Constants.ErrorMessages.VALIDATION_FAILURE + e.getMessage());
+            result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
+            result.put(Constants.Outputs.RETURN_RESULT, Constants.ErrorMessages.VALIDATION_FAILURE + e.getMessage());
         } catch (Exception e) {
-            result.put(Constants.OutputNames.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
+            result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
+            result.put(Constants.Outputs.RETURN_RESULT, e.getMessage());
         }
 
         return result;
@@ -75,20 +75,6 @@ public class ValidateService {
         xmlDocument = writer.toString();
         return xmlDocument;
     }
-
-//    private String readFromFile(String path) throws IOException {
-//        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-//            StringBuilder sb = new StringBuilder();
-//            String line = br.readLine();
-//
-//            while (line != null) {
-//                sb.append(line);
-//                sb.append(System.lineSeparator());
-//                line = br.readLine();
-//            }
-//            return sb.toString();
-//        }
-//    }
 
     private static void validateAgainstXsd(String xmlDocument, String xsdDocument) throws Exception {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
