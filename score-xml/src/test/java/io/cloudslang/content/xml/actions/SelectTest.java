@@ -40,26 +40,24 @@ public class SelectTest {
     public void testSelectValue() {
         String xPathQuery = "/root/element3/subelement";
         String queryType = Constants.QueryTypes.VALUE;
-        String delimiter = null;
         String expectedResult = "Sub3";
 
-        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, null, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
     public void testSelectNode() {
         String xPathQuery = "/root/element3/subelement";
         String queryType = Constants.QueryTypes.NODE;
-        String delimiter = null;
         String expectedResult = "<subelement attr=\"toDelete\">Sub3</subelement>";
 
-        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, null, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -71,8 +69,8 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -84,34 +82,32 @@ public class SelectTest {
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
     public void testNotFoundValue() {
         String xPathQuery = "/root/element1/@id";
         String queryType = Constants.QueryTypes.VALUE;
-        String delimiter = null;
         String expectedResult = "";
 
-        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, null, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
     public void testNotFoundNode() {
         String xPathQuery = "/root/element1/subelement";
         String queryType = Constants.QueryTypes.NODE;
-        String delimiter = null;
         String expectedResult = "";
 
-        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, null, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -122,13 +118,12 @@ public class SelectTest {
 
         String xPathQuery = "//foo:element1";
         String queryType = Constants.QueryTypes.NODE;
-        String delimiter = null;
         String expectedResult = "<foo:element1 xmlns:foo=\"http://www.foo.org/\">First element</foo:element1>";
 
-        Map<String, String> result = select.execute(namespaceXml, "", xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(namespaceXml, "", xPathQuery, queryType, null, "false");
 
-        Assert.assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
-        Assert.assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
+        assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -136,10 +131,9 @@ public class SelectTest {
         String path = getClass().getResource("/xml/test.xml").toURI().getPath();
         String xPathQuery = "/root/element3/subelement";
         String queryType = Constants.QueryTypes.VALUE;
-        String delimiter = null;
         String expectedResult = "Sub3";
 
-        Map<String, String> result = select.execute(path, XML_PATH, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(path, XML_PATH, xPathQuery, queryType, null, "false");
 
         assertEquals(expectedResult, result.get(Constants.Outputs.SELECTED_VALUE));
         assertEquals(Constants.SuccessMessages.SELECT_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
@@ -151,9 +145,8 @@ public class SelectTest {
         String path = "/xml/Wrongtest.xml";
         String xPathQuery = "/root/element3/subelement";
         String queryType = Constants.QueryTypes.VALUE;
-        String delimiter = null;
 
-        Map<String, String> result = select.execute(path, XML_PATH, xPathQuery, queryType, delimiter, "false");
+        Map<String, String> result = select.execute(path, XML_PATH, xPathQuery, queryType, null, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get("returnCode"));

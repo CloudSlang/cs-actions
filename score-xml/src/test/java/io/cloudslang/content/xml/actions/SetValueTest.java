@@ -11,6 +11,8 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by markowis on 23/02/2016.
  */
@@ -39,8 +41,8 @@ public class SetValueTest {
 
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, null, value, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -51,8 +53,8 @@ public class SetValueTest {
 
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -63,8 +65,8 @@ public class SetValueTest {
 
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
-        Assert.assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -76,8 +78,8 @@ public class SetValueTest {
 
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
-        Assert.assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 Constants.ErrorMessages.SET_VALUE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }

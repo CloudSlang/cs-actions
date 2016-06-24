@@ -86,9 +86,8 @@ public class RemoveTest {
     @Test
     public void testRemoveElementsWithWrongXmlPath() {
         String xPathQuery = "//subelement";
-        String name = null;
 
-        Map<String, String> result = remove.execute(xml, "xmlpathd", xPathQuery, name, "false");
+        Map<String, String> result = remove.execute(xml, "xmlpathd", xPathQuery, null, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertTrue(result.get(Constants.Outputs.RETURN_RESULT).contains(INVALID_XML_DOCUMENT_SOURCE));

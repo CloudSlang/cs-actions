@@ -11,6 +11,8 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by markowis on 25/02/2016.
  */
@@ -39,8 +41,8 @@ public class AppendChildTest {
 
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
+        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -51,8 +53,8 @@ public class AppendChildTest {
 
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
+        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -63,8 +65,8 @@ public class AppendChildTest {
 
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
-        Assert.assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -75,8 +77,8 @@ public class AppendChildTest {
 
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
-        Assert.assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "The element type \"open\" must be terminated by the matching end-tag \"</open>\".",
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
@@ -88,8 +90,8 @@ public class AppendChildTest {
 
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
-        Assert.assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.APPEND_CHILD_FAILURE +
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.APPEND_CHILD_FAILURE +
                 Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.RETURN_RESULT));
     }
 }
