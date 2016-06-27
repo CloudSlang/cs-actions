@@ -179,7 +179,7 @@ public class ImageInputs {
         }
 
         public ImageInputs.ImageInputsBuilder withImageNoReboot(String inputValue) {
-            imageNoReboot = InputsUtil.getBoolean(inputValue);
+            imageNoReboot = InputsUtil.getImageNoRebootFlag(inputValue);
             return this;
         }
     }

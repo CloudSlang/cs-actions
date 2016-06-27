@@ -45,7 +45,7 @@ public final class InputsUtil {
         return InstanceState.getKey(input);
     }
 
-    public static boolean getBoolean(String input) {
+    public static boolean getImageNoRebootFlag(String input) {
         return StringUtils.isBlank(input) || Boolean.parseBoolean(input);
     }
 
