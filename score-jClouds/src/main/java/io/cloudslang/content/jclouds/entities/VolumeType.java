@@ -8,11 +8,11 @@ import org.apache.commons.lang3.StringUtils;
  * 6/15/2016.
  */
 public enum VolumeType {
-    GP2,
+    STANDARD,
     IO1,
-    ST1,
+    GP2,
     SC1,
-    STANDARD;
+    ST1;
 
     public static String getValue(String input) throws Exception {
         if (StringUtils.isBlank(input)) {
@@ -23,7 +23,7 @@ public enum VolumeType {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Unrecognized  volume type value: [" + input + "]. " +
-                    "Valid values are: gp2, io1, st1, sc1, standard.");
+                    "Valid values are: standard, io1, gp2, sc1, st1.");
         }
     }
 }

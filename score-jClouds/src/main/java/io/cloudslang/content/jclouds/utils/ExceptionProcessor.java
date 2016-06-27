@@ -15,14 +15,16 @@ public final class ExceptionProcessor {
     public static Map<String, String> getExceptionResult(Exception exception) {
         StringWriter writer = new StringWriter();
         exception.printStackTrace(new PrintWriter(writer));
-        String exceptionString = writer.toString()
-                .replace(Constants.Miscellaneous.EMPTY + (char) 0x00, Constants.Miscellaneous.EMPTY);
+        String exceptionString = writer.toString().replace(Constants.Miscellaneous.EMPTY + (char) 0x00, Constants.Miscellaneous.EMPTY);
 
+        return getResultsMap(exception, exceptionString);
+    }
+
+    private static Map<String, String> getResultsMap(Exception exception, String exceptionString) {
         Map<String, String> returnResult = new HashMap<>();
         returnResult.put(Outputs.RETURN_RESULT, exception.getMessage());
         returnResult.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
         returnResult.put(Outputs.EXCEPTION, exceptionString);
-
         return returnResult;
     }
 }

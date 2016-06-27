@@ -50,8 +50,8 @@ public class DescribeImagesInRegionAction {
      * @param blockDeviceMappingSnapshotId Optional - ID of the snapshot used for the Amazon EBS volume.
      * @param volumeSize                   Optional - Volume size of the Amazon EBS volume, in GiB.
      * @param volumeType                   Optional - Volume type of the Amazon EBS volume - Valid values: "gp2" (for General
-     *                                     Purpose SSD volumes), "io1" (for Provisioned IOPS SSD volumes), and "standard"
-     *                                     (for Magnetic volumes).
+     *                                     Purpose SSD volumes), "io1" (for Provisioned IOPS SSD volumes), "st1" (for Throughput
+     *                                     Optimized HDD), "sc1" (for Cold HDD) and "standard" (for Magnetic volumes).
      * @param hypervisor                   Optional - Hypervisor type of the instance. Valid values: "ovm", "xen".
      * @param imageId                      Optional - ID of the specified image to search for.
      * @param kernelId                     The kernel ID.

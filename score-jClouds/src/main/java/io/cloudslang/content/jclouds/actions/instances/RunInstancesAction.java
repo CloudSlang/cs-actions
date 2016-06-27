@@ -66,7 +66,7 @@ public class RunInstancesAction {
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
-                                       @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(Inputs.InstanceInputs.MIN_COUNT) String minCount,
                                        @Param(Inputs.InstanceInputs.MAX_COUNT) String maxCount) throws Exception {
 
@@ -82,11 +82,11 @@ public class RunInstancesAction {
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
                 .withImageId(imageId)
+                .withAvailabilityZone(availabilityZone)
                 .build();
 
         InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
                 .withCustomInputs(customInputs)
-                .withAvailabilityZone(availabilityZone)
                 .withMinCount(minCount)
                 .withMaxCount(maxCount)
                 .build();

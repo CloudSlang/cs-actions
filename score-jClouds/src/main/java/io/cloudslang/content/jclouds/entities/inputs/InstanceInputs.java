@@ -3,7 +3,6 @@ package io.cloudslang.content.jclouds.entities.inputs;
 import io.cloudslang.content.jclouds.entities.InstanceState;
 import io.cloudslang.content.jclouds.entities.MonitoringState;
 import io.cloudslang.content.jclouds.entities.Tenancy;
-import io.cloudslang.content.jclouds.entities.VirtualizationType;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
@@ -18,7 +17,6 @@ public class InstanceInputs {
     private NetworkInputs networkInputs;
 
     private String instanceType;
-    private String availabilityZone;
     private String affinity;
     private String clientToken;
     private String dnsName;
@@ -55,7 +53,6 @@ public class InstanceInputs {
         this.networkInputs = builder.networkInputs;
 
         this.instanceType = builder.instanceType;
-        this.availabilityZone = builder.availabilityZone;
         this.affinity = builder.affinity;
         this.clientToken = builder.clientToken;
         this.dnsName = builder.dnsName;
@@ -98,10 +95,6 @@ public class InstanceInputs {
 
     public String getInstanceType() {
         return instanceType;
-    }
-
-    public String getAvailabilityZone() {
-        return availabilityZone;
     }
 
     public String getAffinity() {
@@ -225,7 +218,6 @@ public class InstanceInputs {
         private NetworkInputs networkInputs;
 
         private String instanceType;
-        private String availabilityZone;
         private String affinity;
         private String clientToken;
         private String dnsName;
@@ -273,11 +265,6 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withInstanceType(String inputValue) {
             instanceType = inputValue;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withAvailabilityZone(String inputValue) {
-            availabilityZone = inputValue;
             return this;
         }
 

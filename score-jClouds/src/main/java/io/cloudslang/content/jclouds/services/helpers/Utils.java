@@ -35,7 +35,7 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_MESSAGE.getValue(), instanceInputs.getCustomInputs().getStateReasonMessage());
 
         updateFiltersMapEntry(filtersMap, InstanceFilter.AFFINITY.getValue(), instanceInputs.getAffinity());
-        updateFiltersMapEntry(filtersMap, InstanceFilter.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
+        updateFiltersMapEntry(filtersMap, InstanceFilter.AVAILABILITY_ZONE.getValue(), instanceInputs.getCustomInputs().getAvailabilityZone());
         updateFiltersMapEntry(filtersMap, InstanceFilter.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
         updateFiltersMapEntry(filtersMap, InstanceFilter.DNS_NAME.getValue(), instanceInputs.getDnsName());
         updateFiltersMapEntry(filtersMap, InstanceFilter.GROUP_ID.getValue(), instanceInputs.getCustomInputs().getGroupId());
