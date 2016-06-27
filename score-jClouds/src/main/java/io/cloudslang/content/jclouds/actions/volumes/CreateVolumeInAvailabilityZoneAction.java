@@ -22,7 +22,8 @@ import java.util.Map;
  */
 public class CreateVolumeInAvailabilityZoneAction {
     /**
-     * Lists the regions from a cloud endpoint.
+     * Creates an EBS volume that can be attached to an instance in the same Availability Zone. The volume is created in
+     * the regional endpoint that you send the HTTP request to.
      *
      * @param provider         Cloud provider on which you have the instance - Valid values: "amazon" or "openstack".
      * @param endpoint         Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com" for amazon or
