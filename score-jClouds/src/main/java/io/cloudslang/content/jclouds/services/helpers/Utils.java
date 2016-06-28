@@ -96,29 +96,6 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ADDRESSES_ASSOCIATION_IP_OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceIpOwnerId());
     }
 
-    private void setInstanceRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
-        if (!Constants.Miscellaneous.NOT_RELEVANT_INT_CODE.equals(instanceInputs.getInstanceStateCode())) {
-            updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_STATE_CODE.getValue(), instanceInputs.getInstanceStateCode());
-        }
-
-        addFiltersMapRelevantEntry(filtersMap, CommonFilter.ARCHITECTURE.getValue(), instanceInputs.getCustomInputs().getArchitecture());
-        addFiltersMapRelevantEntry(filtersMap, CommonFilter.HYPERVISOR.getValue(), instanceInputs.getCustomInputs().getHypervisor());
-        addFiltersMapRelevantEntry(filtersMap, CommonFilter.PLATFORM.getValue(), instanceInputs.getCustomInputs().getPlatform());
-        addFiltersMapRelevantEntry(filtersMap, CommonFilter.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getCustomInputs().getVirtualizationType());
-
-        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.STATUS.getValue(), instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
-        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), instanceInputs.getCustomInputs().getDeleteOnTermination());
-
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.TENANCY.getValue(), instanceInputs.getTenancy());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.INSTANCE_STATE_NAME.getValue(), instanceInputs.getInstanceStateName());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.MONITORING_STATE.getValue(), instanceInputs.getMonitoringState());
-        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.SOURCE_DESTINATION_CHECK.getValue(),
-                instanceInputs.getSourceDestinationCheck());
-
-        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentStatus());
-        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilter.STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
-    }
-
     void updateImageFiltersMap(ImageInputs imageInputs, Multimap<String, String> filtersMap, String delimiter) {
         setImageRelevantFilters(imageInputs, filtersMap);
         setTagFilters(imageInputs, filtersMap, delimiter);
@@ -141,6 +118,29 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, ImageFilter.ID.getValue(), imageInputs.getCustomInputs().getImageId());
         updateFiltersMapEntry(filtersMap, ImageFilter.MANIFEST_LOCATION.getValue(), imageInputs.getManifestLocation());
         updateFiltersMapEntry(filtersMap, ImageFilter.NAME.getValue(), imageInputs.getImageName());
+    }
+
+    private void setInstanceRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
+        if (!Constants.Miscellaneous.NOT_RELEVANT_INT_CODE.equals(instanceInputs.getInstanceStateCode())) {
+            updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_STATE_CODE.getValue(), instanceInputs.getInstanceStateCode());
+        }
+
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.ARCHITECTURE.getValue(), instanceInputs.getCustomInputs().getArchitecture());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.HYPERVISOR.getValue(), instanceInputs.getCustomInputs().getHypervisor());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.PLATFORM.getValue(), instanceInputs.getCustomInputs().getPlatform());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getCustomInputs().getVirtualizationType());
+
+        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.STATUS.getValue(), instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
+        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), instanceInputs.getCustomInputs().getDeleteOnTermination());
+
+        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.TENANCY.getValue(), instanceInputs.getTenancy());
+        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.INSTANCE_STATE_NAME.getValue(), instanceInputs.getInstanceStateName());
+        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.MONITORING_STATE.getValue(), instanceInputs.getMonitoringState());
+        addFiltersMapRelevantEntry(filtersMap, InstanceFilter.SOURCE_DESTINATION_CHECK.getValue(),
+                instanceInputs.getSourceDestinationCheck());
+
+        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilter.ATTACHMENT_STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceAttachmentStatus());
+        addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilter.STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
     }
 
     private void setImageRelevantFilters(ImageInputs imageInputs, Multimap<String, String> filtersMap) {

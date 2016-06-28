@@ -1,7 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -15,6 +14,7 @@ public class VolumeInputs {
     private String size;
     private String iops;
     private String deviceName;
+    private String description;
 
     private boolean encrypted;
     private boolean force;
@@ -26,6 +26,7 @@ public class VolumeInputs {
         this.size = builder.size;
         this.iops = builder.iops;
         this.deviceName = builder.deviceName;
+        this.description = builder.description;
 
         this.encrypted = builder.encrypted;
         this.force = builder.force;
@@ -51,6 +52,10 @@ public class VolumeInputs {
         return deviceName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public boolean isEncrypted() {
         return encrypted;
     }
@@ -66,6 +71,7 @@ public class VolumeInputs {
         private String size;
         private String iops;
         private String deviceName;
+        private String description;
 
         private boolean encrypted;
         private boolean force;
@@ -96,6 +102,11 @@ public class VolumeInputs {
 
         public VolumeInputsBuilder withDeviceName(String inputValue) {
             deviceName = inputValue;
+            return this;
+        }
+
+        public VolumeInputsBuilder withDescription(String inputValue) {
+            description = inputValue;
             return this;
         }
 
