@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by markowis on 22/02/2016.
  */
-public class Select {
+public class XpathQuery {
     /**
      * Selects from an XML document using an XPATH query.
      *
@@ -29,7 +29,7 @@ public class Select {
      * @param secureProcessing  optional - whether to use secure processing
      * @return map of results containing success or failure text, a result message, and the value selected
      */
-    @Action(name = "Select",
+    @Action(name = "XpathQuery",
             outputs = {
                     @Output(Constants.Outputs.RESULT_TEXT),
                     @Output(Constants.Outputs.RETURN_RESULT),

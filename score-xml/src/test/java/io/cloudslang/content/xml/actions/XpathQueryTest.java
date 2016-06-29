@@ -15,9 +15,9 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by markowis on 22/02/2016.
  */
-public class SelectTest {
+public class XpathQueryTest {
 
-    private Select select;
+    private XpathQuery select;
     String xml;
     private static final String XML_STRING = "xmlString";
     private static final String XML_PATH = "xmlPath";
@@ -25,7 +25,7 @@ public class SelectTest {
 
     @Before
     public void setUp() throws Exception{
-        select = new Select();
+        select = new XpathQuery();
         URI resource = getClass().getResource("/xml/test.xml").toURI();
         xml = FileUtils.readFileToString(new File(resource));
     }
