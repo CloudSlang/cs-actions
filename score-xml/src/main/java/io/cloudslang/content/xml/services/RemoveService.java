@@ -31,18 +31,13 @@ public class RemoveService {
             XmlUtils.validateNodeList(nodeList);
 
             removeFromNodeList(nodeList, customInputs.getAttributeName());
-            ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.REMOVE_SUCCESS,
-                    XmlUtils.nodeToString(doc), Constants.ReturnCodes.SUCCESS);
-
+            ResultUtils.populateSuccessResult(result, Constants.SuccessMessages.REMOVE_SUCCESS, XmlUtils.nodeToString(doc));
         } catch (XPathExpressionException e) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage());
         } catch (TransformerException te) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage());
         } catch (Exception e) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         }
 
         return result;
