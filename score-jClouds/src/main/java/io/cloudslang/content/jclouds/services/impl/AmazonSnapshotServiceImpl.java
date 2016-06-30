@@ -37,7 +37,7 @@ public class AmazonSnapshotServiceImpl extends JCloudsComputeService implements 
     }
 
     @Override
-    public void deleteSnapshotInRegion(String region, String snapshotId){
+    public void deleteSnapshotInRegion(String region, String snapshotId) {
         getEbsApi(region, true).deleteSnapshotInRegion(region, snapshotId);
     }
 
