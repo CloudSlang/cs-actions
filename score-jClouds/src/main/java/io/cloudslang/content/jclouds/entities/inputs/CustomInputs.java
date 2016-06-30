@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.*;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
  * 2/18/2016.
  */
 public class CustomInputs {
-    private static final String DEFAULT_AMAZON_REGION = "us-east-1";
-
     private String region;
     private String instanceId;
     private String imageId;
@@ -274,7 +273,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? DEFAULT_AMAZON_REGION : inputValue;
+            region = (StringUtils.isBlank(inputValue)) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : inputValue;
             return this;
         }
 

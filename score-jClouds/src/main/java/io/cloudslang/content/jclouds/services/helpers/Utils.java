@@ -8,6 +8,7 @@ import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
+import org.jclouds.ec2.EC2Api;
 
 import java.io.Closeable;
 
@@ -16,8 +17,8 @@ import java.io.Closeable;
  * 6/15/2016.
  */
 public class Utils {
-    public <T extends Closeable> T getApi(ContextBuilder contextBuilder, Class<T> valueType) {
-        return contextBuilder.buildApi(valueType);
+    public EC2Api getEC2Api(ContextBuilder contextBuilder) {
+        return contextBuilder.buildApi(EC2Api.class);
     }
 
     void updateInstanceFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {

@@ -4,6 +4,7 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.SnapshotService;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
@@ -41,17 +42,13 @@ public class AmazonSnapshotServiceImpl extends JCloudsComputeService implements 
     }
 
     void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+        ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
     void lazyInit(String region) {
-        if (this.region == null || !this.region.equals(region)) {
-            this.region = region;
-            this.init();
-        } else if (ec2Api == null) {
-            this.init();
-        }
+        this.region = InputsUtil.getAmazonRegion(region);
+        init();
     }
 
     private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion) {

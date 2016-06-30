@@ -11,11 +11,12 @@ public class Constants {
     }
 
     public static final class Apis {
-        public static final String AMAZON_PROVIDER = "ec2";
-        public static final String OPENSTACK_PROVIDER = "openstack-nova";
+        public static final String AMAZON_EC2_API = "ec2";
+        public static final String OPENSTACK_NOVA = "openstack-nova";
     }
 
     public static final class Miscellaneous {
+        public static final String DEFAULT_AMAZON_REGION = "us-east-1";
         public static final String EMPTY = "";
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String NOT_RELEVANT_INT_CODE = "-1";

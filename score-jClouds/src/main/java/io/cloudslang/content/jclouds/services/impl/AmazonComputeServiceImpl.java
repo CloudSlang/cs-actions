@@ -8,6 +8,7 @@ import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.InstanceState;
@@ -35,8 +36,8 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     protected void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+        ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
 
     @Override
     public Set<String> describeRegions() {
-        lazyInit();
+        init();
         return ec2Api.getConfiguredRegions();
     }
 
@@ -127,19 +128,9 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
         instanceApi.rebootInstancesInRegion(region, serverId);
     }
 
-    void lazyInit() {
-        if (ec2Api == null) {
-            this.init();
-        }
-    }
-
     void lazyInit(String region) {
-        if (this.region == null || !this.region.equals(region)) {
-            this.region = region;
-            this.init();
-        } else if (ec2Api == null) {
-            this.init();
-        }
+        this.region = InputsUtil.getAmazonRegion(region);
+        init();
     }
 
     private InstanceApi getEC2InstanceApi(String region, boolean isForRegion) {
