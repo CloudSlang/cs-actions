@@ -18,7 +18,8 @@ public enum CommonFilter {
     ROOT_DEVICE_TYPE("root-device-type"),
     STATE_REASON_CODE("state-reason-code"),
     STATE_REASON_MESSAGE("state-reason-message"),
-    VIRTUALIZATION_TYPE("virtualization-type");
+    VIRTUALIZATION_TYPE("virtualization-type"),
+    INSTANCE_TYPE("instance-type");
 
     private String value;
 

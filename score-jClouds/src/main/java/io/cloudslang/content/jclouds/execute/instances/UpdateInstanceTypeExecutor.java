@@ -16,7 +16,7 @@ public class UpdateInstanceTypeExecutor {
     public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(inputs);
         String result = cs.updateInstanceType(instanceInputs.getCustomInputs().getRegion(),
-                instanceInputs.getCustomInputs().getInstanceId(), instanceInputs.getInstanceType(),
+                instanceInputs.getCustomInputs().getInstanceId(), instanceInputs.getCustomInputs().getInstanceType(),
                 instanceInputs.getCheckStateTimeout(), instanceInputs.getPolingInterval());
 
         return OutputsUtil.getResultsMap(result);

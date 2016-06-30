@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.collect.Multimap;
+import io.cloudslang.content.jclouds.entities.InstanceType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
@@ -111,6 +112,10 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
         AmazonComputeServiceHelper helper = new AmazonComputeServiceHelper();
         InstanceState previousState = helper.getInstanceState(instanceApi, region, serverId);
         helper.stopAndWaitToStopInstance(instanceApi, previousState, region, serverId, checkStateTimeout, polingInterval);
+
+        if (Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(instanceType)) {
+            instanceType = InstanceType.T2_MICRO.getValue();
+        }
 
         instanceApi.setInstanceTypeForInstanceInRegion(region, serverId, instanceType);
 

@@ -43,7 +43,6 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, InstanceFilter.IMAGE_ID.getValue(), instanceInputs.getCustomInputs().getImageId());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_ID.getValue(), instanceInputs.getCustomInputs().getInstanceId());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_LIFECYCLE.getValue(), instanceInputs.getInstanceLifecycle());
-        updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_TYPE.getValue(), instanceInputs.getInstanceType());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_GROUP_ID.getValue(), instanceInputs.getInstanceGroupId());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_GROUP_NAME.getValue(), instanceInputs.getInstanceGroupName());
         updateFiltersMapEntry(filtersMap, InstanceFilter.IP_ADDRESS.getValue(), instanceInputs.getIpAddress());
@@ -129,6 +128,7 @@ public class Utils {
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getCustomInputs().getRootDeviceType());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.PRODUCT_CODE.getValue(), instanceInputs.getCustomInputs().getProductCode());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getCustomInputs().getProductCodeType());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.INSTANCE_TYPE.getValue(), instanceInputs.getCustomInputs().getInstanceType());
 
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.STATUS.getValue(), instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), instanceInputs.getCustomInputs().getDeleteOnTermination());
