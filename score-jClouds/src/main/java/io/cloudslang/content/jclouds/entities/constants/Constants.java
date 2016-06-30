@@ -33,6 +33,8 @@ public class Constants {
                 "greater or equal than the value provided for [minxCount] input.";
         public static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
                 "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
+        public static final String IMAGE_NAME_INPUT_REQUIRED = "The value provided for [name] input is required. " +
+                "Please provide an name";
     }
 
     public static final class ValidationValues {

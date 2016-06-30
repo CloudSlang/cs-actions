@@ -43,6 +43,10 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
             options.noReboot();
         }
 
+        if (Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(name)) {
+            throw new RuntimeException(Constants.ErrorMessages.IMAGE_NAME_INPUT_REQUIRED);
+        }
+
         return getAMIApi(region, true).createImageInRegion(region, name, serverId, options);
     }
 

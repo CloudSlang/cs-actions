@@ -124,7 +124,7 @@ public class ImageInputs {
         }
 
         public ImageInputs.ImageInputsBuilder withImageName(String inputValue) {
-            imageName = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            imageName = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.NOT_RELEVANT : inputValue;
             return this;
         }
 

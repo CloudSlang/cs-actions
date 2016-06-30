@@ -10,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 
-import java.io.Closeable;
-
 /**
  * Created by Mihai Tusa.
  * 6/15/2016.
@@ -97,7 +95,6 @@ public class Utils {
         setImageRelevantFilters(imageInputs, filtersMap);
         setTagFilters(imageInputs, filtersMap, delimiter);
 
-        updateFiltersMapEntry(filtersMap, CommonFilter.HYPERVISOR.getValue(), imageInputs.getCustomInputs().getHypervisor());
         updateFiltersMapEntry(filtersMap, CommonFilter.KERNEL_ID.getValue(), imageInputs.getCustomInputs().getKernelId());
         updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ALIAS.getValue(), imageInputs.getCustomInputs().getOwnerAlias());
         updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ID.getValue(), imageInputs.getCustomInputs().getOwnerId());
@@ -106,14 +103,12 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_CODE.getValue(), imageInputs.getCustomInputs().getStateReasonCode());
         updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_MESSAGE.getValue(), imageInputs.getCustomInputs().getStateReasonMessage());
 
-        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), imageInputs.getCustomInputs().getDeleteOnTermination());
         updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.DEVICE_NAME.getValue(), imageInputs.getCustomInputs().getBlockMappingDeviceName());
         updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.SNAPSHOT_ID.getValue(), imageInputs.getCustomInputs().getBlockDeviceMappingSnapshotId());
 
         updateFiltersMapEntry(filtersMap, ImageFilter.DESCRIPTION.getValue(), imageInputs.getDescription());
         updateFiltersMapEntry(filtersMap, ImageFilter.ID.getValue(), imageInputs.getCustomInputs().getImageId());
         updateFiltersMapEntry(filtersMap, ImageFilter.MANIFEST_LOCATION.getValue(), imageInputs.getManifestLocation());
-        updateFiltersMapEntry(filtersMap, ImageFilter.NAME.getValue(), imageInputs.getImageName());
     }
 
     private void setInstanceRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
@@ -149,13 +144,16 @@ public class Utils {
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.ROOT_DEVICE_TYPE.getValue(), imageInputs.getCustomInputs().getRootDeviceType());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.PLATFORM.getValue(), imageInputs.getCustomInputs().getPlatform());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.PRODUCT_CODE.getValue(), imageInputs.getCustomInputs().getProductCode());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.HYPERVISOR.getValue(), imageInputs.getCustomInputs().getHypervisor());
 
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.VOLUME_SIZE.getValue(), imageInputs.getCustomInputs().getVolumeSize());
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.VOLUME_TYPE.getValue(), imageInputs.getCustomInputs().getVolumeType());
+        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), imageInputs.getCustomInputs().getDeleteOnTermination());
 
         addFiltersMapRelevantEntry(filtersMap, ImageFilter.TYPE.getValue(), imageInputs.getCustomInputs().getVolumeType());
         addFiltersMapRelevantEntry(filtersMap, ImageFilter.IS_PUBLIC.getValue(), imageInputs.getIsPublic());
         addFiltersMapRelevantEntry(filtersMap, ImageFilter.STATE.getValue(), imageInputs.getState());
+        addFiltersMapRelevantEntry(filtersMap, ImageFilter.NAME.getValue(), imageInputs.getImageName());
     }
 
     private void addFiltersMapRelevantEntry(Multimap<String, String> filtersMap, String filterKey, String filterValue) {
