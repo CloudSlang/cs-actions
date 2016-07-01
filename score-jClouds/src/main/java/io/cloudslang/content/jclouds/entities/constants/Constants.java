@@ -34,7 +34,7 @@ public class Constants {
         public static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
                 "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
         public static final String IMAGE_NAME_INPUT_REQUIRED = "The value provided for [name] input is required. " +
-                "Please provide an name";
+                "Please provide an image name.";
     }
 
     public static final class ValidationValues {

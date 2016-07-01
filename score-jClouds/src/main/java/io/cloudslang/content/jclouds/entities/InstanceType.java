@@ -102,8 +102,8 @@ public enum InstanceType {
                 return Constants.Miscellaneous.NOT_RELEVANT;
             }
             for (InstanceType type : InstanceType.values()) {
-                if (type.getValue().toLowerCase().equals(input.toLowerCase())) {
-                    return type.getValue().toLowerCase();
+                if (type.getValue().equals(input.toLowerCase())) {
+                    return type.getValue();
                 }
             }
             throw new IllegalArgumentException(INVALID_INSTANCE_TYPE);
