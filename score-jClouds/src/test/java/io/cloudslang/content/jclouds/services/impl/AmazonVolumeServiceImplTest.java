@@ -23,10 +23,7 @@ import java.util.Properties;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 /**
  * Created by Mihai Tusa.
@@ -51,7 +48,7 @@ public class AmazonVolumeServiceImplTest {
     private ElasticBlockStoreApi ebsApiMock;
 
     @Mock
-    private Optional<? extends InstanceApi> optionalInstanceApi;
+    private Optional<? extends InstanceApi> optionalInstanceApiMock;
 
     @Spy
     private AmazonVolumeServiceImpl volumeSpy = new AmazonVolumeServiceImpl("https://ec2.amazonaws.com",
@@ -62,7 +59,8 @@ public class AmazonVolumeServiceImplTest {
     @Before
     public void init() throws Exception {
         mockStatic(ContextBuilder.class);
-        addCommonMocksForMethods();
+        MockingHelper.addCommonMocksForMethods(volumeSpy, null, ec2ApiMock, optionalInstanceApiMock, ebsApiMock,
+                AmazonVolumeServiceImpl.class);
 
         toTest = new AmazonVolumeServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW",
                 "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z", null, null);
@@ -98,7 +96,7 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, times(1)).lazyInit("some_region");
         verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), any(CreateVolumeOptions.class));
-        commonVerifiersForMethods();
+        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
@@ -107,7 +105,7 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, times(1)).lazyInit("some_region");
         verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), anyInt());
-        commonVerifiersForMethods();
+        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
@@ -116,7 +114,7 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, times(1)).lazyInit("some_region");
         verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), any(CreateVolumeOptions.class));
-        commonVerifiersForMethods();
+        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
@@ -198,7 +196,7 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, times(1)).lazyInit("some_region");
         verify(ebsApiMock, times(1)).attachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq("i-2b84b0b1"), eq("/dev/sdh"));
-        commonVerifiersForMethods();
+        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
@@ -208,7 +206,7 @@ public class AmazonVolumeServiceImplTest {
         verify(volumeSpy, times(1)).lazyInit("some_region");
         verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(false),
                 any(DetachVolumeOptions.class), any(DetachVolumeOptions.class));
-        commonVerifiersForMethods();
+        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
@@ -217,20 +215,6 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, times(1)).lazyInit("some_region");
         verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(true));
-        commonVerifiersForMethods();
-    }
-
-    private void addCommonMocksForMethods() {
-        doNothing().when(volumeSpy).lazyInit(anyString());
-        doNothing().when(volumeSpy).init();
-        volumeSpy.ec2Api = ec2ApiMock;
-        doReturn(optionalInstanceApi).when(ec2ApiMock).getElasticBlockStoreApiForRegion(anyString());
-        doReturn(optionalInstanceApi).when(ec2ApiMock).getElasticBlockStoreApi();
-        doReturn(ebsApiMock).when(optionalInstanceApi).get();
-    }
-
-    private void commonVerifiersForMethods() {
-        verify(optionalInstanceApi, times(1)).get();
-        verifyNoMoreInteractions(ebsApiMock);
+        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 }

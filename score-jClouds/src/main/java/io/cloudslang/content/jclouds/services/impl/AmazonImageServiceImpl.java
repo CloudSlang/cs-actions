@@ -8,6 +8,7 @@ import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonImageServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Image;
@@ -40,6 +41,10 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
         CreateImageOptions options = new CreateImageOptions().withDescription(imageDescription);
         if (imageNoReboot) {
             options.noReboot();
+        }
+
+        if (Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(name)) {
+            throw new RuntimeException(Constants.ErrorMessages.IMAGE_NAME_INPUT_REQUIRED);
         }
 
         return getAMIApi(region, true).createImageInRegion(region, name, serverId, options);
@@ -94,17 +99,13 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
     }
 
     void lazyInit(String region) {
-        if (this.region == null || !this.region.equals(region)) {
-            this.region = region;
-            this.init();
-        } else if (ec2Api == null) {
-            this.init();
-        }
+        this.region = InputsUtil.getAmazonRegion(region);
+        init();
     }
 
     void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+        ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
     private AMIApi getAMIApi(String region, boolean isForRegion) {

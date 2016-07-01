@@ -41,6 +41,10 @@ public final class InputsUtil {
         return StringUtils.isBlank(delimiter) ? COMMA_DELIMITER : delimiter;
     }
 
+    public static String getAmazonRegion(String region) {
+        return StringUtils.isBlank(region) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : region;
+    }
+
     public static int getValidInstanceStateCode(String input) {
         return InstanceState.getKey(input);
     }

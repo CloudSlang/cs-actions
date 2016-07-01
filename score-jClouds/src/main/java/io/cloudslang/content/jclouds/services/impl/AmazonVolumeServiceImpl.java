@@ -5,6 +5,7 @@ import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.VolumeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonVolumeServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
@@ -21,7 +22,7 @@ import org.jclouds.ec2.options.DetachVolumeOptions;
 public class AmazonVolumeServiceImpl extends JCloudsComputeService implements VolumeService {
     EC2Api ec2Api = null;
 
-    private String region;
+    private String region = Constants.Miscellaneous.EMPTY;
 
     public AmazonVolumeServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
@@ -58,18 +59,14 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
         }
     }
 
-    void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_PROVIDER);
-        ec2Api = new Utils().getApi(contextBuilder, EC2Api.class);
+    void lazyInit(String region) {
+        this.region = InputsUtil.getAmazonRegion(region);
+        init();
     }
 
-    void lazyInit(String region) {
-        if (this.region == null || !this.region.equals(region)) {
-            this.region = region;
-            this.init();
-        } else if (ec2Api == null) {
-            this.init();
-        }
+    void init() {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+        ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
     private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion) {

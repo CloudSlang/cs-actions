@@ -16,7 +16,6 @@ public class InstanceInputs {
     private CustomInputs customInputs;
     private NetworkInputs networkInputs;
 
-    private String instanceType;
     private String affinity;
     private String clientToken;
     private String dnsName;
@@ -52,7 +51,6 @@ public class InstanceInputs {
         this.customInputs = builder.customInputs;
         this.networkInputs = builder.networkInputs;
 
-        this.instanceType = builder.instanceType;
         this.affinity = builder.affinity;
         this.clientToken = builder.clientToken;
         this.dnsName = builder.dnsName;
@@ -91,10 +89,6 @@ public class InstanceInputs {
 
     public NetworkInputs getNetworkInputs() {
         return networkInputs;
-    }
-
-    public String getInstanceType() {
-        return instanceType;
     }
 
     public String getAffinity() {
@@ -217,7 +211,6 @@ public class InstanceInputs {
         private CustomInputs customInputs;
         private NetworkInputs networkInputs;
 
-        private String instanceType;
         private String affinity;
         private String clientToken;
         private String dnsName;
@@ -260,11 +253,6 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withNetworkInputs(NetworkInputs inputs) {
             networkInputs = inputs;
-            return this;
-        }
-
-        public InstanceInputs.InstanceInputsBuilder withInstanceType(String inputValue) {
-            instanceType = inputValue;
             return this;
         }
 
