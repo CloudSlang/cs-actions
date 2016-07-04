@@ -90,7 +90,7 @@ public class XpathQueryTest {
     public void testNotFoundValue() {
         String xPathQuery = "/root/element1/@id";
         String queryType = Constants.QueryTypes.VALUE;
-        String expectedResult = "";
+        String expectedResult = "No match found";
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, null, "false");
 
@@ -102,7 +102,7 @@ public class XpathQueryTest {
     public void testNotFoundNode() {
         String xPathQuery = "/root/element1/subelement";
         String queryType = Constants.QueryTypes.NODE;
-        String expectedResult = "";
+        String expectedResult = "No match found";
 
         Map<String, String> result = select.execute(xml, "", xPathQuery, queryType, null, "false");
 

@@ -67,7 +67,7 @@ public class AppendChildTest {
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AppendChildTest {
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "The element type \"open\" must be terminated by the matching end-tag \"</open>\".",
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -92,6 +92,6 @@ public class AppendChildTest {
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.APPEND_CHILD_FAILURE +
-                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.RETURN_RESULT));
+                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 }

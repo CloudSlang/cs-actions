@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
-import io.cloudslang.content.xml.services.SelectService;
+import io.cloudslang.content.xml.services.XpathQueryService;
 import io.cloudslang.content.xml.entities.Constants;
 
 import java.util.Map;
@@ -33,7 +33,8 @@ public class XpathQuery {
             outputs = {
                     @Output(Constants.Outputs.RESULT_TEXT),
                     @Output(Constants.Outputs.RETURN_RESULT),
-                    @Output(Constants.Outputs.SELECTED_VALUE)},
+                    @Output(Constants.Outputs.SELECTED_VALUE),
+                    @Output(Constants.Outputs.ERROR_MESSAGE)},
             responses = {
                     @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RESULT_TEXT, value = Constants.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RESULT_TEXT, value = Constants.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
@@ -57,6 +58,6 @@ public class XpathQuery {
                 .withDelimiter(delimiter)
                 .build();
 
-        return new SelectService().execute(commonInputs, customInputs);
+        return new XpathQueryService().execute(commonInputs, customInputs);
     }
 }

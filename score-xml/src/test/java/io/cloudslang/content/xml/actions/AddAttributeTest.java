@@ -57,7 +57,7 @@ public class AddAttributeTest {
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -70,6 +70,6 @@ public class AddAttributeTest {
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ADD_ATTRIBUTE_FAILURE +
-                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.RETURN_RESULT));
+                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 }

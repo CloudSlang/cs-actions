@@ -69,7 +69,7 @@ public class RemoveTest {
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class RemoveTest {
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.REMOVE_FAILURE +
-                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.RETURN_RESULT));
+                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, "xmlpathd", xPathQuery, null, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertTrue(result.get(Constants.Outputs.RETURN_RESULT).contains(INVALID_XML_DOCUMENT_SOURCE));
+        assertTrue(result.get(Constants.Outputs.ERROR_MESSAGE).contains(INVALID_XML_DOCUMENT_SOURCE));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get("returnCode"));
         assertTrue(result.get("resultXML").isEmpty());
     }

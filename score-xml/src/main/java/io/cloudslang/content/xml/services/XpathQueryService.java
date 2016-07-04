@@ -5,6 +5,7 @@ import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,9 +21,10 @@ import java.util.Map;
 /**
  * Created by markowis on 03/03/2016.
  */
-public class SelectService {
+public class XpathQueryService {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) {
         Map<String, String> result = new HashMap<>();
+
 
         try {
             Document doc = XmlUtils.getDocument(commonInputs);
@@ -32,20 +34,16 @@ public class SelectService {
 
             String selection = xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
 
-            ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
-                    selection, Constants.ReturnCodes.SUCCESS);
-
-        } catch (XPathExpressionException e) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
-        } catch (TransformerException te) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
+            if (StringUtils.isBlank(selection)) {
+                ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
+                        Constants.NO_MATCH_FOUND, Constants.ReturnCodes.SUCCESS);
+            } else {
+                ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
+                        selection, Constants.ReturnCodes.SUCCESS);
+            }
         } catch (Exception e) {
-            ResultUtils.populateValueResult(result, Constants.FAILURE,
-                    Constants.ErrorMessages.PARSING_ERROR + e.getMessage(), Constants.EMPTY_STRING, Constants.ReturnCodes.FAILURE);
+            ResultUtils.populateFailureResult(result, e.getMessage() + e);
         }
-
         return result;
     }
 
@@ -83,6 +81,6 @@ public class SelectService {
             sb.append(delimiter);
         }
         sb.append(XmlUtils.nodeToString(nodeList.item(nodeList.getLength() - 1)));
-        return sb.toString();
+            return sb.toString();
     }
 }

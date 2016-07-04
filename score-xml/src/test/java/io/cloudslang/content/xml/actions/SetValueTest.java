@@ -67,7 +67,7 @@ public class SetValueTest {
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -81,6 +81,6 @@ public class SetValueTest {
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 Constants.ErrorMessages.SET_VALUE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE,
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 }
