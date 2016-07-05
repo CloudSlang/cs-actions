@@ -54,15 +54,19 @@ public class ValidateService {
             }
 
             result.put(Constants.Outputs.RESULT_TEXT, Constants.SUCCESS);
+            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.SUCCESS);
 
         } catch (SAXParseException e) {
             result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
+            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.FAILURE);
             result.put(Constants.Outputs.RETURN_RESULT, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         } catch (SAXException e) {
             result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
+            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.FAILURE);
             result.put(Constants.Outputs.RETURN_RESULT, Constants.ErrorMessages.VALIDATION_FAILURE + e.getMessage());
         } catch (Exception e) {
             result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
+            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.FAILURE);
             result.put(Constants.Outputs.RETURN_RESULT, e.getMessage());
         }
 

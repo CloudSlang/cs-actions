@@ -39,6 +39,7 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, null, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.PARSING_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -49,6 +50,7 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, null, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "The element type \"root\" must be terminated by the matching end-tag \"</root>\".",
                 result.get(Constants.Outputs.RETURN_RESULT));
@@ -65,6 +67,7 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, EMPTY_STR, xsd, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.VALIDATION_SUCCESS,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
@@ -80,6 +83,7 @@ public class ValidateTest {
         Map<String, String> result = validate.execute(xml, EMPTY_STR, xsd, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "cvc-complex-type.4: Attribute 'someid' must appear on element 'root'.",
                 result.get(Constants.Outputs.RETURN_RESULT));

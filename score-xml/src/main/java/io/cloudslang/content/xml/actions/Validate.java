@@ -69,6 +69,7 @@ public class Validate {
     @Action(name = "Validate",
             outputs = {
                 @Output(Constants.Outputs.RETURN_CODE),
+                @Output(Constants.Outputs.RESULT_TEXT),
                 @Output(Constants.Outputs.RETURN_RESULT)},
             responses = {
                 @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
