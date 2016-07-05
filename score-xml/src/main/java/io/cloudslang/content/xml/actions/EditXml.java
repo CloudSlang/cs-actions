@@ -94,15 +94,15 @@ public class EditXml {
                     @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.ReturnCodes.SUCCESS, value = "0"),
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.ReturnCodes.FAILURE, value = "-1")})
     public Map<String, String> xPathReplaceNode(
-            @Param(Constants.Inputs.XML) String xml,
-            @Param(Constants.Inputs.FILE_PATH) String filePath,
-            @Param(Constants.Inputs.ACTION) String action,
-            @Param(Constants.Inputs.XPATH1) String xpath1,
-            @Param(Constants.Inputs.XPATH2) String xpath2,
-            @Param(Constants.Inputs.VALUE) String value,
-            @Param(Constants.Inputs.TYPE) String type,
-            @Param(Constants.Inputs.TYPE_NAME) String name,
-            @Param(Constants.Inputs.FEATURES) String parsingFeatures) {
+            @Param(value = Constants.Inputs.XML) String xml,
+            @Param(value = Constants.Inputs.FILE_PATH) String filePath,
+            @Param(value = Constants.Inputs.ACTION, required = true) String action,
+            @Param(value = Constants.Inputs.XPATH1, required = true) String xpath1,
+            @Param(value = Constants.Inputs.XPATH2) String xpath2,
+            @Param(value = Constants.Inputs.VALUE) String value,
+            @Param(value = Constants.Inputs.TYPE) String type,
+            @Param(value = Constants.Inputs.TYPE_NAME) String name,
+            @Param(value = Constants.Inputs.FEATURES) String parsingFeatures) {
         Map<String, String> result = new HashMap<>();
         try {
             validateInputs(xml, filePath, action.toLowerCase(), xpath1, xpath2, type, name, parsingFeatures);

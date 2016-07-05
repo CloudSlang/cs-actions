@@ -42,6 +42,7 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, null, value, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -54,6 +55,7 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -66,6 +68,7 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
                 result.get(Constants.Outputs.ERROR_MESSAGE));
     }
@@ -79,6 +82,7 @@ public class SetValueTest {
         Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 Constants.ErrorMessages.SET_VALUE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE,
                 result.get(Constants.Outputs.ERROR_MESSAGE));

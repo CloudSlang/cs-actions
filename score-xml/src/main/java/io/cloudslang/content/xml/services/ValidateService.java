@@ -48,7 +48,7 @@ public class ValidateService {
             XmlUtils.parseXML(xmlDocument, commonInputs.getSecureProcessing());
             result.put(Constants.Outputs.RETURN_RESULT, Constants.SuccessMessages.PARSING_SUCCESS);
 
-            if (xsdDocument != null && StringUtils.isNotBlank(xsdDocument)) {
+            if (StringUtils.isNotBlank(xsdDocument)) {
                 validateAgainstXsd(xmlDocument, xsdDocument);
                 result.put(Constants.Outputs.RETURN_RESULT, Constants.SuccessMessages.VALIDATION_SUCCESS);
             }
@@ -70,10 +70,7 @@ public class ValidateService {
     }
 
     private static String getStringValueOfDocument(Document doc) throws TransformerException {
-        String xmlDocument;
-        StringWriter writer = XmlUtils.getStringWriter(doc);
-        xmlDocument = writer.toString();
-        return xmlDocument;
+        return XmlUtils.getStringWriter(doc).toString();
     }
 
     private static void validateAgainstXsd(String xmlDocument, String xsdDocument) throws Exception {

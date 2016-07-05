@@ -46,6 +46,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, XML_STRING, xPathQuery, null, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.REMOVE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -57,6 +58,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, XML_STRING, xPathQuery, name, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.REMOVE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
@@ -68,6 +70,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, XML_STRING, xPathQuery, name, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
                 result.get(Constants.Outputs.ERROR_MESSAGE));
     }
@@ -79,6 +82,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, XML_STRING, xPathQuery, null, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.REMOVE_FAILURE +
                 Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.ERROR_MESSAGE));
     }
@@ -90,6 +94,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(xml, "xmlpathd", xPathQuery, null, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertTrue(result.get(Constants.Outputs.ERROR_MESSAGE).contains(INVALID_XML_DOCUMENT_SOURCE));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get("returnCode"));
         assertTrue(result.get("resultXML").isEmpty());
@@ -101,6 +106,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute(path, XML_PATH, "//subelement", "attr", "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.REMOVE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
         assertEquals(Constants.ReturnCodes.SUCCESS, result.get("returnCode"));
     }
@@ -111,6 +117,7 @@ public class RemoveTest {
         Map<String, String> result = remove.execute("c:/InvalidtestWrong.xml", XML_PATH, "//subelement", "attr", "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get("returnCode"));
     }
 }

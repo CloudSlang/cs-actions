@@ -42,6 +42,7 @@ public class AppendChildTest {
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
@@ -54,6 +55,7 @@ public class AppendChildTest {
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
                 result.get(Constants.Outputs.RETURN_RESULT));
     }
@@ -66,6 +68,7 @@ public class AppendChildTest {
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
                 result.get(Constants.Outputs.ERROR_MESSAGE));
     }
@@ -78,6 +81,7 @@ public class AppendChildTest {
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "The element type \"open\" must be terminated by the matching end-tag \"</open>\".",
                 result.get(Constants.Outputs.ERROR_MESSAGE));
@@ -91,6 +95,7 @@ public class AppendChildTest {
         Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
 
         assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.APPEND_CHILD_FAILURE +
                 Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.ERROR_MESSAGE));
     }
