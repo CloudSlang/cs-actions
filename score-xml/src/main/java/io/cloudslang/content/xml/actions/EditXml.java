@@ -84,34 +84,27 @@ public class EditXml {
             ActionsEnum myAction = getAction(action);
 
             switch (myAction) {
-                case delete: {
+                case delete:
                     result.put(Constants.Outputs.RETURN_RESULT, XmlOperationsUtils.delete(xml, filePath, xpath1, type, name, features));
                     break;
-                }
-                case insert: {
+                case insert:
                     result.put(Constants.Outputs.RETURN_RESULT, XmlOperationsUtils.insert(xml, filePath, xpath1, value, type, name, features));
                     break;
-                }
-                case append: {
+                case append:
                     result.put(Constants.Outputs.RETURN_RESULT, XmlOperationsUtils.append(xml, filePath, xpath1, value, type, name, features));
                     break;
-                }
-                case subnode: {
+                case subnode:
                     result.put(Constants.Outputs.RETURN_RESULT, XmlOperationsUtils.createSubnode(xml, filePath, xpath1, value, features));
                     break;
-                }
-                case move: {
+                case move:
                     result.put(Constants.Outputs.RETURN_RESULT, XmlOperationsUtils.move(xml, filePath, xpath1, xpath2, features));
                     break;
-                }
-                case rename: {
+                case rename:
                     result.put(Constants.Outputs.RETURN_RESULT, XmlOperationsUtils.rename(xml, filePath, xpath1, name, type, value, features));
                     break;
-                }
-                case update: {
+                case update:
                     result.put(Constants.Outputs.RETURN_RESULT, XmlOperationsUtils.update(xml, filePath, xpath1, value, type, name, features));
                     break;
-                }
             }
             result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.SUCCESS));
         } catch (IllegalArgumentException e) {
@@ -142,19 +135,19 @@ public class EditXml {
      */
     private void validateInputs(String xml, String filePath, String action, String xpath1, String xpath2, String type, String name, String features) throws Exception {
         ValidateUtils.validateXmlAndFilePathInputs(xml, filePath);
-        validateIsNotEmpty(action, "ACTION input is required.");
-        validateIsNotEmpty(xpath1, "XPATH1 input is required.");
+        validateIsNotEmpty(action, "action input is required.");
+        validateIsNotEmpty(xpath1, "xpath1 input is required.");
 
         if (Constants.Inputs.MOVE_ACTION.equals(action)) {
-            validateIsNotEmpty(xpath2, "XPATH2 input is required for action 'move' ");
+            validateIsNotEmpty(xpath2, "xpath2 input is required for action 'move' ");
         }
         if (!Constants.Inputs.SUBNODE_ACTION.equals(action) && !Constants.Inputs.MOVE_ACTION.equals(action)) {
-            validateIsNotEmpty(type, "TYPE input is required for action '" + action + "'");
+            validateIsNotEmpty(type, "type input is required for action '" + action + "'");
             if (!Constants.Inputs.TYPE_ELEM.equals(type) && !Constants.Inputs.TYPE_ATTR.equals(type) && !Constants.Inputs.TYPE_TEXT.equals(type)) {
                 throw new Exception("Invalid type. Only supported : " + Constants.Inputs.TYPE_ELEM + ", " + Constants.Inputs.TYPE_ATTR + ", " + Constants.Inputs.TYPE_TEXT);
             }
             if (Constants.Inputs.TYPE_ATTR.equals(type)) {
-                validateIsNotEmpty(name, "NAME input is required for type 'attr' ");
+                validateIsNotEmpty(name, "name input is required for type 'attr' ");
             }
         }
 

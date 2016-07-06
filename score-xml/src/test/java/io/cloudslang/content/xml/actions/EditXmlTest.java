@@ -332,28 +332,28 @@ public class EditXmlTest {
     public void testValidate3() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY_STRING, "asd", EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, "");
         assert (RETURN_CODE_FAILURE.equals(result.get(RETURN_CODE)));
-        assert ("ACTION input is required.".equals(result.get(EXCEPTION)));
+        assert ("action input is required.".equals(result.get(EXCEPTION)));
     }
 
     @Test
     public void testValidate4() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY_STRING, "asd", MOVE, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, "");
         assert (RETURN_CODE_FAILURE.equals(result.get(RETURN_CODE)));
-        assert ("XPATH1 input is required.".equals(result.get(EXCEPTION)));
+        assert ("xpath1 input is required.".equals(result.get(EXCEPTION)));
     }
 
     @Test
     public void testValidate5() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY_STRING, "asd", MOVE, "/test/test", EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, "");
         assert (RETURN_CODE_FAILURE.equals(result.get(RETURN_CODE)));
-        assert ("XPATH2 input is required for action 'move' ".equals(result.get(EXCEPTION)));
+        assert ("xpath2 input is required for action 'move' ".equals(result.get(EXCEPTION)));
     }
 
     @Test
     public void testValidate6() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY_STRING, "asd", DELETE, "/test/test", EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, "");
         assert (RETURN_CODE_FAILURE.equals(result.get(RETURN_CODE)));
-        assert ("TYPE input is required for action 'delete'".equals(result.get(EXCEPTION)));
+        assert ("type input is required for action 'delete'".equals(result.get(EXCEPTION)));
     }
 
     @Test
@@ -367,7 +367,7 @@ public class EditXmlTest {
     public void testValidate8() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY_STRING, "asd", DELETE, "/test/test", EMPTY_STRING, EMPTY_STRING, "attr", EMPTY_STRING, "");
         assert (RETURN_CODE_FAILURE.equals(result.get(RETURN_CODE)));
-        assert ("NAME input is required for type 'attr' ".equals(result.get(EXCEPTION)));
+        assert ("name input is required for type 'attr' ".equals(result.get(EXCEPTION)));
     }
 
     @Test
