@@ -2,7 +2,9 @@ package io.cloudslang.content.xml.actions;
 
 import io.cloudslang.content.xml.entities.Constants;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class RemoveTest {
     private static final String XML_STRING = "xmlString";
     private static final String XML_PATH = "xmlPath";
     private static final String XML_URL = "xmlUrl";
-    private static final String INVALID_XML_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xmlString and xmlPath and xmlUrl";
+    private static final String INVALID_XML_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xmlString, xmlPath and xmlUrl";
 
 
     @Before

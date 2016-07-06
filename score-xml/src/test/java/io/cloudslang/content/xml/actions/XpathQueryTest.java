@@ -2,7 +2,9 @@ package io.cloudslang.content.xml.actions;
 
 import io.cloudslang.content.xml.entities.Constants;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;

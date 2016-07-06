@@ -3,7 +3,6 @@ package io.cloudslang.content.xml.actions;
 import io.cloudslang.content.xml.entities.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

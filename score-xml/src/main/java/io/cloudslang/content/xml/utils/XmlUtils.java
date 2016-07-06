@@ -4,22 +4,26 @@ import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.ScoreHttpClient;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
 import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.methods.HttpGet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.http.client.methods.HttpGet;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -29,9 +33,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -54,24 +58,31 @@ public class XmlUtils {
         }
     }
 
-    public static NamespaceContext createNamespaceContext(String xmlDocument) throws Exception {
-        NamespaceContext nsContext = null;
-
-        XMLInputFactory xif = XMLInputFactory.newFactory();
-        xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
-        xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-
-        XMLStreamReader streamReader = xif.createXMLStreamReader(new StringReader(xmlDocument));
-
-        while (streamReader.hasNext()) {
-            streamReader.next();
-            if (streamReader.isStartElement()) {
-                nsContext = streamReader.getNamespaceContext();
-                break;
+    /**
+     * Returns the Namespaces context from an xml.
+     *
+     * @param xmlString      xml as string
+     * @param xmlFilePath path to xml file
+     * @return the Namespaces context from an xml.
+     * @throws IOException        file reading exception
+     * @throws XMLStreamException parsing exception
+     */
+    public static NamespaceContext getNamespaceContext(String xmlString, String xmlFilePath) throws Exception {
+        InputStream inputXML = getStream(xmlString, xmlFilePath);
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(inputXML);
+        Map<String, String> namespaces = new HashMap<>();
+        while (reader.hasNext()) {
+            int evt = reader.next();
+            if (evt == XMLStreamConstants.START_ELEMENT) {
+                QName qName = reader.getName();
+                if (qName != null) {
+                    if (qName.getPrefix() != null && qName.getPrefix().compareTo("") != 0)
+                        namespaces.put(qName.getPrefix(), qName.getNamespaceURI());
+                }
             }
         }
-
-        return nsContext;
+        return new SimpleNamespaceContext(namespaces);
     }
 
     public static Document parseXML(String xmlDocument, boolean secure) throws Exception {
@@ -102,9 +113,9 @@ public class XmlUtils {
     /**
      * This method creates an XML document from a given path which respects the encoding specified in the xml header. Otherwise it defaults to UTF-8.
      *
-     * @param path
-     * @param secure
-     * @return
+     * @param path xml given path
+     * @param secure secure
+     * @return created xml document form the given path
      * @throws IOException
      * @throws ParserConfigurationException
      * @throws SAXException
@@ -115,6 +126,105 @@ public class XmlUtils {
         InputStream targetStream = new FileInputStream(initialFile);
         InputSource is = new InputSource(targetStream);
         return builder.parse(is);
+    }
+
+    /**
+     * Transforms a String or File provided by path to a Document object.
+     *
+     * @param xml      xml the xml as String
+     * @param filePath the path/remote path to the file
+     * @param features parsing features to set on the document builder
+     * @return a  Document representation of the String or file
+     * @throws Exception in case something goes wrong
+     */
+    public static Document createDocument(String xml, String filePath, String features) throws Exception {
+        Document xmlDocument;
+        try {
+            InputStream inputXML = getStream(xml, filePath);
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            XmlUtils.setFeatures(builderFactory, features);
+
+            builderFactory.setNamespaceAware(true);
+            DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            xmlDocument = builder.parse(inputXML);
+        } catch (MalformedURLException e) {
+            throw new Exception((new StringBuilder("Unable to open remote file requested, file path[")).append(filePath).append("], error[").append(e.getMessage()).append("]").toString(), e);
+        } catch (IOException e) {
+            throw new Exception((new StringBuilder("Unable to open file requested, filename[")).append(filePath).append("], error[").append(e.getMessage()).append("]").toString(), e);
+        }
+        return xmlDocument;
+    }
+
+    /**
+     * Return all the nodes in an Document for a given XPath.
+     *
+     * @param doc        the document to read from
+     * @param pathToNode the XPath to find
+     * @return a NodeList object
+     * @throws XPathExpressionException if  xpath exception occurred
+     */
+    public static NodeList readNode(Document doc, String pathToNode, NamespaceContext ctx) throws XPathExpressionException {
+        XPath xPath = createXpath();
+        xPath.setNamespaceContext(ctx);
+        return (NodeList) xPath.evaluate(pathToNode, doc, XPathConstants.NODESET);
+    }
+
+    /**
+     * Transforms a string representation of an XML Node to an Node
+     *
+     * @param value the node as String
+     * @param features parsing features to set on the document builder
+     * @return the Node object
+     * @throws Exception in case the String can't be represented as a Node
+     */
+    public static Node stringToNode(String value, String encoding, String features) throws Exception {
+        Node node;
+        InputStream inputStream = null;
+        if (encoding == null) {
+            encoding = "UTF-8";
+        }
+        try {
+            // check if input value is a Node
+            inputStream = new ByteArrayInputStream(value.getBytes(encoding));
+            Document docNew = DocumentUtils.createDocumentBuilder(features).parse(inputStream);
+            node = docNew.getDocumentElement();
+        } catch (SAXException se) {
+            throw new Exception("Value " + value + "is not valid XML element : " + se.getMessage());
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        return node;
+    }
+
+    /**
+     * Returns a new instance of XPath.
+     *
+     * @return XPath object
+     */
+    private static XPath createXpath() {
+        return XPathFactory.newInstance().newXPath();
+    }
+
+    /**
+     * Returns the InputStream representation of a file or string.
+     *
+     * @param xml      xml the xml as String
+     * @param filePath he path/remote path to the file
+     * @return the InputStream representation of a file or string
+     * @throws IOException Exception in case something goes wrong
+     */
+    private static InputStream getStream(String xml, String filePath) throws IOException {
+        InputStream inputXML;
+        if (filePath == null || StringUtils.isEmpty(filePath)) {
+            inputXML = new ByteArrayInputStream(xml.getBytes());
+        } else {
+            if (filePath.startsWith(Constants.Inputs.HTTP_PREFIX_STRING) || filePath.startsWith(Constants.Inputs.HTTPS_PREFIX_STRING)) {
+                inputXML = new java.net.URL(filePath).openStream();
+            } else {
+                inputXML = new FileInputStream(new File(filePath));
+            }
+        }
+        return inputXML;
     }
 
     public static StringWriter getStringWriter(Document doc) throws TransformerException {
@@ -170,9 +280,9 @@ public class XmlUtils {
         NamespaceContext context;
         if (Constants.XML_PATH.equalsIgnoreCase(commonInputs.getXmlDocumentSource())) {
             StringWriter writer = XmlUtils.getStringWriter(doc);
-            context = XmlUtils.createNamespaceContext(writer.toString());
+            context = XmlUtils.getNamespaceContext(writer.toString(), "");
         } else {
-            context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
+            context = XmlUtils.getNamespaceContext(commonInputs.getXmlDocument(), "");
         }
         return context;
     }

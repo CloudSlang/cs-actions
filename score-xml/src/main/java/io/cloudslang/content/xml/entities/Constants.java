@@ -11,7 +11,7 @@ public class Constants {
     public static final String YES = "yes";
     public static final String XML_PATH = "xmlPath";
     public static final String XML_URL = "xmlUrl";
-    public static final String INVALID_XML_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xmlString and xmlPath and xmlUrl";
+    public static final String INVALID_XML_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xmlString, xmlPath and xmlUrl";
     public static final String INVALID_XSD_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xsdString and xsdPath";
     public static final String XSD_PATH = "xsdPath";
 

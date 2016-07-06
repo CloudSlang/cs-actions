@@ -19,4 +19,13 @@ public class InputUtils {
         }
         throw new RuntimeException(xmlDocumentSource + Constants.INVALID_XML_DOCUMENT_SOURCE);
     }
+
+    public static String validateXsdDocumentSource(String xsdDocumentSource) {
+        if (StringUtils.isBlank(xsdDocumentSource)) {
+            return Constants.Defaults.XSD_DOCUMENT_SOURCE;
+        } else if (Constants.Defaults.XSD_DOCUMENT_SOURCE.equalsIgnoreCase(xsdDocumentSource) || Constants.XSD_PATH.equalsIgnoreCase(xsdDocumentSource)) {
+            return xsdDocumentSource;
+        }
+        throw new RuntimeException(xsdDocumentSource + Constants.INVALID_XSD_DOCUMENT_SOURCE);
+    }
 }

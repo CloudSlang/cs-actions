@@ -1,6 +1,7 @@
 package io.cloudslang.content.xml.entities.inputs;
 
 import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -102,13 +103,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withXsdDocumentSource(String xsdDocumentSource) {
-            if (xsdDocumentSource.isEmpty()) {
-                this.xsdDocumentSource = Constants.Defaults.XSD_DOCUMENT_SOURCE;
-            } else if (Constants.Defaults.XSD_DOCUMENT_SOURCE.equalsIgnoreCase(xsdDocumentSource) || Constants.XSD_PATH.equalsIgnoreCase(xsdDocumentSource)){
-                this.xsdDocumentSource = xsdDocumentSource;
-            } else {
-                throw new RuntimeException(xsdDocumentSource + Constants.INVALID_XSD_DOCUMENT_SOURCE);
-            }
+            this.xsdDocumentSource = InputUtils.validateXsdDocumentSource(xsdDocumentSource);
             return this;
         }
     }
