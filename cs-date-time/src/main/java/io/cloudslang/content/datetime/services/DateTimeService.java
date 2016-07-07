@@ -30,20 +30,14 @@ public class DateTimeService {
      * @return Current date and time.
      */
     public Map<String, String> getCurrentDateTime(String localeLang, String localeCountry) throws Exception {
-        DateTimeFormatter formatter;
+        DateTimeFormatter formatter = DateTimeFormat.longDateTime();
         DateTime datetime = DateTime.now();
-
-        if (StringUtils.isNotBlank(localeLang)) {
-            if (isUnix(localeLang)) {
-                long timestamp = (long) Math.floor(datetime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
-
-                return getReturnValues(Constants.Miscellaneous.EMPTY + timestamp);
-            }
-            formatter = DateTimeFormat.longDateTime().withLocale(getLocaleByCountry(localeLang, localeCountry));
-        } else {
-            formatter = DateTimeFormat.longDateTime();
+        if (DateTimeUtils.isUnix(localeLang)) {
+            return getReturnValues(String.valueOf(datetime.getMillis()));
         }
-
+        if (StringUtils.isNotBlank(localeLang)) {
+            formatter = formatter.withLocale(getLocaleByCountry(localeLang, localeCountry));
+        }
         return getReturnValues(formatter.print(datetime));
     }
 
