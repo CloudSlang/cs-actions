@@ -48,7 +48,9 @@ public class GetCurrentDateTime {
 
         Map<String, String> returnResult = new HashMap<>();
         try {
-            returnResult = new DateTimeService().getCurrentDateTime(localeLang, localeCountry);
+            String returnValue = new DateTimeService().getCurrentDateTime(localeLang, localeCountry);
+            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+            returnResult.put(Constants.OutputNames.RETURN_RESULT, returnValue);
         } catch (Exception exception) {
             returnResult.put(Constants.OutputNames.EXCEPTION, exception.getMessage());
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
