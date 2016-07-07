@@ -1,6 +1,7 @@
 package io.cloudslang.content.datetime.services;
 
 import io.cloudslang.content.datetime.utils.Constants;
+import io.cloudslang.content.datetime.utils.DateTimeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -71,77 +72,65 @@ public class DateTimeService {
     public Map<String, String> parseDate(String date, String dateFormat, String dateLocaleLang,
                                          String dateLocaleCountry, String outFormat, String outLocaleLang,
                                          String outLocaleCountry) throws Exception {
+
+        DateTimeZone timeZone = DateTimeZone.forID(Constants.Miscellaneous.GMT);
+        DateTime inputDateTime = this.parseInputDate(date, dateFormat, dateLocaleLang, dateLocaleCountry, timeZone);
+
+        return this.changeFormatForDateTime(inputDateTime, outFormat, outLocaleLang, outLocaleCountry);
+    }
+
+    private DateTime parseInputDate(String date, String dateFormat, String dateLocaleLang, String dateLocaleCountry,
+                                    DateTimeZone timeZone) throws Exception {
+
         if (StringUtils.isBlank(date)) {
             throw new RuntimeException(Constants.ErrorMessages.DATE_NULL_OR_EMPTY);
         }
 
-        DateTime inputDateTime;
-        DateTimeFormatter dateFormatter, outFormatter;
-        DateTimeZone timeZone = DateTimeZone.forID(Constants.Miscellaneous.GMT);
-
+        DateTimeFormatter dateFormatter;
         if (StringUtils.isNotBlank(dateFormat)) {
-            if (isUnix(dateFormat)) {
-                inputDateTime = new DateTime(Long.parseLong(date) * Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+            if (DateTimeUtils.isUnix(dateFormat)) {
+                return new DateTime(Long.parseLong(date) * Constants.Miscellaneous.THOUSAND_MULTIPLIER);
             } else if (dateFormat.equals(Constants.Miscellaneous.S_CAPS_CHAR)) {
-                inputDateTime = new DateTime(new Date(Long.parseLong(date))).withZone(timeZone);
+                return new DateTime(new Date(Long.parseLong(date))).withZone(timeZone);
             } else {
-                dateFormatter = formatWithPattern(dateFormat, dateLocaleLang, dateLocaleCountry);
-                if (isUnix(outFormat)) {
-                    dateFormatter.withZone(timeZone);
-                }
-
-                inputDateTime = dateFormatter.parseDateTime(date).withZone(timeZone);
+                dateFormatter = formatWithPattern(dateFormat, dateLocaleLang, dateLocaleCountry).withZone(timeZone);
+                return dateFormatter.parseDateTime(date);
             }
         } else {
             dateFormatter = formatWithDefault(dateLocaleLang, dateLocaleCountry);
-            if (isUnix(dateFormat)) {
-                dateFormatter.withZone(timeZone);
-            }
-
-            inputDateTime = getJodaOrJavaDate(dateFormatter, date);
+            return getJodaOrJavaDate(dateFormatter, date);
         }
+    }
 
-        Map<String, String> returnResult;
+    private Map<String, String> changeFormatForDateTime(DateTime inputDateTime, String outFormat, String outLocaleLang,
+                                                        String outLocaleCountry) {
+        DateTimeFormatter outFormatter;
         if (StringUtils.isNotBlank(outFormat)) {
-            if (isUnix(outFormat)) {
+            if (DateTimeUtils.isUnix(outFormat)) {
                 long timestamp = (long) Math.floor(inputDateTime.toDateTime().getMillis()
                         / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
-
                 return getReturnValues(Constants.Miscellaneous.EMPTY + timestamp);
             } else {
                 outFormatter = formatWithPattern(outFormat, outLocaleLang, outLocaleCountry);
-                if (StringUtils.isNotBlank(dateFormat) && isUnix(outFormat)) {
-                    outFormatter.withZone(timeZone);
-                }
-
-                returnResult = getReturnValues(outFormatter.print(inputDateTime));
+                return getReturnValues(outFormatter.print(inputDateTime));
             }
         } else {
             outFormatter = formatWithDefault(outLocaleLang, outLocaleCountry);
-            if (StringUtils.isNotEmpty(dateFormat) && isUnix(outFormat)) {
-                outFormatter.withZone(timeZone);
-            }
-
-            returnResult = getReturnValues(outFormatter.print(inputDateTime));
+            return getReturnValues(outFormatter.print(inputDateTime));
         }
-
-        return returnResult;
     }
 
-    public Map<String, String> offsetTimeBy(String date, String offset, String localeLang, String localeCountry) throws Exception {
-        DateTime dateTime;
-        DateTimeFormatter dateFormatter;
+    public Map<String, String> offsetTimeBy(String date, String offset, String localeLang, String localeCountry)
+            throws Exception {
+
         int parsedOffset = Integer.parseInt(offset);
-        int offsetTimestamp;
 
-        if (isUnix(localeLang)) {
-            offsetTimestamp = Integer.parseInt(date) + parsedOffset;
-
+        if (DateTimeUtils.isUnix(localeLang)) {
+            int offsetTimestamp = Integer.parseInt(date) + parsedOffset;
             return getReturnValues(Constants.Miscellaneous.EMPTY + offsetTimestamp);
         } else {
-            dateFormatter = formatWithDefault(localeLang, localeCountry);
-            dateTime = getJodaOrJavaDate(dateFormatter, date);
-
+            DateTimeFormatter dateFormatter = formatWithDefault(localeLang, localeCountry);
+            DateTime dateTime = getJodaOrJavaDate(dateFormatter, date);
             return getReturnValues(dateFormatter.print(dateTime.plusSeconds(parsedOffset)));
         }
     }
@@ -188,7 +177,6 @@ public class DateTimeService {
         try {
             DateFormat format = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, locale);
             format.parse(date);
-
             return true;
         } catch (ParseException e) {
             return false;
@@ -231,9 +219,5 @@ public class DateTimeService {
     private DateTimeFormatter formatWithDefault(String lang, String country) {
         return (StringUtils.isNotBlank(lang)) ? DateTimeFormat.longDateTime().withLocale(getLocaleByCountry(lang, country)) :
                 DateTimeFormat.longDateTime().withLocale(Locale.getDefault());
-    }
-
-    private boolean isUnix(String locale) {
-        return Constants.Miscellaneous.UNIX.equals(locale);
     }
 }
