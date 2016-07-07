@@ -180,7 +180,7 @@ public class XmlUtils {
     public static Node stringToNode(String value, String encoding, String features) throws Exception {
         Node node;
         InputStream inputStream = null;
-        if (encoding == null) {
+        if (StringUtils.isEmpty(encoding)) {
             encoding = "UTF-8";
         }
         try {
@@ -215,7 +215,7 @@ public class XmlUtils {
      */
     private static InputStream getStream(String xml, String filePath) throws IOException {
         InputStream inputXML;
-        if (filePath == null || StringUtils.isEmpty(filePath)) {
+        if (StringUtils.isEmpty(filePath)) {
             inputXML = new ByteArrayInputStream(xml.getBytes());
         } else {
             if (filePath.startsWith(Constants.Inputs.HTTP_PREFIX_STRING) || filePath.startsWith(Constants.Inputs.HTTPS_PREFIX_STRING)) {

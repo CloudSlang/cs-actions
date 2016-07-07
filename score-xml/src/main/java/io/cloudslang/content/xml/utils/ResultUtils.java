@@ -8,13 +8,13 @@ import java.util.Map;
  * Created by markowis on 03/03/2016.
  */
 public class ResultUtils {
-    private ResultUtils(){}
+    private ResultUtils() {}
 
-    public static void populateFailureResult(Map<String, String> result, String errorMessage){
+    public static void populateFailureResult(Map<String, String> result, String errorMessage) {
         populateResult(result, Constants.FAILURE, Constants.EMPTY_STRING, Constants.EMPTY_STRING, Constants.Outputs.RESULT_XML, Constants.ReturnCodes.FAILURE, errorMessage);
     }
 
-    public static void populateSuccessResult(Map<String, String> result, String returnResult, String resultXml){
+    public static void populateSuccessResult(Map<String, String> result, String returnResult, String resultXml) {
         populateResult(result, Constants.SUCCESS, returnResult, resultXml, Constants.Outputs.RESULT_XML, Constants.ReturnCodes.SUCCESS, Constants.EMPTY_STRING);
     }
 
