@@ -33,7 +33,8 @@ public class DateTimeService {
         DateTimeFormatter formatter = DateTimeFormat.longDateTime();
         DateTime datetime = DateTime.now();
         if (DateTimeUtils.isUnix(localeLang)) {
-            return getReturnValues(String.valueOf(datetime.getMillis()));
+            Double unixSeconds = (double) Math.round(datetime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+            return getReturnValues(unixSeconds.toString());
         }
         if (StringUtils.isNotBlank(localeLang)) {
             formatter = formatter.withLocale(getLocaleByCountry(localeLang, localeCountry));
@@ -116,17 +117,14 @@ public class DateTimeService {
 
     public Map<String, String> offsetTimeBy(String date, String offset, String localeLang, String localeCountry)
             throws Exception {
-
-        int parsedOffset = Integer.parseInt(offset);
-
+        Double parsedOffset = Double.parseDouble(offset);
         if (DateTimeUtils.isUnix(localeLang)) {
-            int offsetTimestamp = Integer.parseInt(date) + parsedOffset;
-            return getReturnValues(Constants.Miscellaneous.EMPTY + offsetTimestamp);
-        } else {
-            DateTimeFormatter dateFormatter = formatWithDefault(localeLang, localeCountry);
-            DateTime dateTime = getJodaOrJavaDate(dateFormatter, date);
-            return getReturnValues(dateFormatter.print(dateTime.plusSeconds(parsedOffset)));
+            Double offsetTimestamp = Double.parseDouble(date) + parsedOffset;
+            return getReturnValues(offsetTimestamp.toString());
         }
+        DateTimeFormatter dateFormatter = formatWithDefault(localeLang, localeCountry);
+        DateTime dateTime = getJodaOrJavaDate(dateFormatter, date);
+        return getReturnValues(dateFormatter.print(dateTime.plusSeconds(parsedOffset.intValue())));
     }
 
     private Map<String, String> getReturnValues(String value) {
