@@ -31,7 +31,7 @@ public class DateTimeService {
         DateTimeFormatter formatter = DateTimeFormat.longDateTime();
         DateTime datetime = DateTime.now();
         if (DateTimeUtils.isUnix(localeLang)) {
-            Double unixSeconds = Math.floor(datetime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+            Long unixSeconds = (long) Math.round(datetime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
             return unixSeconds.toString();
         }
         if (StringUtils.isNotBlank(localeLang)) {
@@ -69,7 +69,7 @@ public class DateTimeService {
             throw new RuntimeException(Constants.ErrorMessages.DATE_NULL_OR_EMPTY);
         }
         DateTimeZone timeZone = DateTimeZone.forID(Constants.Miscellaneous.GMT);
-        DateTime inputDateTime = this.parseInputDate(date, dateFormat, dateLocaleLang, dateLocaleCountry, timeZone);
+        DateTime inputDateTime = parseInputDate(date, dateFormat, dateLocaleLang, dateLocaleCountry, timeZone);
 
         return changeFormatForDateTime(inputDateTime, outFormat, outLocaleLang, outLocaleCountry);
     }
@@ -77,10 +77,10 @@ public class DateTimeService {
     private DateTime parseInputDate(String date, String dateFormat, String dateLocaleLang, String dateLocaleCountry,
                                     DateTimeZone timeZone) throws Exception {
         if (DateTimeUtils.isUnix(dateFormat)) {
-            return new DateTime(Long.parseLong(date) * Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+            return new DateTime(Long.parseLong(date) * Constants.Miscellaneous.THOUSAND_MULTIPLIER).withZone(timeZone);
         }
         if (DateTimeUtils.isMilliseconds(dateFormat)) { // can be removed if not needed
-            return new DateTime(new Date(Long.parseLong(date)));
+            return new DateTime(new Date(Long.parseLong(date))).withZone(timeZone);
         }
         DateTimeFormatter dateFormatter = DateTimeUtils.getDateFormatter(dateFormat, dateLocaleLang, dateLocaleCountry);
         if (StringUtils.isNotBlank(dateFormat)) {
@@ -93,7 +93,7 @@ public class DateTimeService {
     private String changeFormatForDateTime(DateTime inputDateTime, String outFormat, String outLocaleLang,
                                                         String outLocaleCountry) {
         if (DateTimeUtils.isUnix(outFormat)) {
-            Double timestamp = Math.floor(inputDateTime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+            Long timestamp = (long) Math.round(inputDateTime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
             return String.valueOf(timestamp);
         }
         DateTimeFormatter outFormatter = DateTimeUtils.getDateFormatter(outFormat, outLocaleLang, outLocaleCountry);
@@ -102,9 +102,9 @@ public class DateTimeService {
 
     public String offsetTimeBy(String date, String offset, String localeLang, String localeCountry)
             throws Exception {
-        Double parsedOffset = Double.parseDouble(offset);
+        Long parsedOffset = Long.parseLong(offset);
         if (DateTimeUtils.isUnix(localeLang)) {
-            Double offsetTimestamp = Double.parseDouble(date) + parsedOffset;
+            Long offsetTimestamp = Long.parseLong(date) + parsedOffset;
             return offsetTimestamp.toString();
         }
         DateTimeFormatter dateFormatter = DateTimeUtils.formatWithDefault(localeLang, localeCountry);

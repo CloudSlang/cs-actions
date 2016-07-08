@@ -35,6 +35,8 @@ public class OffsetTimeByTest {
 
         assertEquals("0", result.get("returnCode"));
         assertFalse(result.get("returnResult").isEmpty());
+        assertEquals(result.get("returnResult"), "April 26, 2016 1:32:50 PM EEST");
+
     }
 
     @Test
@@ -43,6 +45,7 @@ public class OffsetTimeByTest {
 
         assertEquals("0", result.get("returnCode"));
         assertFalse(result.get("returnResult").isEmpty());
+        assertEquals(result.get("returnResult"), "4 mai 2016 18:09:53 EEST");
     }
 
     @Test
@@ -51,6 +54,7 @@ public class OffsetTimeByTest {
 
         assertEquals("0", result.get("returnCode"));
         assertFalse(result.get("returnResult").isEmpty());
+        assertEquals(result.get("returnResult"), "1012");
     }
 
     @Test
@@ -59,6 +63,7 @@ public class OffsetTimeByTest {
 
         assertEquals("0", result.get("returnCode"));
         assertFalse(result.get("returnResult").isEmpty());
+        assertEquals(result.get("returnResult"), "April 26, 2016 1:32:40 PM EEST");
     }
 
     @Test
@@ -67,5 +72,6 @@ public class OffsetTimeByTest {
 
         assertEquals("0", result.get("returnCode"));
         assertFalse(result.get("returnResult").isEmpty());
+        assertEquals(result.get("returnResult"), "April 26, 2016 1:32:35 PM EEST");
     }
 }

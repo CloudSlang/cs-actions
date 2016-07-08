@@ -54,7 +54,7 @@ public class DateTimeUtils {
      * Returns a LocalDateTime depending on how the date passes as argument is formatted.
      *
      * @param date date passed as argument
-     * @return true if is a java date
+     * @return the DateTime if it could parse it
      */
     public static DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String date) throws Exception {
         if (DateTimeUtils.isDateValid(date, dateFormatter.getLocale())) {
