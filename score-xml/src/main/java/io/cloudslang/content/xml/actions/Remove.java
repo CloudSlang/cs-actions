@@ -62,7 +62,7 @@ public class Remove {
 
             result =  new RemoveService().execute(inputs, customInputs);
         } catch (Exception e) {
-            ResultUtils.populateFailureResult(result, e.getMessage() + e);
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         }
         return result;
     }

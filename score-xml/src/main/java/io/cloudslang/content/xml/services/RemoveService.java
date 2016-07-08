@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by markowis on 03/03/2016.
  */
 public class RemoveService {
-    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs){
+    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
 
         try {
@@ -36,8 +36,6 @@ public class RemoveService {
             ResultUtils.populateFailureResult(result, Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage());
         } catch (TransformerException te) {
             ResultUtils.populateFailureResult(result, Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage());
-        } catch (Exception e) {
-            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         }
 
         return result;
