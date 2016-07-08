@@ -16,12 +16,14 @@ public class ListProcessor {
         try {
             return Integer.parseInt(index);
         } catch (NumberFormatException e) {
-            if (index.equals("end"))
+            if (index.equals("end")) {
                 return listLength - 1;
-            if (index.startsWith("end-"))
+            }
+            if (index.startsWith("end-")) {
                 index = index.substring(4, index.length()).trim();
-            else if (index.startsWith("end -"))
+            } else if (index.startsWith("end -")) {
                 index = index.substring(5, index.length()).trim();
+            }
             try {
                 return listLength - 1 - Integer.parseInt(index);
             } catch (NumberFormatException f) {
@@ -32,44 +34,50 @@ public class ListProcessor {
 
     public static String[] reverse(String[] list) {
         String[] reversed = new String[list.length];
-        for (int count = 0; count < list.length; count++)
+        for (int count = 0; count < list.length; count++) {
             reversed[reversed.length - count - 1] = list[count];
+        }
         return reversed;
     }
 
     public static int[] reverse(int[] list) {
         int[] reversed = new int[list.length];
-        for (int count = 0; count < list.length; count++)
+        for (int count = 0; count < list.length; count++) {
             reversed[reversed.length - count - 1] = list[count];
+        }
         return reversed;
     }
 
     public static double[] reverse(double[] list) {
         double[] reversed = new double[list.length];
-        for (int count = 0; count < list.length; count++)
+        for (int count = 0; count < list.length; count++) {
             reversed[reversed.length - count - 1] = list[count];
+        }
         return reversed;
     }
 
     public static int[] toIntArray(String list, String delimiter) {
         String[] split = toArray(list, delimiter);
         int[] ints = new int[split.length];
-        for (int count = 0; count < ints.length; count++)
+        for (int count = 0; count < ints.length; count++) {
             ints[count] = Integer.parseInt(split[count]);
+        }
         return ints;
     }
 
     public static double[] toDoubleArray(String list, String delimiter) {
         String[] split = toArray(list, delimiter);
         double[] dubs = new double[split.length];
-        for (int count = 0; count < dubs.length; count++)
+        for (int count = 0; count < dubs.length; count++) {
             dubs[count] = Double.parseDouble(split[count]);
+        }
         return dubs;
     }
 
     public static String toString(double[] list, String delimiter) {
-        if (list.length == 0)
+        if (list.length == 0) {
             return "";
+        }
         list = roundTo(list, 3);
         StringBuilder out = new StringBuilder("" + list[0]);
         for (int count = 1; count < list.length; count++) {
@@ -89,71 +97,83 @@ public class ListProcessor {
     }
 
     public static String toString(String[] list, String delimiter) {
-        if (list.length == 0)
+        if (list.length == 0) {
             return "";
+        }
         StringBuilder out = new StringBuilder(list[0]);
-        for (int count = 1; count < list.length; count++)
+        for (int count = 1; count < list.length; count++) {
             out.append(delimiter).append(list[count]);
+        }
         return out.toString();
     }
 
     public static String[] sort(String[] unsorted) {
         List<String> sorted = new ArrayList<>(unsorted.length);
-        for (int count = 0; count < unsorted.length; count++)
+        for (int count = 0; count < unsorted.length; count++) {
             sorted.add(unsorted[count]);
+        }
         Collections.sort(sorted);
         return sorted.toArray(new String[unsorted.length]);
     }
 
     public static int[] sort(int[] unsorted) {
         List<Integer> sorted = new ArrayList<>(unsorted.length);
-        for (int count = 0; count < unsorted.length; count++)
+        for (int count = 0; count < unsorted.length; count++) {
             sorted.add(unsorted[count]);
+        }
         Collections.sort(sorted);
         int[] out = new int[unsorted.length];
-        for (int count = 0; count < out.length; count++)
+        for (int count = 0; count < out.length; count++) {
             out[count] = sorted.get(count);
+        }
         return out;
     }
 
     public static double[] sort(double[] unsorted) {
         List<Double> sorted = new ArrayList<>(unsorted.length);
-        for (int count = 0; count < unsorted.length; count++)
+        for (int count = 0; count < unsorted.length; count++) {
             sorted.add(unsorted[count]);
+        }
         Collections.sort(sorted);
         double[] out = new double[unsorted.length];
-        for (int count = 0; count < out.length; count++)
+        for (int count = 0; count < out.length; count++) {
             out[count] = sorted.get(count);
+        }
         return out;
     }
 
     public static int[] trimPercent(int[] array, int percent) {
         Integer[] d = new Integer[array.length];
-        for (int count = 0; count < array.length; count++)
+        for (int count = 0; count < array.length; count++) {
             d[count] = array[count];
+        }
         d = trimPercent(Integer.class, d, percent);
         array = new int[d.length];
-        for (int count = 0; count < array.length; count++)
+        for (int count = 0; count < array.length; count++) {
             array[count] = d[count];
+        }
         return array;
     }
 
     public static String[] trimPercent(String[] array, int percent) {
         String[] d = new String[array.length];
-        for (int count = 0; count < array.length; count++)
+        for (int count = 0; count < array.length; count++) {
             d[count] = array[count];
+        }
         d = trimPercent(String.class, d, percent);
         return d;
     }
 
     public static double[] trimPercent(double[] array, int percent) {
         Double[] d = new Double[array.length];
-        for (int count = 0; count < array.length; count++)
+        for (int count = 0; count < array.length; count++) {
             d[count] = array[count];
+        }
         d = trimPercent(Double.class, d, percent);
         array = new double[d.length];
-        for (int count = 0; count < array.length; count++)
+        for (int count = 0; count < array.length; count++) {
             array[count] = d[count];
+        }
         return array;
     }
 
@@ -198,8 +218,9 @@ public class ListProcessor {
         if ((index = delim.indexOf(character)) > -1) {
             String start = delim.substring(0, index);
             String end = "";
-            if (index + 1 < delim.length())
+            if (index + 1 < delim.length()) {
                 end = delim.substring(index + 1, delim.length());
+            }
             delim = start + "\\" + character + regularExpressionReplace(end, character);
 
         }
@@ -236,14 +257,16 @@ public class ListProcessor {
 
     private static double[] roundTo(double[] values, int decimals) {
         double[] rounded = new double[values.length];
-        for (int count = 0; count < values.length; count++)
+        for (int count = 0; count < values.length; count++) {
             rounded[count] = roundTo(values[count], decimals);
+        }
         return rounded;
     }
 
     private static String[] toArrayFromNormalized(String list, String delimiter) {
-        if (list.length() == 0)
+        if (list.length() == 0) {
             return new String[0];
+        }
         return list.split(delimiter);
     }
 }

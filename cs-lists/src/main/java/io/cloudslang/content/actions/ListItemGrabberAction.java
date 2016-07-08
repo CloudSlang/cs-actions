@@ -37,7 +37,7 @@ public class ListItemGrabberAction {
      * @param delimiter The delimiter that separates values in the list.
      * @param index     The index of the value (starting with 0) to retrieve from the list.
      * @return It returns the value found at the specified index in the list, if the value specified for
-     * the @index parameter is positive and less than the size of the list. Otherwise, it contains
+     * the @index parameter is positive and less than the size of the list. Otherwise, it returns
      * the value specified for @index.
      */
     @Action(name = "List Item Grabber",

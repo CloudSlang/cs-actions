@@ -51,7 +51,7 @@ public class ListPrependerAction {
         Map<String, String> result = new HashMap<>();
         try {
             StringBuilder sb = new StringBuilder();
-            sb = StringUtils.isBlank(list) ? sb.append(element) : sb.append(element).append(delimiter).append(list);
+            sb = StringUtils.isEmpty(list) ? sb.append(element) : sb.append(element).append(delimiter).append(list);
             result.put(RESPONSE, SUCCESS);
             result.put(RETURN_RESULT, sb.toString());
             result.put(RETURN_CODE, RETURN_CODE_SUCCESS);

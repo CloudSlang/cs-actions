@@ -27,7 +27,7 @@ public class ListRemoverAction {
     private static final String LIST = "list";
     private static final String DELIMITER = "delimiter";
     private static final String ELEMENT = "element";
-    private static final String BLANK_INPUT_EXCEPTION = "One of the operation inputs is a blank string. Blank strings are not allowed!";
+    private static final String EMPTY_INPUT_EXCEPTION = "One of the operation inputs is empty. All inputs are required!";
 
     /**
      * This method removes an element from a list of strings.
@@ -37,7 +37,7 @@ public class ListRemoverAction {
      * @param delimiter The list delimiter.
      * @return The new list.
      */
-    @Action(name = "List Appender",
+    @Action(name = "List Remover",
             outputs = {
                     @Output(RESPONSE),
                     @Output(RETURN_RESULT),
@@ -52,8 +52,8 @@ public class ListRemoverAction {
                                              @Param(value = DELIMITER, required = true) String delimiter) {
         Map<String, String> result = new HashMap<>();
         try {
-            if (StringUtils.isBlank(list) || StringUtils.isBlank(index) || StringUtils.isBlank(delimiter)) {
-                throw new RuntimeException(BLANK_INPUT_EXCEPTION);
+            if (StringUtils.isEmpty(list) || StringUtils.isEmpty(index) || StringUtils.isEmpty(delimiter)) {
+                throw new RuntimeException(EMPTY_INPUT_EXCEPTION);
             } else {
                 String[] elements = StringUtils.split(list, delimiter);
                 elements = ArrayUtils.remove(elements, Integer.parseInt(index));

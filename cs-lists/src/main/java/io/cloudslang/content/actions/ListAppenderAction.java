@@ -51,7 +51,7 @@ public class ListAppenderAction {
         Map<String, String> result = new HashMap<>();
         try {
             StringBuilder sb = new StringBuilder();
-            sb = StringUtils.isBlank(list) ? sb.append(element) : sb.append(list).append(delimiter).append(element);
+            sb = StringUtils.isEmpty(list) ? sb.append(element) : sb.append(list).append(delimiter).append(element);
             result.put(RESPONSE, SUCCESS);
             result.put(RETURN_RESULT, sb.toString());
             result.put(RETURN_CODE, RETURN_CODE_SUCCESS);
