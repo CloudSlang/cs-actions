@@ -227,9 +227,10 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
                                        @Param(Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
                                        @Param(Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
+                                       @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(Inputs.CustomInputs.INSTANCE_TYPE) String instanceType,
 
                                        @Param(Inputs.InstanceInputs.AFFINITY) String affinity,
-                                       @Param(Inputs.InstanceInputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(Inputs.InstanceInputs.ATTACH_TIME) String attachTime,
                                        @Param(Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
                                        @Param(Inputs.InstanceInputs.DNS_NAME) String dnsName,
@@ -238,7 +239,6 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.InstanceInputs.INSTANCE_LIFECYCLE) String instanceLifecycle,
                                        @Param(Inputs.InstanceInputs.INSTANCE_STATE_CODE) String instanceStateCode,
                                        @Param(Inputs.InstanceInputs.INSTANCE_STATE_NAME) String instanceStateName,
-                                       @Param(Inputs.InstanceInputs.INSTANCE_TYPE) String instanceType,
                                        @Param(Inputs.InstanceInputs.INSTANCE_GROUP_ID) String instanceGroupId,
                                        @Param(Inputs.InstanceInputs.INSTANCE_GROUP_NAME) String instanceGroupName,
                                        @Param(Inputs.InstanceInputs.IP_ADDRESS) String ipAddress,
@@ -325,6 +325,8 @@ public class DescribeInstancesAction {
                 .withKeyTagsString(keyTagsString)
                 .withValueTagsString(valueTagsString)
                 .withVirtualizationType(virtualizationType)
+                .withAvailabilityZone(availabilityZone)
+                .withInstanceType(instanceType)
                 .build();
 
         NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
@@ -359,7 +361,6 @@ public class DescribeInstancesAction {
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
                 .withAffinity(affinity)
-                .withAvailabilityZone(availabilityZone)
                 .withClientToken(clientToken)
                 .withDnsName(dnsName)
                 .withGroupName(groupName)
@@ -367,7 +368,6 @@ public class DescribeInstancesAction {
                 .withInstanceLifecycle(instanceLifecycle)
                 .withInstanceStateCode(instanceStateCode)
                 .withInstanceStateName(instanceStateName)
-                .withInstanceType(instanceType)
                 .withInstanceGroupId(instanceGroupId)
                 .withInstanceGroupName(instanceGroupName)
                 .withIpAddress(ipAddress)

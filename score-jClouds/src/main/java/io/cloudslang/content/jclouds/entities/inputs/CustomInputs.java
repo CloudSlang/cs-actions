@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.*;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
  * 2/18/2016.
  */
 public class CustomInputs {
-    private static final String DEFAULT_AMAZON_REGION = "us-east-1";
-
     private String region;
     private String instanceId;
     private String imageId;
@@ -46,6 +45,8 @@ public class CustomInputs {
     private String keyTagsString;
     private String valueTagsString;
     private String virtualizationType;
+    private String availabilityZone;
+    private String instanceType;
 
     public CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -83,6 +84,8 @@ public class CustomInputs {
         this.keyTagsString = builder.keyTagsString;
         this.valueTagsString = builder.valueTagsString;
         this.virtualizationType = builder.virtualizationType;
+        this.availabilityZone = builder.availabilityZone;
+        this.instanceType = builder.instanceType;
     }
 
     public String getRegion() {
@@ -225,6 +228,14 @@ public class CustomInputs {
         return virtualizationType;
     }
 
+    public String getAvailabilityZone() {
+        return availabilityZone;
+    }
+
+    public String getInstanceType() {
+        return instanceType;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -261,13 +272,15 @@ public class CustomInputs {
         private String keyTagsString;
         private String valueTagsString;
         private String virtualizationType;
+        private String availabilityZone;
+        private String instanceType;
 
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? DEFAULT_AMAZON_REGION : inputValue;
+            region = (StringUtils.isBlank(inputValue)) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : inputValue;
             return this;
         }
 
@@ -438,6 +451,16 @@ public class CustomInputs {
 
         public CustomInputsBuilder withVirtualizationType(String inputValue) throws Exception {
             virtualizationType = VirtualizationType.getValue(inputValue);
+            return this;
+        }
+
+        public CustomInputsBuilder withAvailabilityZone(String inputValue) {
+            availabilityZone = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withInstanceType(String inputValue) {
+            instanceType = InstanceType.getInstanceType(inputValue);
             return this;
         }
     }

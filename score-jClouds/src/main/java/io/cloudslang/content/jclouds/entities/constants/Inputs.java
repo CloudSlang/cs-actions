@@ -50,6 +50,8 @@ public class Inputs {
         public static final String KEY_TAGS_STRING = "keyTagsString";
         public static final String VALUE_TAGS_STRING = "valueTagsString";
         public static final String VIRTUALIZATION_TYPE = "virtualizationType";
+        public static final String AVAILABILITY_ZONE = "availabilityZone";
+        public static final String INSTANCE_TYPE = "instanceType";
     }
 
     public static final class ImageInputs {
@@ -64,11 +66,9 @@ public class Inputs {
         public static final String IS_PUBLIC = "isPublic";
         public static final String MANIFEST_LOCATION = "manifestLocation";
         public static final String STATE = "state";
-    }
 
+    }
     public static final class InstanceInputs {
-        public static final String INSTANCE_TYPE = "instanceType";
-        public static final String AVAILABILITY_ZONE = "availabilityZone";
         public static final String MIN_COUNT = "minCount";
         public static final String MAX_COUNT = "maxCount";
         public static final String OPERATION_TIMEOUT = "operationTimeout";
@@ -127,5 +127,15 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_ADDRESSES_PRIMARY = "networkInterfaceAddressesPrimary";
         public static final String NETWORK_INTERFACE_PUBLIC_IP = "networkInterfacePublicIp";
         public static final String NETWORK_INTERFACE_IP_OWNER_ID = "networkInterfaceIpOwnerId";
+    }
+
+    public static final class VolumeInputs {
+        public static final String SNAPSHOT_ID = "snapshotId";
+        public static final String SIZE = "size";
+        public static final String IOPS = "iops";
+        public static final String ENCRYPTED = "encrypted";
+        public static final String DEVICE_NAME = "deviceName";
+        public static final String FORCE = "force";
+        public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
     }
 }

@@ -8,16 +8,15 @@ import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
-
-import java.io.Closeable;
+import org.jclouds.ec2.EC2Api;
 
 /**
  * Created by Mihai Tusa.
  * 6/15/2016.
  */
 public class Utils {
-    public <T extends Closeable> T getApi(ContextBuilder contextBuilder, Class<T> valueType) {
-        return contextBuilder.buildApi(valueType);
+    public EC2Api getEC2Api(ContextBuilder contextBuilder) {
+        return contextBuilder.buildApi(EC2Api.class);
     }
 
     void updateInstanceFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
@@ -26,16 +25,13 @@ public class Utils {
 
         updateFiltersMapEntry(filtersMap, CommonFilter.KERNEL_ID.getValue(), instanceInputs.getCustomInputs().getKernelId());
         updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ID.getValue(), instanceInputs.getCustomInputs().getOwnerId());
-        updateFiltersMapEntry(filtersMap, CommonFilter.PRODUCT_CODE.getValue(), instanceInputs.getCustomInputs().getProductCode());
-        updateFiltersMapEntry(filtersMap, CommonFilter.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getCustomInputs().getProductCodeType());
         updateFiltersMapEntry(filtersMap, CommonFilter.RAMDISK_ID.getValue(), instanceInputs.getCustomInputs().getRamdiskId());
         updateFiltersMapEntry(filtersMap, CommonFilter.ROOT_DEVICE_NAME.getValue(), instanceInputs.getCustomInputs().getRootDeviceName());
-        updateFiltersMapEntry(filtersMap, CommonFilter.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getCustomInputs().getRootDeviceType());
         updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_CODE.getValue(), instanceInputs.getCustomInputs().getStateReasonCode());
         updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_MESSAGE.getValue(), instanceInputs.getCustomInputs().getStateReasonMessage());
 
         updateFiltersMapEntry(filtersMap, InstanceFilter.AFFINITY.getValue(), instanceInputs.getAffinity());
-        updateFiltersMapEntry(filtersMap, InstanceFilter.AVAILABILITY_ZONE.getValue(), instanceInputs.getAvailabilityZone());
+        updateFiltersMapEntry(filtersMap, InstanceFilter.AVAILABILITY_ZONE.getValue(), instanceInputs.getCustomInputs().getAvailabilityZone());
         updateFiltersMapEntry(filtersMap, InstanceFilter.CLIENT_TOKEN.getValue(), instanceInputs.getClientToken());
         updateFiltersMapEntry(filtersMap, InstanceFilter.DNS_NAME.getValue(), instanceInputs.getDnsName());
         updateFiltersMapEntry(filtersMap, InstanceFilter.GROUP_ID.getValue(), instanceInputs.getCustomInputs().getGroupId());
@@ -45,7 +41,6 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, InstanceFilter.IMAGE_ID.getValue(), instanceInputs.getCustomInputs().getImageId());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_ID.getValue(), instanceInputs.getCustomInputs().getInstanceId());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_LIFECYCLE.getValue(), instanceInputs.getInstanceLifecycle());
-        updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_TYPE.getValue(), instanceInputs.getInstanceType());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_GROUP_ID.getValue(), instanceInputs.getInstanceGroupId());
         updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_GROUP_NAME.getValue(), instanceInputs.getInstanceGroupName());
         updateFiltersMapEntry(filtersMap, InstanceFilter.IP_ADDRESS.getValue(), instanceInputs.getIpAddress());
@@ -96,6 +91,26 @@ public class Utils {
         updateFiltersMapEntry(filtersMap, NetworkInterfaceFilter.ADDRESSES_ASSOCIATION_IP_OWNER_ID.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceIpOwnerId());
     }
 
+    void updateImageFiltersMap(ImageInputs imageInputs, Multimap<String, String> filtersMap, String delimiter) {
+        setImageRelevantFilters(imageInputs, filtersMap);
+        setTagFilters(imageInputs, filtersMap, delimiter);
+
+        updateFiltersMapEntry(filtersMap, CommonFilter.KERNEL_ID.getValue(), imageInputs.getCustomInputs().getKernelId());
+        updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ALIAS.getValue(), imageInputs.getCustomInputs().getOwnerAlias());
+        updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ID.getValue(), imageInputs.getCustomInputs().getOwnerId());
+        updateFiltersMapEntry(filtersMap, CommonFilter.RAMDISK_ID.getValue(), imageInputs.getCustomInputs().getRamdiskId());
+        updateFiltersMapEntry(filtersMap, CommonFilter.ROOT_DEVICE_NAME.getValue(), imageInputs.getCustomInputs().getRootDeviceName());
+        updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_CODE.getValue(), imageInputs.getCustomInputs().getStateReasonCode());
+        updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_MESSAGE.getValue(), imageInputs.getCustomInputs().getStateReasonMessage());
+
+        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.DEVICE_NAME.getValue(), imageInputs.getCustomInputs().getBlockMappingDeviceName());
+        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.SNAPSHOT_ID.getValue(), imageInputs.getCustomInputs().getBlockDeviceMappingSnapshotId());
+
+        updateFiltersMapEntry(filtersMap, ImageFilter.DESCRIPTION.getValue(), imageInputs.getDescription());
+        updateFiltersMapEntry(filtersMap, ImageFilter.ID.getValue(), imageInputs.getCustomInputs().getImageId());
+        updateFiltersMapEntry(filtersMap, ImageFilter.MANIFEST_LOCATION.getValue(), imageInputs.getManifestLocation());
+    }
+
     private void setInstanceRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
         if (!Constants.Miscellaneous.NOT_RELEVANT_INT_CODE.equals(instanceInputs.getInstanceStateCode())) {
             updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_STATE_CODE.getValue(), instanceInputs.getInstanceStateCode());
@@ -105,6 +120,10 @@ public class Utils {
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.HYPERVISOR.getValue(), instanceInputs.getCustomInputs().getHypervisor());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.PLATFORM.getValue(), instanceInputs.getCustomInputs().getPlatform());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.VIRTUALIZATION_TYPE.getValue(), instanceInputs.getCustomInputs().getVirtualizationType());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.ROOT_DEVICE_TYPE.getValue(), instanceInputs.getCustomInputs().getRootDeviceType());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.PRODUCT_CODE.getValue(), instanceInputs.getCustomInputs().getProductCode());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.PRODUCT_CODE_TYPE.getValue(), instanceInputs.getCustomInputs().getProductCodeType());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.INSTANCE_TYPE.getValue(), instanceInputs.getCustomInputs().getInstanceType());
 
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.STATUS.getValue(), instanceInputs.getCustomInputs().getBlockDeviceMappingStatus());
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), instanceInputs.getCustomInputs().getDeleteOnTermination());
@@ -119,42 +138,22 @@ public class Utils {
         addFiltersMapRelevantEntry(filtersMap, NetworkInterfaceFilter.STATUS.getValue(), instanceInputs.getNetworkInputs().getNetworkInterfaceStatus());
     }
 
-    void updateImageFiltersMap(ImageInputs imageInputs, Multimap<String, String> filtersMap, String delimiter) {
-        setImageRelevantFilters(imageInputs, filtersMap);
-        setTagFilters(imageInputs, filtersMap, delimiter);
-
-        updateFiltersMapEntry(filtersMap, CommonFilter.HYPERVISOR.getValue(), imageInputs.getCustomInputs().getHypervisor());
-        updateFiltersMapEntry(filtersMap, CommonFilter.KERNEL_ID.getValue(), imageInputs.getCustomInputs().getKernelId());
-        updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ALIAS.getValue(), imageInputs.getCustomInputs().getOwnerAlias());
-        updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ID.getValue(), imageInputs.getCustomInputs().getOwnerId());
-        updateFiltersMapEntry(filtersMap, CommonFilter.PRODUCT_CODE.getValue(), imageInputs.getCustomInputs().getProductCode());
-        updateFiltersMapEntry(filtersMap, CommonFilter.RAMDISK_ID.getValue(), imageInputs.getCustomInputs().getRamdiskId());
-        updateFiltersMapEntry(filtersMap, CommonFilter.ROOT_DEVICE_NAME.getValue(), imageInputs.getCustomInputs().getRootDeviceName());
-        updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_CODE.getValue(), imageInputs.getCustomInputs().getStateReasonCode());
-        updateFiltersMapEntry(filtersMap, CommonFilter.STATE_REASON_MESSAGE.getValue(), imageInputs.getCustomInputs().getStateReasonMessage());
-
-        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), imageInputs.getCustomInputs().getDeleteOnTermination());
-        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.DEVICE_NAME.getValue(), imageInputs.getCustomInputs().getBlockMappingDeviceName());
-        updateFiltersMapEntry(filtersMap, BlockDeviceMappingFilter.SNAPSHOT_ID.getValue(), imageInputs.getCustomInputs().getBlockDeviceMappingSnapshotId());
-
-        updateFiltersMapEntry(filtersMap, ImageFilter.DESCRIPTION.getValue(), imageInputs.getDescription());
-        updateFiltersMapEntry(filtersMap, ImageFilter.ID.getValue(), imageInputs.getCustomInputs().getImageId());
-        updateFiltersMapEntry(filtersMap, ImageFilter.MANIFEST_LOCATION.getValue(), imageInputs.getManifestLocation());
-        updateFiltersMapEntry(filtersMap, ImageFilter.NAME.getValue(), imageInputs.getImageName());
-    }
-
     private void setImageRelevantFilters(ImageInputs imageInputs, Multimap<String, String> filtersMap) {
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.ARCHITECTURE.getValue(), imageInputs.getCustomInputs().getArchitecture());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.PRODUCT_CODE_TYPE.getValue(), imageInputs.getCustomInputs().getProductCodeType());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.ROOT_DEVICE_TYPE.getValue(), imageInputs.getCustomInputs().getRootDeviceType());
         addFiltersMapRelevantEntry(filtersMap, CommonFilter.PLATFORM.getValue(), imageInputs.getCustomInputs().getPlatform());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.PRODUCT_CODE.getValue(), imageInputs.getCustomInputs().getProductCode());
+        addFiltersMapRelevantEntry(filtersMap, CommonFilter.HYPERVISOR.getValue(), imageInputs.getCustomInputs().getHypervisor());
 
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.VOLUME_SIZE.getValue(), imageInputs.getCustomInputs().getVolumeSize());
         addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.VOLUME_TYPE.getValue(), imageInputs.getCustomInputs().getVolumeType());
+        addFiltersMapRelevantEntry(filtersMap, BlockDeviceMappingFilter.DELETE_ON_TERMINATION.getValue(), imageInputs.getCustomInputs().getDeleteOnTermination());
 
         addFiltersMapRelevantEntry(filtersMap, ImageFilter.TYPE.getValue(), imageInputs.getCustomInputs().getVolumeType());
         addFiltersMapRelevantEntry(filtersMap, ImageFilter.IS_PUBLIC.getValue(), imageInputs.getIsPublic());
         addFiltersMapRelevantEntry(filtersMap, ImageFilter.STATE.getValue(), imageInputs.getState());
+        addFiltersMapRelevantEntry(filtersMap, ImageFilter.NAME.getValue(), imageInputs.getImageName());
     }
 
     private void addFiltersMapRelevantEntry(Multimap<String, String> filtersMap, String filterKey, String filterValue) {

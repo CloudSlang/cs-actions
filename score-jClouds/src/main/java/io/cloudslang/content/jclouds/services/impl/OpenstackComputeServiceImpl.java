@@ -5,7 +5,6 @@ import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
-import io.cloudslang.content.jclouds.services.helpers.Utils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
@@ -33,12 +32,12 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     protected void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.OPENSTACK_PROVIDER);
-        novaApi = new Utils().getApi(contextBuilder, NovaApi.class);
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.OPENSTACK_NOVA);
+        novaApi = contextBuilder.buildApi(NovaApi.class);
     }
 
     void lazyInit() {
-        if (null == novaApi) {
+        if (novaApi == null) {
             this.init();
         }
     }

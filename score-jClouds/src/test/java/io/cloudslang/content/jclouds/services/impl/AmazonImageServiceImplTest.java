@@ -16,7 +16,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -79,21 +78,21 @@ public class AmazonImageServiceImplTest {
 
     @Test
     public void testInit() throws Exception {
-        addCommonMocksForInitMethod();
+        MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
         toTest.init();
 
-        commonVerifiersForInitMethod();
+        MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
         verifyNoMoreInteractions(propertiesMock);
     }
 
     @Test
     public void testLazyInit() throws Exception {
-        addCommonMocksForInitMethod();
+        MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
         toTest.lazyInit("us-east-1");
 
-        commonVerifiersForInitMethod();
+        MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
     }
 
     @Test
@@ -201,26 +200,6 @@ public class AmazonImageServiceImplTest {
         doReturn(optionalInstanceApi).when(ec2ApiMock).getAMIApiForRegion(anyString());
         doReturn(optionalInstanceApi).when(ec2ApiMock).getAMIApi();
         doReturn(amiApiMock).when(optionalInstanceApi).get();
-    }
-
-    private void addCommonMocksForInitMethod() throws Exception {
-        whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
-        doReturn(contextBuilderMock).when(ContextBuilder.class, "newBuilder", "ec2");
-        doReturn(contextBuilderMock).when(contextBuilderMock).endpoint("https://ec2.amazonaws.com");
-        doReturn(contextBuilderMock).when(contextBuilderMock)
-                .credentials("AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z");
-        doReturn(contextBuilderMock).when(contextBuilderMock).overrides(propertiesMock);
-        doReturn(contextBuilderMock).when(contextBuilderMock).modules(Matchers.<Iterable>any());
-    }
-
-    private void commonVerifiersForInitMethod() throws Exception {
-        verifyNew(Properties.class).withNoArguments();
-        verify(contextBuilderMock).endpoint("https://ec2.amazonaws.com");
-        verify(contextBuilderMock).credentials("AKIAIQHVQ4UM7SO673TW", "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z");
-        verify(contextBuilderMock).overrides(propertiesMock);
-        verify(contextBuilderMock).modules(Matchers.<Iterable>any());
-        verify(contextBuilderMock).buildApi(EC2Api.class);
-        verifyNoMoreInteractions(contextBuilderMock);
     }
 
     private CommonInputs getCommonInputs(String delimiter) {

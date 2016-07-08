@@ -180,5 +180,6 @@
         <module>score-xml</module>
         <module>cs-date-time</module>
         <module>score-vmware</module>
+        <module>cs-lists</module>
     </modules>
 </project>

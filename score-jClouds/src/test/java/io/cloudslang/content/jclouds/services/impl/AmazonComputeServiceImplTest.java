@@ -208,32 +208,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * test lazy init when ec2Api is null.
-     */
-    @Test
-    public void testLazyInit() {
-        doNothing().when(amazonComputeServiceImplSpy).init();
-
-        amazonComputeServiceImplSpy.lazyInit();
-
-        verify(amazonComputeServiceImplSpy).lazyInit();
-        verify(amazonComputeServiceImplSpy).init();
-        verifyNoMoreInteractions(amazonComputeServiceImplSpy);
-    }
-
-    /**
-     * test lazy init when novaApi is not null.
-     */
-    @Test
-    public void testLazyInitNotNullNovaApi() {
-        amazonComputeServiceImplSpy.ec2Api = ec2ApiMock;
-        amazonComputeServiceImplSpy.lazyInit();
-
-        verify(amazonComputeServiceImplSpy).lazyInit();
-        verifyNoMoreInteractions(amazonComputeServiceImplSpy);
-    }
-
-    /**
      * test lazy init(region) when previous region was null.
      */
     @Test
@@ -244,20 +218,6 @@ public class AmazonComputeServiceImplTest {
 
         verify(amazonComputeServiceImplSpy).lazyInit(REGION);
         verify(amazonComputeServiceImplSpy).init();
-        verifyNoMoreInteractions(amazonComputeServiceImplSpy);
-    }
-
-    /**
-     * test lazy init(region) when region parameter equals previous region parameter.
-     * In this case no need to invoke init()
-     */
-    @Test
-    public void testLazyInitWithSameRegion() {
-        amazonComputeServiceImplSpy.ec2Api = ec2ApiMock;
-        amazonComputeServiceImplSpy.region = REGION;
-        amazonComputeServiceImplSpy.lazyInit(REGION);
-
-        verify(amazonComputeServiceImplSpy).lazyInit(REGION);
         verifyNoMoreInteractions(amazonComputeServiceImplSpy);
     }
 
@@ -317,7 +277,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testStartInstancesWithInvalidServerId() {
-        setExpectedExceptions(ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
@@ -353,7 +313,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testStopInstancesWithInvalidServerId() {
-        setExpectedExceptions(ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
@@ -383,7 +343,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testRebootInstancesWithInvalidServerId() {
-        setExpectedExceptions(ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
@@ -428,7 +388,7 @@ public class AmazonComputeServiceImplTest {
         Set<String> returnedRegions = amazonComputeServiceImplSpy.describeRegions();
 
         assertTrue(returnedRegions.contains(REGION));
-        verify(amazonComputeServiceImplSpy).lazyInit();
+        verify(amazonComputeServiceImplSpy).init();
         verify(ec2ApiMock, times(1)).getConfiguredRegions();
 
         assertEquals(1, returnedRegions.size());
@@ -440,7 +400,7 @@ public class AmazonComputeServiceImplTest {
      */
     @Test
     public void testListRegionsOnInvalidEndpoint() {
-        setExpectedExceptions(HttpResponseException.class, CONNECTION_REFUSE_EXCEPTION_MESSAGE);
+        MockingHelper.setExpectedExceptions(exception, HttpResponseException.class, CONNECTION_REFUSE_EXCEPTION_MESSAGE);
         addCommonMocksForInstanceApi();
 
         HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
@@ -535,8 +495,8 @@ public class AmazonComputeServiceImplTest {
 
     @Test
     public void testDescribeInstancesInRegionWithFiltersInvalidTags() throws Exception {
-        setExpectedExceptions(RuntimeException.class, "Incorrect supplied values for: [keyTagsString] and/or " +
-                "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.");
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect supplied values for: [keyTagsString] " +
+                "and/or [valueTagsString] inputs. Number of tag keys should be the same with number of tag values.");
         addCommonMocksForInstanceApi();
 
         amazonComputeServiceImplSpy.describeInstancesInRegion(getCommonInputs(), getInstanceInputs("d,e,f,g", "1,2", "1.1.1.1"));
@@ -594,15 +554,11 @@ public class AmazonComputeServiceImplTest {
     private void addCommonMocksForInstanceApi() {
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock;
 
+        doNothing().when(amazonComputeServiceImplSpy).init();
         doNothing().when(amazonComputeServiceImplSpy).lazyInit(anyString());
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApi();
         doReturn(optionalInstanceApi).when(ec2ApiMock).getInstanceApiForRegion(REGION);
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
-    }
-
-    private void setExpectedExceptions(Class<?> type, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
     }
 
     private Set<InstanceStateChange> getInstanceStateChanges() {
