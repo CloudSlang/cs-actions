@@ -43,7 +43,7 @@ public class DateTimeUtilsTest {
         DateTime dateTime = DateTimeUtils
                 .getJodaOrJavaDate(DateTimeUtils.getDateFormatter("HH:MM", "fr", "FR"), "4 juillet 2001 12:08:56 EEST")
                 .withZone(timeZone);
-        assertEquals(dateTime.toString(), "2001-07-04T09:08:56.000Z");
+        assertEquals(dateTime.toString(), "2001-07-04T12:08:56.000Z");
     }
 
     @Test

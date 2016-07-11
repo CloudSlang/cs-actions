@@ -105,7 +105,7 @@ public class ParseDateTest {
 
     @Test
     public void testFormatsNullValid() throws Exception {
-        result = parseDate.execute("2001-07-04T12:08:56.235+0300", "", "en", "US", "", "fr", "FR");
+        result = parseDate.execute("2001-07-04T12:08:56.235", "", "en", "US", "", "fr", "FR");
         DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("dd-MM-yyyy HH:mm:ss", "fr", "FR");
         DateTime dateTime = DateTimeUtils.getJodaOrJavaDate(dateTimeFormatter, result.get("returnResult"));
         assertEquals("0", result.get("returnCode"));
