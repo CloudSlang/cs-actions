@@ -1,5 +1,8 @@
 package io.cloudslang.content.datetime.actions;
 
+import io.cloudslang.content.datetime.utils.DateTimeUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,12 +104,13 @@ public class ParseDateTest {
     }
 
     @Test
-    public void testFormatsNullValid() {
+    public void testFormatsNullValid() throws Exception {
         result = parseDate.execute("2001-07-04T12:08:56.235+0300", "", "en", "US", "", "fr", "FR");
-
+        DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("dd-MM-yyyy HH:mm:ss", "fr", "FR");
+        DateTime dateTime = DateTimeUtils.getJodaOrJavaDate(dateTimeFormatter, result.get("returnResult"));
         assertEquals("0", result.get("returnCode"));
         assertFalse(result.get("returnResult").isEmpty());
-        assertEquals(result.get("returnResult"), "4 juillet 2001 12:08:56 EEST");
+        assertEquals(dateTimeFormatter.print(dateTime), "04-07-2001 12:08:56");
     }
 
     @Test
