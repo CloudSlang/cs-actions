@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Employees>
+  <Employee emplid="1111" type="admin">
+        John
+        Watson
+        30
+        johnwatson@sh.com
+     new text</Employee>
+  <Employee emplid="2222" type="admin">
+        Sherlock
+        Homes
+        32
+        sherlock@sh.com
+     new text</Employee>
+  <Employee emplid="3333" type="user">
+        Jim
+        Moriarty
+        52
+        jim@sh.com
+     new text</Employee>
+  <Employee emplid="4444" type="user">
+        Mycroft
+        Holmes
+        41
+        mycroft@sh.com
+     new text</Employee>
+</Employees>

@@ -1,8 +1,8 @@
 package io.cloudslang.content.xml.services;
 
+import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.w3c.dom.Document;
@@ -24,8 +24,9 @@ public class AddAttributeService {
         Map<String, String> result = new HashMap<>();
 
         try {
-            Document doc = XmlUtils.parseXML(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
-            NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
+            Document doc = XmlUtils.getDocument(commonInputs);
+            NamespaceContext context = XmlUtils.getNamespaceContext(commonInputs, doc);
+
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
             XmlUtils.validateNodeList(nodeList);

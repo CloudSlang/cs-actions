@@ -1,8 +1,8 @@
 package io.cloudslang.content.xml.services;
 
+import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,26 +20,22 @@ import java.util.Map;
  * Created by markowis on 03/03/2016.
  */
 public class RemoveService {
-    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs){
+    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
 
         try {
-            Document doc = XmlUtils.parseXML(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
-            NamespaceContext context = XmlUtils.createNamespaceContext(commonInputs.getXmlDocument());
+            Document doc = XmlUtils.getDocument(commonInputs);
+            NamespaceContext context = XmlUtils.getNamespaceContext(commonInputs, doc);
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());
 
             XmlUtils.validateNodeList(nodeList);
 
             removeFromNodeList(nodeList, customInputs.getAttributeName());
-            ResultUtils.populateSuccessResult(result, Constants.SuccessMessages.REMOVE_SUCCESS,
-                    XmlUtils.nodeToString(doc));
-
+            ResultUtils.populateSuccessResult(result, Constants.SuccessMessages.REMOVE_SUCCESS, XmlUtils.nodeToString(doc));
         } catch (XPathExpressionException e) {
             ResultUtils.populateFailureResult(result, Constants.ErrorMessages.XPATH_PARSING_ERROR + e.getMessage());
         } catch (TransformerException te) {
             ResultUtils.populateFailureResult(result, Constants.ErrorMessages.TRANSFORMER_ERROR + te.getMessage());
-        } catch (Exception e) {
-            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         }
 
         return result;

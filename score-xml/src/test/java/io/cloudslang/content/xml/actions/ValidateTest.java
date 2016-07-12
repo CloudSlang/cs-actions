@@ -1,9 +1,8 @@
 package io.cloudslang.content.xml.actions;
 
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.entities.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,11 +10,14 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by markowis on 18/02/2016.
  */
 public class ValidateTest {
 
+    private static final String EMPTY_STR = "";
     private Validate validate;
     String xml;
 
@@ -34,22 +36,24 @@ public class ValidateTest {
     public void testWithWellFormedXML() {
         xml = "<root>toot</root>";
 
-        Map<String, String> result = validate.execute(xml, null, "false");
+        Map<String, String> result = validate.execute(xml, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, null, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals(Constants.SuccessMessages.PARSING_SUCCESS, result.get(Constants.OutputNames.RETURN_RESULT));
+        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
+        assertEquals(Constants.SuccessMessages.PARSING_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
     public void testWithNonWellFormedXML() {
         xml = "<root>toot</roo>";
 
-        Map<String, String> result = validate.execute(xml, null, "false");
+        Map<String, String> result = validate.execute(xml, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, null, "false");
 
-        Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
+        assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "The element type \"root\" must be terminated by the matching end-tag \"</root>\".",
-                result.get(Constants.OutputNames.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -60,11 +64,12 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        Map<String, String> result = validate.execute(xml, xsd, "false");
+        Map<String, String> result = validate.execute(xml, EMPTY_STR, xsd, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, "false");
 
-        Assert.assertEquals(Constants.SUCCESS, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals(Constants.SuccessMessages.VALIDATION_SUCCESS,
-                result.get(Constants.OutputNames.RETURN_RESULT));
+        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
+        assertEquals(Constants.SuccessMessages.VALIDATION_SUCCESS,
+                result.get(Constants.Outputs.RETURN_RESULT));
     }
 
     @Test
@@ -75,11 +80,12 @@ public class ValidateTest {
         URI resourceXSD = getClass().getResource("/xml/test.xsd").toURI();
         String xsd = FileUtils.readFileToString(new File(resourceXSD));
 
-        Map<String, String> result = validate.execute(xml, xsd, "false");
+        Map<String, String> result = validate.execute(xml, EMPTY_STR, xsd, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, EMPTY_STR, "false");
 
-        Assert.assertEquals(Constants.FAILURE, result.get(Constants.OutputNames.RESULT_TEXT));
-        Assert.assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
+        assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "cvc-complex-type.4: Attribute 'someid' must appear on element 'root'.",
-                result.get(Constants.OutputNames.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 }

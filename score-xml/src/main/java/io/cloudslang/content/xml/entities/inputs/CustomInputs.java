@@ -1,6 +1,7 @@
 package io.cloudslang.content.xml.entities.inputs;
 
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -11,6 +12,7 @@ public class CustomInputs {
     private String value;
     private String xmlElement;
     private String xsdDocument;
+    private String xsdDocumentSource;
     private String queryType;
     private String delimiter;
 
@@ -19,6 +21,7 @@ public class CustomInputs {
         this.value = builder.value;
         this.xmlElement = builder.xmlElement;
         this.xsdDocument = builder.xsdDocument;
+        this.xsdDocumentSource = builder.xsdDocumentSource;
         this.queryType = builder.queryType;
         this.delimiter = builder.delimiter;
     }
@@ -39,6 +42,10 @@ public class CustomInputs {
         return xsdDocument;
     }
 
+    public String getXsdDocumentSource() {
+        return xsdDocumentSource;
+    }
+
     public String getQueryType() {
         return queryType;
     }
@@ -52,6 +59,7 @@ public class CustomInputs {
         private String value;
         private String xmlElement;
         private String xsdDocument;
+        private String xsdDocumentSource;
         private String queryType;
         private String delimiter;
 
@@ -91,6 +99,11 @@ public class CustomInputs {
             else {
                 delimiter = inputValue;
             }
+            return this;
+        }
+
+        public CustomInputsBuilder withXsdDocumentSource(String xsdDocumentSource) {
+            this.xsdDocumentSource = InputUtils.validateXsdDocumentSource(xsdDocumentSource);
             return this;
         }
     }
