@@ -94,7 +94,7 @@ public class DateTimeService {
                                                         String outLocaleCountry) {
         if (DateTimeUtils.isUnix(outFormat)) {
             Long timestamp = (long) Math.round(inputDateTime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
-            return String.valueOf(timestamp);
+            return timestamp.toString();
         }
         DateTimeFormatter outFormatter = DateTimeUtils.getDateFormatter(outFormat, outLocaleLang, outLocaleCountry);
         return outFormatter.print(inputDateTime);
