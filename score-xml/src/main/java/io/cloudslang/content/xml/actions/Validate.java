@@ -71,7 +71,8 @@ public class Validate {
             outputs = {
                 @Output(Constants.Outputs.RETURN_CODE),
                 @Output(Constants.Outputs.RESULT_TEXT),
-                @Output(Constants.Outputs.RETURN_RESULT)},
+                @Output(Constants.Outputs.RETURN_RESULT),
+                @Output(Constants.Outputs.ERROR_MESSAGE)},
             responses = {
                 @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
                 @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})

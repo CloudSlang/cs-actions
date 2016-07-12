@@ -6,7 +6,6 @@ import io.cloudslang.content.httpclient.build.auth.AuthTypes;
 import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.w3c.dom.Document;
@@ -179,19 +178,15 @@ public class XmlUtils {
      */
     public static Node stringToNode(String value, String encoding, String features) throws Exception {
         Node node;
-        InputStream inputStream = null;
         if (StringUtils.isEmpty(encoding)) {
             encoding = "UTF-8";
         }
-        try {
+        try (InputStream inputStream = new ByteArrayInputStream(value.getBytes(encoding))){
             // check if input value is a Node
-            inputStream = new ByteArrayInputStream(value.getBytes(encoding));
             Document docNew = DocumentUtils.createDocumentBuilder(features).parse(inputStream);
             node = docNew.getDocumentElement();
         } catch (SAXException se) {
             throw new Exception("Value " + value + "is not valid XML element : " + se.getMessage());
-        } finally {
-            IOUtils.closeQuietly(inputStream);
         }
         return node;
     }
@@ -288,7 +283,6 @@ public class XmlUtils {
     }
 
     public static String createXmlDocumentFromUrl(CommonInputs commonInputs) throws ParserConfigurationException, SAXException, IOException {
-        if (commonInputs.getXmlDocument().startsWith("http")) {
             ScoreHttpClient scoreHttpClient = new ScoreHttpClient();
             HttpClientInputs httpClientInputs = new HttpClientInputs();
             httpClientInputs.setMethod(HttpGet.METHOD_NAME);
@@ -319,10 +313,6 @@ public class XmlUtils {
                 throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(ScoreHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
             }
             return requestResponse.get(Constants.Outputs.RETURN_RESULT);
-        } else {
-            InputStream inputStream = new FileInputStream(new File(commonInputs.getXmlDocument()));
-            return IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
-        }
     }
 
     public static void setFeatures(DocumentBuilderFactory reader, String features) throws ParserConfigurationException {

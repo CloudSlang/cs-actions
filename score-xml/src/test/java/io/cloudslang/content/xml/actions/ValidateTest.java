@@ -53,7 +53,7 @@ public class ValidateTest {
         assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "The element type \"root\" must be terminated by the matching end-tag \"</root>\".",
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 
     @Test
@@ -86,6 +86,6 @@ public class ValidateTest {
         assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "cvc-complex-type.4: Attribute 'someid' must appear on element 'root'.",
-                result.get(Constants.Outputs.RETURN_RESULT));
+                result.get(Constants.Outputs.ERROR_MESSAGE));
     }
 }

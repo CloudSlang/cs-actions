@@ -3,6 +3,7 @@ package io.cloudslang.content.xml.services;
 import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
+import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
@@ -57,19 +58,12 @@ public class ValidateService {
             result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.SUCCESS);
 
         } catch (SAXParseException e) {
-            result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.FAILURE);
-            result.put(Constants.Outputs.RETURN_RESULT, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
         } catch (SAXException e) {
-            result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.FAILURE);
-            result.put(Constants.Outputs.RETURN_RESULT, Constants.ErrorMessages.VALIDATION_FAILURE + e.getMessage());
+            ResultUtils.populateFailureResult(result, Constants.ErrorMessages.VALIDATION_FAILURE + e.getMessage());
         } catch (Exception e) {
-            result.put(Constants.Outputs.RESULT_TEXT, Constants.FAILURE);
-            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.FAILURE);
-            result.put(Constants.Outputs.RETURN_RESULT, e.getMessage());
+            ResultUtils.populateFailureResult(result, e.getMessage());
         }
-
         return result;
     }
 
