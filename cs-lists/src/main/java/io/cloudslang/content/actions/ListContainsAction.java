@@ -5,19 +5,24 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import io.cloudslang.content.utils.Constants;
 import io.cloudslang.content.utils.ListProcessor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.HashMap;
+
+import static io.cloudslang.content.utils.Constants.EMPTY_STRING;
+import static io.cloudslang.content.utils.Constants.FALSE;
 import static io.cloudslang.content.utils.Constants.OutputNames.RESPONSE_TEXT;
 import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.utils.Constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.utils.Constants.OutputNames.RESPONSE;
 import static io.cloudslang.content.utils.Constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.utils.Constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static io.cloudslang.content.utils.Constants.TRUE;
 
 /**
  * Created by moldovas on 7/12/2016.
@@ -43,7 +48,8 @@ public class ListContainsAction {
             outputs = {
                     @Output(RESPONSE_TEXT),
                     @Output(RETURN_RESULT),
-                    @Output(RETURN_CODE)
+                    @Output(RETURN_CODE),
+                    @Output(EXCEPTION)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL),
@@ -55,8 +61,30 @@ public class ListContainsAction {
                                                @Param(value = IGNORE_CASE) String ignoreCase
                                                ) {
         Map<String, String> result = new HashMap<>();
-        ListProcessor.listContainsElements(sublist, container, getInputDefaultValue(delimiter, Constants.DEFAULT_DELIMITER), result,
-                getInputDefaultValue(ignoreCase, Constants.IGNORE_CASE_DEFAULT));
+        ignoreCase = getInputDefaultValue(ignoreCase, "true");
+        try {
+            String[] subArray = sublist.split(delimiter);
+            String[] containerArray = container.split(delimiter);
+            String[] uncontainedArray = ListProcessor.getUncontainedArray(subArray, containerArray, Boolean.parseBoolean(ignoreCase));
+
+            if (ListProcessor.arrayElementsAreNull(uncontainedArray)) {
+                result.put(RESPONSE_TEXT, TRUE);
+                result.put(RETURN_RESULT, EMPTY_STRING);
+                result.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+                result.put(EXCEPTION, EMPTY_STRING);
+            } else {
+                result.put(RESPONSE, FALSE);
+                result.put(RETURN_CODE, RETURN_CODE_FAILURE);
+                result.put(RETURN_RESULT, StringUtils.join(uncontainedArray, delimiter));
+                result.put(EXCEPTION, EMPTY_STRING);
+            }
+
+        } catch (Exception e) {
+            result.put(RESPONSE, FAILURE);
+            result.put(RETURN_RESULT, EMPTY_STRING);
+            result.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            result.put(EXCEPTION, e.getMessage());
+        }
         return result;
     }
 

@@ -20,7 +20,7 @@ public class ContainsAllActionTest {
     private static final String CONTAINER = "SpiderMan,IronMan,Hulk,Storm,Deadpool";
 
     @Test
-    public void testContai0nsElement() {
+    public void testContainsElement() {
         Map<String, String> result = listContains.containsElement("SpiderMan,Hulk,IronMan,IronMan", CONTAINER, ",", "false");
         assertEquals(RESPONSE_SUCCESS, result.get(RESPONSE));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));

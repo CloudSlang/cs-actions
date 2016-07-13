@@ -1,21 +1,11 @@
 package io.cloudslang.content.utils;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
-import java.util.*;
-
-import static io.cloudslang.content.utils.Constants.OutputNames.RESPONSE_TEXT;
-import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.utils.Constants.OutputNames.RESPONSE;
-import static io.cloudslang.content.utils.Constants.EMPTY_STRING;
-import static io.cloudslang.content.utils.Constants.TRUE;
-import static io.cloudslang.content.utils.Constants.FALSE;
-import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.utils.Constants.ResponseNames.FAILURE;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ListProcessor {
 
@@ -282,36 +272,13 @@ public class ListProcessor {
         return list.split(delimiter);
     }
 
-    public static void listContainsElements(String subList, String container, String delimiter, Map<String, String> result, String ignoreCase) {
-        try {
-            String[] subArray = subList.split(delimiter);
-            String[] containerArray = container.split(delimiter);
-
-            String[] uncontainedArray = getUncontainedArray(subArray, containerArray, Boolean.parseBoolean(ignoreCase));
-
-            if (arrayElementsAreNull(uncontainedArray)) {
-                result.put(RESPONSE_TEXT, TRUE);
-                result.put(RETURN_RESULT, EMPTY_STRING);
-                result.put(RETURN_CODE, RETURN_CODE_SUCCESS);
-            } else {
-                result.put(RESPONSE, FALSE);
-                result.put(RETURN_CODE, RETURN_CODE_FAILURE);
-                result.put(RETURN_RESULT, StringUtils.join(uncontainedArray, delimiter));
-            }
-
-        } catch (Exception e) {
-            result.put(RESPONSE, FAILURE);
-            result.put(RETURN_RESULT, e.getMessage());
-            result.put(RETURN_CODE, RETURN_CODE_FAILURE);
-        }
-    }
 
     /**
      * This method check if all elements of an array are null.
-     * @param uncontainedArray
-     * @return
+     * @param uncontainedArray element in array
+     * @return any element that is found to be empty
      */
-    private static boolean arrayElementsAreNull(String[] uncontainedArray) {
+    public static boolean arrayElementsAreNull(String[] uncontainedArray) {
         boolean empty = true;
         for (Object ob : uncontainedArray) {
             if (ob != null) {
@@ -322,7 +289,7 @@ public class ListProcessor {
         return empty;
     }
 
-    private static String[] getUncontainedArray(String[] subArray, String[] containerArray, boolean ignoreCase) {
+    public static String[] getUncontainedArray(String[] subArray, String[] containerArray, boolean ignoreCase) {
         String[] uncontainedArray = new String[subArray.length];
         int index = 0;
         boolean found = false;
@@ -338,10 +305,13 @@ public class ListProcessor {
                 index++;
             }
         }
-        return uncontainedArray;
+        String[] newUncontainedArray = new String[index];
+         System.arraycopy(uncontainedArray, 0, newUncontainedArray, 0, index);
+
+        return newUncontainedArray;
     }
 
-    private static boolean elementsAreEqual(String a, String b, boolean ignoreCase) {
+    public static boolean elementsAreEqual(String a, String b, boolean ignoreCase) {
         return ignoreCase ? StringUtils.equalsIgnoreCase(a, b) : StringUtils.equals(a, b);
     }
 }
