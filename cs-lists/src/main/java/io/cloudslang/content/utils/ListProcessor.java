@@ -1,5 +1,7 @@
 package io.cloudslang.content.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -269,5 +271,47 @@ public class ListProcessor {
         }
         return list.split(delimiter);
     }
-}
 
+
+    /**
+     * This method check if all elements of an array are null.
+     * @param uncontainedArray element in array
+     * @return any element that is found to be empty
+     */
+    public static boolean arrayElementsAreNull(String[] uncontainedArray) {
+        boolean empty = true;
+        for (Object ob : uncontainedArray) {
+            if (ob != null) {
+                empty = false;
+                break;
+            }
+        }
+        return empty;
+    }
+
+    public static String[] getUncontainedArray(String[] subArray, String[] containerArray, boolean ignoreCase) {
+        String[] uncontainedArray = new String[subArray.length];
+        int index = 0;
+        boolean found = false;
+        for (String subStr : subArray) {
+            for (String contStr : containerArray) {
+                found = elementsAreEqual(subStr, contStr, ignoreCase);
+                if (found) {
+                    break;
+                }
+            }
+            if (!found) {
+                uncontainedArray[index] = subStr;
+                index++;
+            }
+        }
+        String[] newUncontainedArray = new String[index];
+         System.arraycopy(uncontainedArray, 0, newUncontainedArray, 0, index);
+
+        return newUncontainedArray;
+    }
+
+    public static boolean elementsAreEqual(String a, String b, boolean ignoreCase) {
+        return ignoreCase ? StringUtils.equalsIgnoreCase(a, b) : StringUtils.equals(a, b);
+    }
+}
