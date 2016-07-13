@@ -6,10 +6,10 @@ package io.cloudslang.content.utils;
 public class Constants {
 
     public static final String DEFAULT_DELIMITER = ",";
-    public static final String IGNORE_CASE_DEFAULT = Boolean.TRUE.toString();
     public static final String EMPTY_STRING = "";
     public static final String TRUE = "true";
     public static final String FALSE = "false";
+    public static final String INPUT_NOT_BOOLEAN = "Input %s not a boolean value!";
 
 
     public static final class OutputNames {
@@ -19,7 +19,6 @@ public class Constants {
         public static final String EXCEPTION = "exception";
         public static final String RESPONSE = "response";
 
-        public static final String RESULT_STRING = "ResultString";
         public static final String RESULT_TEXT = "result";
     }
 
