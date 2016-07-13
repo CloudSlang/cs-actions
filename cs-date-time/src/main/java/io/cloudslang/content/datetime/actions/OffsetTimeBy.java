@@ -52,15 +52,17 @@ public class OffsetTimeBy {
             @Param(Constants.InputNames.LOCALE_LANG) String localeLang,
             @Param(Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
 
-        Map<String, String> resultMap = new HashMap<>();
+        Map<String, String> returnResult = new HashMap<>();
         try {
-            resultMap = new DateTimeService().offsetTimeBy(date, offset, localeLang, localeCountry);
+            String returnValue = new DateTimeService().offsetTimeBy(date, offset, localeLang, localeCountry);
+            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+            returnResult.put(Constants.OutputNames.RETURN_RESULT, returnValue);
         } catch (Exception exception) {
-            resultMap.put(Constants.OutputNames.EXCEPTION, exception.toString());
-            resultMap.put(Constants.OutputNames.RETURN_RESULT, exception.getMessage());
-            resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+            returnResult.put(Constants.OutputNames.EXCEPTION, exception.toString());
+            returnResult.put(Constants.OutputNames.RETURN_RESULT, exception.getMessage());
+            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
         }
 
-        return resultMap;
+        return returnResult;
     }
 }

@@ -1,5 +1,7 @@
 package io.cloudslang.content.datetime.actions;
 
+import io.cloudslang.content.datetime.utils.Constants;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,9 +59,9 @@ public class GetCurrentDateTimeTest {
     @Test
     public void testExecuteTimestamp() {
         result = getCurrentDateTime.execute("unix", "DK");
-
+        String currentTimeUnix =  String.valueOf(DateTime.now().getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
         assertEquals("0", result.get("returnCode"));
         assertFalse(result.get("returnResult").isEmpty());
-        assertTrue(result.get("returnResult").startsWith("146"));
+        assertTrue(result.get("returnResult").startsWith(currentTimeUnix.substring(0,6)));
     }
 }

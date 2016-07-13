@@ -62,8 +62,10 @@ public class ParseDate {
         Map<String, String> returnResult = new HashMap<>();
 
         try {
-            returnResult = new DateTimeService()
+            String returnValue = new DateTimeService()
                     .parseDate(date, dateFormat, dateLocaleLang, dateLocaleCountry, outFormat, outLocaleLang, outLocaleCountry);
+            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+            returnResult.put(Constants.OutputNames.RETURN_RESULT, returnValue);
         } catch (Exception exception) {
             returnResult.put(Constants.OutputNames.EXCEPTION, exception.toString());
             returnResult.put(Constants.OutputNames.RETURN_RESULT, exception.getMessage());
