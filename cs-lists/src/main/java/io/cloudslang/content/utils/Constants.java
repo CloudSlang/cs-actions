@@ -6,6 +6,11 @@ package io.cloudslang.content.utils;
 public class Constants {
 
     public static final String DEFAULT_DELIMITER = ",";
+    public static final String IGNORE_CASE_DEFAULT = Boolean.TRUE.toString();
+    public static final String EMPTY_STRING = "";
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+
 
     public static final class OutputNames {
         public static final String RETURN_RESULT = "returnResult";
