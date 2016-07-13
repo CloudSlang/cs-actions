@@ -56,6 +56,7 @@ public class ValidateService {
 
             result.put(Constants.Outputs.RESULT_TEXT, Constants.SUCCESS);
             result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.SUCCESS);
+            result.put(Constants.Outputs.ERROR_MESSAGE, Constants.EMPTY_STRING);
 
         } catch (SAXParseException e) {
             ResultUtils.populateFailureResult(result, Constants.ErrorMessages.PARSING_ERROR + e.getMessage());
