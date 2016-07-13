@@ -44,7 +44,7 @@ public class ListContainsAction {
      * @return sublist is contained in container or not.
      */
 
-    @Action(name = "List Contains",
+    @Action(name = "List Contains All",
             outputs = {
                     @Output(RESPONSE_TEXT),
                     @Output(RETURN_RESULT),
