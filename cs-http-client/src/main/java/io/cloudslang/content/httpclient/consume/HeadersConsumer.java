@@ -10,7 +10,7 @@
 
 package io.cloudslang.content.httpclient.consume;
 
-import io.cloudslang.content.httpclient.ScoreHttpClient;
+import io.cloudslang.content.httpclient.CSHttpClient;
 import org.apache.http.Header;
 
 import java.util.Map;
@@ -33,6 +33,6 @@ public class HeadersConsumer {
                 result.delete(result.length() - 2, result.length());
             }
         }
-        returnResult.put(ScoreHttpClient.RESPONSE_HEADERS, result.toString());
+        returnResult.put(CSHttpClient.RESPONSE_HEADERS, result.toString());
     }
 }

@@ -53,7 +53,7 @@ import java.util.Map;
  * User: davidmih
  * Date: 7/15/14
  */
-public class ScoreHttpClient {
+public class CSHttpClient {
     public static final String RETURN_CODE = "returnCode";
     public static final String SUCCESS = "0";
     //outputs
