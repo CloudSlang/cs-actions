@@ -10,7 +10,7 @@
 
 package io.cloudslang.content.httpclient.consume;
 
-import io.cloudslang.content.httpclient.ScoreHttpClient;
+import io.cloudslang.content.httpclient.CSHttpClient;
 import org.apache.http.HttpHost;
 import org.apache.http.client.utils.URIUtils;
 
@@ -45,9 +45,9 @@ public class FinalLocationConsumer {
             location = URIUtils.resolve(uri, targetHost, redirectLocations);
         } catch (URISyntaxException e) {
             //this is not a fatal error
-            throw new IllegalArgumentException("could not determine '" + ScoreHttpClient.FINAL_LOCATION
+            throw new IllegalArgumentException("could not determine '" + CSHttpClient.FINAL_LOCATION
                     + "': " + e.getMessage(), e);
         }
-        returnResult.put(ScoreHttpClient.FINAL_LOCATION, location.toASCIIString());
+        returnResult.put(CSHttpClient.FINAL_LOCATION, location.toASCIIString());
     }
 }

@@ -11,7 +11,7 @@
 package io.cloudslang.content.httpclient.consume;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.httpclient.ScoreHttpClient;
+import io.cloudslang.content.httpclient.CSHttpClient;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
@@ -79,7 +79,7 @@ public class HttpResponseConsumer {
             } catch (UnsupportedCharsetException e) {
                 throw new IllegalArgumentException("Could not parse responseCharacterSet. " + e.getMessage(), e);
             }
-            result.put(ScoreHttpClient.RETURN_RESULT, document);
+            result.put(CSHttpClient.RETURN_RESULT, document);
         } else {
             consumeToDestinationFile();
         }

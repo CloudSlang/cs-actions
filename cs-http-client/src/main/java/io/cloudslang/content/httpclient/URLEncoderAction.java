@@ -51,7 +51,7 @@ public class URLEncoderAction {
      */
     @Action(name = "URL Encoder",
             outputs = {
-                    @Output(ScoreHttpClient.EXCEPTION),
+                    @Output(CSHttpClient.EXCEPTION),
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT)
             },

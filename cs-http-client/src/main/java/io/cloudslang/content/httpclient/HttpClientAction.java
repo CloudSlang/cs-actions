@@ -233,12 +233,12 @@ public class HttpClientAction {
      */
     @Action(name = "Http Client",
             outputs = {
-                    @Output(ScoreHttpClient.EXCEPTION),
-                    @Output(ScoreHttpClient.STATUS_CODE),
-                    @Output(ScoreHttpClient.FINAL_LOCATION),
-                    @Output(ScoreHttpClient.RESPONSE_HEADERS),
-                    @Output(ScoreHttpClient.PROTOCOL_VERSION),
-                    @Output(ScoreHttpClient.REASON_PHRASE),
+                    @Output(CSHttpClient.EXCEPTION),
+                    @Output(CSHttpClient.STATUS_CODE),
+                    @Output(CSHttpClient.FINAL_LOCATION),
+                    @Output(CSHttpClient.RESPONSE_HEADERS),
+                    @Output(CSHttpClient.PROTOCOL_VERSION),
+                    @Output(CSHttpClient.REASON_PHRASE),
                     @Output("returnCode"),
                     @Output("returnResult")
             },
@@ -346,7 +346,7 @@ public class HttpClientAction {
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
 
         try {
-            return new ScoreHttpClient().execute(httpClientInputs);
+            return new CSHttpClient().execute(httpClientInputs);
         } catch (Exception e) {
             return exceptionResult(e.getMessage(), e);
         }
