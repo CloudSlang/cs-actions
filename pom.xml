@@ -169,7 +169,7 @@
         </profile>
     </profiles>
     <modules>
-        <module>score-http-client</module>
+        <module>cs-http-client</module>
         <module>score-ssh</module>
         <module>score-mail</module>
 		<module>score-powershell</module>
