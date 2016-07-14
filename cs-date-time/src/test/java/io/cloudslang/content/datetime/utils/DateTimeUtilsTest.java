@@ -43,7 +43,6 @@ public class DateTimeUtilsTest {
         DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("HH:MM", "fr", "FR");
         DateTime dateTime = DateTimeUtils
                 .getJodaOrJavaDate(dateTimeFormatter, "4 juillet 2001 12:08:56 EEST");
-        System.out.println(Locale.getDefault());
         assertEquals("12:07", dateTime.toString(dateTimeFormatter));
     }
 
