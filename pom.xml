@@ -170,7 +170,7 @@
     </profiles>
     <modules>
         <module>cs-http-client</module>
-        <module>score-ssh</module>
+        <module>cs-ssh</module>
         <module>cs-mail</module>
 		<module>score-powershell</module>
         <module>score-data-format</module>
