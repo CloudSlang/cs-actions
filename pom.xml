@@ -177,7 +177,7 @@
         <module>cs-utilities</module>
         <module>cs-rft</module>
         <module>score-jClouds</module>
-        <module>score-xml</module>
+        <module>cs-xml</module>
         <module>cs-date-time</module>
         <module>score-vmware</module>
         <module>cs-lists</module>

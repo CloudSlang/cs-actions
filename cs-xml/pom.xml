@@ -9,7 +9,7 @@
         http://www.apache.org/licenses/LICENSE-2.0
     -->
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>score-xml</artifactId>
+    <artifactId>cs-xml</artifactId>
     <version>0.0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
@@ -57,8 +57,8 @@
 
         <dependency>
             <groupId>io.cloudslang.content</groupId>
-            <artifactId>score-http-client</artifactId>
-            <version>0.1.65</version>
+            <artifactId>cs-http-client</artifactId>
+            <version>0.1.67</version>
         </dependency>
 
         <dependency>
