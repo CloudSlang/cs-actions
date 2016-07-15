@@ -172,7 +172,7 @@
         <module>cs-http-client</module>
         <module>cs-ssh</module>
         <module>cs-mail</module>
-		<module>score-powershell</module>
+		<module>cs-powershell</module>
         <module>cs-json</module>
         <module>cs-utilities</module>
         <module>cs-rft</module>
