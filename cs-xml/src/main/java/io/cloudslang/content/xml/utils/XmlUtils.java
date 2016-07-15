@@ -1,7 +1,7 @@
 package io.cloudslang.content.xml.utils;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.httpclient.ScoreHttpClient;
+import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
 import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
@@ -283,7 +283,7 @@ public class XmlUtils {
     }
 
     public static String createXmlDocumentFromUrl(CommonInputs commonInputs) throws ParserConfigurationException, SAXException, IOException {
-            ScoreHttpClient scoreHttpClient = new ScoreHttpClient();
+            CSHttpClient scoreHttpClient = new CSHttpClient();
             HttpClientInputs httpClientInputs = new HttpClientInputs();
             httpClientInputs.setMethod(HttpGet.METHOD_NAME);
             httpClientInputs.setUrl(commonInputs.getXmlDocument());
@@ -309,8 +309,8 @@ public class XmlUtils {
             httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
 
             Map<String, String> requestResponse = scoreHttpClient.execute(httpClientInputs);
-            if (!OK_STATUS_CODE.equals(requestResponse.get(ScoreHttpClient.STATUS_CODE))) {
-                throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(ScoreHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
+            if (!OK_STATUS_CODE.equals(requestResponse.get(CSHttpClient.STATUS_CODE))) {
+                throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(CSHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
             }
             return requestResponse.get(Constants.Outputs.RETURN_RESULT);
     }
