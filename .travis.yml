@@ -1,7 +1,7 @@
 language: java
 
 env:
-  - MVN_EXCLUDE_MODULES='-pl !score-vmware'
+  - MVN_EXCLUDE_MODULES='-pl !cs-vmware'
 
 install:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
