@@ -174,7 +174,7 @@
         <module>cs-mail</module>
 		<module>score-powershell</module>
         <module>score-data-format</module>
-        <module>score-utilities</module>
+        <module>cs-utilities</module>
         <module>score-rft</module>
         <module>score-jClouds</module>
         <module>score-xml</module>
