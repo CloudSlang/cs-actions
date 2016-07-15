@@ -1,7 +1,7 @@
 package io.cloudslang.content.datetime.utils;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import java.util.Locale;
@@ -39,11 +39,10 @@ public class DateTimeUtilsTest {
 
     @Test
     public void getJodaOrJavaDate() throws Exception {
-        DateTimeZone timeZone = DateTimeZone.forID(Constants.Miscellaneous.GMT);
+        DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("HH:MM", "fr", "FR");
         DateTime dateTime = DateTimeUtils
-                .getJodaOrJavaDate(DateTimeUtils.getDateFormatter("HH:MM", "fr", "FR"), "4 juillet 2001 12:08:56 EEST")
-                .withZone(timeZone);
-        assertEquals(dateTime.toString(), "2001-07-04T12:08:56.000Z");
+                .getJodaOrJavaDate(dateTimeFormatter, "4 juillet 2001 12:08:56 EEST");
+        assertEquals("12:07", dateTime.toString(dateTimeFormatter));
     }
 
     @Test
