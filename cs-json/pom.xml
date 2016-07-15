@@ -11,7 +11,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-json</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Data format java actions</description>
