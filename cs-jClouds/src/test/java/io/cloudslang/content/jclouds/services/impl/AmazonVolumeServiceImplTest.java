@@ -129,7 +129,6 @@ public class AmazonVolumeServiceImplTest {
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
     }
 
-
     @Test
     public void createVolumeInAvailabilityZoneValidationErrorLowerSizeTest() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
@@ -188,6 +187,15 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, never()).lazyInit(anyString());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
+    }
+
+    @Test
+    public void deleteVolumeInRegion(){
+        volumeSpy.deleteVolumeInRegion("some_region", "vol-b8d74e1c");
+
+        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(ebsApiMock, times(1)).deleteVolumeInRegion(eq("some_region"), eq("vol-b8d74e1c"));
+        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
