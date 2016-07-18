@@ -17,9 +17,12 @@ import java.util.Map;
  * 2/18/2016.
  */
 public class RunInstancesExecutor {
+    private static final String MIN_COUNT_MAX_COUNT_VALIDATION = "The value provided for [maxCount] input should be " +
+            "greater or equal than the value provided for [minxCount] input.";
+
     public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
         if (instanceInputs.getMinCount() > instanceInputs.getMaxCount()) {
-            throw new RuntimeException(Constants.ErrorMessages.MIN_COUNT_MAX_COUNT_VALIDATION);
+            throw new RuntimeException(MIN_COUNT_MAX_COUNT_VALIDATION);
         }
 
         ComputeService cs = ComputeFactory.getComputeService(inputs);

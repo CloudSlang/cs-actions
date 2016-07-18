@@ -15,8 +15,10 @@ import java.util.regex.Pattern;
  */
 public final class InputsUtil {
     private static final String COMMA_DELIMITER = ",";
+
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
+
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
 

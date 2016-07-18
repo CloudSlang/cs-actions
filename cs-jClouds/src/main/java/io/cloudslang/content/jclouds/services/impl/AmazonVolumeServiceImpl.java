@@ -34,7 +34,7 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
         if (StringUtils.isBlank(snapshotId) && StringUtils.isBlank(volumeType)) {
             int validSize = new AmazonVolumeServiceHelper()
                     .getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
-                            Constants.ValidationValues.ONE_THOUSAND, size);
+                            Constants.ValidationValues.THOUSAND_AND_TWENTY_FOUR, size);
             return getEbsApi(region, true).createVolumeInAvailabilityZone(availabilityZone, validSize);
         }
 
@@ -42,6 +42,11 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
                 .getCreateVolumeOptions(snapshotId, volumeType, size, iops, encrypted);
 
         return getEbsApi(region, true).createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
+    }
+
+    @Override
+    public void deleteVolumeInRegion(String region, String volumeId) {
+        getEbsApi(region, true).deleteVolumeInRegion(region, volumeId);
     }
 
     @Override

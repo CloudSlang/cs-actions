@@ -15,6 +15,12 @@ import org.jclouds.ec2.EC2Api;
  * 6/15/2016.
  */
 public class Utils {
+    private static final String NOT_RELEVANT_INT_CODE = "-1";
+    private static final String TAG = "tag:";
+    private static final String EQUAL = "=";
+    private static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
+            "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
+
     public EC2Api getEC2Api(ContextBuilder contextBuilder) {
         return contextBuilder.buildApi(EC2Api.class);
     }
@@ -112,7 +118,7 @@ public class Utils {
     }
 
     private void setInstanceRelevantFilters(InstanceInputs instanceInputs, Multimap<String, String> filtersMap) {
-        if (!Constants.Miscellaneous.NOT_RELEVANT_INT_CODE.equals(instanceInputs.getInstanceStateCode())) {
+        if (!NOT_RELEVANT_INT_CODE.equals(instanceInputs.getInstanceStateCode())) {
             updateFiltersMapEntry(filtersMap, InstanceFilter.INSTANCE_STATE_CODE.getValue(), instanceInputs.getInstanceStateCode());
         }
 
@@ -186,11 +192,11 @@ public class Utils {
     private void updateTagFilters(Multimap<String, String> filtersMap, String[] tagKeys, String[] tagValues) {
         if (tagKeys != null && tagValues != null) {
             if (tagKeys.length != tagValues.length) {
-                throw new RuntimeException(Constants.ErrorMessages.TAG_KEYS_TAG_VALUES_MISMATCH);
+                throw new RuntimeException(TAG_KEYS_TAG_VALUES_MISMATCH);
             }
 
             for (int counter = 0; counter < tagKeys.length - 1; counter++) {
-                filtersMap.put(Constants.Miscellaneous.TAG, tagKeys[counter] + Constants.Miscellaneous.EQUAL + tagValues[counter]);
+                filtersMap.put(TAG, tagKeys[counter] + EQUAL + tagValues[counter]);
             }
         }
     }
