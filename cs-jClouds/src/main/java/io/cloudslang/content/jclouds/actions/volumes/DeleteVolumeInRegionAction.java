@@ -24,8 +24,8 @@ public class DeleteVolumeInRegionAction {
     /**
      * Deletes the specified EBS volume. The volume must be in the "available" state (not attached to an instance).
      * <p>
-     * Note: The volume may remain in the deleting state for several minutes.
-     * For more information, see Deleting an Amazon EBS Volume in the Amazon Elastic Compute Cloud User Guide.
+     * Note: The volume may remain in the deleting state for several minutes. For more information, see Deleting an Amazon
+     * EBS Volume in the Amazon Elastic Compute Cloud User Guide.
      *
      * @param provider   Cloud provider on which you have the instance - Valid values: "amazon" or "openstack".
      * @param endpoint   Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com" for amazon or
