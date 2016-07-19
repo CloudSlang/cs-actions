@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.actions.snapshots;
+package io.cloudslang.content.jclouds.actions.volumes;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -11,25 +11,21 @@ import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
-import io.cloudslang.content.jclouds.execute.snapshots.CreateSnapshotInRegionExecutor;
-import io.cloudslang.content.jclouds.execute.snapshots.DeleteSnapshotInRegionExecutor;
+import io.cloudslang.content.jclouds.execute.volumes.DeleteVolumeInRegionExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 6/29/2016.
+ * 7/18/2016.
  */
-public class DeleteSnapshotInRegionAction {
+public class DeleteVolumeInRegionAction {
     /**
-     * Deletes the specified snapshot.
-     * Note: When you make periodic snapshots of a volume, the snapshots are incremental, and only the blocks on the device
-     * that have changed since your last snapshot are saved in the new snapshot. When you delete a snapshot, only the data
-     * not needed for any other snapshot is removed. So regardless of which prior snapshots have been deleted, all active
-     * snapshots will have access to all the information needed to restore the volume. You cannot delete a snapshot of the
-     * root device of an EBS volume used by a registered AMI. You must first de-register the AMI before you can delete the
-     * snapshot. For more information, see Deleting an Amazon EBS Snapshot in the Amazon Elastic Compute Cloud User Guide.
+     * Deletes the specified EBS volume. The volume must be in the "available" state (not attached to an instance).
+     * <p>
+     * Note: The volume may remain in the deleting state for several minutes. For more information, see Deleting an Amazon
+     * EBS Volume in the Amazon Elastic Compute Cloud User Guide.
      *
      * @param provider   Cloud provider on which you have the instance - Valid values: "amazon" or "openstack".
      * @param endpoint   Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com" for amazon or
@@ -39,13 +35,13 @@ public class DeleteSnapshotInRegionAction {
      * @param credential Optional - Password of the user or the Secret Access Key that correspond to the identity input.
      * @param proxyHost  Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort  Optional - Proxy server port.
-     * @param region     Optional - region where volume, to make snapshot for, belongs. Ex: "RegionOne", "us-east-1".
+     * @param region     Optional - region where volume to be deleted belongs. Ex: "RegionOne", "us-east-1".
      *                   ListRegionAction can be used in order to get all regions - Default: "us-east-1"
-     * @param snapshotId ID of the EBS snapshot.
+     * @param volumeId   ID of the EBS volume.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Delete Snapshot in Region",
+    @Action(name = "Delete Volume in Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -66,7 +62,7 @@ public class DeleteSnapshotInRegionAction {
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.VolumeInputs.SNAPSHOT_ID, required = true) String snapshotId)
+                                       @Param(value = Inputs.CustomInputs.VOLUME_ID, required = true) String volumeId)
             throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
@@ -78,17 +74,11 @@ public class DeleteSnapshotInRegionAction {
                 .withProxyPort(proxyPort)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
-                .withRegion(region)
-                .build();
-
-        VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder()
-                .withCustomInputs(customInputs)
-                .withSnapshotId(snapshotId)
-                .build();
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withRegion(region).withVolumeId(volumeId).build();
+        VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder().withCustomInputs(customInputs).build();
 
         try {
-            return new DeleteSnapshotInRegionExecutor().execute(inputs, volumeInputs);
+            return new DeleteVolumeInRegionExecutor().execute(inputs, volumeInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

@@ -21,6 +21,8 @@ import java.util.Set;
  */
 public class OpenstackComputeServiceImpl extends JCloudsComputeService implements ComputeService {
     NovaApi novaApi = null;
+
+    private static final String OPENSTACK_NOVA = "openstack-nova";
     private String region;
 
     public void setRegion(String region) {
@@ -32,7 +34,7 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     protected void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.OPENSTACK_NOVA);
+        ContextBuilder contextBuilder = super.init(region, OPENSTACK_NOVA);
         novaApi = contextBuilder.buildApi(NovaApi.class);
     }
 

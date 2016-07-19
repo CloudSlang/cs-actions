@@ -17,8 +17,11 @@ public class AmazonVolumeServiceHelper {
     private static final String SC1 = "sc1";
 
     private static final int FOUR = 4;
+    private static final int ONE_HUNDRED = 100;
     private static final int FIVE_HUNDRED = 500;
     private static final int TEN_THOUSANDS = 10000;
+    private static final int COMMON_LARGE_VALUE = 16384;
+    private static final int TWENTY_THOUSAND = 20000;
 
     public CreateVolumeOptions getCreateVolumeOptions(String snapshotId, String volumeType, String size, String iops,
                                                       boolean encrypted) {
@@ -75,33 +78,32 @@ public class AmazonVolumeServiceHelper {
 
     private void setStandardOptions(CreateVolumeOptions options, String size) {
         options.withSize(getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
-                Constants.ValidationValues.ONE_THOUSAND, size));
+                Constants.ValidationValues.THOUSAND_AND_TWENTY_FOUR, size));
     }
 
     private void setCreateVolumeOptions(CreateVolumeOptions options, String volumeType, String size, String iops) {
         switch (volumeType) {
             case GP2:
                 options.volumeType(GP2);
-                options.withSize(getSize(GP2, Constants.ValidationValues.ONE, Constants.ValidationValues.COMMON_LARGE_VALUE, size));
+                options.withSize(getSize(GP2, Constants.ValidationValues.ONE, COMMON_LARGE_VALUE, size));
                 if (!Constants.Miscellaneous.NOT_RELEVANT.equals(iops)) {
-                    options.withIops(getIops(GP2, Constants.ValidationValues.ONE_HUNDRED, TEN_THOUSANDS, iops));
+                    options.withIops(getIops(GP2, ONE_HUNDRED, TEN_THOUSANDS, iops));
                 }
                 break;
             case IO1:
                 options.volumeType(IO1);
-                options.withSize(getSize(IO1, FOUR, Constants.ValidationValues.COMMON_LARGE_VALUE, size));
+                options.withSize(getSize(IO1, FOUR, COMMON_LARGE_VALUE, size));
                 if (!Constants.Miscellaneous.NOT_RELEVANT.equals(iops)) {
-                    options.withIops(getIops(IO1, Constants.ValidationValues.ONE_HUNDRED,
-                            Constants.ValidationValues.TWENTY_THOUSANDS, iops));
+                    options.withIops(getIops(IO1, ONE_HUNDRED, TWENTY_THOUSAND, iops));
                 }
                 break;
             case ST1:
                 options.volumeType(ST1);
-                options.withSize(getSize(ST1, FIVE_HUNDRED, Constants.ValidationValues.COMMON_LARGE_VALUE, size));
+                options.withSize(getSize(ST1, FIVE_HUNDRED, COMMON_LARGE_VALUE, size));
                 break;
             case SC1:
                 options.volumeType(SC1);
-                options.withSize(getSize(SC1, FIVE_HUNDRED, Constants.ValidationValues.COMMON_LARGE_VALUE, size));
+                options.withSize(getSize(SC1, FIVE_HUNDRED, COMMON_LARGE_VALUE, size));
                 break;
             case Constants.Miscellaneous.STANDARD:
                 setStandardOptions(options, size);

@@ -11,10 +11,12 @@ import io.cloudslang.content.jclouds.services.impl.OpenstackComputeServiceImpl;
  * Created by persdana on 5/27/2015.
  */
 public class ComputeFactory {
+    private static final String AMAZON = "amazon";
+
     public static ComputeService getComputeService(CommonInputs commonInputs) throws Exception {
         ComputeService computeService;
         switch (commonInputs.getProvider().toLowerCase()) {
-            case Constants.Providers.AMAZON:
+            case AMAZON:
                 computeService = new AmazonComputeServiceImpl(
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),

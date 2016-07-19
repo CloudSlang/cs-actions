@@ -5,22 +5,20 @@ import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.factory.VolumeFactory;
 import io.cloudslang.content.jclouds.services.VolumeService;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
-import org.jclouds.ec2.domain.Volume;
 
 import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 6/22/2016.
+ * 7/18/2016.
  */
-public class CreateVolumeInAvailabilityZoneExecutor {
+public class DeleteVolumeInRegionExecutor {
+    private static final String DELETE_VOLUME_PROCESS_STARTED = "Delete volume process started successfully.";
+
     public Map<String, String> execute(CommonInputs inputs, VolumeInputs volumeInputs) throws Exception {
         VolumeService volumeService = VolumeFactory.getVolumeService(inputs);
-        Volume volume = volumeService.createVolumeInAvailabilityZone(volumeInputs.getCustomInputs().getRegion(),
-                volumeInputs.getCustomInputs().getAvailabilityZone(), volumeInputs.getSnapshotId(),
-                volumeInputs.getCustomInputs().getVolumeType(), volumeInputs.getSize(), volumeInputs.getIops(),
-                volumeInputs.isEncrypted());
+        volumeService.deleteVolumeInRegion(volumeInputs.getCustomInputs().getRegion(), volumeInputs.getCustomInputs().getVolumeId());
 
-        return OutputsUtil.getResultsMap(volume.toString());
+        return OutputsUtil.getResultsMap(DELETE_VOLUME_PROCESS_STARTED);
     }
 }
