@@ -4,7 +4,6 @@ import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.factory.VolumeFactory;
 import io.cloudslang.content.jclouds.services.VolumeService;
-import io.cloudslang.content.jclouds.utils.InputsUtil;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
 import org.jclouds.ec2.domain.Volume;
 
