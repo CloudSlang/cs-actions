@@ -21,7 +21,7 @@ public class AmazonVolumeServiceHelper {
     private static final int FIVE_HUNDRED = 500;
     private static final int TEN_THOUSANDS = 10000;
     private static final int COMMON_LARGE_VALUE = 16384;
-    private static final int TWENTY_THOUSANDS = 20000;
+    private static final int TWENTY_THOUSAND = 20000;
 
     public CreateVolumeOptions getCreateVolumeOptions(String snapshotId, String volumeType, String size, String iops,
                                                       boolean encrypted) {
@@ -94,7 +94,7 @@ public class AmazonVolumeServiceHelper {
                 options.volumeType(IO1);
                 options.withSize(getSize(IO1, FOUR, COMMON_LARGE_VALUE, size));
                 if (!Constants.Miscellaneous.NOT_RELEVANT.equals(iops)) {
-                    options.withIops(getIops(IO1, ONE_HUNDRED, TWENTY_THOUSANDS, iops));
+                    options.withIops(getIops(IO1, ONE_HUNDRED, TWENTY_THOUSAND, iops));
                 }
                 break;
             case ST1:
