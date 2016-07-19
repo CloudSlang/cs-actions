@@ -20,7 +20,7 @@ import java.util.Set;
  * Created by persdana on 6/5/2015.
  */
 public class ComputeServiceImpl extends JCloudsComputeService implements ComputeService {
-    public static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
+    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
             "providers in the provider input";
 
     org.jclouds.compute.ComputeService computeService = null;

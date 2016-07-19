@@ -12,6 +12,7 @@ import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.execute.snapshots.CreateSnapshotInRegionExecutor;
+import io.cloudslang.content.jclouds.execute.snapshots.DeleteSnapshotInRegionExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -87,7 +88,7 @@ public class DeleteSnapshotInRegionAction {
                 .build();
 
         try {
-            return new CreateSnapshotInRegionExecutor().execute(inputs, volumeInputs);
+            return new DeleteSnapshotInRegionExecutor().execute(inputs, volumeInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
