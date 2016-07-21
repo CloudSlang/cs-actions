@@ -52,6 +52,7 @@ public class Inputs {
         public static final String VIRTUALIZATION_TYPE = "virtualizationType";
         public static final String AVAILABILITY_ZONE = "availabilityZone";
         public static final String INSTANCE_TYPE = "instanceType";
+        public static final String RESOURCE_IDS_STRING = "resourceIdsString";
     }
 
     public static final class ImageInputs {
