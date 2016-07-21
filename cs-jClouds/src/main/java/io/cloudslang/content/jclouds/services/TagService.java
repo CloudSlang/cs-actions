@@ -7,5 +7,5 @@ import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
  * 7/20/2016.
  */
 public interface TagService {
-    void applyToResources(CustomInputs imageInputs, String delimiter);
+    void applyToResources(CustomInputs customInputs, String delimiter);
 }

@@ -25,7 +25,7 @@ public class Utils {
     private static final String EQUAL = "=";
     private static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
             "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
-    private static final String RESOURCE_IDS_STRING_EMPTY = "Value for supplied for: [resourceIdsString] input" +
+    private static final String RESOURCE_IDS_STRING_EMPTY = "Value for supplied for: [resourceIdsString] input " +
             "cannot be empty. Please provide at least one resource id to apply tags to.";
     private static final String MAXIMUM_TAGS_LIMIT_EXCEEDED = "Incorrect supplied values for: [keyTagsString] and/or " +
             "[valueTagsString] inputs. A resource can have a maximum of 10 tags.";

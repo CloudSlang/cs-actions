@@ -52,7 +52,7 @@ public final class InputsUtil {
     }
 
     public static boolean getImageNoRebootFlag(String input) {
-        return StringUtils.isBlank(input) || Boolean.parseBoolean(input);
+        return !isRelevant(input) || StringUtils.isBlank(input) || Boolean.parseBoolean(input);
     }
 
     public static long getValidLong(String input, long defaultValue) {
@@ -129,5 +129,9 @@ public final class InputsUtil {
             return "The provided value: " + input + " input must be integer.";
         }
         return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
+    }
+
+    private static boolean isRelevant(String input){
+        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input) ;
     }
 }

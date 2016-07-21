@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 
 /**
@@ -152,5 +153,12 @@ public class InputsUtilTest {
         String testedString = InputsUtil.getValidVolumeAmount("0.5");
 
         assertEquals("0.5", testedString);
+    }
+
+    @Test
+    public void getImageNoRebootFlag() {
+        boolean flag = InputsUtil.getImageNoRebootFlag("null or empty or anything but true");
+
+        assertTrue(flag);
     }
 }
