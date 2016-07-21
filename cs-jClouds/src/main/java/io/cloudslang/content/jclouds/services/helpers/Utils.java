@@ -3,12 +3,17 @@ package io.cloudslang.content.jclouds.services.helpers;
 import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.*;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Mihai Tusa.
@@ -20,14 +25,34 @@ public class Utils {
     private static final String EQUAL = "=";
     private static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
             "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
+    private static final String RESOURCE_IDS_STRING_EMPTY = "Value for supplied for: [resourceIdsString] input" +
+            "cannot be empty. Please provide at least one resource id to apply tags to.";
+    private static final String MAXIMUM_TAGS_LIMIT_EXCEEDED = "Incorrect supplied values for: [keyTagsString] and/or " +
+            "[valueTagsString] inputs. A resource can have a maximum of 10 tags.";
 
     public EC2Api getEC2Api(ContextBuilder contextBuilder) {
         return contextBuilder.buildApi(EC2Api.class);
     }
 
+    public Map<String, String> getTagsMap(CustomInputs customInputs, String delimiter) {
+        Map<String, String> tagsMap = new HashMap<>();
+        setTags(customInputs, tagsMap, delimiter);
+
+        return tagsMap;
+    }
+
+    public Set<String> getResourcesIdsList(String resourceIdsString, String delimiter) {
+        Set<String> resourceIdsSet = InputsUtil.getStringsSet(resourceIdsString, delimiter);
+        if (resourceIdsSet == null) {
+            throw new RuntimeException(RESOURCE_IDS_STRING_EMPTY);
+        }
+
+        return resourceIdsSet;
+    }
+
     void updateInstanceFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
         setInstanceRelevantFilters(instanceInputs, filtersMap);
-        setTagFilters(instanceInputs, filtersMap, delimiter);
+        setTags(instanceInputs, filtersMap, delimiter);
 
         updateFiltersMapEntry(filtersMap, CommonFilter.KERNEL_ID.getValue(), instanceInputs.getCustomInputs().getKernelId());
         updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ID.getValue(), instanceInputs.getCustomInputs().getOwnerId());
@@ -99,7 +124,7 @@ public class Utils {
 
     void updateImageFiltersMap(ImageInputs imageInputs, Multimap<String, String> filtersMap, String delimiter) {
         setImageRelevantFilters(imageInputs, filtersMap);
-        setTagFilters(imageInputs, filtersMap, delimiter);
+        setTags(imageInputs, filtersMap, delimiter);
 
         updateFiltersMapEntry(filtersMap, CommonFilter.KERNEL_ID.getValue(), imageInputs.getCustomInputs().getKernelId());
         updateFiltersMapEntry(filtersMap, CommonFilter.OWNER_ALIAS.getValue(), imageInputs.getCustomInputs().getOwnerAlias());
@@ -174,30 +199,63 @@ public class Utils {
         }
     }
 
-    private <T> void setTagFilters(T inputs, Multimap<String, String> filtersMap, String delimiter) {
-        String[] tagKeys = null;
-        String[] tagValues = null;
+    private <K, V> void setTags(K inputs, V multipurposeMap, String delimiter) {
+        String[] tagKeys;
+        String[] tagValues;
 
         if (inputs instanceof InstanceInputs) {
-            tagKeys = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getKeyTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
-            tagValues = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getValueTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
+            tagKeys = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getKeyTagsString(),
+                    Constants.Miscellaneous.EMPTY, delimiter);
+            tagValues = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getValueTagsString(),
+                    Constants.Miscellaneous.EMPTY, delimiter);
+
+            updateTagFilters((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
         } else if (inputs instanceof ImageInputs) {
-            tagKeys = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getKeyTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
-            tagValues = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getValueTagsString(), Constants.Miscellaneous.EMPTY, delimiter);
+            tagKeys = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getKeyTagsString(),
+                    Constants.Miscellaneous.EMPTY, delimiter);
+            tagValues = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getValueTagsString(),
+                    Constants.Miscellaneous.EMPTY, delimiter);
+
+            updateTagFilters((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
+        } else if (inputs instanceof CustomInputs) {
+            tagKeys = InputsUtil.getStringsArray(((CustomInputs) inputs).getKeyTagsString(),
+                    Constants.Miscellaneous.EMPTY, delimiter);
+            tagValues = InputsUtil.getStringsArray(((CustomInputs) inputs).getValueTagsString(),
+                    Constants.Miscellaneous.EMPTY, delimiter);
+
+            updateTagsMap((Map<String, String>) multipurposeMap, tagKeys, tagValues);
         }
 
-        updateTagFilters(filtersMap, tagKeys, tagValues);
     }
 
     private void updateTagFilters(Multimap<String, String> filtersMap, String[] tagKeys, String[] tagValues) {
         if (tagKeys != null && tagValues != null) {
-            if (tagKeys.length != tagValues.length) {
-                throw new RuntimeException(TAG_KEYS_TAG_VALUES_MISMATCH);
-            }
+            validateArrays(tagKeys, tagValues);
 
-            for (int counter = 0; counter < tagKeys.length - 1; counter++) {
+            for (int counter = 0; counter < tagKeys.length; counter++) {
                 filtersMap.put(TAG, tagKeys[counter] + EQUAL + tagValues[counter]);
             }
+        }
+    }
+
+    private void updateTagsMap(Map<String, String> tagsMap, String[] tagKeys, String[] tagValues) {
+        if (tagKeys != null && tagValues != null) {
+            validateArrays(tagKeys, tagValues);
+
+            if (tagKeys.length > 10) {
+                throw new RuntimeException(MAXIMUM_TAGS_LIMIT_EXCEEDED);
+            }
+
+            for (int counter = 0; counter < tagKeys.length; counter++) {
+                tagsMap.put(tagKeys[counter], tagValues[counter]);
+            }
+        }
+
+    }
+
+    private void validateArrays(String[] tagKeys, String[] tagValues) {
+        if (tagKeys.length != tagValues.length) {
+            throw new RuntimeException(TAG_KEYS_TAG_VALUES_MISMATCH);
         }
     }
 }
