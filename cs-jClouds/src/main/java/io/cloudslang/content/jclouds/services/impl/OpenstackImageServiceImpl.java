@@ -19,13 +19,13 @@ public class OpenstackImageServiceImpl extends JCloudsComputeService implements 
     }
 
     @Override
-    public String createImageInRegion(String region, String name, String serverId, String imageDescription, boolean imageNoReboot)
-            throws Exception {
+    public String createImageInRegion(String region, String name, String instanceId, String imageDescription,
+                                      boolean imageNoReboot, boolean withExecutionLogs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public String deregisterImageInRegion(String region, String imageId) throws Exception {
+    public String deregisterImageInRegion(String region, String imageId, boolean withExecutionLogs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
@@ -35,22 +35,25 @@ public class OpenstackImageServiceImpl extends JCloudsComputeService implements 
     }
 
     @Override
-    public org.jclouds.ec2.domain.Permission getLaunchPermissionForImage(String region, String imageId) throws Exception {
+    public org.jclouds.ec2.domain.Permission getLaunchPermissionForImage(String region, String imageId,
+                                                                         boolean withExecutionLogs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) throws Exception {
+    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId,
+                                              boolean withExecutionLogs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public String removeLaunchPermissionsFromImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) throws Exception {
+    public String removeLaunchPermissionsFromImage(String region, Set<String> userIds, Set<String> userGroups,
+                                                   String imageId, boolean withExecutionLogs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public String resetLaunchPermissionsOnImage(String region, String imageId) throws Exception {
+    public String resetLaunchPermissionsOnImage(String region, String imageId, boolean withExecutionLogs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 }

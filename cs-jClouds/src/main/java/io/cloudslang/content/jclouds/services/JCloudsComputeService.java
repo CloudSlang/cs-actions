@@ -28,9 +28,25 @@ public class JCloudsComputeService {
         this.proxyPort = proxyPort;
     }
 
-    protected ContextBuilder init(String region, String provider) {
-        Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
+    protected ContextBuilder init(String region, String provider, boolean withExecutionLogs) {
+        Properties overrides = getOverridesProperties(region);
 
+        if (withExecutionLogs) {
+            Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
+            return ContextBuilder.newBuilder(provider)
+                    .endpoint(endpoint)
+                    .credentials(identity, credential)
+                    .overrides(overrides)
+                    .modules(modules);
+        }
+
+        return ContextBuilder.newBuilder(provider)
+                .endpoint(endpoint)
+                .credentials(identity, credential)
+                .overrides(overrides);
+    }
+
+    private Properties getOverridesProperties(String region) {
         Properties overrides = new Properties();
         if (StringUtils.isNotBlank(proxyHost)) {
             overrides.setProperty(Constants.PROPERTY_PROXY_HOST, proxyHost);
@@ -40,10 +56,6 @@ public class JCloudsComputeService {
             overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
         }
 
-        return ContextBuilder.newBuilder(provider)
-                .endpoint(endpoint)
-                .credentials(identity, credential)
-                .overrides(overrides)
-                .modules(modules);
+        return overrides;
     }
 }

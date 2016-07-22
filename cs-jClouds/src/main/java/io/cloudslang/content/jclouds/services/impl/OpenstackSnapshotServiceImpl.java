@@ -15,12 +15,12 @@ public class OpenstackSnapshotServiceImpl extends JCloudsComputeService implemen
     }
 
     @Override
-    public Snapshot createSnapshotInRegion(String region, String volumeId, String description) {
+    public Snapshot createSnapshotInRegion(String region, String volumeId, String description, boolean withExecutionLogs) {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public void deleteSnapshotInRegion(String region, String snapshotId) {
+    public void deleteSnapshotInRegion(String region, String snapshotId, boolean withExecutionLogs) {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 }

@@ -13,11 +13,11 @@ import java.util.Set;
  * 5/4/2016.
  */
 public class DescribeRegionsExecutor {
-    public Map<String, String> execute(CommonInputs inputs) throws Exception {
-        ComputeService cs = ComputeFactory.getComputeService(inputs);
-        Set<String> availableRegions = cs.describeRegions();
+    public Map<String, String> execute(CommonInputs commonInputs) throws Exception {
+        ComputeService cs = ComputeFactory.getComputeService(commonInputs);
+        Set<String> availableRegions = cs.describeRegions(commonInputs.getWithExecutionLogs());
 
-        String regionsString = OutputsUtil.getElementsString(availableRegions, inputs.getDelimiter());
+        String regionsString = OutputsUtil.getElementsString(availableRegions, commonInputs.getDelimiter());
 
         return OutputsUtil.getResultsMap(regionsString);
     }

@@ -26,33 +26,33 @@ public class AmazonSnapshotServiceImpl extends JCloudsComputeService implements 
     }
 
     @Override
-    public Snapshot createSnapshotInRegion(String region, String volumeId, String description) {
+    public Snapshot createSnapshotInRegion(String region, String volumeId, String description, boolean withExecutionLogs) {
         if (StringUtils.isBlank(description)) {
-            return getEbsApi(region, true).createSnapshotInRegion(region, volumeId);
+            return getEbsApi(region, true, withExecutionLogs).createSnapshotInRegion(region, volumeId);
         }
 
         CreateSnapshotOptions snapshotOptions = new CreateSnapshotOptions().withDescription(description);
 
-        return getEbsApi(region, true).createSnapshotInRegion(region, volumeId, snapshotOptions);
+        return getEbsApi(region, true, withExecutionLogs).createSnapshotInRegion(region, volumeId, snapshotOptions);
     }
 
     @Override
-    public void deleteSnapshotInRegion(String region, String snapshotId) {
-        getEbsApi(region, true).deleteSnapshotInRegion(region, snapshotId);
+    public void deleteSnapshotInRegion(String region, String snapshotId, boolean withExecutionLogs) {
+        getEbsApi(region, true, withExecutionLogs).deleteSnapshotInRegion(region, snapshotId);
     }
 
-    void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+    void init(boolean withExecutionLogs) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, withExecutionLogs);
         ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean withExecutionLogs) {
         this.region = InputsUtil.getAmazonRegion(region);
-        init();
+        init(withExecutionLogs);
     }
 
-    private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion) {
-        lazyInit(region);
+    private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
 
         return isForRegion ? ec2Api.getElasticBlockStoreApiForRegion(region).get() : ec2Api.getElasticBlockStoreApi().get();
     }

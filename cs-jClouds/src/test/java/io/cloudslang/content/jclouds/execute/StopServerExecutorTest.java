@@ -19,6 +19,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -59,11 +60,11 @@ public class StopServerExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn("").when(computeServiceMock).stopInstances(anyString(), anyString());
+        doReturn("").when(computeServiceMock).stopInstances(anyString(), anyString(), anyBoolean());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock).stopInstances(inputs.getRegion(), inputs.getServerId());
+        verify(computeServiceMock).stopInstances(inputs.getRegion(), inputs.getServerId(), false);
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

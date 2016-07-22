@@ -36,6 +36,7 @@ public class DescribeImagesInRegionAction {
      * @param proxyHost                    Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort                    Optional - Proxy server port - Default: "8080"
      * @param delimiter                    Optional - Delimiter that will be used - Default: ","
+     * @param withExecutionLogs            Optional - If "true" then the execution logs will be shown in CLI console.
      * @param region                       Optional - Region where image will be created. ListRegionAction can be used
      *                                     in order to get all regions. For further details check:
      *                                     http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
@@ -109,6 +110,7 @@ public class DescribeImagesInRegionAction {
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
+                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(Inputs.CustomInputs.IDENTITY_ID) String identityId,
@@ -152,6 +154,7 @@ public class DescribeImagesInRegionAction {
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
                 .withDelimiter(delimiter)
+                .withExecutionLogs(withExecutionLogs)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

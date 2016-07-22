@@ -24,24 +24,25 @@ public class UpdateInstanceTypeAction {
     /**
      * Updates (changes) instance (identified by "instanceId") type with the new one specified by "serverType".
      *
-     * @param provider         Cloud provider on which you have the instance - Valid values: "amazon" or "openstack".
-     * @param endpoint         Endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com"
-     *                         for amazon or "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity         Optional - Username of your account or the Access Key ID. For OpenStack provider the required
-     *                         format is 'alias:username'.
-     * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity
-     *                         input.
-     * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort        Optional - Proxy server port.
-     * @param region           Optional - Region where the server (instance) to be started can be found.
-     *                         listRegionsAction operation can be used in order to get all regions - Default: 'us-east-1'
-     * @param instanceId       ID of the server (instance) you want to update
-     * @param instanceType     Optional - New server type to be used when updating the instance. The complete list of instance
-     *                         types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
-     *                         - Example: 't2.medium', 'm3.large' - Default: 't2.micro'
-     * @param operationTimeout Optional - the total time (in milliseconds) that operation will wait to complete the execution
-     * @param poolingInterval  Optional - the time (in milliseconds) that operation will wait until next check of the instance
-     *                         state
+     * @param provider          Cloud provider on which you have the instance - Valid values: "amazon" or "openstack".
+     * @param endpoint          Endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com"
+     *                          for amazon or "http://hostOrIp:5000/v2.0" for OpenStack.
+     * @param identity          Optional - Username of your account or the Access Key ID. For OpenStack provider the required
+     *                          format is 'alias:username'.
+     * @param credential        Optional - Password of the user or the Secret Access Key that correspond to the identity
+     *                          input.
+     * @param proxyHost         Optional - Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort         Optional - Proxy server port.
+     * @param withExecutionLogs Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param region            Optional - Region where the server (instance) to be started can be found.
+     *                          listRegionsAction operation can be used in order to get all regions - Default: 'us-east-1'
+     * @param instanceId        ID of the server (instance) you want to update
+     * @param instanceType      Optional - New server type to be used when updating the instance. The complete list of instance
+     *                          types can be found at: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
+     *                          - Example: 't2.medium', 'm3.large' - Default: 't2.micro'
+     * @param operationTimeout  Optional - the total time (in milliseconds) that operation will wait to complete the execution
+     * @param poolingInterval   Optional - the time (in milliseconds) that operation will wait until next check of the instance
+     *                          state
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -64,6 +65,7 @@ public class UpdateInstanceTypeAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId,
@@ -80,6 +82,7 @@ public class UpdateInstanceTypeAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
+                .withExecutionLogs(withExecutionLogs)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

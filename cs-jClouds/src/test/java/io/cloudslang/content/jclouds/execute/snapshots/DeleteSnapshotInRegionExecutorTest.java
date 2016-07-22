@@ -55,7 +55,7 @@ public class DeleteSnapshotInRegionExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getVolumeInputs());
 
-        verify(snapshotServiceMock, times(1)).deleteSnapshotInRegion(eq("testRegion"), eq("snap-abcdef12"));
+        verify(snapshotServiceMock, times(1)).deleteSnapshotInRegion(eq("testRegion"), eq("snap-abcdef12"), eq(false));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
@@ -63,7 +63,7 @@ public class DeleteSnapshotInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {

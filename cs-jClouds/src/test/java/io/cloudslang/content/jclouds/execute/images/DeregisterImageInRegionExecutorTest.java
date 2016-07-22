@@ -17,8 +17,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -54,17 +53,17 @@ public class DeregisterImageInRegionExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getCustomInputs());
 
-        verify(imageServiceMock, times(1)).deregisterImageInRegion(anyString(), anyString());
+        verify(imageServiceMock, times(1)).deregisterImageInRegion(eq("some region"), eq("i-abcdef12"), eq(true));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("tRuE").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().build();
+        return new CustomInputs.CustomInputsBuilder().withRegion("some region").withImageId("i-abcdef12").build();
     }
 }

@@ -7,7 +7,6 @@ import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.domain.Location;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
@@ -33,50 +32,50 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
         this.provider = provider;
     }
 
-    protected void init() {
-        ContextBuilder contextBuilder = super.init(region, provider);
+    protected void init(boolean withExecutionLogs) {
+        ContextBuilder contextBuilder = super.init(region, provider, withExecutionLogs);
         ComputeServiceContext context = contextBuilder.buildView(ComputeServiceContext.class);
         computeService = context.getComputeService();
     }
 
-    void lazyInit() {
+    void lazyInit(boolean withExecutionLogs) {
         if (computeService == null) {
-            this.init();
+            this.init(withExecutionLogs);
         }
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean withExecutionLogs) {
         if (this.region == null || !this.region.equals(region)) {
             this.region = region;
-            this.init();
+            this.init(withExecutionLogs);
         } else if (computeService == null) {
-            this.init();
+            this.init(withExecutionLogs);
         }
     }
 
     @Override
-    public String terminateInstances(String region, String serverId) {
-        lazyInit(region);
+    public String terminateInstances(String region, String serverId, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
         computeService.destroyNode(serverId);
         return "Server Removed";
     }
 
     @Override
-    public String startInstances(String region, String serverId) throws Exception {
+    public String startInstances(String region, String serverId, boolean withExecutionLogs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public String stopInstances(String region, String serverId) throws Exception {
+    public String stopInstances(String region, String serverId, boolean withExecutionLogs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
-    public void rebootInstances(String region, String serverId) {
-        reboot(region, serverId);
+    public void rebootInstances(String region, String serverId, boolean withExecutionLogs) {
+        reboot(region, serverId, withExecutionLogs);
     }
 
-    public Set<String> describeRegions() {
-        lazyInit();
+    public Set<String> describeRegions(boolean withExecutionLogs) {
+        lazyInit(withExecutionLogs);
         Set<? extends Location> locations = computeService.listAssignableLocations();
         Set<String> res = new HashSet<>();
         for (Location l : locations) {
@@ -87,26 +86,26 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
     }
 
     @Override
-    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
-            throws Exception {
+    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
+                                     long polingInterval, boolean withExecutionLogs) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
-                                                                       int minCount, int maxCount, RunInstancesOptions... options)
-            throws Exception {
+    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
+                                                                       String imageId, int minCount, int maxCount,
+                                                                       boolean withExecutionLogs,
+                                                                       RunInstancesOptions... options) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs)
-            throws Exception {
+    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
-    protected void reboot(String region, String serverId) {
-        lazyInit(region);
+    protected void reboot(String region, String serverId, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
         computeService.rebootNode(region + "/" + serverId);
     }
 }

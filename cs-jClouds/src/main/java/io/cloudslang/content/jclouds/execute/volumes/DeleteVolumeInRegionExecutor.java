@@ -15,9 +15,10 @@ import java.util.Map;
 public class DeleteVolumeInRegionExecutor {
     private static final String DELETE_VOLUME_PROCESS_STARTED = "Delete volume process started successfully.";
 
-    public Map<String, String> execute(CommonInputs inputs, VolumeInputs volumeInputs) throws Exception {
-        VolumeService volumeService = VolumeFactory.getVolumeService(inputs);
-        volumeService.deleteVolumeInRegion(volumeInputs.getCustomInputs().getRegion(), volumeInputs.getCustomInputs().getVolumeId());
+    public Map<String, String> execute(CommonInputs commonInputs, VolumeInputs volumeInputs) throws Exception {
+        VolumeService volumeService = VolumeFactory.getVolumeService(commonInputs);
+        volumeService.deleteVolumeInRegion(volumeInputs.getCustomInputs().getRegion(),
+                volumeInputs.getCustomInputs().getVolumeId(), commonInputs.getWithExecutionLogs());
 
         return OutputsUtil.getResultsMap(DELETE_VOLUME_PROCESS_STARTED);
     }

@@ -19,6 +19,8 @@ public class CommonInputs {
     private String proxyPort;
     private String delimiter;
 
+    private boolean withExecutionLogs;
+
     public CommonInputs(CommonInputsBuilder builder) {
         this.provider = builder.provider;
         this.endpoint = builder.endpoint;
@@ -27,6 +29,7 @@ public class CommonInputs {
         this.proxyHost = builder.proxyHost;
         this.proxyPort = builder.proxyPort;
         this.delimiter = builder.delimiter;
+        this.withExecutionLogs = builder.withExecutionLogs;
     }
 
     public String getProvider() {
@@ -57,6 +60,10 @@ public class CommonInputs {
         return delimiter;
     }
 
+    public boolean getWithExecutionLogs() {
+        return withExecutionLogs;
+    }
+
     public static class CommonInputsBuilder {
         private String provider;
         private String endpoint;
@@ -65,6 +72,8 @@ public class CommonInputs {
         private String proxyHost;
         private String proxyPort;
         private String delimiter;
+
+        private boolean withExecutionLogs;
 
         public CommonInputs build() {
             return new CommonInputs(this);
@@ -105,6 +114,11 @@ public class CommonInputs {
 
         public CommonInputsBuilder withDelimiter(String inputValue) {
             delimiter = InputsUtil.getDefaultDelimiter(inputValue);
+            return this;
+        }
+
+        public CommonInputsBuilder withExecutionLogs(String inputValue) {
+            withExecutionLogs = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

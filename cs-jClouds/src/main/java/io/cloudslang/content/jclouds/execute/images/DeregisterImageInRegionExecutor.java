@@ -15,7 +15,8 @@ import java.util.Map;
 public class DeregisterImageInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
-        String response = imageService.deregisterImageInRegion(customInputs.getRegion(), customInputs.getImageId());
+        String response = imageService.deregisterImageInRegion(customInputs.getRegion(), customInputs.getImageId(),
+                commonInputs.getWithExecutionLogs());
 
         return OutputsUtil.getResultsMap(response);
     }

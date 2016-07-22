@@ -33,29 +33,29 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
-    protected void init() {
-        ContextBuilder contextBuilder = super.init(region, OPENSTACK_NOVA);
+    protected void init(boolean withExecutionLogs) {
+        ContextBuilder contextBuilder = super.init(region, OPENSTACK_NOVA, withExecutionLogs);
         novaApi = contextBuilder.buildApi(NovaApi.class);
     }
 
-    void lazyInit() {
+    void lazyInit(boolean withExecutionLogs) {
         if (novaApi == null) {
-            this.init();
+            this.init(withExecutionLogs);
         }
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean withExecutionLogs) {
         if (this.region == null || !this.region.equals(region)) {
             this.region = region;
-            this.init();
+            this.init(withExecutionLogs);
         } else if (novaApi == null) {
-            this.init();
+            this.init(withExecutionLogs);
         }
     }
 
     @Override
-    public String startInstances(String region, String serverId) {
-        lazyInit(region);
+    public String startInstances(String region, String serverId, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
 
         ServerApi serverApi = novaApi.getServerApi(region);
 
@@ -65,8 +65,8 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public String stopInstances(String region, String serverId) {
-        lazyInit(region);
+    public String stopInstances(String region, String serverId, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.stop(serverId);
 
@@ -74,15 +74,15 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public void rebootInstances(String region, String serverId) {
-        lazyInit(region);
+    public void rebootInstances(String region, String serverId, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.reboot(serverId, RebootType.SOFT);
     }
 
     @Override
-    public String terminateInstances(String region, String serverId) {
-        lazyInit(region);
+    public String terminateInstances(String region, String serverId, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.delete(serverId);
 
@@ -90,32 +90,33 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
     }
 
     @Override
-    public Set<String> describeRegions() {
-        lazyInit();
+    public Set<String> describeRegions(boolean withExecutionLogs) {
+        lazyInit(withExecutionLogs);
         return novaApi.getConfiguredRegions();
     }
 
     @Override
-    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
-                                                                       int minCount, int maxCount, RunInstancesOptions... options)
+    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
+                                                                       String imageId, int minCount, int maxCount,
+                                                                       boolean withExecutionLogs,
+                                                                       RunInstancesOptions... options) throws Exception {
+        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
+    }
+
+    @Override
+    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
+                                     long polingInterval, boolean withExecutionLogs)
             throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
-            throws Exception {
+    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
-    @Override
-    public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs)
-            throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    String createServer(String region, String name, String imageRef, String flavorRef) {
-        lazyInit(region);
+    String createServer(String region, String name, String imageRef, String flavorRef, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
         ServerApi serverApi = novaApi.getServerApi(region);
 
         ServerCreated serverCreated = serverApi.create(name, imageRef, flavorRef);

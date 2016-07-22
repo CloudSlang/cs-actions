@@ -69,7 +69,7 @@ public class AmazonSnapshotServiceImplTest {
     public void testInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.init();
+        toTest.init(true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
         verifyNoMoreInteractions(propertiesMock);
@@ -79,25 +79,25 @@ public class AmazonSnapshotServiceImplTest {
     public void testLazyInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.lazyInit("us-east-1");
+        toTest.lazyInit("us-east-1", true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
     }
 
     @Test
     public void createSnapshotInRegionWithoutDescriptionTest() throws Exception {
-        snapshotSpy.createSnapshotInRegion("some_region", "vol-abcdef16", "");
+        snapshotSpy.createSnapshotInRegion("some_region", "vol-abcdef16", "", false);
 
-        verify(snapshotSpy, times(1)).lazyInit("some_region");
+        verify(snapshotSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).createSnapshotInRegion(eq("some_region"), eq("vol-abcdef16"));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
     public void createSnapshotInRegionWithDescriptionTest() throws Exception {
-        snapshotSpy.createSnapshotInRegion("some_region", "vol-abcdef16", "anything in here");
+        snapshotSpy.createSnapshotInRegion("some_region", "vol-abcdef16", "anything in here", false);
 
-        verify(snapshotSpy, times(1)).lazyInit("some_region");
+        verify(snapshotSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1))
                 .createSnapshotInRegion(eq("some_region"), eq("vol-abcdef16"), any(CreateSnapshotOptions.class));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
@@ -105,9 +105,9 @@ public class AmazonSnapshotServiceImplTest {
 
     @Test
     public void deleteSnapshotInRegionTest() throws Exception {
-        snapshotSpy.deleteSnapshotInRegion("some_region", "snap-abcdef16");
+        snapshotSpy.deleteSnapshotInRegion("some_region", "snap-abcdef16", false);
 
-        verify(snapshotSpy, times(1)).lazyInit("some_region");
+        verify(snapshotSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).deleteSnapshotInRegion(eq("some_region"), eq("snap-abcdef16"));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }

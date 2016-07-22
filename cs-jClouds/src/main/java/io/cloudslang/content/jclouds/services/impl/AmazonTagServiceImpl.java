@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.services.JCloudsComputeService;
 import io.cloudslang.content.jclouds.services.TagService;
@@ -26,27 +27,27 @@ public class AmazonTagServiceImpl extends JCloudsComputeService implements TagSe
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
-    public void applyToResources(CustomInputs customInputs, String delimiter) {
+    public void applyToResources(CommonInputs commonInputs, CustomInputs customInputs) {
         Utils utils = new Utils();
 
-        Map<String, String> tagsMap = utils.getTagsMap(customInputs, delimiter);
-        Set<String> resourcesIdsList = utils.getResourcesIdsList(customInputs.getResourceIdsString(), delimiter);
+        Map<String, String> tagsMap = utils.getTagsMap(customInputs, commonInputs.getDelimiter());
+        Set<String> resourcesIdsList = utils.getResourcesIdsList(customInputs.getResourceIdsString(), commonInputs.getDelimiter());
 
-        getTagApi(customInputs.getRegion(), true).applyToResources(tagsMap, resourcesIdsList);
+        getTagApi(customInputs.getRegion(), true, commonInputs.getWithExecutionLogs()).applyToResources(tagsMap, resourcesIdsList);
     }
 
-    void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+    void init(boolean withExecutionLogs) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, withExecutionLogs);
         ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean withExecutionLogs) {
         this.region = InputsUtil.getAmazonRegion(region);
-        init();
+        init(withExecutionLogs);
     }
 
-    private TagApi getTagApi(String region, boolean isForRegion) {
-        lazyInit(region);
+    private TagApi getTagApi(String region, boolean isForRegion, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
 
         return isForRegion ? ec2Api.getTagApiForRegion(region).get() : ec2Api.getTagApi().get();
     }

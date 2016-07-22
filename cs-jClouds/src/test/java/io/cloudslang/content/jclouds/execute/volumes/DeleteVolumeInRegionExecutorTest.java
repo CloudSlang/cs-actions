@@ -56,7 +56,7 @@ public class DeleteVolumeInRegionExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getVolumeInputs());
 
-        verify(volumeServiceMock, times(1)).deleteVolumeInRegion(eq("testRegion"), eq("vol-abcdef12"));
+        verify(volumeServiceMock, times(1)).deleteVolumeInRegion(eq("testRegion"), eq("vol-abcdef12"), eq(false));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
@@ -64,7 +64,7 @@ public class DeleteVolumeInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {

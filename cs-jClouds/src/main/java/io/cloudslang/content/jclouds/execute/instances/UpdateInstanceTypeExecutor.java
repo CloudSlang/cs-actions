@@ -13,11 +13,11 @@ import java.util.Map;
  * 2/24/2016.
  */
 public class UpdateInstanceTypeExecutor {
-    public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
-        ComputeService cs = ComputeFactory.getComputeService(inputs);
+    public Map<String, String> execute(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception {
+        ComputeService cs = ComputeFactory.getComputeService(commonInputs);
         String result = cs.updateInstanceType(instanceInputs.getCustomInputs().getRegion(),
                 instanceInputs.getCustomInputs().getInstanceId(), instanceInputs.getCustomInputs().getInstanceType(),
-                instanceInputs.getCheckStateTimeout(), instanceInputs.getPolingInterval());
+                instanceInputs.getCheckStateTimeout(), instanceInputs.getPolingInterval(), commonInputs.getWithExecutionLogs());
 
         return OutputsUtil.getResultsMap(result);
     }

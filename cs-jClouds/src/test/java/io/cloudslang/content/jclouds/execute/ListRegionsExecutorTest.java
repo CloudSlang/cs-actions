@@ -60,11 +60,11 @@ public class ListRegionsExecutorTest {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
 
         Set<String> regions = getRegions();
-        doReturn(regions).when(computeServiceMock).describeRegions();
+        doReturn(regions).when(computeServiceMock).describeRegions(anyBoolean());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs));
 
-        verify(computeServiceMock, times(1)).describeRegions();
+        verify(computeServiceMock, times(1)).describeRegions(false);
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

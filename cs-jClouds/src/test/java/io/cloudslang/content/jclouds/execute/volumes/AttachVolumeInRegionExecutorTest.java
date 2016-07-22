@@ -55,13 +55,13 @@ public class AttachVolumeInRegionExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(VolumeFactory.getVolumeService(any(CommonInputs.class))).thenReturn(volumeServiceMock);
-        when(volumeServiceMock.attachVolumeInRegion(anyString(), anyString(), anyString(), anyString()))
+        when(volumeServiceMock.attachVolumeInRegion(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
                 .thenReturn(attachmentMock);
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getVolumeInputs());
 
-        verify(volumeServiceMock, times(1))
-                .attachVolumeInRegion(eq("testRegion"), eq("vol-abcdef12"), eq("i-abcdef12"), eq("testName"));
+        verify(volumeServiceMock, times(1)).attachVolumeInRegion(eq("testRegion"), eq("vol-abcdef12"), eq("i-abcdef12"),
+                eq("testName"), eq(false));
 
         assertNotNull(result);
         assertNotNull(result.get("returnResult"));
@@ -69,7 +69,7 @@ public class AttachVolumeInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {

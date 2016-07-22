@@ -12,9 +12,9 @@ import java.util.Map;
  * Created by persdana on 6/23/2015.
  */
 public class TerminateInstancesExecutor {
-    public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
-        ComputeService cs = ComputeFactory.getComputeService(inputs);
-        String resultStr = cs.terminateInstances(customInputs.getRegion(), customInputs.getInstanceId());
+    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+        ComputeService cs = ComputeFactory.getComputeService(commonInputs);
+        String resultStr = cs.terminateInstances(customInputs.getRegion(), customInputs.getInstanceId(), commonInputs.getWithExecutionLogs());
 
         return OutputsUtil.getResultsMap(resultStr);
     }

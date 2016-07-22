@@ -22,9 +22,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -67,12 +65,12 @@ public class RunServerExecutorTest {
     @Test
     public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn(reservationsMock).when(computeServiceMock)
-                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
+        doReturn(reservationsMock).when(computeServiceMock).runInstancesInRegion(anyString(), anyString(), anyString(),
+                anyInt(), anyInt(), anyBoolean(), any(RunInstancesOptions.class));
         Map<String, String> results = toTest.execute(getCommonInputs(inputs), getInstanceInputs(inputs));
 
-        verify(computeServiceMock, times(1))
-                .runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(), anyInt(), any(RunInstancesOptions.class));
+        verify(computeServiceMock, times(1)).runInstancesInRegion(anyString(), anyString(), anyString(), anyInt(),
+                anyInt(), anyBoolean(), any(RunInstancesOptions.class));
 
         assertNotNull(results);
         assertEquals("0", results.get(Outputs.RETURN_CODE));

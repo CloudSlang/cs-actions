@@ -13,22 +13,22 @@ import java.util.Set;
  * Created by persdana on 5/27/2015.
  */
 public interface ComputeService {
-    Set<String> describeRegions();
+    Set<String> describeRegions(boolean withExecutionLogs);
 
     Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception;
 
     Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
-                                                                int minCount, int maxCount, RunInstancesOptions... options)
-            throws Exception;
+                                                                int minCount, int maxCount, boolean withExecutionLogs,
+                                                                RunInstancesOptions... options) throws Exception;
 
-    String updateInstanceType(String region, String instanceId, String instanceType, long checkStateTimeout, long polingInterval)
-            throws Exception;
+    String updateInstanceType(String region, String instanceId, String instanceType, long checkStateTimeout,
+                              long polingInterval, boolean withExecutionLogs) throws Exception;
 
-    String terminateInstances(String region, String serverId);
+    String terminateInstances(String region, String serverId, boolean withExecutionLogs);
 
-    String startInstances(String region, String serverId) throws Exception;
+    String startInstances(String region, String serverId, boolean withExecutionLogs) throws Exception;
 
-    String stopInstances(String region, String serverId) throws Exception;
+    String stopInstances(String region, String serverId, boolean withExecutionLogs) throws Exception;
 
-    void rebootInstances(String region, String serverId);
+    void rebootInstances(String region, String serverId, boolean withExecutionLogs);
 }

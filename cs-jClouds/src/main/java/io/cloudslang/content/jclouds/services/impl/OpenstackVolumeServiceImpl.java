@@ -17,22 +17,24 @@ public class OpenstackVolumeServiceImpl extends JCloudsComputeService implements
 
     @Override
     public Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
-                                                 String size, String iops, boolean encrypted) {
+                                                 String size, String iops, boolean encrypted, boolean withExecutionLogs) {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public void deleteVolumeInRegion(String region, String volumeId) {
+    public void deleteVolumeInRegion(String region, String volumeId, boolean withExecutionLogs) {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) throws Exception {
+    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device,
+                                           boolean withExecutionLogs) throws Exception {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
-    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
+    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force,
+                                     boolean withExecutionLogs) {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 }

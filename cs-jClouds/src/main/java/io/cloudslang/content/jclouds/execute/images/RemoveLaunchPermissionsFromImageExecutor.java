@@ -27,7 +27,7 @@ public class RemoveLaunchPermissionsFromImageExecutor {
         }
 
         String response = imageService.removeLaunchPermissionsFromImage(imageInputs.getCustomInputs().getRegion(), userIds,
-                userGroups, imageInputs.getCustomInputs().getImageId());
+                userGroups, imageInputs.getCustomInputs().getImageId(), commonInputs.getWithExecutionLogs());
 
         return OutputsUtil.getResultsMap(response);
     }

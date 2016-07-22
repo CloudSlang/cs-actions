@@ -53,12 +53,12 @@ public class MockingHelper {
                                              EC2Api ec2ApiMock, Optional<? extends InstanceApi> optionalInstanceApiMock,
                                              ElasticBlockStoreApi ebsApiMock, Class<T> spy) {
         if (spy == AmazonVolumeServiceImpl.class) {
-            doNothing().when(volumeSpy).lazyInit(anyString());
-            doNothing().when(volumeSpy).init();
+            doNothing().when(volumeSpy).lazyInit(anyString(), anyBoolean());
+            doNothing().when(volumeSpy).init(anyBoolean());
             volumeSpy.ec2Api = ec2ApiMock;
         } else if (spy == AmazonSnapshotServiceImpl.class) {
-            doNothing().when(snapshotSpy).lazyInit(anyString());
-            doNothing().when(snapshotSpy).init();
+            doNothing().when(snapshotSpy).lazyInit(anyString(), anyBoolean());
+            doNothing().when(snapshotSpy).init(anyBoolean());
             snapshotSpy.ec2Api = ec2ApiMock;
         }
         doReturn(optionalInstanceApiMock).when(ec2ApiMock).getElasticBlockStoreApiForRegion(anyString());

@@ -19,9 +19,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -61,11 +59,12 @@ public class UpdateServerTypeExecutorTest {
     @Test
     public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn("Server updated successfully.").when(computeServiceMock)
-                .updateInstanceType(anyString(), anyString(), anyString(), anyLong(), anyLong());
+        doReturn("Server updated successfully.").when(computeServiceMock).updateInstanceType(anyString(), anyString(),
+                anyString(), anyLong(), anyLong(), anyBoolean());
         Map<String, String> results = toTest.execute(getCommonInputs(inputs), getInstanceInputs(inputs));
 
-        verify(computeServiceMock, times(1)).updateInstanceType(anyString(), anyString(), anyString(), anyLong(), anyLong());
+        verify(computeServiceMock, times(1)).updateInstanceType(anyString(), anyString(), anyString(), anyLong(),
+                anyLong(), anyBoolean());
 
         assertNotNull(results);
         assertEquals("0", results.get(Outputs.RETURN_CODE));

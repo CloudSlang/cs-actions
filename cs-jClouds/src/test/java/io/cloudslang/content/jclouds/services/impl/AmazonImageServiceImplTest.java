@@ -80,7 +80,7 @@ public class AmazonImageServiceImplTest {
     public void testInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.init();
+        toTest.init(true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
         verifyNoMoreInteractions(propertiesMock);
@@ -90,34 +90,34 @@ public class AmazonImageServiceImplTest {
     public void testLazyInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.lazyInit("us-east-1");
+        toTest.lazyInit("us-east-1", true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
     }
 
     @Test
     public void createImageInRegionTest() {
-        imageSpy.createImageInRegion("", "", "", "", true);
+        imageSpy.createImageInRegion("", "", "", "", true, false);
 
-        verify(imageSpy, times(1)).lazyInit(eq(""));
+        verify(imageSpy, times(1)).lazyInit(eq(""), eq(false));
         verify(amiApiMock, times(1)).createImageInRegion(anyString(), anyString(), anyString(), any(CreateImageOptions.class));
         commonVerifiersForMethods();
     }
 
     @Test
     public void deregisterImageInRegionTest() {
-        imageSpy.deregisterImageInRegion("", "");
+        imageSpy.deregisterImageInRegion("", "", false);
 
-        verify(imageSpy, times(1)).lazyInit(eq(""));
+        verify(imageSpy, times(1)).lazyInit(eq(""), eq(false));
         verify(amiApiMock, times(1)).deregisterImageInRegion(eq(""), eq(""));
         commonVerifiersForMethods();
     }
 
     @Test
     public void getLaunchPermissionForImageTest() {
-        imageSpy.getLaunchPermissionForImage("us-east-1", "ami-abcdef16");
+        imageSpy.getLaunchPermissionForImage("us-east-1", "ami-abcdef16", false);
 
-        verify(imageSpy, times(1)).lazyInit(eq("us-east-1"));
+        verify(imageSpy, times(1)).lazyInit(eq("us-east-1"), eq(false));
         verify(amiApiMock, times(1)).getLaunchPermissionForImageInRegion(eq("us-east-1"), eq("ami-abcdef16"));
         commonVerifiersForMethods();
     }
@@ -127,9 +127,9 @@ public class AmazonImageServiceImplTest {
         Set<String> userIds = InputsUtil.getStringsSet("firstId|secondId|thirdId", "|");
         Set<String> userGroups = InputsUtil.getStringsSet("firstGroup,secondGroup,thirdGroup", ",");
 
-        imageSpy.addLaunchPermissionsToImage("some_region", userIds, userGroups, "ami-abcdef16");
+        imageSpy.addLaunchPermissionsToImage("some_region", userIds, userGroups, "ami-abcdef16", false);
 
-        verify(imageSpy, times(1)).lazyInit(eq("some_region"));
+        verify(imageSpy, times(1)).lazyInit(eq("some_region"), eq(false));
         verify(amiApiMock, times(1)).addLaunchPermissionsToImageInRegion(eq("some_region"), anySetOf(String.class),
                 anySetOf(String.class), eq("ami-abcdef16"));
         commonVerifiersForMethods();
@@ -140,9 +140,9 @@ public class AmazonImageServiceImplTest {
         Set<String> userIds = InputsUtil.getStringsSet("firstId|secondId", "|");
         Set<String> userGroups = InputsUtil.getStringsSet("firstGroup,secondGroup", "");
 
-        imageSpy.removeLaunchPermissionsFromImage("some_region", userIds, userGroups, "ami-abcdef16");
+        imageSpy.removeLaunchPermissionsFromImage("some_region", userIds, userGroups, "ami-abcdef16", false);
 
-        verify(imageSpy, times(1)).lazyInit(eq("some_region"));
+        verify(imageSpy, times(1)).lazyInit(eq("some_region"), eq(false));
         verify(amiApiMock, times(1)).removeLaunchPermissionsFromImageInRegion(eq("some_region"), anySetOf(String.class),
                 anySetOf(String.class), eq("ami-abcdef16"));
         commonVerifiersForMethods();
@@ -150,9 +150,9 @@ public class AmazonImageServiceImplTest {
 
     @Test
     public void resetLaunchPermissionsOnImageTest() {
-        imageSpy.resetLaunchPermissionsOnImage("some_region", "ami-abcdef16");
+        imageSpy.resetLaunchPermissionsOnImage("some_region", "ami-abcdef16", false);
 
-        verify(imageSpy, times(1)).lazyInit(eq("some_region"));
+        verify(imageSpy, times(1)).lazyInit(eq("some_region"), eq(false));
         verify(amiApiMock, times(1)).resetLaunchPermissionsOnImageInRegion(eq("some_region"), eq("ami-abcdef16"));
         commonVerifiersForMethods();
     }
@@ -161,7 +161,7 @@ public class AmazonImageServiceImplTest {
     public void describeImagesInRegionNoOptionsTest() throws Exception {
         imageSpy.describeImagesInRegion(getCommonInputs(""), getImageInputs("", "", "", "", ""));
 
-        verify(imageSpy, times(1)).lazyInit("us-east-1");
+        verify(imageSpy, times(1)).lazyInit("us-east-1", false);
         verify(amiApiMock, times(1)).describeImagesInRegion(eq("us-east-1"), eq(DescribeImagesOptions.NONE));
         commonVerifiersForMethods();
     }
@@ -171,7 +171,7 @@ public class AmazonImageServiceImplTest {
         imageSpy.describeImagesInRegion(getCommonInputs("|"),
                 getImageInputs("another_region", "", "", "firstImageId|secondImageId|thirdImageId", "firstOwner|secondOwner|thirdOwner"));
 
-        verify(imageSpy, times(1)).lazyInit(eq("another_region"));
+        verify(imageSpy, times(1)).lazyInit(eq("another_region"), eq(false));
         verify(amiApiMock, times(1)).describeImagesInRegion(eq("another_region"), any(DescribeImagesOptions.class));
         commonVerifiersForMethods();
     }
@@ -182,7 +182,7 @@ public class AmazonImageServiceImplTest {
                 getImageInputs("another_region", "identityOne", "windows", "firstImageId|secondImageId|thirdImageId",
                         "firstOwner|secondOwner|thirdOwner"));
 
-        verify(imageSpy, times(1)).lazyInit(eq("another_region"));
+        verify(imageSpy, times(1)).lazyInit(eq("another_region"), eq(false));
         verify(amiApiMock, times(1))
                 .describeImagesInRegionWithFilter(eq("another_region"), any(ArrayListMultimap.class), any(DescribeImagesOptions.class));
         commonVerifiersForMethods();
@@ -194,8 +194,8 @@ public class AmazonImageServiceImplTest {
     }
 
     private void addCommonMocksForMethods() {
-        doNothing().when(imageSpy).lazyInit(anyString());
-        doNothing().when(imageSpy).init();
+        doNothing().when(imageSpy).lazyInit(anyString(), anyBoolean());
+        doNothing().when(imageSpy).init(anyBoolean());
         imageSpy.ec2Api = ec2ApiMock;
         doReturn(optionalInstanceApi).when(ec2ApiMock).getAMIApiForRegion(anyString());
         doReturn(optionalInstanceApi).when(ec2ApiMock).getAMIApi();

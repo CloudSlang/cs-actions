@@ -59,7 +59,8 @@ public class AddLaunchPermissionsToImageInRegionExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getPopulatedImageInputs());
 
-        verify(imageServiceMock, times(1)).addLaunchPermissionsToImage(anyString(), anySetOf(String.class), anySetOf(String.class), anyString());
+        verify(imageServiceMock, times(1)).addLaunchPermissionsToImage(eq("us-east-1"), anySetOf(String.class),
+                anySetOf(String.class), eq("ami-abcdef12"), eq(false));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
@@ -77,11 +78,11 @@ public class AddLaunchPermissionsToImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").build();
+        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withExecutionLogs("").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().withRegion("").withImageId("ami-4cfc1121").build();
+        return new CustomInputs.CustomInputsBuilder().withRegion("").withImageId("ami-abcdef12").build();
     }
 
     private ImageInputs getImageInputs() {

@@ -17,7 +17,8 @@ public class GetLaunchPermissionForImageInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
 
-        Permission response = imageService.getLaunchPermissionForImage(customInputs.getRegion(), customInputs.getImageId());
+        Permission response = imageService.getLaunchPermissionForImage(customInputs.getRegion(), customInputs.getImageId(),
+                commonInputs.getWithExecutionLogs());
 
         return OutputsUtil.getResultsMap(response.toString());
     }

@@ -30,52 +30,53 @@ public class AmazonVolumeServiceImpl extends JCloudsComputeService implements Vo
 
     @Override
     public Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
-                                                 String size, String iops, boolean encrypted) {
+                                                 String size, String iops, boolean encrypted, boolean withExecutionLogs) {
         if (StringUtils.isBlank(snapshotId) && StringUtils.isBlank(volumeType)) {
             int validSize = new AmazonVolumeServiceHelper()
                     .getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
                             Constants.ValidationValues.THOUSAND_AND_TWENTY_FOUR, size);
-            return getEbsApi(region, true).createVolumeInAvailabilityZone(availabilityZone, validSize);
+            return getEbsApi(region, true, withExecutionLogs).createVolumeInAvailabilityZone(availabilityZone, validSize);
         }
 
         CreateVolumeOptions createVolumeOptions = new AmazonVolumeServiceHelper()
                 .getCreateVolumeOptions(snapshotId, volumeType, size, iops, encrypted);
 
-        return getEbsApi(region, true).createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
+        return getEbsApi(region, true, withExecutionLogs).createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
     }
 
     @Override
-    public void deleteVolumeInRegion(String region, String volumeId) {
-        getEbsApi(region, true).deleteVolumeInRegion(region, volumeId);
+    public void deleteVolumeInRegion(String region, String volumeId, boolean withExecutionLogs) {
+        getEbsApi(region, true, withExecutionLogs).deleteVolumeInRegion(region, volumeId);
     }
 
     @Override
-    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) {
-        return getEbsApi(region, true).attachVolumeInRegion(region, volumeId, instanceId, device);
+    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean withExecutionLogs) {
+        return getEbsApi(region, true, withExecutionLogs).attachVolumeInRegion(region, volumeId, instanceId, device);
     }
 
     @Override
-    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force) {
+    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force,
+                                     boolean withExecutionLogs) {
         DetachVolumeOptions[] detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
         if (detachVolumeOptions != null && detachVolumeOptions.length > 0) {
-            getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
+            getEbsApi(region, true, withExecutionLogs).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
         } else {
-            getEbsApi(region, true).detachVolumeInRegion(region, volumeId, force);
+            getEbsApi(region, true, withExecutionLogs).detachVolumeInRegion(region, volumeId, force);
         }
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean withExecutionLogs) {
         this.region = InputsUtil.getAmazonRegion(region);
-        init();
+        init(withExecutionLogs);
     }
 
-    void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+    void init(boolean withExecutionLogs) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, withExecutionLogs);
         ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
-    private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion) {
-        lazyInit(region);
+    private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion, boolean withExecutionLogs) {
+        lazyInit(region, withExecutionLogs);
 
         return isForRegion ? ec2Api.getElasticBlockStoreApiForRegion(region).get() : ec2Api.getElasticBlockStoreApi().get();
     }
