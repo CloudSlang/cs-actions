@@ -179,7 +179,7 @@
         <module>cs-jClouds</module>
         <module>cs-xml</module>
         <module>cs-date-time</module>
-        <!--<module>cs-vmware</module>-->
+        <module>cs-vmware</module>
         <module>cs-lists</module>
     </modules>
 </project>
