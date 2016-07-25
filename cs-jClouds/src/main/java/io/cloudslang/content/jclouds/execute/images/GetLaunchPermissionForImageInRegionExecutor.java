@@ -18,7 +18,7 @@ public class GetLaunchPermissionForImageInRegionExecutor {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
 
         Permission response = imageService.getLaunchPermissionForImage(customInputs.getRegion(), customInputs.getImageId(),
-                commonInputs.getWithExecutionLogs());
+                commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(response.toString());
     }

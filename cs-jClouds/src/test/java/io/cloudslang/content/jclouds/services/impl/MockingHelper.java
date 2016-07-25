@@ -49,6 +49,7 @@ public class MockingHelper {
         verifyNoMoreInteractions(contextBuilderMock);
     }
 
+    // because the VolumeService and SnapshotService uses the same ElasticBlockStoreApi
     static <T> void addCommonMocksForMethods(AmazonVolumeServiceImpl volumeSpy, AmazonSnapshotServiceImpl snapshotSpy,
                                              EC2Api ec2ApiMock, Optional<? extends InstanceApi> optionalInstanceApiMock,
                                              ElasticBlockStoreApi ebsApiMock, Class<T> spy) {
@@ -66,8 +67,7 @@ public class MockingHelper {
         doReturn(ebsApiMock).when(optionalInstanceApiMock).get();
     }
 
-    static void commonVerifiersForMethods(Optional<? extends InstanceApi> optionalInstanceApiMock,
-                                          ElasticBlockStoreApi ebsApiMock) {
+    static void commonVerifiersForMethods(Optional<? extends InstanceApi> optionalInstanceApiMock, ElasticBlockStoreApi ebsApiMock) {
         verify(optionalInstanceApiMock, times(1)).get();
         verifyNoMoreInteractions(ebsApiMock);
     }

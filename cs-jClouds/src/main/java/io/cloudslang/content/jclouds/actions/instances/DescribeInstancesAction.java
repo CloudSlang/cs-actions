@@ -42,7 +42,7 @@ public class DescribeInstancesAction {
      *                                               will be used.
      * @param proxyPort                              Optional - proxy server port.
      * @param delimiter                              Optional - delimiter that will be used - Default: ","
-     * @param withExecutionLogs                      Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param debugMode                              Optional - If "true" then the execution logs will be shown in CLI console.
      * @param region                                 Optional - region from which to list servers. Ex: "RegionOne", "us-east-1".
      *                                               ListRegionAction can be used in order to get all regions.
      *                                               Default: "us-east-1"
@@ -198,7 +198,7 @@ public class DescribeInstancesAction {
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(Inputs.CustomInputs.VOLUME_ID) String volumeId,
@@ -294,7 +294,7 @@ public class DescribeInstancesAction {
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
                 .withDelimiter(delimiter)
-                .withExecutionLogs(withExecutionLogs)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

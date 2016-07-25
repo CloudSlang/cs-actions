@@ -65,7 +65,7 @@ public class GetLaunchPermissionForImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("").build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() {

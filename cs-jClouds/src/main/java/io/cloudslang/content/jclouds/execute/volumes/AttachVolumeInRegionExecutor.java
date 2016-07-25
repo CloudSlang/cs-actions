@@ -18,7 +18,7 @@ public class AttachVolumeInRegionExecutor {
         VolumeService volumeService = VolumeFactory.getVolumeService(commonInputs);
         Attachment attachment = volumeService.attachVolumeInRegion(volumeInputs.getCustomInputs().getRegion(),
                 volumeInputs.getCustomInputs().getVolumeId(), volumeInputs.getCustomInputs().getInstanceId(),
-                volumeInputs.getDeviceName(), commonInputs.getWithExecutionLogs());
+                volumeInputs.getDeviceName(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(attachment.toString());
     }

@@ -19,7 +19,7 @@ public class DetachVolumeInRegionExecutor {
         VolumeService volumeService = VolumeFactory.getVolumeService(commonInputs);
         volumeService.detachVolumeInRegion(volumeInputs.getCustomInputs().getRegion(), volumeInputs.getCustomInputs().getVolumeId(),
                 volumeInputs.getCustomInputs().getInstanceId(), volumeInputs.getDeviceName(), volumeInputs.isForce(),
-                commonInputs.getWithExecutionLogs());
+                commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(DETACH_VOLUME_PROCESS_STARTED);
     }

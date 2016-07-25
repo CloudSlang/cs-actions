@@ -78,7 +78,7 @@ public class AddLaunchPermissionsToImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withExecutionLogs("").build();
+        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() {

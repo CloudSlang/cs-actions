@@ -16,7 +16,7 @@ public class ResetLaunchPermissionsOnImageExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
         String response = imageService.resetLaunchPermissionsOnImage(customInputs.getRegion(), customInputs.getImageId(),
-                commonInputs.getWithExecutionLogs());
+                commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(response);
     }

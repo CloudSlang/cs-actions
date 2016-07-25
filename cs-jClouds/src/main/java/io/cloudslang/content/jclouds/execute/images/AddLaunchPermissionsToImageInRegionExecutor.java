@@ -27,7 +27,7 @@ public class AddLaunchPermissionsToImageInRegionExecutor {
         }
 
         String response = imageService.addLaunchPermissionsToImage(imageInputs.getCustomInputs().getRegion(), userIds,
-                userGroups, imageInputs.getCustomInputs().getImageId(), commonInputs.getWithExecutionLogs());
+                userGroups, imageInputs.getCustomInputs().getImageId(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(response);
     }

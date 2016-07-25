@@ -60,7 +60,7 @@ public class DeregisterImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("tRuE").build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("tRuE").build();
     }
 
     private CustomInputs getCustomInputs() {

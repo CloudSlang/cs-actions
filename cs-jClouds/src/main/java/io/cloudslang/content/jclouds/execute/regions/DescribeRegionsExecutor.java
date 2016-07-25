@@ -15,7 +15,7 @@ import java.util.Set;
 public class DescribeRegionsExecutor {
     public Map<String, String> execute(CommonInputs commonInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(commonInputs);
-        Set<String> availableRegions = cs.describeRegions(commonInputs.getWithExecutionLogs());
+        Set<String> availableRegions = cs.describeRegions(commonInputs.isDebugMode());
 
         String regionsString = OutputsUtil.getElementsString(availableRegions, commonInputs.getDelimiter());
 

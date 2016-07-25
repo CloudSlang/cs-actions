@@ -62,7 +62,7 @@ public class ApplyToResourcesExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("").withDelimiter(",").build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").withDelimiter(",").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {

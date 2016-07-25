@@ -53,8 +53,6 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({AmazonComputeServiceImpl.class, ContextBuilder.class})
 public class AmazonComputeServiceImplTest {
-    private AmazonComputeServiceImpl toTest;
-
     private static final String REGION = "us-east-1";
     private static final String SERVER_ID = "i-578dde87";
     private static final String INVALID_SERVER_ID = "i-578dde88";
@@ -63,18 +61,17 @@ public class AmazonComputeServiceImplTest {
     private static final String PASSWORD = "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z";
     private static final String PROXY_HOST = "proxy.some.host.com";
     private static final String PROXY_PORT = "8080";
-
     private static final String AMAZON_PROVIDER = "ec2";
     private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
-
     private static final String SERVER_STOP_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=running, instanceId=i-578dde87, previousState=stopped, region=us-east-1]]";
     private static final String SERVER_START_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=stopped, instanceId=i-578dde87, previousState=running, region=us-east-1]]";
     private static final String REMOVE_SERVER_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=terminated, instanceId=i-578dde87, previousState=stopped, region=us-east-1]]";
-
     private static final String CONNECTION_REFUSE_EXCEPTION_MESSAGE = "org.jclouds.http.HttpResponseException: Connection refused: connect connecting to POST http://11.11.11.11:5000/v2.0/tokens HTTP/1.1";
     private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "The instance ID 'i-a7be737' does not exist";
+
+    private AmazonComputeServiceImpl toTest;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -592,6 +589,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("TrUe").withDelimiter(",").build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("TrUe").withDelimiter(",").build();
     }
 }

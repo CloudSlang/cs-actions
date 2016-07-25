@@ -4,7 +4,7 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.JCloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.domain.Location;
@@ -18,9 +18,11 @@ import java.util.Set;
 /**
  * Created by persdana on 6/5/2015.
  */
-public class ComputeServiceImpl extends JCloudsComputeService implements ComputeService {
+public class ComputeServiceImpl extends JCloudsService implements ComputeService {
     private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
             "providers in the provider input";
+    private static final String SERVER_REMOVED = "Server Removed";
+    private static final String SLASH = "/";
 
     org.jclouds.compute.ComputeService computeService = null;
 
@@ -32,70 +34,70 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
         this.provider = provider;
     }
 
-    protected void init(boolean withExecutionLogs) {
-        ContextBuilder contextBuilder = super.init(region, provider, withExecutionLogs);
+    protected void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, provider, isDebugMode);
         ComputeServiceContext context = contextBuilder.buildView(ComputeServiceContext.class);
         computeService = context.getComputeService();
     }
 
-    void lazyInit(boolean withExecutionLogs) {
+    void lazyInit(boolean isDebugMode) {
         if (computeService == null) {
-            this.init(withExecutionLogs);
+            this.init(isDebugMode);
         }
     }
 
-    void lazyInit(String region, boolean withExecutionLogs) {
+    void lazyInit(String region, boolean isDebugMode) {
         if (this.region == null || !this.region.equals(region)) {
             this.region = region;
-            this.init(withExecutionLogs);
+            this.init(isDebugMode);
         } else if (computeService == null) {
-            this.init(withExecutionLogs);
+            this.init(isDebugMode);
         }
     }
 
     @Override
-    public String terminateInstances(String region, String serverId, boolean withExecutionLogs) {
-        lazyInit(region, withExecutionLogs);
+    public String terminateInstances(String region, String serverId, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
         computeService.destroyNode(serverId);
-        return "Server Removed";
+        return SERVER_REMOVED;
     }
 
     @Override
-    public String startInstances(String region, String serverId, boolean withExecutionLogs) throws Exception {
+    public String startInstances(String region, String serverId, boolean isDebugMode) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
-    public String stopInstances(String region, String serverId, boolean withExecutionLogs) throws Exception {
+    public String stopInstances(String region, String serverId, boolean isDebugMode) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
-    public void rebootInstances(String region, String serverId, boolean withExecutionLogs) {
-        reboot(region, serverId, withExecutionLogs);
+    public void rebootInstances(String region, String serverId, boolean isDebugMode) {
+        reboot(region, serverId, isDebugMode);
     }
 
-    public Set<String> describeRegions(boolean withExecutionLogs) {
-        lazyInit(withExecutionLogs);
-        Set<? extends Location> locations = computeService.listAssignableLocations();
-        Set<String> res = new HashSet<>();
-        for (Location l : locations) {
-            res.add(l.getDescription());
+    public Set<String> describeRegions(boolean isDebugMode) {
+        lazyInit(isDebugMode);
+        Set<? extends Location> locationsSet = computeService.listAssignableLocations();
+        Set<String> regionsSet = new HashSet<>();
+        for (Location location : locationsSet) {
+            regionsSet.add(location.getDescription());
         }
 
-        return res;
+        return regionsSet;
     }
 
     @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
-                                     long polingInterval, boolean withExecutionLogs) throws Exception {
+                                     long polingInterval, boolean isDebugMode) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override
     public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
                                                                        String imageId, int minCount, int maxCount,
-                                                                       boolean withExecutionLogs,
-                                                                       RunInstancesOptions... options) throws Exception {
+                                                                       boolean isDebugMode, RunInstancesOptions... options)
+            throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
@@ -104,8 +106,8 @@ public class ComputeServiceImpl extends JCloudsComputeService implements Compute
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
-    protected void reboot(String region, String serverId, boolean withExecutionLogs) {
-        lazyInit(region, withExecutionLogs);
-        computeService.rebootNode(region + "/" + serverId);
+    protected void reboot(String region, String serverId, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
+        computeService.rebootNode(region + SLASH + serverId);
     }
 }

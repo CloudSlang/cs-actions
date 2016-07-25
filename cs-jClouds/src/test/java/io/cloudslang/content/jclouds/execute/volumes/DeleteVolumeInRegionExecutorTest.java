@@ -6,7 +6,6 @@ import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.factory.VolumeFactory;
 import io.cloudslang.content.jclouds.services.VolumeService;
-import org.jclouds.ec2.domain.Volume;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +63,7 @@ public class DeleteVolumeInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("").build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {

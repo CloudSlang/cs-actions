@@ -18,7 +18,7 @@ public class DeleteVolumeInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, VolumeInputs volumeInputs) throws Exception {
         VolumeService volumeService = VolumeFactory.getVolumeService(commonInputs);
         volumeService.deleteVolumeInRegion(volumeInputs.getCustomInputs().getRegion(),
-                volumeInputs.getCustomInputs().getVolumeId(), commonInputs.getWithExecutionLogs());
+                volumeInputs.getCustomInputs().getVolumeId(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(DELETE_VOLUME_PROCESS_STARTED);
     }

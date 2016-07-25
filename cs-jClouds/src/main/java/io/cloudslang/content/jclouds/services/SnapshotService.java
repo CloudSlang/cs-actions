@@ -7,7 +7,7 @@ import org.jclouds.ec2.domain.Snapshot;
  * 6/27/2016.
  */
 public interface SnapshotService {
-    Snapshot createSnapshotInRegion(String region, String volumeId, String description, boolean withExecutionLogs);
+    Snapshot createSnapshotInRegion(String region, String volumeId, String description, boolean isDebugMode);
 
-    void deleteSnapshotInRegion(String region, String snapshotId, boolean withExecutionLogs);
+    void deleteSnapshotInRegion(String region, String snapshotId, boolean isDebugMode);
 }

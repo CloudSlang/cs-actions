@@ -24,18 +24,18 @@ public class RebootInstancesAction {
      * the specified instances. The operation succeeds if the instances are valid and belong to you. Requests to reboot
      * terminated instances are ignored.
      *
-     * @param provider          Cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
-     * @param endpoint          Endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon
-     *                          or "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity          Optional - Username of your account or the Access Key ID. For openstack provider the required
-     *                          format is 'alias:username'.
-     * @param credential        Optional - Password of the user or the Secret Access Key that correspond to the identity input.
-     * @param proxyHost         Optional - The proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort         Optional - The proxy server port.
-     * @param withExecutionLogs Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param region            Optional - region from which to list servers. Ex: "RegionOne", "us-east-1".
-     *                          ListRegionAction operation can be used in order to get all regions - Default: "us-east-1"
-     * @param instanceId        Optional - The ID of the instance you want to reboot.
+     * @param provider   Cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
+     * @param endpoint   Endpoint to which first request will be sent. Example: "https://ec2.amazonaws.com" for amazon
+     *                   or "http://hostOrIp:5000/v2.0" for OpenStack.
+     * @param identity   Optional - Username of your account or the Access Key ID. For openstack provider the required
+     *                   format is 'alias:username'.
+     * @param credential Optional - Password of the user or the Secret Access Key that correspond to the identity input.
+     * @param proxyHost  Optional - The proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort  Optional - The proxy server port.
+     * @param debugMode  Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param region     Optional - region from which to list servers. Ex: "RegionOne", "us-east-1".
+     *                   ListRegionAction operation can be used in order to get all regions - Default: "us-east-1"
+     * @param instanceId Optional - The ID of the instance you want to reboot.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -58,7 +58,7 @@ public class RebootInstancesAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) throws Exception {
@@ -70,7 +70,7 @@ public class RebootInstancesAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
-                .withExecutionLogs(withExecutionLogs)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

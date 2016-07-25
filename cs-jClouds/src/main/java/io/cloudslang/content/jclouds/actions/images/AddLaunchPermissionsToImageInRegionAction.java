@@ -26,24 +26,24 @@ public class AddLaunchPermissionsToImageInRegionAction {
      * Note:
      * AWS Marketplace product codes cannot be modified. Images with an AWS Marketplace product code cannot be made public.
      *
-     * @param provider          Cloud provider on which you have the image.
-     *                          Default: "amazon"
-     * @param endpoint          Endpoint to which first request will be sent.
-     *                          Example: "https://ec2.amazonaws.com"
-     * @param identity          Optional - Username of your account or the Access Key ID.
-     * @param credential        Optional - Password of the user or the Secret Access Key that correspond to the identity
-     *                          input.
-     * @param proxyHost         Optional - Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort         Optional - Proxy server port.
-     * @param withExecutionLogs Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param region            Optional - Region where the targeted image reside. ListRegionAction can be used in order to
-     *                          get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-     *                          Default: "us-east-1".
-     * @param imageId           ID of the specified image to add launch permission for.
-     * @param userIdsString     Optional - A string that contains: none, one or more user IDs separated by delimiter.
-     *                          Default: ""
-     * @param userGroupsString  Optional - A string that contains: none, one or more user groups separated by delimiter.
-     *                          Default: ""
+     * @param provider         Cloud provider on which you have the image.
+     *                         Default: "amazon"
+     * @param endpoint         Endpoint to which first request will be sent.
+     *                         Example: "https://ec2.amazonaws.com"
+     * @param identity         Optional - Username of your account or the Access Key ID.
+     * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity
+     *                         input.
+     * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort        Optional - Proxy server port.
+     * @param debugMode        Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param region           Optional - Region where the targeted image reside. ListRegionAction can be used in order to
+     *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+     *                         Default: "us-east-1".
+     * @param imageId          ID of the specified image to add launch permission for.
+     * @param userIdsString    Optional - A string that contains: none, one or more user IDs separated by delimiter.
+     *                         Default: ""
+     * @param userGroupsString Optional - A string that contains: none, one or more user groups separated by delimiter.
+     *                         Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -67,7 +67,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
@@ -82,7 +82,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
                 .withDelimiter(delimiter)
-                .withExecutionLogs(withExecutionLogs)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

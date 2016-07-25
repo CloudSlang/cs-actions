@@ -78,7 +78,7 @@ public class RemoveLaunchPermissionsFromImageExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withExecutionLogs("anything in here").build();
+        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withDebugMode("anything in here").build();
     }
 
     private CustomInputs getCustomInputs() {

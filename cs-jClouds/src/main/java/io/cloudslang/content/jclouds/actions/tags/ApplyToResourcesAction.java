@@ -36,7 +36,7 @@ public class ApplyToResourcesAction {
      *                          input.
      * @param proxyHost         Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort         Optional - Proxy server port.
-     * @param withExecutionLogs Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param debugMode         Optional - If "true" then the execution logs will be shown in CLI console.
      * @param delimiter         Optional - Delimiter that will be used - Default: ","
      * @param region            Optional - region where resources to tagged belongs. Ex: "RegionOne", "us-east-1".
      *                          ListRegionAction can be used in order to get all regions - Default: "us-east-1"
@@ -67,7 +67,7 @@ public class ApplyToResourcesAction {
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.KEY_TAGS_STRING, required = true) String keyTagsString,
@@ -83,7 +83,7 @@ public class ApplyToResourcesAction {
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
                 .withDelimiter(delimiter)
-                .withExecutionLogs(withExecutionLogs)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

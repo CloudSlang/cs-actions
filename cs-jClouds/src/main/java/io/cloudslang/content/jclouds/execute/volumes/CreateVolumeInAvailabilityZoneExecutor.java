@@ -19,7 +19,7 @@ public class CreateVolumeInAvailabilityZoneExecutor {
         Volume volume = volumeService.createVolumeInAvailabilityZone(volumeInputs.getCustomInputs().getRegion(),
                 volumeInputs.getCustomInputs().getAvailabilityZone(), volumeInputs.getSnapshotId(),
                 volumeInputs.getCustomInputs().getVolumeType(), volumeInputs.getSize(), volumeInputs.getIops(),
-                volumeInputs.isEncrypted(), commonInputs.getWithExecutionLogs());
+                volumeInputs.isEncrypted(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(volume.toString());
     }

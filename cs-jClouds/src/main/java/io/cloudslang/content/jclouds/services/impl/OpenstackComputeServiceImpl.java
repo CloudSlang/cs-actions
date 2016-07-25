@@ -4,7 +4,7 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.JCloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
@@ -19,11 +19,15 @@ import java.util.Set;
 /**
  * Created by persdana on 5/27/2015.
  */
-public class OpenstackComputeServiceImpl extends JCloudsComputeService implements ComputeService {
-    NovaApi novaApi = null;
-
+public class OpenstackComputeServiceImpl extends JCloudsService implements ComputeService {
     private static final String OPENSTACK_NOVA = "openstack-nova";
+    private static final String SERVER_IS_STARTING = "Server is starting.";
+    private static final String SERVER_IS_STOPPING = "Server is stopping.";
+    private static final String SERVER_DELETED = "Server deleted.";
+
     private String region;
+
+    NovaApi novaApi = null;
 
     public void setRegion(String region) {
         this.region = region;
@@ -33,80 +37,79 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
-    protected void init(boolean withExecutionLogs) {
-        ContextBuilder contextBuilder = super.init(region, OPENSTACK_NOVA, withExecutionLogs);
+    protected void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, OPENSTACK_NOVA, isDebugMode);
         novaApi = contextBuilder.buildApi(NovaApi.class);
     }
 
-    void lazyInit(boolean withExecutionLogs) {
+    void lazyInit(boolean isDebugMode) {
         if (novaApi == null) {
-            this.init(withExecutionLogs);
+            this.init(isDebugMode);
         }
     }
 
-    void lazyInit(String region, boolean withExecutionLogs) {
+    void lazyInit(String region, boolean isDebugMode) {
         if (this.region == null || !this.region.equals(region)) {
             this.region = region;
-            this.init(withExecutionLogs);
+            this.init(isDebugMode);
         } else if (novaApi == null) {
-            this.init(withExecutionLogs);
+            this.init(isDebugMode);
         }
     }
 
     @Override
-    public String startInstances(String region, String serverId, boolean withExecutionLogs) {
-        lazyInit(region, withExecutionLogs);
+    public String startInstances(String region, String serverId, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
 
         ServerApi serverApi = novaApi.getServerApi(region);
 
         serverApi.start(serverId);
 
-        return "Server is Starting";
+        return SERVER_IS_STARTING;
     }
 
     @Override
-    public String stopInstances(String region, String serverId, boolean withExecutionLogs) {
-        lazyInit(region, withExecutionLogs);
+    public String stopInstances(String region, String serverId, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.stop(serverId);
 
-        return "The server is stopping";
+        return SERVER_IS_STOPPING;
     }
 
     @Override
-    public void rebootInstances(String region, String serverId, boolean withExecutionLogs) {
-        lazyInit(region, withExecutionLogs);
+    public void rebootInstances(String region, String serverId, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.reboot(serverId, RebootType.SOFT);
     }
 
     @Override
-    public String terminateInstances(String region, String serverId, boolean withExecutionLogs) {
-        lazyInit(region, withExecutionLogs);
+    public String terminateInstances(String region, String serverId, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
         ServerApi serverApi = novaApi.getServerApi(region);
         serverApi.delete(serverId);
 
-        return "Server deleted";
+        return SERVER_DELETED;
     }
 
     @Override
-    public Set<String> describeRegions(boolean withExecutionLogs) {
-        lazyInit(withExecutionLogs);
+    public Set<String> describeRegions(boolean isDebugMode) {
+        lazyInit(isDebugMode);
         return novaApi.getConfiguredRegions();
     }
 
     @Override
     public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
                                                                        String imageId, int minCount, int maxCount,
-                                                                       boolean withExecutionLogs,
-                                                                       RunInstancesOptions... options) throws Exception {
+                                                                       boolean isDebugMode, RunInstancesOptions... options)
+            throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
-                                     long polingInterval, boolean withExecutionLogs)
-            throws Exception {
+                                     long polingInterval, boolean isDebugMode) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
@@ -115,8 +118,8 @@ public class OpenstackComputeServiceImpl extends JCloudsComputeService implement
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
-    String createServer(String region, String name, String imageRef, String flavorRef, boolean withExecutionLogs) {
-        lazyInit(region, withExecutionLogs);
+    String createServer(String region, String name, String imageRef, String flavorRef, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
         ServerApi serverApi = novaApi.getServerApi(region);
 
         ServerCreated serverCreated = serverApi.create(name, imageRef, flavorRef);

@@ -17,7 +17,7 @@ public class UpdateInstanceTypeExecutor {
         ComputeService cs = ComputeFactory.getComputeService(commonInputs);
         String result = cs.updateInstanceType(instanceInputs.getCustomInputs().getRegion(),
                 instanceInputs.getCustomInputs().getInstanceId(), instanceInputs.getCustomInputs().getInstanceType(),
-                instanceInputs.getCheckStateTimeout(), instanceInputs.getPolingInterval(), commonInputs.getWithExecutionLogs());
+                instanceInputs.getCheckStateTimeout(), instanceInputs.getPolingInterval(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(result);
     }

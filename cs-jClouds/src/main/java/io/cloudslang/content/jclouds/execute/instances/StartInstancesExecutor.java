@@ -14,7 +14,7 @@ import java.util.Map;
 public class StartInstancesExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
         ComputeService cs = ComputeFactory.getComputeService(commonInputs);
-        String resultStr = cs.startInstances(customInputs.getRegion(), customInputs.getInstanceId(), commonInputs.getWithExecutionLogs());
+        String resultStr = cs.startInstances(customInputs.getRegion(), customInputs.getInstanceId(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(resultStr);
     }

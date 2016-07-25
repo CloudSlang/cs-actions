@@ -60,7 +60,7 @@ public class ResetLaunchPermissionsOnImageExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("tRUe").build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("tRUe").build();
     }
 
     private CustomInputs getCustomInputs() {

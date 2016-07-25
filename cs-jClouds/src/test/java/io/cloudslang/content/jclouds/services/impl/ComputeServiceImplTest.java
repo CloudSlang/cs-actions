@@ -35,7 +35,6 @@ import static org.mockito.Mockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ComputeServiceImpl.class, ContextBuilder.class, ComputeService.class})
 public class ComputeServiceImplTest {
-    private ComputeServiceImpl toTest;
     private static final String REGION = "RegionOne";
     private static final String SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e5";
     private static final String INVALID_SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e6";
@@ -46,15 +45,14 @@ public class ComputeServiceImplTest {
     private static final String NULL_PROXY_PORT = null;
     private static final String PROXY_HOST = "some.host";
     private static final String PROXY_PORT = "8888";
-
     private static final String OPENSTACK_PROVIDER = "openstack-nova";
     private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
-
     private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "{\"itemNotFound\": {\"message\": \"Instance not found\", \"code\": 404}}";
-
     private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' providers in the provider input";
+
+    private ComputeServiceImpl toTest;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();

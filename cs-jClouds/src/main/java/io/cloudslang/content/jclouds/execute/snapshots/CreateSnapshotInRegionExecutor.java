@@ -17,7 +17,7 @@ public class CreateSnapshotInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, VolumeInputs volumeInputs) throws Exception {
         SnapshotService snapshotService = SnapshotFactory.getSnapshotService(commonInputs);
         Snapshot snapshot = snapshotService.createSnapshotInRegion(volumeInputs.getCustomInputs().getRegion(),
-                volumeInputs.getCustomInputs().getVolumeId(), volumeInputs.getDescription(), commonInputs.getWithExecutionLogs());
+                volumeInputs.getCustomInputs().getVolumeId(), volumeInputs.getDescription(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(snapshot.toString());
     }

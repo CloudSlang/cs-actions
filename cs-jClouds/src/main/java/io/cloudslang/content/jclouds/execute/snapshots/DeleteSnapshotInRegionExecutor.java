@@ -18,7 +18,7 @@ public class DeleteSnapshotInRegionExecutor {
     public Map<String, String> execute(CommonInputs commonInputs, VolumeInputs volumeInputs) throws Exception {
         SnapshotService snapshotService = SnapshotFactory.getSnapshotService(commonInputs);
         snapshotService.deleteSnapshotInRegion(volumeInputs.getCustomInputs().getRegion(), volumeInputs.getSnapshotId(),
-                commonInputs.getWithExecutionLogs());
+                commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(DELETE_SNAPSHOT_STARTED);
     }

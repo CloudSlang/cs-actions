@@ -30,7 +30,7 @@ public class DescribeRegionsAction {
      * @param proxyHost         Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort         Optional - Proxy server port.
      * @param delimiter         Optional - Delimiter that separates the region elements.
-     * @param withExecutionLogs Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param debugMode Optional - If "true" then the execution logs will be shown in CLI console.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -54,7 +54,7 @@ public class DescribeRegionsAction {
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs) throws Exception {
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
@@ -64,7 +64,7 @@ public class DescribeRegionsAction {
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
                 .withDelimiter(delimiter)
-                .withExecutionLogs(withExecutionLogs)
+                .withDebugMode(debugMode)
                 .build();
 
         try {

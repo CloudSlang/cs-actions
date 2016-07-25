@@ -25,6 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -142,8 +143,8 @@ public class AmazonTagServiceImplTest {
         verifyNoMoreInteractions(tagApiMock);
     }
 
-    private CommonInputs getCommonInputs(){
-        return new CommonInputs.CommonInputsBuilder().withExecutionLogs("tRuE").withDelimiter(",").build();
+    private CommonInputs getCommonInputs() {
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("tRuE").withDelimiter(",").build();
     }
 
     private CustomInputs getCustomInputs(String condition) throws Exception {

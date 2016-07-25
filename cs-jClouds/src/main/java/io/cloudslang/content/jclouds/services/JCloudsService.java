@@ -13,14 +13,14 @@ import java.util.Properties;
 /**
  * Created by persdana on 7/13/2015.
  */
-public class JCloudsComputeService {
+public class JCloudsService {
     private String endpoint;
     private String identity;
     private String credential;
     private String proxyHost;
     private String proxyPort;
 
-    public JCloudsComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    public JCloudsService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         this.endpoint = endpoint;
         this.identity = identity;
         this.credential = credential;
@@ -28,10 +28,10 @@ public class JCloudsComputeService {
         this.proxyPort = proxyPort;
     }
 
-    protected ContextBuilder init(String region, String provider, boolean withExecutionLogs) {
+    protected ContextBuilder init(String region, String provider, boolean isDebugMode) {
         Properties overrides = getOverridesProperties(region);
 
-        if (withExecutionLogs) {
+        if (isDebugMode) {
             Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
             return ContextBuilder.newBuilder(provider)
                     .endpoint(endpoint)

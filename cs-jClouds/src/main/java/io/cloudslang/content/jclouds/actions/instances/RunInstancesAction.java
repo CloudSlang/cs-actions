@@ -24,24 +24,24 @@ public class RunInstancesAction {
     /**
      * Launches one ore more instances in a region based on specified "imageRef".
      *
-     * @param provider          Cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
-     * @param endpoint          Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com"
-     *                          for amazon or "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity          Optional - Username of your account or the Access Key ID. For OpenStack provider the required
-     *                          format is 'alias:username'.
-     * @param credential        Optional - Password of the user or the Secret Access Key that correspond to the identity
-     *                          input.
-     * @param proxyHost         Optional - Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort         Optional - Proxy server port.
-     * @param withExecutionLogs Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param region            Optional - the region where the server (instance) to be started can be found.
-     *                          listRegionsAction can be used in order to get all regions - Default: 'us-east-1'
-     * @param availabilityZone  Optional - specifies the placement constraints for launching instance. Amazon automatically
-     *                          selects an availability zone by default - Default: ''
-     * @param imageId           ID of the AMI. For more information go to: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html
-     *                          Ex: 'ami-fce3c696', 'ami-4b91bb21'
-     * @param minCount          Optional - The minimum number of launched instances - Default: '1'
-     * @param maxCount          Optional - The maximum number of launched instances - Default: '1'
+     * @param provider         Cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
+     * @param endpoint         Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com"
+     *                         for amazon or "http://hostOrIp:5000/v2.0" for OpenStack.
+     * @param identity         Optional - Username of your account or the Access Key ID. For OpenStack provider the required
+     *                         format is 'alias:username'.
+     * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity
+     *                         input.
+     * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort        Optional - Proxy server port.
+     * @param debugMode        Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param region           Optional - the region where the server (instance) to be started can be found.
+     *                         listRegionsAction can be used in order to get all regions - Default: 'us-east-1'
+     * @param availabilityZone Optional - specifies the placement constraints for launching instance. Amazon automatically
+     *                         selects an availability zone by default - Default: ''
+     * @param imageId          ID of the AMI. For more information go to: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html
+     *                         Ex: 'ami-fce3c696', 'ami-4b91bb21'
+     * @param minCount         Optional - The minimum number of launched instances - Default: '1'
+     * @param maxCount         Optional - The maximum number of launched instances - Default: '1'
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -64,7 +64,7 @@ public class RunInstancesAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.WITH_EXECUTION_LOGS) String withExecutionLogs,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
@@ -79,7 +79,7 @@ public class RunInstancesAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
-                .withExecutionLogs(withExecutionLogs)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

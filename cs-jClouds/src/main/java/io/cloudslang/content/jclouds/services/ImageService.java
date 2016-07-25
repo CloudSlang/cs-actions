@@ -13,19 +13,19 @@ import java.util.Set;
  */
 public interface ImageService {
     String createImageInRegion(String region, String name, String instanceId, String imageDescription,
-                               boolean imageNoReboot, boolean withExecutionLogs) throws Exception;
+                               boolean imageNoReboot, boolean isDebugMode) throws Exception;
 
-    String deregisterImageInRegion(String region, String imageId, boolean withExecutionLogs) throws Exception;
+    String deregisterImageInRegion(String region, String imageId, boolean isDebugMode) throws Exception;
 
     Set<? extends Image> describeImagesInRegion(CommonInputs commonInputs, ImageInputs imageInputs) throws Exception;
 
-    Permission getLaunchPermissionForImage(String region, String imageId, boolean withExecutionLogs) throws Exception;
+    Permission getLaunchPermissionForImage(String region, String imageId, boolean isDebugMode) throws Exception;
 
     String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId,
-                                       boolean withExecutionLogs) throws Exception;
+                                       boolean isDebugMode) throws Exception;
 
     String removeLaunchPermissionsFromImage(String region, Set<String> userIds, Set<String> userGroups, String imageId,
-                                            boolean withExecutionLogs) throws Exception;
+                                            boolean isDebugMode) throws Exception;
 
-    String resetLaunchPermissionsOnImage(String region, String imageId, boolean withExecutionLogs) throws Exception;
+    String resetLaunchPermissionsOnImage(String region, String imageId, boolean isDebugMode) throws Exception;
 }
