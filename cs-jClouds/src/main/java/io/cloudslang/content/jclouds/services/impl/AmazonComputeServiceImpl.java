@@ -36,8 +36,8 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
-    protected void init(boolean debugMode) {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, debugMode);
+    protected void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
         ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 

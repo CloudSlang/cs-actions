@@ -13,7 +13,7 @@ public class Inputs {
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
         public static final String DELIMITER = "delimiter";
-        public static final String DEBUG_MODE = "withDebugMode";
+        public static final String DEBUG_MODE = "debugMode";
     }
 
     public static final class CustomInputs {
