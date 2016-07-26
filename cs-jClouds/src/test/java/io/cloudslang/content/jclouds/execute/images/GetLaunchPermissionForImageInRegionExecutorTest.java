@@ -18,8 +18,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -55,21 +54,21 @@ public class GetLaunchPermissionForImageInRegionExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(ImageFactory.getImageService(any(CommonInputs.class))).thenReturn(imageServiceMock);
-        when(imageServiceMock.getLaunchPermissionForImage(anyString(), anyString())).thenReturn(permissionsMock);
+        when(imageServiceMock.getLaunchPermissionForImage(anyString(), anyString(), anyBoolean())).thenReturn(permissionsMock);
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getCustomInputs());
 
-        verify(imageServiceMock, times(1)).getLaunchPermissionForImage(anyString(), anyString());
+        verify(imageServiceMock, times(1)).getLaunchPermissionForImage(eq("some region"), eq("i-abcdef12"), eq(false));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().build();
+        return new CustomInputs.CustomInputsBuilder().withRegion("some region").withImageId("i-abcdef12").build();
     }
 }

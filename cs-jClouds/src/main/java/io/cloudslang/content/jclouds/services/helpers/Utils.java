@@ -209,14 +209,14 @@ public class Utils {
             tagValues = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getValueTagsString(),
                     Constants.Miscellaneous.EMPTY, delimiter);
 
-            updateTagFilters((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
+            updateTagFiltersMap((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
         } else if (inputs instanceof ImageInputs) {
             tagKeys = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getKeyTagsString(),
                     Constants.Miscellaneous.EMPTY, delimiter);
             tagValues = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getValueTagsString(),
                     Constants.Miscellaneous.EMPTY, delimiter);
 
-            updateTagFilters((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
+            updateTagFiltersMap((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
         } else if (inputs instanceof CustomInputs) {
             tagKeys = InputsUtil.getStringsArray(((CustomInputs) inputs).getKeyTagsString(),
                     Constants.Miscellaneous.EMPTY, delimiter);
@@ -228,9 +228,9 @@ public class Utils {
 
     }
 
-    private void updateTagFilters(Multimap<String, String> filtersMap, String[] tagKeys, String[] tagValues) {
+    private void updateTagFiltersMap(Multimap<String, String> filtersMap, String[] tagKeys, String[] tagValues) {
         if (tagKeys != null && tagValues != null) {
-            validateArrays(tagKeys, tagValues);
+            validateArraysLength(tagKeys, tagValues);
 
             for (int counter = 0; counter < tagKeys.length; counter++) {
                 filtersMap.put(TAG, tagKeys[counter] + EQUAL + tagValues[counter]);
@@ -240,7 +240,7 @@ public class Utils {
 
     private void updateTagsMap(Map<String, String> tagsMap, String[] tagKeys, String[] tagValues) {
         if (tagKeys != null && tagValues != null) {
-            validateArrays(tagKeys, tagValues);
+            validateArraysLength(tagKeys, tagValues);
 
             if (tagKeys.length > 10) {
                 throw new RuntimeException(MAXIMUM_TAGS_LIMIT_EXCEEDED);
@@ -253,7 +253,7 @@ public class Utils {
 
     }
 
-    private void validateArrays(String[] tagKeys, String[] tagValues) {
+    private void validateArraysLength(String[] tagKeys, String[] tagValues) {
         if (tagKeys.length != tagValues.length) {
             throw new RuntimeException(TAG_KEYS_TAG_VALUES_MISMATCH);
         }

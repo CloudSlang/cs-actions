@@ -15,9 +15,10 @@ import java.util.Map;
 public class DeleteSnapshotInRegionExecutor {
     private static final String DELETE_SNAPSHOT_STARTED = "Delete snapshot started successfully.";
 
-    public Map<String, String> execute(CommonInputs inputs, VolumeInputs volumeInputs) throws Exception {
-        SnapshotService snapshotService = SnapshotFactory.getSnapshotService(inputs);
-        snapshotService.deleteSnapshotInRegion(volumeInputs.getCustomInputs().getRegion(), volumeInputs.getSnapshotId());
+    public Map<String, String> execute(CommonInputs commonInputs, VolumeInputs volumeInputs) throws Exception {
+        SnapshotService snapshotService = SnapshotFactory.getSnapshotService(commonInputs);
+        snapshotService.deleteSnapshotInRegion(volumeInputs.getCustomInputs().getRegion(), volumeInputs.getSnapshotId(),
+                commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(DELETE_SNAPSHOT_STARTED);
     }

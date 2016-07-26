@@ -54,21 +54,29 @@ public class CreateImageInRegionExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getImageInputs());
 
-        verify(imageServiceMock, times(1)).createImageInRegion(anyString(), anyString(), anyString(), anyString(), anyBoolean());
+        verify(imageServiceMock, times(1)).createImageInRegion(eq("some region"), eq("testName"), eq("i-abcdef12"),
+                eq("anything in here"), eq(false), eq(false));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().build();
+        return new CustomInputs.CustomInputsBuilder()
+                .withRegion("some region")
+                .withInstanceId("i-abcdef12")
+                .build();
     }
 
     private ImageInputs getImageInputs() {
-        return new ImageInputs.ImageInputsBuilder().withCustomInputs(getCustomInputs()).build();
+        return new ImageInputs.ImageInputsBuilder()
+                .withCustomInputs(getCustomInputs())
+                .withImageName("testName")
+                .withImageDescription("anything in here")
+                .build();
     }
 }

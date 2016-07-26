@@ -33,6 +33,7 @@ public class RunInstancesAction {
      *                         input.
      * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        Optional - Proxy server port.
+     * @param debugMode        Optional - If "true" then the execution logs will be shown in CLI console.
      * @param region           Optional - the region where the server (instance) to be started can be found.
      *                         listRegionsAction can be used in order to get all regions - Default: 'us-east-1'
      * @param availabilityZone Optional - specifies the placement constraints for launching instance. Amazon automatically
@@ -63,6 +64,7 @@ public class RunInstancesAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
@@ -77,6 +79,7 @@ public class RunInstancesAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

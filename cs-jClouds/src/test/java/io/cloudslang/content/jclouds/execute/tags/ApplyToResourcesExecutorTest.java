@@ -54,7 +54,7 @@ public class ApplyToResourcesExecutorTest {
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getCustomInputs());
 
-        verify(tagServiceMock, times(1)).applyToResources(any(CustomInputs.class), eq(","));
+        verify(tagServiceMock, times(1)).applyToResources(any(CommonInputs.class), any(CustomInputs.class));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
@@ -62,7 +62,7 @@ public class ApplyToResourcesExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDelimiter(",").build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").withDelimiter(",").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {

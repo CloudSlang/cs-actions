@@ -17,7 +17,7 @@ public class CreateImageInRegionExecutor {
         ImageService imageService = ImageFactory.getImageService(commonInputs);
         String response = imageService.createImageInRegion(imageInputs.getCustomInputs().getRegion(),
                 imageInputs.getImageName(), imageInputs.getCustomInputs().getInstanceId(), imageInputs.getImageDescription(),
-                imageInputs.isImageNoReboot());
+                imageInputs.isImageNoReboot(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(response);
     }

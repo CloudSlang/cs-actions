@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
@@ -24,6 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -79,7 +81,7 @@ public class AmazonTagServiceImplTest {
     public void testInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.init();
+        toTest.init(true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
         verifyNoMoreInteractions(propertiesMock);
@@ -89,16 +91,16 @@ public class AmazonTagServiceImplTest {
     public void testLazyInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.lazyInit("us-east-1");
+        toTest.lazyInit("us-east-1", true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
     }
 
     @Test
     public void applyToResourcesTest() throws Exception {
-        tagSpy.applyToResources(getCustomInputs("positive"), "");
+        tagSpy.applyToResources(getCommonInputs(), getCustomInputs("positive"));
 
-        verify(tagSpy, times(1)).lazyInit(eq("some region"));
+        verify(tagSpy, times(1)).lazyInit(eq("some region"), eq(true));
         verify(tagApiMock, times(1)).applyToResources(any(HashMap.class), anySetOf(String.class));
         commonVerifiersForMethods();
     }
@@ -109,9 +111,9 @@ public class AmazonTagServiceImplTest {
                 "Incorrect supplied values for: [keyTagsString] and/or [valueTagsString] inputs. A resource can have " +
                         "a maximum of 10 tags.");
 
-        tagSpy.applyToResources(getCustomInputs("limit"), ",");
+        tagSpy.applyToResources(getCommonInputs(), getCustomInputs("limit"));
 
-        verify(tagSpy, never()).lazyInit(anyString());
+        verify(tagSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(tagApiMock, never()).applyToResources(any(HashMap.class), anySetOf(String.class));
     }
 
@@ -121,15 +123,15 @@ public class AmazonTagServiceImplTest {
                 "Value for supplied for: [resourceIdsString] input cannot be empty. Please provide at least one resource " +
                         "id to apply tags to.");
 
-        tagSpy.applyToResources(getCustomInputs("anything but positive or limit"), ",");
+        tagSpy.applyToResources(getCommonInputs(), getCustomInputs("anything but positive or limit"));
 
-        verify(tagSpy, never()).lazyInit(anyString());
+        verify(tagSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(tagApiMock, never()).applyToResources(any(HashMap.class), anySetOf(String.class));
     }
 
     private void addCommonMocksForMethods() {
-        doNothing().when(tagSpy).lazyInit(anyString());
-        doNothing().when(tagSpy).init();
+        doNothing().when(tagSpy).lazyInit(anyString(), anyBoolean());
+        doNothing().when(tagSpy).init(anyBoolean());
         tagSpy.ec2Api = ec2ApiMock;
         doReturn(optionalInstanceApi).when(ec2ApiMock).getTagApiForRegion(anyString());
         doReturn(optionalInstanceApi).when(ec2ApiMock).getTagApi();
@@ -139,6 +141,10 @@ public class AmazonTagServiceImplTest {
     private void commonVerifiersForMethods() {
         verify(optionalInstanceApi, times(1)).get();
         verifyNoMoreInteractions(tagApiMock);
+    }
+
+    private CommonInputs getCommonInputs() {
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("tRuE").withDelimiter(",").build();
     }
 
     private CustomInputs getCustomInputs(String condition) throws Exception {

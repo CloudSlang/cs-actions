@@ -75,7 +75,7 @@ public class AmazonVolumeServiceImplTest {
     public void testInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.init();
+        toTest.init(true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
         verifyNoMoreInteractions(propertiesMock);
@@ -85,34 +85,35 @@ public class AmazonVolumeServiceImplTest {
     public void testLazyInit() throws Exception {
         MockingHelper.addCommonMocksForInitMethod(contextBuilderMock, propertiesMock);
 
-        toTest.lazyInit("us-east-1");
+        toTest.lazyInit("us-east-1", true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
     }
 
     @Test
     public void createVolumeInAvailabilityZoneTest() throws Exception {
-        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "snap-c5920f60", "standard", "", "100", true);
+        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "snap-c5920f60", "standard", "",
+                "100", true, false);
 
-        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), any(CreateVolumeOptions.class));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
     public void createVolumeInAvailabilityZoneWithoutSnapshotTest() throws Exception {
-        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "", "", "1024", "100", true);
+        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "", "", "1024", "100", true, false);
 
-        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), anyInt());
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
     public void createVolumeInAvailabilityZoneWithSnapshotTest() throws Exception {
-        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "snap-c5920f60", "", "", "", true);
+        volumeSpy.createVolumeInAvailabilityZone("some_region", "an_available_zone", "snap-c5920f60", "", "", "", true, false);
 
-        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).createVolumeInAvailabilityZone(eq("an_available_zone"), any(CreateVolumeOptions.class));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
@@ -123,9 +124,9 @@ public class AmazonVolumeServiceImplTest {
                 "The size [-5] provided for [standard] volumeType should be greater or equal than [1] GiBs value " +
                         "and smaller or equal than [1024] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "", "-5", "1111", false);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "", "-5", "1111", false, false);
 
-        verify(volumeSpy, never()).lazyInit(anyString());
+        verify(volumeSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
     }
 
@@ -135,9 +136,9 @@ public class AmazonVolumeServiceImplTest {
                 "The size [0] provided for [gp2] volumeType should be greater or equal than [1] GiBs value " +
                         "and smaller or equal than [16384] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", "0", "1111", false);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", "0", "1111", false, false);
 
-        verify(volumeSpy, never()).lazyInit(anyString());
+        verify(volumeSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
     }
 
@@ -147,9 +148,9 @@ public class AmazonVolumeServiceImplTest {
                 "The size [16385] provided for [sc1] volumeType should be greater or equal than [500] GiBs value " +
                         "and smaller or equal than [16384] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "sc1", "16385", "1111", false);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "sc1", "16385", "1111", false, false);
 
-        verify(volumeSpy, never()).lazyInit(anyString());
+        verify(volumeSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
     }
 
@@ -159,9 +160,9 @@ public class AmazonVolumeServiceImplTest {
                 "The size [499] provided for [st1] volumeType should be greater or equal than [500] GiBs value " +
                         "and smaller or equal than [16384] GiBs value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "st1", "499", "0", true);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "st1", "499", "0", true, false);
 
-        verify(volumeSpy, never()).lazyInit(anyString());
+        verify(volumeSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
     }
 
@@ -171,9 +172,9 @@ public class AmazonVolumeServiceImplTest {
                 "The iops [10001] provided for [gp2] volumeType should be greater or equal than [100] IOPS value " +
                         "and smaller or equal than [10000] IOPS value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", "3334", "10001", true);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "gp2", "3334", "10001", true, false);
 
-        verify(volumeSpy, never()).lazyInit(anyString());
+        verify(volumeSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
     }
 
@@ -183,35 +184,35 @@ public class AmazonVolumeServiceImplTest {
                 "The iops [99] provided for [io1] volumeType should be greater or equal than [100] IOPS value " +
                         "and smaller or equal than [20000] IOPS value.");
 
-        volumeSpy.createVolumeInAvailabilityZone("", "", "", "io1", "3333", "99", true);
+        volumeSpy.createVolumeInAvailabilityZone("", "", "", "io1", "3333", "99", true, false);
 
-        verify(volumeSpy, never()).lazyInit(anyString());
+        verify(volumeSpy, never()).lazyInit(anyString(), anyBoolean());
         verify(ebsApiMock, never()).createVolumeInAvailabilityZone(anyString(), any(CreateVolumeOptions.class));
     }
 
     @Test
     public void deleteVolumeInRegion(){
-        volumeSpy.deleteVolumeInRegion("some_region", "vol-b8d74e1c");
+        volumeSpy.deleteVolumeInRegion("some_region", "vol-b8d74e1c", false);
 
-        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).deleteVolumeInRegion(eq("some_region"), eq("vol-b8d74e1c"));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
     public void attachVolumeInRegionTest() {
-        volumeSpy.attachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh");
+        volumeSpy.attachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh", false);
 
-        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).attachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq("i-2b84b0b1"), eq("/dev/sdh"));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 
     @Test
     public void detachVolumeInRegionWithOptionsTest() throws Exception {
-        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh", false);
+        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh", false, false);
 
-        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(false),
                 any(DetachVolumeOptions.class), any(DetachVolumeOptions.class));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
@@ -219,9 +220,9 @@ public class AmazonVolumeServiceImplTest {
 
     @Test
     public void detachVolumeInRegionWithoutOptionsTest() throws Exception {
-        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "", "", true);
+        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "", "", true, false);
 
-        verify(volumeSpy, times(1)).lazyInit("some_region");
+        verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(true));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }

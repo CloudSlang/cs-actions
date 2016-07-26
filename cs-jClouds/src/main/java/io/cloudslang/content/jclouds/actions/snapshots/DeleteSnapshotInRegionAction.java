@@ -11,7 +11,6 @@ import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
-import io.cloudslang.content.jclouds.execute.snapshots.CreateSnapshotInRegionExecutor;
 import io.cloudslang.content.jclouds.execute.snapshots.DeleteSnapshotInRegionExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -39,6 +38,7 @@ public class DeleteSnapshotInRegionAction {
      * @param credential Optional - Password of the user or the Secret Access Key that correspond to the identity input.
      * @param proxyHost  Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort  Optional - Proxy server port.
+     * @param debugMode  Optional - If "true" then the execution logs will be shown in CLI console.
      * @param region     Optional - region where volume, to make snapshot for, belongs. Ex: "RegionOne", "us-east-1".
      *                   ListRegionAction can be used in order to get all regions - Default: "us-east-1"
      * @param snapshotId ID of the EBS snapshot.
@@ -64,6 +64,7 @@ public class DeleteSnapshotInRegionAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.VolumeInputs.SNAPSHOT_ID, required = true) String snapshotId)
@@ -76,6 +77,7 @@ public class DeleteSnapshotInRegionAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

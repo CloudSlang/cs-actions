@@ -35,7 +35,6 @@ import static org.mockito.Mockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ComputeServiceImpl.class, ContextBuilder.class, ComputeService.class})
 public class ComputeServiceImplTest {
-    private ComputeServiceImpl toTest;
     private static final String REGION = "RegionOne";
     private static final String SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e5";
     private static final String INVALID_SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e6";
@@ -46,15 +45,14 @@ public class ComputeServiceImplTest {
     private static final String NULL_PROXY_PORT = null;
     private static final String PROXY_HOST = "some.host";
     private static final String PROXY_PORT = "8888";
-
     private static final String OPENSTACK_PROVIDER = "openstack-nova";
     private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
-
     private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "{\"itemNotFound\": {\"message\": \"Instance not found\", \"code\": 404}}";
-
     private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' providers in the provider input";
+
+    private ComputeServiceImpl toTest;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -123,7 +121,7 @@ public class ComputeServiceImplTest {
      *
      * @throws Exception
      */
-    private void commonVerifiersFirInitMethod() throws Exception {
+    private void commonVerifiersForInitMethod() throws Exception {
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         verify(contextBuilderMock).endpoint(ENDPOINT);
         verify(contextBuilderMock).credentials(IDENTITY, PASSWORD);
@@ -145,9 +143,9 @@ public class ComputeServiceImplTest {
         toTest = new ComputeServiceImpl(OPENSTACK_PROVIDER, ENDPOINT, IDENTITY, PASSWORD, NULL_PROXY_HOST, NULL_PROXY_PORT);
         addCommonMocksForInitMethod();
 
-        toTest.init();
+        toTest.init(true);
 
-        commonVerifiersFirInitMethod();
+        commonVerifiersForInitMethod();
         verifyNoMoreInteractions(propertiesMock);
     }
 
@@ -165,9 +163,9 @@ public class ComputeServiceImplTest {
         Mockito.doReturn(REGION).when(propertiesMock).put(PROPERTY_REGIONS, REGION);
 
         toTest.region = REGION; //this may be or may not be setted before init is called by lazyInit
-        toTest.init();
+        toTest.init(true);
 
-        commonVerifiersFirInitMethod();
+        commonVerifiersForInitMethod();
         verify(propertiesMock).setProperty(eq(PROPERTY_PROXY_HOST), eq(PROXY_HOST));
         verify(propertiesMock).setProperty(eq(PROPERTY_PROXY_PORT), eq(PROXY_PORT));
         verify(propertiesMock).setProperty(eq(PROPERTY_REGIONS), eq(REGION));
@@ -186,9 +184,9 @@ public class ComputeServiceImplTest {
         Mockito.doReturn(REGION).when(propertiesMock).put(PROPERTY_REGIONS, REGION);
 
         toTest.region = REGION; //this may be or may not be setted before init is called by lazyInit
-        toTest.init();
+        toTest.init(true);
 
-        commonVerifiersFirInitMethod();
+        commonVerifiersForInitMethod();
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         verify(propertiesMock).setProperty(eq(PROPERTY_REGIONS), eq(REGION));
         verifyNoMoreInteractions(contextBuilderMock);
@@ -199,12 +197,12 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testLazyInit() {
-        doNothing().when(ComputeServiceImplSpy).init();
+        doNothing().when(ComputeServiceImplSpy).init(false);
 
-        ComputeServiceImplSpy.lazyInit();
+        ComputeServiceImplSpy.lazyInit(false);
 
-        verify(ComputeServiceImplSpy).lazyInit();
-        verify(ComputeServiceImplSpy).init();
+        verify(ComputeServiceImplSpy).lazyInit(false);
+        verify(ComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
     }
 
@@ -215,9 +213,9 @@ public class ComputeServiceImplTest {
     public void testLazyInitNotNullComputeService() {
         ComputeServiceImplSpy.computeService = computeServiceMock;
 
-        ComputeServiceImplSpy.lazyInit();
+        ComputeServiceImplSpy.lazyInit(false);
 
-        verify(ComputeServiceImplSpy).lazyInit();
+        verify(ComputeServiceImplSpy).lazyInit(false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
     }
 
@@ -226,12 +224,12 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testLazyInitWithRegion() {
-        doNothing().when(ComputeServiceImplSpy).init();
+        doNothing().when(ComputeServiceImplSpy).init(false);
 
-        ComputeServiceImplSpy.lazyInit(REGION);
+        ComputeServiceImplSpy.lazyInit(REGION, false);
 
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
-        verify(ComputeServiceImplSpy).init();
+        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
+        verify(ComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
     }
 
@@ -244,9 +242,9 @@ public class ComputeServiceImplTest {
         ComputeServiceImplSpy.computeService = computeServiceMock;
         ComputeServiceImplSpy.region = REGION;
 
-        ComputeServiceImplSpy.lazyInit(REGION);
+        ComputeServiceImplSpy.lazyInit(REGION, false);
 
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
+        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
     }
 
@@ -256,13 +254,13 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testLazyInitWithSameRegionAndNullComputeService() {
-        doNothing().when(ComputeServiceImplSpy).init();
+        doNothing().when(ComputeServiceImplSpy).init(false);
         ComputeServiceImplSpy.region = REGION;
 
-        ComputeServiceImplSpy.lazyInit(REGION);
+        ComputeServiceImplSpy.lazyInit(REGION, false);
 
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
-        verify(ComputeServiceImplSpy).init();
+        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
+        verify(ComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
     }
 
@@ -272,13 +270,13 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testLazyInitWithDifferentRegion() {
-        doNothing().when(ComputeServiceImplSpy).init();
+        doNothing().when(ComputeServiceImplSpy).init(false);
         ComputeServiceImplSpy.region = REGION + " dasda";
 
-        ComputeServiceImplSpy.lazyInit(REGION);
+        ComputeServiceImplSpy.lazyInit(REGION, false);
 
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
-        verify(ComputeServiceImplSpy).init();
+        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
+        verify(ComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
     }
 
@@ -291,7 +289,7 @@ public class ComputeServiceImplTest {
         exception.expect(java.lang.Exception.class);
         exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
 
-        ComputeServiceImplSpy.startInstances(REGION, INVALID_SERVER_ID);
+        ComputeServiceImplSpy.startInstances(REGION, INVALID_SERVER_ID, false);
     }
 
     /**
@@ -302,7 +300,7 @@ public class ComputeServiceImplTest {
         exception.expect(java.lang.Exception.class);
         exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
 
-        ComputeServiceImplSpy.stopInstances(REGION, INVALID_SERVER_ID);
+        ComputeServiceImplSpy.stopInstances(REGION, INVALID_SERVER_ID, false);
     }
 
     /**
@@ -310,13 +308,13 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testReboot() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
+        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
         ComputeServiceImplSpy.computeService = computeServiceMock;
         Mockito.doNothing().when(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
 
-        ComputeServiceImplSpy.reboot(REGION, SERVER_ID);
+        ComputeServiceImplSpy.reboot(REGION, SERVER_ID, false);
 
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
+        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
         verifyNoMoreInteractions(computeServiceContextMock);
         verify(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
         verifyNoMoreInteractions(computeServiceMock);
@@ -331,12 +329,12 @@ public class ComputeServiceImplTest {
     public void testRebootWithInvalidServerId() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
+        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
         ComputeServiceImplSpy.computeService = computeServiceMock;
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
 
-        ComputeServiceImplSpy.reboot(REGION, SERVER_ID);
+        ComputeServiceImplSpy.reboot(REGION, SERVER_ID, false);
     }
 
     /**
@@ -344,11 +342,11 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testSoftReboot() {
-        doNothing().when(ComputeServiceImplSpy).reboot(REGION, SERVER_ID);
+        doNothing().when(ComputeServiceImplSpy).reboot(REGION, SERVER_ID, false);
 
-        ComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID);
+        ComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID, false);
 
-        verify(ComputeServiceImplSpy).reboot(REGION, SERVER_ID);
+        verify(ComputeServiceImplSpy).reboot(REGION, SERVER_ID, false);
     }
 
     /**
@@ -356,14 +354,14 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testRemoveServer() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
+        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
         ComputeServiceImplSpy.computeService = computeServiceMock;
         Mockito.doNothing().when(computeServiceMock).destroyNode(SERVER_ID);
 
-        String result = ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID);
+        String result = ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
 
         assertEquals("Server Removed", result);
-        verify(ComputeServiceImplSpy).lazyInit(REGION);
+        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
         verifyNoMoreInteractions(computeServiceContextMock);
         verify(computeServiceMock).destroyNode(SERVER_ID);
         verifyNoMoreInteractions(computeServiceMock);
@@ -378,12 +376,12 @@ public class ComputeServiceImplTest {
     public void testRemoveServerWithInvalidServerId() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
+        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
         ComputeServiceImplSpy.computeService = computeServiceMock;
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(computeServiceMock).destroyNode(SERVER_ID);
 
-        ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID);
+        ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
     }
 
     /**
@@ -391,7 +389,7 @@ public class ComputeServiceImplTest {
      */
     @Test
     public void testListRegions() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit();
+        doNothing().when(ComputeServiceImplSpy).lazyInit(false);
         ComputeServiceImplSpy.computeService = computeServiceMock;
         Mockito.doReturn(locationsSetMock).when(computeServiceMock).listAssignableLocations();
         Mockito.doReturn(locationIteratorMock).when(locationsSetMock).iterator();
@@ -399,10 +397,10 @@ public class ComputeServiceImplTest {
         Mockito.doReturn(locationMock).when(locationIteratorMock).next();
         Mockito.doReturn("locationDrescription").when(locationMock).getDescription();
 
-        Set<String> result = ComputeServiceImplSpy.describeRegions();
+        Set<String> result = ComputeServiceImplSpy.describeRegions(false);
 
         assertEquals("[locationDrescription]", result.toString());
-        verify(ComputeServiceImplSpy).lazyInit();
+        verify(ComputeServiceImplSpy).lazyInit(false);
         verifyNoMoreInteractions(computeServiceContextMock);
         verify(computeServiceMock).listAssignableLocations();
         verifyNoMoreInteractions(computeServiceMock);
@@ -421,11 +419,11 @@ public class ComputeServiceImplTest {
     public void testListRegionsOnInvalidEndpoint() {
         exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
         exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION);
+        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
         ComputeServiceImplSpy.computeService = computeServiceMock;
         ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
         Mockito.doThrow(toThrow).when(computeServiceMock).listAssignableLocations();
 
-        ComputeServiceImplSpy.describeRegions();
+        ComputeServiceImplSpy.describeRegions(false);
     }
 }

@@ -14,11 +14,11 @@ import java.util.Map;
  * 6/24/2016.
  */
 public class AttachVolumeInRegionExecutor {
-    public Map<String, String> execute(CommonInputs inputs, VolumeInputs volumeInputs) throws Exception {
-        VolumeService volumeService = VolumeFactory.getVolumeService(inputs);
+    public Map<String, String> execute(CommonInputs commonInputs, VolumeInputs volumeInputs) throws Exception {
+        VolumeService volumeService = VolumeFactory.getVolumeService(commonInputs);
         Attachment attachment = volumeService.attachVolumeInRegion(volumeInputs.getCustomInputs().getRegion(),
                 volumeInputs.getCustomInputs().getVolumeId(), volumeInputs.getCustomInputs().getInstanceId(),
-                volumeInputs.getDeviceName());
+                volumeInputs.getDeviceName(), commonInputs.isDebugMode());
 
         return OutputsUtil.getResultsMap(attachment.toString());
     }

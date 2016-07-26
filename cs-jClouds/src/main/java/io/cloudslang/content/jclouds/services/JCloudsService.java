@@ -13,14 +13,14 @@ import java.util.Properties;
 /**
  * Created by persdana on 7/13/2015.
  */
-public class JCloudsComputeService {
+public class JCloudsService {
     private String endpoint;
     private String identity;
     private String credential;
     private String proxyHost;
     private String proxyPort;
 
-    public JCloudsComputeService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    public JCloudsService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         this.endpoint = endpoint;
         this.identity = identity;
         this.credential = credential;
@@ -28,9 +28,25 @@ public class JCloudsComputeService {
         this.proxyPort = proxyPort;
     }
 
-    protected ContextBuilder init(String region, String provider) {
-        Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
+    protected ContextBuilder init(String region, String provider, boolean isDebugMode) {
+        Properties overrides = getOverridesProperties(region);
 
+        if (isDebugMode) {
+            Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
+            return ContextBuilder.newBuilder(provider)
+                    .endpoint(endpoint)
+                    .credentials(identity, credential)
+                    .overrides(overrides)
+                    .modules(modules);
+        }
+
+        return ContextBuilder.newBuilder(provider)
+                .endpoint(endpoint)
+                .credentials(identity, credential)
+                .overrides(overrides);
+    }
+
+    private Properties getOverridesProperties(String region) {
         Properties overrides = new Properties();
         if (StringUtils.isNotBlank(proxyHost)) {
             overrides.setProperty(Constants.PROPERTY_PROXY_HOST, proxyHost);
@@ -40,10 +56,6 @@ public class JCloudsComputeService {
             overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
         }
 
-        return ContextBuilder.newBuilder(provider)
-                .endpoint(endpoint)
-                .credentials(identity, credential)
-                .overrides(overrides)
-                .modules(modules);
+        return overrides;
     }
 }

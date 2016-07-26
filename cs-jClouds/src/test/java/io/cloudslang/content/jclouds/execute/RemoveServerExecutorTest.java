@@ -58,11 +58,11 @@ public class RemoveServerExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doReturn("removed").when(computeServiceMock).terminateInstances(anyString(), anyString());
+        doReturn("removed").when(computeServiceMock).terminateInstances(anyString(), anyString(), anyBoolean());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock, times(1)).terminateInstances(eq(inputs.getRegion()), eq(inputs.getServerId()));
+        verify(computeServiceMock, times(1)).terminateInstances(eq(inputs.getRegion()), eq(inputs.getServerId()), eq(false));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

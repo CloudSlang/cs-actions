@@ -58,11 +58,11 @@ public class SoftRebootExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);
-        doNothing().when(computeServiceMock).rebootInstances(anyString(), anyString());
+        doNothing().when(computeServiceMock).rebootInstances(anyString(), anyString(), anyBoolean());
 
         Map<String, String> result = toTest.execute(getCommonInputs(inputs), getCustomInputs(inputs));
 
-        verify(computeServiceMock, times(1)).rebootInstances(inputs.getRegion(), inputs.getServerId());
+        verify(computeServiceMock, times(1)).rebootInstances(inputs.getRegion(), inputs.getServerId(), false);
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));

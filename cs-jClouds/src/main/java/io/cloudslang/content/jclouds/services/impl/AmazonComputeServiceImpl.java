@@ -6,7 +6,7 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
-import io.cloudslang.content.jclouds.services.JCloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonComputeServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Created by persdana on 5/27/2015.
  */
-public class AmazonComputeServiceImpl extends JCloudsComputeService implements ComputeService {
+public class AmazonComputeServiceImpl extends JCloudsService implements ComputeService {
     private static final String INSTANCE_SUCCESSFULLY_UPDATED = "Instance successfully updated.";
 
     EC2Api ec2Api = null;
@@ -36,14 +36,15 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
-    protected void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+    protected void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
         ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
     @Override
     public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) {
-        InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(), true);
+        InstanceApi instanceApi = getEC2InstanceApi(instanceInputs.getCustomInputs().getRegion(),
+                commonInputs.isDebugMode(), true);
 
         Multimap<String, String> filtersMap = new AmazonComputeServiceHelper()
                 .getInstanceFiltersMap(instanceInputs, commonInputs.getDelimiter());
@@ -65,49 +66,50 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public String startInstances(String region, String serverId) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, true);
+    public String startInstances(String region, String serverId, boolean isDebugMode) {
+        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.startInstancesInRegion(region, serverId);
 
         return instanceChanged.toString();
     }
 
     @Override
-    public String stopInstances(String region, String serverId) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, true);
+    public String stopInstances(String region, String serverId, boolean isDebugMode) {
+        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.stopInstancesInRegion(region, false, serverId);
 
         return instanceChanged.toString();
     }
 
     @Override
-    public String terminateInstances(String region, String serverId) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, true);
+    public String terminateInstances(String region, String serverId, boolean isDebugMode) {
+        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.terminateInstancesInRegion(region, serverId);
 
         return instanceChanged.toString();
     }
 
     @Override
-    public Set<String> describeRegions() {
-        init();
+    public Set<String> describeRegions(boolean isDebugMode) {
+        init(isDebugMode);
         return ec2Api.getConfiguredRegions();
     }
 
     @Override
-    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
-                                                                       int minCount, int maxCount, RunInstancesOptions... options)
-            throws Exception {
-        InstanceApi instanceApi = getEC2InstanceApi(region, false);
+    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
+                                                                       String imageId, int minCount, int maxCount,
+                                                                       boolean isDebugMode,
+                                                                       RunInstancesOptions... options) throws Exception {
+        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
         RunInstancesOptions runInstancesOptions = RunInstancesOptions.NONE;
 
         return instanceApi.runInstancesInRegion(region, availabilityZone, imageId, minCount, maxCount, runInstancesOptions);
     }
 
     @Override
-    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout, long polingInterval)
-            throws Exception {
-        InstanceApi instanceApi = getEC2InstanceApi(region, false);
+    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
+                                     long polingInterval, boolean isDebugMode) throws Exception {
+        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, false);
 
         AmazonComputeServiceHelper helper = new AmazonComputeServiceHelper();
         InstanceState previousState = helper.getInstanceState(instanceApi, region, serverId);
@@ -128,18 +130,18 @@ public class AmazonComputeServiceImpl extends JCloudsComputeService implements C
     }
 
     @Override
-    public void rebootInstances(String region, String serverId) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, true);
+    public void rebootInstances(String region, String serverId, boolean isDebugMode) {
+        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
         instanceApi.rebootInstancesInRegion(region, serverId);
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean isDebugMode) {
         this.region = InputsUtil.getAmazonRegion(region);
-        init();
+        init(isDebugMode);
     }
 
-    private InstanceApi getEC2InstanceApi(String region, boolean isForRegion) {
-        lazyInit(region);
+    private InstanceApi getEC2InstanceApi(String region, boolean isDebugMode, boolean isForRegion) {
+        lazyInit(region, isDebugMode);
         return isForRegion ? ec2Api.getInstanceApiForRegion(region).get() : ec2Api.getInstanceApi().get();
     }
 

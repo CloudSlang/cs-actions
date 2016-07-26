@@ -5,7 +5,7 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
-import io.cloudslang.content.jclouds.services.JCloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonImageServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -23,7 +23,7 @@ import java.util.Set;
  * Created by Mihai Tusa.
  * 5/4/2016.
  */
-public class AmazonImageServiceImpl extends JCloudsComputeService implements ImageService {
+public class AmazonImageServiceImpl extends JCloudsService implements ImageService {
     EC2Api ec2Api;
 
     private String region;
@@ -40,7 +40,8 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
     }
 
     @Override
-    public String createImageInRegion(String region, String name, String serverId, String imageDescription, boolean imageNoReboot) {
+    public String createImageInRegion(String region, String name, String instanceId, String imageDescription,
+                                      boolean imageNoReboot, boolean isDebugMode) {
         CreateImageOptions options = new CreateImageOptions().withDescription(imageDescription);
         if (imageNoReboot) {
             options.noReboot();
@@ -50,12 +51,12 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
             throw new RuntimeException(IMAGE_NAME_INPUT_REQUIRED);
         }
 
-        return getAMIApi(region, true).createImageInRegion(region, name, serverId, options);
+        return getAMIApi(region, true, isDebugMode).createImageInRegion(region, name, instanceId, options);
     }
 
     @Override
-    public String deregisterImageInRegion(String region, String imageId) {
-        getAMIApi(region, true).deregisterImageInRegion(region, imageId);
+    public String deregisterImageInRegion(String region, String imageId, boolean isDebugMode) {
+        getAMIApi(region, true, isDebugMode).deregisterImageInRegion(region, imageId);
 
         return IMAGE_SUCCESSFULLY_DEREGISTER;
     }
@@ -67,52 +68,55 @@ public class AmazonImageServiceImpl extends JCloudsComputeService implements Ima
         Multimap<String, String> filtersMap = helper.getImageFiltersMap(imageInputs, commonInputs.getDelimiter());
 
         if (filtersMap.isEmpty()) {
-            return getAMIApi(imageInputs.getCustomInputs().getRegion(), true)
+            return getAMIApi(imageInputs.getCustomInputs().getRegion(), true, commonInputs.isDebugMode())
                     .describeImagesInRegion(imageInputs.getCustomInputs().getRegion(), options);
         }
 
-        return getAMIApi(imageInputs.getCustomInputs().getRegion(), true)
+        return getAMIApi(imageInputs.getCustomInputs().getRegion(), true, commonInputs.isDebugMode())
                 .describeImagesInRegionWithFilter(imageInputs.getCustomInputs().getRegion(), filtersMap, options);
     }
 
     @Override
-    public Permission getLaunchPermissionForImage(String region, String imageId) {
-        return getAMIApi(region, true).getLaunchPermissionForImageInRegion(region, imageId);
+    public Permission getLaunchPermissionForImage(String region, String imageId, boolean isDebugMode) {
+        return getAMIApi(region, true, isDebugMode).getLaunchPermissionForImageInRegion(region, imageId);
     }
 
     @Override
-    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) {
-        getAMIApi(region, true).addLaunchPermissionsToImageInRegion(region, userIds, userGroups, imageId);
+    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId,
+                                              boolean isDebugMode) {
+        getAMIApi(region, true, isDebugMode).addLaunchPermissionsToImageInRegion(region, userIds, userGroups, imageId);
 
         return LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED;
     }
 
     @Override
-    public String removeLaunchPermissionsFromImage(String region, Set<String> userIds, Set<String> userGroups, String imageId) {
-        getAMIApi(region, true).removeLaunchPermissionsFromImageInRegion(region, userIds, userGroups, imageId);
+    public String removeLaunchPermissionsFromImage(String region, Set<String> userIds, Set<String> userGroups,
+                                                   String imageId, boolean isDebugMode) {
+        getAMIApi(region, true, isDebugMode)
+                .removeLaunchPermissionsFromImageInRegion(region, userIds, userGroups, imageId);
 
         return LAUNCH_PERMISSIONS_SUCCESSFULLY_REMOVED;
     }
 
     @Override
-    public String resetLaunchPermissionsOnImage(String region, String imageId) {
-        getAMIApi(region, true).resetLaunchPermissionsOnImageInRegion(region, imageId);
+    public String resetLaunchPermissionsOnImage(String region, String imageId, boolean isDebugMode) {
+        getAMIApi(region, true, isDebugMode).resetLaunchPermissionsOnImageInRegion(region, imageId);
 
         return LAUNCH_PERMISSIONS_SUCCESSFULLY_RESET;
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean isDebugMode) {
         this.region = InputsUtil.getAmazonRegion(region);
-        init();
+        init(isDebugMode);
     }
 
-    void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+    void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
         ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
-    private AMIApi getAMIApi(String region, boolean isForRegion) {
-        lazyInit(region);
+    private AMIApi getAMIApi(String region, boolean isForRegion, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
 
         return isForRegion ? ec2Api.getAMIApiForRegion(region).get() : ec2Api.getAMIApi().get();
     }

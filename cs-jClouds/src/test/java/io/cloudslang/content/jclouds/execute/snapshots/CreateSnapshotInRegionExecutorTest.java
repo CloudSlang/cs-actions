@@ -55,12 +55,13 @@ public class CreateSnapshotInRegionExecutorTest {
     @Test
     public void testExecute() throws Exception {
         when(SnapshotFactory.getSnapshotService(any(CommonInputs.class))).thenReturn(snapshotServiceMock);
-        when(snapshotServiceMock.createSnapshotInRegion(anyString(), anyString(), anyString())).thenReturn(snapshotMock);
+        when(snapshotServiceMock.createSnapshotInRegion(anyString(), anyString(), anyString(), anyBoolean()))
+                .thenReturn(snapshotMock);
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getVolumeInputs());
 
-        verify(snapshotServiceMock, times(1))
-                .createSnapshotInRegion(eq("testRegion"), eq("vol-abcdef12"), eq("somethingHere"));
+        verify(snapshotServiceMock, times(1)).createSnapshotInRegion(eq("testRegion"), eq("vol-abcdef12"),
+                eq("somethingHere"), eq(false));
 
         assertNotNull(result);
         assertNotNull(result.get("returnResult"));
@@ -68,7 +69,7 @@ public class CreateSnapshotInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {

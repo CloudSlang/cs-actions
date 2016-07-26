@@ -47,6 +47,7 @@ public class AttachVolumeInRegionAction {
      * @param credential Optional - Password of the user or the Secret Access Key that correspond to the identity input.
      * @param proxyHost  Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort  Optional - Proxy server port.
+     * @param debugMode  Optional - If "true" then the execution logs will be shown in CLI console.
      * @param region     Optional - region where volume belongs. Ex: "RegionOne", "us-east-1".
      *                   ListRegionAction can be used in order to get all regions - Default: "us-east-1"
      * @param volumeId   ID of the EBS volume. The volume and instance must be within the same Availability Zone.
@@ -74,6 +75,7 @@ public class AttachVolumeInRegionAction {
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.VOLUME_ID, required = true) String volumeId,
@@ -89,6 +91,7 @@ public class AttachVolumeInRegionAction {
                 .withCredential(credential)
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

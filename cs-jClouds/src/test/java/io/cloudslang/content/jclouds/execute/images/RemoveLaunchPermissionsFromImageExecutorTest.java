@@ -20,9 +20,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anySetOf;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -59,9 +57,10 @@ public class RemoveLaunchPermissionsFromImageExecutorTest {
     public void testExecute() throws Exception {
         when(ImageFactory.getImageService(any(CommonInputs.class))).thenReturn(imageServiceMock);
 
-        Map<String, String> result = toTest.execute(getCommonInputs(), getPopulatedImageInputs());
+        Map<String, String> result = toTest.execute(getCommonInputs(), getPopulatedImageInputs(true));
 
-        verify(imageServiceMock, times(1)).removeLaunchPermissionsFromImage(anyString(), anySetOf(String.class), anySetOf(String.class), anyString());
+        verify(imageServiceMock, times(1)).removeLaunchPermissionsFromImage(eq("some region"), anySetOf(String.class),
+                anySetOf(String.class), eq("ami-abcdef12"), eq(false));
 
         assertNotNull(result);
         assertEquals("0", result.get(Outputs.RETURN_CODE));
@@ -75,26 +74,26 @@ public class RemoveLaunchPermissionsFromImageExecutorTest {
 
         when(ImageFactory.getImageService(any(CommonInputs.class))).thenReturn(imageServiceMock);
 
-        toTest.execute(getCommonInputs(), getImageInputs());
+        toTest.execute(getCommonInputs(), getPopulatedImageInputs(false));
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").build();
+        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withDebugMode("anything in here").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().withRegion("").withImageId("ami-4cfc1121").build();
+        return new CustomInputs.CustomInputsBuilder().withRegion("some region").withImageId("ami-abcdef12").build();
     }
 
-    private ImageInputs getImageInputs() {
+    private ImageInputs getPopulatedImageInputs(boolean withUser) {
+        if (withUser) {
+            return new ImageInputs.ImageInputsBuilder()
+                    .withCustomInputs(getCustomInputs())
+                    .withUserIdsString("firstId,secondId")
+                    .withUserGroupsString("firstGroup,secondGroup")
+                    .build();
+        }
+
         return new ImageInputs.ImageInputsBuilder().withCustomInputs(getCustomInputs()).build();
-    }
-
-    private ImageInputs getPopulatedImageInputs() {
-        return new ImageInputs.ImageInputsBuilder()
-                .withCustomInputs(getCustomInputs())
-                .withUserIdsString("firstId,secondId")
-                .withUserGroupsString("firstGroup,secondGroup")
-                .build();
     }
 }

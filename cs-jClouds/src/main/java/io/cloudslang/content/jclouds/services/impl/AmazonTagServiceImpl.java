@@ -1,8 +1,9 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.services.JCloudsComputeService;
+import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.TagService;
 import io.cloudslang.content.jclouds.services.helpers.Utils;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -17,7 +18,7 @@ import java.util.Set;
  * Created by Mihai Tusa.
  * 7/20/2016.
  */
-public class AmazonTagServiceImpl extends JCloudsComputeService implements TagService {
+public class AmazonTagServiceImpl extends JCloudsService implements TagService {
     EC2Api ec2Api = null;
 
     private String region;
@@ -26,27 +27,27 @@ public class AmazonTagServiceImpl extends JCloudsComputeService implements TagSe
         super(endpoint, identity, credential, proxyHost, proxyPort);
     }
 
-    public void applyToResources(CustomInputs customInputs, String delimiter) {
+    public void applyToResources(CommonInputs commonInputs, CustomInputs customInputs) {
         Utils utils = new Utils();
 
-        Map<String, String> tagsMap = utils.getTagsMap(customInputs, delimiter);
-        Set<String> resourcesIdsList = utils.getResourcesIdsList(customInputs.getResourceIdsString(), delimiter);
+        Map<String, String> tagsMap = utils.getTagsMap(customInputs, commonInputs.getDelimiter());
+        Set<String> resourcesIdsList = utils.getResourcesIdsList(customInputs.getResourceIdsString(), commonInputs.getDelimiter());
 
-        getTagApi(customInputs.getRegion(), true).applyToResources(tagsMap, resourcesIdsList);
+        getTagApi(customInputs.getRegion(), true, commonInputs.isDebugMode()).applyToResources(tagsMap, resourcesIdsList);
     }
 
-    void init() {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API);
+    void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
         ec2Api = new Utils().getEC2Api(contextBuilder);
     }
 
-    void lazyInit(String region) {
+    void lazyInit(String region, boolean isDebugMode) {
         this.region = InputsUtil.getAmazonRegion(region);
-        init();
+        init(isDebugMode);
     }
 
-    private TagApi getTagApi(String region, boolean isForRegion) {
-        lazyInit(region);
+    private TagApi getTagApi(String region, boolean isForRegion, boolean isDebugMode) {
+        lazyInit(region, isDebugMode);
 
         return isForRegion ? ec2Api.getTagApiForRegion(region).get() : ec2Api.getTagApi().get();
     }

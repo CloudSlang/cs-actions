@@ -15,9 +15,9 @@ import java.util.Map;
 public class ApplyToResourcesExecutor {
     private static final String APPLIED_TO_RESOURCES_SUCCESSFULLY = "Apply tags to resources process started successfully.";
 
-    public Map<String, String> execute(CommonInputs inputs, CustomInputs customInputs) throws Exception {
-        TagService tagService = TagFactory.getTagService(inputs);
-        tagService.applyToResources(customInputs, inputs.getDelimiter());
+    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) throws Exception {
+        TagService tagService = TagFactory.getTagService(commonInputs);
+        tagService.applyToResources(commonInputs, customInputs);
 
         return OutputsUtil.getResultsMap(APPLIED_TO_RESOURCES_SUCCESSFULLY);
     }

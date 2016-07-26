@@ -35,6 +35,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
      *                         input.
      * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        Optional - Proxy server port.
+     * @param debugMode        Optional - If "true" then the execution logs will be shown in CLI console.
      * @param region           Optional - Region where the targeted image reside. ListRegionAction can be used in order to
      *                         get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
      *                         Default: "us-east-1".
@@ -66,6 +67,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
                                        @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
+                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
@@ -80,6 +82,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
                 .withProxyHost(proxyHost)
                 .withProxyPort(proxyPort)
                 .withDelimiter(delimiter)
+                .withDebugMode(debugMode)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

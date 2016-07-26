@@ -1,6 +1,5 @@
 package io.cloudslang.content.jclouds.execute.instances;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
@@ -20,15 +19,16 @@ public class RunInstancesExecutor {
     private static final String MIN_COUNT_MAX_COUNT_VALIDATION = "The value provided for [maxCount] input should be " +
             "greater or equal than the value provided for [minxCount] input.";
 
-    public Map<String, String> execute(CommonInputs inputs, InstanceInputs instanceInputs) throws Exception {
+    public Map<String, String> execute(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception {
         if (instanceInputs.getMinCount() > instanceInputs.getMaxCount()) {
             throw new RuntimeException(MIN_COUNT_MAX_COUNT_VALIDATION);
         }
 
-        ComputeService cs = ComputeFactory.getComputeService(inputs);
+        ComputeService cs = ComputeFactory.getComputeService(commonInputs);
         Reservation<? extends RunningInstance> result = cs.runInstancesInRegion(instanceInputs.getCustomInputs().getRegion(),
                 instanceInputs.getCustomInputs().getAvailabilityZone(), instanceInputs.getCustomInputs().getImageId(),
-                instanceInputs.getMinCount(), instanceInputs.getMaxCount(), RunInstancesOptions.NONE);
+                instanceInputs.getMinCount(), instanceInputs.getMaxCount(), commonInputs.isDebugMode(),
+                RunInstancesOptions.NONE);
 
         return OutputsUtil.getResultsMap(result.toString());
     }

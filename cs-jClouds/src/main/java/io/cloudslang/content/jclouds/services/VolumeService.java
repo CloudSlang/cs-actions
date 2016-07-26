@@ -9,11 +9,12 @@ import org.jclouds.ec2.domain.Volume;
  */
 public interface VolumeService {
     Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
-                                          String size, String iops, boolean encrypted);
+                                          String size, String iops, boolean encrypted, boolean isDebugMode);
 
-    void deleteVolumeInRegion(String region, String volumeId);
+    void deleteVolumeInRegion(String region, String volumeId, boolean isDebugMode);
 
-    Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device) throws Exception;
+    Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean isDebugMode)
+            throws Exception;
 
-    void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force);
+    void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force, boolean isDebugMode);
 }

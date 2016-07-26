@@ -56,12 +56,12 @@ public class CreateVolumeInAvailabilityZoneExecutorTest {
     public void testExecute() throws Exception {
         when(VolumeFactory.getVolumeService(any(CommonInputs.class))).thenReturn(volumeServiceMock);
         when(volumeServiceMock.createVolumeInAvailabilityZone(anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyBoolean())).thenReturn(volumeMock);
+                anyString(), anyString(), anyBoolean(), anyBoolean())).thenReturn(volumeMock);
 
         Map<String, String> result = toTest.execute(getCommonInputs(), getVolumeInputs());
 
         verify(volumeServiceMock, times(1)).createVolumeInAvailabilityZone(eq("testRegion"), eq("testAvailabilityZone"),
-                eq("snap-abcdef12"), eq("standard"), eq("8"), eq("10"), eq(false));
+                eq("snap-abcdef12"), eq("standard"), eq("8"), eq("10"), eq(false), eq(false));
 
         assertNotNull(result);
         assertNotNull(result.get("returnResult"));
@@ -69,7 +69,7 @@ public class CreateVolumeInAvailabilityZoneExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {
