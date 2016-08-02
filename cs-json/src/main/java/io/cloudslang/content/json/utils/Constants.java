@@ -18,12 +18,20 @@ public class Constants {
 
     public static final String EMPTY_STRING = "";
 
-    public static final class OutputNames {
+    public static final class BooleanNames {
+
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+    }
+
+        public static final class OutputNames {
 
         public static final String RETURN_RESULT = "returnResult";
         public static final String EXCEPTION = "exception";
         public static final String RETURN_CODE = "returnCode";
         public static final String ERROR_MESSAGE = "errorMessage";
+        public static final String NAMESPACES_PREFIXES = "differentListSize";
+        public static final String NAMESPACES_URIS = "namespacesUris";
     }
 
     public static final class ReturnCodes {
@@ -39,6 +47,24 @@ public class Constants {
     }
 
     public static final class InputNames {
+        //ConvertJsonToXml
+        public static final String JSON = "json";
+        public static final String PRETTY_PRINT = "prettyPrint";
+        public static final String SHOW_XML_DECLARATION = "showXmlDeclaration";
+        public static final String ROOT_TAG_NAME = "rootTagName";
+        public static final String DEFAULT_JSON_ARRAY_ITEM_NAME = "defaultJsonArrayItemName";
+        public static final String NAMESPACES_URIS = "namespacesUris";
+        public static final String NAMESPACES_PREFIXES = "namespacesPrefixes";
+        public static final String JSON_ARRAYS_NAMES = "jsonArraysNames";
+        public static final String JSON_ARRAYS_ITEM_NAMES = "jsonArraysItemNames";
+        public static final String DELIMITER = "delimiter";
+
+        //ConvertXmlToJson
+        public static final String XML = "xml";
+        public static final String TEXT_ELEMENTS_NAME = "textElementsName";
+        public static final String INCLUDE_ROOT = "includeRootElement";
+        public static final String INCLUDE_ATTRIBUTES = "includeAttributes";
+        public static final String PARSING_FEATURES = "parsingFeatures";
 
         public static final String JSON_OBJECT = "jsonObject";
         public static final String NEW_PROPERTY_NAME = "newPropertyName";
@@ -51,6 +77,12 @@ public class Constants {
         public static final String NAME = "name";
         public static final String VALUE = "value";
         public static final String VALIDATE_VALUE = "validateValue";
+    }
+
+    public static final class Defaults {
+
+        public static final String DEFAULT_DELIMITER = ",";
+        public static final String DEFAULT_TEXT_ELEMENTS_NAME = "_text";
     }
 
     public static final class EditJsonOperations {
