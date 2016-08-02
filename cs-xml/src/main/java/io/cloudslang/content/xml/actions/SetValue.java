@@ -43,9 +43,9 @@ public class SetValue {
             @Param(value = Constants.Inputs.XML_DOCUMENT, required = true) String xmlDocument,
             @Param(value = Constants.Inputs.XML_DOCUMENT_SOURCE, required = true) String xmlDocumentSource,
             @Param(value = Constants.Inputs.XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
-            @Param(value = Constants.Inputs.ATTRIBUTE_NAME, required = false) String attributeName,
+            @Param(Constants.Inputs.ATTRIBUTE_NAME) String attributeName,
             @Param(value = Constants.Inputs.VALUE, required = true) String value,
-            @Param(value = Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
+            @Param(Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)

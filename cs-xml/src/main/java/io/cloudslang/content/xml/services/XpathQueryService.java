@@ -6,6 +6,7 @@ import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -41,7 +42,8 @@ public class XpathQueryService {
                         selection, Constants.ReturnCodes.SUCCESS);
             }
         } catch (Exception e) {
-            ResultUtils.populateFailureResult(result, e.getMessage() + e);
+            ResultUtils.populateFailureResult(result, ExceptionUtils.getStackTrace(e));
+            result.put(Constants.Outputs.SELECTED_VALUE, Constants.EMPTY_STRING);
         }
         return result;
     }

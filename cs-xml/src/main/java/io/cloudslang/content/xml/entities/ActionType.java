@@ -3,7 +3,7 @@ package io.cloudslang.content.xml.entities;
 /**
  * Created by moldovas on 7/8/2016.
  */
-public enum Action {
+public enum ActionType {
     delete(Constants.Inputs.DELETE_ACTION),
     insert(Constants.Inputs.INSERT_ACTION),
     append(Constants.Inputs.APPEND_ACTION),
@@ -13,7 +13,7 @@ public enum Action {
     update(Constants.Inputs.UPDATE_ACTION);
     private String value;
 
-    Action(String value) {
+    ActionType(String value) {
         this.value = value;
     }
 

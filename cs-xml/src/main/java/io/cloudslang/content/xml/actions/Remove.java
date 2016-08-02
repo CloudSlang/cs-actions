@@ -43,10 +43,10 @@ public class Remove {
                     @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = Constants.Inputs.XML_DOCUMENT, required = true) String xmlDocument,
-            @Param(value = Constants.Inputs.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
+            @Param(Constants.Inputs.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
             @Param(value = Constants.Inputs.XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
-            @Param(value = Constants.Inputs.ATTRIBUTE_NAME) String attributeName,
-            @Param(value = Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
+            @Param(Constants.Inputs.ATTRIBUTE_NAME) String attributeName,
+            @Param(Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
 
         Map<String, String> result = new HashMap<>();
         try {

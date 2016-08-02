@@ -8,6 +8,7 @@ public class Constants {
     public static final String FAILURE = "failure";
     public static final String EMPTY_STRING = "";
     public static final String NO_MATCH_FOUND = "No match found";
+    public static final String EMPTY_XML_FILE = "XML file error: Not found";
     public static final String YES = "yes";
     public static final String XML_PATH = "xmlPath";
     public static final String XML_URL = "xmlUrl";
