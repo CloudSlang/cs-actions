@@ -76,7 +76,7 @@ public class GsonJsonConverter implements JsonConverter {
             addNamespaces(xmlElement.getAdditionalNamespaces());
 
             if (includeAttributes) {
-                addAttributes(result, xmlElement.getAttributes());
+                result = addAttributes(result, xmlElement.getAttributes());
             }
 
 
@@ -96,22 +96,26 @@ public class GsonJsonConverter implements JsonConverter {
                 arrayName = containsArrays(children);
             }
 
-            //add jsonObjects and jsonPrimitives
-            for (Element element : children) {
-                if (isPrimitiveElement(element)) {
-                    JsonPrimitive jsonPrimitive = new JsonPrimitive(element.getValue());
-                    result.add(getElementFullName(element), jsonPrimitive);
-                } else {
-                    JsonElement jsonObject = convertToJsonObject(Collections.singletonList(element));
-                    result.add(getElementFullName(element), jsonObject);
-                }
-            }
+            result = addJsonObjectsAndPrimitives(result, children);
 
             //add text prop
-            addTextProp(result, xmlElement.getText());
+            result = addTextProp(result, xmlElement.getText());
         }
 
         return result;
+    }
+
+    private JsonObject addJsonObjectsAndPrimitives(JsonObject jsonObject, List<Element> elements) {
+        for (Element element : elements) {
+            if (isPrimitiveElement(element)) {
+                JsonPrimitive jsonPrimitive = new JsonPrimitive(element.getValue());
+                jsonObject.add(getElementFullName(element), jsonPrimitive);
+            } else {
+                JsonElement jsonElement = convertToJsonObject(Collections.singletonList(element));
+                jsonObject.add(getElementFullName(element), jsonElement);
+            }
+        }
+        return jsonObject;
     }
 
     private JsonArray convertToJsonArray(List<Element> xmlElements) {
@@ -127,7 +131,7 @@ public class GsonJsonConverter implements JsonConverter {
             addNamespaces(namespaces);
 
             if (includeAttributes)
-                addAttributes(jsonObject, attributes);
+                jsonObject = addAttributes(jsonObject, attributes);
 
             String arrayName = containsArrays(children);
 //            while (arrayName != null) {
@@ -155,7 +159,7 @@ public class GsonJsonConverter implements JsonConverter {
 //            }
 
             //add text prop
-            addTextProp(jsonObject, xmlElement.getText());
+            jsonObject = addTextProp(jsonObject, xmlElement.getText());
 
             result.add(jsonElement);
         }
@@ -163,10 +167,11 @@ public class GsonJsonConverter implements JsonConverter {
         return result;
     }
 
-    private void addTextProp(JsonObject jsonObject, String text) {
+    private JsonObject addTextProp(JsonObject jsonObject, String text) {
         if (!StringUtils.isEmpty(text) && text.matches(".*[a-zA-Z0-9].*")) {
             jsonObject.addProperty(textPropName, text);
         }
+        return jsonObject;
     }
 
     private void addNamespaces(List<Namespace> namespaces) {
@@ -180,10 +185,11 @@ public class GsonJsonConverter implements JsonConverter {
         }
     }
 
-    private void addAttributes(JsonObject jsonObject, List<Attribute> attributes) {
+    private JsonObject addAttributes(JsonObject jsonObject, List<Attribute> attributes) {
         for (Attribute attribute : attributes) {
             jsonObject.addProperty(JSON_ATTRIBUTE_PREFIX + attribute.getName(), attribute.getValue());
         }
+        return jsonObject;
     }
 
     private String getElementFullName(Element element) {
