@@ -5,6 +5,7 @@ package io.cloudslang.content.xml.utils;
  */
 public class Constants {
     public static final String EMPTY_STRING = "";
+    public static final String JSON_ATTRIBUTE_PREFIX = "@";
     public static final String NO_MATCH_FOUND = "No match found";
     public static final String YES = "yes";
     public static final String XML_PATH = "xmlPath";
@@ -129,9 +130,9 @@ public class Constants {
 
     public static final class Defaults {
         public static final String DELIMITER = ",";
+        public static final String PREFIX_DELIMITER = ":";
         public static final String XML_DOCUMENT_SOURCE = "xmlString";
         public static final String XSD_DOCUMENT_SOURCE = "xsdString";
-        public static final String DEFAULT_DELIMITER = ",";
         public static final String DEFAULT_TEXT_ELEMENTS_NAME = "_text";
     }
 

@@ -1,5 +1,6 @@
 package io.cloudslang.content.xml.services;
 
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
 
 import com.google.gson.Gson;
@@ -20,15 +21,12 @@ import org.jdom2.input.SAXBuilder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import static io.cloudslang.content.xml.utils.Constants.*;
+
 /**
  * Created by persdana on 11/17/2014.
  */
 public class GsonJsonConverter implements JsonConverter {
-    private static final String JSON_ATTRIBUTE_PREFIX = "@";
-    private static final String DEFAULT_DELIMITER = ",";
-    private static final String PREFIX_DELIMITER = ":";
-    private static final String DEFAULT_TEXT_PROP_NAME = "_text";
-
     private StringBuilder namespacesPrefixes;
     private StringBuilder namespacesUris;
     private String parsingFeatures;
@@ -36,7 +34,7 @@ public class GsonJsonConverter implements JsonConverter {
     private boolean addRootElement = true;
     private boolean prettyPrint = true;
     private boolean includeAttributes = true;
-    private String textPropName = DEFAULT_TEXT_PROP_NAME;
+    private String textPropName = Defaults.DEFAULT_TEXT_ELEMENTS_NAME;
 
     public GsonJsonConverter() {
         namespacesPrefixes = new StringBuilder();
@@ -174,8 +172,8 @@ public class GsonJsonConverter implements JsonConverter {
     private void addNamespaces(List<Namespace> namespaces) {
         for (Namespace namespace : namespaces) {
             if (namespacesUris.length() > 0) {
-                namespacesPrefixes.append(DEFAULT_DELIMITER);
-                namespacesUris.append(DEFAULT_DELIMITER);
+                namespacesPrefixes.append(Defaults.DELIMITER);
+                namespacesUris.append(Defaults.DELIMITER);
             }
             namespacesPrefixes.append(namespace.getPrefix());
             namespacesUris.append(namespace.getURI());
@@ -191,7 +189,7 @@ public class GsonJsonConverter implements JsonConverter {
     private String getElementFullName(Element element) {
         String name = element.getNamespacePrefix();
         if (!name.isEmpty())
-            name += PREFIX_DELIMITER;
+            name += Defaults.PREFIX_DELIMITER;
         name += element.getName();
         return name;
     }
@@ -206,15 +204,13 @@ public class GsonJsonConverter implements JsonConverter {
      */
     private String containsArrays(List<Element> elements) {
         List<String> names = new LinkedList<>();
-
-        for (Element e : elements) {
-            String name = getElementFullName(e);
+        for (Element element : elements) {
+            String name = getElementFullName(element);
             if (names.contains(name)) {
                 return name;
             }
             names.add(name);
         }
-
         return null;
     }
 
@@ -230,8 +226,8 @@ public class GsonJsonConverter implements JsonConverter {
 
     private void eliminateElementsByName(String arrayName, List<Element> children) {
         for (Iterator<Element> i = children.iterator(); i.hasNext(); ) {
-            Element e = i.next();
-            if (getElementFullName(e).equals(arrayName)) {
+            Element element = i.next();
+            if (getElementFullName(element).equals(arrayName)) {
                 i.remove();
             }
         }

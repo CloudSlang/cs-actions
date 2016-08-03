@@ -4,7 +4,8 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import io.cloudslang.content.xml.utils.Constants.*;
+import static  io.cloudslang.content.xml.utils.Constants.*;
+
 import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -40,7 +41,7 @@ public class ConvertJsonToXml {
 
         Map<String, String> result = new HashMap<>();
         try {
-            delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DEFAULT_DELIMITER);
+            delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
             prettyPrintStr = StringUtils.defaultIfEmpty(prettyPrintStr, BooleanNames.TRUE);
             showXmlDeclarationStr = StringUtils.defaultIfEmpty(showXmlDeclarationStr, BooleanNames.FALSE);
 
