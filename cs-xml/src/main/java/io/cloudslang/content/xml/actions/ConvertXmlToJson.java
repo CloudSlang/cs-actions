@@ -1,13 +1,12 @@
-package io.cloudslang.content.json.actions;
+package io.cloudslang.content.xml.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import io.cloudslang.content.json.utils.Constants;
-import io.cloudslang.content.json.utils.Constants.*;
-import io.cloudslang.content.json.utils.InputUtils;
-import org.apache.commons.lang3.BooleanUtils;
+import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.entities.Constants.*;
+import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -28,16 +27,16 @@ public class ConvertXmlToJson {
                     @Output(OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.RETURN_CODE_SUCCESS),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.RETURN_CODE_FAILURE)
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE)
             })
     public Map<String, String> convertXmlToJson(
-            @Param(value = InputNames.XML, required = true) String xml,
-            @Param(value = InputNames.TEXT_ELEMENTS_NAME) String textElementsName,
-            @Param(value = InputNames.INCLUDE_ROOT) String includeRootStr,
-            @Param(value = InputNames.INCLUDE_ATTRIBUTES) String includeAttributesStr,
-            @Param(value = InputNames.PRETTY_PRINT) String prettyPrintStr,
-            @Param(value = InputNames.PARSING_FEATURES) String parsingFeatures) {
+            @Param(value = Inputs.XML, required = true) String xml,
+            @Param(value = Inputs.TEXT_ELEMENTS_NAME) String textElementsName,
+            @Param(value = Inputs.INCLUDE_ROOT) String includeRootStr,
+            @Param(value = Inputs.INCLUDE_ATTRIBUTES) String includeAttributesStr,
+            @Param(value = Inputs.PRETTY_PRINT) String prettyPrintStr,
+            @Param(value = Inputs.PARSING_FEATURES) String parsingFeatures) {
 
         Map<String, String> result = new HashMap<>();
         try {
@@ -60,7 +59,7 @@ public class ConvertXmlToJson {
             result.put(OutputNames.NAMESPACES_PREFIXES, Constants.EMPTY_STRING);
             result.put(OutputNames.NAMESPACES_URIS, Constants.EMPTY_STRING);
             result.put(OutputNames.RETURN_RESULT, ExceptionUtils.getStackTrace(e));
-            result.put(OutputNames.RETURN_CODE, ReturnCodes.RETURN_CODE_FAILURE);
+            result.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
         }
         return result;
     }

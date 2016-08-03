@@ -26,6 +26,33 @@ public class Constants {
     }
 
     public static final class Inputs {
+        //ConvertJsonToXml
+        public static final String JSON = "json";
+        public static final String PRETTY_PRINT = "prettyPrint";
+        public static final String SHOW_XML_DECLARATION = "showXmlDeclaration";
+        public static final String ROOT_TAG_NAME = "rootTagName";
+        public static final String DEFAULT_JSON_ARRAY_ITEM_NAME = "defaultJsonArrayItemName";
+        public static final String NAMESPACES_URIS = "namespacesUris";
+        public static final String NAMESPACES_PREFIXES = "namespacesPrefixes";
+        public static final String JSON_ARRAYS_NAMES = "jsonArraysNames";
+        public static final String JSON_ARRAYS_ITEM_NAMES = "jsonArraysItemNames";
+
+        //ConvertXmlToJson
+        public static final String TEXT_ELEMENTS_NAME = "textElementsName";
+        public static final String INCLUDE_ROOT = "includeRootElement";
+        public static final String INCLUDE_ATTRIBUTES = "includeAttributes";
+        public static final String PARSING_FEATURES = "parsingFeatures";
+
+        public static final String JSON_OBJECT = "jsonObject";
+        public static final String NEW_PROPERTY_NAME = "newPropertyName";
+        public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
+        public static final String OBJECT = "object";
+        public static final String KEY = "key";
+        public static final String ARRAY = "array";
+        public static final String JSON_PATH = "jsonPath";
+        public static final String NAME = "name";
+        public static final String VALIDATE_VALUE = "validateValue";
+
         public static final String XML_DOCUMENT = "xmlDocument";
         public static final String XML_DOCUMENT_SOURCE = "xmlDocumentSource";
         public static final String XSD_DOCUMENT = "xsdDocument";
@@ -116,10 +143,43 @@ public class Constants {
         public static final String DELIMITER = ",";
         public static final String XML_DOCUMENT_SOURCE = "xmlString";
         public static final String XSD_DOCUMENT_SOURCE = "xsdString";
+        public static final String DEFAULT_DELIMITER = ",";
+        public static final String DEFAULT_TEXT_ELEMENTS_NAME = "_text";
     }
 
     public static final class ReturnCodes {
         public static final String SUCCESS = "0";
         public static final String FAILURE = "-1";
+    }
+
+
+    public static final class BooleanNames {
+
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+    }
+
+    public static final class OutputNames {
+
+        public static final String RETURN_RESULT = "returnResult";
+        public static final String EXCEPTION = "exception";
+        public static final String RETURN_CODE = "returnCode";
+        public static final String ERROR_MESSAGE = "errorMessage";
+        public static final String NAMESPACES_PREFIXES = "differentListSize";
+        public static final String NAMESPACES_URIS = "namespacesUris";
+    }
+
+
+    public static final class InputNames {
+
+    }
+
+    public static final class EditJsonOperations {
+
+        public static final String GET_ACTION = "get";
+        public static final String INSERT_ACTION = "insert";
+        public static final String UPDATE_ACTION = "update";
+        public static final String DELETE_ACTION = "delete";
+        public static final String ADD_ACTION = "add";
     }
 }
