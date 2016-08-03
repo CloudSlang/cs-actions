@@ -1,9 +1,6 @@
 package io.cloudslang.content.xml.utils;
 
-import com.hp.oo.sdk.content.annotations.Param;
-import io.cloudslang.content.xml.entities.Constants;
 import org.apache.commons.lang3.StringUtils;
-import io.cloudslang.content.xml.utils.Constants.InputNames;
 /**
  * Created by moldovas on 6/24/2016.
  */
@@ -34,7 +31,7 @@ public class InputUtils {
         return "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value);
     }
 
-    public static void validateBoolean(@Param(value = InputNames.INCLUDE_ROOT) String includeRootStr) throws Exception {
+    public static void validateBoolean(String includeRootStr) throws Exception {
         if (!InputUtils.isBoolean(includeRootStr)) {
             throw new Exception(includeRootStr + " is not a valid value for Boolean");
         }

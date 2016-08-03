@@ -4,7 +4,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.xml.entities.Action;
-import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import io.cloudslang.content.xml.factory.OperationFactory;
 import io.cloudslang.content.xml.services.OperationService;

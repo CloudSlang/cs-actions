@@ -1,25 +1,22 @@
 package io.cloudslang.content.xml.services;
 
+import io.cloudslang.content.xml.utils.XmlUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.opsware.pas.content.commons.util.XMLSecurityCommons;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
+import java.util.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jdom2.*;
+import org.jdom2.input.SAXBuilder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -47,54 +44,45 @@ public class GsonJsonConverter implements JsonConverter {
     }
 
     public String convertToJsonString(String xml) throws JDOMException, IOException, SAXException {
-        String result = "";
-        try {
-            Reader stringReader = new StringReader(xml);
-            InputSource inputSource = new InputSource(stringReader);
-            SAXBuilder builder = new SAXBuilder();
-            XMLSecurityCommons.setFeatures(builder, parsingFeatures);
-            Document doc = builder.build(inputSource);
-            Element root = doc.getRootElement();
+        Reader stringReader = new StringReader(xml);
+        InputSource inputSource = new InputSource(stringReader);
+        SAXBuilder builder = new SAXBuilder();
+        XmlUtils.setFeatures(builder, parsingFeatures);
+        Document document = builder.build(inputSource);
+        Element root = document.getRootElement();
 
-            List<Element> xmlElements = Arrays.asList(root);
-            JsonObject jsonObject = convertToJsonObject(xmlElements);
+        List<Element> xmlElements = Collections.singletonList(root);
+        JsonObject jsonObject = convertToJsonObject(xmlElements);
 
-            //add root element
-            JsonObject rootJson;
-            if (addRootElement) {
-                rootJson = new JsonObject();
-                rootJson.add(root.getName(), jsonObject);
-            } else {
-                rootJson = jsonObject;
-            }
-
-            //pretty print
-            if (prettyPrint) {
-                Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-                result = gson.toJson(rootJson);
-            } else {
-                result = rootJson.toString();
-            }
-
-        } catch (Exception e) {
-            throw e;
+        //add root element
+        JsonObject rootJson;
+        if (addRootElement) {
+            rootJson = new JsonObject();
+            rootJson.add(root.getName(), jsonObject);
+        } else {
+            rootJson = jsonObject;
         }
-        return result;
+
+        //pretty print
+        if (prettyPrint) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+            return gson.toJson(rootJson);
+        }
+        return rootJson.toString();
 
     }
 
     private JsonObject convertToJsonObject(List<Element> xmlElements) {
         JsonObject result = new JsonObject();
         for (Element xmlElement : xmlElements) {
-            List namespaces = xmlElement.getAdditionalNamespaces();
-            List attributes = xmlElement.getAttributes();
+            addNamespaces(xmlElement.getAdditionalNamespaces());
+
+            if (includeAttributes) {
+                addAttributes(result, xmlElement.getAttributes());
+            }
+
+
             List<Element> children = xmlElement.getChildren();
-
-            addNamespaces(namespaces);
-
-            if (includeAttributes)
-                addAttributes(result, attributes);
-
             //add jsonArrays
             String arrayName = containsArrays(children);
             while (arrayName != null) {
@@ -111,16 +99,13 @@ public class GsonJsonConverter implements JsonConverter {
             }
 
             //add jsonObjects and jsonPrimitives
-            for (Object o : children.toArray()) {
-                if (o instanceof Element) {
-                    Element element = (Element) o;
-                    if (isPrimitiveElement(element)) {
-                        JsonPrimitive jsonPrimitive = new JsonPrimitive(element.getValue());
-                        result.add(getElementFullName(element), jsonPrimitive);
-                    } else {
-                        JsonElement jsonObject = convertToJsonObject(Arrays.asList(element));
-                        result.add(getElementFullName(element), jsonObject);
-                    }
+            for (Element element : children) {
+                if (isPrimitiveElement(element)) {
+                    JsonPrimitive jsonPrimitive = new JsonPrimitive(element.getValue());
+                    result.add(getElementFullName(element), jsonPrimitive);
+                } else {
+                    JsonElement jsonObject = convertToJsonObject(Collections.singletonList(element));
+                    result.add(getElementFullName(element), jsonObject);
                 }
             }
 
@@ -135,8 +120,8 @@ public class GsonJsonConverter implements JsonConverter {
         JsonArray result = new JsonArray();
 
         for (Element xmlElement : xmlElements) {
-            List namespaces = xmlElement.getAdditionalNamespaces();
-            List attributes = xmlElement.getAttributes();
+            List<Namespace> namespaces = xmlElement.getAdditionalNamespaces();
+            List<Attribute> attributes = xmlElement.getAttributes();
             List<Element> children = xmlElement.getChildren();
 
             JsonElement jsonElement = new JsonObject();
@@ -147,32 +132,29 @@ public class GsonJsonConverter implements JsonConverter {
                 addAttributes(jsonObject, attributes);
 
             String arrayName = containsArrays(children);
-            while (arrayName != null) {
-                //add array
-                List<Element> elements = getElementsByName(arrayName, children);
-                JsonArray jsonArray = convertToJsonArray(elements);
-                jsonObject.add(arrayName, jsonArray);
-
-                //eliminate what was added
-                eliminateElementsByName(arrayName, children);
-
-                //verify if it contains another array
-                arrayName = containsArrays(children);
-            }
-
-            for (Object o : children.toArray()) {
-                if (o instanceof Element) {
-                    Element element = (Element) o;
-                    //jsonObject.addProperty(element.getName(), element.getValue());
-                    if (isPrimitiveElement(element)) {     //
-                        JsonPrimitive jsonPrimitive = new JsonPrimitive(element.getValue());
-                        jsonObject.add(getElementFullName(element), jsonPrimitive);
-                    } else {
-                        JsonElement jsonObject2 = convertToJsonObject(Arrays.asList(element));
-                        jsonObject.add(getElementFullName(element), jsonObject2);
-                    }
-                }
-            }
+//            while (arrayName != null) {
+//                //add array
+//                List<Element> elements = getElementsByName(arrayName, children);
+//                JsonArray jsonArray = convertToJsonArray(elements);
+//                jsonObject.add(arrayName, jsonArray);
+//
+//                //eliminate what was added
+//                eliminateElementsByName(arrayName, children);
+//
+//                //verify if it contains another array
+//                arrayName = containsArrays(children);
+//            }
+//
+//            for (Element element : children) {
+//                //jsonObject.addProperty(element.getName(), element.getValue());
+//                if (isPrimitiveElement(element)) {     //
+//                    JsonPrimitive jsonPrimitive = new JsonPrimitive(element.getValue());
+//                    jsonObject.add(getElementFullName(element), jsonPrimitive);
+//                } else {
+//                    JsonElement jsonObject2 = convertToJsonObject(Collections.singletonList(element));
+//                    jsonObject.add(getElementFullName(element), jsonObject2);
+//                }
+//            }
 
             //add text prop
             addTextProp(jsonObject, xmlElement.getText());
@@ -184,49 +166,37 @@ public class GsonJsonConverter implements JsonConverter {
     }
 
     private void addTextProp(JsonObject jsonObject, String text) {
-        if (text != null && !text.isEmpty()) {
-            if (text.matches(".*[a-zA-Z0-9].*")) {
-                jsonObject.addProperty(textPropName, text);
-            }
+        if (!StringUtils.isEmpty(text) && text.matches(".*[a-zA-Z0-9].*")) {
+            jsonObject.addProperty(textPropName, text);
         }
     }
 
-    private void addNamespaces(List namespaces) {
-        for (Object o : namespaces.toArray()) {
-            if (o instanceof Namespace) {
-                Namespace namespace = (Namespace) o;
-                if (namespacesUris.length() > 0) {
-                    namespacesPrefixes.append(DEFAULT_DELIMITER + namespace.getPrefix());
-                    namespacesUris.append(DEFAULT_DELIMITER + namespace.getURI());
-                } else {
-                    namespacesPrefixes.append(namespace.getPrefix());
-                    namespacesUris.append(namespace.getURI());
-                }
+    private void addNamespaces(List<Namespace> namespaces) {
+        for (Namespace namespace : namespaces) {
+            if (namespacesUris.length() > 0) {
+                namespacesPrefixes.append(DEFAULT_DELIMITER);
+                namespacesUris.append(DEFAULT_DELIMITER);
             }
+            namespacesPrefixes.append(namespace.getPrefix());
+            namespacesUris.append(namespace.getURI());
         }
     }
 
-    private void addAttributes(JsonObject jsonObject, List namespaces) {
-        for (Object o : namespaces.toArray()) {
-            if (o instanceof Attribute) {
-                Attribute attribute = (Attribute) o;
-                jsonObject.addProperty(JSON_ATTRIBUTE_PREFIX + attribute.getName(), attribute.getValue());
-            }
+    private void addAttributes(JsonObject jsonObject, List<Attribute> attributes) {
+        for (Attribute attribute : attributes) {
+            jsonObject.addProperty(JSON_ATTRIBUTE_PREFIX + attribute.getName(), attribute.getValue());
         }
     }
 
     private String getElementFullName(Element element) {
-        String name = "";
-        name += element.getNamespacePrefix();
+        String name = element.getNamespacePrefix();
         if (!name.isEmpty())
             name += PREFIX_DELIMITER;
         name += element.getName();
-
         return name;
     }
 
     private boolean isPrimitiveElement(Element e) {
-
         return e.getChildren().isEmpty() && e.getAttributes().isEmpty(); //if it doesn't have child and doesn't have attributes it's primitive.
     }
 
@@ -235,7 +205,7 @@ public class GsonJsonConverter implements JsonConverter {
      * @return the name of the element that was found twice for the first time.
      */
     private String containsArrays(List<Element> elements) {
-        List<String> names = new LinkedList();
+        List<String> names = new LinkedList<>();
 
         for (Element e : elements) {
             String name = getElementFullName(e);
@@ -249,10 +219,10 @@ public class GsonJsonConverter implements JsonConverter {
     }
 
     private List<Element> getElementsByName(String arrayName, List<Element> elementsToSearch) {
-        List<Element> elements = new LinkedList<Element>();
-        for (Element e : elementsToSearch) {
-            if (getElementFullName(e).equals(arrayName)) {
-                elements.add(e);
+        List<Element> elements = new LinkedList<>();
+        for (Element element : elementsToSearch) {
+            if (getElementFullName(element).equals(arrayName)) {
+                elements.add(element);
             }
         }
         return elements;

@@ -1,6 +1,5 @@
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import org.apache.commons.lang3.StringUtils;
 

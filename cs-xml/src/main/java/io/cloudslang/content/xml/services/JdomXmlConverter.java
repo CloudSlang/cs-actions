@@ -1,12 +1,12 @@
 package io.cloudslang.content.xml.services;
 
 import com.google.gson.*;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 import java.util.*;
 
@@ -45,8 +45,8 @@ public class JdomXmlConverter implements XmlConverter {
      */
     public JdomXmlConverter() {
         xmlWriter = new XMLOutputter();
-        namespaces = new HashMap<String, Namespace>();
-        jsonArrayItemNames = new HashMap<String, String>();
+        namespaces = new HashMap<>();
+        jsonArrayItemNames = new HashMap<>();
         jsonArrayItemName = JSON_ARRAY_ITEM_NAME;
         rootTagName = ROOT_TAG_NAME;
         showXmlDeclaration = false;
@@ -96,7 +96,7 @@ public class JdomXmlConverter implements XmlConverter {
             }
 
             Element root = convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName, jsonArrayItemName);
-            return Arrays.asList(root);
+            return Collections.singletonList(root);
         } else {
             if (isStringEmpty(rootTagName)) {
                 // if it's JSON object and rootTagName is empty it return a list of contains elements
@@ -104,7 +104,7 @@ public class JdomXmlConverter implements XmlConverter {
             }
 
             Element root = convertToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
-            return Arrays.asList(root);
+            return Collections.singletonList(root);
         }
     }
 
@@ -211,7 +211,7 @@ public class JdomXmlConverter implements XmlConverter {
      * @return the list of XML elements
      */
     private List<Element> convertToXmlElement(JsonObject jsonObject) {
-        List<Element> result = new ArrayList<Element>();
+        List<Element> result = new ArrayList<>();
         Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
         for (Map.Entry<String, JsonElement> entry : entries) {
             String childTagName = entry.getKey();

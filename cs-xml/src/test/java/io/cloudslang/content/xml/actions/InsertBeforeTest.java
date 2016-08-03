@@ -1,6 +1,6 @@
 package io.cloudslang.content.xml.actions;
 
-import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class InsertBeforeTest {
 
         Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
-        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ResponseNames.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.INSERT_BEFORE_SUCCESS,
                 result.get(Constants.Outputs.RETURN_RESULT));
@@ -53,7 +53,7 @@ public class InsertBeforeTest {
 
         Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
-        assertEquals(Constants.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ResponseNames.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.SuccessMessages.INSERT_BEFORE_SUCCESS,
                 result.get(Constants.Outputs.RETURN_RESULT));
@@ -66,7 +66,7 @@ public class InsertBeforeTest {
 
         Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
-        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
                 result.get(Constants.Outputs.ERROR_MESSAGE));
@@ -79,7 +79,7 @@ public class InsertBeforeTest {
 
         Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
-        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 "The element type \"open\" must be terminated by the matching end-tag \"</open>\".",
@@ -93,7 +93,7 @@ public class InsertBeforeTest {
 
         Map<String, String> result = insertBefore.execute(xml, "", xPathQuery, xmlElement, "false");
 
-        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
         assertEquals(Constants.ErrorMessages.PARSING_ERROR +
                 Constants.ErrorMessages.INSERT_BEFORE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE,

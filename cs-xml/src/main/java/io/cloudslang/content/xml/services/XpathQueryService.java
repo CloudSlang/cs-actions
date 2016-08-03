@@ -1,6 +1,6 @@
 package io.cloudslang.content.xml.services;
 
-import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.utils.ResultUtils;
@@ -34,10 +34,10 @@ public class XpathQueryService {
             String selection = xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
 
             if (StringUtils.isBlank(selection)) {
-                ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
+                ResultUtils.populateValueResult(result, Constants.ResponseNames.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
                         Constants.NO_MATCH_FOUND, Constants.ReturnCodes.SUCCESS);
             } else {
-                ResultUtils.populateValueResult(result, Constants.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
+                ResultUtils.populateValueResult(result, Constants.ResponseNames.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
                         selection, Constants.ReturnCodes.SUCCESS);
             }
         } catch (Exception e) {
