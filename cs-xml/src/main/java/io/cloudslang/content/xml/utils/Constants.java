@@ -13,6 +13,8 @@ public class Constants {
     public static final String INVALID_XML_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xmlString, xmlPath and xmlUrl";
     public static final String INVALID_XSD_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xsdString and xsdPath";
     public static final String XSD_PATH = "xsdPath";
+    public static final String DIFFERENT_LIST_SIZE = "differentListSize";
+
 
     public static final class Outputs {
         public static final String RETURN_RESULT = "returnResult";
@@ -22,6 +24,8 @@ public class Constants {
         public static final String RETURN_CODE = "returnCode";
         public static final String EXCEPTION = "exception";
         public static final String ERROR_MESSAGE = "errorMessage";
+        public static final String NAMESPACES_URIS = "namespacesUris";
+        public static final String NAMESPACES_PREFIXES = "namespacesPrefixes";
     }
 
     public static final class Inputs {
@@ -147,13 +151,4 @@ public class Constants {
         public static final String FALSE = "false";
     }
 
-    public static final class OutputNames {
-
-        public static final String RETURN_RESULT = "returnResult";
-        public static final String EXCEPTION = "exception";
-        public static final String RETURN_CODE = "returnCode";
-        public static final String ERROR_MESSAGE = "errorMessage";
-        public static final String NAMESPACES_PREFIXES = "differentListSize";
-        public static final String NAMESPACES_URIS = "namespacesUris";
-    }
 }

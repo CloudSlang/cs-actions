@@ -28,19 +28,17 @@ public class GsonJsonConverter {
     private StringBuilder namespacesPrefixes;
     private StringBuilder namespacesUris;
 
-    private String textPropName;
-
-    public GsonJsonConverter(String textElementsName) {
+    public GsonJsonConverter() {
         namespacesPrefixes = new StringBuilder();
         namespacesUris = new StringBuilder();
-        textPropName = textElementsName;
     }
 
     public String convertToJsonString(String xml,
                                       Boolean includeAttributes,
                                       Boolean prettyPrint,
                                       Boolean addRootElement,
-                                      String parsingFeatures) throws JDOMException, IOException, SAXException {
+                                      String parsingFeatures,
+                                      String textPropName) throws JDOMException, IOException, SAXException {
 
         InputSource inputSource = new InputSource(new StringReader(xml));
         SAXBuilder builder = new SAXBuilder();
@@ -49,7 +47,7 @@ public class GsonJsonConverter {
         Element root = document.getRootElement();
 
         List<Element> xmlElements = Collections.singletonList(root);
-        JsonObject jsonObject = convertToJsonObject(xmlElements, includeAttributes);
+        JsonObject jsonObject = convertToJsonObject(xmlElements, includeAttributes, textPropName);
 
         //add root element
         JsonObject rootJson = new JsonObject();
@@ -68,33 +66,33 @@ public class GsonJsonConverter {
 
     }
 
-    private JsonObject addJsonObjectsAndPrimitives(JsonObject jsonObject, List<Element> elements, Boolean includeAttributes) {
+    private JsonObject addJsonObjectsAndPrimitives(JsonObject jsonObject, List<Element> elements, Boolean includeAttributes, String textPropName) {
         for (Element element : elements) {
             JsonElement jsonElement = isPrimitiveElement(element)?
-                    new JsonPrimitive(element.getValue()) : convertToJsonObject(Collections.singletonList(element), includeAttributes);
+                    new JsonPrimitive(element.getValue()) : convertToJsonObject(Collections.singletonList(element), includeAttributes, textPropName);
             jsonObject.add(getElementFullName(element), jsonElement);
         }
         return jsonObject;
     }
 
 
-    private JsonObject convertToJsonObject(List<Element> xmlElements, Boolean includeAttributes) {
+    private JsonObject convertToJsonObject(List<Element> xmlElements, Boolean includeAttributes, String textPropName) {
         JsonObject result = new JsonObject();
         for (Element xmlElement : xmlElements) {
-            result = addToJsonObjectXmlElement(result, xmlElement, includeAttributes);
+            result = addToJsonObjectXmlElement(result, xmlElement, includeAttributes, textPropName);
         }
         return result;
     }
 
-    private JsonArray convertToJsonArray(List<Element> xmlElements, Boolean includeAttributes) {
+    private JsonArray convertToJsonArray(List<Element> xmlElements, Boolean includeAttributes, String textPropName) {
         JsonArray result = new JsonArray();
         for (Element xmlElement : xmlElements) {
-            result.add(addToJsonObjectXmlElement(new JsonObject(), xmlElement, includeAttributes));
+            result.add(addToJsonObjectXmlElement(new JsonObject(), xmlElement, includeAttributes, textPropName));
         }
         return result;
     }
 
-    private JsonObject addToJsonObjectXmlElement(JsonObject jsonObject, Element xmlElement, Boolean includeAttributes) {
+    private JsonObject addToJsonObjectXmlElement(JsonObject jsonObject, Element xmlElement, Boolean includeAttributes,String textPropName) {
         addNamespaces(xmlElement.getAdditionalNamespaces());
 
         if (includeAttributes) {
@@ -107,20 +105,20 @@ public class GsonJsonConverter {
         for (String arrayName: arrayElementsNames) {
             //add array
             List<Element> elements = getElementsByName(arrayName, children);
-            jsonObject.add(arrayName, convertToJsonArray(elements, includeAttributes));
+            jsonObject.add(arrayName, convertToJsonArray(elements, includeAttributes, textPropName));
             //eliminate what was added
             children = eliminateElementsWithName(arrayName, children);
         }
 
         //add jsonObjects and jsonPrimitives
-        jsonObject = addJsonObjectsAndPrimitives(jsonObject, children, includeAttributes);
+        jsonObject = addJsonObjectsAndPrimitives(jsonObject, children, includeAttributes, textPropName);
 
         //add text prop
-        jsonObject = addTextProp(jsonObject, xmlElement.getText());
+        jsonObject = addTextProp(jsonObject, xmlElement.getText(), textPropName);
         return jsonObject;
     }
 
-    private JsonObject addTextProp(JsonObject jsonObject, String text) {
+    private JsonObject addTextProp(JsonObject jsonObject, String text, String textPropName) {
         if (!StringUtils.isEmpty(text) && text.matches(".*[a-zA-Z0-9].*")) {
             jsonObject.addProperty(textPropName, text);
         }
@@ -153,6 +151,15 @@ public class GsonJsonConverter {
         return name;
     }
 
+    private List<String> getElementsFullName(List<Element> elements) {
+        List<String> names = new LinkedList<>();
+        for (Element element : elements) {
+            names.add(getElementFullName(element));
+        }
+        return names;
+    }
+
+
     private boolean isPrimitiveElement(Element element) {
         return element.getChildren().isEmpty() && element.getAttributes().isEmpty(); //if it doesn't have child and doesn't have attributes it's primitive.
     }
@@ -163,9 +170,9 @@ public class GsonJsonConverter {
      */
     private List<String> getListOfArrayElementNames(List<Element> elements) {
         List<String> names = new LinkedList<>();
-        for (Element element : elements) {
-            String name = getElementFullName(element);
-            if (names.indexOf(name) != names.lastIndexOf(name) && !names.contains(name)) {
+        List<String> elementsStr = getElementsFullName(elements);
+        for (String name : elementsStr) {
+            if (elementsStr.indexOf(name) != elementsStr.lastIndexOf(name) && !names.contains(name)) {
                 names.add(name);
             }
         }

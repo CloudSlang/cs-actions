@@ -9,7 +9,6 @@ import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.Constants.*;
 import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,15 +20,15 @@ public class ConvertXmlToJson {
 
     @Action(name = "Convert XML to Json",
             outputs = {
-                    @Output(OutputNames.NAMESPACES_PREFIXES),
-                    @Output(OutputNames.NAMESPACES_URIS),
-                    @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RETURN_CODE),
-                    @Output(OutputNames.EXCEPTION)
+                    @Output(Outputs.NAMESPACES_PREFIXES),
+                    @Output(Outputs.NAMESPACES_URIS),
+                    @Output(Outputs.RETURN_RESULT),
+                    @Output(Outputs.RETURN_CODE),
+                    @Output(Outputs.EXCEPTION)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE)
+                    @Response(text = ResponseNames.SUCCESS, field = Outputs.RETURN_CODE, value = ReturnCodes.SUCCESS),
+                    @Response(text = ResponseNames.FAILURE, field = Outputs.RETURN_CODE, value = ReturnCodes.FAILURE)
             })
     public Map<String, String> convertXmlToJson(
             @Param(value = Inputs.XML, required = true) String xml,
@@ -54,22 +53,21 @@ public class ConvertXmlToJson {
             Boolean includeAttributes = Boolean.parseBoolean(includeAttributesStr);
             Boolean prettyPrint = Boolean.parseBoolean(prettyPrintStr);
 
-            GsonJsonConverter converter = new GsonJsonConverter(textElementsName);
-            String json = converter.convertToJsonString(xml, includeAttributes, prettyPrint, includeRoot, parsingFeatures);
+            GsonJsonConverter converter = new GsonJsonConverter();
+            String json = converter.convertToJsonString(xml, includeAttributes, prettyPrint, includeRoot, parsingFeatures, textElementsName);
 
-            result.put(OutputNames.NAMESPACES_PREFIXES, converter.getNamespacesPrefixes());
-            result.put(OutputNames.NAMESPACES_URIS, converter.getNamespacesUris());
-            result.put(OutputNames.RETURN_RESULT, json);
-            result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
+            result.put(Outputs.NAMESPACES_PREFIXES, converter.getNamespacesPrefixes());
+            result.put(Outputs.NAMESPACES_URIS, converter.getNamespacesUris());
+            result.put(Outputs.RETURN_RESULT, json);
+            result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
 
         } catch (Exception e) {
-            result.put(OutputNames.NAMESPACES_PREFIXES, Constants.EMPTY_STRING);
-            result.put(OutputNames.NAMESPACES_URIS, Constants.EMPTY_STRING);
-            result.put(OutputNames.RETURN_RESULT, ExceptionUtils.getStackTrace(e));
-            result.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
+            result.put(Outputs.NAMESPACES_PREFIXES, Constants.EMPTY_STRING);
+            result.put(Outputs.NAMESPACES_URIS, Constants.EMPTY_STRING);
+            result.put(Outputs.RETURN_RESULT, e.getMessage());
+            result.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
         }
         return result;
     }
-
 
 }
