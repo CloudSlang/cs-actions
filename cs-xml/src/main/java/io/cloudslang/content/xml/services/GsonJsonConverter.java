@@ -28,11 +28,12 @@ public class GsonJsonConverter {
     private StringBuilder namespacesPrefixes;
     private StringBuilder namespacesUris;
 
-    private String textPropName = Defaults.DEFAULT_TEXT_ELEMENTS_NAME;
+    private String textPropName;
 
-    public GsonJsonConverter() {
+    public GsonJsonConverter(String textElementsName) {
         namespacesPrefixes = new StringBuilder();
         namespacesUris = new StringBuilder();
+        textPropName = textElementsName;
     }
 
     public String convertToJsonString(String xml,
@@ -191,15 +192,11 @@ public class GsonJsonConverter {
         return newElements;
     }
 
-    public StringBuilder getNamespacesUris() {
-        return namespacesUris;
+    public String getNamespacesUris() {
+        return namespacesUris.toString();
     }
 
-    public StringBuilder getNamespacesPrefixes() {
-        return namespacesPrefixes;
-    }
-
-    public void setTextPropName(String textPropName) {
-        this.textPropName = textPropName;
+    public String getNamespacesPrefixes() {
+        return namespacesPrefixes.toString();
     }
 }

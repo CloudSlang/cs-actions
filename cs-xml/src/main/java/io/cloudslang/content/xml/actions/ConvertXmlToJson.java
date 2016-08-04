@@ -4,6 +4,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.xml.services.GsonJsonConverter;
 import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.Constants.*;
 import io.cloudslang.content.xml.utils.InputUtils;
@@ -53,7 +54,13 @@ public class ConvertXmlToJson {
             Boolean includeAttributes = Boolean.parseBoolean(includeAttributesStr);
             Boolean prettyPrint = Boolean.parseBoolean(prettyPrintStr);
 
+            GsonJsonConverter converter = new GsonJsonConverter(textElementsName);
+            String json = converter.convertToJsonString(xml, includeAttributes, prettyPrint, includeRoot, parsingFeatures);
 
+            result.put(OutputNames.NAMESPACES_PREFIXES, converter.getNamespacesPrefixes());
+            result.put(OutputNames.NAMESPACES_URIS, converter.getNamespacesUris());
+            result.put(OutputNames.RETURN_RESULT, json);
+            result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
 
         } catch (Exception e) {
             result.put(OutputNames.NAMESPACES_PREFIXES, Constants.EMPTY_STRING);
