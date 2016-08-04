@@ -1,6 +1,7 @@
 package io.cloudslang.content.xml.services;
 
 import com.google.gson.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -90,7 +91,7 @@ public class JdomXmlConverter implements XmlConverter {
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(json);
         if (jsonElement.isJsonArray()) {
-            if (isStringEmpty(rootTagName)) {
+            if (StringUtils.isEmpty(rootTagName)) {
                 // if it's JSON array and rootTagName is empty it returns a list of elements with the name jsonArrayItemName
                 return convertToXmlElements(jsonElement.getAsJsonArray(), jsonArrayItemName);
             }
@@ -98,7 +99,7 @@ public class JdomXmlConverter implements XmlConverter {
             Element root = convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName, jsonArrayItemName);
             return Collections.singletonList(root);
         } else {
-            if (isStringEmpty(rootTagName)) {
+            if (StringUtils.isEmpty(rootTagName)) {
                 // if it's JSON object and rootTagName is empty it return a list of contains elements
                 return convertToXmlElement(jsonElement.getAsJsonObject());
             }
@@ -120,14 +121,14 @@ public class JdomXmlConverter implements XmlConverter {
         JsonElement jsonElement = parser.parse(json);
         Element root;
         if (jsonElement.isJsonArray()) {
-            if (isStringEmpty(rootTagName)) {
+            if (StringUtils.isEmpty(rootTagName)) {
                 // we don't know the root tag name
                 throw new IllegalArgumentException(PropsLoader.EXCEPTIONS.getProperty(ROOT_TAG_NAME_IS_EMPTY));
             }
 
             root = convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName, jsonArrayItemName);
         } else {
-            if (isStringEmpty(rootTagName)) {
+            if (StringUtils.isEmpty(rootTagName)) {
                 List<Element> elements = convertToXmlElement(jsonElement.getAsJsonObject());
                 if (elements.size() != 1) {
                     // the JSON object must have only one element
@@ -322,10 +323,6 @@ public class JdomXmlConverter implements XmlConverter {
         }
     }
 
-    private boolean isStringEmpty(String value) {
-        return value == null || value.isEmpty();
-    }
-
     /* Getters and setters */
 
     /**
@@ -357,7 +354,7 @@ public class JdomXmlConverter implements XmlConverter {
      * @param jsonArrayItemName JSON array items name
      */
     public void setJsonArrayItemName(String jsonArrayItemName) {
-        if (isStringEmpty(jsonArrayItemName)) {
+        if (StringUtils.isEmpty(jsonArrayItemName)) {
             throw new IllegalArgumentException(PropsLoader.EXCEPTIONS.getProperty(JSON_ARRAY_ITEM_NAME_IS_EMPTY));
         }
         this.jsonArrayItemName = jsonArrayItemName;
