@@ -14,9 +14,9 @@ public class Constants {
     public static final String INVALID_XML_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xmlString, xmlPath and xmlUrl";
     public static final String INVALID_XSD_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xsdString and xsdPath";
     public static final String XSD_PATH = "xsdPath";
-    public static final String DIFFERENT_LIST_SIZE = "differentListSize";
-    public static final String ROOT_TAG_NAME_IS_EMPTY = "rootTagNameIsEmpty";
-    public static final String JSON_ARRAY_ITEM_NAME_IS_EMPTY = "jsonArrayItemNameIsEmpty";
+    public static final String DIFFERENT_LIST_SIZE = "The two lists are of different size";
+    public static final String ROOT_TAG_NAME_IS_MISSING = "The root tag name is missing";
+    public static final String ONLY_ONE_ROOT_ELEMENT = "There must be only one root element";
     public static final String NEW_LINE = System.lineSeparator();
     public static final String INDENT = "  ";
     public static final String UTF_8_ENCODING = "UTF-8";

@@ -34,10 +34,7 @@ public class ConvertJsonToXmlService {
             return EMPTY_STRING;
         }
         this.jsonArrayItemName = jsonArrayItemName;
-        Format format = prettyPrint ? Format.getPrettyFormat().setIndent(INDENT) : Format.getCompactFormat();
-        format.setOmitDeclaration(!showXmlDeclaration);
-        format.setEncoding(UTF_8_ENCODING);
-        xmlWriter.setFormat(format);
+        xmlWriter.setFormat(getFormat(prettyPrint, showXmlDeclaration));
 
         if (showXmlDeclaration) {
             return xmlWriter.outputString(convertToXmlDocument(json, rootTagName));
@@ -46,11 +43,18 @@ public class ConvertJsonToXmlService {
         List<Element> elements = convertToXmlElements(json, rootTagName);
         StringBuilder result = new StringBuilder();
         for (Element element : elements) {
-            result.append(xmlWriter.outputString(element));
-            result.append(NEW_LINE);
+            result.append(xmlWriter.outputString(element)).append(NEW_LINE);
+//            result.append(NEW_LINE);
         }
         result.delete(result.length() - NEW_LINE.length(), result.length());
         return result.toString();
+    }
+
+    private Format getFormat(Boolean prettyPrint, Boolean showXmlDeclaration) {
+        Format format = prettyPrint ? Format.getPrettyFormat().setIndent(INDENT) : Format.getCompactFormat();
+        format.setOmitDeclaration(!showXmlDeclaration);
+        format.setEncoding(UTF_8_ENCODING);
+        return format;
     }
 
     /**
@@ -95,7 +99,7 @@ public class ConvertJsonToXmlService {
         if (jsonElement.isJsonArray()) {
             if (StringUtils.isEmpty(rootTagName)) {
                 // we don't know the root tag name
-                throw new IllegalArgumentException(PropsLoader.EXCEPTIONS.getProperty(ROOT_TAG_NAME_IS_EMPTY));
+                throw new IllegalArgumentException(ROOT_TAG_NAME_IS_MISSING);
             }
             root = convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName, jsonArrayItemName);
         } else {
@@ -103,9 +107,8 @@ public class ConvertJsonToXmlService {
                 List<Element> elements = convertToXmlElement(jsonElement.getAsJsonObject());
                 if (elements.size() != 1) {
                     // the JSON object must have only one element
-                    throw new IllegalArgumentException(PropsLoader.EXCEPTIONS.getProperty(ROOT_TAG_NAME_IS_EMPTY));
+                    throw new IllegalArgumentException(ONLY_ONE_ROOT_ELEMENT);
                 }
-
                 root = elements.get(0);
             } else {
                 root = convertToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
@@ -290,11 +293,6 @@ public class ConvertJsonToXmlService {
         return jsonPrimitive.getAsString();
     }
 
-    /**
-     * Set the map with array items name.
-     *
-     * @param jsonArrayItemNames the map with the names of array items based on the array name
-     */
     public void setJsonArrayItemNames(Map<String, String> jsonArrayItemNames) {
         this.jsonArrayItemNames = jsonArrayItemNames;
     }

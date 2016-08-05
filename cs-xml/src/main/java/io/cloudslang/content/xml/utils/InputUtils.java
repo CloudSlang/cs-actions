@@ -1,6 +1,5 @@
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.xml.services.PropsLoader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -52,7 +51,7 @@ public class InputUtils {
         String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(valuesList, delimiter);
 
         if (names.length != values.length) {
-            throw new IllegalArgumentException(String.format(PropsLoader.EXCEPTIONS.getProperty(DIFFERENT_LIST_SIZE), Constants.Outputs.NAMESPACES_URIS, Constants.Outputs.NAMESPACES_PREFIXES));
+            throw new IllegalArgumentException(DIFFERENT_LIST_SIZE);
         }
 
         for (int i = 0; i < names.length; i++) {
