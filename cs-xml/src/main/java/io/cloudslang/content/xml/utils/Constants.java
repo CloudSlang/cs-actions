@@ -5,6 +5,7 @@ package io.cloudslang.content.xml.utils;
  */
 public class Constants {
     public static final String EMPTY_STRING = "";
+    public static final String NAMESPACE_DELIMITER = ":";
     public static final String JSON_ATTRIBUTE_PREFIX = "@";
     public static final String NO_MATCH_FOUND = "No match found";
     public static final String YES = "yes";
@@ -14,7 +15,11 @@ public class Constants {
     public static final String INVALID_XSD_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xsdString and xsdPath";
     public static final String XSD_PATH = "xsdPath";
     public static final String DIFFERENT_LIST_SIZE = "differentListSize";
-
+    public static final String ROOT_TAG_NAME_IS_EMPTY = "rootTagNameIsEmpty";
+    public static final String JSON_ARRAY_ITEM_NAME_IS_EMPTY = "jsonArrayItemNameIsEmpty";
+    public static final String NEW_LINE = System.lineSeparator();
+    public static final String INDENT = "  ";
+    public static final String UTF_8_ENCODING = "UTF-8";
 
     public static final class Outputs {
         public static final String RETURN_RESULT = "returnResult";
@@ -138,6 +143,8 @@ public class Constants {
         public static final String XML_DOCUMENT_SOURCE = "xmlString";
         public static final String XSD_DOCUMENT_SOURCE = "xsdString";
         public static final String DEFAULT_TEXT_ELEMENTS_NAME = "_text";
+        public static final String JSON_ARRAY_ITEM_NAME = "item";
+
     }
 
     public static final class ReturnCodes {
@@ -146,7 +153,6 @@ public class Constants {
     }
 
     public static final class BooleanNames {
-
         public static final String TRUE = "true";
         public static final String FALSE = "false";
     }

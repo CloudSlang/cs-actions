@@ -22,13 +22,13 @@ import org.xml.sax.SAXException;
 import static io.cloudslang.content.xml.utils.Constants.*;
 
 /**
- * Created by persdana on 11/17/2014.
+ * Created by ursan on 8/2/2016.
  */
-public class GsonJsonConverter {
+public class ConvertXmlToJsonService {
     private StringBuilder namespacesPrefixes;
     private StringBuilder namespacesUris;
 
-    public GsonJsonConverter() {
+    public ConvertXmlToJsonService() {
         namespacesPrefixes = new StringBuilder();
         namespacesUris = new StringBuilder();
     }
@@ -45,30 +45,30 @@ public class GsonJsonConverter {
         XmlUtils.setFeatures(builder, parsingFeatures);
         Document document = builder.build(inputSource);
         Element root = document.getRootElement();
-
         List<Element> xmlElements = Collections.singletonList(root);
         JsonObject jsonObject = convertToJsonObject(xmlElements, includeAttributes, textPropName);
+        jsonObject = getJsonObjectWithRootElement(root, jsonObject, addRootElement);
 
-        //add root element
-        JsonObject rootJson = new JsonObject();
+        return prettyPrint ? prettyPrint(jsonObject) : jsonObject.toString();
+    }
+
+    private JsonObject getJsonObjectWithRootElement(Element rootElement, JsonObject jsonObject, Boolean addRootElement) {
         if (addRootElement) {
-            rootJson.add(root.getName(), jsonObject);
-        } else {
-            rootJson = jsonObject;
+            JsonObject rootJson = new JsonObject();
+            rootJson.add(rootElement.getName(), jsonObject);
+            return rootJson;
         }
+        return jsonObject;
+    }
 
-        //pretty print
-        if (prettyPrint) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-            return gson.toJson(rootJson);
-        }
-        return rootJson.toString();
-
+    private String prettyPrint(JsonObject rootJson) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(rootJson);
     }
 
     private JsonObject addJsonObjectsAndPrimitives(JsonObject jsonObject, List<Element> elements, Boolean includeAttributes, String textPropName) {
         for (Element element : elements) {
-            JsonElement jsonElement = isPrimitiveElement(element)?
+            JsonElement jsonElement = isPrimitiveElement(element) ?
                     new JsonPrimitive(element.getValue()) : convertToJsonObject(Collections.singletonList(element), includeAttributes, textPropName);
             jsonObject.add(getElementFullName(element), jsonElement);
         }
@@ -92,30 +92,34 @@ public class GsonJsonConverter {
         return result;
     }
 
-    private JsonObject addToJsonObjectXmlElement(JsonObject jsonObject, Element xmlElement, Boolean includeAttributes,String textPropName) {
+    private JsonObject addToJsonObjectXmlElement(JsonObject jsonObject, Element xmlElement, Boolean includeAttributes, String textPropName) {
         addNamespaces(xmlElement.getAdditionalNamespaces());
-
         if (includeAttributes) {
             jsonObject = addAttributes(jsonObject, xmlElement.getAttributes());
         }
-
         List<Element> children = xmlElement.getChildren();
-        List<String> arrayElementsNames = getListOfArrayElementNames(children);
-
-        for (String arrayName: arrayElementsNames) {
-            //add array
-            List<Element> elements = getElementsByName(arrayName, children);
-            jsonObject.add(arrayName, convertToJsonArray(elements, includeAttributes, textPropName));
-            //eliminate what was added
-            children = eliminateElementsWithName(arrayName, children);
-        }
-
-        //add jsonObjects and jsonPrimitives
+        jsonObject = searchAndAddArrayElementsToJsonObject(jsonObject, children, includeAttributes, textPropName);
+        children = eliminateArrayElements(children);
         jsonObject = addJsonObjectsAndPrimitives(jsonObject, children, includeAttributes, textPropName);
-
-        //add text prop
         jsonObject = addTextProp(jsonObject, xmlElement.getText(), textPropName);
         return jsonObject;
+    }
+
+    private JsonObject searchAndAddArrayElementsToJsonObject(JsonObject jsonObject, List<Element> elements, Boolean includeAttributes, String textPropName) {
+        List<String> arrayElementsNames = getListOfArrayElementNames(elements);
+        for (String arrayName : arrayElementsNames) {
+            List<Element> arrayElements = getElementsByName(arrayName, elements);
+            jsonObject.add(arrayName, convertToJsonArray(arrayElements, includeAttributes, textPropName));
+        }
+        return jsonObject;
+    }
+
+    private List<Element> eliminateArrayElements(List<Element> elements) {
+        List<String> arrayElementsNames = getListOfArrayElementNames(elements);
+        for (String arrayName : arrayElementsNames) {
+            elements = eliminateElementsWithName(arrayName, elements);
+        }
+        return elements;
     }
 
     private JsonObject addTextProp(JsonObject jsonObject, String text, String textPropName) {
@@ -160,14 +164,10 @@ public class GsonJsonConverter {
     }
 
 
-    private boolean isPrimitiveElement(Element element) {
+    private Boolean isPrimitiveElement(Element element) {
         return element.getChildren().isEmpty() && element.getAttributes().isEmpty(); //if it doesn't have child and doesn't have attributes it's primitive.
     }
 
-    /**
-     * @param elements - a list of xml Elements
-     * @return the List of names of the elements that were found at least twice in the <elements>
-     */
     private List<String> getListOfArrayElementNames(List<Element> elements) {
         List<String> names = new LinkedList<>();
         List<String> elementsStr = getElementsFullName(elements);

@@ -11,67 +11,39 @@ import org.jdom2.output.XMLOutputter;
 
 import java.util.*;
 
-/**
- * Converts JSON to XML. It uses jDom library for creating the XML elements.
- *
- * @author hasna
- * @since 1.0.135-SNAPSHOT
- */
-public class JdomXmlConverter implements XmlConverter {
-    private static final String NAMESPACE_DELIMITER = ":";
-    private static final String JSON_ATTRIBUTE_PREFIX = "@";
-    private static final String NEW_LINE = System.lineSeparator();
-    private static final String INDENT = "  ";
-    private static final String ROOT_TAG_NAME_IS_EMPTY = "rootTagNameIsEmpty";
-    private static final String JSON_ARRAY_ITEM_NAME_IS_EMPTY = "jsonArrayItemNameIsEmpty";
-    private XMLOutputter xmlWriter;
-    /**
-     * A map with the names of array items based on the array name.
-     */
-    private Map<String, String> jsonArrayItemNames;
-    /**
-     * If the name of the array items is not found in the map it will use this value.
-     */
-    private String jsonArrayItemName;
-    /**
-     * Name for root tag.
-     */
-    private String rootTagName;
-    private Map<String, Namespace> namespaces;
-    private boolean showXmlDeclaration;
-    private boolean prettyPrint;
+import static io.cloudslang.content.xml.utils.Constants.*;
 
-    /**
-     * Default constructor.
-     */
-    public JdomXmlConverter() {
+/**
+ * Created by ursan on 8/2/2016.
+ */
+public class ConvertJsonToXmlService {
+    private XMLOutputter xmlWriter;
+    private Map<String, String> jsonArrayItemNames;
+    private String jsonArrayItemName;
+    private Map<String, Namespace> namespaces;
+
+
+    public ConvertJsonToXmlService() {
         xmlWriter = new XMLOutputter();
         namespaces = new HashMap<>();
         jsonArrayItemNames = new HashMap<>();
-        jsonArrayItemName = JSON_ARRAY_ITEM_NAME;
-        rootTagName = ROOT_TAG_NAME;
-        showXmlDeclaration = false;
-        prettyPrint = true;
     }
 
-    @Override
-    public String convertToXmlString(String json) {
-        Format format;
-        if (prettyPrint) {
-            format = Format.getPrettyFormat();
-            format.setIndent(INDENT);
-        } else {
-            format = Format.getCompactFormat();
+    public String convertToXmlString(String json, Boolean prettyPrint, Boolean showXmlDeclaration, String rootTagName, String jsonArrayItemName) {
+        if (StringUtils.isBlank(json)) {
+            return EMPTY_STRING;
         }
+        this.jsonArrayItemName = jsonArrayItemName;
+        Format format = prettyPrint ? Format.getPrettyFormat().setIndent(INDENT) : Format.getCompactFormat();
         format.setOmitDeclaration(!showXmlDeclaration);
-        format.setEncoding("UTF-8");
+        format.setEncoding(UTF_8_ENCODING);
         xmlWriter.setFormat(format);
 
         if (showXmlDeclaration) {
-            return xmlWriter.outputString(convertToXmlDocument(json));
+            return xmlWriter.outputString(convertToXmlDocument(json, rootTagName));
         }
 
-        List<Element> elements = convertToXmlElements(json);
+        List<Element> elements = convertToXmlElements(json, rootTagName);
         StringBuilder result = new StringBuilder();
         for (Element element : elements) {
             result.append(xmlWriter.outputString(element));
@@ -87,7 +59,7 @@ public class JdomXmlConverter implements XmlConverter {
      * @param json JSON object or JSON array
      * @return a list of XML elements
      */
-    public List<Element> convertToXmlElements(String json) {
+    private List<Element> convertToXmlElements(String json, String rootTagName) {
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(json);
         if (jsonElement.isJsonArray()) {
@@ -116,7 +88,7 @@ public class JdomXmlConverter implements XmlConverter {
      * @param json JSON string
      * @return the XML document
      */
-    public Document convertToXmlDocument(String json) {
+    private Document convertToXmlDocument(String json, String rootTagName) {
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(json);
         Element root;
@@ -125,7 +97,6 @@ public class JdomXmlConverter implements XmlConverter {
                 // we don't know the root tag name
                 throw new IllegalArgumentException(PropsLoader.EXCEPTIONS.getProperty(ROOT_TAG_NAME_IS_EMPTY));
             }
-
             root = convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName, jsonArrayItemName);
         } else {
             if (StringUtils.isEmpty(rootTagName)) {
@@ -185,7 +156,7 @@ public class JdomXmlConverter implements XmlConverter {
      * @return the list of XML elements
      */
     private List<Element> convertToXmlElements(JsonArray jsonArray, String itemName) {
-        List<Element> result = new ArrayList<Element>();
+        List<Element> result = new ArrayList<>();
         for (JsonElement itemJson : jsonArray) {
             //if it's null we don't care
             if (itemJson.isJsonObject()) {
@@ -271,12 +242,9 @@ public class JdomXmlConverter implements XmlConverter {
                 } else if (childJson.isJsonObject()) {
                     result.addContent(convertToXmlElement(childJson.getAsJsonObject(), childTagName));
                 } else if (childJson.isJsonArray()) {
-                    String itemName;
-                    if (jsonArrayItemNames.containsKey(childTagName)) {
-                        itemName = jsonArrayItemNames.get(childTagName);
-                    } else {
-                        itemName = jsonArrayItemName;
-                    }
+                    String itemName = jsonArrayItemNames.containsKey(childTagName)?
+                            jsonArrayItemNames.get(childTagName) : jsonArrayItemName;
+
                     Element container = createElement(childTagName);
                     List<Element> elements = convertToXmlElements(childJson.getAsJsonArray(), itemName);
                     for (Element element : elements) {
@@ -318,18 +286,8 @@ public class JdomXmlConverter implements XmlConverter {
             return jsonPrimitive.getAsNumber().toString();
         } else if (jsonPrimitive.isBoolean()) {
             return Boolean.toString(jsonPrimitive.getAsBoolean());
-        } else {
-            return jsonPrimitive.getAsString();
         }
-    }
-
-    /* Getters and setters */
-
-    /**
-     * @return the map with the names of array items based on the array name
-     */
-    public Map<String, String> getJsonArrayItemNames() {
-        return jsonArrayItemNames;
+        return jsonPrimitive.getAsString();
     }
 
     /**
@@ -341,80 +299,10 @@ public class JdomXmlConverter implements XmlConverter {
         this.jsonArrayItemNames = jsonArrayItemNames;
     }
 
-    /**
-     * @return the JSON array items name
-     */
-    public String getJsonArrayItemName() {
-        return jsonArrayItemName;
-    }
-
-    /**
-     * Set the JSON array items name.
-     *
-     * @param jsonArrayItemName JSON array items name
-     */
-    public void setJsonArrayItemName(String jsonArrayItemName) {
-        if (StringUtils.isEmpty(jsonArrayItemName)) {
-            throw new IllegalArgumentException(PropsLoader.EXCEPTIONS.getProperty(JSON_ARRAY_ITEM_NAME_IS_EMPTY));
+    public void setNamespaces(Map<String, String> namespacesString) {
+        for (Map.Entry<String, String> entry : namespacesString.entrySet()) {
+            namespaces.put(entry.getValue(), Namespace.getNamespace(entry.getValue(), entry.getKey()));
         }
-        this.jsonArrayItemName = jsonArrayItemName;
     }
 
-    /**
-     * @return the name of JSON object (=XML root tag name)
-     */
-    public String getRootTagName() {
-        return rootTagName;
-    }
-
-    /**
-     * Set the name of JSON object (=XML root tag name).
-     *
-     * @param rootTagName the name of JSON object
-     */
-    public void setRootTagName(String rootTagName) {
-        this.rootTagName = rootTagName;
-    }
-
-    /**
-     * Add a new namespace.
-     *
-     * @param prefix XML tag prefix
-     * @param uri    the URI for the namespace
-     */
-    public void addNamespace(String prefix, String uri) {
-        namespaces.put(prefix, Namespace.getNamespace(prefix, uri));
-    }
-
-    /**
-     * @return true if will show XML declaration, otherwise false
-     */
-    public boolean isShowXmlDeclaration() {
-        return showXmlDeclaration;
-    }
-
-    /**
-     * Set the flag for showing XML declaration.
-     *
-     * @param showXmlDeclaration the flag value
-     */
-    public void setShowXmlDeclaration(boolean showXmlDeclaration) {
-        this.showXmlDeclaration = showXmlDeclaration;
-    }
-
-    /**
-     * @return true if the converter will pretty print the XML output, otherwise false
-     */
-    public boolean isPrettyPrint() {
-        return prettyPrint;
-    }
-
-    /**
-     * Set the flag prettyPrint.
-     *
-     * @param prettyPrint the flag value
-     */
-    public void setPrettyPrint(boolean prettyPrint) {
-        this.prettyPrint = prettyPrint;
-    }
 }

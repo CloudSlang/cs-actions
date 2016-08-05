@@ -4,9 +4,10 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import static  io.cloudslang.content.xml.utils.Constants.*;
 
-import io.cloudslang.content.xml.services.JdomXmlConverter;
+import static io.cloudslang.content.xml.utils.Constants.*;
+
+import io.cloudslang.content.xml.services.ConvertJsonToXmlService;
 import io.cloudslang.content.xml.services.PropsLoader;
 import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +48,11 @@ public class ConvertJsonToXml {
             prettyPrintStr = StringUtils.defaultIfEmpty(prettyPrintStr, BooleanNames.TRUE);
             showXmlDeclarationStr = StringUtils.defaultIfEmpty(showXmlDeclarationStr, BooleanNames.FALSE);
             rootTagName = StringUtils.defaultIfEmpty(rootTagName, EMPTY_STRING);
+            defaultJsonArrayItemName = StringUtils.defaultIfEmpty(defaultJsonArrayItemName, Defaults.JSON_ARRAY_ITEM_NAME);
+            namespacesUris = StringUtils.defaultString(namespacesUris, EMPTY_STRING);
+            namespacesPrefixes = StringUtils.defaultIfEmpty(namespacesPrefixes, EMPTY_STRING);
+            jsonArraysNames = StringUtils.defaultString(jsonArraysNames, EMPTY_STRING);
+            jsonArraysItemNames = StringUtils.defaultIfEmpty(jsonArraysItemNames, EMPTY_STRING);
 
             InputUtils.validateBoolean(prettyPrintStr);
             InputUtils.validateBoolean(showXmlDeclarationStr);
@@ -55,24 +61,14 @@ public class ConvertJsonToXml {
             Boolean showXmlDeclaration = Boolean.parseBoolean(showXmlDeclarationStr);
 
             // get list values
-            Map<String, String> namespaces = generateMap(namespacesUris, namespacesPrefixes, delimiter);
-            Map<String, String> arraysItemNames = generateMap(jsonArraysNames, jsonArraysItemNames, delimiter);
+            Map<String, String> namespaces = InputUtils.generateMap(namespacesUris, namespacesPrefixes, delimiter);
+            Map<String, String> arraysItemNames = InputUtils.generateMap(jsonArraysNames, jsonArraysItemNames, delimiter);
 
             // run the converter
-            JdomXmlConverter converter = new JdomXmlConverter();
-            converter.setPrettyPrint(prettyPrint);
-            converter.setShowXmlDeclaration(showXmlDeclaration);
-            converter.setRootTagName(rootTagName);
-
-            if (!StringUtils.isBlank(defaultJsonArrayItemName)) {
-                converter.setJsonArrayItemName(defaultJsonArrayItemName);
-            }
+            ConvertJsonToXmlService converter = new ConvertJsonToXmlService();
+            converter.setNamespaces(namespaces);
             converter.setJsonArrayItemNames(arraysItemNames);
-            // value = namespacePrefix, key = namespaceUri
-            for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-                converter.addNamespace(entry.getValue(), entry.getKey());
-            }
-            String xml = StringUtils.isEmpty(json)? EMPTY_STRING : converter.convertToXmlString(json);
+            String xml = converter.convertToXmlString(json, prettyPrint, showXmlDeclaration, rootTagName, defaultJsonArrayItemName);
 
             result.put(Outputs.RETURN_RESULT, xml);
             result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
@@ -83,23 +79,5 @@ public class ConvertJsonToXml {
         }
         return result;
     }
-     /* Utility functions */
 
-    private Map<String, String> generateMap(String namesList, String valuesList, String delimiter) {
-        Map<String, String> result = new HashMap<>();
-        if (!StringUtils.isEmpty(namesList)) {
-            String[] names = StringUtils.splitByWholeSeparatorPreserveAllTokens(namesList, delimiter);
-            if (valuesList == null) {
-                valuesList = "";
-            }
-            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(valuesList, delimiter);
-            if (names.length != values.length) {
-                throw new IllegalArgumentException(String.format(PropsLoader.EXCEPTIONS.getProperty(DIFFERENT_LIST_SIZE), Outputs.NAMESPACES_URIS, Outputs.NAMESPACES_PREFIXES));
-            }
-            for (int i = 0; i < names.length; i++) {
-                result.put(names[i], values[i]);
-            }
-        }
-        return result;
-    }
 }
