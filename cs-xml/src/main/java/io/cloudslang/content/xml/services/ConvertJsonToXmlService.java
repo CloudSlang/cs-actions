@@ -39,8 +39,10 @@ public class ConvertJsonToXmlService {
         if (showXmlDeclaration) {
             return xmlWriter.outputString(convertToXmlDocument(json, rootTagName));
         }
+        return getXmlFromElements(convertToXmlElements(json, rootTagName));
+    }
 
-        List<Element> elements = convertToXmlElements(json, rootTagName);
+    private String getXmlFromElements(List<Element> elements) {
         StringBuilder result = new StringBuilder();
         for (Element element : elements) {
             result.append(xmlWriter.outputString(element)).append(NEW_LINE);
@@ -51,9 +53,8 @@ public class ConvertJsonToXmlService {
 
     private Format getFormat(Boolean prettyPrint, Boolean showXmlDeclaration) {
         Format format = prettyPrint ? Format.getPrettyFormat().setIndent(INDENT) : Format.getCompactFormat();
-        format.setOmitDeclaration(!showXmlDeclaration);
-        format.setEncoding(UTF_8_ENCODING);
-        return format;
+        return format.setOmitDeclaration(!showXmlDeclaration)
+                     .setEncoding(UTF_8_ENCODING);
     }
 
     /**
@@ -301,5 +302,4 @@ public class ConvertJsonToXmlService {
             namespaces.put(entry.getValue(), Namespace.getNamespace(entry.getValue(), entry.getKey()));
         }
     }
-
 }
