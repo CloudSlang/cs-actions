@@ -24,7 +24,7 @@ public class ConvertJsonToXmlTest {
 
     @Test
     public void testConvertJsonNullToXmlElements() {
-        Map<String, String> result = converter.convertJsonToXml(
+        Map<String, String> result = converter.execute(
                 null,
                 "false",
                 "false",
@@ -42,7 +42,7 @@ public class ConvertJsonToXmlTest {
 
     @Test
     public void testConvertJsonEmptyStringToXmlElements() {
-        Map<String, String> result = converter.convertJsonToXml(
+        Map<String, String> result = converter.execute(
                 "",
                 "false",
                 "false",
@@ -60,7 +60,7 @@ public class ConvertJsonToXmlTest {
 
     @Test
     public void testConvertJsonArrayWithoutRootTagNameToXmlElements() {
-        Map<String, String> result = converter.convertJsonToXml(
+        Map<String, String> result = converter.execute(
                 "[{\"name1\":\"value1\"},{\"name2\":\"value2\"}]",
                 "false",
                 "false",
@@ -79,7 +79,7 @@ public class ConvertJsonToXmlTest {
 
     @Test
     public void testConvertJsonObjectWithoutRootTagNameToXmlDocument() {
-        Map<String, String> result = converter.convertJsonToXml(
+        Map<String, String> result = converter.execute(
                 "{\"property\":{\"name1\":\"value1\"}}",
                 "false",
                 "true",
@@ -98,7 +98,7 @@ public class ConvertJsonToXmlTest {
 
     @Test
     public void testConvertComplexJsonObjectWithRootTagNameToXml() {
-        Map<String, String> result = converter.convertJsonToXml(
+        Map<String, String> result = converter.execute(
                 "{\"@id\":\"Page1\", \"ui:position\": {\"x\":1,\"y\":2}," +
                         "\"f:properties\": [{\"key1\":\"value1\"},{\"key2\":\"value2\"}]," +
                         "\"details\":[{\"type\":\"size\", \"height\":10, \"width\":10},{\"type\":\"color\", \"name\":\"blue\"}\n" +

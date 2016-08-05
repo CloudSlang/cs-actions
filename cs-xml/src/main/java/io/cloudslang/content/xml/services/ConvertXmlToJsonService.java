@@ -39,7 +39,9 @@ public class ConvertXmlToJsonService {
                                       Boolean addRootElement,
                                       String parsingFeatures,
                                       String textPropName) throws JDOMException, IOException, SAXException {
-
+        if (StringUtils.isBlank(xml)) {
+            return EMPTY_STRING;
+        }
         InputSource inputSource = new InputSource(new StringReader(xml));
         SAXBuilder builder = new SAXBuilder();
         XmlUtils.setFeatures(builder, parsingFeatures);

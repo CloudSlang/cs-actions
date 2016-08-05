@@ -52,7 +52,7 @@ public class ConvertJsonToXml {
                     @Response(text = ResponseNames.SUCCESS, field = Outputs.RETURN_CODE, value = ReturnCodes.SUCCESS),
                     @Response(text = ResponseNames.FAILURE, field = Outputs.RETURN_CODE, value = ReturnCodes.FAILURE)
             })
-    public Map<String, String> convertJsonToXml(
+    public Map<String, String> execute(
             @Param(value = Inputs.JSON, required = true) String json,
             @Param(value = Inputs.PRETTY_PRINT) String prettyPrint,
             @Param(value = Inputs.SHOW_XML_DECLARATION) String showXmlDeclaration,

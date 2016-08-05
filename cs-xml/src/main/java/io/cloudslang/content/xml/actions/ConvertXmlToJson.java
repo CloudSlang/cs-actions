@@ -23,7 +23,7 @@ public class ConvertXmlToJson {
      *
      * @param xml - The XML document (in the form of a String)
      * @param textElementsName - specify custom property name for text elements. This will be used for elements that have attributes and text content.
-     *                           Default value: _text
+     *                           Default value: '_text'
      * @param includeRoot - The flag for including the xml root in the resulted JSON.
      *                      Default value: true
      *                      Valid values: true, false
@@ -60,7 +60,7 @@ public class ConvertXmlToJson {
                     @Response(text = ResponseNames.SUCCESS, field = Outputs.RETURN_CODE, value = ReturnCodes.SUCCESS),
                     @Response(text = ResponseNames.FAILURE, field = Outputs.RETURN_CODE, value = ReturnCodes.FAILURE)
             })
-    public Map<String, String> convertXmlToJson(
+    public Map<String, String> execute(
             @Param(value = Inputs.XML, required = true) String xml,
             @Param(value = Inputs.TEXT_ELEMENTS_NAME) String textElementsName,
             @Param(value = Inputs.INCLUDE_ROOT) String includeRoot,
@@ -70,6 +70,7 @@ public class ConvertXmlToJson {
 
         Map<String, String> result = new HashMap<>();
         try {
+            xml = StringUtils.defaultIfBlank(xml, Constants.EMPTY_STRING);
             textElementsName = StringUtils.defaultIfEmpty(textElementsName, Defaults.DEFAULT_TEXT_ELEMENTS_NAME);
             includeRoot = StringUtils.defaultIfEmpty(includeRoot, BooleanNames.TRUE);
             includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);

@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by ursan on 8/4/2016.
  */
@@ -126,7 +124,7 @@ public class ConvertXmlToJsonTest {
 
     @Test
     public void testConvertXmlToJsonWithDefaultValues() {
-        Map<String, String> result = convertXmlToJson.convertXmlToJson(XML, "", "", "", "", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, "", "", "", "", "");
 
         Assert.assertEquals("0", result.get("returnCode"));
         Assert.assertEquals(JSON, result.get("returnResult"));
@@ -137,7 +135,7 @@ public class ConvertXmlToJsonTest {
     @SuppressWarnings("Duplicates")
     @Test
     public void testConvertXmlToJsonWithDefaultValuesSpecified() {
-        Map<String, String> result = convertXmlToJson.convertXmlToJson(XML, "_text", "true", "true", "true", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, "_text", "true", "true", "true", "");
 
         Assert.assertEquals("0", result.get("returnCode"));
         Assert.assertEquals(JSON, result.get("returnResult"));
@@ -148,7 +146,7 @@ public class ConvertXmlToJsonTest {
 
     @Test
     public void testConvertXmlToJsonWithInvalidBooleanValues() {
-        Map<String, String> result = convertXmlToJson.convertXmlToJson(XML, "_text", "abc", "abc", "abc", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, "_text", "abc", "abc", "abc", "");
 
         Assert.assertEquals("-1", result.get("returnCode"));
         Assert.assertEquals("abc is not a valid value for Boolean", result.get("returnResult"));
@@ -158,7 +156,7 @@ public class ConvertXmlToJsonTest {
 
     @Test
     public void testConvertXmlToJsonWithNooRootNoPrettyPrintNoAttributes() {
-        Map<String, String> result = convertXmlToJson.convertXmlToJson(XML, "+text", "false", "false", "false", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, "+text", "false", "false", "false", "");
 
         Assert.assertEquals("0", result.get("returnCode"));
         Assert.assertEquals(JSON_NO_PRETTY_NO_ROOT_NO_ATTRIBUTES, result.get("returnResult"));
@@ -168,7 +166,7 @@ public class ConvertXmlToJsonTest {
 
     @Test
     public void testConvertXmlToJsonWithInvalidXml() {
-        Map<String, String> result = convertXmlToJson.convertXmlToJson(XML + "abc", "+text", "false", "false", "false", "");
+        Map<String, String> result = convertXmlToJson.execute(XML + "abc", "+text", "false", "false", "false", "");
 
         Assert.assertEquals("-1", result.get("returnCode"));
         Assert.assertEquals("Error on line 12: Content is not allowed in trailing section.", result.get("returnResult"));
@@ -179,7 +177,7 @@ public class ConvertXmlToJsonTest {
     @SuppressWarnings("Duplicates")
     @Test
     public void testConvertXmlToJsonWithTextElements() {
-        Map<String, String> result = convertXmlToJson.convertXmlToJson(XML_WITH_TEXT, "_text", "true", "true", "true", "");
+        Map<String, String> result = convertXmlToJson.execute(XML_WITH_TEXT, "_text", "true", "true", "true", "");
 
         Assert.assertEquals("0", result.get("returnCode"));
         Assert.assertEquals(JSON_WITH_TEXT, result.get("returnResult"));

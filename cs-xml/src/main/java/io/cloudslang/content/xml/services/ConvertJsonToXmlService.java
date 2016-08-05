@@ -44,7 +44,6 @@ public class ConvertJsonToXmlService {
         StringBuilder result = new StringBuilder();
         for (Element element : elements) {
             result.append(xmlWriter.outputString(element)).append(NEW_LINE);
-//            result.append(NEW_LINE);
         }
         result.delete(result.length() - NEW_LINE.length(), result.length());
         return result.toString();
