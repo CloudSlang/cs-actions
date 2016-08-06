@@ -29,11 +29,10 @@ public class ConvertJsonToXmlService {
         jsonArrayItemNames = new HashMap<>();
     }
 
-    public String convertToXmlString(String json, Boolean prettyPrint, Boolean showXmlDeclaration, String rootTagName, String jsonArrayItemName) {
+    public String convertToXmlString(String json, Boolean prettyPrint, Boolean showXmlDeclaration, String rootTagName) {
         if (StringUtils.isBlank(json)) {
             return EMPTY_STRING;
         }
-        this.jsonArrayItemName = jsonArrayItemName;
         xmlWriter.setFormat(getFormat(prettyPrint, showXmlDeclaration));
 
         if (showXmlDeclaration) {
@@ -54,8 +53,8 @@ public class ConvertJsonToXmlService {
     private Format getFormat(Boolean prettyPrint, Boolean showXmlDeclaration) {
         Format format = prettyPrint ? Format.getPrettyFormat().setIndent(INDENT) : Format.getCompactFormat();
         return format.setOmitDeclaration(!showXmlDeclaration)
-                     .setEncoding(UTF_8_ENCODING)
-                     .setLineSeparator(NEW_LINE);
+                .setEncoding(UTF_8_ENCODING)
+                .setLineSeparator(NEW_LINE);
     }
 
     /**
@@ -65,25 +64,12 @@ public class ConvertJsonToXmlService {
      * @return a list of XML elements
      */
     private List<Element> convertToXmlElements(String json, String rootTagName) {
-        JsonParser parser = new JsonParser();
-        JsonElement jsonElement = parser.parse(json);
-        if (jsonElement.isJsonArray()) {
-            if (StringUtils.isEmpty(rootTagName)) {
-                // if it's JSON array and rootTagName is empty it returns a list of elements with the name jsonArrayItemName
-                return convertToXmlElements(jsonElement.getAsJsonArray(), jsonArrayItemName);
-            }
-
-            Element root = convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName, jsonArrayItemName);
-            return Collections.singletonList(root);
-        } else {
-            if (StringUtils.isEmpty(rootTagName)) {
-                // if it's JSON object and rootTagName is empty it return a list of contains elements
-                return convertToXmlElement(jsonElement.getAsJsonObject());
-            }
-
-            Element root = convertToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
-            return Collections.singletonList(root);
+        JsonElement jsonElement = new JsonParser().parse(json);
+        if (StringUtils.isEmpty(rootTagName)) {
+            return convertToXmlElementsJsonElement(jsonElement);
         }
+        Element root = convertToXmlElementJsonElementWithRootTag(jsonElement, rootTagName);
+        return Collections.singletonList(root);
     }
 
     /**
@@ -94,28 +80,23 @@ public class ConvertJsonToXmlService {
      * @return the XML document
      */
     private Document convertToXmlDocument(String json, String rootTagName) {
-        JsonParser parser = new JsonParser();
-        JsonElement jsonElement = parser.parse(json);
+        JsonElement jsonElement = new JsonParser().parse(json);
         Element root;
-        if (jsonElement.isJsonArray()) {
-            if (StringUtils.isEmpty(rootTagName)) {
+        if (StringUtils.isEmpty(rootTagName)) {
+            if (jsonElement.isJsonArray()) {
                 // we don't know the root tag name
                 throw new IllegalArgumentException(ROOT_TAG_NAME_IS_MISSING);
-            }
-            root = convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName, jsonArrayItemName);
-        } else {
-            if (StringUtils.isEmpty(rootTagName)) {
-                List<Element> elements = convertToXmlElement(jsonElement.getAsJsonObject());
+            } else {
+                List<Element> elements = convertToXmlElementsJsonObject(jsonElement.getAsJsonObject());
                 if (elements.size() != 1) {
                     // the JSON object must have only one element
                     throw new IllegalArgumentException(ONLY_ONE_ROOT_ELEMENT);
                 }
                 root = elements.get(0);
-            } else {
-                root = convertToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
             }
+        } else {
+            root = convertToXmlElementJsonElementWithRootTag(jsonElement, rootTagName);
         }
-
         Document document = new Document();
         document.setRootElement(root);
         return document;
@@ -128,57 +109,50 @@ public class ConvertJsonToXmlService {
      *
      * @param jsonArray JSON array
      * @param arrayName the array tag name
-     * @param itemName  the item tag name
      * @return the XML element
      */
-    private Element convertToXmlElements(JsonArray jsonArray, String arrayName, String itemName) {
+    private Element convertToXmlElements(JsonArray jsonArray, String arrayName) {
         Element result = createElement(arrayName);
         for (JsonElement itemJson : jsonArray) {
             //if it's null we don't care
-            if (itemJson.isJsonObject()) {
-                result.addContent(convertToXmlElement(itemJson.getAsJsonObject(), itemName));
-            } else if (itemJson.isJsonPrimitive()) {
-                String itemValue = getJsonPrimitiveValue(itemJson.getAsJsonPrimitive());
-                result.addContent(createElement(itemName).setText(itemValue));
-            } else if (itemJson.isJsonArray()) {
-                Element arrayElement = createElement(jsonArrayItemName);
-                List<Element> elements = convertToXmlElements(itemJson.getAsJsonArray(), jsonArrayItemName);
-                for (Element element : elements) {
-                    arrayElement.addContent(element);
-                }
-                result.addContent(arrayElement);
+            Element elementToAdd = getXmlElementFromJsonElement(itemJson, arrayName);
+            if (elementToAdd != null) {
+                result.addContent(elementToAdd);
             }
         }
         return result;
     }
 
-    /**
-     * Explode the JSON array to its elements and convert them to XML elements.
-     *
-     * @param jsonArray JSON array
-     * @param itemName  the item tag name
-     * @return the list of XML elements
-     */
-    private List<Element> convertToXmlElements(JsonArray jsonArray, String itemName) {
+    private List<Element> convertToXmlElementsJsonArray(JsonArray jsonArray) {
+        return convertToXmlElementsJsonArray(jsonArray, jsonArrayItemName);
+    }
+
+    private List<Element> convertToXmlElementsJsonArray(JsonArray jsonArray, String itemName) {
         List<Element> result = new ArrayList<>();
         for (JsonElement itemJson : jsonArray) {
-            //if it's null we don't care
-            if (itemJson.isJsonObject()) {
-                result.add(convertToXmlElement(itemJson.getAsJsonObject(), itemName));
-            } else if (itemJson.isJsonPrimitive()) {
-                String itemValue = getJsonPrimitiveValue(itemJson.getAsJsonPrimitive());
-                result.add(createElement(itemName).setText(itemValue));
-            } else if (itemJson.isJsonArray()) {
-                Element arrayElement = createElement(jsonArrayItemName);
-                List<Element> elements = convertToXmlElements(itemJson.getAsJsonArray(), jsonArrayItemName);
-                for (Element element : elements) {
-                    arrayElement.addContent(element);
-                }
-                result.add(arrayElement);
+            Element xmlItem = getXmlElementFromJsonElement(itemJson, itemName);
+            if (xmlItem != null) {
+                result.add(xmlItem);
             }
         }
         return result;
     }
+
+
+    private List<Element> convertToXmlElementsJsonElement(JsonElement jsonElement) {
+        if (jsonElement.isJsonArray()) {
+            return convertToXmlElementsJsonArray(jsonElement.getAsJsonArray());
+        }
+        return convertToXmlElementsJsonObject(jsonElement.getAsJsonObject());
+    }
+
+    private Element convertToXmlElementJsonElementWithRootTag(JsonElement jsonElement, String rootTagName) {
+        if (jsonElement.isJsonArray()) {
+            return convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName);
+        }
+        return convertToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
+    }
+
 
     /**
      * Explode the JSON object to its components and convert them to XML elements.
@@ -186,34 +160,38 @@ public class ConvertJsonToXmlService {
      * @param jsonObject JSON object
      * @return the list of XML elements
      */
-    private List<Element> convertToXmlElement(JsonObject jsonObject) {
+    private List<Element> convertToXmlElementsJsonObject(JsonObject jsonObject) {
         List<Element> result = new ArrayList<>();
         Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
         for (Map.Entry<String, JsonElement> entry : entries) {
             String childTagName = entry.getKey();
             JsonElement childJson = entry.getValue();
             //if it's null we don't care
-            if (childJson.isJsonPrimitive()) {
-                String childValue = getJsonPrimitiveValue(childJson.getAsJsonPrimitive());
-                result.add(createElement(childTagName).setText(childValue));
-            } else if (childJson.isJsonObject()) {
-                result.add(convertToXmlElement(childJson.getAsJsonObject(), childTagName));
-            } else if (childJson.isJsonArray()) {
-                String itemName;
-                if (jsonArrayItemNames.containsKey(childTagName)) {
-                    itemName = jsonArrayItemNames.get(childTagName);
-                } else {
-                    itemName = jsonArrayItemName;
-                }
-                Element container = createElement(childTagName);
-                List<Element> elements = convertToXmlElements(childJson.getAsJsonArray(), itemName);
-                for (Element element : elements) {
-                    container.addContent(element);
-                }
-                result.add(container);
+            Element elementToAdd = getXmlElementFromJsonElement(childJson, childTagName);
+            if (elementToAdd != null) {
+                result.add(elementToAdd);
             }
         }
         return result;
+    }
+
+    private Element getXmlElementFromJsonElement(JsonElement childJson, String childTagName) {
+        if (childJson.isJsonPrimitive()) {
+            String childValue = getJsonPrimitiveValue(childJson.getAsJsonPrimitive());
+            return createElement(childTagName).setText(childValue);
+        } else if (childJson.isJsonObject()) {
+            return convertToXmlElement(childJson.getAsJsonObject(), childTagName);
+        } else if (childJson.isJsonArray()) {
+            String itemName = jsonArrayItemNames.containsKey(childTagName) ?
+                    jsonArrayItemNames.get(childTagName) : jsonArrayItemName;
+            Element container = createElement(childTagName);
+            List<Element> elements = convertToXmlElementsJsonArray(childJson.getAsJsonArray(), itemName);
+            for (Element element : elements) {
+                container.addContent(element);
+            }
+            return container;
+        }
+        return null;
     }
 
     /**
@@ -225,8 +203,7 @@ public class ConvertJsonToXmlService {
      */
     private Element convertToXmlElement(JsonObject jsonObject, String tagName) {
         Element result = createElement(tagName);
-        Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
-        for (Map.Entry<String, JsonElement> entry : entries) {
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             String childTagName = entry.getKey();
             JsonElement childJson = entry.getValue();
             //this child element is an XML attribute
@@ -240,51 +217,24 @@ public class ConvertJsonToXmlService {
                 }
             } else {
                 //if it's null we don't care
-                if (childJson.isJsonPrimitive()) {
-                    String childValue = getJsonPrimitiveValue(childJson.getAsJsonPrimitive());
-                    result.addContent(createElement(childTagName).setText(childValue));
-                } else if (childJson.isJsonObject()) {
-                    result.addContent(convertToXmlElement(childJson.getAsJsonObject(), childTagName));
-                } else if (childJson.isJsonArray()) {
-                    String itemName = jsonArrayItemNames.containsKey(childTagName)?
-                            jsonArrayItemNames.get(childTagName) : jsonArrayItemName;
-
-                    Element container = createElement(childTagName);
-                    List<Element> elements = convertToXmlElements(childJson.getAsJsonArray(), itemName);
-                    for (Element element : elements) {
-                        container.addContent(element);
-                    }
-                    result.addContent(container);
+                Element elementToAdd = getXmlElementFromJsonElement(childJson, childTagName);
+                if (elementToAdd != null) {
+                    result.addContent(elementToAdd);
                 }
             }
         }
         return result;
     }
 
-    /**
-     * Create an XML element with the given tag name. It will add all the namespaces declared.
-     *
-     * @param tagName the tag name (can contain namespace prefix)
-     * @return the XML element
-     */
     private Element createElement(String tagName) {
-        String[] v = tagName.split(NAMESPACE_DELIMITER);
-        Element result;
-        if (v.length == 1) {
-            result = new Element(tagName);
-        } else {
-            result = new Element(v[1], namespaces.get(v[0]));
-        }
+        String[] tagNames = tagName.split(NAMESPACE_DELIMITER);
+        Element result = tagNames.length == 1 ? new Element(tagName) : new Element(tagNames[1], namespaces.get(tagNames[0]));
         for (Namespace namespace : namespaces.values()) {
             result.addNamespaceDeclaration(namespace);
         }
         return result;
     }
 
-    /**
-     * @param jsonPrimitive the JSON primitive (String, Number, Boolean)
-     * @return the string value of the JSON primitive
-     */
     private String getJsonPrimitiveValue(JsonPrimitive jsonPrimitive) {
         if (jsonPrimitive.isNumber()) {
             return jsonPrimitive.getAsNumber().toString();
@@ -296,6 +246,10 @@ public class ConvertJsonToXmlService {
 
     public void setJsonArrayItemNames(Map<String, String> jsonArrayItemNames) {
         this.jsonArrayItemNames = jsonArrayItemNames;
+    }
+
+    public void setJsonArrayItemName(String jsonArrayItemName) {
+        this.jsonArrayItemName = jsonArrayItemName;
     }
 
     public void setNamespaces(Map<String, String> namespacesString) {

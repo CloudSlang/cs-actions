@@ -4,9 +4,6 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-
-import static io.cloudslang.content.xml.utils.Constants.*;
-
 import io.cloudslang.content.xml.services.ConvertJsonToXmlService;
 import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +11,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.xml.utils.Constants.*;
 
 /**
  * Created by ursan on 8/2/2016.
@@ -90,7 +89,8 @@ public class ConvertJsonToXml {
             ConvertJsonToXmlService converter = new ConvertJsonToXmlService();
             converter.setNamespaces(namespaces);
             converter.setJsonArrayItemNames(arraysItemNames);
-            String xml = converter.convertToXmlString(json, prettyPrintBoolean, showXmlDeclarationBoolean, rootTagName, defaultJsonArrayItemName);
+            converter.setJsonArrayItemName(defaultJsonArrayItemName);
+            String xml = converter.convertToXmlString(json, prettyPrintBoolean, showXmlDeclarationBoolean, rootTagName);
 
             result.put(Outputs.RETURN_RESULT, xml);
             result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
