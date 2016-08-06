@@ -35,7 +35,6 @@ public class ValidateService {
                 xmlDocument = getStringValueOfDocument(doc);
             } else if (Constants.XML_URL.equalsIgnoreCase(commonInputs.getXmlDocumentSource())) {
                 xmlDocument = XmlUtils.createXmlDocumentFromUrl(commonInputs);
-                xmlDocument = xmlDocument.replaceAll("<!DOCTYPE[^>]*>\n", "");
             } else {
                 xmlDocument = commonInputs.getXmlDocument();
             }

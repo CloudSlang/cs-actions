@@ -8,6 +8,7 @@ public class Constants {
     public static final String NAMESPACE_DELIMITER = ":";
     public static final String JSON_ATTRIBUTE_PREFIX = "@";
     public static final String NO_MATCH_FOUND = "No match found";
+    public static final String EMPTY_XML_FILE = "XML file error: Not found";
     public static final String YES = "yes";
     public static final String XML_PATH = "xmlPath";
     public static final String XML_URL = "xmlUrl";
