@@ -54,7 +54,8 @@ public class ConvertJsonToXmlService {
     private Format getFormat(Boolean prettyPrint, Boolean showXmlDeclaration) {
         Format format = prettyPrint ? Format.getPrettyFormat().setIndent(INDENT) : Format.getCompactFormat();
         return format.setOmitDeclaration(!showXmlDeclaration)
-                     .setEncoding(UTF_8_ENCODING);
+                     .setEncoding(UTF_8_ENCODING)
+                     .setLineSeparator(NEW_LINE);
     }
 
     /**
