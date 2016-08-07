@@ -5,13 +5,13 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.xml.services.ConvertXmlToJsonService;
-import io.cloudslang.content.xml.utils.Constants;
-import io.cloudslang.content.xml.utils.Constants.*;
 import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.xml.utils.Constants.*;
 
 /**
  * Created by ursan on 8/2/2016.
@@ -70,7 +70,7 @@ public class ConvertXmlToJson {
 
         Map<String, String> result = new HashMap<>();
         try {
-            xml = StringUtils.defaultIfBlank(xml, Constants.EMPTY_STRING);
+            xml = StringUtils.defaultIfBlank(xml, EMPTY_STRING);
             textElementsName = StringUtils.defaultIfEmpty(textElementsName, Defaults.DEFAULT_TEXT_ELEMENTS_NAME);
             includeRoot = StringUtils.defaultIfEmpty(includeRoot, BooleanNames.TRUE);
             includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);
@@ -93,8 +93,8 @@ public class ConvertXmlToJson {
             result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
 
         } catch (Exception e) {
-            result.put(Outputs.NAMESPACES_PREFIXES, Constants.EMPTY_STRING);
-            result.put(Outputs.NAMESPACES_URIS, Constants.EMPTY_STRING);
+            result.put(Outputs.NAMESPACES_PREFIXES, EMPTY_STRING);
+            result.put(Outputs.NAMESPACES_URIS, EMPTY_STRING);
             result.put(Outputs.RETURN_RESULT, e.getMessage());
             result.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
         }

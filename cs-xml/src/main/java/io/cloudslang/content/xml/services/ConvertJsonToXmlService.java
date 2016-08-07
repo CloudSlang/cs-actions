@@ -17,14 +17,12 @@ import static io.cloudslang.content.xml.utils.Constants.*;
  * Created by ursan on 8/2/2016.
  */
 public class ConvertJsonToXmlService {
-    private XMLOutputter xmlWriter;
     private Map<String, String> jsonArrayItemNames;
     private String jsonArrayItemName;
     private Map<String, Namespace> namespaces;
 
 
     public ConvertJsonToXmlService() {
-        xmlWriter = new XMLOutputter();
         namespaces = new HashMap<>();
         jsonArrayItemNames = new HashMap<>();
     }
@@ -33,15 +31,15 @@ public class ConvertJsonToXmlService {
         if (StringUtils.isBlank(json)) {
             return EMPTY_STRING;
         }
+        XMLOutputter xmlWriter = new XMLOutputter();
         xmlWriter.setFormat(getFormat(prettyPrint, showXmlDeclaration));
-
         if (showXmlDeclaration) {
             return xmlWriter.outputString(convertToXmlDocument(json, rootTagName));
         }
-        return getXmlFromElements(convertToXmlElements(json, rootTagName));
+        return getXmlFromElements(convertToXmlElements(json, rootTagName), xmlWriter);
     }
 
-    private String getXmlFromElements(List<Element> elements) {
+    private String getXmlFromElements(List<Element> elements, XMLOutputter xmlWriter) {
         StringBuilder result = new StringBuilder();
         for (Element element : elements) {
             result.append(xmlWriter.outputString(element)).append(NEW_LINE);
@@ -57,12 +55,6 @@ public class ConvertJsonToXmlService {
                 .setLineSeparator(NEW_LINE);
     }
 
-    /**
-     * Convert the JSON string to a list of XML elements.
-     *
-     * @param json JSON object or JSON array
-     * @return a list of XML elements
-     */
     private List<Element> convertToXmlElements(String json, String rootTagName) {
         JsonElement jsonElement = new JsonParser().parse(json);
         if (StringUtils.isEmpty(rootTagName)) {
@@ -72,16 +64,14 @@ public class ConvertJsonToXmlService {
         return Collections.singletonList(root);
     }
 
-    /**
-     * Convert the JSON string to a XML document.
-     * If json is a JSON array it will create a root node with the name {@code rootJsonArrayName}
-     *
-     * @param json JSON string
-     * @return the XML document
-     */
     private Document convertToXmlDocument(String json, String rootTagName) {
         JsonElement jsonElement = new JsonParser().parse(json);
-        Element root;
+        Document document = new Document();
+        return document.setRootElement(addRootTagJsonElement(rootTagName, jsonElement));
+
+    }
+
+    private Element addRootTagJsonElement(String rootTagName, JsonElement jsonElement) {
         if (StringUtils.isEmpty(rootTagName)) {
             if (jsonElement.isJsonArray()) {
                 // we don't know the root tag name
@@ -92,30 +82,16 @@ public class ConvertJsonToXmlService {
                     // the JSON object must have only one element
                     throw new IllegalArgumentException(ONLY_ONE_ROOT_ELEMENT);
                 }
-                root = elements.get(0);
+                return elements.get(0);
             }
-        } else {
-            root = convertToXmlElementJsonElementWithRootTag(jsonElement, rootTagName);
         }
-        Document document = new Document();
-        document.setRootElement(root);
-        return document;
+        return convertToXmlElementJsonElementWithRootTag(jsonElement, rootTagName);
     }
 
-    /* Utility functions */
-
-    /**
-     * Convert a JSON array to a container XML element with the name arrayName.
-     *
-     * @param jsonArray JSON array
-     * @param arrayName the array tag name
-     * @return the XML element
-     */
-    private Element convertToXmlElements(JsonArray jsonArray, String arrayName) {
+    private Element convertToXmlElementJsonArray(JsonArray jsonArray, String arrayName) {
         Element result = createElement(arrayName);
         for (JsonElement itemJson : jsonArray) {
-            //if it's null we don't care
-            Element elementToAdd = getXmlElementFromJsonElement(itemJson, arrayName);
+            Element elementToAdd = getXmlElementFromJsonElement(itemJson, jsonArrayItemName);
             if (elementToAdd != null) {
                 result.addContent(elementToAdd);
             }
@@ -148,18 +124,11 @@ public class ConvertJsonToXmlService {
 
     private Element convertToXmlElementJsonElementWithRootTag(JsonElement jsonElement, String rootTagName) {
         if (jsonElement.isJsonArray()) {
-            return convertToXmlElements(jsonElement.getAsJsonArray(), rootTagName);
+            return convertToXmlElementJsonArray(jsonElement.getAsJsonArray(), rootTagName);
         }
         return convertToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
     }
 
-
-    /**
-     * Explode the JSON object to its components and convert them to XML elements.
-     *
-     * @param jsonObject JSON object
-     * @return the list of XML elements
-     */
     private List<Element> convertToXmlElementsJsonObject(JsonObject jsonObject) {
         List<Element> result = new ArrayList<>();
         Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
@@ -194,13 +163,6 @@ public class ConvertJsonToXmlService {
         return null;
     }
 
-    /**
-     * Convert the JSON object to a single XML element with the given tagName.
-     *
-     * @param jsonObject JSON object
-     * @param tagName    XML element name
-     * @return the XML element
-     */
     private Element convertToXmlElement(JsonObject jsonObject, String tagName) {
         Element result = createElement(tagName);
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
