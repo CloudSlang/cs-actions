@@ -131,7 +131,7 @@ public class ConvertJsonToXmlTest {
     }
 
     @Test
-    public void testConvertJsonArrayWithoutRootTagNameToXmlElements2() {
+    public void testConvertJsonArrayWithRootTagNameToXmlElements() {
         Map<String, String> result = converter.execute(
                 "[{\"name1\":\"value1\"},{\"name2\":\"value2\"}]",
                 "false",
@@ -147,6 +147,4 @@ public class ConvertJsonToXmlTest {
         assertNotNull(result.get(Outputs.RETURN_RESULT));
         assertEquals(result.get(Outputs.RETURN_RESULT), "<items><item><name1>value1</name1></item><item><name2>value2</name2></item></items>");
     }
-
-
 }
