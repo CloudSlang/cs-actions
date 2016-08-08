@@ -24,7 +24,7 @@ public class ConvertXmlToJson {
      * @param xml - The XML document (in the form of a String)
      * @param textElementsName - specify custom property name for text elements. This will be used for elements that have attributes and text content.
      *                           Default value: '_text'
-     * @param includeRoot - The flag for including the xml root in the resulted JSON.
+     * @param includeRootElement - The flag for including the xml root in the resulted JSON.
      *                      Default value: true
      *                      Valid values: true, false
      * @param includeAttributes - The flag for including XML attributes in the resulted JSON
@@ -63,7 +63,7 @@ public class ConvertXmlToJson {
     public Map<String, String> execute(
             @Param(value = Inputs.XML, required = true) String xml,
             @Param(value = Inputs.TEXT_ELEMENTS_NAME) String textElementsName,
-            @Param(value = Inputs.INCLUDE_ROOT) String includeRoot,
+            @Param(value = Inputs.INCLUDE_ROOT) String includeRootElement,
             @Param(value = Inputs.INCLUDE_ATTRIBUTES) String includeAttributes,
             @Param(value = Inputs.PRETTY_PRINT) String prettyPrint,
             @Param(value = Inputs.PARSING_FEATURES) String parsingFeatures) {
@@ -72,15 +72,15 @@ public class ConvertXmlToJson {
         try {
             xml = StringUtils.defaultIfBlank(xml, EMPTY_STRING);
             textElementsName = StringUtils.defaultIfEmpty(textElementsName, Defaults.DEFAULT_TEXT_ELEMENTS_NAME);
-            includeRoot = StringUtils.defaultIfEmpty(includeRoot, BooleanNames.TRUE);
+            includeRootElement = StringUtils.defaultIfEmpty(includeRootElement, BooleanNames.TRUE);
             includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);
             prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
 
-            InputUtils.validateBoolean(includeRoot);
+            InputUtils.validateBoolean(includeRootElement);
             InputUtils.validateBoolean(includeAttributes);
             InputUtils.validateBoolean(prettyPrint);
 
-            Boolean includeRootBoolean = Boolean.parseBoolean(includeRoot);
+            Boolean includeRootBoolean = Boolean.parseBoolean(includeRootElement);
             Boolean includeAttributesBoolean = Boolean.parseBoolean(includeAttributes);
             Boolean prettyPrintBoolean = Boolean.parseBoolean(prettyPrint);
 
