@@ -14,10 +14,17 @@ public class Constants {
     }
 
     public static final class Miscellaneous {
+        public static final String AMAZON_HOSTNAME = "amazonaws.com";
         public static final String DEFAULT_AMAZON_REGION = "us-east-1";
-        public static final String EMPTY = "";
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String STANDARD = "standard";
+        public static final String ENCODING = "UTF-8";
+        public static final String EMPTY = "";
+        public static final String COLON = ":";
+        public static final String AMPERSAND = "&";
+        public static final String EQUAL = "=";
+        public static final String LINE_SEPARATOR = "\n";
+        public static final String SCOPE_SEPARATOR = "/";
     }
 
     public static final class ErrorMessages {
@@ -29,5 +36,11 @@ public class Constants {
     public static final class ValidationValues {
         public static final int ONE = 1;
         public static final int THOUSAND_AND_TWENTY_FOUR = 1024;
+    }
+
+    public static final class AWSParams {
+        public static final String AWS_REQUEST_VERSION = "aws4_request";
+        public static final String SIGNATURE_RESULT = "signature";
+        public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
     }
 }

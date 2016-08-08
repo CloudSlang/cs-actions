@@ -54,6 +54,13 @@ public class Inputs {
         public static final String AVAILABILITY_ZONE = "availabilityZone";
         public static final String INSTANCE_TYPE = "instanceType";
         public static final String RESOURCE_IDS_STRING = "resourceIdsString";
+        public static final String HTTP_VERB = "httpVerb";
+        public static final String URI = "uri";
+        public static final String ENCODE_URI = "encodeUri";
+        public static final String PAYLOAD_HASH = "payloadHash";
+        public static final String DATE = "date";
+        public static final String QUERY_PARAMS = "queryParams";
+        public static final String HEADERS = "headers";
     }
 
     public static final class ImageInputs {
@@ -70,6 +77,7 @@ public class Inputs {
         public static final String STATE = "state";
 
     }
+
     public static final class InstanceInputs {
         public static final String MIN_COUNT = "minCount";
         public static final String MAX_COUNT = "maxCount";

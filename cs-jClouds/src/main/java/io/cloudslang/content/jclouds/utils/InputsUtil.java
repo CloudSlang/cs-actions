@@ -4,9 +4,7 @@ import io.cloudslang.content.jclouds.entities.InstanceState;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -23,6 +21,64 @@ public final class InputsUtil {
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
 
     private InputsUtil() {
+    }
+
+    /**
+     * Parses the query param list and creates a map of query params and query param values.
+     *
+     * @param queryParams The list of query params.
+     * @return The map of query param keys and query params values.
+     */
+    public static Map<String, String> getQueryParamsMap(String queryParams) {
+        if (StringUtils.isBlank(queryParams)) {
+            return new HashMap<>();
+        }
+
+        String[] params = StringUtils.split(queryParams, Constants.Miscellaneous.AMPERSAND);
+        String[] paramValues;
+
+        Map<String, String> queryParamsMap = new HashMap<>();
+        for (String param : params) {
+            paramValues = param.split(Constants.Miscellaneous.EQUAL, 2);
+            if (paramValues.length > 1) {
+                queryParamsMap.put(paramValues[0], paramValues[1]);
+            } else {
+                queryParamsMap.put(paramValues[0], Constants.Miscellaneous.EMPTY);
+            }
+        }
+
+        return queryParamsMap;
+    }
+
+    /**
+     * Parses the headers list and creates a map of headers and header values.
+     * The headers (map keys) are trimmed of white spaces and converted to lowercase.
+     *
+     * @param headers The list of headers.
+     * @return The map of header keys and header values.
+     */
+    public static Map<String, String> getHeadersMap(String headers) {
+        if (StringUtils.isBlank(headers)) {
+            return new HashMap<>();
+        }
+
+        String headerValuesDelimiter = Pattern.quote(Constants.Miscellaneous.COLON);
+        String headerDelimiter = "\\r?\\n";
+
+        String[] headerValues = StringUtils.split(headers, headerDelimiter);
+        String[] values;
+
+        Map<String, String> headersList = new HashMap<>();
+        for (String headerValue : headerValues) {
+            values = headerValue.split(headerValuesDelimiter, 2);
+            if (values.length > 1) {
+                headersList.put(values[0].trim().toLowerCase(), values[1]);
+            } else {
+                headersList.put(values[0].trim().toLowerCase(), Constants.Miscellaneous.EMPTY);
+            }
+        }
+
+        return headersList;
     }
 
     public static String[] getStringsArray(String input, String condition, String delimiter) {
