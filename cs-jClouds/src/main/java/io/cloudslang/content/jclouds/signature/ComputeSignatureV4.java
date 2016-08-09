@@ -11,10 +11,10 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
+import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -34,8 +34,8 @@ public class ComputeSignatureV4 {
      * @param uri         The request canonical URI.
      * @param encodeUri   Whether to encode or not URI.
      * @param payloadHash The request payload's hash.
-     * @param date
-     * @param queryParams
+     * @param date        List of headers
+     * @param queryParams List of query params
      * @param headers     The canonical headers for the request. These headers will be signed.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
@@ -56,7 +56,8 @@ public class ComputeSignatureV4 {
             })
     public Map<String, String> computeSignature(@Param(value = Inputs.CommonInputs.ENDPOINT) String endpoint,
                                                 @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
-                                                @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
+                                                @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true)
+                                                        String credential,
 
                                                 @Param(value = Inputs.CustomInputs.HTTP_VERB) String httpVerb,
                                                 @Param(value = Inputs.CustomInputs.URI) String uri,
@@ -69,20 +70,15 @@ public class ComputeSignatureV4 {
         Map<String, String> queryParamsMap = InputsUtil.getQueryParamsMap(queryParams);
         Map<String, String> headersMap = InputsUtil.getHeadersMap(headers);
 
-        Map<String, String> returnResult = new HashMap<>();
         try {
             AuthorizationHeader authorizationHeader = new AmazonSignatureService()
                     .computeSignatureAuthorization(httpVerb, uri, payloadHash, queryParamsMap, headersMap, endpoint,
                             identity, credential, date, Boolean.parseBoolean(encodeUri));
 
-            returnResult = OutputsUtil.populateSignatureResultsMap(authorizationHeader.getSignature(), Outputs.SUCCESS_RETURN_CODE,
+            return OutputsUtil.populateSignatureResultsMap(authorizationHeader.getSignature(), Outputs.SUCCESS_RETURN_CODE,
                     authorizationHeader.getSignature(), authorizationHeader.getAuthorizationHeader());
-        } catch (Exception e) {
-            returnResult.put(Outputs.RETURN_RESULT, e.getMessage());
-            returnResult.put(Outputs.EXCEPTION, e.getMessage());
-            returnResult.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
+        } catch (Exception exception) {
+            return ExceptionProcessor.getExceptionResult(exception);
         }
-
-        return returnResult;
     }
 }
