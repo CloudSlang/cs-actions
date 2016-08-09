@@ -30,7 +30,7 @@ public class ConvertXmlToJson {
      * @param includeAttributes - The flag for including XML attributes in the resulted JSON
      *                            Default value: true
      *                            Valid values: true, false
-     * @param prettyPrint - The flag for formatting the resulted XML.
+     * @param prettyPrint - The flag for formatting the resulted XML. The newline character is '\n'
      *                      Default value: true
      *                      Valid values: true, false
      * @param  parsingFeatures - The list of XML parsing features separated by new line (CRLF). The feature name - value must be separated by empty space. Setting specific features this field could be used to avoid XML security issues like "XML Entity Expansion injection" and "XML External Entity injection". To avoid aforementioned security issues we strongly recommend to set this input to the following values:

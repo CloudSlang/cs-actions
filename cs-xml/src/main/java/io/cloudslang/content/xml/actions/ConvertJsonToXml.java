@@ -23,7 +23,7 @@ public class ConvertJsonToXml {
      * Converts a JSON array or a JSON object to a XML document.
      *
      * @param json - The JSON array or object (in the form of a String).
-     * @param prettyPrint - The flag for formatting the resulted XML. If it is true the result will contain tabs and newline chars.
+     * @param prettyPrint - The flag for formatting the resulted XML. If it is true the result will contain tabs and newline ('\n') chars.
      *                      Default value: true
      *                      Valid values: true, false
      * @param showXmlDeclaration - The flag for showing the xml declaration (<?xml version="1.0" encoding="UTF-8" standalone="yes"?>).
