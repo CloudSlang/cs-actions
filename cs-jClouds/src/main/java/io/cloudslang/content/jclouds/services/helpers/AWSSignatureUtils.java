@@ -119,7 +119,7 @@ public class AWSSignatureUtils {
      * @param endpoint The AWS request endpoint.
      * @return A (lowercase alphanumeric) string representing the AWS region.
      */
-    public String getAmazonS3Region(String endpoint) {
+    public String getAmazonRegion(String endpoint) {
         if (StringUtils.isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
             endpoint = endpoint.substring(3);
             return endpoint.substring(0, endpoint.indexOf('.'));

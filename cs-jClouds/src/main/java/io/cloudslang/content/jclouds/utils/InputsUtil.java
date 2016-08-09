@@ -34,7 +34,7 @@ public final class InputsUtil {
             return new HashMap<>();
         }
 
-        String[] params = StringUtils.split(queryParams, Constants.Miscellaneous.AMPERSAND);
+        String[] params = queryParams.split(Constants.Miscellaneous.AMPERSAND);
         String[] paramValues;
 
         Map<String, String> queryParamsMap = new HashMap<>();
@@ -62,10 +62,10 @@ public final class InputsUtil {
             return new HashMap<>();
         }
 
-        String headerValuesDelimiter = Pattern.quote(Constants.Miscellaneous.COLON);
         String headerDelimiter = "\\r?\\n";
+        String headerValuesDelimiter = Pattern.quote(Constants.Miscellaneous.COLON);
 
-        String[] headerValues = StringUtils.split(headers, headerDelimiter);
+        String[] headerValues = headers.split(headerDelimiter);
         String[] values;
 
         Map<String, String> headersList = new HashMap<>();

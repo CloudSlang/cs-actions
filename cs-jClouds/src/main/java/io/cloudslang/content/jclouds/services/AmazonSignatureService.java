@@ -54,7 +54,7 @@ public class AmazonSignatureService {
 
         String amazonDate = StringUtils.isBlank(amzDate) ? signatureUtils.getAmazonDateString(new Date()) : amzDate;
         String dateStamp = amazonDate.split("T")[0];
-        String region = signatureUtils.getAmazonS3Region(requestEndpoint);
+        String region = signatureUtils.getAmazonRegion(requestEndpoint);
         String credentialScope = signatureUtils.getAmazonCredentialScope(dateStamp, region, Constants.Apis.AMAZON_EC2_API);
         String amzCredential = accessKeyId + Constants.Miscellaneous.SCOPE_SEPARATOR + credentialScope;
 
