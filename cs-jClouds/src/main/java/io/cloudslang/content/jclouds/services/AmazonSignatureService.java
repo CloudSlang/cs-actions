@@ -2,7 +2,7 @@ package io.cloudslang.content.jclouds.services;
 
 import io.cloudslang.content.jclouds.entities.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.services.helpers.AWSSignatureUtils;
+import io.cloudslang.content.jclouds.services.helpers.AWSSignatureHelper;
 import io.cloudslang.content.jclouds.services.helpers.AWSSignatureV4;
 import io.cloudslang.content.jclouds.services.helpers.UriEncoder;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ public class AmazonSignatureService {
         requestEndpoint = StringUtils.isBlank(requestEndpoint) ? Constants.Apis.AMAZON_EC2_API + DOT +
                 Constants.Miscellaneous.AMAZON_HOSTNAME : requestEndpoint.toLowerCase();
 
-        AWSSignatureUtils signatureUtils = new AWSSignatureUtils();
+        AWSSignatureHelper signatureUtils = new AWSSignatureHelper();
 
         String amazonDate = StringUtils.isBlank(amzDate) ? signatureUtils.getAmazonDateString(new Date()) : amzDate;
         String dateStamp = amazonDate.split("T")[0];
@@ -59,7 +59,7 @@ public class AmazonSignatureService {
         String amzCredential = accessKeyId + Constants.Miscellaneous.SCOPE_SEPARATOR + credentialScope;
 
         String signedHeadersString = signatureUtils.getSignedHeadersString(requestHeaders);
-        String canonicalRequest = awsSignatureV4.getS3CanonicalRequest(requestHttpMethod, requestUri,
+        String canonicalRequest = awsSignatureV4.getCanonicalRequest(requestHttpMethod, requestUri,
                 signatureUtils.canonicalizedQueryString(queryParams), signatureUtils.canonicalizedHeadersString(requestHeaders),
                 signedHeadersString, payloadHash);
 

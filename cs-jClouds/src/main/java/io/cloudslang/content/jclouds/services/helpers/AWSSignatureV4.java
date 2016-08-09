@@ -37,8 +37,8 @@ public class AWSSignatureV4 {
      * @param payloadHash          The request payload's hash.
      * @return A string representing the canonical request.
      */
-    public String getS3CanonicalRequest(String httpRequestMethod, String canonicalURI, String canonicalQueryString,
-                                        String canonicalHeaders, String signedHeaders, String payloadHash) {
+    public String getCanonicalRequest(String httpRequestMethod, String canonicalURI, String canonicalQueryString,
+                                      String canonicalHeaders, String signedHeaders, String payloadHash) {
         return httpRequestMethod + Constants.Miscellaneous.LINE_SEPARATOR + canonicalURI + Constants.Miscellaneous.LINE_SEPARATOR +
                 canonicalQueryString + Constants.Miscellaneous.LINE_SEPARATOR + canonicalHeaders +
                 Constants.Miscellaneous.LINE_SEPARATOR + signedHeaders + Constants.Miscellaneous.LINE_SEPARATOR + payloadHash;

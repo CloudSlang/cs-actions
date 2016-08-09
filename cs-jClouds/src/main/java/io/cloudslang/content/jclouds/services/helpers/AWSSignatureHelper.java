@@ -10,7 +10,7 @@ import java.util.*;
  * Created by Mihai Tusa.
  * 8/8/2016.
  */
-public class AWSSignatureUtils {
+public class AWSSignatureHelper {
     private static final String DATE_FORMAT = "yyyyMMdd'T'HHmmss'Z'";
     private static final String TIME_ZONE = "UTC";
     private static final String SEMICOLON = ";";
