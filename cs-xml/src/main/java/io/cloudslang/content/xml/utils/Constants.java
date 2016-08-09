@@ -18,7 +18,7 @@ public class Constants {
     public static final String DIFFERENT_LIST_SIZE = "The two lists are of different size";
     public static final String ROOT_TAG_NAME_IS_MISSING = "The root tag name is missing";
     public static final String ONLY_ONE_ROOT_ELEMENT = "There must be only one root element";
-    public static final String NEW_LINE = System.lineSeparator();
+    public static final String NEW_LINE = "\n";
     public static final String INDENT = "  ";
     public static final String UTF_8_ENCODING = "UTF-8";
 

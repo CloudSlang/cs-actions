@@ -1,5 +1,6 @@
 package io.cloudslang.content.xml.services;
 
+import com.google.gson.stream.JsonWriter;
 import io.cloudslang.content.xml.utils.XmlUtils;
 
 import com.google.gson.Gson;
@@ -64,7 +65,9 @@ public class ConvertXmlToJsonService {
     }
 
     private String prettyPrint(JsonObject rootJson) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting()
+                                    .disableHtmlEscaping()
+                                    .create();
         return gson.toJson(rootJson);
     }
 

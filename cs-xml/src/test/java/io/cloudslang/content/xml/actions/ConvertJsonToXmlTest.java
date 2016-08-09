@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static io.cloudslang.content.xml.utils.Constants.NEW_LINE;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
@@ -14,7 +15,6 @@ import static junit.framework.Assert.assertNotNull;
  * Created by ursan on 8/4/2016.
  */
 public class ConvertJsonToXmlTest {
-    private static final String NEW_LINE = System.lineSeparator();
     private ConvertJsonToXml converter;
 
     @Before
