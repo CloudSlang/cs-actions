@@ -55,8 +55,8 @@ public class ComputeSignatureV4 {
      *                    by the ASCII hexadecimal equivalent code. The "/" character in the URI remains un-encoded.
      *                    Valid values: "true", "false"
      *                    Default value: "false"
-     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message, the exception if there is one, signature value and authorization header
+     * @return A map, with strings as keys and values, that contains: outcome of the action, returnCode of the operation
+     * or failure message, the exception if there is one, signature value and authorization header value
      */
     @Action(name = "Compute Signature V4",
             outputs = {
@@ -94,7 +94,7 @@ public class ComputeSignatureV4 {
                     .computeSignatureAuthorization(httpVerb, uri, payloadHash, queryParamsMap, headersMap, amazonApi, endpoint,
                             identity, credential, date, Boolean.parseBoolean(encodeUri));
 
-            return OutputsUtil.populateSignatureResultsMap(authorizationHeader.getSignature(), Outputs.SUCCESS_RETURN_CODE,
+            return OutputsUtil.populateSignatureResultsMap(authorizationHeader.getSignature(),
                     authorizationHeader.getSignature(), authorizationHeader.getAuthorizationHeader());
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);

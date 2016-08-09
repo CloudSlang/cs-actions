@@ -39,12 +39,10 @@ public class OutputsUtil {
         return Constants.Miscellaneous.EMPTY;
     }
 
-    public static Map<String, String> populateSignatureResultsMap(String returnResult, String returnCode, String signature,
+    public static Map<String, String> populateSignatureResultsMap(String returnResult, String signature,
                                                                   String authorizationHeader) {
-        Map<String, String> signatureReturnResultMap = new HashMap<>();
+        Map<String, String> signatureReturnResultMap = getResultsMap(returnResult);
 
-        signatureReturnResultMap.put(Outputs.RETURN_RESULT, returnResult);
-        signatureReturnResultMap.put(Outputs.RETURN_CODE, returnCode);
         signatureReturnResultMap.put(Constants.AWSParams.SIGNATURE_RESULT, signature);
         signatureReturnResultMap.put(Constants.AWSParams.AUTHORIZATION_HEADER_RESULT, authorizationHeader);
 
