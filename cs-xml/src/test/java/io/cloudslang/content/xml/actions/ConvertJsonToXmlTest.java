@@ -1,5 +1,6 @@
 package io.cloudslang.content.xml.actions;
 
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.Constants.Outputs;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class ConvertJsonToXmlTest {
                 ",");
         assertNotNull(result);
         assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.SUCCESS);
         assertEquals(result.get(Outputs.RETURN_RESULT), "");
     }
 
@@ -55,6 +57,7 @@ public class ConvertJsonToXmlTest {
                 ",");
         assertNotNull(result);
         assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.SUCCESS);
         assertEquals(result.get(Outputs.RETURN_RESULT), "");
     }
 
@@ -73,6 +76,7 @@ public class ConvertJsonToXmlTest {
                 ",");
         assertNotNull(result);
         assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.SUCCESS);
         assertEquals(result.get(Outputs.RETURN_RESULT), "<item><name1>value1</name1></item>" + NEW_LINE +
                 "<item><name2>value2</name2></item>");
     }
@@ -92,6 +96,7 @@ public class ConvertJsonToXmlTest {
                 ",");
         assertNotNull(result);
         assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.SUCCESS);
         assertEquals(result.get(Outputs.RETURN_RESULT), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE +
                 "<property><name1>value1</name1></property>" + NEW_LINE);
     }
@@ -114,6 +119,7 @@ public class ConvertJsonToXmlTest {
                 ",");
         assertNotNull(result);
         assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.SUCCESS);
         assertEquals(result.get(Outputs.RETURN_RESULT),
                 "<root xmlns:f=\"http://java.sun.com/jsf/core\" " +
                         "xmlns:ui=\"urn:x-hp:2012:software:eve:uibinding\" " +
@@ -145,6 +151,64 @@ public class ConvertJsonToXmlTest {
                 ",");
         assertNotNull(result);
         assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.SUCCESS);
         assertEquals(result.get(Outputs.RETURN_RESULT), "<items><item><name1>value1</name1></item><item><name2>value2</name2></item></items>");
+    }
+
+    @Test
+    public void testInvalidBooleanInput() {
+        Map<String, String> result = converter.execute(
+                " ",
+                "invalid",
+                "invalid",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ",");
+        assertNotNull(result);
+        assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.FAILURE);
+        assertEquals(result.get(Outputs.RETURN_RESULT), "invalid is not a valid value for Boolean");
+    }
+
+    @Test
+    public void testMissingRootTagName() {
+        Map<String, String> result = converter.execute(
+                "[{\"name1\":\"value1\"},{\"name2\":\"value2\"}]",
+                "false",
+                "true",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ",");
+        assertNotNull(result);
+        assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.FAILURE);
+        assertEquals(result.get(Outputs.RETURN_RESULT), "The root tag name is missing");
+    }
+
+    @Test
+    public void testMalformedJson() {
+        Map<String, String> result = converter.execute(
+                "{items: {\"name1\":\"value1\"},{\"name2\":\"value2\"}}",
+                "false",
+                "true",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ",");
+        assertNotNull(result);
+        assertNotNull(result.get(Outputs.RETURN_RESULT));
+        assertEquals(result.get(Outputs.RETURN_CODE), Constants.ReturnCodes.FAILURE);
+        assertEquals(result.get(Outputs.RETURN_RESULT),"com.google.gson.stream.MalformedJsonException: Expected name at line 1 column 28 path $.items");
     }
 }

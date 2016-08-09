@@ -96,7 +96,7 @@ public class ConvertJsonToXml {
             result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
 
         } catch (Exception e) {
-            result.put(Outputs.RETURN_RESULT, ExceptionUtils.getStackTrace(e));
+            result.put(Outputs.RETURN_RESULT, e.getMessage());
             result.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
         }
         return result;
