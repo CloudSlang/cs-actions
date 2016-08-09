@@ -16,14 +16,14 @@ import java.security.SignatureException;
  * 8/8/2016.
  */
 public class AWSSignatureV4 {
+    private static final String AWS_SIGNATURE_VERSION = "AWS4";
     private static final String AWS4_SIGNING_ALGORITHM = "AWS4-HMAC-SHA256";
     private static final String HASH_ALGORITHM = "SHA-256";
     private static final String HMAC_ALGORITHM = "HmacSHA256";
-    private static final String AWS_SIGNATURE_VERSION = "AWS4";
 
+    private static final String CANONICAL_REQUEST_DIGEST_ERROR = "Failed to calculate the canonical request digest: ";
     private static final String DERIVED_SIGNING_ERROR = "Failed to calculate the derived signing key: ";
     private static final String SIGNATURE_ERROR = "Failed to calculate the AWS signature: ";
-    private static final String CANONICAL_REQUEST_DIGEST_ERROR = "Failed to calculate the canonical request digest: ";
 
     /**
      * Combines the inputs into a canonical (standardized format) request.
@@ -67,20 +67,20 @@ public class AWSSignatureV4 {
     /**
      * Derives a signing key from the AWS secret access key.
      *
-     * @param amazonSecretKey Amazon secret a access key.
+     * @param secretAccessKey Amazon secret a access key.
      * @param dateStamp       Credential scope date stamp in "yyyyMMdd" format.
-     * @param regionName      Amazon region name.
-     * @param serviceName     Amazon service name.
+     * @param region          Amazon region name.
+     * @param amazonApi       Amazon service name.
      * @return The signing key's bytes. This result is not encoded.
      * @throws SignatureException
      */
-    public byte[] getDerivedSigningKey(String amazonSecretKey, String dateStamp, String regionName, String serviceName)
+    public byte[] getDerivedSigningKey(String secretAccessKey, String dateStamp, String region, String amazonApi)
             throws SignatureException {
         try {
-            byte[] kSecret = (AWS_SIGNATURE_VERSION + amazonSecretKey).getBytes(Constants.Miscellaneous.ENCODING);
+            byte[] kSecret = (AWS_SIGNATURE_VERSION + secretAccessKey).getBytes(Constants.Miscellaneous.ENCODING);
             byte[] kDate = calculateHmacSHA256(dateStamp, kSecret);
-            byte[] kRegion = calculateHmacSHA256(regionName, kDate);
-            byte[] kService = calculateHmacSHA256(serviceName, kRegion);
+            byte[] kRegion = calculateHmacSHA256(region, kDate);
+            byte[] kService = calculateHmacSHA256(amazonApi, kRegion);
 
             return calculateHmacSHA256(Constants.AWSParams.AWS_REQUEST_VERSION, kService);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {

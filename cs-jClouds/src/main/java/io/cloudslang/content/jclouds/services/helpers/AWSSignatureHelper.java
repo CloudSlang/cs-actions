@@ -12,9 +12,11 @@ import java.util.*;
  */
 public class AWSSignatureHelper {
     private static final String DATE_FORMAT = "yyyyMMdd'T'HHmmss'Z'";
-    private static final String TIME_ZONE = "UTC";
-    private static final String SEMICOLON = ";";
     private static final String HYPHEN = "-";
+    private static final String SEMICOLON = ";";
+    private static final String TIME_ZONE = "UTC";
+
+    private static final char DOT_CHAR = '.';
 
     /**
      * The canonicalized (standardized) query string is formed by first sorting all the query
@@ -29,8 +31,8 @@ public class AWSSignatureHelper {
         Collections.sort(sortedList, new UTF8StringComparator());
 
         StringBuilder queryString = new StringBuilder();
-        for (Map.Entry<String, String> ent : sortedList) {
-            queryString.append(entryToQuery(ent));
+        for (Map.Entry<String, String> entry : sortedList) {
+            queryString.append(entryToQuery(entry));
         }
         if (queryString.length() > 0) queryString.deleteCharAt(queryString.length() - 1);   //last &
 
@@ -122,7 +124,7 @@ public class AWSSignatureHelper {
     public String getAmazonRegion(String endpoint) {
         if (StringUtils.isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
             endpoint = endpoint.substring(3);
-            return endpoint.substring(0, endpoint.indexOf('.'));
+            return endpoint.substring(0, endpoint.indexOf(DOT_CHAR));
         }
         return Constants.Miscellaneous.DEFAULT_AMAZON_REGION;
     }

@@ -61,6 +61,7 @@ public class Inputs {
         public static final String DATE = "date";
         public static final String QUERY_PARAMS = "queryParams";
         public static final String HEADERS = "headers";
+        public static final String AMAZON_API = "amazonApi";
     }
 
     public static final class ImageInputs {

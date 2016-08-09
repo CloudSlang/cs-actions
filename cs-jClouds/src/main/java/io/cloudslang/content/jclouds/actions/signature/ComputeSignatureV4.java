@@ -36,16 +36,8 @@ public class ComputeSignatureV4 {
      *                    Default: GET
      * @param uri         request's relative URI. The URI should be from the service endpoint to the query params.
      *                    Default: "/"
-     * @param encodeUri   Specifies if the URI should be encoded by replacing the special characters with a "%" followed
-     *                    by the ASCII hexadecimal equivalent code. The "/" character in the URI remains un-encoded.
-     *                    Valid values: "true", "false"
-     *                    Default value: "false"
      * @param payloadHash Payload's hash that will be included in the signature. The hashing should be computed using the
      *                    "SHA-256" hashing algorithm and then hex encoded.
-     * @param date        Date of the request. The date should be also included in the "x-amz-date" header and should be
-     *                    in the in the YYYYMMDD'T'HHMMSS'Z' format form UTC time zone.
-     *                    Example: 20150416T112043Z for April 16, 2015 11:20:43 AM UTC
-     *                    Default: The current date and time in UTC time zone
      * @param queryParams List containing query parameters that will be appended to the URL. The names and the values must
      *                    not be URL encoded because if they are encoded then a double encoded will occur. The separator
      *                    between name-value pairs is "&" symbol. The query name will be separated from query value by "="
@@ -53,6 +45,16 @@ public class ComputeSignatureV4 {
      * @param headers     List containing the headers to use for the request separated by new line (CRLF). The header
      *                    name-value pair will be separated by ":". Format: Conforming with HTTP standard for headers (RFC 2616).
      *                    Examples: Accept:text/plain
+     * @param amazonApi   Amazon API corresponding to where the request is send.
+     *                    Examples: "ec2", "s3"
+     * @param date        Date of the request. The date should be also included in the "x-amz-date" header and should be
+     *                    in the in the YYYYMMDD'T'HHMMSS'Z' format form UTC time zone.
+     *                    Example: 20150416T112043Z for April 16, 2015 11:20:43 AM UTC
+     *                    Default: The current date and time in UTC time zone
+     * @param encodeUri   Specifies if the URI should be encoded by replacing the special characters with a "%" followed
+     *                    by the ASCII hexadecimal equivalent code. The "/" character in the URI remains un-encoded.
+     *                    Valid values: "true", "false"
+     *                    Default value: "false"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message, the exception if there is one, signature value and authorization header
      */
@@ -77,18 +79,19 @@ public class ComputeSignatureV4 {
 
                                                 @Param(value = Inputs.CustomInputs.HTTP_VERB) String httpVerb,
                                                 @Param(value = Inputs.CustomInputs.URI) String uri,
-                                                @Param(value = Inputs.CustomInputs.ENCODE_URI) String encodeUri,
                                                 @Param(value = Inputs.CustomInputs.PAYLOAD_HASH) String payloadHash,
-                                                @Param(value = Inputs.CustomInputs.DATE) String date,
                                                 @Param(value = Inputs.CustomInputs.QUERY_PARAMS) String queryParams,
-                                                @Param(value = Inputs.CustomInputs.HEADERS) String headers) {
+                                                @Param(value = Inputs.CustomInputs.HEADERS) String headers,
+                                                @Param(value = Inputs.CustomInputs.AMAZON_API) String amazonApi,
+                                                @Param(value = Inputs.CustomInputs.DATE) String date,
+                                                @Param(value = Inputs.CustomInputs.ENCODE_URI) String encodeUri) {
 
         Map<String, String> queryParamsMap = InputsUtil.getQueryParamsMap(queryParams);
         Map<String, String> headersMap = InputsUtil.getHeadersMap(headers);
 
         try {
             AuthorizationHeader authorizationHeader = new AmazonSignatureService()
-                    .computeSignatureAuthorization(httpVerb, uri, payloadHash, queryParamsMap, headersMap, endpoint,
+                    .computeSignatureAuthorization(httpVerb, uri, payloadHash, queryParamsMap, headersMap, amazonApi, endpoint,
                             identity, credential, date, Boolean.parseBoolean(encodeUri));
 
             return OutputsUtil.populateSignatureResultsMap(authorizationHeader.getSignature(), Outputs.SUCCESS_RETURN_CODE,
