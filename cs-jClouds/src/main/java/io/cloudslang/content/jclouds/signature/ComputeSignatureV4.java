@@ -34,9 +34,9 @@ public class ComputeSignatureV4 {
      * @param uri         The request canonical URI.
      * @param encodeUri   Whether to encode or not URI.
      * @param payloadHash The request payload's hash.
-     * @param date        List of headers
-     * @param queryParams List of query params
-     * @param headers     The canonical headers for the request. These headers will be signed.
+     * @param date        The AWS date in (Java) format "yyyyMMdd'T'HHmmss'Z'" and in time zone UTC
+     * @param queryParams Canonical query params for the request.
+     * @param headers     Canonical headers for the request. These headers will be signed.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
