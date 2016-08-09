@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.signature;
+package io.cloudslang.content.jclouds.actions.signature;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -25,20 +25,36 @@ public class ComputeSignatureV4 {
     /**
      * Computes the AWS Signature Version 4 used to authenticate requests by using the authorization header.
      * For this signature type the checksum of the entire payload is computed.
+     * Note: The "authorizationHeader" output's value should be added in the "Authorization" header.
      *
-     * @param endpoint    Amazon AWS request endpoint. Ex.: "ec2.amazonaws.com", "s3.amazonaws.com"
+     * @param endpoint    Service endpoint used to compute the signature. Ex.: "ec2.amazonaws.com", "s3.amazonaws.com"
      *                    Default: "ec2.amazonaws.com"
-     * @param identity    Access Key ID.
-     * @param credential  Secret Access Key that correspond to the Access Key ID.
-     * @param httpVerb    The request method.
-     * @param uri         The request canonical URI.
-     * @param encodeUri   Whether to encode or not URI.
-     * @param payloadHash The request payload's hash.
-     * @param date        The AWS date in (Java) format "yyyyMMdd'T'HHmmss'Z'" and in time zone UTC
-     * @param queryParams Canonical query params for the request.
-     * @param headers     Canonical headers for the request. These headers will be signed.
+     * @param identity    ID of the secret access key associated with your Amazon AWS or IAM account.
+     * @param credential  Secret access key associated with your Amazon AWS or IAM account.
+     * @param httpVerb    Method used for the request. You need to specify this with upper case.
+     *                    Valid values: GET, DELETE, HEAD, POST, PUT
+     *                    Default: GET
+     * @param uri         request's relative URI. The URI should be from the service endpoint to the query params.
+     *                    Default: "/"
+     * @param encodeUri   Specifies if the URI should be encoded by replacing the special characters with a "%" followed
+     *                    by the ASCII hexadecimal equivalent code. The "/" character in the URI remains un-encoded.
+     *                    Valid values: "true", "false"
+     *                    Default value: "false"
+     * @param payloadHash Payload's hash that will be included in the signature. The hashing should be computed using the
+     *                    "SHA-256" hashing algorithm and then hex encoded.
+     * @param date        Date of the request. The date should be also included in the "x-amz-date" header and should be
+     *                    in the in the YYYYMMDD'T'HHMMSS'Z' format form UTC time zone.
+     *                    Example: 20150416T112043Z for April 16, 2015 11:20:43 AM UTC
+     *                    Default: The current date and time in UTC time zone
+     * @param queryParams List containing query parameters that will be appended to the URL. The names and the values must
+     *                    not be URL encoded because if they are encoded then a double encoded will occur. The separator
+     *                    between name-value pairs is "&" symbol. The query name will be separated from query value by "="
+     *                    Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;
+     * @param headers     List containing the headers to use for the request separated by new line (CRLF). The header
+     *                    name-value pair will be separated by ":". Format: Conforming with HTTP standard for headers (RFC 2616).
+     *                    Examples: Accept:text/plain
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     * operation, or failure message, the exception if there is one, signature value and authorization header
      */
     @Action(name = "Compute Signature V4",
             outputs = {
