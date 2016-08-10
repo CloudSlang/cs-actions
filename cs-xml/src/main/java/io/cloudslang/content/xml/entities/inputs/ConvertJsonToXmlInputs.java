@@ -1,8 +1,11 @@
 package io.cloudslang.content.xml.entities.inputs;
 
-import io.cloudslang.content.xml.utils.Constants.*;
+import io.cloudslang.content.xml.utils.Constants.BooleanNames;
+import io.cloudslang.content.xml.utils.Constants.Defaults;
 import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 import static io.cloudslang.content.xml.utils.Constants.EMPTY_STRING;
 
@@ -15,11 +18,8 @@ public class ConvertJsonToXmlInputs {
     private String showXmlDeclaration;
     private String rootTagName;
     private String defaultJsonArrayItemName;
-    private String namespacesPrefixes;
-    private String namespacesUris;
-    private String jsonArraysNames;
-    private String jsonArraysItemNames;
-    private String delimiter;
+    private Map<String, String> namespaces;
+    private Map<String, String> arraysItemNames;
 
     public ConvertJsonToXmlInputs(ConvertJsonToXmlInputsBuilder builder) {
         this.json = builder.json;
@@ -27,11 +27,8 @@ public class ConvertJsonToXmlInputs {
         this.showXmlDeclaration = builder.showXmlDeclaration;
         this.rootTagName = builder.rootTagName;
         this.defaultJsonArrayItemName = builder.defaultJsonArrayItemName;
-        this.namespacesPrefixes = builder.namespacesPrefixes;
-        this.namespacesUris = builder.namespacesUris;
-        this.jsonArraysNames = builder.jsonArraysNames;
-        this.jsonArraysItemNames = builder.jsonArraysItemNames;
-        this.delimiter = builder.delimiter;
+        this.namespaces = builder.namespaces;
+        this.arraysItemNames = builder.arraysItemNames;
     }
 
     public String getJson() {
@@ -54,24 +51,12 @@ public class ConvertJsonToXmlInputs {
         return defaultJsonArrayItemName;
     }
 
-    public String getNamespacesPrefixes() {
-        return namespacesPrefixes;
+    public Map<String, String> getNamespaces() {
+        return namespaces;
     }
 
-    public String getNamespacesUris() {
-        return namespacesUris;
-    }
-
-    public String getJsonArraysNames() {
-        return jsonArraysNames;
-    }
-
-    public String getJsonArraysItemNames() {
-        return jsonArraysItemNames;
-    }
-
-    public String getDelimiter() {
-        return delimiter;
+    public Map<String, String> getArraysItemNames() {
+        return arraysItemNames;
     }
 
     public static class ConvertJsonToXmlInputsBuilder {
@@ -80,11 +65,8 @@ public class ConvertJsonToXmlInputs {
         private String showXmlDeclaration;
         private String rootTagName;
         private String defaultJsonArrayItemName;
-        private String namespacesPrefixes;
-        private String namespacesUris;
-        private String jsonArraysNames;
-        private String jsonArraysItemNames;
-        private String delimiter;
+        private Map<String, String> namespaces;
+        private Map<String, String> arraysItemNames;
 
         public ConvertJsonToXmlInputs build() {
             return new ConvertJsonToXmlInputs(this);
@@ -115,29 +97,21 @@ public class ConvertJsonToXmlInputs {
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withNamespacesPrefixes(String namespacesPrefixes) {
-            this.namespacesPrefixes = StringUtils.defaultIfEmpty(namespacesPrefixes, EMPTY_STRING);
+        public ConvertJsonToXmlInputsBuilder withNamespaces(String namespacesUris, String namespacesPrefixes, String delimiter) {
+            namespacesUris = StringUtils.defaultString(namespacesUris, EMPTY_STRING);
+            namespacesPrefixes = StringUtils.defaultIfEmpty(namespacesPrefixes, EMPTY_STRING);
+            delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
+            this.namespaces = InputUtils.generateMap(namespacesUris, namespacesPrefixes, delimiter);
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withNamespacesUris(String namespacesUris) {
-            this.namespacesUris = StringUtils.defaultString(namespacesUris, EMPTY_STRING);
+        public ConvertJsonToXmlInputsBuilder withJsonArraysNames(String jsonArraysNames, String jsonArraysItemNames, String delimiter) {
+            jsonArraysNames = StringUtils.defaultString(jsonArraysNames, EMPTY_STRING);
+            jsonArraysItemNames = StringUtils.defaultIfEmpty(jsonArraysItemNames, EMPTY_STRING);
+            delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
+            this.arraysItemNames = InputUtils.generateMap(jsonArraysNames, jsonArraysItemNames, delimiter);
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withJsonArraysNames(String jsonArraysNames) {
-            this.jsonArraysNames = StringUtils.defaultString(jsonArraysNames, EMPTY_STRING);
-            return this;
-        }
-
-        public ConvertJsonToXmlInputsBuilder withJsonArraysItemNames(String jsonArraysItemNames) {
-            this.jsonArraysItemNames = StringUtils.defaultIfEmpty(jsonArraysItemNames, EMPTY_STRING);
-            return this;
-        }
-
-        public ConvertJsonToXmlInputsBuilder withDelimiter(String delimiter) {
-            this.delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
-            return this;
-        }
     }
 }

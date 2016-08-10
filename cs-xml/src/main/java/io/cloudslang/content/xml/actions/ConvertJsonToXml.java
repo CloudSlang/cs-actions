@@ -6,9 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
 import io.cloudslang.content.xml.services.ConvertJsonToXmlService;
-import io.cloudslang.content.xml.utils.InputUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import io.cloudslang.content.xml.utils.ValidateUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,32 +64,27 @@ public class ConvertJsonToXml {
 
         Map<String, String> result = new HashMap<>();
         try {
-            delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
-            prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
-            showXmlDeclaration = StringUtils.defaultIfEmpty(showXmlDeclaration, BooleanNames.FALSE);
-            rootTagName = StringUtils.defaultIfEmpty(rootTagName, EMPTY_STRING);
-            defaultJsonArrayItemName = StringUtils.defaultIfEmpty(defaultJsonArrayItemName, Defaults.JSON_ARRAY_ITEM_NAME);
-            namespacesUris = StringUtils.defaultString(namespacesUris, EMPTY_STRING);
-            namespacesPrefixes = StringUtils.defaultIfEmpty(namespacesPrefixes, EMPTY_STRING);
-            jsonArraysNames = StringUtils.defaultString(jsonArraysNames, EMPTY_STRING);
-            jsonArraysItemNames = StringUtils.defaultIfEmpty(jsonArraysItemNames, EMPTY_STRING);
+            ConvertJsonToXmlInputs inputs = new ConvertJsonToXmlInputs.ConvertJsonToXmlInputsBuilder()
+                    .withJson(json)
+                    .withPrettyPrint(prettyPrint)
+                    .withShowXmlDeclaration(showXmlDeclaration)
+                    .withRootTagName(rootTagName)
+                    .withDefaultJsonArrayItemName(defaultJsonArrayItemName)
+                    .withNamespaces(namespacesUris, namespacesPrefixes, delimiter)
+                    .withJsonArraysNames(jsonArraysNames, jsonArraysItemNames, delimiter)
+                    .build();
 
-            InputUtils.validateBoolean(prettyPrint);
-            InputUtils.validateBoolean(showXmlDeclaration);
+            ValidateUtils.validateInputs(inputs);
 
-            Boolean prettyPrintBoolean = Boolean.parseBoolean(prettyPrint);
-            Boolean showXmlDeclarationBoolean = Boolean.parseBoolean(showXmlDeclaration);
-
-            // get list values
-            Map<String, String> namespaces = InputUtils.generateMap(namespacesUris, namespacesPrefixes, delimiter);
-            Map<String, String> arraysItemNames = InputUtils.generateMap(jsonArraysNames, jsonArraysItemNames, delimiter);
+            Boolean prettyPrintBoolean = Boolean.parseBoolean(inputs.getPrettyPrint());
+            Boolean showXmlDeclarationBoolean = Boolean.parseBoolean(inputs.getShowXmlDeclaration());
 
             // run the converter
             ConvertJsonToXmlService converter = new ConvertJsonToXmlService();
-            converter.setNamespaces(namespaces);
-            converter.setJsonArrayItemNames(arraysItemNames);
+            converter.setNamespaces(inputs.getNamespaces());
+            converter.setJsonArrayItemNames(inputs.getArraysItemNames());
             converter.setJsonArrayItemName(defaultJsonArrayItemName);
-            String xml = converter.convertToXmlString(json, prettyPrintBoolean, showXmlDeclarationBoolean, rootTagName);
+            String xml = converter.convertToXmlString(inputs, prettyPrintBoolean, showXmlDeclarationBoolean);
 
             result.put(Outputs.RETURN_RESULT, xml);
             result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);

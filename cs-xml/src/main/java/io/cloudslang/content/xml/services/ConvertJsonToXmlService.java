@@ -1,6 +1,7 @@
 package io.cloudslang.content.xml.services;
 
 import com.google.gson.*;
+import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -27,16 +28,16 @@ public class ConvertJsonToXmlService {
         jsonArrayItemNames = new HashMap<>();
     }
 
-    public String convertToXmlString(String json, Boolean prettyPrint, Boolean showXmlDeclaration, String rootTagName) {
-        if (StringUtils.isBlank(json)) {
+    public String convertToXmlString(ConvertJsonToXmlInputs inputs, Boolean prettyPrint, Boolean showXmlDeclaration) {
+        if (StringUtils.isBlank(inputs.getJson())) {
             return EMPTY_STRING;
         }
         XMLOutputter xmlWriter = new XMLOutputter();
         xmlWriter.setFormat(getFormat(prettyPrint, showXmlDeclaration));
         if (showXmlDeclaration) {
-            return xmlWriter.outputString(convertJsonStringToXmlDocument(json, rootTagName));
+            return xmlWriter.outputString(convertJsonStringToXmlDocument(inputs.getJson(), inputs.getRootTagName()));
         }
-        return getXmlFromElements(convertJsonStringToXmlElements(json, rootTagName), xmlWriter);
+        return getXmlFromElements(convertJsonStringToXmlElements(inputs.getJson(), inputs.getRootTagName()), xmlWriter);
     }
 
     private String getXmlFromElements(List<Element> elements, XMLOutputter xmlWriter) {
