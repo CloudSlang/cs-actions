@@ -4,8 +4,9 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.services.ConvertXmlToJsonService;
-import io.cloudslang.content.xml.utils.InputUtils;
+import io.cloudslang.content.xml.utils.ValidateUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -70,22 +71,29 @@ public class ConvertXmlToJson {
 
         Map<String, String> result = new HashMap<>();
         try {
+
+            ConvertXmlToJsonInputs inputs = new ConvertXmlToJsonInputs.ConvertXmlToJsonInputsBuilder()
+                    .withXml(xml)
+                    .withTextElementsName(textElementsName)
+                    .withIncludeRootElement(includeRootElement)
+                    .withIncludeAttributes(includeAttributes)
+                    .withPrettyPrint(prettyPrint)
+                    .withParsingFeatures(parsingFeatures)
+                    .build();
             xml = StringUtils.defaultIfBlank(xml, EMPTY_STRING);
             textElementsName = StringUtils.defaultIfEmpty(textElementsName, Defaults.DEFAULT_TEXT_ELEMENTS_NAME);
             includeRootElement = StringUtils.defaultIfEmpty(includeRootElement, BooleanNames.TRUE);
             includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);
             prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
 
-            InputUtils.validateBoolean(includeRootElement);
-            InputUtils.validateBoolean(includeAttributes);
-            InputUtils.validateBoolean(prettyPrint);
+            ValidateUtils.validateInputs(inputs);
 
-            Boolean includeRootBoolean = Boolean.parseBoolean(includeRootElement);
-            Boolean includeAttributesBoolean = Boolean.parseBoolean(includeAttributes);
-            Boolean prettyPrintBoolean = Boolean.parseBoolean(prettyPrint);
+            Boolean includeRootBoolean = Boolean.parseBoolean(inputs.getIncludeRootElement());
+            Boolean includeAttributesBoolean = Boolean.parseBoolean(inputs.getIncludeAttributes());
+            Boolean prettyPrintBoolean = Boolean.parseBoolean(inputs.getPrettyPrint());
 
             ConvertXmlToJsonService converter = new ConvertXmlToJsonService();
-            String json = converter.convertToJsonString(xml, includeAttributesBoolean, prettyPrintBoolean, includeRootBoolean, parsingFeatures, textElementsName);
+            String json = converter.convertToJsonString(inputs, includeAttributesBoolean, prettyPrintBoolean, includeRootBoolean);
 
             result.put(Outputs.NAMESPACES_PREFIXES, converter.getNamespacesPrefixes());
             result.put(Outputs.NAMESPACES_URIS, converter.getNamespacesUris());

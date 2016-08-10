@@ -1,6 +1,7 @@
 package io.cloudslang.content.xml.utils;
 
 import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
+import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,6 +51,12 @@ public class ValidateUtils {
     public static void validateInputs(ConvertJsonToXmlInputs inputs) throws Exception {
         InputUtils.validateBoolean(inputs.getPrettyPrint());
         InputUtils.validateBoolean(inputs.getShowXmlDeclaration());
+    }
+
+    public static void validateInputs(ConvertXmlToJsonInputs inputs) throws Exception {
+        InputUtils.validateBoolean(inputs.getIncludeRootElement());
+        InputUtils.validateBoolean(inputs.getIncludeAttributes());
+        InputUtils.validateBoolean(inputs.getPrettyPrint());
     }
 
 }

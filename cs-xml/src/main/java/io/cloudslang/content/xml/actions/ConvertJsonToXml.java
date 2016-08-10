@@ -83,7 +83,7 @@ public class ConvertJsonToXml {
             ConvertJsonToXmlService converter = new ConvertJsonToXmlService();
             converter.setNamespaces(inputs.getNamespaces());
             converter.setJsonArrayItemNames(inputs.getArraysItemNames());
-            converter.setJsonArrayItemName(defaultJsonArrayItemName);
+            converter.setJsonArrayItemName(inputs.getDefaultJsonArrayItemName());
             String xml = converter.convertToXmlString(inputs, prettyPrintBoolean, showXmlDeclarationBoolean);
 
             result.put(Outputs.RETURN_RESULT, xml);

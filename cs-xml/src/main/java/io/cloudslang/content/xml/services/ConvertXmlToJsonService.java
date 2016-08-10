@@ -1,23 +1,19 @@
 package io.cloudslang.content.xml.services;
 
+import com.google.gson.*;
+import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.utils.XmlUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.*;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.*;
 import org.jdom2.input.SAXBuilder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import static io.cloudslang.content.xml.utils.Constants.*;
 
@@ -33,22 +29,20 @@ public class ConvertXmlToJsonService {
         namespacesUris = new StringBuilder();
     }
 
-    public String convertToJsonString(String xml,
+    public String convertToJsonString(ConvertXmlToJsonInputs inputs,
                                       Boolean includeAttributes,
                                       Boolean prettyPrint,
-                                      Boolean addRootElement,
-                                      String parsingFeatures,
-                                      String textPropName) throws JDOMException, IOException, SAXException {
-        if (StringUtils.isBlank(xml)) {
+                                      Boolean addRootElement) throws JDOMException, IOException, SAXException {
+        if (StringUtils.isBlank(inputs.getXml())) {
             return EMPTY_STRING;
         }
-        InputSource inputSource = new InputSource(new StringReader(xml));
+        InputSource inputSource = new InputSource(new StringReader(inputs.getXml()));
         SAXBuilder builder = new SAXBuilder();
-        XmlUtils.setFeatures(builder, parsingFeatures);
+        XmlUtils.setFeatures(builder, inputs.getParsingFeatures());
         Document document = builder.build(inputSource);
         Element root = document.getRootElement();
         List<Element> xmlElements = Collections.singletonList(root);
-        JsonObject jsonObject = convertXmlElementsToJsonObject(xmlElements, includeAttributes, textPropName);
+        JsonObject jsonObject = convertXmlElementsToJsonObject(xmlElements, includeAttributes, inputs.getTextElementsName());
         jsonObject = getJsonObjectWithRootElement(root, jsonObject, addRootElement);
 
         return prettyPrint ? prettyPrint(jsonObject) : jsonObject.toString();
@@ -65,8 +59,8 @@ public class ConvertXmlToJsonService {
 
     private String prettyPrint(JsonObject rootJson) {
         Gson gson = new GsonBuilder().setPrettyPrinting()
-                                    .disableHtmlEscaping()
-                                    .create();
+                .disableHtmlEscaping()
+                .create();
         return gson.toJson(rootJson);
     }
 

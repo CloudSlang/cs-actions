@@ -1,6 +1,7 @@
 package io.cloudslang.content.xml.entities.inputs;
 
-import io.cloudslang.content.xml.utils.Constants.*;
+import io.cloudslang.content.xml.utils.Constants.BooleanNames;
+import io.cloudslang.content.xml.utils.Constants.Defaults;
 import org.apache.commons.lang3.StringUtils;
 
 import static io.cloudslang.content.xml.utils.Constants.EMPTY_STRING;
