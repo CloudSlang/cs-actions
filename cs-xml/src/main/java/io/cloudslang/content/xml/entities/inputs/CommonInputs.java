@@ -143,6 +143,10 @@ public class CommonInputs {
             this.secureProcessing = Boolean.parseBoolean(inputValue);
             return this;
         }
+        public CommonInputsBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
 
         public CommonInputsBuilder withXmlDocumentSource(String xmlDocumentSource) {
             this.xmlDocumentSource = InputUtils.validateXmlDocumentSource(xmlDocumentSource);
@@ -154,10 +158,6 @@ public class CommonInputs {
             return this;
         }
 
-        public CommonInputsBuilder withPassword(String password) {
-            this.password = password;
-            return this;
-        }
 
         public CommonInputsBuilder withTrustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;

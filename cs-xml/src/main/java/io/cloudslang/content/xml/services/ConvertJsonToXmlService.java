@@ -34,9 +34,9 @@ public class ConvertJsonToXmlService {
         XMLOutputter xmlWriter = new XMLOutputter();
         xmlWriter.setFormat(getFormat(prettyPrint, showXmlDeclaration));
         if (showXmlDeclaration) {
-            return xmlWriter.outputString(convertToXmlDocument(json, rootTagName));
+            return xmlWriter.outputString(convertJsonStringToXmlDocument(json, rootTagName));
         }
-        return getXmlFromElements(convertToXmlElements(json, rootTagName), xmlWriter);
+        return getXmlFromElements(convertJsonStringToXmlElements(json, rootTagName), xmlWriter);
     }
 
     private String getXmlFromElements(List<Element> elements, XMLOutputter xmlWriter) {
@@ -55,7 +55,7 @@ public class ConvertJsonToXmlService {
                 .setLineSeparator(NEW_LINE);
     }
 
-    private List<Element> convertToXmlElements(String json, String rootTagName) {
+    private List<Element> convertJsonStringToXmlElements(String json, String rootTagName) {
         JsonElement jsonElement = new JsonParser().parse(json);
         if (StringUtils.isEmpty(rootTagName)) {
             return convertToXmlElementsJsonElement(jsonElement);
@@ -64,7 +64,7 @@ public class ConvertJsonToXmlService {
         return Collections.singletonList(root);
     }
 
-    private Document convertToXmlDocument(String json, String rootTagName) {
+    private Document convertJsonStringToXmlDocument(String json, String rootTagName) {
         JsonElement jsonElement = new JsonParser().parse(json);
         Document document = new Document();
         return document.setRootElement(addRootTagJsonElement(rootTagName, jsonElement));
@@ -88,7 +88,7 @@ public class ConvertJsonToXmlService {
         return convertToXmlElementJsonElementWithRootTag(jsonElement, rootTagName);
     }
 
-    private Element convertToXmlElementJsonArray(JsonArray jsonArray, String arrayName) {
+    private Element convertJsonArrayToXmlElement(JsonArray jsonArray, String arrayName) {
         Element result = createElement(arrayName);
         for (JsonElement itemJson : jsonArray) {
             Element elementToAdd = getXmlElementFromJsonElement(itemJson, jsonArrayItemName);
@@ -124,15 +124,14 @@ public class ConvertJsonToXmlService {
 
     private Element convertToXmlElementJsonElementWithRootTag(JsonElement jsonElement, String rootTagName) {
         if (jsonElement.isJsonArray()) {
-            return convertToXmlElementJsonArray(jsonElement.getAsJsonArray(), rootTagName);
+            return convertJsonArrayToXmlElement(jsonElement.getAsJsonArray(), rootTagName);
         }
-        return convertToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
+        return convertJsonObjectToXmlElement(jsonElement.getAsJsonObject(), rootTagName);
     }
 
     private List<Element> convertToXmlElementsJsonObject(JsonObject jsonObject) {
         List<Element> result = new ArrayList<>();
-        Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
-        for (Map.Entry<String, JsonElement> entry : entries) {
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             String childTagName = entry.getKey();
             JsonElement childJson = entry.getValue();
             //if it's null we don't care
@@ -149,7 +148,7 @@ public class ConvertJsonToXmlService {
             String childValue = getJsonPrimitiveValue(childJson.getAsJsonPrimitive());
             return createElement(childTagName).setText(childValue);
         } else if (childJson.isJsonObject()) {
-            return convertToXmlElement(childJson.getAsJsonObject(), childTagName);
+            return convertJsonObjectToXmlElement(childJson.getAsJsonObject(), childTagName);
         } else if (childJson.isJsonArray()) {
             String itemName = jsonArrayItemNames.containsKey(childTagName) ?
                     jsonArrayItemNames.get(childTagName) : jsonArrayItemName;
@@ -163,7 +162,7 @@ public class ConvertJsonToXmlService {
         return null;
     }
 
-    private Element convertToXmlElement(JsonObject jsonObject, String tagName) {
+    private Element convertJsonObjectToXmlElement(JsonObject jsonObject, String tagName) {
         Element result = createElement(tagName);
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             String childTagName = entry.getKey();
