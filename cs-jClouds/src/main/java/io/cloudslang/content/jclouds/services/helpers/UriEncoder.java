@@ -5,7 +5,7 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public class UriEncoder {
+class UriEncoder {
     private static final Charset CHARSET_UTF_8 = Charset.forName(Constants.Miscellaneous.ENCODING);
 
     private UriEncoder() {

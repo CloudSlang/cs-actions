@@ -23,25 +23,31 @@ public class AWSSignatureV4 {
 
     private static final String CANONICAL_REQUEST_DIGEST_ERROR = "Failed to calculate the canonical request digest: ";
     private static final String DERIVED_SIGNING_ERROR = "Failed to calculate the derived signing key: ";
+    private static final String REQUEST_PAYLOAD_DIGEST = "Failed to calculate the request payload digest: ";
     private static final String SIGNATURE_ERROR = "Failed to calculate the AWS signature: ";
 
     /**
      * Combines the inputs into a canonical (standardized format) request.
-     * This method requires the payload's hash precalculated.
+     * This method requires the payload's hash pre-calculated.
      *
      * @param httpRequestMethod    The request method.
      * @param canonicalURI         The request canonical URI.
      * @param canonicalQueryString The request query string.
      * @param canonicalHeaders     The canonical headers for the request. These headers will be signed.
      * @param signedHeaders        Column separated list of header names that will be signed.
-     * @param payloadHash          The request payload's hash.
+     * @param requestPayload          The request payload's hash.
      * @return A string representing the canonical request.
      */
     public String getCanonicalRequest(String httpRequestMethod, String canonicalURI, String canonicalQueryString,
-                                      String canonicalHeaders, String signedHeaders, String payloadHash) {
-        return httpRequestMethod + Constants.Miscellaneous.LINE_SEPARATOR + canonicalURI + Constants.Miscellaneous.LINE_SEPARATOR +
-                canonicalQueryString + Constants.Miscellaneous.LINE_SEPARATOR + canonicalHeaders +
-                Constants.Miscellaneous.LINE_SEPARATOR + signedHeaders + Constants.Miscellaneous.LINE_SEPARATOR + payloadHash;
+                                      String canonicalHeaders, String signedHeaders, String requestPayload) throws SignatureException {
+        try {
+            return httpRequestMethod + Constants.Miscellaneous.LINE_SEPARATOR + canonicalURI + Constants.Miscellaneous.LINE_SEPARATOR +
+                    canonicalQueryString + Constants.Miscellaneous.LINE_SEPARATOR + canonicalHeaders +
+                    Constants.Miscellaneous.LINE_SEPARATOR + signedHeaders + Constants.Miscellaneous.LINE_SEPARATOR +
+                    new String(Hex.encode(calculateHash(requestPayload)), Constants.Miscellaneous.ENCODING);
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            throw new SignatureException(REQUEST_PAYLOAD_DIGEST + e.getMessage());
+        }
     }
 
     /**
@@ -52,7 +58,6 @@ public class AWSSignatureV4 {
      * @param credentialScope  The request credential scope.
      * @param canonicalRequest The canonical request.
      * @return A string that includes meta information about the request.
-     * @throws SignatureException
      */
     public String getStringToSign(String requestDate, String credentialScope, String canonicalRequest) throws SignatureException {
         try {
@@ -72,7 +77,6 @@ public class AWSSignatureV4 {
      * @param region          Amazon region name.
      * @param amazonApi       Amazon service name.
      * @return The signing key's bytes. This result is not encoded.
-     * @throws SignatureException
      */
     public byte[] getDerivedSigningKey(String secretAccessKey, String dateStamp, String region, String amazonApi)
             throws SignatureException {
@@ -94,7 +98,6 @@ public class AWSSignatureV4 {
      * @param stringToSign      The string-to-sign the includes meta information about the request.
      * @param derivedSigningKey The signing key derived from the AWS secret access key.
      * @return The AWS Signature Version 4.
-     * @throws SignatureException
      */
     public String getSignature(String stringToSign, byte[] derivedSigningKey) throws SignatureException {
         try {
@@ -109,8 +112,6 @@ public class AWSSignatureV4 {
      *
      * @param data The string for which the digest will be calculated.
      * @return The digest's bytes. This result is not encoded.
-     * @throws NoSuchAlgorithmException
-     * @throws UnsupportedEncodingException
      */
     private byte[] calculateHash(String data) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
@@ -124,9 +125,6 @@ public class AWSSignatureV4 {
      * @param data The string for which the HMAC will be calculated.
      * @param key  The key used for HMAC calculation.
      * @return The HMAC's bytes. This result is not encoded.
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws UnsupportedEncodingException
      */
     private byte[] calculateHmacSHA256(String data, byte[] key)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {

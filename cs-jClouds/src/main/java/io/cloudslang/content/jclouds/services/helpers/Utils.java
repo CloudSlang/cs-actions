@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
 import com.google.common.collect.Multimap;
-import io.cloudslang.content.jclouds.entities.*;
+import io.cloudslang.content.jclouds.entities.aws.*;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;

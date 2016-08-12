@@ -12,6 +12,8 @@ public class Inputs {
         public static final String CREDENTIAL = "credential";
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
+        public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String DELIMITER = "delimiter";
         public static final String DEBUG_MODE = "debugMode";
     }
@@ -56,12 +58,11 @@ public class Inputs {
         public static final String RESOURCE_IDS_STRING = "resourceIdsString";
         public static final String HTTP_VERB = "httpVerb";
         public static final String URI = "uri";
-        public static final String ENCODE_URI = "encodeUri";
         public static final String PAYLOAD_HASH = "payloadHash";
-        public static final String DATE = "date";
         public static final String QUERY_PARAMS = "queryParams";
         public static final String HEADERS = "headers";
         public static final String AMAZON_API = "amazonApi";
+        public static final String DATE = "date";
     }
 
     public static final class ImageInputs {
@@ -148,5 +149,12 @@ public class Inputs {
         public static final String DEVICE_NAME = "deviceName";
         public static final String FORCE = "force";
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
+    }
+
+    public static final class AWSApiInputs {
+        public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
+        public static final String DEVICE_INDEX = "deviceIndex";
+        public static final String SECURITY_TOKEN = "securityToken";
+        public static final String VERSION = "version";
     }
 }

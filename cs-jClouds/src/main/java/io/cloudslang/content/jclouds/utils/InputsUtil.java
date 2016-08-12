@@ -1,9 +1,11 @@
 package io.cloudslang.content.jclouds.utils;
 
-import io.cloudslang.content.jclouds.entities.InstanceState;
+import io.cloudslang.content.jclouds.entities.aws.InstanceState;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -12,8 +14,6 @@ import java.util.regex.Pattern;
  * 2/24/2016.
  */
 public final class InputsUtil {
-    private static final String COMMA_DELIMITER = ",";
-
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
 
@@ -21,6 +21,36 @@ public final class InputsUtil {
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
 
     private InputsUtil() {
+    }
+
+    /**
+     * Parses the headers list and creates a map of headers and header values.
+     * The headers (map keys) are trimmed of white spaces and converted to lowercase.
+     *
+     * @param headers The list of headers.
+     * @return The map of header keys and header values.
+     */
+    public static Map<String, String> getHeadersMap(String headers) {
+        if (StringUtils.isBlank(headers)) {
+            return new HashMap<>();
+        }
+
+        String headerDelimiter = "\\r?\\n";
+        String headerValuesDelimiter = Pattern.quote(Constants.Miscellaneous.COLON);
+
+        String[] headerValues = headers.split(headerDelimiter);
+        String[] values;
+
+        Map<String, String> headersMap = new HashMap<>();
+        for (String headerValue : headerValues) {
+            values = headerValue.split(headerValuesDelimiter, 2);
+            if (values.length > 1) {
+                headersMap.put(values[0].trim().toLowerCase(), values[1]);
+            } else {
+                headersMap.put(values[0].trim().toLowerCase(), Constants.Miscellaneous.EMPTY);
+            }
+        }
+        return headersMap;
     }
 
     /**
@@ -46,39 +76,27 @@ public final class InputsUtil {
                 queryParamsMap.put(paramValues[0], Constants.Miscellaneous.EMPTY);
             }
         }
-
         return queryParamsMap;
     }
 
-    /**
-     * Parses the headers list and creates a map of headers and header values.
-     * The headers (map keys) are trimmed of white spaces and converted to lowercase.
-     *
-     * @param headers The list of headers.
-     * @return The map of header keys and header values.
-     */
-    public static Map<String, String> getHeadersMap(String headers) {
-        if (StringUtils.isBlank(headers)) {
-            return new HashMap<>();
+    public static String getEndpointFromUrl(String input) throws MalformedURLException {
+        URL url = new URL(input);
+        String endpoint = url.getHost();
+        if (url.getPort() > 0) {
+            endpoint += Constants.Miscellaneous.COLON + url.getPort();
         }
+        return endpoint;
+    }
 
-        String headerDelimiter = "\\r?\\n";
-        String headerValuesDelimiter = Pattern.quote(Constants.Miscellaneous.COLON);
-
-        String[] headerValues = headers.split(headerDelimiter);
-        String[] values;
-
-        Map<String, String> headersList = new HashMap<>();
-        for (String headerValue : headerValues) {
-            values = headerValue.split(headerValuesDelimiter, 2);
-            if (values.length > 1) {
-                headersList.put(values[0].trim().toLowerCase(), values[1]);
-            } else {
-                headersList.put(values[0].trim().toLowerCase(), Constants.Miscellaneous.EMPTY);
-            }
+    public static String getParamsString(Map<String, String> paramsMap, String separator, String suffix) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
+            sb.append(entry.getKey());
+            sb.append(separator);
+            sb.append(entry.getValue());
+            sb.append(suffix);
         }
-
-        return headersList;
+        return sb.toString().substring(0, sb.toString().length() - 1);
     }
 
     public static String[] getStringsArray(String input, String condition, String delimiter) {
@@ -92,15 +110,12 @@ public final class InputsUtil {
         if (StringUtils.isBlank(input)) {
             return null;
         }
-        return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultDelimiter(delimiter)))));
+        return new HashSet<>(Arrays.asList(input.split(Pattern
+                .quote(getDefaultStringInput(delimiter, Constants.Miscellaneous.COMMA_DELIMITER)))));
     }
 
-    public static String getDefaultDelimiter(String delimiter) {
-        return StringUtils.isBlank(delimiter) ? COMMA_DELIMITER : delimiter;
-    }
-
-    public static String getAmazonRegion(String region) {
-        return StringUtils.isBlank(region) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : region;
+    public static String getDefaultStringInput(String input, String defaultValue) {
+        return StringUtils.isBlank(input) ? defaultValue : input;
     }
 
     public static int getValidInstanceStateCode(String input) {
@@ -187,7 +202,7 @@ public final class InputsUtil {
         return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
     }
 
-    private static boolean isTrueOrFalse(String input){
-        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input) ;
+    private static boolean isTrueOrFalse(String input) {
+        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
     }
 }

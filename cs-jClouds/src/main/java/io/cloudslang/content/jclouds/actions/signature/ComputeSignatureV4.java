@@ -6,7 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.jclouds.entities.AuthorizationHeader;
+import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
@@ -27,34 +27,34 @@ public class ComputeSignatureV4 {
      * For this signature type the checksum of the entire payload is computed.
      * Note: The "authorizationHeader" output's value should be added in the "Authorization" header.
      *
-     * @param endpoint    Service endpoint used to compute the signature. Ex.: "ec2.amazonaws.com", "s3.amazonaws.com"
-     *                    Default: "ec2.amazonaws.com"
-     * @param identity    ID of the secret access key associated with your Amazon AWS or IAM account.
-     * @param credential  Secret access key associated with your Amazon AWS or IAM account.
-     * @param httpVerb    Method used for the request. You need to specify this with upper case.
-     *                    Valid values: GET, DELETE, HEAD, POST, PUT
-     *                    Default: GET
-     * @param uri         request's relative URI. The URI should be from the service endpoint to the query params.
-     *                    Default: "/"
-     * @param payloadHash Payload's hash that will be included in the signature. The hashing should be computed using the
-     *                    "SHA-256" hashing algorithm and then hex encoded.
-     * @param queryParams List containing query parameters that will be appended to the URL. The names and the values must
-     *                    not be URL encoded because if they are encoded then a double encoded will occur. The separator
-     *                    between name-value pairs is "&" symbol. The query name will be separated from query value by "="
-     *                    Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;
-     * @param headers     List containing the headers to use for the request separated by new line (CRLF). The header
-     *                    name-value pair will be separated by ":". Format: Conforming with HTTP standard for headers (RFC 2616).
-     *                    Examples: Accept:text/plain
-     * @param amazonApi   Amazon API corresponding to where the request is send.
-     *                    Examples: "ec2", "s3"
-     * @param date        Date of the request. The date should be also included in the "x-amz-date" header and should be
-     *                    in the in the YYYYMMDD'T'HHMMSS'Z' format form UTC time zone.
-     *                    Example: 20150416T112043Z for April 16, 2015 11:20:43 AM UTC
-     *                    Default: The current date and time in UTC time zone
-     * @param encodeUri   Specifies if the URI should be encoded by replacing the special characters with a "%" followed
-     *                    by the ASCII hexadecimal equivalent code. The "/" character in the URI remains un-encoded.
-     *                    Valid values: "true", "false"
-     *                    Default value: "false"
+     * @param endpoint      Service endpoint used to compute the signature. Ex.: "ec2.amazonaws.com", "s3.amazonaws.com"
+     *                      Default: "ec2.amazonaws.com"
+     * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
+     * @param credential    Secret access key associated with your Amazon AWS or IAM account.
+     * @param amazonApi     Amazon API corresponding to where the request is send.
+     *                      Examples: "ec2", "s3"
+     * @param uri           request's relative URI. The URI should be from the service endpoint to the query params.
+     *                      Default: "/"
+     * @param httpVerb      Method used for the request. You need to specify this with upper case.
+     *                      Valid values: GET, DELETE, HEAD, POST, PUT
+     *                      Default: GET
+     * @param payloadHash   Payload's hash that will be included in the signature. The hashing should be computed using
+     *                      the "SHA-256" hashing algorithm and then hex encoded.
+     * @param securityToken URI-encoded session token. The string you received from AWS STS when you obtained temporary
+     *                      security credentials.
+     * @param date          Date of the request. The date should be also included in the "x-amz-date" header and should
+     *                      be in the in the YYYYMMDD'T'HHMMSS'Z' format form UTC time zone.
+     *                      Example: 20150416T112043Z for April 16, 2015 11:20:43 AM UTC
+     *                      Default: The current date and time in UTC time zone
+     * @param headers       String containing the headers to use for the request separated by new line (CRLF). The header
+     *                      name-value pair will be separated by ":".
+     *                      Format: Conforming with HTTP standard for headers (RFC 2616)
+     *                      Examples: Accept:text/plain
+     * @param queryParams   String containing query parameters that will be appended to the URL. The names and the values
+     *                      must not be URL encoded because if they are encoded then a double encoded will occur. The
+     *                      separator between name-value pairs is "&" symbol. The query name will be separated from query
+     *                      value by "="
+     *                      Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;
      * @return A map, with strings as keys and values, that contains: outcome of the action, returnCode of the operation
      * or failure message, the exception if there is one, signature value and authorization header value
      */
@@ -77,22 +77,22 @@ public class ComputeSignatureV4 {
                                                 @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true)
                                                         String credential,
 
-                                                @Param(value = Inputs.CustomInputs.HTTP_VERB) String httpVerb,
-                                                @Param(value = Inputs.CustomInputs.URI) String uri,
-                                                @Param(value = Inputs.CustomInputs.PAYLOAD_HASH) String payloadHash,
-                                                @Param(value = Inputs.CustomInputs.QUERY_PARAMS) String queryParams,
-                                                @Param(value = Inputs.CustomInputs.HEADERS) String headers,
                                                 @Param(value = Inputs.CustomInputs.AMAZON_API) String amazonApi,
+                                                @Param(value = Inputs.CustomInputs.URI) String uri,
+                                                @Param(value = Inputs.CustomInputs.HTTP_VERB) String httpVerb,
+                                                @Param(value = Inputs.CustomInputs.PAYLOAD_HASH) String payloadHash,
                                                 @Param(value = Inputs.CustomInputs.DATE) String date,
-                                                @Param(value = Inputs.CustomInputs.ENCODE_URI) String encodeUri) {
+                                                @Param(value = Inputs.CustomInputs.HEADERS) String headers,
+                                                @Param(value = Inputs.CustomInputs.QUERY_PARAMS) String queryParams,
 
-        Map<String, String> queryParamsMap = InputsUtil.getQueryParamsMap(queryParams);
+                                                @Param(value = Inputs.AWSApiInputs.SECURITY_TOKEN) String securityToken) {
+
         Map<String, String> headersMap = InputsUtil.getHeadersMap(headers);
+        Map<String, String> queryParamsMap = InputsUtil.getQueryParamsMap(queryParams);
 
         try {
-            AuthorizationHeader authorizationHeader = new AmazonSignatureService()
-                    .computeSignatureAuthorization(httpVerb, uri, payloadHash, queryParamsMap, headersMap, amazonApi, endpoint,
-                            identity, credential, date, Boolean.parseBoolean(encodeUri));
+            AuthorizationHeader authorizationHeader = new AmazonSignatureService().signRequestHeaders(endpoint, identity,
+                    credential, amazonApi, uri, httpVerb, payloadHash, securityToken, date, headersMap, queryParamsMap);
 
             return OutputsUtil.populateSignatureResultsMap(authorizationHeader.getSignature(),
                     authorizationHeader.getSignature(), authorizationHeader.getAuthorizationHeader());

@@ -7,10 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Comparator;
 import java.util.Map;
 
-/**
- * Created by Mihai Tusa.
- * 8/8/2016.
- */
 class UTF8StringComparator implements Comparator<Map.Entry<String, String>>, Serializable {
     public int compare(Map.Entry<String, String> e1, Map.Entry<String, String> e2) {
         try {

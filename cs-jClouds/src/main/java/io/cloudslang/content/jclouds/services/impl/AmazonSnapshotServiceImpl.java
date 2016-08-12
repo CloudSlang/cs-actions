@@ -47,7 +47,7 @@ public class AmazonSnapshotServiceImpl extends JCloudsService implements Snapsho
     }
 
     void lazyInit(String region, boolean isDebugMode) {
-        this.region = InputsUtil.getAmazonRegion(region);
+        this.region = InputsUtil.getDefaultStringInput(region, Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
         init(isDebugMode);
     }
 

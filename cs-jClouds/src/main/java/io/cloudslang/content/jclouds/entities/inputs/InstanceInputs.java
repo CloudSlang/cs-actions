@@ -1,8 +1,8 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.InstanceState;
-import io.cloudslang.content.jclouds.entities.MonitoringState;
-import io.cloudslang.content.jclouds.entities.Tenancy;
+import io.cloudslang.content.jclouds.entities.aws.InstanceState;
+import io.cloudslang.content.jclouds.entities.aws.MonitoringState;
+import io.cloudslang.content.jclouds.entities.aws.Tenancy;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
@@ -47,7 +47,7 @@ public class InstanceInputs {
     private long checkStateTimeout;
     private long polingInterval;
 
-    public InstanceInputs(InstanceInputs.InstanceInputsBuilder builder) {
+    private InstanceInputs(InstanceInputs.InstanceInputsBuilder builder) {
         this.customInputs = builder.customInputs;
         this.networkInputs = builder.networkInputs;
 

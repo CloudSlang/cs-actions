@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.Providers;
+import io.cloudslang.content.jclouds.entities.aws.Providers;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,7 +22,7 @@ public class CommonInputs {
 
     private boolean debugMode;
 
-    public CommonInputs(CommonInputsBuilder builder) {
+    private CommonInputs(CommonInputsBuilder builder) {
         this.provider = builder.provider;
         this.endpoint = builder.endpoint;
         this.identity = builder.identity;
@@ -113,7 +114,7 @@ public class CommonInputs {
         }
 
         public CommonInputsBuilder withDelimiter(String inputValue) {
-            delimiter = InputsUtil.getDefaultDelimiter(inputValue);
+            delimiter = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.COMMA_DELIMITER);
             return this;
         }
 

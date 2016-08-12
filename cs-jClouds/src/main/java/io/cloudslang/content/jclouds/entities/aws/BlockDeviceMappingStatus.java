@@ -1,18 +1,19 @@
-package io.cloudslang.content.jclouds.entities;
+package io.cloudslang.content.jclouds.entities.aws;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
- * 6/6/2016.
+ * 6/3/2016.
  */
-public enum Tenancy {
-    DEDICATED,
-    DEFAULT,
-    HOST;
+public enum BlockDeviceMappingStatus {
+    ATTACHING,
+    ATTACHED,
+    DETACHING,
+    DETACHED;
 
-    public static String getValue(String input) throws Exception {
+    public static String getValue(String input) throws RuntimeException {
         if (StringUtils.isBlank(input)) {
             return Constants.Miscellaneous.NOT_RELEVANT;
         }
@@ -20,7 +21,7 @@ public enum Tenancy {
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized tenancy value: [" + input + "]. Valid values are: dedicated, default, host.");
+            throw new RuntimeException("Invalid status value: [" + input + "]. Valid values: attaching, attached, detaching, detached.");
         }
     }
 }
