@@ -89,7 +89,9 @@ public class AmazonSignatureService {
     private Map<String, String> getRequestHeadersMap(Map<String, String> requestHeaders, String requestEndpoint,
                                                      String securityToken, String amazonDate) {
         requestHeaders = requestHeaders == null ? new HashMap<String, String>() : requestHeaders;
-        requestHeaders.put(X_AMZ_DATE, amazonDate);
+        if(!(requestHeaders.containsKey(X_AMZ_DATE.toLowerCase()))){
+            requestHeaders.put(X_AMZ_DATE, amazonDate);
+        }
 
         if (!(requestHeaders.containsKey(HOST.toLowerCase()) || requestHeaders.containsKey(HOST))) {
             requestHeaders.put(HOST.toLowerCase(), requestEndpoint); // At least the host header must be signed.
