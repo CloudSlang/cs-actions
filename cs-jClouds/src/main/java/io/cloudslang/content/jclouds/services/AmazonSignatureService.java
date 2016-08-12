@@ -89,7 +89,7 @@ public class AmazonSignatureService {
     private Map<String, String> getRequestHeadersMap(Map<String, String> requestHeaders, String requestEndpoint,
                                                      String securityToken, String amazonDate) {
         requestHeaders = requestHeaders == null ? new HashMap<String, String>() : requestHeaders;
-        if(!(requestHeaders.containsKey(X_AMZ_DATE.toLowerCase()))){
+        if(!(requestHeaders.containsKey(X_AMZ_DATE.toLowerCase()) || requestHeaders.containsKey(X_AMZ_DATE))){
             requestHeaders.put(X_AMZ_DATE, amazonDate);
         }
 
