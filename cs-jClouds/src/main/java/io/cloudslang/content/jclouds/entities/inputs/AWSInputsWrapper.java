@@ -23,6 +23,9 @@ public class AWSInputsWrapper {
     private String networkInterfaceId;
     private String deviceIndex;
     private String securityToken;
+    private String attachmentId;
+
+    private boolean forceDetach;
 
     private AWSInputsWrapper(AWSInputsWrapperBuilder builder) {
         this.httpClientInputs = builder.httpClientInputs;
@@ -38,6 +41,9 @@ public class AWSInputsWrapper {
         this.networkInterfaceId = builder.networkInterfaceId;
         this.deviceIndex = builder.deviceIndex;
         this.securityToken = builder.securityToken;
+        this.attachmentId = builder.attachmentId;
+
+        this.forceDetach = builder.forceDetach;
     }
 
     public HttpClientInputs getHttpClientInputs() {
@@ -88,6 +94,14 @@ public class AWSInputsWrapper {
         return securityToken;
     }
 
+    public String getAttachmentId() {
+        return attachmentId;
+    }
+
+    public boolean isForceDetach() {
+        return forceDetach;
+    }
+
     public static class AWSInputsWrapperBuilder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
@@ -102,6 +116,9 @@ public class AWSInputsWrapper {
         private String networkInterfaceId;
         private String deviceIndex;
         private String securityToken;
+        private String attachmentId;
+
+        private boolean forceDetach;
 
         public AWSInputsWrapper build() {
             return new AWSInputsWrapper(this);
@@ -165,6 +182,16 @@ public class AWSInputsWrapper {
 
         public AWSInputsWrapperBuilder withSecurityToken(String inputValue) {
             securityToken = inputValue;
+            return this;
+        }
+
+        public AWSInputsWrapperBuilder withForceDetach(String inputValue) {
+            forceDetach = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public AWSInputsWrapperBuilder withAttachmentId(String inputValue) {
+            attachmentId = inputValue;
             return this;
         }
     }

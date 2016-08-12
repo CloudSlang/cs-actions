@@ -12,4 +12,6 @@ import java.util.Map;
  */
 public interface AWSApiNetworkService {
     Map<String, String> attachNetworkInterface(AWSInputsWrapper inputs) throws SignatureException, MalformedURLException;
+
+    Map<String, String> detachNetworkInterface(AWSInputsWrapper inputs) throws MalformedURLException, SignatureException;
 }

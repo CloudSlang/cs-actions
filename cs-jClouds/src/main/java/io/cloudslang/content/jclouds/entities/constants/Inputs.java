@@ -152,8 +152,10 @@ public class Inputs {
     }
 
     public static final class AWSApiInputs {
+        public static final String ATTACHMENT_ID = "attachmentId";
         public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
         public static final String DEVICE_INDEX = "deviceIndex";
+        public static final String FORCE_DETACH = "forceDetach";
         public static final String SECURITY_TOKEN = "securityToken";
         public static final String VERSION = "version";
     }
