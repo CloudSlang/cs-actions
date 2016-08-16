@@ -1,6 +1,6 @@
 package io.cloudslang.content.xml.actions;
 
-import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -150,7 +150,7 @@ public class XpathQueryTest {
 
         Map<String, String> result = select.execute(path, XML_PATH, xPathQuery, queryType, null, "false");
 
-        assertEquals(Constants.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
+        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
         assertEquals(Constants.ReturnCodes.FAILURE, result.get("returnCode"));
     }
 }

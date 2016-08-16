@@ -1,7 +1,5 @@
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.xml.entities.Constants;
-
 import java.util.Map;
 
 /**
@@ -11,11 +9,11 @@ public class ResultUtils {
     private ResultUtils() {}
 
     public static void populateFailureResult(Map<String, String> result, String errorMessage) {
-        populateResult(result, Constants.FAILURE, Constants.EMPTY_STRING, Constants.EMPTY_STRING, Constants.Outputs.RESULT_XML, Constants.ReturnCodes.FAILURE, errorMessage);
+        populateResult(result, Constants.ResponseNames.FAILURE, Constants.EMPTY_STRING, Constants.EMPTY_STRING, Constants.Outputs.RESULT_XML, Constants.ReturnCodes.FAILURE, errorMessage);
     }
 
     public static void populateSuccessResult(Map<String, String> result, String returnResult, String resultXml) {
-        populateResult(result, Constants.SUCCESS, returnResult, resultXml, Constants.Outputs.RESULT_XML, Constants.ReturnCodes.SUCCESS, Constants.EMPTY_STRING);
+        populateResult(result, Constants.ResponseNames.SUCCESS, returnResult, resultXml, Constants.Outputs.RESULT_XML, Constants.ReturnCodes.SUCCESS, Constants.EMPTY_STRING);
     }
 
     public static void populateValueResult(Map<String, String> result, String resultText, String returnResult, String selectedValue, String returnCode) {
