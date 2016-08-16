@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>SSH java actions</description>
-    <url>https://github.com/CloudSlang/score-actions</url>
+    <url>https://github.com/CloudSlang/cs-actions</url>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -22,9 +22,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:https://CloudSlang/score-actions.git</connection>
-        <developerConnection>scm:git:git@github.com:CloudSlang/score-actions.git</developerConnection>
-        <url>https://github.com/CloudSlang/score-actions.git</url>
+        <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
+        <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
     <developers>
