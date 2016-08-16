@@ -87,7 +87,7 @@ previously functioning. Some common terms that you may encounter when reading ab
   - Test suite: a grouping of test classes that are run together.
 
 In general, unit tests should have the following characteristics:
-  - They test a small bit (or �unit�) of code. If the tests test �too much,� then they become less useful, as it will not
+  - They test a small bit (or "unit") of code. If the tests test "too much" then they become less useful, as it will not
   be clear which bit of code is causing the test to fail;
   - They do not depend on external resources such as databases. The reason for this is so that the tests can be run in a
   variety of environments and so that multiple concurrent executions of the unit tests do not interfere with each other;
