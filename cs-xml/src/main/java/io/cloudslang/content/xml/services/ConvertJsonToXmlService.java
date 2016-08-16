@@ -28,13 +28,13 @@ public class ConvertJsonToXmlService {
         jsonArrayItemNames = new HashMap<>();
     }
 
-    public String convertToXmlString(ConvertJsonToXmlInputs inputs, Boolean prettyPrint, Boolean showXmlDeclaration) {
+    public String convertToXmlString(ConvertJsonToXmlInputs inputs) {
         if (StringUtils.isBlank(inputs.getJson())) {
             return EMPTY_STRING;
         }
         XMLOutputter xmlWriter = new XMLOutputter();
-        xmlWriter.setFormat(getFormat(prettyPrint, showXmlDeclaration));
-        if (showXmlDeclaration) {
+        xmlWriter.setFormat(getFormat(inputs.getPrettyPrint(), inputs.getShowXmlDeclaration()));
+        if (inputs.getShowXmlDeclaration()) {
             return xmlWriter.outputString(convertJsonStringToXmlDocument(inputs.getJson(), inputs.getRootTagName()));
         }
         return getXmlFromElements(convertJsonStringToXmlElements(inputs.getJson(), inputs.getRootTagName()), xmlWriter);

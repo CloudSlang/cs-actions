@@ -12,9 +12,9 @@ import static io.cloudslang.content.xml.utils.Constants.EMPTY_STRING;
 public class ConvertXmlToJsonInputs {
     private String xml;
     private String textElementsName;
-    private String includeRootElement;
-    private String includeAttributes;
-    private String prettyPrint;
+    private Boolean includeRootElement;
+    private Boolean includeAttributes;
+    private Boolean prettyPrint;
     private String parsingFeatures;
 
     public ConvertXmlToJsonInputs(ConvertXmlToJsonInputsBuilder builder) {
@@ -34,15 +34,15 @@ public class ConvertXmlToJsonInputs {
         return textElementsName;
     }
 
-    public String getIncludeRootElement() {
+    public Boolean getIncludeRootElement() {
         return includeRootElement;
     }
 
-    public String getIncludeAttributes() {
+    public Boolean getIncludeAttributes() {
         return includeAttributes;
     }
 
-    public String getPrettyPrint() {
+    public Boolean getPrettyPrint() {
         return prettyPrint;
     }
 
@@ -53,9 +53,9 @@ public class ConvertXmlToJsonInputs {
     public static class ConvertXmlToJsonInputsBuilder {
         private String xml;
         private String textElementsName;
-        private String includeRootElement;
-        private String includeAttributes;
-        private String prettyPrint;
+        private Boolean includeRootElement;
+        private Boolean includeAttributes;
+        private Boolean prettyPrint;
         private String parsingFeatures;
 
         public ConvertXmlToJsonInputs build() {
@@ -72,18 +72,18 @@ public class ConvertXmlToJsonInputs {
             return this;
         }
 
-        public ConvertXmlToJsonInputsBuilder withIncludeRootElement(String includeRootElement) {
-            this.includeRootElement = StringUtils.defaultIfEmpty(includeRootElement, BooleanNames.TRUE);
+        public ConvertXmlToJsonInputsBuilder withIncludeRootElement(Boolean includeRootElement) {
+            this.includeRootElement = includeRootElement;
             return this;
         }
 
-        public ConvertXmlToJsonInputsBuilder withIncludeAttributes(String includeAttributes) {
-            this.includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);
+        public ConvertXmlToJsonInputsBuilder withIncludeAttributes(Boolean includeAttributes) {
+            this.includeAttributes = includeAttributes;
             return this;
         }
 
-        public ConvertXmlToJsonInputsBuilder withPrettyPrint(String prettyPrint) {
-            this.prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
+        public ConvertXmlToJsonInputsBuilder withPrettyPrint(Boolean prettyPrint) {
+            this.prettyPrint = prettyPrint;
             return this;
         }
 

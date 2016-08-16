@@ -7,6 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
 import io.cloudslang.content.xml.services.ConvertJsonToXmlService;
 import io.cloudslang.content.xml.utils.ValidateUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,27 +65,25 @@ public class ConvertJsonToXml {
 
         Map<String, String> result = new HashMap<>();
         try {
+            showXmlDeclaration = StringUtils.defaultIfEmpty(showXmlDeclaration, BooleanNames.TRUE);
+            prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
+            ValidateUtils.validateInputs(prettyPrint, showXmlDeclaration);
+
             ConvertJsonToXmlInputs inputs = new ConvertJsonToXmlInputs.ConvertJsonToXmlInputsBuilder()
                     .withJson(json)
-                    .withPrettyPrint(prettyPrint)
-                    .withShowXmlDeclaration(showXmlDeclaration)
+                    .withPrettyPrint(Boolean.parseBoolean(prettyPrint))
+                    .withShowXmlDeclaration(Boolean.parseBoolean(showXmlDeclaration))
                     .withRootTagName(rootTagName)
                     .withDefaultJsonArrayItemName(defaultJsonArrayItemName)
                     .withNamespaces(namespacesUris, namespacesPrefixes, delimiter)
                     .withJsonArraysNames(jsonArraysNames, jsonArraysItemNames, delimiter)
                     .build();
 
-            ValidateUtils.validateInputs(inputs);
-
-            Boolean prettyPrintBoolean = Boolean.parseBoolean(inputs.getPrettyPrint());
-            Boolean showXmlDeclarationBoolean = Boolean.parseBoolean(inputs.getShowXmlDeclaration());
-
-            // run the converter
             ConvertJsonToXmlService converter = new ConvertJsonToXmlService();
             converter.setNamespaces(inputs.getNamespaces());
             converter.setJsonArrayItemNames(inputs.getArraysItemNames());
             converter.setJsonArrayItemName(inputs.getDefaultJsonArrayItemName());
-            String xml = converter.convertToXmlString(inputs, prettyPrintBoolean, showXmlDeclarationBoolean);
+            String xml = converter.convertToXmlString(inputs);
 
             result.put(Outputs.RETURN_RESULT, xml);
             result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);

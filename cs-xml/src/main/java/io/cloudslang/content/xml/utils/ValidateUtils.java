@@ -48,15 +48,15 @@ public class ValidateUtils {
         }
     }
 
-    public static void validateInputs(ConvertJsonToXmlInputs inputs) throws Exception {
-        InputUtils.validateBoolean(inputs.getPrettyPrint());
-        InputUtils.validateBoolean(inputs.getShowXmlDeclaration());
+    public static void validateInputs(String prettyPrint, String showXmlDeclaration) throws Exception {
+        InputUtils.validateBoolean(prettyPrint);
+        InputUtils.validateBoolean(showXmlDeclaration);
     }
 
-    public static void validateInputs(ConvertXmlToJsonInputs inputs) throws Exception {
-        InputUtils.validateBoolean(inputs.getIncludeRootElement());
-        InputUtils.validateBoolean(inputs.getIncludeAttributes());
-        InputUtils.validateBoolean(inputs.getPrettyPrint());
+    public static void validateInputs(String includeRootElement, String includeAttributes, String prettyPrint) throws Exception {
+        InputUtils.validateBoolean(includeRootElement);
+        InputUtils.validateBoolean(includeAttributes);
+        InputUtils.validateBoolean(prettyPrint);
     }
 
 }

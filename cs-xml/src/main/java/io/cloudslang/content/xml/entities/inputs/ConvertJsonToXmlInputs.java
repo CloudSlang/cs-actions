@@ -14,8 +14,8 @@ import static io.cloudslang.content.xml.utils.Constants.EMPTY_STRING;
  */
 public class ConvertJsonToXmlInputs {
     private String json;
-    private String prettyPrint;
-    private String showXmlDeclaration;
+    private Boolean prettyPrint;
+    private Boolean showXmlDeclaration;
     private String rootTagName;
     private String defaultJsonArrayItemName;
     private Map<String, String> namespaces;
@@ -35,11 +35,11 @@ public class ConvertJsonToXmlInputs {
         return json;
     }
 
-    public String getPrettyPrint() {
+    public Boolean getPrettyPrint() {
         return prettyPrint;
     }
 
-    public String getShowXmlDeclaration() {
+    public Boolean getShowXmlDeclaration() {
         return showXmlDeclaration;
     }
 
@@ -61,8 +61,8 @@ public class ConvertJsonToXmlInputs {
 
     public static class ConvertJsonToXmlInputsBuilder {
         private String json;
-        private String prettyPrint;
-        private String showXmlDeclaration;
+        private Boolean prettyPrint;
+        private Boolean showXmlDeclaration;
         private String rootTagName;
         private String defaultJsonArrayItemName;
         private Map<String, String> namespaces;
@@ -77,13 +77,13 @@ public class ConvertJsonToXmlInputs {
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withPrettyPrint(String prettyPrint) {
-            this.prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
+        public ConvertJsonToXmlInputsBuilder withPrettyPrint(Boolean prettyPrint) {
+            this.prettyPrint = prettyPrint;
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withShowXmlDeclaration(String showXmlDeclaration) {
-            this.showXmlDeclaration = StringUtils.defaultIfEmpty(showXmlDeclaration, BooleanNames.FALSE);
+        public ConvertJsonToXmlInputsBuilder withShowXmlDeclaration(Boolean showXmlDeclaration) {
+            this.showXmlDeclaration = showXmlDeclaration;
             return this;
         }
 

@@ -71,29 +71,22 @@ public class ConvertXmlToJson {
 
         Map<String, String> result = new HashMap<>();
         try {
+            includeRootElement = StringUtils.defaultIfEmpty(includeRootElement, BooleanNames.TRUE);
+            includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);
+            prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
+            ValidateUtils.validateInputs(includeRootElement, includeAttributes, prettyPrint);
 
             ConvertXmlToJsonInputs inputs = new ConvertXmlToJsonInputs.ConvertXmlToJsonInputsBuilder()
                     .withXml(xml)
                     .withTextElementsName(textElementsName)
-                    .withIncludeRootElement(includeRootElement)
-                    .withIncludeAttributes(includeAttributes)
-                    .withPrettyPrint(prettyPrint)
+                    .withIncludeRootElement(Boolean.parseBoolean(includeRootElement))
+                    .withIncludeAttributes(Boolean.parseBoolean(includeAttributes))
+                    .withPrettyPrint(Boolean.parseBoolean(prettyPrint))
                     .withParsingFeatures(parsingFeatures)
                     .build();
-            xml = StringUtils.defaultIfBlank(xml, EMPTY_STRING);
-            textElementsName = StringUtils.defaultIfEmpty(textElementsName, Defaults.DEFAULT_TEXT_ELEMENTS_NAME);
-            includeRootElement = StringUtils.defaultIfEmpty(includeRootElement, BooleanNames.TRUE);
-            includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);
-            prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
-
-            ValidateUtils.validateInputs(inputs);
-
-            Boolean includeRootBoolean = Boolean.parseBoolean(inputs.getIncludeRootElement());
-            Boolean includeAttributesBoolean = Boolean.parseBoolean(inputs.getIncludeAttributes());
-            Boolean prettyPrintBoolean = Boolean.parseBoolean(inputs.getPrettyPrint());
 
             ConvertXmlToJsonService converter = new ConvertXmlToJsonService();
-            String json = converter.convertToJsonString(inputs, includeAttributesBoolean, prettyPrintBoolean, includeRootBoolean);
+            String json = converter.convertToJsonString(inputs);
 
             result.put(Outputs.NAMESPACES_PREFIXES, converter.getNamespacesPrefixes());
             result.put(Outputs.NAMESPACES_URIS, converter.getNamespacesUris());

@@ -29,10 +29,7 @@ public class ConvertXmlToJsonService {
         namespacesUris = new StringBuilder();
     }
 
-    public String convertToJsonString(ConvertXmlToJsonInputs inputs,
-                                      Boolean includeAttributes,
-                                      Boolean prettyPrint,
-                                      Boolean addRootElement) throws JDOMException, IOException, SAXException {
+    public String convertToJsonString(ConvertXmlToJsonInputs inputs) throws JDOMException, IOException, SAXException {
         if (StringUtils.isBlank(inputs.getXml())) {
             return EMPTY_STRING;
         }
@@ -42,10 +39,10 @@ public class ConvertXmlToJsonService {
         Document document = builder.build(inputSource);
         Element root = document.getRootElement();
         List<Element> xmlElements = Collections.singletonList(root);
-        JsonObject jsonObject = convertXmlElementsToJsonObject(xmlElements, includeAttributes, inputs.getTextElementsName());
-        jsonObject = getJsonObjectWithRootElement(root, jsonObject, addRootElement);
+        JsonObject jsonObject = convertXmlElementsToJsonObject(xmlElements, inputs.getIncludeAttributes(), inputs.getTextElementsName());
+        jsonObject = getJsonObjectWithRootElement(root, jsonObject, inputs.getIncludeRootElement());
 
-        return prettyPrint ? prettyPrint(jsonObject) : jsonObject.toString();
+        return inputs.getPrettyPrint() ? prettyPrint(jsonObject) : jsonObject.toString();
     }
 
     private JsonObject getJsonObjectWithRootElement(Element rootElement, JsonObject jsonObject, Boolean addRootElement) {
