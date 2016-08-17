@@ -36,22 +36,22 @@ public class AWSApiNetworkServiceHelper {
                     .getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL, Constants.Miscellaneous.AMPERSAND);
             inputs.getHttpClientInputs().setQueryParams(queryParamsString);
         } else {
-            queryParamsMap = InputsUtil.getQueryParamsMap(inputs.getHttpClientInputs().getQueryParams());
+            queryParamsMap = InputsUtil.getQueryParamsMap(new HashMap<String, String>(), inputs.getHttpClientInputs().getQueryParams());
         }
         return queryParamsMap;
     }
 
-    public Map<String, String> getNullOrHeadersMap(AWSInputsWrapper inputs) {
+    public Map<String, String> getNullOrHeadersMap(Map<String, String> headersMap, AWSInputsWrapper inputs) {
+        if (headersMap == null || headersMap.isEmpty()) {
+            headersMap = new HashMap<>();
+        }
         return StringUtils.isBlank(inputs.getHttpClientInputs().getHeaders()) ?
-                null : InputsUtil.getHeadersMap(inputs.getHttpClientInputs().getHeaders());
+                headersMap : InputsUtil.getHeadersMap(headersMap, inputs.getHttpClientInputs().getHeaders());
     }
 
     public void setQueryApiCallHeaders(AWSInputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
             throws SignatureException, MalformedURLException {
-        AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs.getServiceEndpoint(),
-                inputs.getCommonInputs().getIdentity(), inputs.getCommonInputs().getCredential(), inputs.getApiService(),
-                inputs.getRequestUri(), inputs.getHttpClientInputs().getMethod(), inputs.getRequestPayload(),
-                inputs.getSecurityToken(), inputs.getDate(), headersMap, queryParamsMap);
+        AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
 
         inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
     }

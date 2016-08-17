@@ -10,11 +10,14 @@ import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
+import io.cloudslang.content.jclouds.entities.inputs.AWSInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -74,8 +77,7 @@ public class ComputeSignatureV4 {
             })
     public Map<String, String> computeSignature(@Param(value = Inputs.CommonInputs.ENDPOINT) String endpoint,
                                                 @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
-                                                @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true)
-                                                        String credential,
+                                                @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
 
                                                 @Param(value = Inputs.CustomInputs.AMAZON_API) String amazonApi,
                                                 @Param(value = Inputs.CustomInputs.URI) String uri,
@@ -86,16 +88,31 @@ public class ComputeSignatureV4 {
                                                 @Param(value = Inputs.CustomInputs.QUERY_PARAMS) String queryParams,
 
                                                 @Param(value = Inputs.AWSApiInputs.SECURITY_TOKEN) String securityToken) {
-
-        Map<String, String> headersMap = InputsUtil.getHeadersMap(headers);
-        Map<String, String> queryParamsMap = InputsUtil.getQueryParamsMap(queryParams);
-
         try {
-            AuthorizationHeader authorizationHeader = new AmazonSignatureService().signRequestHeaders(endpoint, identity,
-                    credential, amazonApi, uri, httpVerb, payloadHash, securityToken, date, headersMap, queryParamsMap);
+            Map<String, String> headersMap = InputsUtil.getHeadersMap(new HashMap<String, String>(), headers);
+            Map<String, String> queryParamsMap = InputsUtil.getQueryParamsMap(new HashMap<String, String>(), queryParams);
 
-            return OutputsUtil.populateSignatureResultsMap(authorizationHeader.getSignature(),
-                    authorizationHeader.getSignature(), authorizationHeader.getAuthorizationHeader());
+            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+                    .withEndpoint(endpoint)
+                    .withIdentity(identity)
+                    .withCredential(credential)
+                    .build();
+
+            AWSInputsWrapper wrapper = new AWSInputsWrapper.AWSInputsWrapperBuilder()
+                    .withCommonInputs(commonInputs)
+                    .withApiService(amazonApi)
+                    .withRequestUri(uri)
+                    .withHttpVerb(httpVerb)
+                    .withRequestPayload(payloadHash)
+                    .withDate(date)
+                    .withHeaders(headers)
+                    .withQueryParams(queryParams)
+                    .withSecurityToken(securityToken)
+                    .build();
+
+            AuthorizationHeader authorizationHeader = new AmazonSignatureService().signRequestHeaders(wrapper, headersMap, queryParamsMap);
+
+            return OutputsUtil.populateSignatureResultsMap(authorizationHeader);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

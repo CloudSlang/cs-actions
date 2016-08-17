@@ -1,7 +1,8 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.jclouds.entities.aws.AmazonApiService;
+import io.cloudslang.content.jclouds.entities.aws.AmazonApiServiceType;
+import io.cloudslang.content.jclouds.entities.aws.HttpClientMethod;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
@@ -24,6 +25,9 @@ public class AWSInputsWrapper {
     private String deviceIndex;
     private String securityToken;
     private String attachmentId;
+    private String httpVerb;
+    private String headers;
+    private String queryParams;
 
     private boolean forceDetach;
 
@@ -42,6 +46,9 @@ public class AWSInputsWrapper {
         this.deviceIndex = builder.deviceIndex;
         this.securityToken = builder.securityToken;
         this.attachmentId = builder.attachmentId;
+        this.httpVerb = builder.httpVerb;
+        this.headers = builder.headers;
+        this.queryParams = builder.queryParams;
 
         this.forceDetach = builder.forceDetach;
     }
@@ -98,6 +105,18 @@ public class AWSInputsWrapper {
         return attachmentId;
     }
 
+    public String getHttpVerb() {
+        return httpVerb;
+    }
+
+    public String getHeaders() {
+        return headers;
+    }
+
+    public String getQueryParams() {
+        return queryParams;
+    }
+
     public boolean isForceDetach() {
         return forceDetach;
     }
@@ -117,6 +136,9 @@ public class AWSInputsWrapper {
         private String deviceIndex;
         private String securityToken;
         private String attachmentId;
+        private String httpVerb;
+        private String headers;
+        private String queryParams;
 
         private boolean forceDetach;
 
@@ -140,13 +162,13 @@ public class AWSInputsWrapper {
         }
 
         public AWSInputsWrapperBuilder withServiceEndpoint(String inputValue) {
-            serviceEndpoint = AmazonApiService.getValue(inputValue) +
+            serviceEndpoint = AmazonApiServiceType.getValue(inputValue) +
                     Constants.Miscellaneous.DOT + Constants.AWSParams.AMAZON_HOSTNAME;
             return this;
         }
 
         public AWSInputsWrapperBuilder withApiService(String inputValue) {
-            apiService = AmazonApiService.getValue(inputValue);
+            apiService = AmazonApiServiceType.getValue(inputValue);
             return this;
         }
 
@@ -185,13 +207,28 @@ public class AWSInputsWrapper {
             return this;
         }
 
-        public AWSInputsWrapperBuilder withForceDetach(String inputValue) {
-            forceDetach = Boolean.parseBoolean(inputValue);
+        public AWSInputsWrapperBuilder withAttachmentId(String inputValue) {
+            attachmentId = inputValue;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withAttachmentId(String inputValue) {
-            attachmentId = inputValue;
+        public AWSInputsWrapperBuilder withHttpVerb(String inputValue) {
+            httpVerb = HttpClientMethod.getValue(inputValue);
+            return this;
+        }
+
+        public AWSInputsWrapperBuilder withHeaders(String inputValue) {
+            headers = inputValue;
+            return this;
+        }
+
+        public AWSInputsWrapperBuilder withQueryParams(String inputValue) {
+            queryParams = inputValue;
+            return this;
+        }
+
+        public AWSInputsWrapperBuilder withForceDetach(String inputValue) {
+            forceDetach = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

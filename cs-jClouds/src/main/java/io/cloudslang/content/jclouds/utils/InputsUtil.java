@@ -6,7 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -30,18 +33,13 @@ public final class InputsUtil {
      * @param headers The list of headers.
      * @return The map of header keys and header values.
      */
-    public static Map<String, String> getHeadersMap(String headers) {
-        if (StringUtils.isBlank(headers)) {
-            return new HashMap<>();
-        }
-
+    public static Map<String, String> getHeadersMap(Map<String, String> headersMap, String headers) {
         String headerDelimiter = "\\r?\\n";
         String headerValuesDelimiter = Pattern.quote(Constants.Miscellaneous.COLON);
 
         String[] headerValues = headers.split(headerDelimiter);
         String[] values;
 
-        Map<String, String> headersMap = new HashMap<>();
         for (String headerValue : headerValues) {
             values = headerValue.split(headerValuesDelimiter, 2);
             if (values.length > 1) {
@@ -50,6 +48,7 @@ public final class InputsUtil {
                 headersMap.put(values[0].trim().toLowerCase(), Constants.Miscellaneous.EMPTY);
             }
         }
+
         return headersMap;
     }
 
@@ -59,15 +58,10 @@ public final class InputsUtil {
      * @param queryParams The list of query params.
      * @return The map of query param keys and query params values.
      */
-    public static Map<String, String> getQueryParamsMap(String queryParams) {
-        if (StringUtils.isBlank(queryParams)) {
-            return new HashMap<>();
-        }
-
+    public static Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, String queryParams) {
         String[] params = queryParams.split(Constants.Miscellaneous.AMPERSAND);
         String[] paramValues;
 
-        Map<String, String> queryParamsMap = new HashMap<>();
         for (String param : params) {
             paramValues = param.split(Constants.Miscellaneous.EQUAL, 2);
             if (paramValues.length > 1) {
@@ -76,6 +70,7 @@ public final class InputsUtil {
                 queryParamsMap.put(paramValues[0], Constants.Miscellaneous.EMPTY);
             }
         }
+
         return queryParamsMap;
     }
 

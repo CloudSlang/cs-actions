@@ -34,7 +34,10 @@ public class AWSSignatureHelper {
         for (Map.Entry<String, String> entry : sortedList) {
             queryString.append(entryToQuery(entry));
         }
-        if (queryString.length() > 0) queryString.deleteCharAt(queryString.length() - 1);   //last &
+
+        if (queryString.length() > 0) {
+            queryString.deleteCharAt(queryString.length() - 1);   //removing last '&'
+        }
 
         return queryString.toString();
     }
@@ -81,8 +84,9 @@ public class AWSSignatureHelper {
 
         StringBuilder signedHeaderString = new StringBuilder();
         for (String header : sortedList) {
-            if (signedHeaderString.length() > 0)
+            if (signedHeaderString.length() > 0) {
                 signedHeaderString.append(SEMICOLON);
+            }
             signedHeaderString.append(nullToEmpty(header).toLowerCase());
         }
         return signedHeaderString.toString();

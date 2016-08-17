@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.utils;
 
+import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 
@@ -39,12 +40,11 @@ public class OutputsUtil {
         return Constants.Miscellaneous.EMPTY;
     }
 
-    public static Map<String, String> populateSignatureResultsMap(String returnResult, String signature,
-                                                                  String authorizationHeader) {
-        Map<String, String> signatureReturnResultMap = getResultsMap(returnResult);
+    public static Map<String, String> populateSignatureResultsMap(AuthorizationHeader authorizationHeader) {
+        Map<String, String> signatureReturnResultMap = getResultsMap(authorizationHeader.getSignature());
 
-        signatureReturnResultMap.put(Constants.AWSParams.SIGNATURE_RESULT, signature);
-        signatureReturnResultMap.put(Constants.AWSParams.AUTHORIZATION_HEADER_RESULT, authorizationHeader);
+        signatureReturnResultMap.put(Constants.AWSParams.SIGNATURE_RESULT, authorizationHeader.getSignature());
+        signatureReturnResultMap.put(Constants.AWSParams.AUTHORIZATION_HEADER_RESULT, authorizationHeader.getAuthorizationHeader());
 
         return signatureReturnResultMap;
     }

@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.jclouds.entities.aws.HttpClientMethods;
+import io.cloudslang.content.jclouds.entities.aws.HttpClientMethod;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
@@ -96,7 +96,7 @@ public class DetachNetworkInterfaceAction {
             httpClientInputs.setProxyPassword(proxyPassword);
             httpClientInputs.setHeaders(headers);
             httpClientInputs.setQueryParams(queryParams);
-            httpClientInputs.setMethod(HttpClientMethods.GET.toString());
+            httpClientInputs.setMethod(HttpClientMethod.GET.toString());
             httpClientInputs.setAuthType(Constants.AWSParams.AUTHORIZATION_TYPE_ANONYMOUS);
             httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
 
@@ -112,6 +112,9 @@ public class DetachNetworkInterfaceAction {
                     .withForceDetach(forceDetach)
                     .withVersion(version)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
+                    .withRequestUri(Constants.Miscellaneous.EMPTY)
+                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                    .withHttpVerb(HttpClientMethod.GET.toString())
                     .build();
 
             return new AWSApiNetworkServiceImpl().detachNetworkInterface(wrapper);

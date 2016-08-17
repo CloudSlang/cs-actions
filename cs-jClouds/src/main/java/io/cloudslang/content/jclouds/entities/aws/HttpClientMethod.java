@@ -6,13 +6,14 @@ import org.apache.commons.lang3.StringUtils;
  * Created by Mihai Tusa.
  * 8/10/2016.
  */
-public enum HttpClientMethods {
+public enum HttpClientMethod {
+    DELETE,
     GET,
+    HEAD,
+    OPTIONS,
+    PATCH,
     POST,
     PUT,
-    DELETE,
-    PATCH,
-    HEAD,
     TRACE;
 
     public static String getValue(String input) throws RuntimeException {

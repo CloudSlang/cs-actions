@@ -17,7 +17,7 @@ import java.util.Map;
 public class AWSApiNetworkServiceImpl implements AWSApiNetworkService {
     public Map<String, String> attachNetworkInterface(AWSInputsWrapper inputs) throws SignatureException, MalformedURLException {
         AWSApiNetworkServiceHelper helper = new AWSApiNetworkServiceHelper();
-        Map<String, String> headersMap = helper.getNullOrHeadersMap(inputs);
+        Map<String, String> headersMap = helper.getNullOrHeadersMap(null, inputs);
         Map<String, String> queryParamsMap = helper.getApiQueryParamsMap(inputs, AWSApiAction.ATTACH_NETWORK_INTERFACE.getValue());
 
         helper.setQueryApiCallHeaders(inputs, headersMap, queryParamsMap);
@@ -27,7 +27,7 @@ public class AWSApiNetworkServiceImpl implements AWSApiNetworkService {
 
     public Map<String, String> detachNetworkInterface(AWSInputsWrapper inputs) throws MalformedURLException, SignatureException {
         AWSApiNetworkServiceHelper helper = new AWSApiNetworkServiceHelper();
-        Map<String, String> headersMap = helper.getNullOrHeadersMap(inputs);
+        Map<String, String> headersMap = helper.getNullOrHeadersMap(null, inputs);
         Map<String, String> queryParamsMap = helper.getApiQueryParamsMap(inputs, AWSApiAction.DETACH_NETWORK_INTERFACE.getValue());
 
         helper.setQueryApiCallHeaders(inputs, headersMap, queryParamsMap);

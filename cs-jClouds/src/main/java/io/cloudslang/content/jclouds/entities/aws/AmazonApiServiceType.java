@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
  * Created by Mihai Tusa.
  * 8/10/2016.
  */
-public enum AmazonApiService {
+public enum AmazonApiServiceType {
     EC2,
     S3;
 
