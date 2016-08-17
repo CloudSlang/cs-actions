@@ -51,12 +51,7 @@ public class AWSSignatureHelper {
      * @return A canonicalized form for the specified headers.
      */
     public String canonicalizedHeadersString(Map<String, String> headers) {
-        List<Map.Entry<String, String>> sortedList = new ArrayList<>(headers.entrySet());
-        Collections.sort(sortedList, new Comparator<Map.Entry<String, String>>() {
-            public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
-                return (o1.getKey().compareToIgnoreCase(o2.getKey()));
-            }
-        });
+        List<Map.Entry<String, String>> sortedList = getSortedHeadersMapEntries(headers);
 
         String header;
         String headerValue;
@@ -150,5 +145,15 @@ public class AWSSignatureHelper {
             return Constants.Miscellaneous.EMPTY;
         }
         return inputString;
+    }
+
+    private List<Map.Entry<String, String>> getSortedHeadersMapEntries(Map<String, String> headers) {
+        List<Map.Entry<String, String>> sortedList = new ArrayList<>(headers.entrySet());
+        Collections.sort(sortedList, new Comparator<Map.Entry<String, String>>() {
+            public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
+                return (o1.getKey().compareToIgnoreCase(o2.getKey()));
+            }
+        });
+        return sortedList;
     }
 }
