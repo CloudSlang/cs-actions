@@ -45,6 +45,7 @@ public class Constants {
         public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
         public static final String AUTHORIZATION_TYPE_ANONYMOUS = "anonymous";
         public static final String AWS_REQUEST_VERSION = "aws4_request";
+        public static final String HEADER_DELIMITER = "\\r?\\n";
         public static final String INSTANCE_ID = "InstanceId";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String VERSION = "Version";

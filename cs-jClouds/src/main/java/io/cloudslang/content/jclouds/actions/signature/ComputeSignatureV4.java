@@ -89,8 +89,10 @@ public class ComputeSignatureV4 {
 
                                                 @Param(value = Inputs.AWSApiInputs.SECURITY_TOKEN) String securityToken) {
         try {
-            Map<String, String> headersMap = InputsUtil.getHeadersMap(new HashMap<String, String>(), headers);
-            Map<String, String> queryParamsMap = InputsUtil.getQueryParamsMap(new HashMap<String, String>(), queryParams);
+            Map<String, String> headersMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), headers,
+                    Constants.AWSParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true);
+            Map<String, String> queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), queryParams,
+                    Constants.Miscellaneous.AMPERSAND, Constants.Miscellaneous.EQUAL, false);
 
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
                     .withEndpoint(endpoint)

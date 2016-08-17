@@ -38,7 +38,9 @@ public class AWSApiNetworkServiceHelper {
 
             inputs.getHttpClientInputs().setQueryParams(queryParamsString);
         } else {
-            queryParamsMap = InputsUtil.getQueryParamsMap(new HashMap<String, String>(), inputs.getHttpClientInputs().getQueryParams());
+            queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
+                    inputs.getHttpClientInputs().getQueryParams(), Constants.Miscellaneous.AMPERSAND,
+                    Constants.Miscellaneous.EQUAL, false);
         }
         return queryParamsMap;
     }
@@ -47,8 +49,9 @@ public class AWSApiNetworkServiceHelper {
         if (headersMap == null || headersMap.isEmpty()) {
             headersMap = new HashMap<>();
         }
-        return StringUtils.isBlank(inputs.getHttpClientInputs().getHeaders()) ?
-                headersMap : InputsUtil.getHeadersMap(headersMap, inputs.getHttpClientInputs().getHeaders());
+        return StringUtils.isBlank(inputs.getHttpClientInputs().getHeaders()) ? headersMap :
+                InputsUtil.getHeadersOrQueryParamsMap(headersMap, inputs.getHttpClientInputs().getHeaders(),
+                        Constants.AWSParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true);
     }
 
     public void setQueryApiCallHeaders(AWSInputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)

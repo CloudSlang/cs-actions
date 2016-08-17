@@ -70,7 +70,8 @@ public class AmazonSignatureService {
         }
 
         queryParamsMap = StringUtils.isBlank(wrapper.getQueryParams()) ? queryParamsMap :
-                InputsUtil.getQueryParamsMap(queryParamsMap, wrapper.getQueryParams());
+                InputsUtil.getHeadersOrQueryParamsMap(queryParamsMap, wrapper.getQueryParams(),
+                        Constants.Miscellaneous.AMPERSAND, Constants.Miscellaneous.EQUAL, false);
 
         return queryParamsMap;
     }
@@ -103,7 +104,8 @@ public class AmazonSignatureService {
         }
 
         if (StringUtils.isNotBlank(headers)) {
-            headersMap = InputsUtil.getHeadersMap(headersMap, headers);
+            headersMap = InputsUtil.getHeadersOrQueryParamsMap(headersMap, headers, Constants.AWSParams.HEADER_DELIMITER,
+                    Constants.Miscellaneous.COLON, true);
         }
 
         if (!(headersMap.containsKey(HOST.toLowerCase()) || headersMap.containsKey(HOST))) {

@@ -26,52 +26,25 @@ public final class InputsUtil {
     private InputsUtil() {
     }
 
-    /**
-     * Parses the headers list and creates a map of headers and header values.
-     * The headers (map keys) are trimmed of white spaces and converted to lowercase.
-     *
-     * @param headers The list of headers.
-     * @return The map of header keys and header values.
-     */
-    public static Map<String, String> getHeadersMap(Map<String, String> headersMap, String headers) {
-        String headerDelimiter = "\\r?\\n";
-        String headerValuesDelimiter = Pattern.quote(Constants.Miscellaneous.COLON);
-
-        String[] headerValues = headers.split(headerDelimiter);
+    public static Map<String, String> getHeadersOrQueryParamsMap(Map<String, String> inputMap, String stringToSplit,
+                                                                 String delimiter, String customDelimiter, boolean trim) {
+        String[] headersOrParamsArray = stringToSplit.split(delimiter);
         String[] values;
 
-        for (String headerValue : headerValues) {
-            values = headerValue.split(headerValuesDelimiter, 2);
-            if (values.length > 1) {
-                headersMap.put(values[0].trim().toLowerCase(), values[1]);
+        for (String headersOrParamsItem : headersOrParamsArray) {
+            values = headersOrParamsItem.split(Pattern.quote(customDelimiter), 2);
+            if (values.length > 1 && trim) {
+                inputMap.put(values[0].trim().toLowerCase(), values[1]);
+            } else if (values.length > 1 && !trim) {
+                inputMap.put(values[0], values[1]);
+            } else if (values.length <= 1 && trim) {
+                inputMap.put(values[0].trim().toLowerCase(), Constants.Miscellaneous.EMPTY);
             } else {
-                headersMap.put(values[0].trim().toLowerCase(), Constants.Miscellaneous.EMPTY);
+                inputMap.put(values[0], Constants.Miscellaneous.EMPTY);
             }
         }
 
-        return headersMap;
-    }
-
-    /**
-     * Parses the query param list and creates a map of query params and query param values.
-     *
-     * @param queryParams The list of query params.
-     * @return The map of query param keys and query params values.
-     */
-    public static Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, String queryParams) {
-        String[] params = queryParams.split(Constants.Miscellaneous.AMPERSAND);
-        String[] paramValues;
-
-        for (String param : params) {
-            paramValues = param.split(Constants.Miscellaneous.EQUAL, 2);
-            if (paramValues.length > 1) {
-                queryParamsMap.put(paramValues[0], paramValues[1]);
-            } else {
-                queryParamsMap.put(paramValues[0], Constants.Miscellaneous.EMPTY);
-            }
-        }
-
-        return queryParamsMap;
+        return inputMap;
     }
 
     public static String getEndpointFromUrl(String input) throws MalformedURLException {
