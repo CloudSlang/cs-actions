@@ -27,8 +27,7 @@ public class AWSSignatureHelper {
      * @return A canonicalized form for the specified query parameters.
      */
     public String canonicalizedQueryString(Map<String, String> queryParameters) {
-        List<Map.Entry<String, String>> sortedList = new ArrayList<>(queryParameters.entrySet());
-        Collections.sort(sortedList, new UTF8StringComparator());
+        List<Map.Entry<String, String>> sortedList = getSortedMapEntries(queryParameters);
 
         StringBuilder queryString = new StringBuilder();
         for (Map.Entry<String, String> entry : sortedList) {
@@ -51,7 +50,7 @@ public class AWSSignatureHelper {
      * @return A canonicalized form for the specified headers.
      */
     public String canonicalizedHeadersString(Map<String, String> headers) {
-        List<Map.Entry<String, String>> sortedList = getSortedHeadersMapEntries(headers);
+        List<Map.Entry<String, String>> sortedList = getSortedMapEntries(headers);
 
         String header;
         String headerValue;
@@ -131,11 +130,7 @@ public class AWSSignatureHelper {
     private String entryToQuery(Map.Entry<String, String> entry) {
         String escapedKey = nullToEmpty(UriEncoder.escapeString(entry.getKey()));
         String escapedValue;
-        if (entry.getValue() != null) {
             escapedValue = nullToEmpty(UriEncoder.escapeString(entry.getValue()));
-        } else {
-            escapedValue = Constants.Miscellaneous.EMPTY;
-        }
 
         return escapedKey + Constants.Miscellaneous.EQUAL + escapedValue + Constants.Miscellaneous.AMPERSAND;
     }
@@ -147,11 +142,11 @@ public class AWSSignatureHelper {
         return inputString;
     }
 
-    private List<Map.Entry<String, String>> getSortedHeadersMapEntries(Map<String, String> headers) {
-        List<Map.Entry<String, String>> sortedList = new ArrayList<>(headers.entrySet());
+    private List<Map.Entry<String, String>> getSortedMapEntries(Map<String, String> map) {
+        List<Map.Entry<String, String>> sortedList = new ArrayList<>(map.entrySet());
         Collections.sort(sortedList, new Comparator<Map.Entry<String, String>>() {
-            public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
-                return (o1.getKey().compareToIgnoreCase(o2.getKey()));
+            public int compare(Map.Entry<String, String> firstEntry, Map.Entry<String, String> secondEntry) {
+                return (firstEntry.getKey().compareToIgnoreCase(secondEntry.getKey()));
             }
         });
         return sortedList;
