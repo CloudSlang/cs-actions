@@ -1,14 +1,17 @@
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.xml.entities.Constants;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static io.cloudslang.content.xml.utils.Constants.*;
 
 /**
  * Created by moldovas on 6/24/2016.
  */
 public class InputUtils {
     private InputUtils() {
-
     }
 
     public static String validateXmlDocumentSource(String xmlDocumentSource) {
@@ -27,5 +30,34 @@ public class InputUtils {
             return xsdDocumentSource;
         }
         throw new RuntimeException(xsdDocumentSource + Constants.INVALID_XSD_DOCUMENT_SOURCE);
+    }
+
+    private static boolean isBoolean(String value) {
+        return BooleanNames.TRUE.equalsIgnoreCase(value) || BooleanNames.FALSE.equalsIgnoreCase(value);
+    }
+
+    public static void validateBoolean(String includeRootStr) throws Exception {
+        if (!InputUtils.isBoolean(includeRootStr)) {
+            throw new Exception(includeRootStr + " is not a valid value for Boolean");
+        }
+    }
+
+    public static Map<String, String> generateMap(String namesList, String valuesList, String delimiter) {
+        Map<String, String> result = new HashMap<>();
+        if (StringUtils.isEmpty(namesList)) {
+            return result;
+        }
+        String[] names = StringUtils.splitByWholeSeparatorPreserveAllTokens(namesList, delimiter);
+        String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(valuesList, delimiter);
+
+        if (names.length != values.length) {
+            throw new IllegalArgumentException(DIFFERENT_LIST_SIZE);
+        }
+
+        for (int i = 0; i < names.length; i++) {
+            result.put(names[i], values[i]);
+        }
+
+        return result;
     }
 }

@@ -5,7 +5,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import io.cloudslang.content.xml.entities.Constants;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.ValidateService;
@@ -87,7 +87,7 @@ public class Validate {
             @Param(Constants.Inputs.KEYSTORE) String keystore,
             @Param(value = Constants.Inputs.KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(Constants.Inputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = Constants.Inputs.TRUST_PASSWORD) String trustPassword,
+            @Param(value = Constants.Inputs.TRUST_PASSWORD, encrypted = true) String trustPassword,
             @Param(Constants.Inputs.X_509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(Constants.Inputs.PROXY_HOST) String proxyHost,
             @Param(Constants.Inputs.PROXY_PORT) String proxyPort,

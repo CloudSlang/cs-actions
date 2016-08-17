@@ -1,12 +1,12 @@
-package io.cloudslang.content.xml.entities;
+package io.cloudslang.content.xml.utils;
 
 /**
  * Created by markowis on 18/02/2016.
  */
 public class Constants {
-    public static final String SUCCESS = "success";
-    public static final String FAILURE = "failure";
     public static final String EMPTY_STRING = "";
+    public static final String NAMESPACE_DELIMITER = ":";
+    public static final String JSON_ATTRIBUTE_PREFIX = "@";
     public static final String NO_MATCH_FOUND = "No match found";
     public static final String EMPTY_XML_FILE = "XML file error: Not found";
     public static final String YES = "yes";
@@ -15,6 +15,12 @@ public class Constants {
     public static final String INVALID_XML_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xmlString, xmlPath and xmlUrl";
     public static final String INVALID_XSD_DOCUMENT_SOURCE = " is an invalid input value. Valid values are: xsdString and xsdPath";
     public static final String XSD_PATH = "xsdPath";
+    public static final String DIFFERENT_LIST_SIZE = "The two lists are of different size";
+    public static final String ROOT_TAG_NAME_IS_MISSING = "The root tag name is missing";
+    public static final String ONLY_ONE_ROOT_ELEMENT = "There must be only one root element";
+    public static final String NEW_LINE = "\n";
+    public static final String INDENT = "  ";
+    public static final String UTF_8_ENCODING = "UTF-8";
 
     public static final class Outputs {
         public static final String RETURN_RESULT = "returnResult";
@@ -24,9 +30,28 @@ public class Constants {
         public static final String RETURN_CODE = "returnCode";
         public static final String EXCEPTION = "exception";
         public static final String ERROR_MESSAGE = "errorMessage";
+        public static final String NAMESPACES_URIS = "namespacesUris";
+        public static final String NAMESPACES_PREFIXES = "namespacesPrefixes";
     }
 
     public static final class Inputs {
+        //ConvertJsonToXml
+        public static final String JSON = "json";
+        public static final String PRETTY_PRINT = "prettyPrint";
+        public static final String SHOW_XML_DECLARATION = "showXmlDeclaration";
+        public static final String ROOT_TAG_NAME = "rootTagName";
+        public static final String DEFAULT_JSON_ARRAY_ITEM_NAME = "defaultJsonArrayItemName";
+        public static final String NAMESPACES_URIS = "namespacesUris";
+        public static final String NAMESPACES_PREFIXES = "namespacesPrefixes";
+        public static final String JSON_ARRAYS_NAMES = "jsonArraysNames";
+        public static final String JSON_ARRAYS_ITEM_NAMES = "jsonArraysItemNames";
+
+        //ConvertXmlToJson
+        public static final String TEXT_ELEMENTS_NAME = "textElementsName";
+        public static final String INCLUDE_ROOT = "includeRootElement";
+        public static final String INCLUDE_ATTRIBUTES = "includeAttributes";
+        public static final String PARSING_FEATURES = "parsingFeatures";
+
         public static final String XML_DOCUMENT = "xmlDocument";
         public static final String XML_DOCUMENT_SOURCE = "xmlDocumentSource";
         public static final String XSD_DOCUMENT = "xsdDocument";
@@ -115,12 +140,22 @@ public class Constants {
 
     public static final class Defaults {
         public static final String DELIMITER = ",";
+        public static final String PREFIX_DELIMITER = ":";
         public static final String XML_DOCUMENT_SOURCE = "xmlString";
         public static final String XSD_DOCUMENT_SOURCE = "xsdString";
+        public static final String DEFAULT_TEXT_ELEMENTS_NAME = "_text";
+        public static final String JSON_ARRAY_ITEM_NAME = "item";
+
     }
 
     public static final class ReturnCodes {
         public static final String SUCCESS = "0";
         public static final String FAILURE = "-1";
     }
+
+    public static final class BooleanNames {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+    }
+
 }

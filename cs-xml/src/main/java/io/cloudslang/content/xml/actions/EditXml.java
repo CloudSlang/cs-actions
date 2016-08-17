@@ -1,14 +1,13 @@
 package io.cloudslang.content.xml.actions;
 
-import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.xml.entities.ActionType;
-import io.cloudslang.content.xml.entities.Constants;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import io.cloudslang.content.xml.factory.OperationFactory;
 import io.cloudslang.content.xml.services.OperationService;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ValidateUtils;
 
 import java.util.HashMap;
@@ -59,7 +58,7 @@ public class EditXml {
      *                        http://xml.org/sax/features/external-parameter-entities false
      * @return map of results containing success or failure text, a result message, and the value selected
      */
-    @Action(name = "Edit XML",
+    @com.hp.oo.sdk.content.annotations.Action(name = "Edit XML",
             outputs = {
                     @Output(Constants.Outputs.RETURN_RESULT),
                     @Output(Constants.Outputs.RETURN_CODE),

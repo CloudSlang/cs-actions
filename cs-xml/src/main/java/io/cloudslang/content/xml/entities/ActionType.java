@@ -1,5 +1,7 @@
 package io.cloudslang.content.xml.entities;
 
+import io.cloudslang.content.xml.utils.Constants;
+
 /**
  * Created by moldovas on 7/8/2016.
  */

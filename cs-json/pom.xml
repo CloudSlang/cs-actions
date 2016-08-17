@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Data format java actions</description>
-    <url>https://github.com/CloudSlang/score-actions</url>
+    <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
         <license>
@@ -38,9 +38,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://CloudSlang/score-actions.git</connection>
-        <developerConnection>scm:git:git@github.com:CloudSlang/score-actions.git</developerConnection>
-        <url>https://github.com/CloudSlang/score-actions.git</url>
+        <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
+        <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
 
@@ -85,7 +85,11 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
 
     </dependencies>
 
