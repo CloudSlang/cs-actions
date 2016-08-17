@@ -19,7 +19,7 @@ public class AWSSignatureHelper {
     private static final char DOT_CHAR = '.';
 
     /**
-     * The canonicalized (standardized) query string is formed by first sorting all the query
+     * Canonicalized (standardized) query string is formed by first sorting all the query
      * parameters, then URI encoding both the key and value and then
      * joining them, in order, separating key value pairs with an '&'.
      *
@@ -42,7 +42,7 @@ public class AWSSignatureHelper {
     }
 
     /**
-     * The canonicalized (standardized) headers string is formed by first sorting all the header
+     * Canonicalized (standardized) headers string is formed by first sorting all the header
      * parameters, then converting all header names to lowercase and
      * trimming excess white space characters out of the header values
      *

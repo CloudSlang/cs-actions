@@ -95,8 +95,8 @@ public class AWSSignatureV4 {
     /**
      * Calculates the AWS Signature Version 4 by signing (calculates the HmacSHA256) the string-to-sign with the derived key.
      *
-     * @param stringToSign      The string-to-sign the includes meta information about the request.
-     * @param derivedSigningKey The signing key derived from the AWS secret access key.
+     * @param stringToSign      String-to-sign the includes meta information about the request.
+     * @param derivedSigningKey Signing key derived from the AWS secret access key.
      * @return AWS Signature Version 4.
      */
     public String getSignature(String stringToSign, byte[] derivedSigningKey) throws SignatureException {
@@ -110,7 +110,7 @@ public class AWSSignatureV4 {
     /**
      * Calculates the message digest (hash) for the data string.
      *
-     * @param data The string for which the digest will be calculated.
+     * @param data String for which the digest will be calculated.
      * @return Digest's bytes. This result is not encoded.
      */
     private byte[] calculateHash(String data) throws NoSuchAlgorithmException, UnsupportedEncodingException {

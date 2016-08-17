@@ -47,12 +47,7 @@ public class AmazonSignatureService {
                 wrapper.getSecurityToken(), amazonDate);
         String signedHeadersString = signatureUtils.getSignedHeadersString(requestHeaders);
 
-        if (queryParamsMap == null || queryParamsMap.isEmpty()) {
-            queryParamsMap = new HashMap<>();
-        }
-
-        queryParamsMap = StringUtils.isBlank(wrapper.getQueryParams()) ?
-                queryParamsMap : InputsUtil.getQueryParamsMap(queryParamsMap, wrapper.getQueryParams());
+        queryParamsMap = getQueryParamsMap(queryParamsMap, wrapper);
 
         String canonicalRequest = awsSignatureV4.getCanonicalRequest(wrapper.getHttpVerb(), wrapper.getRequestUri(),
                 signatureUtils.canonicalizedQueryString(queryParamsMap), signatureUtils.canonicalizedHeadersString(requestHeaders),
@@ -67,6 +62,17 @@ public class AmazonSignatureService {
         requestHeaders.put(AUTHORIZATION, authorizationHeader);
 
         return new AuthorizationHeader(getSignedRequestHeadersString(requestHeaders), signature);
+    }
+
+    private Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, AWSInputsWrapper wrapper) {
+        if (queryParamsMap == null || queryParamsMap.isEmpty()) {
+            queryParamsMap = new HashMap<>();
+        }
+
+        queryParamsMap = StringUtils.isBlank(wrapper.getQueryParams()) ? queryParamsMap :
+                InputsUtil.getQueryParamsMap(queryParamsMap, wrapper.getQueryParams());
+
+        return queryParamsMap;
     }
 
     private String getSignedRequestHeadersString(Map<String, String> requestHeaders) {
