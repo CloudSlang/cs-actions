@@ -23,7 +23,7 @@ public class AWSSignatureHelper {
      * parameters, then URI encoding both the key and value and then
      * joining them, in order, separating key value pairs with an '&'.
      *
-     * @param queryParameters The query parameters to be canonicalized.
+     * @param queryParameters Query parameters to be canonicalized.
      * @return A canonicalized form for the specified query parameters.
      */
     public String canonicalizedQueryString(Map<String, String> queryParameters) {
@@ -46,7 +46,7 @@ public class AWSSignatureHelper {
      * parameters, then converting all header names to lowercase and
      * trimming excess white space characters out of the header values
      *
-     * @param headers The headers to be canonicalized.
+     * @param headers Headers to be canonicalized.
      * @return A canonicalized form for the specified headers.
      */
     public String canonicalizedHeadersString(Map<String, String> headers) {
@@ -69,8 +69,8 @@ public class AWSSignatureHelper {
     /**
      * Creates a comma separated list of headers.
      *
-     * @param headers The headers to be signed.
-     * @return The comma separated list of headers to be signed.
+     * @param headers Headers to be signed.
+     * @return Comma separated list of headers to be signed.
      */
     public String getSignedHeadersString(Map<String, String> headers) {
         List<String> sortedList = new ArrayList<>(headers.keySet());
@@ -90,8 +90,8 @@ public class AWSSignatureHelper {
      * Converts a java.util.Date to an AWS specific date format.
      * The AWS date should be in (java) format "yyyyMMdd'T'HHmmss'Z'" and in time zone UTC.
      *
-     * @param date The date to be formatted.
-     * @return A string representing the formatted string.
+     * @param date Date to be formatted.
+     * @return A string representing the formatted date.
      */
     public String getAmazonDateString(Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -102,9 +102,9 @@ public class AWSSignatureHelper {
     /**
      * Crates the amazon AWS credential scope (is represented by a slash-separated string of dimensions).
      *
-     * @param dateStamp  The request date stamp. (Format: "yyyyMMdd")
-     * @param awsRegion  The AWS region to which the request is sent.
-     * @param awsService The AWS service to which the request is sent.
+     * @param dateStamp  Request date stamp. (Format: "yyyyMMdd")
+     * @param awsRegion  AWS region to which the request is sent.
+     * @param awsService AWS service to which the request is sent.
      * @return A string representing the AWS credential scope.
      */
     public String getAmazonCredentialScope(String dateStamp, String awsRegion, String awsService) {
@@ -116,7 +116,7 @@ public class AWSSignatureHelper {
      * Extracts the AWS region from the endpoint.
      * If the endpoint has no region the "us-east-1" region is returned b default.
      *
-     * @param endpoint The AWS request endpoint.
+     * @param endpoint AWS request endpoint.
      * @return A (lowercase alphanumeric) string representing the AWS region.
      */
     public String getAmazonRegion(String endpoint) {

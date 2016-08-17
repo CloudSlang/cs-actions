@@ -30,12 +30,12 @@ public class AWSSignatureV4 {
      * Combines the inputs into a canonical (standardized format) request.
      * This method requires the payload's hash pre-calculated.
      *
-     * @param httpRequestMethod    The request method.
-     * @param canonicalURI         The request canonical URI.
-     * @param canonicalQueryString The request query string.
-     * @param canonicalHeaders     The canonical headers for the request. These headers will be signed.
+     * @param httpRequestMethod    Request method.
+     * @param canonicalURI         Request canonical URI.
+     * @param canonicalQueryString Request query string.
+     * @param canonicalHeaders     Canonical headers for the request. These headers will be signed.
      * @param signedHeaders        Column separated list of header names that will be signed.
-     * @param requestPayload          The request payload's hash.
+     * @param requestPayload       Request payload's hash.
      * @return A string representing the canonical request.
      */
     public String getCanonicalRequest(String httpRequestMethod, String canonicalURI, String canonicalQueryString,
@@ -54,9 +54,9 @@ public class AWSSignatureV4 {
      * Combines the inputs into a string with a fixed structure and calculates the canonical request digest.
      * This string can be used with the derived signing key to create an AWS signature.
      *
-     * @param requestDate      The request date in YYYYMMDD'T'HHMMSS'Z' format.
-     * @param credentialScope  The request credential scope.
-     * @param canonicalRequest The canonical request.
+     * @param requestDate      Request date in YYYYMMDD'T'HHMMSS'Z' format.
+     * @param credentialScope  Request credential scope.
+     * @param canonicalRequest Canonical request.
      * @return A string that includes meta information about the request.
      */
     public String getStringToSign(String requestDate, String credentialScope, String canonicalRequest) throws SignatureException {
@@ -76,7 +76,7 @@ public class AWSSignatureV4 {
      * @param dateStamp       Credential scope date stamp in "yyyyMMdd" format.
      * @param region          Amazon region name.
      * @param amazonApi       Amazon service name.
-     * @return The signing key's bytes. This result is not encoded.
+     * @return Signing key's bytes. This result is not encoded.
      */
     public byte[] getDerivedSigningKey(String secretAccessKey, String dateStamp, String region, String amazonApi)
             throws SignatureException {
@@ -97,7 +97,7 @@ public class AWSSignatureV4 {
      *
      * @param stringToSign      The string-to-sign the includes meta information about the request.
      * @param derivedSigningKey The signing key derived from the AWS secret access key.
-     * @return The AWS Signature Version 4.
+     * @return AWS Signature Version 4.
      */
     public String getSignature(String stringToSign, byte[] derivedSigningKey) throws SignatureException {
         try {
@@ -111,7 +111,7 @@ public class AWSSignatureV4 {
      * Calculates the message digest (hash) for the data string.
      *
      * @param data The string for which the digest will be calculated.
-     * @return The digest's bytes. This result is not encoded.
+     * @return Digest's bytes. This result is not encoded.
      */
     private byte[] calculateHash(String data) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
@@ -122,9 +122,9 @@ public class AWSSignatureV4 {
     /**
      * Calculates the keyed-hash message authentication code for the data string.
      *
-     * @param data The string for which the HMAC will be calculated.
-     * @param key  The key used for HMAC calculation.
-     * @return The HMAC's bytes. This result is not encoded.
+     * @param data String for which the HMAC will be calculated.
+     * @param key  Key used for HMAC calculation.
+     * @return HMAC's bytes. This result is not encoded.
      */
     private byte[] calculateHmacSHA256(String data, byte[] key)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {

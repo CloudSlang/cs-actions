@@ -25,15 +25,17 @@ public class AWSApiNetworkServiceHelper {
     private static final String SET_FLAG = "1";
 
     public Map<String, String> getApiQueryParamsMap(AWSInputsWrapper inputs, String actionName) {
-        Map<String, String> queryParamsMap = null;
+        Map<String, String> queryParamsMap = new HashMap<>();
         if (StringUtils.isBlank(inputs.getHttpClientInputs().getQueryParams())) {
             if (AWSApiAction.ATTACH_NETWORK_INTERFACE.getValue().equalsIgnoreCase(actionName)) {
                 queryParamsMap = new AWSApiNetworkServiceHelper().getAttachNetworkInterfaceQueryParamsMap(inputs);
             } else if (AWSApiAction.DETACH_NETWORK_INTERFACE.getValue().equalsIgnoreCase(actionName)) {
                 queryParamsMap = new AWSApiNetworkServiceHelper().getDetachNetworkInterfaceQueryParamsMap(inputs);
             }
-            String queryParamsString = InputsUtil
-                    .getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL, Constants.Miscellaneous.AMPERSAND);
+
+            String queryParamsString = queryParamsMap.isEmpty() ? Constants.Miscellaneous.EMPTY :
+                    InputsUtil.getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL, Constants.Miscellaneous.AMPERSAND);
+
             inputs.getHttpClientInputs().setQueryParams(queryParamsString);
         } else {
             queryParamsMap = InputsUtil.getQueryParamsMap(new HashMap<String, String>(), inputs.getHttpClientInputs().getQueryParams());
