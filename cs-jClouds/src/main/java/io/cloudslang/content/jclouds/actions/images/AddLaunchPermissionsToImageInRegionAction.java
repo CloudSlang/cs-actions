@@ -28,7 +28,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
      *
      * @param provider         Cloud provider on which you have the image.
      *                         Default: "amazon"
-     * @param endpoint         Endpoint to which first request will be sent.
+     * @param endpoint         Endpoint to which request will be sent.
      *                         Example: "https://ec2.amazonaws.com"
      * @param identity         Optional - Username of your account or the Access Key ID.
      * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity
@@ -47,7 +47,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Add Launch Permissions To Image In Region",
+    @Action(name = "Add Launch Permissions to Image in Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -62,17 +62,17 @@ public class AddLaunchPermissionsToImageInRegionAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
+                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
+                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
-                                       @Param(Inputs.CustomInputs.REGION) String region,
+                                       @Param(value = Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
-                                       @Param(Inputs.ImageInputs.USER_IDS_STRING) String userIdsString,
-                                       @Param(Inputs.ImageInputs.USER_GROUPS_STRING) String userGroupsString) throws Exception {
+                                       @Param(value = Inputs.ImageInputs.USER_IDS_STRING) String userIdsString,
+                                       @Param(value = Inputs.ImageInputs.USER_GROUPS_STRING) String userGroupsString) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

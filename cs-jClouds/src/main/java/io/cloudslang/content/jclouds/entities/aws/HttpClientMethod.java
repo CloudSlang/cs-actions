@@ -25,7 +25,7 @@ public enum HttpClientMethod {
             return valueOf(input.toUpperCase()).toString();
         } catch (IllegalArgumentException iae) {
             throw new RuntimeException("Invalid Http Client method value: [" + input + "]. " +
-                    "Valid values: GET, POST, PUT, DELETE, PATCH, HEAD, TRACE.");
+                    "Valid values: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT, TRACE.");
         }
     }
 }

@@ -31,29 +31,29 @@ public class DetachNetworkInterfaceAction {
      * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
      * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
      *
-     * @param endpoint      Endpoint to which first request will be sent.
+     * @param endpoint      Endpoint to which request will be sent.
      *                      Default: "https://ec2.amazonaws.com"
      * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "AKIAIOSFODNN7EXAMPLE"
      * @param credential    Secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-     * @param proxyHost     Optional - Proxy server used to connect to Amazon API. If empty no proxy will be used.
+     * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and
      *                      <proxyPort> inputs or leave them both empty.
-     * @param proxyUsername Optional - Proxy server user name.
-     * @param proxyPassword Optional - Proxy server password associated with the <proxyUsername> input value.
-     * @param headers       Optional - String containing the headers to use for the request separated by new line
+     * @param proxyUsername Optional - proxy server user name.
+     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param headers       Optional - string containing the headers to use for the request separated by new line
      *                      (CRLF). The header name-value pair will be separated by ":"
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
      *                      Examples: Accept:text/plain
-     * @param queryParams   Optional - String containing query parameters that will be appended to the URL. The names
+     * @param queryParams   Optional - string containing query parameters that will be appended to the URL. The names
      *                      and the values must not be URL encoded because if they are encoded then a double encoded
      *                      will occur. The separator between name-value pairs is "&" symbol. The query name will be
      *                      separated from query value by "="
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      * @param attachmentId  ID of the attachment.
      *                      Example: "eni-attach-12345678"
-     * @param forceDetach   Optional - Specifies whether to force a detachment or not - Valid values: "true", "false".
+     * @param forceDetach   Optional - specifies whether to force a detachment or not - Valid values: "true", "false".
      *                      Default: "false"
      * @param version       Version of the web service to made the call against it.
      *                      Example: "2014-06-15"

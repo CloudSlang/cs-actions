@@ -21,16 +21,16 @@ public class DescribeRegionsAction {
     /**
      * Lists the regions from a cloud endpoint.
      *
-     * @param provider          Cloud provider on which you have the instance - Valid values: "amazon" or "openstack".
-     * @param endpoint          Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com" for amazon or
-     *                          "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity          Optional - Username of your account or the Access Key ID. For OpenStack provider the required
-     *                          format is 'alias:username'.
-     * @param credential        Optional - Password of the user or the Secret Access Key that correspond to the identity input.
-     * @param proxyHost         Optional - Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort         Optional - Proxy server port.
-     * @param delimiter         Optional - Delimiter that separates the region elements.
-     * @param debugMode Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param provider   Cloud provider where regions are defined - Valid values: "amazon" or "openstack".
+     * @param endpoint   Endpoint to which request will be sent. Ex: "https://ec2.amazonaws.com" for Amazon AWS or
+     *                   "http://hostOrIp:5000/v2.0" for OpenStack.
+     * @param identity   Optional - username of your account or the Access Key ID. For OpenStack provider the required
+     *                   format is 'alias:username'.
+     * @param credential Optional - password of the user or the Secret Access Key that correspond to the identity input.
+     * @param proxyHost  Optional - proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort  Optional - proxy server port.
+     * @param delimiter  Optional - delimiter that separates the region elements.
+     * @param debugMode  Optional - if "true" then the execution logs will be shown in CLI console.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -49,12 +49,12 @@ public class DescribeRegionsAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode) throws Exception {
+                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
+                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)
