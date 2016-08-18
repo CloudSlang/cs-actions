@@ -33,14 +33,12 @@ public final class InputsUtil {
 
         for (String headersOrParamsItem : headersOrParamsArray) {
             values = headersOrParamsItem.split(Pattern.quote(customDelimiter), 2);
-            if (values.length > 1 && trim) {
-                inputMap.put(values[0].trim().toLowerCase(), values[1]);
-            } else if (values.length > 1 && !trim) {
-                inputMap.put(values[0], values[1]);
-            } else if (values.length <= 1 && trim) {
-                inputMap.put(values[0].trim().toLowerCase(), Constants.Miscellaneous.EMPTY);
+            String key = trim ? values[0].trim().toLowerCase() : values[0];
+
+            if (values.length > 1) {
+                inputMap.put(key, values[1]);
             } else {
-                inputMap.put(values[0], Constants.Miscellaneous.EMPTY);
+                inputMap.put(key, Constants.Miscellaneous.EMPTY);
             }
         }
 
@@ -64,7 +62,7 @@ public final class InputsUtil {
             sb.append(entry.getValue());
             sb.append(suffix);
         }
-        return sb.toString().substring(0, sb.toString().length() - 1);
+        return sb.deleteCharAt(sb.length()-1).toString();
     }
 
     public static String[] getStringsArray(String input, String condition, String delimiter) {
