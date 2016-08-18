@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 8/16/2016.
  */
-public class AWSApiBaseService {
+public class AWSApiService {
     public Map<String, String> getApiQueryParamsMap(AWSInputsWrapper inputs, String actionName) {
         Map<String, String> queryParamsMap = new HashMap<>();
         if (StringUtils.isBlank(inputs.getHttpClientInputs().getQueryParams())) {
