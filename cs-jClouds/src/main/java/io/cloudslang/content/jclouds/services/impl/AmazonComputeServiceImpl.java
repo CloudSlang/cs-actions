@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.collect.Multimap;
-import io.cloudslang.content.jclouds.entities.InstanceType;
+import io.cloudslang.content.jclouds.entities.aws.InstanceType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
@@ -136,7 +136,7 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
     }
 
     void lazyInit(String region, boolean isDebugMode) {
-        this.region = InputsUtil.getAmazonRegion(region);
+        this.region = InputsUtil.getDefaultStringInput(region, Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
         init(isDebugMode);
     }
 

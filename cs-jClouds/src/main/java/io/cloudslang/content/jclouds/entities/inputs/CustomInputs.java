@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.*;
+import io.cloudslang.content.jclouds.entities.aws.*;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +49,7 @@ public class CustomInputs {
     private String instanceType;
     private String resourceIdsString;
 
-    public CustomInputs(CustomInputsBuilder builder) {
+    private CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
         this.instanceId = builder.instanceId;
         this.imageId = builder.imageId;

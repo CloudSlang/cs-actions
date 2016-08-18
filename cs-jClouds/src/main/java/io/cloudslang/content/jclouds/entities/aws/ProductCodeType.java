@@ -1,17 +1,17 @@
-package io.cloudslang.content.jclouds.entities;
+package io.cloudslang.content.jclouds.entities.aws;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
- * 6/3/2016.
+ * 6/17/2016.
  */
-public enum Hypervisor {
-    OVM,
-    XEN;
+public enum ProductCodeType {
+    DEVPAY,
+    MARKETPLACE;
 
-    public static String getValue(String input) throws RuntimeException {
+    public static String getValue(String input) throws Exception {
         if (StringUtils.isBlank(input)) {
             return Constants.Miscellaneous.NOT_RELEVANT;
         }
@@ -19,7 +19,7 @@ public enum Hypervisor {
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid hypervisor value: [" + input + "]. Valid values: ovm, xen.");
+            throw new RuntimeException("Unrecognized product code type value: [" + input + "]. Valid values are: devpay, marketplace.");
         }
     }
 }

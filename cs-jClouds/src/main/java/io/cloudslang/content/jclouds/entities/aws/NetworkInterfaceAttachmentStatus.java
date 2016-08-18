@@ -1,15 +1,17 @@
-package io.cloudslang.content.jclouds.entities;
+package io.cloudslang.content.jclouds.entities.aws;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
- * 6/7/2016.
+ * 6/8/2016.
  */
-public enum VirtualizationType {
-    PARAVIRTUAL,
-    HVM;
+public enum NetworkInterfaceAttachmentStatus {
+    ATTACHING,
+    ATTACHED,
+    DETACHING,
+    DETACHED;
 
     public static String getValue(String input) throws Exception {
         if (StringUtils.isBlank(input)) {
@@ -19,7 +21,8 @@ public enum VirtualizationType {
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized  virtualization type value: [" + input + "]. Valid values are: paravirtual, hvm.");
+            throw new RuntimeException("Unrecognized networkInterfaceAttachmentStatus value: [" + input + "]. " +
+                    "Valid values are: attaching, attached, detaching, detached.");
         }
     }
 }

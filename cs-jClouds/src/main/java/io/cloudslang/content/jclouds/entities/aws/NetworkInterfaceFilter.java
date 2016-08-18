@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.entities;
+package io.cloudslang.content.jclouds.entities.aws;
 
 /**
  * Created by Mihai Tusa.

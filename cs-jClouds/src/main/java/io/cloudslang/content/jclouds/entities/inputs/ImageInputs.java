@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.ImageState;
-import io.cloudslang.content.jclouds.entities.ImageType;
+import io.cloudslang.content.jclouds.entities.aws.ImageState;
+import io.cloudslang.content.jclouds.entities.aws.ImageType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;

@@ -106,7 +106,7 @@ public class AmazonImageServiceImpl extends JCloudsService implements ImageServi
     }
 
     void lazyInit(String region, boolean isDebugMode) {
-        this.region = InputsUtil.getAmazonRegion(region);
+        this.region = InputsUtil.getDefaultStringInput(region, Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
         init(isDebugMode);
     }
 

@@ -1,19 +1,19 @@
-package io.cloudslang.content.jclouds.entities;
+package io.cloudslang.content.jclouds.entities.aws;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
- * 6/6/2016.
+ * 6/8/2016.
  */
-public enum Platform {
-    OTHERS(""),
-    WINDOWS("windows");
+public enum NetworkInterfaceStatus {
+    AVAILABLE("available"),
+    IN_USE("in-use");
 
     private String value;
 
-    Platform(String value) {
+    NetworkInterfaceStatus(String value) {
         this.value = value;
     }
 
@@ -22,11 +22,12 @@ public enum Platform {
             return Constants.Miscellaneous.NOT_RELEVANT;
         }
 
-        for (Platform member : Platform.values()) {
+        for (NetworkInterfaceStatus member : NetworkInterfaceStatus.values()) {
             if (member.value.equals(input.toLowerCase())) {
                 return member.value;
             }
         }
-        throw new RuntimeException("Invalid platform value: [" + input + "]. Valid values: \"\" (empty string), windows.");
+        throw new RuntimeException("Unrecognized network interface status value: [" + input + "]. " +
+                "Valid values are: available, in-use.");
     }
 }

@@ -1,20 +1,17 @@
-package io.cloudslang.content.jclouds.entities;
+package io.cloudslang.content.jclouds.entities.aws;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
- * 6/15/2016.
+ * 6/3/2016.
  */
-public enum VolumeType {
-    STANDARD,
-    IO1,
-    GP2,
-    SC1,
-    ST1;
+public enum Architecture {
+    I386,
+    X86_64;
 
-    public static String getValue(String input) throws Exception {
+    public static String getValue(String input) throws RuntimeException {
         if (StringUtils.isBlank(input)) {
             return Constants.Miscellaneous.NOT_RELEVANT;
         }
@@ -22,8 +19,7 @@ public enum VolumeType {
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized  volume type value: [" + input + "]. " +
-                    "Valid values are: standard, io1, gp2, sc1, st1.");
+            throw new RuntimeException("Invalid architecture value: [" + input + "]. Valid values: i386, x86_64.");
         }
     }
 }

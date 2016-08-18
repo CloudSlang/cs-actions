@@ -24,9 +24,9 @@ public class RunInstancesAction {
     /**
      * Launches one ore more instances in a region based on specified "imageRef".
      *
-     * @param provider         Cloud provider on which you have the instance. Valid values: "amazon" or "openstack".
-     * @param endpoint         Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com"
-     *                         for amazon or "http://hostOrIp:5000/v2.0" for OpenStack.
+     * @param provider         Cloud provider on which you launch the instances. Valid values: "amazon" or "openstack".
+     * @param endpoint         Endpoint to which request will be sent. Example: "https://ec2.amazonaws.com"
+     *                         for Amazon AWS or "http://hostOrIp:5000/v2.0" for OpenStack.
      * @param identity         Optional - Username of your account or the Access Key ID. For OpenStack provider the required
      *                         format is 'alias:username'.
      * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity
@@ -39,7 +39,7 @@ public class RunInstancesAction {
      * @param availabilityZone Optional - specifies the placement constraints for launching instance. Amazon automatically
      *                         selects an availability zone by default - Default: ''
      * @param imageId          ID of the AMI. For more information go to: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html
-     *                         Ex: 'ami-fce3c696', 'ami-4b91bb21'
+     *                         Example: 'ami-fce3c696', 'ami-4b91bb21'
      * @param minCount         Optional - The minimum number of launched instances - Default: '1'
      * @param maxCount         Optional - The maximum number of launched instances - Default: '1'
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
@@ -60,17 +60,17 @@ public class RunInstancesAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
+                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
-                                       @Param(Inputs.CustomInputs.REGION) String region,
+                                       @Param(value = Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
-                                       @Param(Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
-                                       @Param(Inputs.InstanceInputs.MIN_COUNT) String minCount,
-                                       @Param(Inputs.InstanceInputs.MAX_COUNT) String maxCount) throws Exception {
+                                       @Param(value = Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(value = Inputs.InstanceInputs.MIN_COUNT) String minCount,
+                                       @Param(value = Inputs.InstanceInputs.MAX_COUNT) String maxCount) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

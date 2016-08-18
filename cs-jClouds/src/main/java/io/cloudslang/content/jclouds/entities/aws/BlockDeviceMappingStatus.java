@@ -1,18 +1,19 @@
-package io.cloudslang.content.jclouds.entities;
+package io.cloudslang.content.jclouds.entities.aws;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
- * 6/15/2016.
+ * 6/3/2016.
  */
-public enum ImageType {
-    MACHINE,
-    KERNEL,
-    RAMDISK;
+public enum BlockDeviceMappingStatus {
+    ATTACHING,
+    ATTACHED,
+    DETACHING,
+    DETACHED;
 
-    public static String getValue(String input) throws Exception {
+    public static String getValue(String input) throws RuntimeException {
         if (StringUtils.isBlank(input)) {
             return Constants.Miscellaneous.NOT_RELEVANT;
         }
@@ -20,7 +21,7 @@ public enum ImageType {
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized  volume type value: [" + input + "]. Valid values are: machine, kernel, ramdisk.");
+            throw new RuntimeException("Invalid status value: [" + input + "]. Valid values: attaching, attached, detaching, detached.");
         }
     }
 }

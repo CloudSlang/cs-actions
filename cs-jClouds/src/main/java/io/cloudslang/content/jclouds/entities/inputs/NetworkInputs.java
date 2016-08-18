@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.NetworkInterfaceAttachmentStatus;
-import io.cloudslang.content.jclouds.entities.NetworkInterfaceStatus;
+import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceAttachmentStatus;
+import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceStatus;
 
 /**
  * Created by Mihai Tusa.

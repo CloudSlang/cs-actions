@@ -42,7 +42,7 @@ public class AmazonTagServiceImpl extends JCloudsService implements TagService {
     }
 
     void lazyInit(String region, boolean isDebugMode) {
-        this.region = InputsUtil.getAmazonRegion(region);
+        this.region = InputsUtil.getDefaultStringInput(region, Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
         init(isDebugMode);
     }
 

@@ -23,7 +23,7 @@ public class AddLaunchPermissionsToImageInRegionExecutor {
         Set<String> userGroups = InputsUtil.getStringsSet(imageInputs.getUserGroupsString(), commonInputs.getDelimiter());
 
         if (userIds == null && userGroups == null) {
-            throw new RuntimeException(Constants.ErrorMessages.BOTH_PERMISSIONS_INPUTS_EMPTY);
+            throw new RuntimeException(Constants.ErrorMessages.BOTH_PERMISSION_INPUTS_EMPTY);
         }
 
         String response = imageService.addLaunchPermissionsToImage(imageInputs.getCustomInputs().getRegion(), userIds,

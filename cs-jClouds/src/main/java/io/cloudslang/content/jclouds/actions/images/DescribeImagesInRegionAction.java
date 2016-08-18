@@ -28,8 +28,8 @@ public class DescribeImagesInRegionAction {
      * Note:
      * De-registered images are included in the returned results for an unspecified interval after de-registration.
      *
-     * @param provider                     Cloud provider on which you have the instance - Default: "amazon"
-     * @param endpoint                     Endpoint to which first request will be sent - Ex: "https://ec2.amazonaws.com"
+     * @param provider                     Cloud provider on which you have the images - Default: "amazon"
+     * @param endpoint                     Endpoint to which request will be sent - Example: "https://ec2.amazonaws.com"
      * @param identity                     Optional - Username of your account or the Access Key ID.
      * @param credential                   Optional - Password of the user or the Secret Access Key that correspond to
      *                                     the identity input.
@@ -47,7 +47,7 @@ public class DescribeImagesInRegionAction {
      * @param architecture                 Optional - Instance architecture - Valid values: "i386" or "x86_64".
      * @param deleteOnTermination          Optional - A Boolean that indicates whether the EBS volume is deleted on instance
      *                                     termination.
-     * @param blockMappingDeviceName       Optional - Device name for the EBS volume - Ex: "/dev/sdh".
+     * @param blockMappingDeviceName       Optional - Device name for the EBS volume - Example: "/dev/sdh".
      * @param blockDeviceMappingSnapshotId Optional - ID of the snapshot used for the Amazon EBS volume.
      * @param volumeSize                   Optional - Volume size of the Amazon EBS volume, in GiB.
      * @param volumeType                   Optional - Volume type of the Amazon EBS volume - Valid values: "gp2" (for General
@@ -55,15 +55,15 @@ public class DescribeImagesInRegionAction {
      *                                     Optimized HDD), "sc1" (for Cold HDD) and "standard" (for Magnetic volumes).
      * @param hypervisor                   Optional - Hypervisor type of the instance. Valid values: "ovm", "xen".
      * @param imageId                      Optional - ID of the specified image to search for.
-     * @param kernelId                     The kernel ID.
-     * @param ownerAlias                   Optional - AWS account alias. Ex: "amazon"
+     * @param kernelId                     Kernel ID.
+     * @param ownerAlias                   Optional - AWS account alias. Example: "amazon"
      * @param ownerId                      Optional - AWS account ID of the instance owner.
      * @param platform                     Optional - platform used. Use "windows" if you have Windows instances; otherwise,
      *                                     leave blank. Valid values: "", "windows".
      * @param productCode                  Optional - product code associated with the AMI used to launch the instance.
      * @param productCodeType              Optional - type of product code. Valid values: "devpay", "marketplace".
      * @param ramdiskId                    Optional - RAM disk ID.
-     * @param rootDeviceName               Optional - name of the root device for the instance. Ex: "/dev/sda1"
+     * @param rootDeviceName               Optional - name of the root device for the instance. Example: "/dev/sda1"
      * @param rootDeviceType               Optional - type of root device that the instance uses.
      *                                     Valid values: "ebs", "instance-store".
      * @param stateReasonCode              Optional - reason code for the state change.
@@ -90,7 +90,7 @@ public class DescribeImagesInRegionAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Describe Images In Region",
+    @Action(name = "Describe Images in Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -105,46 +105,46 @@ public class DescribeImagesInRegionAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
+                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
+                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
-                                       @Param(Inputs.CustomInputs.REGION) String region,
-                                       @Param(Inputs.CustomInputs.IDENTITY_ID) String identityId,
-                                       @Param(Inputs.CustomInputs.ARCHITECTURE) String architecture,
-                                       @Param(Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
-                                       @Param(Inputs.CustomInputs.BLOCK_MAPPING_DEVICE_NAME) String blockMappingDeviceName,
-                                       @Param(Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockDeviceMappingSnapshotId,
-                                       @Param(Inputs.CustomInputs.VOLUME_SIZE) String volumeSize,
-                                       @Param(Inputs.CustomInputs.VOLUME_TYPE) String volumeType,
-                                       @Param(Inputs.CustomInputs.HYPERVISOR) String hypervisor,
-                                       @Param(Inputs.CustomInputs.IMAGE_ID) String imageId,
-                                       @Param(Inputs.CustomInputs.KERNEL_ID) String kernelId,
-                                       @Param(Inputs.CustomInputs.OWNER_ALIAS) String ownerAlias,
-                                       @Param(Inputs.CustomInputs.OWNER_ID) String ownerId,
-                                       @Param(Inputs.CustomInputs.PLATFORM) String platform,
-                                       @Param(Inputs.CustomInputs.PRODUCT_CODE) String productCode,
-                                       @Param(Inputs.CustomInputs.PRODUCT_CODE_TYPE) String productCodeType,
-                                       @Param(Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
-                                       @Param(Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
-                                       @Param(Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
-                                       @Param(Inputs.CustomInputs.STATE_REASON_CODE) String stateReasonCode,
-                                       @Param(Inputs.CustomInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
-                                       @Param(Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
-                                       @Param(Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
-                                       @Param(Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
+                                       @Param(value = Inputs.CustomInputs.REGION) String region,
+                                       @Param(value = Inputs.CustomInputs.IDENTITY_ID) String identityId,
+                                       @Param(value = Inputs.CustomInputs.ARCHITECTURE) String architecture,
+                                       @Param(value = Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
+                                       @Param(value = Inputs.CustomInputs.BLOCK_MAPPING_DEVICE_NAME) String blockMappingDeviceName,
+                                       @Param(value = Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockDeviceMappingSnapshotId,
+                                       @Param(value = Inputs.CustomInputs.VOLUME_SIZE) String volumeSize,
+                                       @Param(value = Inputs.CustomInputs.VOLUME_TYPE) String volumeType,
+                                       @Param(value = Inputs.CustomInputs.HYPERVISOR) String hypervisor,
+                                       @Param(value = Inputs.CustomInputs.IMAGE_ID) String imageId,
+                                       @Param(value = Inputs.CustomInputs.KERNEL_ID) String kernelId,
+                                       @Param(value = Inputs.CustomInputs.OWNER_ALIAS) String ownerAlias,
+                                       @Param(value = Inputs.CustomInputs.OWNER_ID) String ownerId,
+                                       @Param(value = Inputs.CustomInputs.PLATFORM) String platform,
+                                       @Param(value = Inputs.CustomInputs.PRODUCT_CODE) String productCode,
+                                       @Param(value = Inputs.CustomInputs.PRODUCT_CODE_TYPE) String productCodeType,
+                                       @Param(value = Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
+                                       @Param(value = Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
+                                       @Param(value = Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
+                                       @Param(value = Inputs.CustomInputs.STATE_REASON_CODE) String stateReasonCode,
+                                       @Param(value = Inputs.CustomInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
+                                       @Param(value = Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
+                                       @Param(value = Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
+                                       @Param(value = Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
 
-                                       @Param(Inputs.ImageInputs.IDS_STRING) String idsString,
-                                       @Param(Inputs.ImageInputs.OWNERS_STRING) String ownersString,
-                                       @Param(Inputs.ImageInputs.DESCRIPTION) String description,
-                                       @Param(Inputs.ImageInputs.TYPE) String type,
-                                       @Param(Inputs.ImageInputs.IS_PUBLIC) String isPublic,
-                                       @Param(Inputs.ImageInputs.MANIFEST_LOCATION) String manifestLocation,
-                                       @Param(Inputs.ImageInputs.NAME) String name,
-                                       @Param(Inputs.ImageInputs.STATE) String state) throws Exception {
+                                       @Param(value = Inputs.ImageInputs.IDS_STRING) String idsString,
+                                       @Param(value = Inputs.ImageInputs.OWNERS_STRING) String ownersString,
+                                       @Param(value = Inputs.ImageInputs.DESCRIPTION) String description,
+                                       @Param(value = Inputs.ImageInputs.TYPE) String type,
+                                       @Param(value = Inputs.ImageInputs.IS_PUBLIC) String isPublic,
+                                       @Param(value = Inputs.ImageInputs.MANIFEST_LOCATION) String manifestLocation,
+                                       @Param(value = Inputs.ImageInputs.NAME) String name,
+                                       @Param(value = Inputs.ImageInputs.STATE) String state) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withProvider(provider)

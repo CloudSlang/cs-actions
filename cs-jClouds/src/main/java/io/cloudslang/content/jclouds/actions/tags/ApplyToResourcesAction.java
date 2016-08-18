@@ -22,28 +22,29 @@ import java.util.Map;
 public class ApplyToResourcesAction {
     /**
      * Adds or overwrites one or more tags for the specified Amazon EC2 resource/resources.
+     * <p>
      * Note: Each resource can have a maximum of 10 tags. Each tag consists of a key and optional value. Tag keys must be
      * unique per resource. For more information about tags, see Tagging Your Resources in the Amazon Elastic Compute Cloud
      * User Guide. For more information about creating IAM policies that control users' access to resources based on tags,
      * see Supported Resource-Level Permissions for Amazon EC2 API Actions in the Amazon Elastic Compute Cloud User Guide.
      *
      * @param provider          Cloud provider on which you have the resources - Valid values: "amazon" or "openstack".
-     * @param endpoint          Endpoint to which first request will be sent. Ex: "https://ec2.amazonaws.com" for amazon or
+     * @param endpoint          Endpoint to which request will be sent. Ex: "https://ec2.amazonaws.com" for Amazon AWS or
      *                          "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity          Optional - Username of your account or the Access Key ID. For OpenStack provider the required
+     * @param identity          Optional - username of your account or the Access Key ID. For OpenStack provider the required
      *                          format is 'alias:username'.
-     * @param credential        Optional - Password of the user or the Secret Access Key that correspond to the identity
+     * @param credential        Optional - password of the user or the Secret Access Key that correspond to the identity
      *                          input.
-     * @param proxyHost         Optional - Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort         Optional - Proxy server port.
-     * @param debugMode         Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param delimiter         Optional - Delimiter that will be used - Default: ","
-     * @param region            Optional - region where resources to tagged belongs. Ex: "RegionOne", "us-east-1".
+     * @param proxyHost         Optional - proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort         Optional - proxy server port.
+     * @param debugMode         Optional - if "true" then the execution logs will be shown in CLI console.
+     * @param delimiter         Optional - delimiter that will be used - Default: ","
+     * @param region            Optional - region where resources to be tagged belongs. Example: "RegionOne", "us-east-1".
      *                          ListRegionAction can be used in order to get all regions - Default: "us-east-1"
      * @param keyTagsString     String that contains one or more key tags separated by delimiter.
      * @param valueTagsString   String that contains one or more tag values separated by delimiter.
      * @param resourceIdsString String that contains Id's of one or more resources to tag.
-     *                          Ex: "ami-1a2b3c4d"
+     *                          Example: "ami-1a2b3c4d"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -62,14 +63,14 @@ public class ApplyToResourcesAction {
     )
     public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
                                        @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(Inputs.CommonInputs.IDENTITY) String identity,
+                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(Inputs.CommonInputs.DEBUG_MODE) String debugMode,
+                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
+                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
-                                       @Param(Inputs.CustomInputs.REGION) String region,
+                                       @Param(value = Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.KEY_TAGS_STRING, required = true) String keyTagsString,
                                        @Param(value = Inputs.CustomInputs.VALUE_TAGS_STRING, required = true) String valueTagsString,
                                        @Param(value = Inputs.CustomInputs.RESOURCE_IDS_STRING, required = true) String resourceIdsString)
