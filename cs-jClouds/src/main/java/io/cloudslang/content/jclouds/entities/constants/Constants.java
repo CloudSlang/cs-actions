@@ -24,8 +24,9 @@ public class Constants {
         public static final String EQUAL = "=";
         public static final String LINE_SEPARATOR = "\n";
         public static final String NOT_RELEVANT = "Not relevant";
-        public static final String STANDARD = "standard";
         public static final String SCOPE_SEPARATOR = "/";
+        public static final String SET_FLAG = "1";
+        public static final String STANDARD = "standard";
     }
 
     public static final class ErrorMessages {
