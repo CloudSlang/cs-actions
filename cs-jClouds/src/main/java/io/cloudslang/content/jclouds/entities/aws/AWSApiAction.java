@@ -6,7 +6,8 @@ package io.cloudslang.content.jclouds.entities.aws;
  */
 public enum AWSApiAction {
     ATTACH_NETWORK_INTERFACE("AttachNetworkInterface"),
-    DETACH_NETWORK_INTERFACE("DetachNetworkInterface");
+    DETACH_NETWORK_INTERFACE("DetachNetworkInterface"),
+    CREATE_VOLUME("CreateVolume");
 
     private String value;
 

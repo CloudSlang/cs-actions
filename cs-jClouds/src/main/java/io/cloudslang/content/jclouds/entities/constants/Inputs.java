@@ -63,6 +63,7 @@ public class Inputs {
         public static final String HEADERS = "headers";
         public static final String AMAZON_API = "amazonApi";
         public static final String DATE = "date";
+        public static final String KMS_KEY_ID = "kmsKeyId";
     }
 
     public static final class ImageInputs {

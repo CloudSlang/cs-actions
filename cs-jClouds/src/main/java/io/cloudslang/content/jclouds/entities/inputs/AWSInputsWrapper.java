@@ -14,6 +14,7 @@ public class AWSInputsWrapper {
     private HttpClientInputs httpClientInputs;
     private CommonInputs commonInputs;
     private CustomInputs customInputs;
+    private VolumeInputs volumeInputs;
 
     private String serviceEndpoint;
     private String apiService;
@@ -35,6 +36,7 @@ public class AWSInputsWrapper {
         this.httpClientInputs = builder.httpClientInputs;
         this.commonInputs = builder.commonInputs;
         this.customInputs = builder.customInputs;
+        this.volumeInputs = builder.volumeInputs;
 
         this.serviceEndpoint = builder.serviceEndpoint;
         this.apiService = builder.apiService;
@@ -63,6 +65,10 @@ public class AWSInputsWrapper {
 
     public CustomInputs getCustomInputs() {
         return customInputs;
+    }
+
+    public VolumeInputs getVolumeInputs() {
+        return volumeInputs;
     }
 
     public String getServiceEndpoint() {
@@ -125,6 +131,7 @@ public class AWSInputsWrapper {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
         private CustomInputs customInputs;
+        private VolumeInputs volumeInputs;
 
         private String serviceEndpoint;
         private String apiService;
@@ -158,6 +165,11 @@ public class AWSInputsWrapper {
 
         public AWSInputsWrapperBuilder withCustomInputs(CustomInputs inputs) {
             customInputs = inputs;
+            return this;
+        }
+
+        public AWSInputsWrapperBuilder withVolumeInputs(VolumeInputs inputs) {
+            volumeInputs = inputs;
             return this;
         }
 
