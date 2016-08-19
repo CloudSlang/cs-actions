@@ -29,6 +29,8 @@ public class AWSApiService {
                 queryParamsMap = new AWSApiNetworkServiceHelper().getDetachNetworkInterfaceQueryParamsMap(inputs);
             } else if (AWSApiAction.CREATE_VOLUME.getValue().equalsIgnoreCase(actionName)) {
                 queryParamsMap = new AWSApiVolumeServiceHelper().getCreateVolumeQueryParamsMap(inputs);
+            } else {
+                throw new RuntimeException(Constants.ErrorMessages.UNSUPPORTED_QUERY_API_CALL);
             }
 
             String queryParamsString = queryParamsMap.isEmpty() ? Constants.Miscellaneous.EMPTY :

@@ -33,6 +33,7 @@ public class Constants {
         public static final String NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
+        public static final String UNSUPPORTED_QUERY_API_CALL = "Unsupported Query API call.";
     }
 
     public static final class ValidationValues {
