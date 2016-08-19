@@ -86,4 +86,18 @@ public class MockingHelper {
         verify(optionalInstanceApiMock, times(1)).get();
         verifyNoMoreInteractions(ebsApiMock);
     }
+
+    static HttpClientInputs getHttpClientInputs(boolean withHeaders) {
+        HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setMethod("GET");
+        httpClientInputs.setAuthType("anonymous");
+        httpClientInputs.setQueryParamsAreURLEncoded("false");
+
+        if (withHeaders) {
+            httpClientInputs.setHeaders("Cache-Control:no-cache\r\n" +
+                    "Accept-Charset:UTF-8\r\n" + "Accept:application/xml\r\n");
+        }
+
+        return httpClientInputs;
+    }
 }

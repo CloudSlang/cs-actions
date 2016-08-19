@@ -18,7 +18,7 @@ public class AWSApiVolumeServiceHelper {
     private static final String IOPS = "Iops";
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";
-    private static final String SNAPSHOT_ID = "Size";
+    private static final String SNAPSHOT_ID = "SnapshotId";
     private static final String VOLUME_TYPE = "VolumeType";
 
     public Map<String, String> getCreateVolumeQueryParamsMap(AWSInputsWrapper inputs) {

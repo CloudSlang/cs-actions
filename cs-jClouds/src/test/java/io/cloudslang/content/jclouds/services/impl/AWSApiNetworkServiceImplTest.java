@@ -105,7 +105,7 @@ public class AWSApiNetworkServiceImplTest {
         return new AWSInputsWrapper.AWSInputsWrapperBuilder()
                 .withCommonInputs(getCommonInputs())
                 .withCustomInputs(getAttachNetworkInterfaceCustomInputs())
-                .withHttpClientInputs(getHttpClientInputs())
+                .withHttpClientInputs(MockingHelper.getHttpClientInputs(false))
                 .withNetworkInterfaceId("eni-12345678")
                 .withDeviceIndex("1")
                 .withVersion("2014-06-15")
@@ -133,7 +133,7 @@ public class AWSApiNetworkServiceImplTest {
     private AWSInputsWrapper getDetachNetworkInterfaceWrapper() throws MalformedURLException {
         return new AWSInputsWrapper.AWSInputsWrapperBuilder()
                 .withCommonInputs(getCommonInputs())
-                .withHttpClientInputs(getHttpClientInputs())
+                .withHttpClientInputs(MockingHelper.getHttpClientInputs(false))
                 .withAttachmentId("eni-attach-12345678")
                 .withVersion("2014-06-15")
                 .withForceDetach("true")
@@ -155,14 +155,5 @@ public class AWSApiNetworkServiceImplTest {
         entriesMap.put("Force", "1");
 
         return entriesMap;
-    }
-
-    private HttpClientInputs getHttpClientInputs() {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setMethod("GET");
-        httpClientInputs.setAuthType("anonymous");
-        httpClientInputs.setQueryParamsAreURLEncoded("false");
-
-        return httpClientInputs;
     }
 }
