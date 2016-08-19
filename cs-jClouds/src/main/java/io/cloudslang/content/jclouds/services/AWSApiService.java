@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class AWSApiService {
     public Map<String, String> getApiQueryParamsMap(AWSInputsWrapper inputs, String actionName) {
-        Map<String, String> queryParamsMap = new HashMap<>();
+        Map<String, String> queryParamsMap;
         if (StringUtils.isBlank(inputs.getHttpClientInputs().getQueryParams())) {
             if (AWSApiAction.ATTACH_NETWORK_INTERFACE.getValue().equalsIgnoreCase(actionName)) {
                 queryParamsMap = new AWSApiNetworkServiceHelper().getAttachNetworkInterfaceQueryParamsMap(inputs);
