@@ -176,7 +176,7 @@
         <module>cs-json</module>
         <module>cs-utilities</module>
         <module>cs-rft</module>
-        <module>cs-jClouds</module>
+        <module>cs-jclouds</module>
         <module>cs-xml</module>
         <module>cs-date-time</module>
         <module>cs-vmware</module>
