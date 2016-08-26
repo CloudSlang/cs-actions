@@ -1,13 +1,24 @@
 package io.cloudslang.content.ssh.services.impl;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.jcraft.jsch.*;
-import io.cloudslang.content.ssh.entities.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import io.cloudslang.content.ssh.entities.CommandResult;
+import io.cloudslang.content.ssh.entities.ConnectionDetails;
+import io.cloudslang.content.ssh.entities.KeyFile;
+import io.cloudslang.content.ssh.entities.KnownHostsFile;
+import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.utils.CacheUtils;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -20,16 +31,16 @@ import java.util.Map;
  */
 public class SSHServiceImpl implements SSHService {
     private static final int POLLING_INTERVAL = 10;
-    private static final String SHELL_CHANNEL = "shell";
+    private static final String EXEC_CHANNEL = "exec";
     private static final String KNOWN_HOSTS_ALLOW = "allow";
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
     private Session session;
-    private Channel shellChannel;
+    private Channel execChannel;
 
     public SSHServiceImpl(Session session, Channel channel) {
         this.session = session;
-        this.shellChannel = channel;
+        this.execChannel = channel;
     }
 
     /**
@@ -102,10 +113,10 @@ public class SSHServiceImpl implements SSHService {
 
             if (keepContextForExpectCommand) {
                 // create shell channel
-                shellChannel = session.openChannel(SHELL_CHANNEL);
+                execChannel = session.openChannel(EXEC_CHANNEL);
 
                 // connect to the channel and run the command(s)
-                shellChannel.connect(connectTimeout);
+                execChannel.connect(connectTimeout);
             }
         } catch (JSchException | IOException e) {
             throw new RuntimeException(e);
@@ -122,22 +133,20 @@ public class SSHServiceImpl implements SSHService {
             int commandTimeout,
             boolean agentForwarding) {
         try {
+
             if (!isConnected()) {
                 session.connect(connectTimeout);
             }
-            // create shell channel
-            Channel channel = session.openChannel(SHELL_CHANNEL);
-            ((ChannelShell) channel).setPty(usePseudoTerminal);
-            ((ChannelShell) channel).setAgentForwarding(agentForwarding);
-            InputStream in = new ByteArrayInputStream(command.getBytes(characterSet));
-            channel.setInputStream(in);
+            Channel channel = session.openChannel(EXEC_CHANNEL);
+            OutputStream err = new ByteArrayOutputStream();
+            ((ChannelExec) channel).setErrStream(err);
             OutputStream out = new ByteArrayOutputStream();
             channel.setOutputStream(out);
-            OutputStream err = new ByteArrayOutputStream();
-            channel.setExtOutputStream(err);
+            ((ChannelExec) channel).setCommand(command.getBytes(characterSet));
+            ((ChannelExec) channel).setPty(false);
 
-            // connect to the channel and run the command(s)
-            channel.connect(connectTimeout);
+            InputStream in = channel.getInputStream();
+            channel.connect();
 
             // wait for response
             long currentTime = System.currentTimeMillis();
@@ -150,22 +159,32 @@ public class SSHServiceImpl implements SSHService {
                 currentTime = System.currentTimeMillis();
             }
             boolean timedOut = !channel.isClosed();
-
-            // save the response
             CommandResult result = new CommandResult();
-            result.setStandardOutput(((ByteArrayOutputStream) out).toString(characterSet));
-            result.setStandardError(((ByteArrayOutputStream) err).toString(characterSet));
-
-            channel.disconnect();
-            // The exit status is only available after the channel was closed (more exactly, just before the channel is closed).
-            result.setExitCode(channel.getExitStatus());
-
             if (timedOut) {
                 throw new TimeoutException(String.valueOf(result));
             }
+            byte[] tmp = new byte[1024];
+            while (true) {
+                while (in.available() > 0) {
+                    int i = in.read(tmp, 0, 1024);
+                    if (i < 0) break;
+                    result.setStandardOutput(new String(tmp, 0, i));
+                }
+                if (channel.isClosed()) {
+                    if (in.available() > 0) continue;
+                    result.setExitCode(channel.getExitStatus());
+                    break;
+                }
+                try {
+                    Thread.sleep(POLLING_INTERVAL);
+                } catch (InterruptedException ignore) {
+                }
+            }
+            result.setStandardError(((ByteArrayOutputStream) err).toString(characterSet));
+            channel.disconnect();
 
             return result;
-        } catch (JSchException | UnsupportedEncodingException | TimeoutException e) {
+        } catch (JSchException | IOException | TimeoutException e) {
             throw new RuntimeException(e);
         }
     }
@@ -186,9 +205,9 @@ public class SSHServiceImpl implements SSHService {
 
     @Override
     public void close() {
-        if (shellChannel != null) {
-            shellChannel.disconnect();
-            shellChannel = null;
+        if (execChannel != null) {
+            execChannel.disconnect();
+            execChannel = null;
         }
         session.disconnect();
         session = null;
@@ -196,7 +215,7 @@ public class SSHServiceImpl implements SSHService {
 
     @Override
     public boolean saveToCache(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId) {
-        return CacheUtils.saveSshSessionAndChannel(session, shellChannel, sessionParam, sessionId);
+        return CacheUtils.saveSshSessionAndChannel(session, execChannel, sessionParam, sessionId);
 
     }
 
@@ -210,8 +229,7 @@ public class SSHServiceImpl implements SSHService {
         return session;
     }
 
-    @Override
-    public Channel getShellChannel() {
-        return shellChannel;
+    public Channel getExecChannel() {
+        return execChannel;
     }
 }
