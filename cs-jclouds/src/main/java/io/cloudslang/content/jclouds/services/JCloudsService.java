@@ -2,6 +2,7 @@ package io.cloudslang.content.jclouds.services;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
@@ -52,9 +53,10 @@ public class JCloudsService {
             overrides.setProperty(Constants.PROPERTY_PROXY_HOST, proxyHost);
             overrides.setProperty(Constants.PROPERTY_PROXY_PORT, proxyPort);
         }
-        if (StringUtils.isNotBlank(region)) {
-            overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
-        }
+
+        region = InputsUtil.getDefaultStringInput(region,
+                io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
+        overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
 
         return overrides;
     }
