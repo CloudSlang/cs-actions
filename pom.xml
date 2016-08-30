@@ -67,23 +67,12 @@
                     <executions>
                         <execution>
                             <id>attach-sources</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
+                            <phase>DISABLE_FORKED_LIFECYCLE_MSOURCES-13</phase>
                         </execution>
                     </executions>
-                    <configuration>
-                        <attach>true</attach>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-        </plugins>
     </build>
     <distributionManagement>
         <repository>
