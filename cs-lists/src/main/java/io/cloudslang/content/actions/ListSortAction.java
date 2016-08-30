@@ -50,11 +50,11 @@ public class ListSortAction {
             })
     public Map<String, String> sortList(@Param(value = LIST, required = true) String list,
                                         @Param(value = DELIMITER, required = true) String delimiter,
-                                        @Param(value = REVERSE) Boolean reverse) {
+                                        @Param(value = REVERSE) String reverse) {
 
         Map<String, String> result = new HashMap<>();
         try {
-            String sortedList = sort(list, reverse, delimiter);
+            String sortedList = sort(list, Boolean.parseBoolean(reverse), delimiter);
             result.put(RESULT_TEXT, sortedList);
             result.put(RESPONSE, SUCCESS);
             result.put(RETURN_RESULT, sortedList);
@@ -68,7 +68,7 @@ public class ListSortAction {
         return result;
     }
 
-    private String sort(String list, Boolean reverse, String delimiter) {
+    private String sort(String list, boolean reverse, String delimiter) {
         try {
             int[] unsorted = ListProcessor.toIntArray(list, delimiter);
             if (reverse) {
