@@ -91,7 +91,7 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
 
     @Override
     public Set<String> describeRegions(boolean isDebugMode) {
-        lazyInit(region, isDebugMode);
+        init(isDebugMode);
         return ec2Api.getConfiguredRegions();
     }
 

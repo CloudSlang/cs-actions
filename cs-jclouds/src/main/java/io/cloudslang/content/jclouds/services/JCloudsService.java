@@ -54,9 +54,9 @@ public class JCloudsService {
             overrides.setProperty(Constants.PROPERTY_PROXY_PORT, proxyPort);
         }
 
-        region = InputsUtil.getDefaultStringInput(region,
-                io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
-        overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
+        if (StringUtils.isNotBlank(region)) {
+            overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
+        }
 
         return overrides;
     }
