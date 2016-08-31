@@ -52,6 +52,7 @@ public class JCloudsService {
             overrides.setProperty(Constants.PROPERTY_PROXY_HOST, proxyHost);
             overrides.setProperty(Constants.PROPERTY_PROXY_PORT, proxyPort);
         }
+
         if (StringUtils.isNotBlank(region)) {
             overrides.setProperty(LocationConstants.PROPERTY_REGIONS, region);
         }
