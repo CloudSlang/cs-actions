@@ -2,7 +2,6 @@ package io.cloudslang.content.jclouds.services;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
-import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
