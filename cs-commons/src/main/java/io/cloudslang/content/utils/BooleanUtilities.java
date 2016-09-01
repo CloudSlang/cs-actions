@@ -2,20 +2,21 @@ package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ExceptionsValues;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+//import lombok.AccessLevel;
+//import lombok.NoArgsConstructor;
+//import lombok.NonNull;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by victor on 31.08.2016.
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+//@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BooleanUtilities {
 
-    @NonNull
-    private static String getLowerCaseString(@NonNull final String string) {
+    @NotNull
+    private static String getLowerCaseString(@NotNull final String string) {
         return StringUtils.strip(string).toLowerCase();
     }
 

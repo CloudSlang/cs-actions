@@ -1,15 +1,13 @@
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.ExceptionsValues;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * Created by victor on 31.08.2016.
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+//@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NumberUtilities {
 
     public static boolean isValidInt(final String integerStr) {
