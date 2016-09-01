@@ -10,6 +10,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class NumberUtilities {
 
+    /**
+     * @param integerStr
+     * @return
+     */
     public static boolean isValidInt(@Nullable final String integerStr) {
         if (StringUtils.isBlank(integerStr)) {
             return false;
@@ -23,6 +27,12 @@ public class NumberUtilities {
         }
     }
 
+    /**
+     * @param integerStr
+     * @param lowerBound
+     * @param upperBound
+     * @return
+     */
     public static boolean isValidInt(@Nullable final String integerStr, int lowerBound, int upperBound) {
         if (lowerBound >= upperBound) {
             throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
@@ -34,6 +44,10 @@ public class NumberUtilities {
         return lowerBound < aInteger && aInteger < upperBound;
     }
 
+    /**
+     * @param integerStr
+     * @return
+     */
     public static int toInteger(@Nullable final String integerStr) {
         if (!isValidInt(integerStr)) {
             throw new IllegalArgumentException(integerStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_INTEGER_VALUE);
@@ -42,10 +56,19 @@ public class NumberUtilities {
         return NumberUtils.createInteger(stripedInteger);
     }
 
+    /**
+     * @param integerStr
+     * @param defaultInteger
+     * @return
+     */
     public static int toInteger(final String integerStr, final int defaultInteger) {
         return StringUtils.isNoneEmpty(integerStr) ? toInteger(integerStr) : defaultInteger;
     }
 
+    /**
+     * @param doubleStr
+     * @return
+     */
     public static boolean isValidDouble(@Nullable final String doubleStr) {
         if (StringUtils.isBlank(doubleStr)){
             return false;
@@ -59,6 +82,12 @@ public class NumberUtilities {
         }
     }
 
+    /**
+     * @param doubleStr
+     * @param lowerBound
+     * @param upperBound
+     * @return
+     */
     public static boolean isValidDouble(@Nullable final String doubleStr, double lowerBound, double upperBound) {
         if (lowerBound >= upperBound) {
             throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
@@ -70,6 +99,10 @@ public class NumberUtilities {
         return lowerBound < aDouble && aDouble < upperBound;
     }
 
+    /**
+     * @param doubleStr
+     * @return
+     */
     public static double toDouble(@Nullable final String doubleStr) {
         if (!isValidInt(doubleStr)) {
             throw new IllegalArgumentException(doubleStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_DOUBLE_VALUE);
@@ -78,6 +111,11 @@ public class NumberUtilities {
         return NumberUtils.createDouble(stripedDouble);
     }
 
+    /**
+     * @param doubleStr
+     * @param defaultDouble
+     * @return
+     */
     public static double toDouble(@Nullable final String doubleStr, final double defaultDouble) {
         return StringUtils.isNoneEmpty(doubleStr) ? toDouble(doubleStr) : defaultDouble;
     }

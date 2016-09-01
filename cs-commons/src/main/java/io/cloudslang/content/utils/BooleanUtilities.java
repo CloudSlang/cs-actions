@@ -12,11 +12,19 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BooleanUtilities {
 
+    /**
+     * @param string
+     * @return
+     */
     @NotNull
     private static String getLowerCaseString(@NotNull final String string) {
         return StringUtils.strip(string).toLowerCase();
     }
 
+    /**
+     * @param booleanStr
+     * @return
+     */
     public static boolean isValid(@Nullable final String booleanStr) {
         if (StringUtils.isBlank(booleanStr)) {
             return false;
@@ -25,6 +33,10 @@ public class BooleanUtilities {
         return lowerCaseBoolean.equals(BooleanValues.TRUE) || lowerCaseBoolean.equals(BooleanValues.FALSE);
     }
 
+    /**
+     * @param booleanStr
+     * @return
+     */
     public static boolean toBoolean(@Nullable final String booleanStr) {
         if (!isValid(booleanStr)) {
             throw new IllegalArgumentException(booleanStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_BOOLEAN_VALUE);
@@ -32,6 +44,11 @@ public class BooleanUtilities {
         return BooleanUtils.toBoolean(getLowerCaseString(booleanStr));
     }
 
+    /**
+     * @param booleanStr
+     * @param defaultValue
+     * @return
+     */
     public static boolean toBoolean(@Nullable  final String booleanStr, final boolean defaultValue) {
         return StringUtils.isNoneEmpty(booleanStr) ? toBoolean(booleanStr) : defaultValue;
     }
