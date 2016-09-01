@@ -13,7 +13,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 public class NumberUtilities {
 
     public static boolean isValidInt(final String integerStr) {
-        if (StringUtils.isBlank(integerStr)) return false;
+        if (StringUtils.isBlank(integerStr)) {
+            return false;
+        }
         final String stripedInteger = StringUtils.strip(integerStr);
         try {
             NumberUtils.createInteger(stripedInteger);
@@ -24,8 +26,12 @@ public class NumberUtilities {
     }
 
     public static boolean isValidInt(final String integerStr, int lowerBound, int upperBound) {
-        if (lowerBound >= upperBound) throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
-        if (!isValidInt(integerStr)) return false;
+        if (lowerBound >= upperBound) {
+            throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
+        }
+        if (!isValidInt(integerStr)) {
+            return false;
+        }
         final int aInteger = toInteger(integerStr);
         return lowerBound < aInteger && aInteger < upperBound;
     }
@@ -43,7 +49,9 @@ public class NumberUtilities {
     }
 
     public static boolean isValidDouble(final String doubleStr) {
-        if (StringUtils.isBlank(doubleStr)) return false;
+        if (StringUtils.isBlank(doubleStr)){
+            return false;
+        }
         final String stripedDouble = StringUtils.strip(doubleStr);
         try {
             NumberUtils.createDouble(stripedDouble);
@@ -54,8 +62,12 @@ public class NumberUtilities {
     }
 
     public static boolean isValidDouble(final String doubleStr, double lowerBound, double upperBound) {
-        if (lowerBound >= upperBound) throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
-        if (!isValidDouble(doubleStr)) return false;
+        if (lowerBound >= upperBound) {
+            throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
+        }
+        if (!isValidDouble(doubleStr)) {
+            return false;
+        }
         final double aDouble = toDouble(doubleStr);
         return lowerBound < aDouble && aDouble < upperBound;
     }

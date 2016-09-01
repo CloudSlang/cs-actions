@@ -20,7 +20,9 @@ public class BooleanUtilities {
     }
 
     public static boolean isValid(final String booleanStr) {
-        if (StringUtils.isBlank(booleanStr)) return false;
+        if (StringUtils.isBlank(booleanStr)) {
+            return false;
+        }
         final String lowerCaseBoolean = getLowerCaseString(booleanStr);
         return lowerCaseBoolean.equals(BooleanValues.TRUE) || lowerCaseBoolean.equals(BooleanValues.FALSE);
     }
@@ -35,5 +37,6 @@ public class BooleanUtilities {
     public static boolean toBoolean(final String booleanStr, final boolean defaultValue) {
         return StringUtils.isNoneEmpty(booleanStr) ? toBoolean(booleanStr) : defaultValue;
     }
+
 
 }
