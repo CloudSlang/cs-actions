@@ -3,14 +3,14 @@ package io.cloudslang.content.utils;
 import io.cloudslang.content.constants.ExceptionsValues;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by victor on 31.08.2016.
  */
-//@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NumberUtilities {
 
-    public static boolean isValidInt(final String integerStr) {
+    public static boolean isValidInt(@Nullable final String integerStr) {
         if (StringUtils.isBlank(integerStr)) {
             return false;
         }
@@ -23,7 +23,7 @@ public class NumberUtilities {
         }
     }
 
-    public static boolean isValidInt(final String integerStr, int lowerBound, int upperBound) {
+    public static boolean isValidInt(@Nullable final String integerStr, int lowerBound, int upperBound) {
         if (lowerBound >= upperBound) {
             throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
         }
@@ -34,7 +34,7 @@ public class NumberUtilities {
         return lowerBound < aInteger && aInteger < upperBound;
     }
 
-    public static int toInteger(final String integerStr) {
+    public static int toInteger(@Nullable final String integerStr) {
         if (!isValidInt(integerStr)) {
             throw new IllegalArgumentException(integerStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_INTEGER_VALUE);
         }
@@ -46,7 +46,7 @@ public class NumberUtilities {
         return StringUtils.isNoneEmpty(integerStr) ? toInteger(integerStr) : defaultInteger;
     }
 
-    public static boolean isValidDouble(final String doubleStr) {
+    public static boolean isValidDouble(@Nullable final String doubleStr) {
         if (StringUtils.isBlank(doubleStr)){
             return false;
         }
@@ -59,7 +59,7 @@ public class NumberUtilities {
         }
     }
 
-    public static boolean isValidDouble(final String doubleStr, double lowerBound, double upperBound) {
+    public static boolean isValidDouble(@Nullable final String doubleStr, double lowerBound, double upperBound) {
         if (lowerBound >= upperBound) {
             throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
         }
@@ -70,7 +70,7 @@ public class NumberUtilities {
         return lowerBound < aDouble && aDouble < upperBound;
     }
 
-    public static double toDouble(final String doubleStr) {
+    public static double toDouble(@Nullable final String doubleStr) {
         if (!isValidInt(doubleStr)) {
             throw new IllegalArgumentException(doubleStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_DOUBLE_VALUE);
         }
@@ -78,7 +78,7 @@ public class NumberUtilities {
         return NumberUtils.createDouble(stripedDouble);
     }
 
-    public static double toDouble(final String doubleStr, final double defaultDouble) {
+    public static double toDouble(@Nullable final String doubleStr, final double defaultDouble) {
         return StringUtils.isNoneEmpty(doubleStr) ? toDouble(doubleStr) : defaultDouble;
     }
 }
