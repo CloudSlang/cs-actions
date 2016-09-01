@@ -1,6 +1,7 @@
 package io.cloudslang.content.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,7 @@ public class StringUtilities {
      * @param string
      * @return
      */
+    @Contract("null -> true")
     public static boolean isEmpty(@Nullable final String string) {
         return StringUtils.isEmpty(string);
     }
@@ -21,6 +23,7 @@ public class StringUtilities {
      * @param string
      * @return
      */
+    @Contract("null -> true")
     public static boolean isBlank(@Nullable final String string) {
         return StringUtils.isBlank(string);
     }
