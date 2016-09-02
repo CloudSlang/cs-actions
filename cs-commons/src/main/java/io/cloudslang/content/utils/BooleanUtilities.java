@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by victor on 31.08.2016.
  */
-public class BooleanUtilities {
+public final class BooleanUtilities {
 
     /**
      * @param string
