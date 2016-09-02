@@ -49,9 +49,9 @@
     </distributionManagement>
     <dependencies>
         <dependency>
-            <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-http-client</artifactId>
-            <version>0.1.67</version>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+            <version>1.10.6</version>
         </dependency>
 
         <dependency>
