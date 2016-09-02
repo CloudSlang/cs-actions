@@ -65,6 +65,10 @@ public class Inputs {
     public static final String TIME_ZONE = "timeZone";
     public static final String UTC_CLOCK = "hwClockUTC";
 
+    //Cluster specific inputs
+    public static final String CLUSTER_NAME = "clusterName";
+    public static final String RESTART_PRIORITY = "restartPriority";
+
     // Miscellaneous
     public static final String DELIMITER = "delimiter";
 }

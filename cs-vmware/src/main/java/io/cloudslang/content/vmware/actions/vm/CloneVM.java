@@ -77,7 +77,6 @@ public class CloneVM {
                                        @Param(value = Inputs.USERNAME, required = true) String username,
                                        @Param(value = Inputs.PASSWORD, encrypted = true) String password,
                                        @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
-
                                        @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
                                        @Param(value = Inputs.HOSTNAME, required = true) String hostname,
                                        @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
