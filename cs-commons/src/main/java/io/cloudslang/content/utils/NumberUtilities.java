@@ -61,7 +61,7 @@ public class NumberUtilities {
      * @param defaultInteger
      * @return
      */
-    public static int toInteger(final String integerStr, final int defaultInteger) {
+    public static int toInteger(@Nullable final String integerStr, final int defaultInteger) {
         return StringUtils.isNoneEmpty(integerStr) ? toInteger(integerStr) : defaultInteger;
     }
 
@@ -104,7 +104,7 @@ public class NumberUtilities {
      * @return
      */
     public static double toDouble(@Nullable final String doubleStr) {
-        if (!isValidInt(doubleStr)) {
+        if (!isValidDouble(doubleStr)) {
             throw new IllegalArgumentException(doubleStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_DOUBLE_VALUE);
         }
         final String stripedDouble = StringUtils.strip(doubleStr);
