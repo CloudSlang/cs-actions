@@ -3,6 +3,7 @@ package io.cloudslang.content.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.regex.Pattern;
 
 /** Other utilities like ip, email, port, and other validation
@@ -56,6 +57,5 @@ public final class OtherUtilities {
     public static String changeNewLineFromUnixToWindows(@NotNull final String string) {
         return string.replaceAll("\n", "\r\n");
     }
-
 
 }
