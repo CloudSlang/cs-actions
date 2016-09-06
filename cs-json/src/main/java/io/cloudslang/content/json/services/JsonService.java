@@ -134,13 +134,7 @@ public class JsonService {
     }
 
     private boolean shouldCharacterBeReplaced(char[] characters, char characterToReplace, int characterPosition) {
-        if (characters[characterPosition] == characterToReplace) {
-            if (characterPosition == 0) {
-                return true;
-            } else if (characters[characterPosition - 1] != '\\') {
-                return true;
-            }
-        }
-        return false;
+        return characters[characterPosition] == characterToReplace &&
+                (characterPosition == 0 || characters[characterPosition - 1] != '\\');
     }
 }
