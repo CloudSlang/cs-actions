@@ -27,8 +27,9 @@ public class StringUtils {
             return EMPTY_STRING;
         }
     }
+
     public static boolean isEmpty(Object val) {
-        return (val == null)||(EMPTY_STRING.equals(val));
+        return (val == null) || (EMPTY_STRING.equals(val));
     }
 
 

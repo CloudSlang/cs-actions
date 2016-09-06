@@ -16,9 +16,9 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.jayway.jsonpath.internal.JsonReader;
-import com.jayway.jsonpath.internal.spi.json.AbstractJsonProvider;
-import com.jayway.jsonpath.internal.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.internal.JsonContext;
+import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import io.cloudslang.content.json.utils.ActionsEnum;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.json.utils.JsonUtils;
@@ -71,12 +71,12 @@ public class EditJson {
                                        @Param(value = Constants.InputNames.VALIDATE_VALUE) String validateValue) {
 
         Map<String, String> returnResult = new HashMap<>();
-        JsonReader jsonReader;
+        JsonContext jsonContext;
         final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider();
         boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
         try {
             JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
-            jsonReader = JsonUtils.getJsonReader(jsonObject, provider);
+            jsonContext = JsonUtils.getJsonContext(jsonObject, provider);
         } catch (Exception e) {
             return populateResult(returnResult, e);
         }
@@ -84,10 +84,10 @@ public class EditJson {
         String result;
         try {
             Object valueObject;
-            JsonReader valueJsonReader;
+            JsonContext valueJsonContext;
             try {
-                valueJsonReader = JsonUtils.getJsonReader(value, provider);
-                valueObject = valueJsonReader.json();
+                valueJsonContext = JsonUtils.getJsonContext(value, provider);
+                valueObject = valueJsonContext.json();
             } catch (Exception e) {
                 if (!validateValueBoolean || !actionEnum.getNeedValue()) {
                     valueObject = value;
@@ -95,7 +95,7 @@ public class EditJson {
                     throw e;
                 }
             }
-            Object json = editJson(jsonPath, action, name, valueObject, jsonReader);
+            Object json = editJson(jsonPath, action, name, valueObject, jsonContext);
             result = json.toString();
         } catch (Exception e) {
             return populateResult(returnResult, e);
@@ -103,25 +103,25 @@ public class EditJson {
         return populateResult(returnResult, result, null);
     }
 
-    private Object editJson(String jsonPath, String action, String name, Object value, JsonReader jsonReader) {
+    private Object editJson(String jsonPath, String action, String name, Object value, JsonContext jsonContext) {
         ActionsEnum myAction = ActionsEnum.valueOf(action.toLowerCase());
         Object json = null;
 
         switch (myAction) {
             case get:
-                json = jsonReader.read(jsonPath);
+                json = jsonContext.read(jsonPath);
                 break;
             case insert:
-                json = jsonReader.put(jsonPath, name, value).json();
+                json = jsonContext.put(jsonPath, name, value).json();
                 break;
             case add:
-                json = jsonReader.add(jsonPath, value).json();
+                json = jsonContext.add(jsonPath, value).json();
                 break;
             case update:
-                json = jsonReader.set(jsonPath, value).json();
+                json = jsonContext.set(jsonPath, value).json();
                 break;
             case delete:
-                json = jsonReader.delete(jsonPath).json();
+                json = jsonContext.delete(jsonPath).json();
                 break;
         }
         return json;

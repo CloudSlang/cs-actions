@@ -2,7 +2,7 @@ package io.cloudslang.content.json.services;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.internal.spi.json.GsonJsonProvider;
+import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
 import io.cloudslang.content.json.utils.StringUtils;
@@ -52,12 +52,13 @@ public class JsonService {
 
     private void parseJsonForInconsistencies(String normalizedJson) {
         JsonProvider provider = new GsonJsonProvider();
-        Configuration configuration =  Configuration.builder().jsonProvider(provider).build();
+        Configuration configuration = Configuration.builder().jsonProvider(provider).build();
         JsonPath.parse(normalizedJson, configuration);       //throws an exception at runtime if the json is malformed
     }
 
     /**
      * Returns the quote character used for specifying json member names and String values of json members
+     *
      * @param jsonString the source json from which to extract the wrapping quote
      * @return either one of the characters ' (single quote)or " (double quote)
      */
@@ -75,14 +76,14 @@ public class JsonService {
     private void removeEmptyElementsFromMap(Map<String, Object> json) {
         Set<Map.Entry<String, Object>> jsonElements = json.entrySet();
         Iterator<Map.Entry<String, Object>> jsonElementsIterator = jsonElements.iterator();
-        while(jsonElementsIterator.hasNext()) {
+        while (jsonElementsIterator.hasNext()) {
             Map.Entry<String, Object> jsonElement = jsonElementsIterator.next();
             Object jsonElementValue = jsonElement.getValue();
             if (StringUtils.isEmpty(jsonElementValue)) {
-                   jsonElementsIterator.remove();
+                jsonElementsIterator.remove();
             } else if (jsonElementValue instanceof JSONArray) {
                 if (((JSONArray) jsonElementValue).isEmpty()) {
-                   jsonElementsIterator.remove();
+                    jsonElementsIterator.remove();
                 } else {
                     removeEmptyElementFromJsonArray((JSONArray) jsonElementValue);
                 }
@@ -100,10 +101,10 @@ public class JsonService {
     private void removeEmptyElementFromJsonArray(JSONArray jsonArray) {
 
         Iterator jsonArrayIterator = jsonArray.iterator();
-        while(jsonArrayIterator.hasNext()){
+        while (jsonArrayIterator.hasNext()) {
             Object jsonArrayElement = jsonArrayIterator.next();
-             if (StringUtils.isEmpty(jsonArrayElement)) {
-                    jsonArrayIterator.remove();
+            if (StringUtils.isEmpty(jsonArrayElement)) {
+                jsonArrayIterator.remove();
             } else if (jsonArrayElement instanceof JSONArray) {
                 if (((JSONArray) jsonArrayElement).isEmpty()) {
                     jsonArrayIterator.remove();
@@ -124,7 +125,7 @@ public class JsonService {
     private String replaceUnescapedOccurrencesOfCharacterInText(String text, char toReplace, char newChar) {
         char[] charArrayText = text.toCharArray();
         for (int i = 0; i < charArrayText.length; i++) {
-            if(shouldCharacterBeReplaced(charArrayText, toReplace, i))  {
+            if (shouldCharacterBeReplaced(charArrayText, toReplace, i)) {
                 charArrayText[i] = newChar;
             }
         }
@@ -133,10 +134,10 @@ public class JsonService {
     }
 
     private boolean shouldCharacterBeReplaced(char[] characters, char characterToReplace, int characterPosition) {
-        if(characters[characterPosition] == characterToReplace){
-            if( characterPosition == 0){
+        if (characters[characterPosition] == characterToReplace) {
+            if (characterPosition == 0) {
                 return true;
-            } else if(characters[characterPosition - 1] != '\\'){
+            } else if (characters[characterPosition - 1] != '\\') {
                 return true;
             }
         }

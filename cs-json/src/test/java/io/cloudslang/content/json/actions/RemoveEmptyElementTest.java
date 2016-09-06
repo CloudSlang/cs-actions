@@ -24,28 +24,29 @@ public class RemoveEmptyElementTest {
     Map<String, String> returnResult;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         actionUnderTest = new RemoveEmptyElementAction();
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         actionUnderTest = null;
         returnResult = null;
     }
 
     @Test
-      public void givenValidJsonInputThenReturnSuccess(){
-        String expectedResultString = "{\"expected\":\"value\"}";;
+    public void givenValidJsonInputThenReturnSuccess() {
+        String expectedResultString = "{\"expected\":\"value\"}";
+        ;
         String jsonInput = "{\"removed1\":\"\", \"removed2\":[], \"removed3\":null, \"expected\":\"value\"} ";
         returnResult = actionUnderTest.removeEmptyElements(jsonInput);
 
-       assertEquals("0", returnResult.get(RETURN_CODE));
+        assertEquals("0", returnResult.get(RETURN_CODE));
         assertEquals(expectedResultString, returnResult.get(RETURN_RESULT));
     }
 
     @Test
-    public void givenInvalidJsonThenReturnFailure(){
+    public void givenInvalidJsonThenReturnFailure() {
         String invalidJsonInput = "{\"removed1\":\"\", \"removed2\":[] \"removed3\":null \"expected\":\"value\"} ";
         returnResult = actionUnderTest.removeEmptyElements(invalidJsonInput);
 

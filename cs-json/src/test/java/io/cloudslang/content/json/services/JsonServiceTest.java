@@ -26,13 +26,13 @@ public class JsonServiceTest {
 
 
     @Before
-    public void setUp(){
-        jsonServiceUnderTest =  new JsonService();
+    public void setUp() {
+        jsonServiceUnderTest = new JsonService();
     }
 
     @After
-    public void tearDown(){
-        jsonServiceUnderTest =  null;
+    public void tearDown() {
+        jsonServiceUnderTest = null;
         jsonStringInput = null;
         expectedJsonStringOutput = null;
         actualJsonStringOutput = null;
@@ -42,56 +42,56 @@ public class JsonServiceTest {
     @Test
     public void givenValidJsonStringWithDoubleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
         jsonStringInput = "{\"removed1\":\"\", \"removed2\":[], \"removed3\":null, \"expected\":\"value\"} ";
-        expectedJsonStringOutput ="{\"expected\":\"value\"}";
+        expectedJsonStringOutput = "{\"expected\":\"value\"}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 
     @Test
-     public void givenValidJsonStringWithNewLineAndDoubleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
+    public void givenValidJsonStringWithNewLineAndDoubleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
         jsonStringInput = "{\"removed1\":\"\", \"removed2\":[], \n" +
                 " \"removed3\":null, \"expected\":\"value\"} \n";
-        expectedJsonStringOutput ="{\"expected\":\"value\"}";
+        expectedJsonStringOutput = "{\"expected\":\"value\"}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 
     @Test
     public void givenValidJsonStringWithEmptySpaceAndDoubleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
         jsonStringInput = "{   \"removed1\":\"\", \"removed2\":[],  \"removed3\":null, \"expected\":\"value\"} ";
-        expectedJsonStringOutput ="{\"expected\":\"value\"}";
+        expectedJsonStringOutput = "{\"expected\":\"value\"}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 
     @Test
     public void givenValidJsonStringWithSingleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
         jsonStringInput = "{'removed1':'', 'removed2':[], 'removed3':null, 'expected':'value'} ";
-        expectedJsonStringOutput ="{'expected':'value'}";
+        expectedJsonStringOutput = "{'expected':'value'}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 
     @Test
     public void givenValidJsonStringWithNewLineAndSingleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
         jsonStringInput = "{'removed1':'', 'removed2':[], 'removed3':null, 'expected':'value'} ";
-        expectedJsonStringOutput ="{'expected':'value'}";
+        expectedJsonStringOutput = "{'expected':'value'}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 
     @Test
     public void givenValidJsonStringWithEmptySpaceAndSingleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
         jsonStringInput = "{    'removed1':'', 'removed2':[],  'removed3':null, 'expected':'value'} ";
-        expectedJsonStringOutput ="{'expected':'value'}";
+        expectedJsonStringOutput = "{'expected':'value'}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 
     @Test
@@ -119,10 +119,10 @@ public class JsonServiceTest {
                 "  \"remove3\": \"\" \n" +
                 " }] \n" +
                 "} \n";
-        expectedJsonStringOutput ="{\"expected1\":\"value\",\"expected2\":1,\"expected\":{\"public\":[{\"expected1\":\"value\",\"expected2\":1}]},\"links\":[{\"expected1\":\"http://test.com\",\"expected2\":1}]}";
+        expectedJsonStringOutput = "{\"expected1\":\"value\",\"expected2\":1,\"expected\":{\"public\":[{\"expected1\":\"value\",\"expected2\":1}]},\"links\":[{\"expected1\":\"http://test.com\",\"expected2\":1}]}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals( JsonPath.parse(expectedJsonStringOutput).json(),  JsonPath.parse(actualJsonStringOutput).json());
+        assertEquals(JsonPath.parse(expectedJsonStringOutput).json(), JsonPath.parse(actualJsonStringOutput).json());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class JsonServiceTest {
                 "  'remove3': '' \n" +
                 " }] \n" +
                 "} \n";
-        expectedJsonStringOutput ="{'expected1':'value','expected2':1,'expected':{'public':[{'expected1':'value','expected2':1}]},'links':[{'expected1':'http://test.com','expected2':1}]}";
+        expectedJsonStringOutput = "{'expected1':'value','expected2':1,'expected':{'public':[{'expected1':'value','expected2':1}]},'links':[{'expected1':'http://test.com','expected2':1}]}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
         assertEquals(JsonPath.parse(expectedJsonStringOutput).json(), JsonPath.parse(actualJsonStringOutput).json());
@@ -159,16 +159,16 @@ public class JsonServiceTest {
     @Test
     public void givenURLJsonValueAndDoubleQuoteThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
         jsonStringInput = "{\"removed1\":\"\", \"removed2\":[], \"removed3\":null, \"expected\":\"http://test.com\"} ";
-        expectedJsonStringOutput ="{\"expected\":\"http://test.com\"}";
+        expectedJsonStringOutput = "{\"expected\":\"http://test.com\"}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 
     @Test
     public void givenInvalidJsonThenThrowException() throws RemoveEmptyElementException {
         jsonStringInput = "{\"removed1\":\"\", \"removed2\":[], \"removed3\":null \"expected\":\"http://test.com\"}";
-        expectedJsonStringOutput ="{\"expected\":\"http://test.com\"}";
+        expectedJsonStringOutput = "{\"expected\":\"http://test.com\"}";
 
         exception.expect(RemoveEmptyElementException.class);
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
@@ -177,9 +177,9 @@ public class JsonServiceTest {
     @Test
     public void givenJsonWithEmptyElementsThenReturnEmptyJsonString() throws RemoveEmptyElementException {
         jsonStringInput = "{'remove1': '','remove2': ''}";
-        expectedJsonStringOutput ="{}";
+        expectedJsonStringOutput = "{}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(expectedJsonStringOutput,actualJsonStringOutput);
+        assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
     }
 }

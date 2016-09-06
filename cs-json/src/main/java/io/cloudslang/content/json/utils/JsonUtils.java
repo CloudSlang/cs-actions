@@ -10,8 +10,8 @@
 package io.cloudslang.content.json.utils;
 
 import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.internal.JsonReader;
-import com.jayway.jsonpath.internal.spi.json.AbstractJsonProvider;
+import com.jayway.jsonpath.internal.JsonContext;
+import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
 
 import java.util.Map;
 
@@ -90,11 +90,11 @@ public class JsonUtils {
         }
     }
 
-    public static JsonReader getJsonReader(String jsonObject, final AbstractJsonProvider provider) {
+    public static JsonContext getJsonContext(String jsonObject, final AbstractJsonProvider provider) {
         final Configuration configuration = Configuration.defaultConfiguration().jsonProvider(provider);
-        JsonReader jsonReader = new JsonReader(configuration);
-        jsonReader.parse(jsonObject);
-        return jsonReader;
+        JsonContext jsonContext = new JsonContext(configuration);
+        jsonContext.parse(jsonObject);
+        return jsonContext;
     }
 
     public static boolean parseBooleanWithDefault(String booleanValue, boolean defaultValue) {
