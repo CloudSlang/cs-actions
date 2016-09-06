@@ -21,6 +21,17 @@ public final class StringEscapeUtilities extends StringEscapeUtils {
         return string.replaceAll("\\\\" + toEscapeStr, toEscapeStr).replaceAll(toEscapeStr, "\\\\" + toEscapeStr);
     }
 
+    /** Unescape all the occurrences of the <toUnescape> character from the <string>
+     * @param string the string from which to unescape the character
+     * @param toUnescape the character to unescape
+     * @return a new string with the unescaped <toUnescape> character
+     */
+    @NotNull
+    public static String unescapeChar(@NotNull final String string, final char toUnescape) {
+        final String toUnescapeStr = String.valueOf(toUnescape);
+        return string.replaceAll("\\\\" + toUnescapeStr, toUnescapeStr);
+    }
+
     /** Escapes all the occurrences of the <toEscape> characters from the <string> if they are not escaped already
      * @param string the string from which to escape the characters
      * @param toEscape the characters to escape as Array
@@ -35,4 +46,41 @@ public final class StringEscapeUtilities extends StringEscapeUtils {
         return toReturn;
     }
 
+    /** Unscape all the occurrences of the <toUnescape> characters from the <string>
+     * @param string the string from which to unescape the characters
+     * @param toUnescape the characters to unescape as Array
+     * @return a new string with the unescaped <toUnescape> characters
+     */
+    @NotNull
+    public static String unescapeChars(@NotNull final String string, final char[] toUnescape) {
+        String toReturn = string;
+        for (char character: toUnescape) {
+            toReturn = unescapeChar(toReturn, character);
+        }
+        return toReturn;
+    }
+
+    /** Removes all the occurrences of the \<toRemove> characters from the <string>
+     * @param string the string from which to remove the character
+     * @param toRemove the \character to remove from the <string>
+     * @return a new string with the removed \<toRemove> character
+     */
+    @NotNull
+    public static String removeEscapedChar(@NotNull final String string, final char toRemove) {
+        return string.replaceAll("\\\\" + toRemove, "");
+    }
+
+    /** Removes all the occurrences of the \<toRemove> characters from the <string>
+     * @param string the string from which to remove the characters
+     * @param toRemove the \character to remove from the <string>
+     * @return a new string with the removed \<toRemove> characters
+     */
+    @NotNull
+    public static String removeEscapedChars(@NotNull final String string, final char[] toRemove) {
+        String toReturn = string;
+        for (char character: toRemove) {
+            toReturn = removeEscapedChar(toReturn, character);
+        }
+        return toReturn;
+    }
 }
