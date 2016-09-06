@@ -1,7 +1,7 @@
 package io.cloudslang.content.utils;
 
-import com.sun.istack.internal.NotNull;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 
 /** An extension of apaches StringEscapeUtils, including escapeChar and escapeChars methods.
  * Created by victor on 01.09.2016.
