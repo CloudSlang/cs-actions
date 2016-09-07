@@ -16,6 +16,9 @@ public class Inputs {
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String DELIMITER = "delimiter";
         public static final String DEBUG_MODE = "debugMode";
+        public static final String VERSION = "version";
+        public static final String QUERY_PARAMS = "queryParams";
+        public static final String HEADERS = "headers";
     }
 
     public static final class CustomInputs {
@@ -59,11 +62,10 @@ public class Inputs {
         public static final String HTTP_VERB = "httpVerb";
         public static final String URI = "uri";
         public static final String PAYLOAD_HASH = "payloadHash";
-        public static final String QUERY_PARAMS = "queryParams";
-        public static final String HEADERS = "headers";
         public static final String AMAZON_API = "amazonApi";
         public static final String DATE = "date";
         public static final String KMS_KEY_ID = "kmsKeyId";
+        public static final String ATTACHMENT_ID = "attachmentId";
     }
 
     public static final class ImageInputs {
@@ -140,6 +142,8 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_ADDRESSES_PRIMARY = "networkInterfaceAddressesPrimary";
         public static final String NETWORK_INTERFACE_PUBLIC_IP = "networkInterfacePublicIp";
         public static final String NETWORK_INTERFACE_IP_OWNER_ID = "networkInterfaceIpOwnerId";
+        public static final String DEVICE_INDEX = "deviceIndex";
+        public static final String FORCE_DETACH = "forceDetach";
     }
 
     public static final class VolumeInputs {
@@ -152,12 +156,8 @@ public class Inputs {
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
     }
 
-    public static final class AWSApiInputs {
-        public static final String ATTACHMENT_ID = "attachmentId";
-        public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
-        public static final String DEVICE_INDEX = "deviceIndex";
-        public static final String FORCE_DETACH = "forceDetach";
+    public static final class AwsApiInputs {
+        public static final String DOMAIN = "domain";
         public static final String SECURITY_TOKEN = "securityToken";
-        public static final String VERSION = "version";
     }
 }

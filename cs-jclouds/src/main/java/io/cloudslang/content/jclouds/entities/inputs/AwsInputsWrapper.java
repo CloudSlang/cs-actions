@@ -10,49 +10,39 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * Created by Mihai Tusa.
  * 8/10/2016.
  */
-public class AWSInputsWrapper {
+public class AwsInputsWrapper {
     private HttpClientInputs httpClientInputs;
     private CommonInputs commonInputs;
     private CustomInputs customInputs;
     private VolumeInputs volumeInputs;
+    private NetworkInputs networkInputs;
 
-    private String serviceEndpoint;
     private String apiService;
     private String requestUri;
     private String requestPayload;
     private String date;
-    private String version;
-    private String networkInterfaceId;
-    private String deviceIndex;
     private String securityToken;
-    private String attachmentId;
     private String httpVerb;
     private String headers;
     private String queryParams;
+    private String action;
 
-    private boolean forceDetach;
-
-    private AWSInputsWrapper(AWSInputsWrapperBuilder builder) {
+    private AwsInputsWrapper(AWSInputsWrapperBuilder builder) {
         this.httpClientInputs = builder.httpClientInputs;
         this.commonInputs = builder.commonInputs;
         this.customInputs = builder.customInputs;
         this.volumeInputs = builder.volumeInputs;
+        this.networkInputs = builder.networkInputs;
 
-        this.serviceEndpoint = builder.serviceEndpoint;
         this.apiService = builder.apiService;
         this.requestUri = builder.requestUri;
         this.requestPayload = builder.requestPayload;
         this.date = builder.date;
-        this.version = builder.version;
-        this.networkInterfaceId = builder.networkInterfaceId;
-        this.deviceIndex = builder.deviceIndex;
         this.securityToken = builder.securityToken;
-        this.attachmentId = builder.attachmentId;
         this.httpVerb = builder.httpVerb;
         this.headers = builder.headers;
         this.queryParams = builder.queryParams;
-
-        this.forceDetach = builder.forceDetach;
+        this.action = builder.action;
     }
 
     public HttpClientInputs getHttpClientInputs() {
@@ -71,8 +61,8 @@ public class AWSInputsWrapper {
         return volumeInputs;
     }
 
-    public String getServiceEndpoint() {
-        return serviceEndpoint;
+    public NetworkInputs getNetworkInputs() {
+        return networkInputs;
     }
 
     public String getApiService() {
@@ -91,24 +81,8 @@ public class AWSInputsWrapper {
         return date;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public String getNetworkInterfaceId() {
-        return networkInterfaceId;
-    }
-
-    public String getDeviceIndex() {
-        return deviceIndex;
-    }
-
     public String getSecurityToken() {
         return securityToken;
-    }
-
-    public String getAttachmentId() {
-        return attachmentId;
     }
 
     public String getHttpVerb() {
@@ -123,8 +97,8 @@ public class AWSInputsWrapper {
         return queryParams;
     }
 
-    public boolean isForceDetach() {
-        return forceDetach;
+    public String getAction() {
+        return action;
     }
 
     public static class AWSInputsWrapperBuilder {
@@ -132,25 +106,20 @@ public class AWSInputsWrapper {
         private CommonInputs commonInputs;
         private CustomInputs customInputs;
         private VolumeInputs volumeInputs;
+        private NetworkInputs networkInputs;
 
-        private String serviceEndpoint;
         private String apiService;
         private String requestUri;
         private String requestPayload;
         private String date;
-        private String version;
-        private String networkInterfaceId;
-        private String deviceIndex;
         private String securityToken;
-        private String attachmentId;
         private String httpVerb;
         private String headers;
         private String queryParams;
+        private String action;
 
-        private boolean forceDetach;
-
-        public AWSInputsWrapper build() {
-            return new AWSInputsWrapper(this);
+        public AwsInputsWrapper build() {
+            return new AwsInputsWrapper(this);
         }
 
         public AWSInputsWrapperBuilder withHttpClientInputs(HttpClientInputs inputs) {
@@ -173,9 +142,8 @@ public class AWSInputsWrapper {
             return this;
         }
 
-        public AWSInputsWrapperBuilder withServiceEndpoint(String inputValue) {
-            serviceEndpoint = AmazonApiServiceType.getValue(inputValue) +
-                    Constants.Miscellaneous.DOT + Constants.AWSParams.AMAZON_HOSTNAME;
+        public AWSInputsWrapperBuilder withNetworkInputs(NetworkInputs inputs) {
+            networkInputs = inputs;
             return this;
         }
 
@@ -199,28 +167,8 @@ public class AWSInputsWrapper {
             return this;
         }
 
-        public AWSInputsWrapperBuilder withNetworkInterfaceId(String inputValue) {
-            networkInterfaceId = inputValue;
-            return this;
-        }
-
-        public AWSInputsWrapperBuilder withDeviceIndex(String inputValue) {
-            deviceIndex = inputValue;
-            return this;
-        }
-
-        public AWSInputsWrapperBuilder withVersion(String inputValue) {
-            version = inputValue;
-            return this;
-        }
-
         public AWSInputsWrapperBuilder withSecurityToken(String inputValue) {
             securityToken = inputValue;
-            return this;
-        }
-
-        public AWSInputsWrapperBuilder withAttachmentId(String inputValue) {
-            attachmentId = inputValue;
             return this;
         }
 
@@ -239,8 +187,8 @@ public class AWSInputsWrapper {
             return this;
         }
 
-        public AWSInputsWrapperBuilder withForceDetach(String inputValue) {
-            forceDetach = Boolean.parseBoolean(inputValue);
+        public AWSInputsWrapperBuilder withAction(String inputValue) {
+            action = inputValue;
             return this;
         }
     }

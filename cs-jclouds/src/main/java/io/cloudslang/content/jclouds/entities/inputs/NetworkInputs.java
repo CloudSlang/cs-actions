@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.aws.Domain;
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceAttachmentStatus;
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceStatus;
 
@@ -33,6 +34,10 @@ public class NetworkInputs {
     private String networkInterfaceAddressesPrimary;
     private String networkInterfacePublicIp;
     private String networkInterfaceIpOwnerId;
+    private String domain;
+    private String deviceIndex;
+
+    private boolean isForceDetach;
 
     private NetworkInputs(NetworkInputs.NetworkInputsBuilder builder) {
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
@@ -60,6 +65,10 @@ public class NetworkInputs {
         this.networkInterfaceAddressesPrimary = builder.networkInterfaceAddressesPrimary;
         this.networkInterfacePublicIp = builder.networkInterfacePublicIp;
         this.networkInterfaceIpOwnerId = builder.networkInterfaceIpOwnerId;
+        this.domain = builder.domain;
+        this.deviceIndex = builder.deviceIndex;
+
+        this.isForceDetach = builder.isForceDetach;
     }
 
     public String getNetworkInterfaceDescription() {
@@ -162,6 +171,18 @@ public class NetworkInputs {
         return networkInterfaceIpOwnerId;
     }
 
+    public String getDomain() {
+        return domain;
+    }
+
+    public String getDeviceIndex() {
+        return deviceIndex;
+    }
+
+    public boolean isForceDetach() {
+        return isForceDetach;
+    }
+
     public static class NetworkInputsBuilder {
         private String networkInterfaceDescription;
         private String networkInterfaceSubnetId;
@@ -188,6 +209,10 @@ public class NetworkInputs {
         private String networkInterfaceAddressesPrimary;
         private String networkInterfacePublicIp;
         private String networkInterfaceIpOwnerId;
+        private String domain;
+        private String deviceIndex;
+
+        private boolean isForceDetach;
 
         public NetworkInputs build() {
             return new NetworkInputs(this);
@@ -315,6 +340,21 @@ public class NetworkInputs {
 
         public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceIpOwnerId(String inputValue) throws Exception {
             networkInterfaceIpOwnerId = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withDomain(String inputValue) {
+            domain = Domain.getValue(inputValue);
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withDeviceIndex(String inputValue) {
+            deviceIndex = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withIsForceDetach(String inputValue) {
+            isForceDetach = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

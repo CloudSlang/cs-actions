@@ -33,7 +33,7 @@ public class Constants {
         public static final String NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
-        public static final String UNSUPPORTED_QUERY_API_CALL = "Unsupported Query API call.";
+        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
     }
 
     public static final class ValidationValues {
@@ -41,7 +41,7 @@ public class Constants {
         public static final int THOUSAND_AND_TWENTY_FOUR = 1024;
     }
 
-    public static final class AWSParams {
+    public static final class AwsParams {
         public static final String ACTION = "Action";
         public static final String AMAZON_HOSTNAME = "amazonaws.com";
         public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
@@ -51,5 +51,12 @@ public class Constants {
         public static final String INSTANCE_ID = "InstanceId";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String VERSION = "Version";
+    }
+
+    public static final class QueryApiActions {
+        public static final String ALLOCATE_ADDRESS = "AllocateAddress";
+        public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
+        public static final String CREATE_VOLUME = "CreateVolume";
+        public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
     }
 }

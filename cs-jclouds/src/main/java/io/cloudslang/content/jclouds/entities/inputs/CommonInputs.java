@@ -18,7 +18,12 @@ public class CommonInputs {
     private String credential;
     private String proxyHost;
     private String proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
     private String delimiter;
+    private String version;
+    private String headers;
+    private String queryParams;
 
     private boolean debugMode;
 
@@ -29,7 +34,13 @@ public class CommonInputs {
         this.credential = builder.credential;
         this.proxyHost = builder.proxyHost;
         this.proxyPort = builder.proxyPort;
+        this.proxyUsername = builder.proxyUsername;
+        this.proxyPassword = builder.proxyPassword;
         this.delimiter = builder.delimiter;
+        this.version = builder.version;
+        this.headers = builder.headers;
+        this.queryParams = builder.queryParams;
+
         this.debugMode = builder.debugMode;
     }
 
@@ -57,8 +68,28 @@ public class CommonInputs {
         return proxyPort;
     }
 
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
     public String getDelimiter() {
         return delimiter;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getHeaders() {
+        return headers;
+    }
+
+    public String getQueryParams() {
+        return queryParams;
     }
 
     public boolean isDebugMode() {
@@ -72,7 +103,12 @@ public class CommonInputs {
         private String credential;
         private String proxyHost;
         private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
         private String delimiter;
+        private String version;
+        private String headers;
+        private String queryParams;
 
         private boolean debugMode;
 
@@ -113,8 +149,33 @@ public class CommonInputs {
             return this;
         }
 
+        public CommonInputsBuilder withProxyUsername(String inputValue) {
+            proxyUsername = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withProxyPassword(String inputValue) {
+            proxyPassword = inputValue;
+            return this;
+        }
+
         public CommonInputsBuilder withDelimiter(String inputValue) {
             delimiter = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.COMMA_DELIMITER);
+            return this;
+        }
+
+        public CommonInputsBuilder withVersion(String inputValue) {
+            version = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withHeaders(String inputValue) {
+            headers = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withQueryParams(String inputValue) {
+            queryParams = inputValue;
             return this;
         }
 

@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.services;
 
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.jclouds.entities.inputs.AWSInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import org.junit.Test;
 
@@ -45,8 +45,8 @@ public class AmazonSignatureServiceTest {
                 .build();
     }
 
-    private AWSInputsWrapper getWrapper() throws MalformedURLException {
-        return new AWSInputsWrapper.AWSInputsWrapperBuilder()
+    private AwsInputsWrapper getWrapper() throws MalformedURLException {
+        return new AwsInputsWrapper.AWSInputsWrapperBuilder()
                 .withCommonInputs(getCommonInputs())
                 .withApiService(API_SERVICE)
                 .withRequestUri(REQUEST_URI)

@@ -49,6 +49,7 @@ public class CustomInputs {
     private String instanceType;
     private String resourceIdsString;
     private String kmsKeyId;
+    private String attachmentId;
 
     private CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -90,6 +91,7 @@ public class CustomInputs {
         this.instanceType = builder.instanceType;
         this.resourceIdsString = builder.resourceIdsString;
         this.kmsKeyId = builder.kmsKeyId;
+        this.attachmentId = builder.attachmentId;
     }
 
     public String getRegion() {
@@ -248,6 +250,10 @@ public class CustomInputs {
         return kmsKeyId;
     }
 
+    public String getAttachmentId() {
+        return attachmentId;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -288,6 +294,7 @@ public class CustomInputs {
         private String instanceType;
         private String resourceIdsString;
         private String kmsKeyId;
+        private String attachmentId;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -485,6 +492,11 @@ public class CustomInputs {
 
         public CustomInputsBuilder withKmsKeyId(String inputValue) {
             kmsKeyId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withAttachmentId(String inputValue) {
+            attachmentId = inputValue;
             return this;
         }
     }
