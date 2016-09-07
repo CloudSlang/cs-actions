@@ -17,8 +17,6 @@ import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-//import io.cloudslang.content.jclouds.services.AwsApiService;
-
 /**
  * Created by Mihai Tusa.
  * 6/23/2016.
