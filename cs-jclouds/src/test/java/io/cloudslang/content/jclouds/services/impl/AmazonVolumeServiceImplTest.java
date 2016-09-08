@@ -32,9 +32,6 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({AmazonVolumeServiceImpl.class, ContextBuilder.class})
 public class AmazonVolumeServiceImplTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Mock
     private Properties propertiesMock;
 

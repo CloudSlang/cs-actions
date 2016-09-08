@@ -37,7 +37,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
 
-    private static QueryApiExecutor toTest;
+    private QueryApiExecutor toTest;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
