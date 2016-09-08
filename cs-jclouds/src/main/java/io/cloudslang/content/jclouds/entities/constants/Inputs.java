@@ -5,7 +5,7 @@ package io.cloudslang.content.jclouds.entities.constants;
  * 2/17/2016.
  */
 public class Inputs {
-    public static final class CommonInputs {
+    public static class CommonInputs {
         public static final String PROVIDER = "provider";
         public static final String ENDPOINT = "endpoint";
         public static final String IDENTITY = "identity";
@@ -21,7 +21,7 @@ public class Inputs {
         public static final String HEADERS = "headers";
     }
 
-    public static final class CustomInputs {
+    public static class CustomInputs {
         public static final String REGION = "region";
         public static final String INSTANCE_ID = "instanceId";
         public static final String IMAGE_ID = "imageId";
@@ -69,7 +69,7 @@ public class Inputs {
         public static final String DOMAIN = "domain";
     }
 
-    public static final class ImageInputs {
+    public static class ImageInputs {
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
         public static final String NO_REBOOT = "noReboot";
@@ -84,7 +84,7 @@ public class Inputs {
 
     }
 
-    public static final class InstanceInputs {
+    public static class InstanceInputs {
         public static final String MIN_COUNT = "minCount";
         public static final String MAX_COUNT = "maxCount";
         public static final String OPERATION_TIMEOUT = "operationTimeout";
@@ -117,7 +117,7 @@ public class Inputs {
         public static final String IP_OWNER_ID = "ipOwnerId";
     }
 
-    public static final class NetworkInputs {
+    public static class NetworkInputs {
         public static final String NETWORK_INTERFACE_DESCRIPTION = "networkInterfaceDescription";
         public static final String NETWORK_INTERFACE_SUBNET_ID = "networkInterfaceSubnetId";
         public static final String NETWORK_INTERFACE_VPC_ID = "networkInterfaceVpcId";
@@ -147,7 +147,7 @@ public class Inputs {
         public static final String FORCE_DETACH = "forceDetach";
     }
 
-    public static final class VolumeInputs {
+    public static class VolumeInputs {
         public static final String SNAPSHOT_ID = "snapshotId";
         public static final String SIZE = "size";
         public static final String IOPS = "iops";
@@ -157,7 +157,7 @@ public class Inputs {
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
     }
 
-    public static final class AwsApiInputs {
+    public static class AwsApiInputs {
         public static final String SECURITY_TOKEN = "securityToken";
     }
 }
