@@ -57,6 +57,7 @@ public class Constants {
         public static final String ALLOCATE_ADDRESS = "AllocateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
         public static final String CREATE_VOLUME = "CreateVolume";
+        public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String HTTP_CLIENT_METHOD_GET = "GET";
     }

@@ -21,6 +21,40 @@ import java.util.Map;
  * 9/5/2016.
  */
 public class AllocateAddressAction {
+    /**
+     * Acquires an Elastic IP address.
+     * Note: An Elastic IP address is for use either in the EC2-Classic platform or in a VPC.
+     * For more information, see Elastic IP Addresses in the Amazon Elastic Compute Cloud User Guide.
+     *
+     * @param endpoint      Endpoint to which request will be sent.
+     *                      Default: "https://ec2.amazonaws.com"
+     * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
+     *                      Example: "AKIAIOSFODNN7EXAMPLE"
+     * @param credential    Secret access key associated with your Amazon AWS or IAM account.
+     *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+     * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and
+     *                      <proxyPort> inputs or leave them both empty.
+     * @param proxyUsername Optional - proxy server user name.
+     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param version       Version of the web service to made the call against it.
+     *                      Example: "2014-06-15"
+     * @param headers       Optional - string containing the headers to use for the request separated by new line
+     *                      (CRLF). The header name-value pair will be separated by ":"
+     *                      Format: Conforming with HTTP standard for headers (RFC 2616)
+     *                      Examples: Accept:text/plain
+     * @param queryParams   Optional - string containing query parameters that will be appended to the URL. The names
+     *                      and the values must not be URL encoded because if they are encoded then a double encoded
+     *                      will occur. The separator between name-value pairs is "&" symbol. The query name will be
+     *                      separated from query value by "="
+     *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
+     * @param domain        Optional - If set to "vpc" then allocates the address for use with instances in a VPC, otherwise
+     *                      for use with with instances in EC2 Classic way.
+     *                      Valid values: "standard", "vpc"
+     *                      Default: "standard"
+     * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
+     * and the exception if there is one), returnCode of the operation and the ID of the request
+     */
     @Action(name = "Allocate Address",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

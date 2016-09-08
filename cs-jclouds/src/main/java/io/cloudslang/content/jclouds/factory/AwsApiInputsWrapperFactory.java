@@ -27,6 +27,9 @@ public class AwsApiInputsWrapperFactory {
             case Constants.QueryApiActions.CREATE_VOLUME:
                 wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
                 break;
+            case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
+                wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
+                break;
             case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
                 wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
                 break;

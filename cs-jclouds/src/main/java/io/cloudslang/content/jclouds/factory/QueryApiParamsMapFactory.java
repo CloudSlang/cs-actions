@@ -43,6 +43,9 @@ public class QueryApiParamsMapFactory {
                 case Constants.QueryApiActions.CREATE_VOLUME:
                     queryParamsMap = getCreateVolumeQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
+                    queryParamsMap = getDeleteNetworkInterfaceQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
                     queryParamsMap = getDetachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
@@ -54,6 +57,15 @@ public class QueryApiParamsMapFactory {
                     wrapper.getCommonInputs().getQueryParams(), Constants.Miscellaneous.AMPERSAND,
                     Constants.Miscellaneous.EQUAL, false);
         }
+
+        return queryParamsMap;
+    }
+
+    private static Map<String, String> getDeleteNetworkInterfaceQueryParamsMap(AwsInputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        queryParamsMap.put(Constants.AwsParams.ACTION, wrapper.getAction());
+        queryParamsMap.put(Constants.AwsParams.VERSION, wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
 
         return queryParamsMap;
     }

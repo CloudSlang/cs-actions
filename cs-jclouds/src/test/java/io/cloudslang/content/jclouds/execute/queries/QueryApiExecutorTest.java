@@ -70,60 +70,45 @@ public class QueryApiExecutorTest {
     public void testCreateVolume() throws Exception {
         toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verifyNew(AmazonSignatureService.class).withNoArguments();
-        verifyNew(CSHttpClient.class).withNoArguments();
-
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateVolume")));
-        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
-
-        verifyNoMoreInteractions(amazonSignatureServiceMock);
-        verifyNoMoreInteractions(csHttpClientMock);
+        runCommonVerifiersForQueryApi();
     }
 
     @Test
     public void testAllocateAddress() throws Exception {
         toTest.execute(getCommonInputs("AllocateAddress", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verifyNew(AmazonSignatureService.class).withNoArguments();
-        verifyNew(CSHttpClient.class).withNoArguments();
-
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AllocateAddress")));
-        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
-
-        verifyNoMoreInteractions(amazonSignatureServiceMock);
-        verifyNoMoreInteractions(csHttpClientMock);
+        runCommonVerifiersForQueryApi();
     }
 
     @Test
     public void testAttachNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
+        toTest.execute(getCommonInputs("DeleteNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verifyNew(AmazonSignatureService.class).withNoArguments();
-        verifyNew(CSHttpClient.class).withNoArguments();
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteNetworkInterface")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDeleteNetworkInterface() throws Exception {
+        toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
-        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
-
-        verifyNoMoreInteractions(amazonSignatureServiceMock);
-        verifyNoMoreInteractions(csHttpClientMock);
+        runCommonVerifiersForQueryApi();
     }
 
     @Test
     public void testDetachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verifyNew(AmazonSignatureService.class).withNoArguments();
-        verifyNew(CSHttpClient.class).withNoArguments();
-
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachNetworkInterface")));
-        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
-
-        verifyNoMoreInteractions(amazonSignatureServiceMock);
-        verifyNoMoreInteractions(csHttpClientMock);
+        runCommonVerifiersForQueryApi();
     }
 
     @Test
@@ -145,6 +130,14 @@ public class QueryApiExecutorTest {
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
+    }
+
+    private void runCommonVerifiersForQueryApi() throws Exception {
+        verifyNew(AmazonSignatureService.class).withNoArguments();
+        verifyNew(CSHttpClient.class).withNoArguments();
+        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
+        verifyNoMoreInteractions(amazonSignatureServiceMock);
+        verifyNoMoreInteractions(csHttpClientMock);
     }
 
     private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString) throws MalformedURLException {
@@ -207,6 +200,10 @@ public class QueryApiExecutorTest {
 
         if ("DetachNetworkInterface".equals(action)) {
             queryParamsMap.put("AttachmentId", "eni-attach-12345678");
+        }
+
+        if ("DeleteNetworkInterface".equals(action)) {
+            queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
         }
 
         return queryParamsMap;
