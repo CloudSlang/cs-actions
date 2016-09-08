@@ -1,7 +1,10 @@
 package io.cloudslang.content.ssh.services.impl;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.CommandResult;
 import io.cloudslang.content.ssh.entities.ConnectionDetails;
 import io.cloudslang.content.ssh.entities.KeyFile;

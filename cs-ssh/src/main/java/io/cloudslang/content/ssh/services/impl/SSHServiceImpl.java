@@ -133,15 +133,14 @@ public class SSHServiceImpl implements SSHService {
             int commandTimeout,
             boolean agentForwarding) {
         try {
-
             if (!isConnected()) {
                 session.connect(connectTimeout);
             }
+            // create exec channel
             ChannelExec channel = (ChannelExec) session.openChannel(EXEC_CHANNEL);
             channel.setCommand(command.getBytes(characterSet));
             channel.setPty(usePseudoTerminal);
             channel.setAgentForwarding(agentForwarding);
-            channel.setInputStream(null);
             OutputStream out = new ByteArrayOutputStream();
             channel.setOutputStream(out);
             OutputStream err = new ByteArrayOutputStream();
@@ -161,12 +160,13 @@ public class SSHServiceImpl implements SSHService {
                 currentTime = System.currentTimeMillis();
             }
             boolean timedOut = !channel.isClosed();
+
+            // save the response
             CommandResult result = new CommandResult();
             result.setStandardOutput(((ByteArrayOutputStream) out).toString(characterSet));
-            if( usePseudoTerminal && channel.getExitStatus() != 0){
+            if (usePseudoTerminal && channel.getExitStatus() != 0) {
                 result.setStandardError(((ByteArrayOutputStream) out).toString(characterSet));
-            }
-            else {
+            } else {
                 result.setStandardError(((ByteArrayOutputStream) err).toString(characterSet));
             }
 
@@ -224,6 +224,7 @@ public class SSHServiceImpl implements SSHService {
         return session;
     }
 
+    @Override
     public Channel getExecChannel() {
         return execChannel;
     }
