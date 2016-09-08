@@ -11,7 +11,6 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -45,7 +44,7 @@ public class AllocateAddressAction {
                                                @Param(value = Inputs.CommonInputs.HEADERS) String headers,
                                                @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
 
-                                               @Param(value = Inputs.AwsApiInputs.DOMAIN) String domain) {
+                                               @Param(value = Inputs.CustomInputs.DOMAIN) String domain) {
 
         try {
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
@@ -59,12 +58,16 @@ public class AllocateAddressAction {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
+                    .withAction(Constants.QueryApiActions.ALLOCATE_ADDRESS)
+                    .withApiService(Constants.Apis.AMAZON_EC2_API)
+                    .withRequestUri(Constants.Miscellaneous.EMPTY)
+                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                    .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().build();
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder().withDomain(domain).build();
+            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withDomain(domain).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, null, networkInputs, Constants.QueryApiActions.ALLOCATE_ADDRESS);
+            return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

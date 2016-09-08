@@ -2,7 +2,6 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.jclouds.entities.aws.AmazonApiServiceType;
-import io.cloudslang.content.jclouds.entities.aws.HttpClientMethod;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
@@ -14,8 +13,10 @@ public class AwsInputsWrapper {
     private HttpClientInputs httpClientInputs;
     private CommonInputs commonInputs;
     private CustomInputs customInputs;
-    private VolumeInputs volumeInputs;
+    private ImageInputs imageInputs;
+    private InstanceInputs instanceInputs;
     private NetworkInputs networkInputs;
+    private VolumeInputs volumeInputs;
 
     private String apiService;
     private String requestUri;
@@ -30,9 +31,6 @@ public class AwsInputsWrapper {
     private AwsInputsWrapper(AWSInputsWrapperBuilder builder) {
         this.httpClientInputs = builder.httpClientInputs;
         this.commonInputs = builder.commonInputs;
-        this.customInputs = builder.customInputs;
-        this.volumeInputs = builder.volumeInputs;
-        this.networkInputs = builder.networkInputs;
 
         this.apiService = builder.apiService;
         this.requestUri = builder.requestUri;
@@ -53,16 +51,48 @@ public class AwsInputsWrapper {
         return commonInputs;
     }
 
+    public void setCommonInputs(CommonInputs commonInputs) {
+        this.commonInputs = commonInputs;
+    }
+
     public CustomInputs getCustomInputs() {
         return customInputs;
+    }
+
+    public void setCustomInputs(CustomInputs customInputs) {
+        this.customInputs = customInputs;
+    }
+
+    public ImageInputs getImageInputs() {
+        return imageInputs;
+    }
+
+    public void setImageInputs(ImageInputs imageInputs) {
+        this.imageInputs = imageInputs;
+    }
+
+    public InstanceInputs getInstanceInputs() {
+        return instanceInputs;
+    }
+
+    public void setInstanceInputs(InstanceInputs instanceInputs) {
+        this.instanceInputs = instanceInputs;
+    }
+
+    public NetworkInputs getNetworkInputs() {
+        return networkInputs;
+    }
+
+    public void setNetworkInputs(NetworkInputs networkInputs) {
+        this.networkInputs = networkInputs;
     }
 
     public VolumeInputs getVolumeInputs() {
         return volumeInputs;
     }
 
-    public NetworkInputs getNetworkInputs() {
-        return networkInputs;
+    public void setVolumeInputs(VolumeInputs volumeInputs) {
+        this.volumeInputs = volumeInputs;
     }
 
     public String getApiService() {
@@ -104,9 +134,6 @@ public class AwsInputsWrapper {
     public static class AWSInputsWrapperBuilder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
-        private CustomInputs customInputs;
-        private VolumeInputs volumeInputs;
-        private NetworkInputs networkInputs;
 
         private String apiService;
         private String requestUri;
@@ -132,21 +159,6 @@ public class AwsInputsWrapper {
             return this;
         }
 
-        public AWSInputsWrapperBuilder withCustomInputs(CustomInputs inputs) {
-            customInputs = inputs;
-            return this;
-        }
-
-        public AWSInputsWrapperBuilder withVolumeInputs(VolumeInputs inputs) {
-            volumeInputs = inputs;
-            return this;
-        }
-
-        public AWSInputsWrapperBuilder withNetworkInputs(NetworkInputs inputs) {
-            networkInputs = inputs;
-            return this;
-        }
-
         public AWSInputsWrapperBuilder withApiService(String inputValue) {
             apiService = AmazonApiServiceType.getValue(inputValue);
             return this;
@@ -158,7 +170,7 @@ public class AwsInputsWrapper {
         }
 
         public AWSInputsWrapperBuilder withRequestPayload(String inputValue) {
-            requestPayload = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            requestPayload = inputValue;
             return this;
         }
 
@@ -173,7 +185,7 @@ public class AwsInputsWrapper {
         }
 
         public AWSInputsWrapperBuilder withHttpVerb(String inputValue) {
-            httpVerb = HttpClientMethod.getValue(inputValue);
+            httpVerb = inputValue;
             return this;
         }
 

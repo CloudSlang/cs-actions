@@ -98,12 +98,17 @@ public class DetachNetworkInterfaceAction {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
+                    .withAction(Constants.QueryApiActions.DETACH_NETWORK_INTERFACE)
+                    .withApiService(Constants.Apis.AMAZON_EC2_API)
+                    .withRequestUri(Constants.Miscellaneous.EMPTY)
+                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                    .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withAttachmentId(attachmentId).build();
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder().withIsForceDetach(forceDetach).build();
+            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder().withForceDetach(forceDetach).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, null, networkInputs, Constants.QueryApiActions.DETACH_NETWORK_INTERFACE);
+            return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

@@ -3,7 +3,8 @@ package io.cloudslang.content.jclouds.execute.queries;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.*;
+import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.factory.AwsApiInputsWrapperFactory;
 import io.cloudslang.content.jclouds.factory.QueryApiParamsMapFactory;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
@@ -20,13 +21,15 @@ import java.util.Map;
  * 9/6/2016.
  */
 public class QueryApiExecutor {
-    public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs, VolumeInputs volumeInputs,
-                                       NetworkInputs networkInputs, String action) throws MalformedURLException, SignatureException {
-        Map<String, String> headersMap = StringUtils.isNotBlank(commonInputs.getHeaders()) ?
-                InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), commonInputs.getHeaders(),
-                        Constants.AwsParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true) : new HashMap<String, String>();
+    @SafeVarargs
+    public final <T> Map<String, String> execute(CommonInputs commonInputs, T... builders)
+            throws MalformedURLException, SignatureException {
+        AwsInputsWrapper inputs = AwsApiInputsWrapperFactory.getWrapper(commonInputs, builders);
 
-        AwsInputsWrapper inputs = AwsApiInputsWrapperFactory.getWrapper(commonInputs, customInputs, volumeInputs, networkInputs, action);
+        Map<String, String> headersMap = StringUtils.isNotBlank(inputs.getCommonInputs().getHeaders()) ?
+                InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), inputs.getCommonInputs().getHeaders(),
+                        Constants.AwsParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true) :
+                new HashMap<String, String>();
 
         Map<String, String> queryParamsMap = QueryApiParamsMapFactory.getQueryApiParamsMap(inputs);
 
@@ -43,7 +46,8 @@ public class QueryApiExecutor {
     }
 
     private void setQueryApiCallParams(AwsInputsWrapper inputs, Map<String, String> queryParamsMap) {
-        String queryParamsString = InputsUtil.getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL, Constants.Miscellaneous.AMPERSAND);
+        String queryParamsString = InputsUtil
+                .getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL, Constants.Miscellaneous.AMPERSAND);
         inputs.getHttpClientInputs().setQueryParams(queryParamsString);
     }
 }

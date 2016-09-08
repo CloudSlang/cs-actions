@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.aws.HttpClientMethod;
 import io.cloudslang.content.jclouds.entities.aws.Providers;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -24,6 +25,11 @@ public class CommonInputs {
     private String version;
     private String headers;
     private String queryParams;
+    private String apiService;
+    private String requestUri;
+    private String action;
+    private String requestPayload;
+    private String httpClientMethod;
 
     private boolean debugMode;
 
@@ -40,6 +46,11 @@ public class CommonInputs {
         this.version = builder.version;
         this.headers = builder.headers;
         this.queryParams = builder.queryParams;
+        this.apiService = builder.apiService;
+        this.requestUri = builder.requestUri;
+        this.action = builder.action;
+        this.requestPayload = builder.requestPayload;
+        this.httpClientMethod = builder.httpClientMethod;
 
         this.debugMode = builder.debugMode;
     }
@@ -92,6 +103,26 @@ public class CommonInputs {
         return queryParams;
     }
 
+    public String getApiService() {
+        return apiService;
+    }
+
+    public String getRequestUri() {
+        return requestUri;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public String getRequestPayload() {
+        return requestPayload;
+    }
+
+    public String getHttpClientMethod() {
+        return httpClientMethod;
+    }
+
     public boolean isDebugMode() {
         return debugMode;
     }
@@ -109,6 +140,11 @@ public class CommonInputs {
         private String version;
         private String headers;
         private String queryParams;
+        private String apiService;
+        private String requestUri;
+        private String action;
+        private String requestPayload;
+        private String httpClientMethod;
 
         private boolean debugMode;
 
@@ -176,6 +212,31 @@ public class CommonInputs {
 
         public CommonInputsBuilder withQueryParams(String inputValue) {
             queryParams = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withApiService(String inputValue) {
+            apiService = InputsUtil.getDefaultStringInput(inputValue, Constants.Apis.AMAZON_EC2_API);
+            return this;
+        }
+
+        public CommonInputsBuilder withRequestUri(String inputValue) {
+            requestUri = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            return this;
+        }
+
+        public CommonInputsBuilder withAction(String inputValue) {
+            action = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withRequestPayload(String inputValue) {
+            requestPayload = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            return this;
+        }
+
+        public CommonInputsBuilder withHttpClientMethod(String inputValue) {
+            httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HttpClientMethod.GET.toString());
             return this;
         }
 

@@ -109,7 +109,7 @@ public class QueryApiParamsMapFactory {
         Map<String, String> queryParamsMap = new HashMap<>();
         queryParamsMap.put(Constants.AwsParams.ACTION, wrapper.getAction());
         queryParamsMap.put(Constants.AwsParams.VERSION, wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(DOMAIN, wrapper.getNetworkInputs().getDomain());
+        queryParamsMap.put(DOMAIN, wrapper.getCustomInputs().getDomain());
 
         return queryParamsMap;
     }

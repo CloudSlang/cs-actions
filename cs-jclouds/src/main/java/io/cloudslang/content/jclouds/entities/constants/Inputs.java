@@ -66,6 +66,7 @@ public class Inputs {
         public static final String DATE = "date";
         public static final String KMS_KEY_ID = "kmsKeyId";
         public static final String ATTACHMENT_ID = "attachmentId";
+        public static final String DOMAIN = "domain";
     }
 
     public static final class ImageInputs {
@@ -157,7 +158,6 @@ public class Inputs {
     }
 
     public static final class AwsApiInputs {
-        public static final String DOMAIN = "domain";
         public static final String SECURITY_TOKEN = "securityToken";
     }
 }

@@ -125,6 +125,11 @@ public class CreateVolumeAction {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
+                    .withAction(Constants.QueryApiActions.CREATE_VOLUME)
+                    .withApiService(Constants.Apis.AMAZON_EC2_API)
+                    .withRequestUri(Constants.Miscellaneous.EMPTY)
+                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                    .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
@@ -140,7 +145,7 @@ public class CreateVolumeAction {
                     .withSnapshotId(snapshotId)
                     .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs, null, Constants.QueryApiActions.CREATE_VOLUME);
+            return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

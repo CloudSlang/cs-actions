@@ -42,6 +42,12 @@ public class AmazonSignatureServiceTest {
                 .withEndpoint("https://examplebucket.s3.amazonaws.com")
                 .withIdentity("AKIAIOSFODNN7EXAMPLE")
                 .withCredential("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                .withApiService(API_SERVICE)
+                .withRequestUri(REQUEST_URI)
+                .withHttpClientMethod("GET")
+                .withRequestPayload("")
+                .withHeaders(HEADERS)
+                .withQueryParams("")
                 .build();
     }
 
@@ -50,8 +56,8 @@ public class AmazonSignatureServiceTest {
                 .withCommonInputs(getCommonInputs())
                 .withApiService(API_SERVICE)
                 .withRequestUri(REQUEST_URI)
-                .withHttpVerb(null)
-                .withRequestPayload(null)
+                .withHttpVerb("GET")
+                .withRequestPayload("")
                 .withDate(DATE)
                 .withHeaders(HEADERS)
                 .withQueryParams("")

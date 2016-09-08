@@ -35,8 +35,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
 public class QueryApiExecutorTest {
-    private static final String HEADERS = "Accept:text/plain\r\n" +
-            "Content-Type:application/json";
+    private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
 
     private static QueryApiExecutor toTest;
 
@@ -56,8 +55,9 @@ public class QueryApiExecutorTest {
     private QueryApiExecutor queryApiExecutorSpy = new QueryApiExecutor();
 
     @Before
-    public void init() {
+    public void init() throws Exception {
         toTest = new QueryApiExecutor();
+        addCommonMocksForQueryApi();
     }
 
     @After
@@ -67,22 +67,14 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
-        whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
-        when(amazonSignatureServiceMock.signRequestHeaders(any(AwsInputsWrapper.class),
-                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class))).thenReturn(authorizationHeaderMock);
-        doNothing().when(queryApiExecutorSpy).setQueryApiCallHeaders(any(AwsInputsWrapper.class),
-                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
-        whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
-        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
-
-        toTest.execute(getCommonInputs(HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(), "CreateVolume");
+    public void testCreateVolume() throws Exception {
+        toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
         verifyNew(AmazonSignatureService.class).withNoArguments();
         verifyNew(CSHttpClient.class).withNoArguments();
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
-                eq(getQueryParamsMap()));
+                eq(getQueryParamsMap("CreateVolume")));
         verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
 
         verifyNoMoreInteractions(amazonSignatureServiceMock);
@@ -90,18 +82,74 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testExecuteExceptionTest() throws Exception {
+    public void testAllocateAddress() throws Exception {
+        toTest.execute(getCommonInputs("AllocateAddress", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
+
+        verifyNew(AmazonSignatureService.class).withNoArguments();
+        verifyNew(CSHttpClient.class).withNoArguments();
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("AllocateAddress")));
+        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
+
+        verifyNoMoreInteractions(amazonSignatureServiceMock);
+        verifyNoMoreInteractions(csHttpClientMock);
+    }
+
+    @Test
+    public void testAttachNetworkInterface() throws Exception {
+        toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
+
+        verifyNew(AmazonSignatureService.class).withNoArguments();
+        verifyNew(CSHttpClient.class).withNoArguments();
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("AttachNetworkInterface")));
+        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
+
+        verifyNoMoreInteractions(amazonSignatureServiceMock);
+        verifyNoMoreInteractions(csHttpClientMock);
+    }
+
+    @Test
+    public void testDetachNetworkInterface() throws Exception {
+        toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
+
+        verifyNew(AmazonSignatureService.class).withNoArguments();
+        verifyNew(CSHttpClient.class).withNoArguments();
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DetachNetworkInterface")));
+        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
+
+        verifyNoMoreInteractions(amazonSignatureServiceMock);
+        verifyNoMoreInteractions(csHttpClientMock);
+    }
+
+    @Test
+    public void testExecuteException() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unsupported Query API.");
 
-        toTest.execute(getCommonInputs("", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(), "");
+        toTest.execute(getCommonInputs("", "", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
         verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(AwsInputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
         verify(csHttpClientMock, never()).execute(any(HttpClientInputs.class));
     }
 
-    private CommonInputs getCommonInputs(String headersString, String queryParamsString) throws MalformedURLException {
+    private void addCommonMocksForQueryApi() throws Exception {
+        whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
+        when(amazonSignatureServiceMock.signRequestHeaders(any(AwsInputsWrapper.class),
+                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class))).thenReturn(authorizationHeaderMock);
+        doNothing().when(queryApiExecutorSpy).setQueryApiCallHeaders(any(AwsInputsWrapper.class),
+                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
+        whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
+        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
+    }
+
+    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString) throws MalformedURLException {
         return new CommonInputs.CommonInputsBuilder()
+                .withAction(action)
                 .withHeaders(headersString)
                 .withQueryParams(queryParamsString)
                 .withVersion("2016-04-01")
@@ -109,7 +157,12 @@ public class QueryApiExecutorTest {
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder().withVolumeType("").withAvailabilityZone("us-east-1d").build();
+        return new CustomInputs.CustomInputsBuilder()
+                .withAvailabilityZone("us-east-1d")
+                .withInstanceId("i-abcdef12")
+                .withAttachmentId("eni-attach-12345678")
+                .withVolumeType("")
+                .withDomain("").build();
     }
 
     private VolumeInputs getVolumeInputs() {
@@ -117,7 +170,10 @@ public class QueryApiExecutorTest {
     }
 
     private NetworkInputs getNetworkInputs() {
-        return new NetworkInputs.NetworkInputsBuilder().build();
+        return new NetworkInputs.NetworkInputsBuilder()
+                .withNetworkInterfaceId("eni-12345678")
+                .withDeviceIndex("25")
+                .build();
     }
 
     private Map<String, String> getHeadersMap() {
@@ -128,13 +184,30 @@ public class QueryApiExecutorTest {
         return headersMap;
     }
 
-    private Map<String, String> getQueryParamsMap() {
+    private Map<String, String> getQueryParamsMap(String action) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        queryParamsMap.put("Action", "CreateVolume");
-        queryParamsMap.put("VolumeType", "standard");
+        queryParamsMap.put("Action", action);
         queryParamsMap.put("Version", "2016-04-01");
-        queryParamsMap.put("Size", "10");
-        queryParamsMap.put("AvailabilityZone", "us-east-1d");
+
+        if ("CreateVolume" .equals(action)) {
+            queryParamsMap.put("VolumeType", "standard");
+            queryParamsMap.put("Size", "10");
+            queryParamsMap.put("AvailabilityZone", "us-east-1d");
+        }
+
+        if ("AllocateAddress" .equals(action)) {
+            queryParamsMap.put("Domain", "standard");
+        }
+
+        if ("AttachNetworkInterface".equals(action)) {
+            queryParamsMap.put("InstanceId", "i-abcdef12");
+            queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
+            queryParamsMap.put("DeviceIndex", "25");
+        }
+
+        if ("DetachNetworkInterface".equals(action)) {
+            queryParamsMap.put("AttachmentId", "eni-attach-12345678");
+        }
 
         return queryParamsMap;
     }
