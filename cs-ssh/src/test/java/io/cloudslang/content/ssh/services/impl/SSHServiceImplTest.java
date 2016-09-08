@@ -1,7 +1,7 @@
 package io.cloudslang.content.ssh.services.impl;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -21,11 +21,15 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author ioanvranauhp
@@ -55,13 +59,16 @@ public class SSHServiceImplTest {
     private Session sessionMock;
 
     @Mock
-    private ChannelShell channelShellMock;
+    private ChannelExec channelExecMock;
 
     @Mock
     private CommandResult commandResultMock;
 
     @Mock
     private JSch jSchMock;
+
+    @Mock
+    private InputStream inputStreamMock;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -71,52 +78,68 @@ public class SSHServiceImplTest {
         PowerMockito.whenNew(JSch.class).withNoArguments().thenReturn(jSchMock);
         PowerMockito.when(jSchMock.getSession(USERNAME, HOST, PORT)).thenReturn(sessionMock);
         Mockito.doNothing().when(jSchMock).addIdentity(SHELL_PATH);
-        PowerMockito.when(sessionMock.openChannel("shell")).thenReturn(channelShellMock);
-        Mockito.doNothing().when(channelShellMock).connect(CONNECT_TIMEOUT);
-        PowerMockito.when(channelShellMock.isClosed()).thenReturn(true);
+        PowerMockito.when(sessionMock.openChannel("exec")).thenReturn(channelExecMock);
+        Mockito.doNothing().when(channelExecMock).connect(CONNECT_TIMEOUT);
+        PowerMockito.when(channelExecMock.isClosed()).thenReturn(true);
     }
 
     @Test
     public void testConstructors() {
-        SSHServiceImpl sshService = new SSHServiceImpl(sessionMock, channelShellMock);
-        assertEquals(sshService.getShellChannel(), channelShellMock);
+        SSHServiceImpl sshService = new SSHServiceImpl(sessionMock, channelExecMock);
+        assertEquals(sshService.getExecChannel(), channelExecMock);
         assertEquals(sshService.getSSHSession(), sessionMock);
 
         sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, false);
-        assertEquals(null, sshService.getShellChannel());
+        assertEquals(null, sshService.getExecChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
         sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
-        assertEquals(channelShellMock, sshService.getShellChannel());
+        assertEquals(channelExecMock, sshService.getExecChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
         sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
-        assertEquals(channelShellMock, sshService.getShellChannel());
+        assertEquals(channelExecMock, sshService.getExecChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
         sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
-        assertEquals(channelShellMock, sshService.getShellChannel());
+        assertEquals(channelExecMock, sshService.getExecChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
 
         sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT);
-        assertEquals(null, sshService.getShellChannel());
+        assertEquals(null, sshService.getExecChannel());
         assertEquals(sessionMock, sshService.getSSHSession());
     }
 
     @Test
     public void testRunShellCommand() throws Exception {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        SSHService sshService = prepareRunShellCommandTest();
         CommandResult commandResult = sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_FALSE);
         assertEquals(commandResult.getExitCode(), 0);
         assertEquals(commandResult.getStandardError(), "");
         assertEquals(commandResult.getStandardOutput(), "");
+    }
 
-        commandResult = sshService.runShellCommand("ls", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_TRUE);
+    private SSHService prepareRunShellCommandTest() throws IOException {
+        when(channelExecMock.getInputStream()).thenReturn(inputStreamMock);
+        when(inputStreamMock.available()).thenReturn(1).thenReturn(0);
+        return new SSHServiceImpl(sessionMock, channelExecMock);
+    }
+
+    @Test
+    public void testRunShellCommand2() throws Exception {
+        SSHService sshService = prepareRunShellCommandTest();
+
+        CommandResult commandResult = sshService.runShellCommand("ls", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_TRUE);
         assertEquals(commandResult.getExitCode(), 0);
         assertEquals(commandResult.getStandardError(), "");
         assertEquals(commandResult.getStandardOutput(), "");
+    }
 
-        commandResult = sshService.runShellCommand("", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_FALSE);
+    @Test
+    public void testRunShellCommand3() throws Exception {
+        SSHService sshService = prepareRunShellCommandTest();
+
+        CommandResult commandResult = sshService.runShellCommand("", "UTF-8", false, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_FALSE);
         assertEquals(commandResult.getExitCode(), 0);
         assertEquals(commandResult.getStandardError(), "");
         assertEquals(commandResult.getStandardOutput(), "");
@@ -124,7 +147,7 @@ public class SSHServiceImplTest {
 
     @Test
     public void testRunShellCommandInvalidEncoding() throws Exception {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelExecMock);
 
         exception.expect(RuntimeException.class);
 
@@ -133,7 +156,7 @@ public class SSHServiceImplTest {
 
     @Test
     public void testCreateLocalTunnel() throws JSchException {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelExecMock);
         sshService.createLocalTunnel(PORT, HOST, PORT);
 
         verify(sessionMock).setPortForwardingL(PORT, HOST, PORT);
@@ -141,10 +164,10 @@ public class SSHServiceImplTest {
 
     @Test
     public void testClose() {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelExecMock);
         sshService.close();
-        verify(channelShellMock).disconnect();
-        Mockito.verifyNoMoreInteractions(channelShellMock);
+        verify(channelExecMock).disconnect();
+        Mockito.verifyNoMoreInteractions(channelExecMock);
         verify(sessionMock).disconnect();
 
         sshService = new SSHServiceImpl(sessionMock, null);
@@ -153,28 +176,28 @@ public class SSHServiceImplTest {
 
     @Test
     public void testGetSSHSession() {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelExecMock);
         assertEquals(sessionMock, sshService.getSSHSession());
-        assertEquals(channelShellMock, sshService.getShellChannel());
+        assertEquals(channelExecMock, sshService.getExecChannel());
     }
 
     @Test
     public void testSaveToCache() {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelExecMock);
         final boolean savedToCache = sshService.saveToCache(Mockito.any(GlobalSessionObject.class), "sessionId");
         assertEquals(false, savedToCache);
     }
 
     @Test
     public void testRemoveFromCache() {
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelExecMock);
         sshService.removeFromCache(Mockito.any(GlobalSessionObject.class), "sessionId");
     }
 
     @Test
     public void testTimeoutExceptionIsThrown() throws Exception {
-        PowerMockito.when(channelShellMock.isClosed()).thenReturn(false);
-        SSHService sshService = new SSHServiceImpl(sessionMock, channelShellMock);
+        PowerMockito.when(channelExecMock.isClosed()).thenReturn(false);
+        SSHService sshService = new SSHServiceImpl(sessionMock, channelExecMock);
 
         exception.expect(RuntimeException.class);
         exception.expectMessage("Timeout");
