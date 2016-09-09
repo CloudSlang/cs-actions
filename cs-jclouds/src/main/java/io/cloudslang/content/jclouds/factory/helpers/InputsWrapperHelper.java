@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.factory;
+package io.cloudslang.content.jclouds.factory.helpers;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
@@ -6,41 +6,10 @@ import io.cloudslang.content.jclouds.entities.inputs.*;
 
 /**
  * Created by Mihai Tusa.
- * 9/5/2016.
+ * 9/9/2016.
  */
-public class AwsApiInputsWrapperFactory {
-    private AwsApiInputsWrapperFactory() {
-    }
-
-    @SafeVarargs
-    public static <T> AwsInputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
-        HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs);
-
-        AwsInputsWrapper wrapper;
-        switch (commonInputs.getAction()) {
-            case Constants.QueryApiActions.ALLOCATE_ADDRESS:
-                wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE:
-                wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.CREATE_VOLUME:
-                wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
-                wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
-                wrapper = getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            default:
-                throw new RuntimeException(Constants.ErrorMessages.UNSUPPORTED_QUERY_API);
-        }
-
-        return wrapper;
-    }
-
-    private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
+public class InputsWrapperHelper {
+    public HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
 
         httpClientInputs.setUrl(commonInputs.getEndpoint());
@@ -56,8 +25,8 @@ public class AwsApiInputsWrapperFactory {
     }
 
     @SafeVarargs
-    private static <T> AwsInputsWrapper getAwsWrapperBuild(HttpClientInputs httpClientInputs, CommonInputs commonInputs,
-                                                           T... builders) {
+    public final <T> AwsInputsWrapper getAwsWrapperBuild(HttpClientInputs httpClientInputs, CommonInputs commonInputs,
+                                                         T... builders) {
         AwsInputsWrapper wrapper = new AwsInputsWrapper.AWSInputsWrapperBuilder()
                 .withHttpClientInputs(httpClientInputs)
                 .withCommonInputs(commonInputs)

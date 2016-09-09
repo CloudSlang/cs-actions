@@ -5,8 +5,8 @@ import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.factory.AwsApiInputsWrapperFactory;
-import io.cloudslang.content.jclouds.factory.QueryApiParamsMapFactory;
+import io.cloudslang.content.jclouds.factory.InputsWrapperFactory;
+import io.cloudslang.content.jclouds.factory.ParamsMapFactory;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -24,14 +24,14 @@ public class QueryApiExecutor {
     @SafeVarargs
     public final <T> Map<String, String> execute(CommonInputs commonInputs, T... builders)
             throws MalformedURLException, SignatureException {
-        AwsInputsWrapper inputs = AwsApiInputsWrapperFactory.getWrapper(commonInputs, builders);
+        AwsInputsWrapper inputs = InputsWrapperFactory.getWrapper(commonInputs, builders);
 
         Map<String, String> headersMap = StringUtils.isNotBlank(inputs.getCommonInputs().getHeaders()) ?
                 InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), inputs.getCommonInputs().getHeaders(),
                         Constants.AwsParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true) :
                 new HashMap<String, String>();
 
-        Map<String, String> queryParamsMap = QueryApiParamsMapFactory.getQueryApiParamsMap(inputs);
+        Map<String, String> queryParamsMap = ParamsMapFactory.getQueryApiParamsMap(inputs);
 
         setQueryApiCallParams(inputs, queryParamsMap);
         setQueryApiCallHeaders(inputs, headersMap, queryParamsMap);

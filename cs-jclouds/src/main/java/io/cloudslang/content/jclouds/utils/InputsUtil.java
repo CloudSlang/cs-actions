@@ -141,6 +141,12 @@ public final class InputsUtil {
         }
     }
 
+    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
+        if (condition) {
+            inputMap.put(key, value);
+        }
+    }
+
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {
         if (!isInt(input)) {
             throw new RuntimeException(noIntError);
