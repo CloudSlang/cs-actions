@@ -1,12 +1,13 @@
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.constants.ResponseNames;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by victor on 05.09.2016.
@@ -27,6 +28,7 @@ public class OutputUtilitiesTest {
         assertEquals(result.get(OutputNames.EXCEPTION), "a");
         assertEquals(result.get(OutputNames.RETURN_CODE), "-1");
     }
+
     @Test
     public void getFailureResultsMapThrowable() throws Exception {
         Map<String, String> result = OutputUtilities.getFailureResultsMap(new Exception("b"));

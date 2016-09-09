@@ -2,7 +2,10 @@ package io.cloudslang.content.utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.assertFalse;
+
 
 /**
  * Created by victor on 04.09.2016.
@@ -26,6 +29,7 @@ public class OtherUtilitiesTest {
         assertFalse(OtherUtilities.isValidIpPort("-1"));
         assertFalse(OtherUtilities.isValidIpPort("9999999999999999999"));
         assertFalse(OtherUtilities.isValidIpPort("65539"));
+        assertFalse(OtherUtilities.isValidIpPort("65536"));
 
     }
 

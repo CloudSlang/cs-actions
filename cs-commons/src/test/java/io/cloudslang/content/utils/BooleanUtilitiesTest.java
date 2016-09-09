@@ -2,7 +2,9 @@ package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.ExceptionsValues;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by victor on 04.09.2016.

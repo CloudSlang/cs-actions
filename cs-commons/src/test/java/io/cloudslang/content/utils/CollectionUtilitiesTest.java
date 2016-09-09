@@ -5,7 +5,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by victor on 04.09.2016.
@@ -47,6 +49,7 @@ public class CollectionUtilitiesTest {
             assertEquals(iae.getMessage(), "a:b:c" + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_KEY_VALUE_PAIR);
         }
     }
+
     @Test
     public void toMap() throws Exception {
         assertEquals(CollectionUtilities.toMap("a:b,c:d,E:F", ",", ":").get("c"), "d");
