@@ -22,7 +22,7 @@ public enum ActionsEnum {
     private final Boolean needValue;
     private String value;
 
-    private ActionsEnum(String value, Boolean needValue) {
+    ActionsEnum(String value, Boolean needValue) {
         this.value = value;
         this.needValue = needValue;
     }

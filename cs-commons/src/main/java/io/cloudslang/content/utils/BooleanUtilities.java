@@ -1,7 +1,7 @@
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.BooleanValues;
-import io.cloudslang.content.constants.ExceptionsValues;
+import io.cloudslang.content.constants.ExceptionValues;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ public final class BooleanUtilities {
      */
     public static boolean toBoolean(@Nullable final String booleanStr) {
         if (!isValid(booleanStr)) {
-            throw new IllegalArgumentException(booleanStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_BOOLEAN_VALUE);
+            throw new IllegalArgumentException(booleanStr + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_BOOLEAN_VALUE);
         }
         return BooleanUtils.toBoolean(getLowerCaseString(booleanStr));
     }
@@ -66,6 +66,4 @@ public final class BooleanUtilities {
     public static boolean toBoolean(@Nullable final String booleanStr, final boolean defaultValue) {
         return StringUtils.isNoneEmpty(booleanStr) ? toBoolean(booleanStr) : defaultValue;
     }
-
-
 }

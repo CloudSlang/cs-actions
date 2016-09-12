@@ -1,11 +1,9 @@
 package io.cloudslang.content.utils;
 
-import io.cloudslang.content.constants.ExceptionsValues;
+import io.cloudslang.content.constants.ExceptionValues;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
-
-import java.security.SecureRandom;
 
 /**
  * A Number utility class that offers integer and double validation and conversion.
@@ -39,9 +37,9 @@ public final class NumberUtilities {
      * Given an integer string, it checks if it's a valid integer (base on apaches NumberUtils.createInteger) and if
      * it's between the lowerBound and upperBound.
      *
-     * @param integerStr the integer string to check
-     * @param lowerBound the lower bound of the interval
-     * @param upperBound the upper bound of the interval
+     * @param integerStr        the integer string to check
+     * @param lowerBound        the lower bound of the interval
+     * @param upperBound        the upper bound of the interval
      * @param includeLowerBound boolean if to include the lower bound of the interval
      * @param includeUpperBound boolean if to include the upper bound of the interval
      * @return true if the integer string is valid and in between the lowerBound and upperBound, false otherwise
@@ -49,13 +47,13 @@ public final class NumberUtilities {
      */
     public static boolean isValidInt(@Nullable final String integerStr, final int lowerBound, final int upperBound, final boolean includeLowerBound, final boolean includeUpperBound) {
         if (lowerBound > upperBound) {
-            throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
+            throw new IllegalArgumentException(ExceptionValues.INVALID_BOUNDS);
         } else if (!isValidInt(integerStr)) {
             return false;
         }
         final int aInteger = toInteger(integerStr);
-        final boolean respectsLowerBound = includeLowerBound? lowerBound <= aInteger : lowerBound < aInteger;
-        final boolean respectsUpperBound = includeUpperBound? aInteger <= upperBound : aInteger < upperBound;
+        final boolean respectsLowerBound = includeLowerBound ? lowerBound <= aInteger : lowerBound < aInteger;
+        final boolean respectsUpperBound = includeUpperBound ? aInteger <= upperBound : aInteger < upperBound;
         return respectsLowerBound && respectsUpperBound;
     }
 
@@ -70,7 +68,7 @@ public final class NumberUtilities {
      * @throws IllegalArgumentException if the lowerBound is not less than the upperBound
      */
     public static boolean isValidInt(@Nullable final String integerStr, final int lowerBound, final int upperBound) {
-         return isValidInt(integerStr, lowerBound, upperBound, true, false);
+        return isValidInt(integerStr, lowerBound, upperBound, true, false);
     }
 
     /**
@@ -82,7 +80,7 @@ public final class NumberUtilities {
      */
     public static int toInteger(@Nullable final String integerStr) {
         if (!isValidInt(integerStr)) {
-            throw new IllegalArgumentException(integerStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_INTEGER_VALUE);
+            throw new IllegalArgumentException(integerStr + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_INTEGER_VALUE);
         }
         final String stripedInteger = StringUtils.strip(integerStr);
         return NumberUtils.createInteger(stripedInteger);
@@ -105,9 +103,9 @@ public final class NumberUtilities {
      * Given an double string, it checks if it's a valid double (base on apaches NumberUtils.createDouble) and if
      * it's between the lowerBound and upperBound.
      *
-     * @param doubleStr  the integer string to check
-     * @param lowerBound the lower bound of the interval
-     * @param upperBound the upper bound of the interval
+     * @param doubleStr         the integer string to check
+     * @param lowerBound        the lower bound of the interval
+     * @param upperBound        the upper bound of the interval
      * @param includeLowerBound boolean if to include the lower bound of the interval
      * @param includeUpperBound boolean if to include the upper bound of the interval
      * @return true if the integer string is valid and in between the lowerBound and upperBound, false otherwise
@@ -115,13 +113,13 @@ public final class NumberUtilities {
      */
     public static boolean isValidDouble(@Nullable final String doubleStr, double lowerBound, double upperBound, final boolean includeLowerBound, final boolean includeUpperBound) {
         if (lowerBound > upperBound) {
-            throw new IllegalArgumentException(ExceptionsValues.INVALID_BOUNDS);
+            throw new IllegalArgumentException(ExceptionValues.INVALID_BOUNDS);
         } else if (!isValidDouble(doubleStr)) {
             return false;
         }
         final double aDouble = toDouble(doubleStr);
-        final boolean respectsLowerBound = includeLowerBound? Double.compare(lowerBound, aDouble) <= 0 : lowerBound < aDouble;
-        final boolean respectsUpperBound = includeUpperBound? Double.compare(aDouble, upperBound) <= 0 : aDouble < upperBound;
+        final boolean respectsLowerBound = includeLowerBound ? Double.compare(lowerBound, aDouble) <= 0 : lowerBound < aDouble;
+        final boolean respectsUpperBound = includeUpperBound ? Double.compare(aDouble, upperBound) <= 0 : aDouble < upperBound;
         return respectsLowerBound && respectsUpperBound;
     }
 
@@ -168,7 +166,7 @@ public final class NumberUtilities {
      */
     public static double toDouble(@Nullable final String doubleStr) {
         if (!isValidDouble(doubleStr)) {
-            throw new IllegalArgumentException(doubleStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_DOUBLE_VALUE);
+            throw new IllegalArgumentException(doubleStr + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_DOUBLE_VALUE);
         }
         final String stripedDouble = StringUtils.strip(doubleStr);
         return NumberUtils.createDouble(stripedDouble);

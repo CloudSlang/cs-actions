@@ -1,6 +1,6 @@
 package io.cloudslang.content.utils;
 
-import io.cloudslang.content.constants.ExceptionsValues;
+import io.cloudslang.content.constants.ExceptionValues;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -43,7 +43,7 @@ public class NumberUtilitiesTest {
             NumberUtilities.isValidInt(value, lowerBound, upperBound);
             assertFalse(true);
         } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), ExceptionsValues.INVALID_BOUNDS);
+            assertEquals(iae.getMessage(), ExceptionValues.INVALID_BOUNDS);
         }
     }
 
@@ -53,7 +53,7 @@ public class NumberUtilitiesTest {
             NumberUtilities.toInteger(value);
             assertFalse(true);
         } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), value + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_INTEGER_VALUE);
+            assertEquals(iae.getMessage(), value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_INTEGER_VALUE);
         }
     }
 
@@ -82,7 +82,7 @@ public class NumberUtilitiesTest {
             NumberUtilities.isValidDouble(value, lowerBound, upperBound);
             assertFalse(true);
         } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), ExceptionsValues.INVALID_BOUNDS);
+            assertEquals(iae.getMessage(), ExceptionValues.INVALID_BOUNDS);
         }
     }
 
@@ -113,7 +113,7 @@ public class NumberUtilitiesTest {
             NumberUtilities.toDouble(value);
             assertFalse(true);
         } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), value + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_DOUBLE_VALUE);
+            assertEquals(iae.getMessage(), value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_DOUBLE_VALUE);
         }
     }
 

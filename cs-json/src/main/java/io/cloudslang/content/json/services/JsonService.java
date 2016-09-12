@@ -12,6 +12,9 @@ import io.cloudslang.content.json.utils.StringUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONStyle;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -98,7 +101,6 @@ public class JsonService {
                 }
             }
         }
-
     }
 
     private void removeEmptyElementFromJsonArray(JSONArray jsonArray) {
@@ -125,6 +127,7 @@ public class JsonService {
 
     }
 
+    @NotNull
     private String replaceUnescapedOccurrencesOfCharacterInText(String text, char toReplace, char newChar) {
         char[] charArrayText = text.toCharArray();
         for (int i = 0; i < charArrayText.length; i++) {
@@ -136,14 +139,16 @@ public class JsonService {
         return String.valueOf(charArrayText);
     }
 
+    @Contract(pure = true)
     private boolean shouldCharacterBeReplaced(char[] characters, char characterToReplace, int characterPosition) {
         return characters[characterPosition] == characterToReplace &&
                 (characterPosition == 0 || characters[characterPosition - 1] != '\\');
     }
 
-    public static JsonNode evaluateJsonPathQuery(final String jsonObject, final String jsonPath) {
-        final JsonPath path = JsonPath.compile(jsonPath);
-        final JsonContext jsonContext = JsonUtils.getJsonContext(jsonObject);
+    @NotNull
+    public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
+        final JsonContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
+        final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
         return jsonContext.read(path);
     }
 }

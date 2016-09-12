@@ -17,7 +17,6 @@ public class RemoveEmptyElementTest {
     private static final String EXCEPTION = "exception";
     private static final String RETURN_RESULT = "returnResult";
     private static final String RETURN_CODE = "returnCode";
-    private static final String ERROR_MESSAGE = "errorMessage";
 
 
     private RemoveEmptyElementAction actionUnderTest;
@@ -51,8 +50,8 @@ public class RemoveEmptyElementTest {
         returnResult = actionUnderTest.removeEmptyElements(invalidJsonInput);
 
         assertEquals("-1", returnResult.get(RETURN_CODE));
+        assertNotNull(returnResult.get(RETURN_RESULT));
         assertNotNull(returnResult.get(EXCEPTION));
-        assertNotNull(returnResult.get(ERROR_MESSAGE));
     }
 
 }
