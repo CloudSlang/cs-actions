@@ -22,7 +22,7 @@ public final class StringEscapeUtilities extends StringEscapeUtils {
     @NotNull
     public static String escapeChar(@NotNull final String string, final char toEscape) {
         final String toEscapeStr = String.valueOf(toEscape);
-        return string.replace("\\" + toEscapeStr, toEscapeStr).replace(toEscapeStr, "\\" + toEscapeStr);
+        return string.replaceAll("\\\\" + toEscapeStr, toEscapeStr).replaceAll(toEscapeStr, "\\\\" + toEscapeStr);
     }
 
     /**
@@ -35,7 +35,7 @@ public final class StringEscapeUtilities extends StringEscapeUtils {
     @NotNull
     public static String unescapeChar(@NotNull final String string, final char toUnescape) {
         final String toUnescapeStr = String.valueOf(toUnescape);
-        return string.replace("\\" + toUnescapeStr, toUnescapeStr);
+        return string.replaceAll("\\\\" + toUnescapeStr, toUnescapeStr);
     }
 
     /**
