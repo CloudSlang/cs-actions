@@ -137,9 +137,9 @@ public class DescribeImagesInRegionAction {
                                        @Param(value = Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
                                        @Param(value = Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
 
+                                       @Param(value = Inputs.ImageInputs.IMAGE_DESCRIPTION) String description,
                                        @Param(value = Inputs.ImageInputs.IDS_STRING) String idsString,
                                        @Param(value = Inputs.ImageInputs.OWNERS_STRING) String ownersString,
-                                       @Param(value = Inputs.ImageInputs.DESCRIPTION) String description,
                                        @Param(value = Inputs.ImageInputs.TYPE) String type,
                                        @Param(value = Inputs.ImageInputs.IS_PUBLIC) String isPublic,
                                        @Param(value = Inputs.ImageInputs.MANIFEST_LOCATION) String manifestLocation,
@@ -186,9 +186,9 @@ public class DescribeImagesInRegionAction {
 
         ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
                 .withCustomInputs(customInputs)
+                .withDescription(description)
                 .withImageIdsString(idsString)
                 .withOwnersString(ownersString)
-                .withDescription(description)
                 .withType(type)
                 .withIsPublic(isPublic)
                 .withManifestLocation(manifestLocation)

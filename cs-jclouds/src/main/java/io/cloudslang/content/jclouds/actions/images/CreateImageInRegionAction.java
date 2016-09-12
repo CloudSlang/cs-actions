@@ -71,8 +71,9 @@ public class CreateImageInRegionAction {
 
                                        @Param(value = Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId,
+
+                                       @Param(value = Inputs.ImageInputs.IMAGE_DESCRIPTION) String description,
                                        @Param(value = Inputs.ImageInputs.NAME, required = true) String name,
-                                       @Param(value = Inputs.ImageInputs.DESCRIPTION) String description,
                                        @Param(value = Inputs.ImageInputs.NO_REBOOT) String noReboot) throws Exception {
 
         CommonInputs inputs = new CommonInputs.CommonInputsBuilder()

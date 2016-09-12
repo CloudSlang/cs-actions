@@ -34,6 +34,7 @@ public class Constants {
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
         public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
+        public static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
     }
 
     public static class ValidationValues {
@@ -57,6 +58,7 @@ public class Constants {
         public static final String ALLOCATE_ADDRESS = "AllocateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
         public static final String CREATE_VOLUME = "CreateVolume";
+        public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String HTTP_CLIENT_METHOD_GET = "GET";

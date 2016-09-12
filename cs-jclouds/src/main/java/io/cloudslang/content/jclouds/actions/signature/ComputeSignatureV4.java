@@ -10,7 +10,7 @@ import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
-import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
@@ -100,7 +100,7 @@ public class ComputeSignatureV4 {
                     .withCredential(credential)
                     .build();
 
-            AwsInputsWrapper wrapper = new AwsInputsWrapper.AWSInputsWrapperBuilder()
+            InputsWrapper wrapper = new InputsWrapper.InputsWrapperBuilder()
                     .withCommonInputs(commonInputs)
                     .withApiService(amazonApi)
                     .withRequestUri(uri)

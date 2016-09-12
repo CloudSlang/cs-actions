@@ -2,9 +2,7 @@ package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.factory.helpers.InputsWrapperHelper;
+import io.cloudslang.content.jclouds.entities.inputs.*;
 
 /**
  * Created by Mihai Tusa.
@@ -15,30 +13,56 @@ public class InputsWrapperFactory {
     }
 
     @SafeVarargs
-    public static <T> AwsInputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
-        HttpClientInputs httpClientInputs = new InputsWrapperHelper().getHttpClientInputs(commonInputs);
+    public static <T> InputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
+        HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs);
 
-        AwsInputsWrapper wrapper;
-        switch (commonInputs.getAction()) {
-            case Constants.QueryApiActions.ALLOCATE_ADDRESS:
-                wrapper = new InputsWrapperHelper().getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE:
-                wrapper = new InputsWrapperHelper().getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.CREATE_VOLUME:
-                wrapper = new InputsWrapperHelper().getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
-                wrapper = new InputsWrapperHelper().getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
-                wrapper = new InputsWrapperHelper().getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
-                break;
-            default:
-                throw new RuntimeException(Constants.ErrorMessages.UNSUPPORTED_QUERY_API);
+        return getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
+    }
+
+    private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
+        HttpClientInputs httpClientInputs = new HttpClientInputs();
+
+        httpClientInputs.setUrl(commonInputs.getEndpoint());
+        httpClientInputs.setProxyHost(commonInputs.getProxyHost());
+        httpClientInputs.setProxyPort(commonInputs.getProxyPort());
+        httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
+        httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
+        httpClientInputs.setMethod(commonInputs.getHttpClientMethod());
+        httpClientInputs.setAuthType(Constants.AwsParams.AUTHORIZATION_TYPE_ANONYMOUS);
+        httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
+
+        return httpClientInputs;
+    }
+
+    @SafeVarargs
+    private static <T> InputsWrapper getAwsWrapperBuild(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+        InputsWrapper wrapper = new InputsWrapper.InputsWrapperBuilder()
+                .withHttpClientInputs(httpClientInputs)
+                .withCommonInputs(commonInputs)
+                .withAction(commonInputs.getAction())
+                .withApiService(commonInputs.getApiService())
+                .withRequestUri(commonInputs.getRequestUri())
+                .withRequestPayload(commonInputs.getRequestPayload())
+                .withHttpVerb(commonInputs.getHttpClientMethod())
+                .build();
+
+        if (builders.length > 0) {
+            for (T builder : builders) {
+                if (builder instanceof CustomInputs) {
+                    wrapper.setCustomInputs((CustomInputs) builder);
+                } else if (builder instanceof ImageInputs) {
+                    wrapper.setImageInputs((ImageInputs) builder);
+                } else if (builder instanceof InstanceInputs) {
+                    wrapper.setInstanceInputs((InstanceInputs) builder);
+                } else if (builder instanceof NetworkInputs) {
+                    wrapper.setNetworkInputs((NetworkInputs) builder);
+                } else if (builder instanceof VolumeInputs) {
+                    wrapper.setVolumeInputs((VolumeInputs) builder);
+                } else {
+                    throw new RuntimeException(Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE);
+                }
+            }
         }
-
         return wrapper;
     }
 }

@@ -3,7 +3,7 @@ package io.cloudslang.content.jclouds.services.impl;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.SnapshotService;
-import io.cloudslang.content.jclouds.services.helpers.Utils;
+import io.cloudslang.content.jclouds.services.helpers.FiltersHelper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
@@ -43,7 +43,7 @@ public class AmazonSnapshotServiceImpl extends JCloudsService implements Snapsho
 
     void init(boolean isDebugMode) {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
-        ec2Api = new Utils().getEC2Api(contextBuilder);
+        ec2Api = new FiltersHelper().getEC2Api(contextBuilder);
     }
 
     void lazyInit(String region, boolean isDebugMode) {

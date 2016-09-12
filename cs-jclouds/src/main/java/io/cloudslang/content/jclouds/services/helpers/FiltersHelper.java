@@ -19,7 +19,7 @@ import java.util.Set;
  * Created by Mihai Tusa.
  * 6/15/2016.
  */
-public class Utils {
+public class FiltersHelper {
     private static final String NOT_RELEVANT_INT_CODE = "-1";
     private static final String TAG = "tag:";
     private static final String EQUAL = "=";
@@ -199,6 +199,7 @@ public class Utils {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <K, V> void setTags(K inputs, V multipurposeMap, String delimiter) {
         String[] tagKeys;
         String[] tagValues;

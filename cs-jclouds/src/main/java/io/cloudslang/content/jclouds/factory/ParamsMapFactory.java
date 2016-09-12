@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.factory.helpers.NetworkHelper;
 import io.cloudslang.content.jclouds.factory.helpers.VolumeHelper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -18,7 +18,7 @@ public class ParamsMapFactory {
     private ParamsMapFactory() {
     }
 
-    public static Map<String, String> getQueryApiParamsMap(AwsInputsWrapper wrapper) {
+    public static Map<String, String> getQueryApiParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap;
         if (StringUtils.isBlank(wrapper.getCommonInputs().getQueryParams())) {
             switch (wrapper.getAction()) {
@@ -30,6 +30,9 @@ public class ParamsMapFactory {
                     break;
                 case Constants.QueryApiActions.CREATE_VOLUME:
                     queryParamsMap = new VolumeHelper().getCreateVolumeQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.CREATE_NETWORK_INTERFACE:
+                    queryParamsMap = new NetworkHelper().getCreateNetworkInterfaceQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDeleteNetworkInterfaceQueryParamsMap(wrapper);

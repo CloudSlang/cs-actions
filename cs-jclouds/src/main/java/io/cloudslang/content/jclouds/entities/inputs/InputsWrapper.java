@@ -9,7 +9,7 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * Created by Mihai Tusa.
  * 8/10/2016.
  */
-public class AwsInputsWrapper {
+public class InputsWrapper {
     private HttpClientInputs httpClientInputs;
     private CommonInputs commonInputs;
     private CustomInputs customInputs;
@@ -28,7 +28,7 @@ public class AwsInputsWrapper {
     private String queryParams;
     private String action;
 
-    private AwsInputsWrapper(AWSInputsWrapperBuilder builder) {
+    private InputsWrapper(InputsWrapperBuilder builder) {
         this.httpClientInputs = builder.httpClientInputs;
         this.commonInputs = builder.commonInputs;
 
@@ -131,7 +131,7 @@ public class AwsInputsWrapper {
         return action;
     }
 
-    public static class AWSInputsWrapperBuilder {
+    public static class InputsWrapperBuilder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
 
@@ -145,61 +145,61 @@ public class AwsInputsWrapper {
         private String queryParams;
         private String action;
 
-        public AwsInputsWrapper build() {
-            return new AwsInputsWrapper(this);
+        public InputsWrapper build() {
+            return new InputsWrapper(this);
         }
 
-        public AWSInputsWrapperBuilder withHttpClientInputs(HttpClientInputs inputs) {
+        public InputsWrapperBuilder withHttpClientInputs(HttpClientInputs inputs) {
             httpClientInputs = inputs;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withCommonInputs(CommonInputs inputs) {
+        public InputsWrapperBuilder withCommonInputs(CommonInputs inputs) {
             commonInputs = inputs;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withApiService(String inputValue) {
+        public InputsWrapperBuilder withApiService(String inputValue) {
             apiService = AmazonApiServiceType.getValue(inputValue);
             return this;
         }
 
-        public AWSInputsWrapperBuilder withRequestUri(String inputValue) {
+        public InputsWrapperBuilder withRequestUri(String inputValue) {
             requestUri = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.SCOPE_SEPARATOR);
             return this;
         }
 
-        public AWSInputsWrapperBuilder withRequestPayload(String inputValue) {
+        public InputsWrapperBuilder withRequestPayload(String inputValue) {
             requestPayload = inputValue;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withDate(String inputValue) {
+        public InputsWrapperBuilder withDate(String inputValue) {
             date = inputValue;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withSecurityToken(String inputValue) {
+        public InputsWrapperBuilder withSecurityToken(String inputValue) {
             securityToken = inputValue;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withHttpVerb(String inputValue) {
+        public InputsWrapperBuilder withHttpVerb(String inputValue) {
             httpVerb = inputValue;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withHeaders(String inputValue) {
+        public InputsWrapperBuilder withHeaders(String inputValue) {
             headers = inputValue;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withQueryParams(String inputValue) {
+        public InputsWrapperBuilder withQueryParams(String inputValue) {
             queryParams = inputValue;
             return this;
         }
 
-        public AWSInputsWrapperBuilder withAction(String inputValue) {
+        public InputsWrapperBuilder withAction(String inputValue) {
             action = inputValue;
             return this;
         }

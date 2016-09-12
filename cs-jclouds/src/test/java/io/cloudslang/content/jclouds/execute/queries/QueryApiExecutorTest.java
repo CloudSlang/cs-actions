@@ -70,7 +70,7 @@ public class QueryApiExecutorTest {
     public void testCreateVolume() throws Exception {
         toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateVolume")));
         runCommonVerifiersForQueryApi();
     }
@@ -79,7 +79,7 @@ public class QueryApiExecutorTest {
     public void testAllocateAddress() throws Exception {
         toTest.execute(getCommonInputs("AllocateAddress", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AllocateAddress")));
         runCommonVerifiersForQueryApi();
     }
@@ -88,7 +88,7 @@ public class QueryApiExecutorTest {
     public void testAttachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DeleteNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteNetworkInterface")));
         runCommonVerifiersForQueryApi();
     }
@@ -97,7 +97,7 @@ public class QueryApiExecutorTest {
     public void testDeleteNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
         runCommonVerifiersForQueryApi();
     }
@@ -106,7 +106,7 @@ public class QueryApiExecutorTest {
     public void testDetachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(AwsInputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachNetworkInterface")));
         runCommonVerifiersForQueryApi();
     }
@@ -117,16 +117,16 @@ public class QueryApiExecutorTest {
 
         toTest.execute(getCommonInputs("", "", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
 
-        verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(AwsInputsWrapper.class),
+        verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
         verify(csHttpClientMock, never()).execute(any(HttpClientInputs.class));
     }
 
     private void addCommonMocksForQueryApi() throws Exception {
         whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
-        when(amazonSignatureServiceMock.signRequestHeaders(any(AwsInputsWrapper.class),
+        when(amazonSignatureServiceMock.signRequestHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class))).thenReturn(authorizationHeaderMock);
-        doNothing().when(queryApiExecutorSpy).setQueryApiCallHeaders(any(AwsInputsWrapper.class),
+        doNothing().when(queryApiExecutorSpy).setQueryApiCallHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);

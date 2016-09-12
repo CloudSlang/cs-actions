@@ -2,7 +2,7 @@ package io.cloudslang.content.jclouds.services;
 
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.services.helpers.AWSSignatureHelper;
 import io.cloudslang.content.jclouds.services.helpers.AWSSignatureV4;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -29,7 +29,7 @@ public class AmazonSignatureService {
 
     private AWSSignatureV4 awsSignatureV4 = new AWSSignatureV4();
 
-    public AuthorizationHeader signRequestHeaders(AwsInputsWrapper wrapper, Map<String, String> headersMap,
+    public AuthorizationHeader signRequestHeaders(InputsWrapper wrapper, Map<String, String> headersMap,
                                                   Map<String, String> queryParamsMap) throws SignatureException, MalformedURLException {
         AWSSignatureHelper signatureUtils = new AWSSignatureHelper();
         String amazonDate = StringUtils.isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
@@ -64,7 +64,7 @@ public class AmazonSignatureService {
         return new AuthorizationHeader(getSignedRequestHeadersString(requestHeaders), signature);
     }
 
-    private Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, AwsInputsWrapper wrapper) {
+    private Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         if (queryParamsMap == null || queryParamsMap.isEmpty()) {
             queryParamsMap = new HashMap<>();
         }

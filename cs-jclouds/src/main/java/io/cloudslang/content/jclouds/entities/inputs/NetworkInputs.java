@@ -2,6 +2,8 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceAttachmentStatus;
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceStatus;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
  * Created by Mihai Tusa.
@@ -34,6 +36,9 @@ public class NetworkInputs {
     private String networkInterfacePublicIp;
     private String networkInterfaceIpOwnerId;
     private String deviceIndex;
+    private String privateIpAddressesString;
+    private String secondaryPrivateIpAddressCount;
+    private String securityGroupIdsString;
 
     private boolean forceDetach;
 
@@ -64,6 +69,9 @@ public class NetworkInputs {
         this.networkInterfacePublicIp = builder.networkInterfacePublicIp;
         this.networkInterfaceIpOwnerId = builder.networkInterfaceIpOwnerId;
         this.deviceIndex = builder.deviceIndex;
+        this.privateIpAddressesString = builder.privateIpAddressesString;
+        this.secondaryPrivateIpAddressCount = builder.secondaryPrivateIpAddressCount;
+        this.securityGroupIdsString = builder.securityGroupIdsString;
 
         this.forceDetach = builder.forceDetach;
     }
@@ -172,6 +180,18 @@ public class NetworkInputs {
         return deviceIndex;
     }
 
+    public String getPrivateIpAddressesString() {
+        return privateIpAddressesString;
+    }
+
+    public String getSecondaryPrivateIpAddressCount() {
+        return secondaryPrivateIpAddressCount;
+    }
+
+    public String getSecurityGroupIdsString() {
+        return securityGroupIdsString;
+    }
+
     public boolean isForceDetach() {
         return forceDetach;
     }
@@ -203,6 +223,9 @@ public class NetworkInputs {
         private String networkInterfacePublicIp;
         private String networkInterfaceIpOwnerId;
         private String deviceIndex;
+        private String privateIpAddressesString;
+        private String secondaryPrivateIpAddressCount;
+        private String securityGroupIdsString;
 
         private boolean forceDetach;
 
@@ -337,6 +360,21 @@ public class NetworkInputs {
 
         public NetworkInputs.NetworkInputsBuilder withDeviceIndex(String inputValue) {
             deviceIndex = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withPrivateIpAddressesString(String inputValue) {
+            privateIpAddressesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withSecondaryPrivateIpAddressCount(String inputValue) {
+            secondaryPrivateIpAddressCount = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withSecurityGroupIdsString(String inputValue) {
+            securityGroupIdsString = inputValue;
             return this;
         }
 

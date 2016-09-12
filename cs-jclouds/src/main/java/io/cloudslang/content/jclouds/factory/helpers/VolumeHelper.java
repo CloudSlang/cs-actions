@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.factory.helpers;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,7 +21,7 @@ public class VolumeHelper {
     private static final String SNAPSHOT_ID = "SnapshotId";
     private static final String VOLUME_TYPE = "VolumeType";
 
-    public Map<String, String> getCreateVolumeQueryParamsMap(AwsInputsWrapper wrapper) {
+    public Map<String, String> getCreateVolumeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         queryParamsMap.put(Constants.AwsParams.ACTION, wrapper.getAction());
         queryParamsMap.put(Constants.AwsParams.VERSION, wrapper.getCommonInputs().getVersion());

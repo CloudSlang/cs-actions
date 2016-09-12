@@ -3,6 +3,7 @@ package io.cloudslang.content.jclouds.utils;
 import io.cloudslang.content.jclouds.entities.aws.InstanceState;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,7 +63,7 @@ public final class InputsUtil {
             sb.append(entry.getValue());
             sb.append(suffix);
         }
-        return sb.deleteCharAt(sb.length()-1).toString();
+        return sb.deleteCharAt(sb.length() - 1).toString();
     }
 
     public static String[] getStringsArray(String input, String condition, String delimiter) {
@@ -145,6 +146,10 @@ public final class InputsUtil {
         if (condition) {
             inputMap.put(key, value);
         }
+    }
+
+    public static boolean isValidIPv4Address(String input) {
+        return new InetAddressValidator().isValidInet4Address(input);
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {

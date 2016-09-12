@@ -3,8 +3,8 @@ package io.cloudslang.content.jclouds.execute.queries;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.AwsInputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.factory.InputsWrapperFactory;
 import io.cloudslang.content.jclouds.factory.ParamsMapFactory;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
@@ -24,7 +24,7 @@ public class QueryApiExecutor {
     @SafeVarargs
     public final <T> Map<String, String> execute(CommonInputs commonInputs, T... builders)
             throws MalformedURLException, SignatureException {
-        AwsInputsWrapper inputs = InputsWrapperFactory.getWrapper(commonInputs, builders);
+        InputsWrapper inputs = InputsWrapperFactory.getWrapper(commonInputs, builders);
 
         Map<String, String> headersMap = StringUtils.isNotBlank(inputs.getCommonInputs().getHeaders()) ?
                 InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), inputs.getCommonInputs().getHeaders(),
@@ -39,13 +39,13 @@ public class QueryApiExecutor {
         return new CSHttpClient().execute(inputs.getHttpClientInputs());
     }
 
-    void setQueryApiCallHeaders(AwsInputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
+    void setQueryApiCallHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
             throws SignatureException, MalformedURLException {
         AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
         inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
     }
 
-    private void setQueryApiCallParams(AwsInputsWrapper inputs, Map<String, String> queryParamsMap) {
+    private void setQueryApiCallParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
         String queryParamsString = InputsUtil
                 .getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL, Constants.Miscellaneous.AMPERSAND);
         inputs.getHttpClientInputs().setQueryParams(queryParamsString);
