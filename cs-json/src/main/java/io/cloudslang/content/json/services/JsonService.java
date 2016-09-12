@@ -1,10 +1,13 @@
 package io.cloudslang.content.json.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.internal.JsonContext;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
+import io.cloudslang.content.json.utils.JsonUtils;
 import io.cloudslang.content.json.utils.StringUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -136,5 +139,11 @@ public class JsonService {
     private boolean shouldCharacterBeReplaced(char[] characters, char characterToReplace, int characterPosition) {
         return characters[characterPosition] == characterToReplace &&
                 (characterPosition == 0 || characters[characterPosition - 1] != '\\');
+    }
+
+    public static JsonNode evaluateJsonPathQuery(final String jsonObject, final String jsonPath) {
+        final JsonPath path = JsonPath.compile(jsonPath);
+        final JsonContext jsonContext = JsonUtils.getJsonContext(jsonObject);
+        return jsonContext.read(path);
     }
 }

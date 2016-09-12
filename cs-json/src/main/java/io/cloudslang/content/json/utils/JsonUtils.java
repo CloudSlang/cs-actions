@@ -9,10 +9,14 @@
  *******************************************************************************/
 package io.cloudslang.content.json.utils;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.internal.JsonContext;
 import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.ActionsEnum.insert;
@@ -32,6 +36,21 @@ public class JsonUtils {
             returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
         }
         return returnResult;
+    }
+
+    public static Map<String, String> returnResultSuccessMap(String returnResult) {
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put(Constants.OutputNames.RETURN_RESULT, returnResult);
+        resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+        return resultMap;
+    }
+
+    public static Map<String, String> returnResultFailureMap(String returnResult, Exception exception) {
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put(Constants.OutputNames.RETURN_RESULT, returnResult);
+        resultMap.put(Constants.OutputNames.EXCEPTION, exception.getMessage());
+        resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+        return resultMap;
     }
 
     public static Map<String, String> populateResult(Map<String, String> returnResult, Exception exception) {
@@ -90,7 +109,9 @@ public class JsonUtils {
         }
     }
 
-    public static JsonContext getJsonContext(String jsonObject, final AbstractJsonProvider provider) {
+    public static JsonContext getJsonContext(String jsonObject) {
+        final ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
         final Configuration configuration = Configuration.defaultConfiguration().jsonProvider(provider);
         JsonContext jsonContext = new JsonContext(configuration);
         jsonContext.parse(jsonObject);

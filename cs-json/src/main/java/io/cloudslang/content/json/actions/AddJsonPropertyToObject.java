@@ -10,6 +10,7 @@
 
 package io.cloudslang.content.json.actions;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -78,7 +79,7 @@ public class AddJsonPropertyToObject {
             return populateResult(returnResult, new Exception("Empty jsonObject provided!"));
         }
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         final boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
 
         if (isBlank(newPropertyValue)) {

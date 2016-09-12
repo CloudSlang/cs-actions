@@ -72,11 +72,10 @@ public class EditJson {
 
         Map<String, String> returnResult = new HashMap<>();
         JsonContext jsonContext;
-        final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider();
         boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
         try {
             JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
-            jsonContext = JsonUtils.getJsonContext(jsonObject, provider);
+            jsonContext = JsonUtils.getJsonContext(jsonObject);
         } catch (Exception e) {
             return populateResult(returnResult, e);
         }
@@ -86,7 +85,7 @@ public class EditJson {
             Object valueObject;
             JsonContext valueJsonContext;
             try {
-                valueJsonContext = JsonUtils.getJsonContext(value, provider);
+                valueJsonContext = JsonUtils.getJsonContext(value);
                 valueObject = valueJsonContext.json();
             } catch (Exception e) {
                 if (!validateValueBoolean || !actionEnum.getNeedValue()) {
