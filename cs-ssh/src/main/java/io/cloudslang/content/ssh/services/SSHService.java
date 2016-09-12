@@ -66,5 +66,5 @@ public interface SSHService extends AutoCloseable {
 
     Session getSSHSession();
 
-    Channel getShellChannel();
+    Channel getExecChannel();
 }
