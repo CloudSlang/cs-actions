@@ -14,7 +14,7 @@ package io.cloudslang.content.json.utils;
  * Created by ioanvranauhp
  * Date 1/12/2015.
  */
-public class Constants {
+public final class Constants {
 
     public static final class InputNames extends io.cloudslang.content.constants.InputNames {
         public static final String JSON_OBJECT = "jsonObject";
