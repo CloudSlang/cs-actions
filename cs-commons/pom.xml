@@ -1,119 +1,41 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <!--
-        (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-        All rights reserved. This program and the accompanying materials
-        are made available under the terms of the Apache License v2.0 which accompany this distribution.
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-        The Apache License is available at
-        http://www.apache.org/licenses/LICENSE-2.0
-    -->
+    <modelVersion>4.0.0</modelVersion>
+
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-ssh</artifactId>
-    <version>0.0.35-SNAPSHOT</version>
+    <artifactId>cs-commons</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>SSH java actions</description>
+    <description>Utils for java cloudSlang modules.</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
     <scm>
         <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
         <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
+
     <developers>
         <developer>
-            <name>Octavian Hasna</name>
-            <email>octavian-lucian.hasna@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Ioan Vranau</name>
-            <email>ioan.vranau@hp.com</email>
-            <organization>HP Software</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Avi Moradi</name>
-            <email>avi.moradi@hp.com</email>
-            <organization>HP Software</organization>
+            <name>Victor Ursan</name>
+            <email>victor.ursan@hpe.com</email>
+            <organization>Hewlett Packard Enterprise</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
     </developers>
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>Maven Central staging repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>Maven Central snapshots repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-    <dependencies>
-        <dependency>
-            <groupId>com.hp.score.sdk</groupId>
-            <artifactId>score-content-sdk</artifactId>
-            <version>1.10.6</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.50</version>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>140</version>
-        </dependency>
 
-        <!-- testing dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.18.1-GA</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- end of testing dependencies -->
-    </dependencies>
     <build>
         <pluginManagement>
             <plugins>
@@ -229,4 +151,25 @@
             </build>
         </profile>
     </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
 </project>
