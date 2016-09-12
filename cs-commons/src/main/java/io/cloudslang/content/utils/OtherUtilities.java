@@ -55,7 +55,7 @@ public final class OtherUtilities {
      */
     @NotNull
     public static String changeNewLineFromWindowsToUnix(@NotNull final String string) {
-        return string.replaceAll("\r\n", "\n");
+        return string.replace("\r\n", "\n");
     }
 
     /**
@@ -66,7 +66,7 @@ public final class OtherUtilities {
      */
     @NotNull
     public static String changeNewLineFromUnixToWindows(@NotNull final String string) {
-        return string.replaceAll("\n", "\r\n");
+        return string.replace("\n", "\r\n");
     }
 
 }
