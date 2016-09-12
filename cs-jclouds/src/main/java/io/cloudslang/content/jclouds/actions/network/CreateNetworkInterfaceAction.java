@@ -142,12 +142,4 @@ public class CreateNetworkInterfaceAction {
             return ExceptionProcessor.getExceptionResult(exception);
         }
     }
-
-    public static void main(String[] args) {
-        CreateNetworkInterfaceAction action = new CreateNetworkInterfaceAction();
-        Map<String, String> results = action.createNetworkInterface("https://ec2.amazonaws.com/", "AKIAJN4U4OLPDONR4KMA",
-                "33FDnaGmrPXBn6nwKtKCZhLP7IN2HY7d5jxuBv6X", "proxy.houston.hp.com", "8080", "", "",
-                "", "", "2016-04-01", "", "testCSIntelliJ", "10.0.0.20", "", "3", "sg-b10089cb", "subnet-4713b230");
-        System.out.println(results.get("returnResult"));
-    }
 }
