@@ -101,7 +101,7 @@ public class JsonUtils {
         try {
             return JsonPath.compile(jsonPath);
         } catch (IllegalArgumentException iae) {
-            throw illegalArgumentExceptionWithMessage(INVALID_JSONPATH, iae);
+            throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONPATH, iae);
         }
     }
 
@@ -116,7 +116,7 @@ public class JsonUtils {
             jsonContext.parse(jsonObject);
             return jsonContext;
         } catch (IllegalArgumentException iae) {
-            throw illegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
+            throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
         }
     }
 
@@ -129,7 +129,7 @@ public class JsonUtils {
     }
 
     @NotNull
-    public static IllegalArgumentException illegalArgumentExceptionWithMessage(@NotNull final String message, @NotNull final Throwable throwable) {
+    public static IllegalArgumentException hammerIllegalArgumentExceptionWithMessage(@NotNull final String message, @NotNull final Throwable throwable) {
         final IllegalArgumentException iae = new IllegalArgumentException(message);
         iae.setStackTrace(throwable.getStackTrace());
         return iae;

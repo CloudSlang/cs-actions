@@ -20,7 +20,7 @@ public class RemoveEmptyElementTest {
 
 
     private RemoveEmptyElementAction actionUnderTest;
-    Map<String, String> returnResult;
+    private Map<String, String> returnResult;
 
     @Before
     public void setUp() {
@@ -36,7 +36,6 @@ public class RemoveEmptyElementTest {
     @Test
     public void givenValidJsonInputThenReturnSuccess() {
         String expectedResultString = "{\"expected\":\"value\"}";
-        ;
         String jsonInput = "{\"removed1\":\"\", \"removed2\":[], \"removed3\":null, \"expected\":\"value\"} ";
         returnResult = actionUnderTest.removeEmptyElements(jsonInput);
 

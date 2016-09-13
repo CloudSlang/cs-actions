@@ -28,7 +28,7 @@ public class JsonPathQuery {
      * It returns the results as a JSON Object.
      *
      * @param jsonObject The JSON in the form of a string.
-     * @param jsonPath   The JSON Path query to run. See details and examples in the Notes section below.
+     * @param jsonPath   The JSON Path query to run.
      * @return           A map which contains the resulted JSON from the given path.
      */
     @Action(name = "JSON Path Query",
