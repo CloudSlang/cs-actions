@@ -10,6 +10,4 @@ public class ExceptionValues {
     public static final String INVALID_DOUBLE_VALUE = "The provided string cannot be converted to a double value.";
     public static final String INVALID_BOUNDS = "The lower bound is required to be less than the upper bound";
     public static final String INVALID_KEY_VALUE_PAIR = "The Key, Value pair has to be formatted as: key<keyValueDelimiter>value";
-
-
 }

@@ -19,14 +19,18 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.utils.Constants;
+import io.cloudslang.content.utils.StringUtilities;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.json.utils.JsonUtils.isBlank;
 import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
+import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
 
 /**
  * Created by ioanvranauhp
@@ -60,25 +64,25 @@ public class MergeArrays {
      */
     @Action(name = "Merge Arrays",
             outputs = {
-                    @Output(Constants.OutputNames.RETURN_RESULT),
-                    @Output(Constants.OutputNames.RETURN_CODE),
-                    @Output(Constants.OutputNames.EXCEPTION)
+                    @Output(OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = Constants.InputNames.ARRAY, required = true) String array1,
                                        @Param(value = Constants.InputNames.ARRAY, required = true) String array2) {
 
         Map<String, String> returnResult = new HashMap<>();
-        if (isBlank(array1)) {
-            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY1_MESSAGE.replaceFirst("=", "");
+        if (StringUtilities.isBlank(array1)) {
+            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY1_MESSAGE.replaceFirst("=", EMPTY_STRING);
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }
 
-        if (isBlank(array2)) {
-            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY2_MESSAGE.replaceFirst("=", "");
+        if (StringUtilities.isBlank(array2)) {
+            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY2_MESSAGE.replaceFirst("=", EMPTY_STRING);
             return populateResult(returnResult, new Exception(exceptionValue));
         }
 

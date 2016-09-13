@@ -68,5 +68,4 @@ public final class OtherUtilities {
     public static String changeNewLineFromUnixToWindows(@NotNull final String string) {
         return string.replace("\n", "\r\n");
     }
-
 }

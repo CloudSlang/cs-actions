@@ -75,5 +75,4 @@ public final class OutputUtilities {
         results.put(OutputNames.EXCEPTION, ExceptionUtils.getStackTrace(throwable));
         return results;
     }
-
 }

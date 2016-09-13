@@ -1,7 +1,7 @@
 package io.cloudslang.content.constants;
 
 /**
- * Created by victor on 13.09.2016.
+ * Created by victor on 9/12/16.
  */
 public class OtherValues {
     public static final String EMPTY_STRING = "";
