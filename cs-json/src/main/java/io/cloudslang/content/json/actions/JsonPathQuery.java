@@ -23,6 +23,14 @@ import static io.cloudslang.content.constants.OtherValues.NULL_STRING;
  */
 public class JsonPathQuery {
 
+    /**
+     * This operation takes a reference to JSON (in the form of a string) and runs a specified JSON Path query on it.
+     * It returns the results as a JSON Object.
+     *
+     * @param jsonObject The JSON in the form of a string.
+     * @param jsonPath   The JSON Path query to run. See details and examples in the Notes section below.
+     * @return           A map which contains the resulted JSON from the given path.
+     */
     @Action(name = "JSON Path Query",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
