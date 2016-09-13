@@ -3,7 +3,7 @@ package io.cloudslang.content.constants;
 /**
  * Created by victor on 31.08.2016.
  */
-public class ExceptionsValues {
+public class ExceptionValues {
     public static final String EXCEPTION_DELIMITER = ": ";
     public static final String INVALID_BOOLEAN_VALUE = "The provided string cannot be converted to a boolean value. It must be 'true' or 'false'";
     public static final String INVALID_INTEGER_VALUE = "The provided string cannot be converted to an integer value.";

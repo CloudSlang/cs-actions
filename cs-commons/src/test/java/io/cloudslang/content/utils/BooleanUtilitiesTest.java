@@ -1,6 +1,6 @@
 package io.cloudslang.content.utils;
 
-import io.cloudslang.content.constants.ExceptionsValues;
+import io.cloudslang.content.constants.ExceptionValues;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -51,12 +51,12 @@ public class BooleanUtilitiesTest {
         try {
             BooleanUtilities.toBoolean("a");
         } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), "a" + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_BOOLEAN_VALUE);
+            assertEquals(iae.getMessage(), "a" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_BOOLEAN_VALUE);
         }
         try {
             BooleanUtilities.toBoolean("b", true);
         } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), "b" + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_BOOLEAN_VALUE);
+            assertEquals(iae.getMessage(), "b" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_BOOLEAN_VALUE);
         }
     }
 

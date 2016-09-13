@@ -1,6 +1,6 @@
 package io.cloudslang.content.utils;
 
-import io.cloudslang.content.constants.ExceptionsValues;
+import io.cloudslang.content.constants.ExceptionValues;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,7 +91,7 @@ public final class CollectionUtilities {
         for (final String pairStr : toArray(stringMap, pairDelimiter)) {
             final String[] arrayPair = toArray(pairStr, keyValueDelimiter);
             if (arrayPair.length != 2 && arrayPair.length != 0) {
-                throw new IllegalArgumentException(pairStr + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_KEY_VALUE_PAIR);
+                throw new IllegalArgumentException(pairStr + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_KEY_VALUE_PAIR);
             } else if (arrayPair.length == 2) {
                 theMap.put(arrayPair[0], arrayPair[1]);
             }
