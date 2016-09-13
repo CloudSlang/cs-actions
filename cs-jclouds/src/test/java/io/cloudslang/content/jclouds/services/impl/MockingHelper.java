@@ -25,11 +25,13 @@ public class MockingHelper {
     private MockingHelper() {
     }
 
+    @SuppressWarnings("unchecked")
     public static void setExpectedExceptions(ExpectedException exception, Class<?> type, String message) {
         exception.expect((Class<? extends Throwable>) type);
         exception.expectMessage(message);
     }
 
+    @SuppressWarnings("unchecked")
     static void addCommonMocksForInitMethod(ContextBuilder contextBuilderMock, Properties propertiesMock) throws Exception {
         whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         doReturn(contextBuilderMock).when(ContextBuilder.class, "newBuilder", "ec2");
@@ -39,6 +41,7 @@ public class MockingHelper {
         doReturn(contextBuilderMock).when(contextBuilderMock).modules(Matchers.<Iterable>any());
     }
 
+    @SuppressWarnings("unchecked")
     static void commonVerifiersForInitMethod(ContextBuilder contextBuilderMock, Properties propertiesMock) throws Exception {
         verifyNew(Properties.class).withNoArguments();
         verify(contextBuilderMock).endpoint("https://ec2.amazonaws.com");
@@ -49,7 +52,6 @@ public class MockingHelper {
         verifyNoMoreInteractions(contextBuilderMock);
     }
 
-    // because the VolumeService and SnapshotService uses the same ElasticBlockStoreApi
     static <T> void addCommonMocksForMethods(AmazonVolumeServiceImpl volumeSpy, AmazonSnapshotServiceImpl snapshotSpy,
                                              EC2Api ec2ApiMock, Optional<? extends InstanceApi> optionalInstanceApiMock,
                                              ElasticBlockStoreApi ebsApiMock, Class<T> spy) {

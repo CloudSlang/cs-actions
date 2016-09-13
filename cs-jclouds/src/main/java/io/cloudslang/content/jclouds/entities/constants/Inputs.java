@@ -148,6 +148,7 @@ public class Inputs {
         public static final String PRIVATE_IP_ADDRESSES_STRING = "privateIpAddressesString";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
         public static final String SECURITY_GROUP_IDS_STRING = "securityGroupIdsString";
+        public static final String ALLOW_REASSOCIATION = "allowReassociation";
     }
 
     public static class VolumeInputs {

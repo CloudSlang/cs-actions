@@ -56,6 +56,7 @@ public class Constants {
 
     public static class QueryApiActions {
         public static final String ALLOCATE_ADDRESS = "AllocateAddress";
+        public static final String ASSOCIATE_ADDRESS = "AssociateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";

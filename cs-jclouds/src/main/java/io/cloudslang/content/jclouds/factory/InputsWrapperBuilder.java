@@ -8,15 +8,15 @@ import io.cloudslang.content.jclouds.entities.inputs.*;
  * Created by Mihai Tusa.
  * 9/5/2016.
  */
-public class InputsWrapperFactory {
-    private InputsWrapperFactory() {
+public class InputsWrapperBuilder {
+    private InputsWrapperBuilder() {
     }
 
     @SafeVarargs
     public static <T> InputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
         HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs);
 
-        return getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
+        return buildWrapper(httpClientInputs, commonInputs, builders);
     }
 
     private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
@@ -35,7 +35,7 @@ public class InputsWrapperFactory {
     }
 
     @SafeVarargs
-    private static <T> InputsWrapper getAwsWrapperBuild(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+    private static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
         InputsWrapper wrapper = new InputsWrapper.InputsWrapperBuilder()
                 .withHttpClientInputs(httpClientInputs)
                 .withCommonInputs(commonInputs)
@@ -63,6 +63,7 @@ public class InputsWrapperFactory {
                 }
             }
         }
+
         return wrapper;
     }
 }
