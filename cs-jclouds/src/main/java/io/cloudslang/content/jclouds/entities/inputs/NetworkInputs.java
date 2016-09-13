@@ -41,6 +41,7 @@ public class NetworkInputs {
     private String securityGroupIdsString;
 
     private boolean forceDetach;
+    private boolean allowReassociation;
 
     private NetworkInputs(NetworkInputs.NetworkInputsBuilder builder) {
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
@@ -74,6 +75,7 @@ public class NetworkInputs {
         this.securityGroupIdsString = builder.securityGroupIdsString;
 
         this.forceDetach = builder.forceDetach;
+        this.allowReassociation = builder.allowReassociation;
     }
 
     public String getNetworkInterfaceDescription() {
@@ -196,6 +198,10 @@ public class NetworkInputs {
         return forceDetach;
     }
 
+    public boolean isAllowReassociation() {
+        return allowReassociation;
+    }
+
     public static class NetworkInputsBuilder {
         private String networkInterfaceDescription;
         private String networkInterfaceSubnetId;
@@ -228,6 +234,7 @@ public class NetworkInputs {
         private String securityGroupIdsString;
 
         private boolean forceDetach;
+        private boolean allowReassociation;
 
         public NetworkInputs build() {
             return new NetworkInputs(this);
@@ -380,6 +387,11 @@ public class NetworkInputs {
 
         public NetworkInputs.NetworkInputsBuilder withForceDetach(String inputValue) {
             forceDetach = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withAllowReassociation(String inputValue) {
+            allowReassociation = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

@@ -67,17 +67,8 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testCreateVolume() throws Exception {
-        toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
-
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
-                eq(getQueryParamsMap("CreateVolume")));
-        runCommonVerifiersForQueryApi();
-    }
-
-    @Test
     public void testAllocateAddress() throws Exception {
-        toTest.execute(getCommonInputs("AllocateAddress", HEADERS, ""), getCustomInputs(), getNetworkInputs());
+        toTest.execute(getCommonInputs("AllocateAddress", HEADERS, ""), getCustomInputs(), getNetworkInputs(true));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AllocateAddress")));
@@ -85,8 +76,17 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testAssociateAddress() throws Exception {
+        toTest.execute(getCommonInputs("AssociateAddress", HEADERS, ""), getCustomInputs(), getNetworkInputs(true));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("AssociateAddress")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testAttachNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("DeleteNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs());
+        toTest.execute(getCommonInputs("DeleteNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(true));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteNetworkInterface")));
@@ -95,7 +95,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS, ""), getNetworkInputs());
+        toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS, ""), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateNetworkInterface")));
@@ -103,8 +103,17 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateVolume() throws Exception {
+        toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateVolume")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDeleteNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs());
+        toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(true));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
@@ -113,7 +122,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDetachNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs());
+        toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachNetworkInterface")));
@@ -121,10 +130,19 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testExecuteException() throws Exception {
+    public void testDisassociateAddress() throws Exception {
+        toTest.execute(getCommonInputs("DisassociateAddress", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DisassociateAddress")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testExecuteWithException() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unsupported Query API.");
 
-        toTest.execute(getCommonInputs("", "", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs());
+        toTest.execute(getCommonInputs("", "", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
@@ -135,7 +153,7 @@ public class QueryApiExecutorTest {
         whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
         when(amazonSignatureServiceMock.signRequestHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class))).thenReturn(authorizationHeaderMock);
-        doNothing().when(queryApiExecutorSpy).setQueryApiCallHeaders(any(InputsWrapper.class),
+        doNothing().when(queryApiExecutorSpy).setQueryApiHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
@@ -161,11 +179,13 @@ public class QueryApiExecutorTest {
 
     private CustomInputs getCustomInputs() throws Exception {
         return new CustomInputs.CustomInputsBuilder()
-                .withAvailabilityZone("us-east-1d")
-                .withInstanceId("i-abcdef12")
+                .withAllocationId("eipalloc-abcdef12")
+                .withAssociationId("eipassoc-abcdef12")
                 .withAttachmentId("eni-attach-12345678")
-                .withVolumeType("")
+                .withAvailabilityZone("us-east-1d")
                 .withDomain("")
+                .withInstanceId("i-abcdef12")
+                .withVolumeType("")
                 .build();
     }
 
@@ -173,17 +193,30 @@ public class QueryApiExecutorTest {
         return new VolumeInputs.VolumeInputsBuilder().withSize("10").withIops("").build();
     }
 
-    private NetworkInputs getNetworkInputs() {
+    private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) throws Exception {
+        if (withNetworkInterfaceId) {
+            return new NetworkInputs.NetworkInputsBuilder()
+                    .withAllowReassociation("tRuE")
+                    .withDeviceIndex("25")
+                    .withNetworkInterfaceDescription("anything in here")
+                    .withNetworkInterfaceId("eni-12345678")
+                    .withNetworkInterfacePrivateIpAddress("10.0.0.129")
+                    .withNetworkInterfacePublicIp("52.xxx.xxx.xxx")
+                    .withPrivateIpAddressesString("10.0.0.130,10.0.0.131,10.0.0.132")
+                    .withNetworkInterfaceSubnetId("subnet-abcdef12")
+                    .withSecondaryPrivateIpAddressCount("3")
+                    .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
+                    .build();
+        }
         return new NetworkInputs.NetworkInputsBuilder()
-                .withNetworkInterfaceId("eni-12345678")
                 .withDeviceIndex("25")
                 .withNetworkInterfaceDescription("anything in here")
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
-                .withNetworkInterfaceSubnetId("subnet-abcdef12")
+                .withNetworkInterfacePublicIp("52.xxx.xxx.xxx")
                 .withPrivateIpAddressesString("10.0.0.130,10.0.0.131,10.0.0.132")
+                .withNetworkInterfaceSubnetId("subnet-abcdef12")
                 .withSecondaryPrivateIpAddressCount("3")
                 .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
-                .withNetworkInterfaceSubnetId("subnet-abcdef12")
                 .build();
     }
 
@@ -201,13 +234,15 @@ public class QueryApiExecutorTest {
         queryParamsMap.put("Version", "2016-04-01");
 
         switch (action) {
-            case "CreateVolume":
-                queryParamsMap.put("VolumeType", "standard");
-                queryParamsMap.put("Size", "10");
-                queryParamsMap.put("AvailabilityZone", "us-east-1d");
-                break;
             case "AllocateAddress":
                 queryParamsMap.put("Domain", "standard");
+                break;
+            case "AssociateAddress":
+                queryParamsMap.put("AllocationId", "eipalloc-abcdef12");
+                queryParamsMap.put("AllowReassociation", "true");
+                queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
+                queryParamsMap.put("PrivateIpAddress", "10.0.0.129");
+                queryParamsMap.put("PublicIp", "52.xxx.xxx.xxx");
                 break;
             case "AttachNetworkInterface":
                 queryParamsMap.put("InstanceId", "i-abcdef12");
@@ -228,11 +263,20 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("SecurityGroupId.1", "sg-12345678");
                 queryParamsMap.put("SecurityGroupId.2", "sg-abcdef12");
                 break;
+            case "CreateVolume":
+                queryParamsMap.put("VolumeType", "standard");
+                queryParamsMap.put("Size", "10");
+                queryParamsMap.put("AvailabilityZone", "us-east-1d");
+                break;
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
                 break;
             case "DetachNetworkInterface":
                 queryParamsMap.put("AttachmentId", "eni-attach-12345678");
+                break;
+            case "DisassociateAddress":
+                queryParamsMap.put("AssociationId", "eipassoc-abcdef12");
+                queryParamsMap.put("PublicIp", "52.xxx.xxx.xxx");
                 break;
             default:
                 throw new RuntimeException("You forgot to setup queryParamsMap naughty developer!");

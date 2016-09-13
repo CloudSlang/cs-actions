@@ -19,6 +19,7 @@ public class VolumeHelper {
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";
     private static final String SNAPSHOT_ID = "SnapshotId";
+    private static final String STANDARD = "standard";
     private static final String VOLUME_TYPE = "VolumeType";
 
     public Map<String, String> getCreateVolumeQueryParamsMap(InputsWrapper wrapper) {
@@ -28,7 +29,7 @@ public class VolumeHelper {
         queryParamsMap.put(AVAILABILITY_ZONE, wrapper.getCustomInputs().getAvailabilityZone());
 
         String volumeType = Constants.Miscellaneous.NOT_RELEVANT.equals(wrapper.getCustomInputs().getVolumeType()) ?
-                Constants.Miscellaneous.STANDARD : wrapper.getCustomInputs().getVolumeType();
+                STANDARD : wrapper.getCustomInputs().getVolumeType();
         queryParamsMap.put(VOLUME_TYPE, volumeType);
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, KMS_KEY_ID, wrapper.getCustomInputs().getKmsKeyId(),

@@ -14,16 +14,21 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 9/5/2016.
  */
-public class ParamsMapFactory {
-    private ParamsMapFactory() {
+public class ParamsMapBuilder {
+    private static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
+
+    private ParamsMapBuilder() {
     }
 
-    public static Map<String, String> getQueryApiParamsMap(InputsWrapper wrapper) {
+    public static Map<String, String> getParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap;
         if (StringUtils.isBlank(wrapper.getCommonInputs().getQueryParams())) {
             switch (wrapper.getAction()) {
                 case Constants.QueryApiActions.ALLOCATE_ADDRESS:
                     queryParamsMap = new NetworkHelper().getAllocateAddressQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.ASSOCIATE_ADDRESS:
+                    queryParamsMap = new NetworkHelper().getAssociateAddressQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getAttachNetworkInterfaceQueryParamsMap(wrapper);
@@ -40,8 +45,11 @@ public class ParamsMapFactory {
                 case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDetachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
+                    queryParamsMap = new NetworkHelper().getDisassociateAddressQueryParamsMap(wrapper);
+                    break;
                 default:
-                    throw new RuntimeException(Constants.ErrorMessages.UNSUPPORTED_QUERY_API);
+                    throw new RuntimeException(UNSUPPORTED_QUERY_API);
             }
         } else {
             queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),

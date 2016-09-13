@@ -1,22 +1,24 @@
 package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.*;
 
 /**
  * Created by Mihai Tusa.
  * 9/5/2016.
  */
-public class InputsWrapperFactory {
-    private InputsWrapperFactory() {
+public class InputsWrapperBuilder {
+    private static final String AUTHORIZATION_TYPE_ANONYMOUS = "anonymous";
+    private static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
+
+    private InputsWrapperBuilder() {
     }
 
     @SafeVarargs
     public static <T> InputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
         HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs);
 
-        return getAwsWrapperBuild(httpClientInputs, commonInputs, builders);
+        return buildWrapper(httpClientInputs, commonInputs, builders);
     }
 
     private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
@@ -28,14 +30,14 @@ public class InputsWrapperFactory {
         httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
         httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
         httpClientInputs.setMethod(commonInputs.getHttpClientMethod());
-        httpClientInputs.setAuthType(Constants.AwsParams.AUTHORIZATION_TYPE_ANONYMOUS);
+        httpClientInputs.setAuthType(AUTHORIZATION_TYPE_ANONYMOUS);
         httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
 
         return httpClientInputs;
     }
 
     @SafeVarargs
-    private static <T> InputsWrapper getAwsWrapperBuild(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+    private static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
         InputsWrapper wrapper = new InputsWrapper.InputsWrapperBuilder()
                 .withHttpClientInputs(httpClientInputs)
                 .withCommonInputs(commonInputs)
@@ -59,10 +61,11 @@ public class InputsWrapperFactory {
                 } else if (builder instanceof VolumeInputs) {
                     wrapper.setVolumeInputs((VolumeInputs) builder);
                 } else {
-                    throw new RuntimeException(Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE);
+                    throw new RuntimeException(UNKNOWN_BUILDER_TYPE);
                 }
             }
         }
+
         return wrapper;
     }
 }
