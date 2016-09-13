@@ -66,6 +66,4 @@ public final class BooleanUtilities {
     public static boolean toBoolean(@Nullable final String booleanStr, final boolean defaultValue) {
         return StringUtils.isNoneEmpty(booleanStr) ? toBoolean(booleanStr) : defaultValue;
     }
-
-
 }
