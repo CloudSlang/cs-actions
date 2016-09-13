@@ -17,8 +17,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.jayway.jsonpath.internal.JsonContext;
-import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.utils.ActionsEnum;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.json.utils.JsonUtils;
@@ -55,13 +56,13 @@ public class EditJson {
      */
     @Action(name = "Edit Json",
             outputs = {
-                    @Output(Constants.OutputNames.RETURN_RESULT),
-                    @Output(Constants.OutputNames.RETURN_CODE),
-                    @Output(Constants.OutputNames.EXCEPTION)
+                    @Output(OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = Constants.InputNames.JSON_OBJECT, required = true) String jsonObject,
                                        @Param(value = Constants.InputNames.JSON_PATH, required = true) String jsonPath,
@@ -75,7 +76,7 @@ public class EditJson {
         boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
         try {
             JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
-            jsonContext = JsonUtils.getJsonContext(jsonObject);
+            jsonContext = JsonUtils.getValidJsonContext(jsonObject);
         } catch (Exception e) {
             return populateResult(returnResult, e);
         }
@@ -85,7 +86,7 @@ public class EditJson {
             Object valueObject;
             JsonContext valueJsonContext;
             try {
-                valueJsonContext = JsonUtils.getJsonContext(value);
+                valueJsonContext = JsonUtils.getValidJsonContext(value);
                 valueObject = valueJsonContext.json();
             } catch (Exception e) {
                 if (!validateValueBoolean || !actionEnum.getNeedValue()) {

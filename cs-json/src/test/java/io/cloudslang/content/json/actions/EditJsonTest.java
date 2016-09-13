@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
@@ -108,7 +109,7 @@ public class EditJsonTest {
     public void testUpdateActionJsonWithEmptyValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.store.bicycle";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "update", "", "", VALIDATE_VALUE_TRUE);
-        assertEquals("json string can not be null or empty", result.get(RETURN_RESULT));
+        assertEquals(INVALID_JSONOBJECT, result.get(RETURN_RESULT));
     }
 
     @Test
@@ -202,7 +203,7 @@ public class EditJsonTest {
     public void testInsertActionJsonEmptyValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.store.bicycle";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "newName", "", VALIDATE_VALUE_TRUE);
-        assertEquals("json string can not be null or empty", result.get(RETURN_RESULT));
+        assertEquals(INVALID_JSONOBJECT, result.get(RETURN_RESULT));
     }
 
     @Test

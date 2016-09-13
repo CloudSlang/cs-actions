@@ -12,14 +12,21 @@ package io.cloudslang.content.json.utils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.JsonContext;
 import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import io.cloudslang.content.constants.OtherValues;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.utils.StringUtilities;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.ActionsEnum.insert;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONPATH;
 
 /**
  * Created by ioanvranauhp
@@ -28,51 +35,32 @@ import static io.cloudslang.content.json.utils.ActionsEnum.insert;
 public class JsonUtils {
 
     public static Map<String, String> populateResult(Map<String, String> returnResult, String value, Exception exception) {
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, value);
+        returnResult.put(OutputNames.RETURN_RESULT, value);
         if (exception != null) {
-            returnResult.put(Constants.OutputNames.EXCEPTION, exception.getMessage());
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+            returnResult.put(OutputNames.EXCEPTION, exception.getMessage());
+            returnResult.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
         } else {
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+            returnResult.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
         }
         return returnResult;
-    }
-
-    public static Map<String, String> returnResultSuccessMap(String returnResult) {
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put(Constants.OutputNames.RETURN_RESULT, returnResult);
-        resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-        return resultMap;
-    }
-
-    public static Map<String, String> returnResultFailureMap(String returnResult, Exception exception) {
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put(Constants.OutputNames.RETURN_RESULT, returnResult);
-        resultMap.put(Constants.OutputNames.EXCEPTION, exception.getMessage());
-        resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
-        return resultMap;
     }
 
     public static Map<String, String> populateResult(Map<String, String> returnResult, Exception exception) {
         if (exception != null) {
             return populateResult(returnResult, exception.getMessage(), exception);
         } else {
-            return populateResult(returnResult, Constants.EMPTY_STRING, null);
+            return populateResult(returnResult, OtherValues.EMPTY_STRING, null);
         }
-    }
-
-    public static boolean isBlank(String value) {
-        return value == null || value.trim().equals(Constants.EMPTY_STRING);
     }
 
     public static void validateEditJsonInputs(String jsonObject, String jsonPath, String action, String name, String value) throws Exception {
-        if (isBlank(jsonObject)) {
+        if (StringUtilities.isBlank(jsonObject)) {
             throw new Exception("Empty jsonObject provided!");
         }
-        if (isBlank(jsonPath)) {
+        if (StringUtilities.isBlank(jsonPath)) {
             throw new Exception("Empty jsonPath provided!");
         }
-        if (isBlank(action)) {
+        if (StringUtilities.isBlank(action)) {
             throw new Exception("Empty action provided!");
         }
 
@@ -92,7 +80,7 @@ public class JsonUtils {
         }
 
         if (actionString.equals(insert.getValue())) {
-            if (isBlank(name)) {
+            if (StringUtilities.isBlank(name)) {
                 throw new Exception("Empty name provided for insert action!");
             }
         }
@@ -109,20 +97,41 @@ public class JsonUtils {
         }
     }
 
-    public static JsonContext getJsonContext(String jsonObject) {
-        final ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
-        final Configuration configuration = Configuration.defaultConfiguration().jsonProvider(provider);
-        JsonContext jsonContext = new JsonContext(configuration);
-        jsonContext.parse(jsonObject);
-        return jsonContext;
+    public static JsonPath getValidJsonPath(final String jsonPath) {
+        try {
+            return JsonPath.compile(jsonPath);
+        } catch (IllegalArgumentException iae) {
+            throw illegalArgumentExceptionWithMessage(INVALID_JSONPATH, iae);
+        }
+    }
+
+    @NotNull
+    public static JsonContext getValidJsonContext(final String jsonObject) {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
+            final Configuration configuration = Configuration.defaultConfiguration()
+                    .jsonProvider(provider);
+            final JsonContext jsonContext = new JsonContext(configuration);
+            jsonContext.parse(jsonObject);
+            return jsonContext;
+        } catch (IllegalArgumentException iae) {
+            throw illegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
+        }
     }
 
     public static boolean parseBooleanWithDefault(String booleanValue, boolean defaultValue) {
-        if (isBlank(booleanValue)) {
+        if (StringUtilities.isBlank(booleanValue)) {
             return defaultValue;
         } else {
             return Boolean.valueOf(booleanValue);
         }
+    }
+
+    @NotNull
+    public static IllegalArgumentException illegalArgumentExceptionWithMessage(@NotNull final String message, @NotNull final Throwable throwable) {
+        final IllegalArgumentException iae = new IllegalArgumentException(message);
+        iae.setStackTrace(throwable.getStackTrace());
+        return iae;
     }
 }

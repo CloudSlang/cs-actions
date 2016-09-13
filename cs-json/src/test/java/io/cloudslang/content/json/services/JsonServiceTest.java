@@ -1,7 +1,10 @@
 package io.cloudslang.content.json.services;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.internal.filter.ValueNode;
+import io.cloudslang.content.json.actions.JsonPathQuery;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +18,6 @@ import static org.junit.Assert.assertEquals;
  * Created by nane on 2/9/2016.
  */
 public class JsonServiceTest {
-
     private JsonService jsonServiceUnderTest;
     private String jsonStringInput;
     private String expectedJsonStringOutput;
@@ -181,5 +183,47 @@ public class JsonServiceTest {
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
         assertEquals(expectedJsonStringOutput, actualJsonStringOutput);
+    }
+
+    @Test
+    public void evaluateSimpleJsonPathQuery() throws Exception {
+        JsonNode jsonNode = JsonService.evaluateJsonPathQuery("{'key1': 'value1','key2': 'value2', 'key3': { 'key31': 'value31'}}", "$.key3.key31");
+        assertEquals(jsonNode.toString(), "\"value31\"");
+    }
+
+    @Test
+    public void evaluateComplexJsonPathQuery() throws Exception {
+        JsonNode jsonNode = JsonService.evaluateJsonPathQuery("{ \"store\": {\n" +
+                "    \"book\": [ \n" +
+                "      { \"category\": \"reference\",\n" +
+                "        \"author\": \"Nigel Rees\",\n" +
+                "        \"title\": \"Sayings of the Century\",\n" +
+                "        \"price\": 8.95\n" +
+                "      },\n" +
+                "      { \"category\": \"fiction\",\n" +
+                "        \"author\": \"Evelyn Waugh\",\n" +
+                "        \"title\": \"Sword of Honour\",\n" +
+                "        \"price\": 12.99\n" +
+                "      },\n" +
+                "      { \"category\": \"fiction\",\n" +
+                "        \"author\": \"Herman Melville\",\n" +
+                "        \"title\": \"Moby Dick\",\n" +
+                "        \"isbn\": \"0-553-21311-3\",\n" +
+                "        \"price\": 8.99\n" +
+                "      },\n" +
+                "      { \"category\": \"fiction\",\n" +
+                "        \"author\": \"J. R. R. Tolkien\",\n" +
+                "        \"title\": \"The Lord of the Rings\",\n" +
+                "        \"isbn\": \"0-395-19395-8\",\n" +
+                "        \"price\": 22.99\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"bicycle\": {\n" +
+                "      \"color\": \"red\",\n" +
+                "      \"price\": 19.95\n" +
+                "    }\n" +
+                "  }\n" +
+                "}", "$..book[?(@.price<10)]");
+        assertEquals(jsonNode.toString(), "[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}]");
     }
 }

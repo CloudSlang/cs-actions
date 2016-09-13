@@ -1,6 +1,6 @@
 package io.cloudslang.content.utils;
 
-import io.cloudslang.content.constants.ExceptionsValues;
+import io.cloudslang.content.constants.ExceptionValues;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -46,7 +46,7 @@ public class CollectionUtilitiesTest {
             CollectionUtilities.toMap(mapStr, pairDelimiter, keyValueDelimiter);
             assertFalse(true);
         } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), "a:b:c" + ExceptionsValues.EXCEPTION_DELIMITER + ExceptionsValues.INVALID_KEY_VALUE_PAIR);
+            assertEquals(iae.getMessage(), "a:b:c" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_KEY_VALUE_PAIR);
         }
     }
 
