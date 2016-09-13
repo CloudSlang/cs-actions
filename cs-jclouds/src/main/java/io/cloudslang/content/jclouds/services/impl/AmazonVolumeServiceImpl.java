@@ -4,15 +4,12 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.VolumeService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonVolumeServiceHelper;
-import io.cloudslang.content.jclouds.services.helpers.Utils;
+import io.cloudslang.content.jclouds.services.helpers.FiltersHelper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Attachment;
-import org.jclouds.ec2.domain.Volume;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
-import org.jclouds.ec2.options.CreateVolumeOptions;
 import org.jclouds.ec2.options.DetachVolumeOptions;
 
 /**
@@ -26,22 +23,6 @@ public class AmazonVolumeServiceImpl extends JCloudsService implements VolumeSer
 
     public AmazonVolumeServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
-    }
-
-    @Override
-    public Volume createVolumeInAvailabilityZone(String region, String availabilityZone, String snapshotId, String volumeType,
-                                                 String size, String iops, boolean encrypted, boolean isDebugMode) {
-        if (StringUtils.isBlank(snapshotId) && StringUtils.isBlank(volumeType)) {
-            int validSize = new AmazonVolumeServiceHelper()
-                    .getSize(Constants.Miscellaneous.STANDARD, Constants.ValidationValues.ONE,
-                            Constants.ValidationValues.THOUSAND_AND_TWENTY_FOUR, size);
-            return getEbsApi(region, true, isDebugMode).createVolumeInAvailabilityZone(availabilityZone, validSize);
-        }
-
-        CreateVolumeOptions createVolumeOptions = new AmazonVolumeServiceHelper()
-                .getCreateVolumeOptions(snapshotId, volumeType, size, iops, encrypted);
-
-        return getEbsApi(region, true, isDebugMode).createVolumeInAvailabilityZone(availabilityZone, createVolumeOptions);
     }
 
     @Override
@@ -72,7 +53,7 @@ public class AmazonVolumeServiceImpl extends JCloudsService implements VolumeSer
 
     void init(boolean isDebugMode) {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
-        ec2Api = new Utils().getEC2Api(contextBuilder);
+        ec2Api = new FiltersHelper().getEC2Api(contextBuilder);
     }
 
     private ElasticBlockStoreApi getEbsApi(String region, boolean isForRegion, boolean isDebugMode) {

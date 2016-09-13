@@ -10,7 +10,6 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
@@ -19,16 +18,12 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 8/11/2016.
+ * 9/8/2016.
  */
-public class AttachNetworkInterfaceAction {
+public class DeleteNetworkInterfaceAction {
     /**
-     * Attaches a network interface to an instance.
-     * Note: The set of: <instanceId>, <networkInterfaceId>, <deviceIndex> are mutually exclusive with <queryParams> input.
-     * Please provide values EITHER FOR ALL: <instanceId>, <networkInterfaceId>, <deviceIndex> inputs OR FOR <queryParams> input.
-     * Note: As with all Amazon EC2 operations, the results might not appear immediately.
-     * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
-     * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
+     * Deletes the specified network interface.
+     * Note: You must detach the network interface before you can delete it.
      *
      * @param endpoint           Endpoint to which request will be sent.
      *                           Default: "https://ec2.amazonaws.com"
@@ -41,9 +36,8 @@ public class AttachNetworkInterfaceAction {
      *                           <proxyPort> inputs or leave them both empty.
      * @param proxyUsername      Optional - proxy server user name.
      * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
-     * @param instanceId         Optional - ID of the instance that will be attached to the network interface. The instance
-     *                           should be running (hot attach) or stopped (warm attach).
-     *                           Example: "i-abcdef12"
+     * @param version            Version of the web service to made the call against it.
+     *                           Example: "2016-04-01"
      * @param headers            Optional - string containing the headers to use for the request separated by new line
      *                           (CRLF). The header name-value pair will be separated by ":"
      *                           Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -53,16 +47,12 @@ public class AttachNetworkInterfaceAction {
      *                           will occur. The separator between name-value pairs is "&" symbol. The query name will be
      *                           separated from query value by "="
      *                           Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     * @param networkInterfaceId Optional - ID of the network interface to attach.
+     * @param networkInterfaceId ID of the network interface to delete.
      *                           Example: "eni-12345678"
-     * @param deviceIndex        Optional - ID of the device for the network interface attachment on the instance.
-     *                           Example: "1"
-     * @param version            Version of the web service to made the call against it.
-     *                           Example: "2014-06-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Attach Network Interface",
+    @Action(name = "Delete Network Interface",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -74,21 +64,18 @@ public class AttachNetworkInterfaceAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> attachNetworkInterface(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
+    public Map<String, String> deleteNetworkInterface(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
                                                       @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
                                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
                                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                                       @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
                                                       @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                                      @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
                                                       @Param(value = Inputs.CommonInputs.HEADERS) String headers,
                                                       @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
-                                                      @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
 
-                                                      @Param(value = Inputs.CustomInputs.INSTANCE_ID) String instanceId,
-
-                                                      @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID) String networkInterfaceId,
-                                                      @Param(value = Inputs.NetworkInputs.DEVICE_INDEX) String deviceIndex) {
+                                                      @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
 
         try {
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
@@ -102,21 +89,18 @@ public class AttachNetworkInterfaceAction {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
-                    .withAction(Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE)
+                    .withAction(Constants.QueryApiActions.DELETE_NETWORK_INTERFACE)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
                     .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withInstanceId(instanceId).build();
-
             NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
                     .withNetworkInterfaceId(networkInterfaceId)
-                    .withDeviceIndex(deviceIndex)
                     .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
+            return new QueryApiExecutor().execute(commonInputs, networkInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

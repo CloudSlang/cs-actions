@@ -11,7 +11,6 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -19,16 +18,13 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 8/12/2016.
+ * 9/5/2016.
  */
-public class DetachNetworkInterfaceAction {
+public class AllocateAddressAction {
     /**
-     * Detaches a network interface from an instance.
-     * Note: The set of: <attachmentId> and <force> are mutually exclusive with <queryParams> input.
-     * Please provide values EITHER FOR BOTH: <attachmentId> and <force> inputs OR FOR <queryParams> input.
-     * Note: As with all Amazon EC2 operations, the results might not appear immediately.
-     * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
-     * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
+     * Acquires an Elastic IP address.
+     * Note: An Elastic IP address is for use either in the EC2-Classic platform or in a VPC.
+     * For more information, see Elastic IP Addresses in the Amazon Elastic Compute Cloud User Guide.
      *
      * @param endpoint      Endpoint to which request will be sent.
      *                      Default: "https://ec2.amazonaws.com"
@@ -41,6 +37,8 @@ public class DetachNetworkInterfaceAction {
      *                      <proxyPort> inputs or leave them both empty.
      * @param proxyUsername Optional - proxy server user name.
      * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param version       Version of the web service to made the call against it.
+     *                      Example: "2014-06-15"
      * @param headers       Optional - string containing the headers to use for the request separated by new line
      *                      (CRLF). The header name-value pair will be separated by ":"
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -50,16 +48,14 @@ public class DetachNetworkInterfaceAction {
      *                      will occur. The separator between name-value pairs is "&" symbol. The query name will be
      *                      separated from query value by "="
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     * @param attachmentId  ID of the attachment.
-     *                      Example: "eni-attach-12345678"
-     * @param forceDetach   Optional - specifies whether to force a detachment or not - Valid values: "true", "false".
-     *                      Default: "false"
-     * @param version       Version of the web service to made the call against it.
-     *                      Example: "2014-06-15"
+     * @param domain        Optional - If set to "vpc" then allocates the address for use with instances in a VPC, otherwise
+     *                      for use with with instances in EC2 Classic way.
+     *                      Valid values: "standard", "vpc"
+     *                      Default: "standard"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Detach Network Interface",
+    @Action(name = "Allocate Address",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -71,20 +67,18 @@ public class DetachNetworkInterfaceAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> detachNetworkInterface(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                                      @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
-                                                      @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
-                                                      @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                                      @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                                      @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
-                                                      @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                                      @Param(value = Inputs.CommonInputs.HEADERS) String headers,
-                                                      @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
-                                                      @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
+    public Map<String, String> allocateAddress(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
+                                               @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
+                                               @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
+                                               @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                               @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                               @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
+                                               @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                               @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
+                                               @Param(value = Inputs.CommonInputs.HEADERS) String headers,
+                                               @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
 
-                                                      @Param(value = Inputs.CustomInputs.ATTACHMENT_ID, required = true) String attachmentId,
-
-                                                      @Param(value = Inputs.NetworkInputs.FORCE_DETACH) String forceDetach) {
+                                               @Param(value = Inputs.CustomInputs.DOMAIN) String domain) {
 
         try {
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
@@ -98,17 +92,16 @@ public class DetachNetworkInterfaceAction {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
-                    .withAction(Constants.QueryApiActions.DETACH_NETWORK_INTERFACE)
+                    .withAction(Constants.QueryApiActions.ALLOCATE_ADDRESS)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
                     .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withAttachmentId(attachmentId).build();
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder().withForceDetach(forceDetach).build();
+            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withDomain(domain).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
+            return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

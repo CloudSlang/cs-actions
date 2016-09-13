@@ -26,7 +26,7 @@ public class AmazonImageServiceHelper {
 
     public Multimap<String, String> getImageFiltersMap(ImageInputs imageInputs, String delimiter) {
         Multimap<String, String> filtersMap = ArrayListMultimap.create();
-        new Utils().updateImageFiltersMap(imageInputs, filtersMap, delimiter);
+        new FiltersHelper().updateImageFiltersMap(imageInputs, filtersMap, delimiter);
 
         return filtersMap;
     }

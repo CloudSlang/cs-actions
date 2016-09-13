@@ -43,8 +43,8 @@ public class OutputsUtil {
     public static Map<String, String> populateSignatureResultsMap(AuthorizationHeader authorizationHeader) {
         Map<String, String> signatureReturnResultMap = getResultsMap(authorizationHeader.getSignature());
 
-        signatureReturnResultMap.put(Constants.AWSParams.SIGNATURE_RESULT, authorizationHeader.getSignature());
-        signatureReturnResultMap.put(Constants.AWSParams.AUTHORIZATION_HEADER_RESULT, authorizationHeader.getAuthorizationHeader());
+        signatureReturnResultMap.put(Constants.AwsParams.SIGNATURE_RESULT, authorizationHeader.getSignature());
+        signatureReturnResultMap.put(Constants.AwsParams.AUTHORIZATION_HEADER_RESULT, authorizationHeader.getAuthorizationHeader());
 
         return signatureReturnResultMap;
     }

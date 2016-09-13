@@ -109,7 +109,7 @@ public class AWSSignatureHelper {
      */
     public String getAmazonCredentialScope(String dateStamp, String awsRegion, String awsService) {
         return dateStamp + Constants.Miscellaneous.SCOPE_SEPARATOR + awsRegion + Constants.Miscellaneous.SCOPE_SEPARATOR +
-                awsService + Constants.Miscellaneous.SCOPE_SEPARATOR + Constants.AWSParams.AWS_REQUEST_VERSION;
+                awsService + Constants.Miscellaneous.SCOPE_SEPARATOR + Constants.AwsParams.AWS_REQUEST_VERSION;
     }
 
     /**
