@@ -32,19 +32,19 @@ public class QueryApiExecutor {
                 InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), inputs.getCommonInputs().getHeaders(),
                         Constants.AwsParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true);
 
-        setQueryApiCallParams(inputs, queryParamsMap);
-        setQueryApiCallHeaders(inputs, headersMap, queryParamsMap);
+        setQueryApiParams(inputs, queryParamsMap);
+        setQueryApiHeaders(inputs, headersMap, queryParamsMap);
 
         return new CSHttpClient().execute(inputs.getHttpClientInputs());
     }
 
-    void setQueryApiCallHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
+    void setQueryApiHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
             throws SignatureException, MalformedURLException {
         AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
         inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
     }
 
-    private void setQueryApiCallParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
+    private void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
         String queryParamsString = InputsUtil.getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL,
                 Constants.Miscellaneous.AMPERSAND);
         inputs.getHttpClientInputs().setQueryParams(queryParamsString);

@@ -15,6 +15,8 @@ import java.util.Map;
  * 9/5/2016.
  */
 public class ParamsMapBuilder {
+    private static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
+
     private ParamsMapBuilder() {
     }
 
@@ -43,8 +45,11 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDetachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
+                    queryParamsMap = new NetworkHelper().getDisassociateAddressQueryParamsMap(wrapper);
+                    break;
                 default:
-                    throw new RuntimeException(Constants.ErrorMessages.UNSUPPORTED_QUERY_API);
+                    throw new RuntimeException(UNSUPPORTED_QUERY_API);
             }
         } else {
             queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),

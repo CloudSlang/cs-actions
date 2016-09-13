@@ -26,6 +26,7 @@ public class AmazonSignatureService {
     private static final String T_REGEX_STRING = "T";
     private static final String X_AMZ_DATE = "X-Amz-Date";
     private static final String X_AMZ_SECURITY_TOKEN = "X-Amz-Security-Token";
+    private static final String AMAZON_HOSTNAME = "amazonaws.com";
 
     private AWSSignatureV4 awsSignatureV4 = new AWSSignatureV4();
 
@@ -89,8 +90,8 @@ public class AmazonSignatureService {
 
     private String getRequestEndpoint(String requestEndpoint) throws MalformedURLException {
         requestEndpoint = InputsUtil.getDefaultStringInput(requestEndpoint, Constants.Apis.AMAZON_EC2_API +
-                Constants.Miscellaneous.DOT + Constants.AwsParams.AMAZON_HOSTNAME);
-        if (!requestEndpoint.contains(Constants.AwsParams.AMAZON_HOSTNAME)) {
+                Constants.Miscellaneous.DOT + AMAZON_HOSTNAME);
+        if (!requestEndpoint.contains(AMAZON_HOSTNAME)) {
             requestEndpoint = InputsUtil.getEndpointFromUrl(requestEndpoint);
         }
 

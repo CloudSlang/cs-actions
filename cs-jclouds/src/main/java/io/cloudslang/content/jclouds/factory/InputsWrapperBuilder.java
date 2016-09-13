@@ -1,7 +1,6 @@
 package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.*;
 
 /**
@@ -9,6 +8,9 @@ import io.cloudslang.content.jclouds.entities.inputs.*;
  * 9/5/2016.
  */
 public class InputsWrapperBuilder {
+    private static final String AUTHORIZATION_TYPE_ANONYMOUS = "anonymous";
+    private static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
+
     private InputsWrapperBuilder() {
     }
 
@@ -28,7 +30,7 @@ public class InputsWrapperBuilder {
         httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
         httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
         httpClientInputs.setMethod(commonInputs.getHttpClientMethod());
-        httpClientInputs.setAuthType(Constants.AwsParams.AUTHORIZATION_TYPE_ANONYMOUS);
+        httpClientInputs.setAuthType(AUTHORIZATION_TYPE_ANONYMOUS);
         httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
 
         return httpClientInputs;
@@ -59,7 +61,7 @@ public class InputsWrapperBuilder {
                 } else if (builder instanceof VolumeInputs) {
                     wrapper.setVolumeInputs((VolumeInputs) builder);
                 } else {
-                    throw new RuntimeException(Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE);
+                    throw new RuntimeException(UNKNOWN_BUILDER_TYPE);
                 }
             }
         }

@@ -17,10 +17,12 @@ public class NetworkHelper {
     private static final String ALLOCATION_ID = "AllocationId";
     private static final String ALLOW_REASSOCIATION = "AllowReassociation";
     private static final String ATTACHMENT_ID = "AttachmentId";
+    private static final String ASSOCIATION_ID = "AssociationId";
     private static final String DEVICE_ID = "DeviceIndex";
     private static final String DESCRIPTION = "Description";
     private static final String DOMAIN = "Domain";
     private static final String FORCE = "Force";
+    private static final String INSTANCE_ID = "InstanceId";
     private static final String NETWORK_INTERFACE_ID = "NetworkInterfaceId";
     private static final String PRIMARY = "Primary";
     private static final String PRIVATE_IP_ADDRESS = "PrivateIpAddress";
@@ -61,7 +63,7 @@ public class NetworkHelper {
     public Map<String, String> getAttachNetworkInterfaceQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getAction(), wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(Constants.AwsParams.INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
+        queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
         queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
         queryParamsMap.put(DEVICE_ID, wrapper.getNetworkInputs().getDeviceIndex());
 
@@ -144,6 +146,18 @@ public class NetworkHelper {
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, Constants.Miscellaneous.SET_FLAG,
                 wrapper.getNetworkInputs().isForceDetach());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getDisassociateAddressQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getAction(), wrapper.getCommonInputs().getVersion());
+
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ASSOCIATION_ID, wrapper.getCustomInputs().getAssociationId(),
+                StringUtils.isNotBlank(wrapper.getCustomInputs().getAssociationId()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, PUBLIC_IP, wrapper.getNetworkInputs().getNetworkInterfacePublicIp(),
+                StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacePublicIp()));
 
         return queryParamsMap;
     }

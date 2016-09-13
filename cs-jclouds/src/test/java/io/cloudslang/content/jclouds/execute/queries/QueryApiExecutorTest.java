@@ -135,7 +135,7 @@ public class QueryApiExecutorTest {
         whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
         when(amazonSignatureServiceMock.signRequestHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class))).thenReturn(authorizationHeaderMock);
-        doNothing().when(queryApiExecutorSpy).setQueryApiCallHeaders(any(InputsWrapper.class),
+        doNothing().when(queryApiExecutorSpy).setQueryApiHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
