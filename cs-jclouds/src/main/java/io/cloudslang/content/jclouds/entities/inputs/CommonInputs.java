@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.aws.HttpClientMethod;
 import io.cloudslang.content.jclouds.entities.aws.Providers;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -18,7 +19,17 @@ public class CommonInputs {
     private String credential;
     private String proxyHost;
     private String proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
     private String delimiter;
+    private String version;
+    private String headers;
+    private String queryParams;
+    private String apiService;
+    private String requestUri;
+    private String action;
+    private String requestPayload;
+    private String httpClientMethod;
 
     private boolean debugMode;
 
@@ -29,7 +40,18 @@ public class CommonInputs {
         this.credential = builder.credential;
         this.proxyHost = builder.proxyHost;
         this.proxyPort = builder.proxyPort;
+        this.proxyUsername = builder.proxyUsername;
+        this.proxyPassword = builder.proxyPassword;
         this.delimiter = builder.delimiter;
+        this.version = builder.version;
+        this.headers = builder.headers;
+        this.queryParams = builder.queryParams;
+        this.apiService = builder.apiService;
+        this.requestUri = builder.requestUri;
+        this.action = builder.action;
+        this.requestPayload = builder.requestPayload;
+        this.httpClientMethod = builder.httpClientMethod;
+
         this.debugMode = builder.debugMode;
     }
 
@@ -57,8 +79,48 @@ public class CommonInputs {
         return proxyPort;
     }
 
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
     public String getDelimiter() {
         return delimiter;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getHeaders() {
+        return headers;
+    }
+
+    public String getQueryParams() {
+        return queryParams;
+    }
+
+    public String getApiService() {
+        return apiService;
+    }
+
+    public String getRequestUri() {
+        return requestUri;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public String getRequestPayload() {
+        return requestPayload;
+    }
+
+    public String getHttpClientMethod() {
+        return httpClientMethod;
     }
 
     public boolean isDebugMode() {
@@ -72,7 +134,17 @@ public class CommonInputs {
         private String credential;
         private String proxyHost;
         private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
         private String delimiter;
+        private String version;
+        private String headers;
+        private String queryParams;
+        private String apiService;
+        private String requestUri;
+        private String action;
+        private String requestPayload;
+        private String httpClientMethod;
 
         private boolean debugMode;
 
@@ -113,8 +185,58 @@ public class CommonInputs {
             return this;
         }
 
+        public CommonInputsBuilder withProxyUsername(String inputValue) {
+            proxyUsername = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withProxyPassword(String inputValue) {
+            proxyPassword = inputValue;
+            return this;
+        }
+
         public CommonInputsBuilder withDelimiter(String inputValue) {
             delimiter = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.COMMA_DELIMITER);
+            return this;
+        }
+
+        public CommonInputsBuilder withVersion(String inputValue) {
+            version = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withHeaders(String inputValue) {
+            headers = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withQueryParams(String inputValue) {
+            queryParams = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withApiService(String inputValue) {
+            apiService = InputsUtil.getDefaultStringInput(inputValue, Constants.Apis.AMAZON_EC2_API);
+            return this;
+        }
+
+        public CommonInputsBuilder withRequestUri(String inputValue) {
+            requestUri = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            return this;
+        }
+
+        public CommonInputsBuilder withAction(String inputValue) {
+            action = inputValue;
+            return this;
+        }
+
+        public CommonInputsBuilder withRequestPayload(String inputValue) {
+            requestPayload = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            return this;
+        }
+
+        public CommonInputsBuilder withHttpClientMethod(String inputValue) {
+            httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HttpClientMethod.GET.toString());
             return this;
         }
 

@@ -4,7 +4,6 @@ import io.cloudslang.content.jclouds.entities.aws.ImageState;
 import io.cloudslang.content.jclouds.entities.aws.ImageType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
@@ -124,22 +123,22 @@ public class ImageInputs {
         }
 
         public ImageInputs.ImageInputsBuilder withImageName(String inputValue) {
-            imageName = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.NOT_RELEVANT : inputValue;
+            imageName = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.NOT_RELEVANT);
             return this;
         }
 
         public ImageInputs.ImageInputsBuilder withImageIdsString(String inputValue) {
-            imageIdsString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            imageIdsString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
         public ImageInputs.ImageInputsBuilder withOwnersString(String inputValue) {
-            ownersString = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            ownersString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
         public ImageInputs.ImageInputsBuilder withImageDescription(String inputValue) {
-            imageDescription = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.EMPTY : inputValue;
+            imageDescription = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 

@@ -5,15 +5,15 @@ package io.cloudslang.content.jclouds.entities.constants;
  * 5/4/2016.
  */
 public class Constants {
-    public static final class Providers {
+    public static class Providers {
         public static final String OPENSTACK = "openstack";
     }
 
-    public static final class Apis {
+    public static class Apis {
         public static final String AMAZON_EC2_API = "ec2";
     }
 
-    public static final class Miscellaneous {
+    public static class Miscellaneous {
         public static final String AMPERSAND = "&";
         public static final String COLON = ":";
         public static final String COMMA_DELIMITER = ",";
@@ -29,19 +29,20 @@ public class Constants {
         public static final String STANDARD = "standard";
     }
 
-    public static final class ErrorMessages {
+    public static class ErrorMessages {
         public static final String NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
-        public static final String UNSUPPORTED_QUERY_API_CALL = "Unsupported Query API call.";
+        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
+        public static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
     }
 
-    public static final class ValidationValues {
+    public static class ValidationValues {
         public static final int ONE = 1;
         public static final int THOUSAND_AND_TWENTY_FOUR = 1024;
     }
 
-    public static final class AWSParams {
+    public static class AwsParams {
         public static final String ACTION = "Action";
         public static final String AMAZON_HOSTNAME = "amazonaws.com";
         public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
@@ -51,5 +52,15 @@ public class Constants {
         public static final String INSTANCE_ID = "InstanceId";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String VERSION = "Version";
+    }
+
+    public static class QueryApiActions {
+        public static final String ALLOCATE_ADDRESS = "AllocateAddress";
+        public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
+        public static final String CREATE_VOLUME = "CreateVolume";
+        public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
+        public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
+        public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
+        public static final String HTTP_CLIENT_METHOD_GET = "GET";
     }
 }

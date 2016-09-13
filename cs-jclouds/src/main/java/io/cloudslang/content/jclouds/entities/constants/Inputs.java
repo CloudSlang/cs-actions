@@ -5,7 +5,7 @@ package io.cloudslang.content.jclouds.entities.constants;
  * 2/17/2016.
  */
 public class Inputs {
-    public static final class CommonInputs {
+    public static class CommonInputs {
         public static final String PROVIDER = "provider";
         public static final String ENDPOINT = "endpoint";
         public static final String IDENTITY = "identity";
@@ -16,9 +16,12 @@ public class Inputs {
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String DELIMITER = "delimiter";
         public static final String DEBUG_MODE = "debugMode";
+        public static final String VERSION = "version";
+        public static final String QUERY_PARAMS = "queryParams";
+        public static final String HEADERS = "headers";
     }
 
-    public static final class CustomInputs {
+    public static class CustomInputs {
         public static final String REGION = "region";
         public static final String INSTANCE_ID = "instanceId";
         public static final String IMAGE_ID = "imageId";
@@ -59,16 +62,16 @@ public class Inputs {
         public static final String HTTP_VERB = "httpVerb";
         public static final String URI = "uri";
         public static final String PAYLOAD_HASH = "payloadHash";
-        public static final String QUERY_PARAMS = "queryParams";
-        public static final String HEADERS = "headers";
         public static final String AMAZON_API = "amazonApi";
         public static final String DATE = "date";
         public static final String KMS_KEY_ID = "kmsKeyId";
+        public static final String ATTACHMENT_ID = "attachmentId";
+        public static final String DOMAIN = "domain";
     }
 
-    public static final class ImageInputs {
+    public static class ImageInputs {
         public static final String NAME = "name";
-        public static final String DESCRIPTION = "description";
+        public static final String IMAGE_DESCRIPTION = "description";
         public static final String NO_REBOOT = "noReboot";
         public static final String IDS_STRING = "idsString";
         public static final String OWNERS_STRING = "ownersString";
@@ -81,7 +84,7 @@ public class Inputs {
 
     }
 
-    public static final class InstanceInputs {
+    public static class InstanceInputs {
         public static final String MIN_COUNT = "minCount";
         public static final String MAX_COUNT = "maxCount";
         public static final String OPERATION_TIMEOUT = "operationTimeout";
@@ -114,35 +117,40 @@ public class Inputs {
         public static final String IP_OWNER_ID = "ipOwnerId";
     }
 
-    public static final class NetworkInputs {
-        public static final String NETWORK_INTERFACE_DESCRIPTION = "networkInterfaceDescription";
-        public static final String NETWORK_INTERFACE_SUBNET_ID = "networkInterfaceSubnetId";
-        public static final String NETWORK_INTERFACE_VPC_ID = "networkInterfaceVpcId";
-        public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
-        public static final String NETWORK_INTERFACE_OWNER_ID = "networkInterfaceOwnerId";
-        public static final String NETWORK_INTERFACE_AVAILABILITY_ZONE = "networkInterfaceAvailabilityZone";
-        public static final String NETWORK_INTERFACE_REQUESTER_ID = "networkInterfaceRequesterId";
-        public static final String NETWORK_INTERFACE_REQUESTER_MANAGED = "networkInterfaceRequesterManaged";
-        public static final String NETWORK_INTERFACE_STATUS = "networkInterfaceStatus";
-        public static final String NETWORK_INTERFACE_MAC_ADDRESS = "networkInterfaceMacAddress";
-        public static final String NETWORK_INTERFACE_PRIVATE_DNS_NAME = "networkInterfacePrivateDnsName";
-        public static final String NETWORK_INTERFACE_SOURCE_DESTINATION_CHECK = "networkInterfaceSourceDestinationCheck";
-        public static final String NETWORK_INTERFACE_GROUP_ID = "networkInterfaceGroupId";
-        public static final String NETWORK_INTERFACE_GROUP_NAME = "networkInterfaceGroupName";
+    public static class NetworkInputs {
+        public static final String DEVICE_INDEX = "deviceIndex";
+        public static final String FORCE_DETACH = "forceDetach";
+        public static final String NETWORK_INTERFACE_ADDRESSES_PRIMARY = "networkInterfaceAddressesPrimary";
         public static final String NETWORK_INTERFACE_ATTACHMENT_ID = "networkInterfaceAttachmentId";
+        public static final String NETWORK_INTERFACE_ATTACH_TIME = "networkInterfaceAttachTime";
+        public static final String NETWORK_INTERFACE_ATTACHMENT_STATUS = "networkInterfaceAttachmentStatus";
+        public static final String NETWORK_INTERFACE_AVAILABILITY_ZONE = "networkInterfaceAvailabilityZone";
+        public static final String NETWORK_INTERFACE_DELETE_ON_TERMINATION = "networkInterfaceDeleteOnTermination";
+        public static final String NETWORK_INTERFACE_DESCRIPTION = "networkInterfaceDescription";
+        public static final String NETWORK_INTERFACE_DEVICE_INDEX = "networkInterfaceDeviceIndex";
+        public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
         public static final String NETWORK_INTERFACE_INSTANCE_ID = "networkInterfaceInstanceId";
         public static final String NETWORK_INTERFACE_INSTANCE_OWNER_ID = "networkInterfaceInstanceOwnerId";
-        public static final String NETWORK_INTERFACE_PRIVATE_IP_ADDRESS = "networkInterfacePrivateIpAddress";
-        public static final String NETWORK_INTERFACE_DEVICE_INDEX = "networkInterfaceDeviceIndex";
-        public static final String NETWORK_INTERFACE_ATTACHMENT_STATUS = "networkInterfaceAttachmentStatus";
-        public static final String NETWORK_INTERFACE_ATTACH_TIME = "networkInterfaceAttachTime";
-        public static final String NETWORK_INTERFACE_DELETE_ON_TERMINATION = "networkInterfaceDeleteOnTermination";
-        public static final String NETWORK_INTERFACE_ADDRESSES_PRIMARY = "networkInterfaceAddressesPrimary";
-        public static final String NETWORK_INTERFACE_PUBLIC_IP = "networkInterfacePublicIp";
         public static final String NETWORK_INTERFACE_IP_OWNER_ID = "networkInterfaceIpOwnerId";
+        public static final String NETWORK_INTERFACE_GROUP_ID = "networkInterfaceGroupId";
+        public static final String NETWORK_INTERFACE_GROUP_NAME = "networkInterfaceGroupName";
+        public static final String NETWORK_INTERFACE_MAC_ADDRESS = "networkInterfaceMacAddress";
+        public static final String NETWORK_INTERFACE_OWNER_ID = "networkInterfaceOwnerId";
+        public static final String NETWORK_INTERFACE_PRIVATE_DNS_NAME = "networkInterfacePrivateDnsName";
+        public static final String NETWORK_INTERFACE_PRIVATE_IP_ADDRESS = "networkInterfacePrivateIpAddress";
+        public static final String NETWORK_INTERFACE_PUBLIC_IP = "networkInterfacePublicIp";
+        public static final String NETWORK_INTERFACE_REQUESTER_ID = "networkInterfaceRequesterId";
+        public static final String NETWORK_INTERFACE_REQUESTER_MANAGED = "networkInterfaceRequesterManaged";
+        public static final String NETWORK_INTERFACE_SOURCE_DESTINATION_CHECK = "networkInterfaceSourceDestinationCheck";
+        public static final String NETWORK_INTERFACE_STATUS = "networkInterfaceStatus";
+        public static final String NETWORK_INTERFACE_SUBNET_ID = "networkInterfaceSubnetId";
+        public static final String NETWORK_INTERFACE_VPC_ID = "networkInterfaceVpcId";
+        public static final String PRIVATE_IP_ADDRESSES_STRING = "privateIpAddressesString";
+        public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
+        public static final String SECURITY_GROUP_IDS_STRING = "securityGroupIdsString";
     }
 
-    public static final class VolumeInputs {
+    public static class VolumeInputs {
         public static final String SNAPSHOT_ID = "snapshotId";
         public static final String SIZE = "size";
         public static final String IOPS = "iops";
@@ -152,12 +160,7 @@ public class Inputs {
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
     }
 
-    public static final class AWSApiInputs {
-        public static final String ATTACHMENT_ID = "attachmentId";
-        public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
-        public static final String DEVICE_INDEX = "deviceIndex";
-        public static final String FORCE_DETACH = "forceDetach";
+    public static class AwsApiInputs {
         public static final String SECURITY_TOKEN = "securityToken";
-        public static final String VERSION = "version";
     }
 }

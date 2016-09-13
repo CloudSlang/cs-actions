@@ -39,7 +39,7 @@ public class AmazonComputeServiceHelper {
 
     public Multimap<String, String> getInstanceFiltersMap(InstanceInputs instanceInputs, String delimiter) {
         Multimap<String, String> filtersMap = ArrayListMultimap.create();
-        new Utils().updateInstanceFiltersMap(instanceInputs, filtersMap, delimiter);
+        new FiltersHelper().updateInstanceFiltersMap(instanceInputs, filtersMap, delimiter);
 
         return filtersMap;
     }
