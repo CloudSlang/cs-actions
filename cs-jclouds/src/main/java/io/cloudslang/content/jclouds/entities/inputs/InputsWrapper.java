@@ -13,6 +13,7 @@ public class InputsWrapper {
     private HttpClientInputs httpClientInputs;
     private CommonInputs commonInputs;
     private CustomInputs customInputs;
+    private ElasticIpInputs elasticIpInputs;
     private ImageInputs imageInputs;
     private InstanceInputs instanceInputs;
     private NetworkInputs networkInputs;
@@ -31,6 +32,7 @@ public class InputsWrapper {
     private InputsWrapper(InputsWrapperBuilder builder) {
         this.httpClientInputs = builder.httpClientInputs;
         this.commonInputs = builder.commonInputs;
+        this.customInputs = builder.customInputs;
 
         this.apiService = builder.apiService;
         this.requestUri = builder.requestUri;
@@ -61,6 +63,14 @@ public class InputsWrapper {
 
     public void setCustomInputs(CustomInputs customInputs) {
         this.customInputs = customInputs;
+    }
+
+    public ElasticIpInputs getElasticIpInputs() {
+        return elasticIpInputs;
+    }
+
+    public void setElasticIpInputs(ElasticIpInputs elasticIpInputs) {
+        this.elasticIpInputs = elasticIpInputs;
     }
 
     public ImageInputs getImageInputs() {
@@ -134,6 +144,7 @@ public class InputsWrapper {
     public static class InputsWrapperBuilder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
+        private CustomInputs customInputs;
 
         private String apiService;
         private String requestUri;
@@ -156,6 +167,11 @@ public class InputsWrapper {
 
         public InputsWrapperBuilder withCommonInputs(CommonInputs inputs) {
             commonInputs = inputs;
+            return this;
+        }
+
+        public InputsWrapperBuilder withCustomInputs(CustomInputs inputs) {
+            customInputs = inputs;
             return this;
         }
 

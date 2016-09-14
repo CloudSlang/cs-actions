@@ -36,12 +36,10 @@ public class NetworkInputs {
     private String networkInterfacePublicIp;
     private String networkInterfaceIpOwnerId;
     private String deviceIndex;
-    private String privateIpAddressesString;
     private String secondaryPrivateIpAddressCount;
     private String securityGroupIdsString;
 
     private boolean forceDetach;
-    private boolean allowReassociation;
 
     private NetworkInputs(NetworkInputs.NetworkInputsBuilder builder) {
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
@@ -70,12 +68,10 @@ public class NetworkInputs {
         this.networkInterfacePublicIp = builder.networkInterfacePublicIp;
         this.networkInterfaceIpOwnerId = builder.networkInterfaceIpOwnerId;
         this.deviceIndex = builder.deviceIndex;
-        this.privateIpAddressesString = builder.privateIpAddressesString;
         this.secondaryPrivateIpAddressCount = builder.secondaryPrivateIpAddressCount;
         this.securityGroupIdsString = builder.securityGroupIdsString;
 
         this.forceDetach = builder.forceDetach;
-        this.allowReassociation = builder.allowReassociation;
     }
 
     public String getNetworkInterfaceDescription() {
@@ -182,10 +178,6 @@ public class NetworkInputs {
         return deviceIndex;
     }
 
-    public String getPrivateIpAddressesString() {
-        return privateIpAddressesString;
-    }
-
     public String getSecondaryPrivateIpAddressCount() {
         return secondaryPrivateIpAddressCount;
     }
@@ -196,10 +188,6 @@ public class NetworkInputs {
 
     public boolean isForceDetach() {
         return forceDetach;
-    }
-
-    public boolean isAllowReassociation() {
-        return allowReassociation;
     }
 
     public static class NetworkInputsBuilder {
@@ -229,12 +217,10 @@ public class NetworkInputs {
         private String networkInterfacePublicIp;
         private String networkInterfaceIpOwnerId;
         private String deviceIndex;
-        private String privateIpAddressesString;
         private String secondaryPrivateIpAddressCount;
         private String securityGroupIdsString;
 
         private boolean forceDetach;
-        private boolean allowReassociation;
 
         public NetworkInputs build() {
             return new NetworkInputs(this);
@@ -370,11 +356,6 @@ public class NetworkInputs {
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withPrivateIpAddressesString(String inputValue) {
-            privateIpAddressesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
-            return this;
-        }
-
         public NetworkInputs.NetworkInputsBuilder withSecondaryPrivateIpAddressCount(String inputValue) {
             secondaryPrivateIpAddressCount = inputValue;
             return this;
@@ -387,11 +368,6 @@ public class NetworkInputs {
 
         public NetworkInputs.NetworkInputsBuilder withForceDetach(String inputValue) {
             forceDetach = Boolean.parseBoolean(inputValue);
-            return this;
-        }
-
-        public NetworkInputs.NetworkInputsBuilder withAllowReassociation(String inputValue) {
-            allowReassociation = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

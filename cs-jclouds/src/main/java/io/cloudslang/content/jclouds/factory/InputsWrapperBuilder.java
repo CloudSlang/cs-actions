@@ -52,6 +52,8 @@ public class InputsWrapperBuilder {
             for (T builder : builders) {
                 if (builder instanceof CustomInputs) {
                     wrapper.setCustomInputs((CustomInputs) builder);
+                } else if (builder instanceof ElasticIpInputs) {
+                    wrapper.setElasticIpInputs((ElasticIpInputs) builder);
                 } else if (builder instanceof ImageInputs) {
                     wrapper.setImageInputs((ImageInputs) builder);
                 } else if (builder instanceof InstanceInputs) {

@@ -3,7 +3,6 @@ package io.cloudslang.content.jclouds.entities.inputs;
 import io.cloudslang.content.jclouds.entities.aws.*;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
@@ -308,7 +307,7 @@ public class CustomInputs {
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : inputValue;
+            region = InputsUtil.getDefaultStringInput(inputValue, Constants.AwsParams.DEFAULT_AMAZON_REGION);
             return this;
         }
 

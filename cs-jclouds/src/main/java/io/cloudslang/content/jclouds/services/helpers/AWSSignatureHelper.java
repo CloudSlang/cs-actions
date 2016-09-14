@@ -124,7 +124,7 @@ public class AWSSignatureHelper {
             endpoint = endpoint.substring(3);
             return endpoint.substring(0, endpoint.indexOf(DOT_CHAR));
         }
-        return Constants.Miscellaneous.DEFAULT_AMAZON_REGION;
+        return Constants.AwsParams.DEFAULT_AMAZON_REGION;
     }
 
     private String entryToQuery(Map.Entry<String, String> entry) {

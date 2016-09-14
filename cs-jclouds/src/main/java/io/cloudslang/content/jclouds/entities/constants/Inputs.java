@@ -145,10 +145,8 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_STATUS = "networkInterfaceStatus";
         public static final String NETWORK_INTERFACE_SUBNET_ID = "networkInterfaceSubnetId";
         public static final String NETWORK_INTERFACE_VPC_ID = "networkInterfaceVpcId";
-        public static final String PRIVATE_IP_ADDRESSES_STRING = "privateIpAddressesString";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
         public static final String SECURITY_GROUP_IDS_STRING = "securityGroupIdsString";
-        public static final String ALLOW_REASSOCIATION = "allowReassociation";
     }
 
     public static class VolumeInputs {
@@ -159,6 +157,13 @@ public class Inputs {
         public static final String DEVICE_NAME = "deviceName";
         public static final String FORCE = "force";
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
+    }
+
+    public static class ElasticIpInputs {
+        public static final String ALLOW_REASSOCIATION = "allowReassociation";
+        public static final String PUBLIC_IP = "publicIp";
+        public static final String PRIVATE_IP_ADDRESS = "privateIpAddress";
+        public static final String PRIVATE_IP_ADDRESSES_STRING = "privateIpAddressesString";
     }
 
     public static class AwsApiInputs {

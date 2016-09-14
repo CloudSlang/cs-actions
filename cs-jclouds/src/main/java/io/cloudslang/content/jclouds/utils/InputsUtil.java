@@ -18,6 +18,9 @@ import java.util.regex.Pattern;
  * 2/24/2016.
  */
 public final class InputsUtil {
+    private static final String ACTION = "Action";
+    private static final String VERSION = "Version";
+
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
 
@@ -77,8 +80,7 @@ public final class InputsUtil {
         if (StringUtils.isBlank(input)) {
             return null;
         }
-        return new HashSet<>(Arrays.asList(input.split(Pattern
-                .quote(getDefaultStringInput(delimiter, Constants.Miscellaneous.COMMA_DELIMITER)))));
+        return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultStringInput(delimiter, Constants.Miscellaneous.COMMA_DELIMITER)))));
     }
 
     public static String getDefaultStringInput(String input, String defaultValue) {
@@ -114,10 +116,6 @@ public final class InputsUtil {
                         getValidationException(input, false));
     }
 
-    public static int getVolumeValidInt(String input, int min, int max, String errorMessage) {
-        return getValidInt(input, min, max, getValidationException(input, true), errorMessage);
-    }
-
     public static String getRelevantBooleanString(String input) {
         if (StringUtils.isNotBlank(input)
                 && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
@@ -146,6 +144,18 @@ public final class InputsUtil {
         if (condition) {
             inputMap.put(key, value);
         }
+    }
+
+    public static void setCommonQueryParamsMap(Map<String, String> queryParamsMap, String action, String version) {
+        queryParamsMap.put(ACTION, action);
+        queryParamsMap.put(VERSION, version);
+    }
+
+    public static String getValidIPv4Address(String input) {
+        if (StringUtils.isNotBlank(input) && !isValidIPv4Address(input)) {
+            throw new RuntimeException("The provided value for: " + input + " input must be a valid IPv4 address.");
+        }
+        return input;
     }
 
     public static boolean isValidIPv4Address(String input) {

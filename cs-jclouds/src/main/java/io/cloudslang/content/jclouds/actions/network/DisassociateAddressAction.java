@@ -11,7 +11,7 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ElasticIpInputs;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 9/13/2016.
  */
-public class DisassociateAddress {
+public class DisassociateAddressAction {
     /**
      * Disassociates an Elastic IP address from the instance or network interface it's associated with.
      * Note: An Elastic IP address is for use in either the EC2-Classic platform or in a VPC. For more information, see
@@ -30,39 +30,38 @@ public class DisassociateAddress {
      * Important: This is an idempotent operation. If you perform the operation more than once, Amazon EC2 doesn't return
      * an error.
      *
-     * @param endpoint                 Endpoint to which request will be sent.
-     *                                 Default: "https://ec2.amazonaws.com"
-     * @param identity                 ID of the secret access key associated with your Amazon AWS or IAM account.
-     *                                 Example: "AKIAIOSFODNN7EXAMPLE"
-     * @param credential               Secret access key associated with your Amazon AWS or IAM account.
-     *                                 Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-     * @param proxyHost                Optional - proxy server used to connect to Amazon API. If empty no proxy will be
-     *                                 used.
-     *                                 Default: ""
-     * @param proxyPort                Optional - proxy server port. You must either specify values for both <proxyHost>
-     *                                 and <proxyPort> inputs or leave them both empty.
-     *                                 Default: ""
-     * @param proxyUsername            Optional - proxy server user name.
-     *                                 Default: ""
-     * @param proxyPassword            Optional - proxy server password associated with the <proxyUsername> input value.
-     *                                 Default: ""
-     * @param version                  Version of the web service to made the call against it.
-     *                                 Example: "2016-04-01"
-     * @param headers                  Optional - string containing the headers to use for the request separated by new
-     *                                 line (CRLF). The header name-value pair will be separated by ":"
-     *                                 Format: Conforming with HTTP standard for headers (RFC 2616)
-     *                                 Examples: Accept:text/plain
-     *                                 Default: ""
-     * @param queryParams              Optional - string containing query parameters that will be appended to the URL.
-     *                                 The names and the values must not be URL encoded because if they are encoded then
-     *                                 a double encoded will occur. The separator between name-value pairs is "&" symbol.
-     *                                 The query name will be separated from query value by "="
-     *                                 Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     *                                 Default: ""
-     * @param associationId            Optional - [EC2-VPC] Association ID. Required for EC2-VPC.
-     *                                 Default: ""
-     * @param networkInterfacePublicIp Optional - Elastic IP address. This is required for EC2-Classic.
-     *                                 Default: ""
+     * @param endpoint      Endpoint to which request will be sent.
+     *                      Default: "https://ec2.amazonaws.com"
+     * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
+     *                      Example: "AKIAIOSFODNN7EXAMPLE"
+     * @param credential    Secret access key associated with your Amazon AWS or IAM account.
+     *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+     * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
+     *                      Default: ""
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and <proxyPort>
+     *                      inputs or leave them both empty.
+     *                      Default: ""
+     * @param proxyUsername Optional - proxy server user name.
+     *                      Default: ""
+     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     *                      Default: ""
+     * @param version       Version of the web service to made the call against it.
+     *                      Example: "2016-04-01"
+     * @param headers       Optional - string containing the headers to use for the request separated by new line (CRLF).
+     *                      The header name-value pair will be separated by ":".
+     *                      Format: Conforming with HTTP standard for headers (RFC 2616)
+     *                      Examples: "Accept:text/plain"
+     *                      Default: ""
+     * @param queryParams   Optional - string containing query parameters that will be appended to the URL. The names and
+     *                      the values must not be URL encoded because if they are encoded then a double encoded will occur.
+     *                      The separator between name-value pairs is "&" symbol. The query name will be separated from
+     *                      query value by "=".
+     *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
+     *                      Default: ""
+     * @param associationId Optional - [EC2-VPC] Association ID. Required for EC2-VPC.
+     *                      Default: ""
+     * @param publicIp      Optional - Elastic IP address. This is required for EC2-Classic.
+     *                      Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
@@ -91,8 +90,7 @@ public class DisassociateAddress {
 
                                                    @Param(value = Inputs.CustomInputs.ASSOCIATION_ID) String associationId,
 
-                                                   @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_PUBLIC_IP) String networkInterfacePublicIp) {
-
+                                                   @Param(value = Inputs.ElasticIpInputs.PUBLIC_IP) String publicIp) {
         try {
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
                     .withEndpoint(endpoint)
@@ -109,16 +107,13 @@ public class DisassociateAddress {
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withAssociationId(associationId).build();
+            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder().withPublicIp(publicIp).build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
-                    .withNetworkInterfacePublicIp(networkInterfacePublicIp)
-                    .build();
-
-            return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
+            return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }
