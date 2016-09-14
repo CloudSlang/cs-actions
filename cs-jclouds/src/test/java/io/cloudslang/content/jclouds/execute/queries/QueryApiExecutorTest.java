@@ -135,10 +135,21 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDisassociateAddress() throws Exception {
-        toTest.execute(getCommonInputs("DisassociateAddress", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
+        toTest.execute(getCommonInputs("DisassociateAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
+                getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DisassociateAddress")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testReleaseAddress() throws Exception {
+        toTest.execute(getCommonInputs("ReleaseAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
+                getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("ReleaseAddress")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -224,7 +235,7 @@ public class QueryApiExecutorTest {
                 .withDeviceIndex("25")
                 .withNetworkInterfaceDescription("anything in here")
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
-                .withNetworkInterfacePublicIp("52.xxx.xxx.xxx")
+                .withNetworkInterfacePublicIp("52.0.0.2")
                 .withNetworkInterfaceSubnetId("subnet-abcdef12")
                 .withSecondaryPrivateIpAddressCount("3")
                 .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
@@ -287,7 +298,11 @@ public class QueryApiExecutorTest {
                 break;
             case "DisassociateAddress":
                 queryParamsMap.put("AssociationId", "eipassoc-abcdef12");
-                queryParamsMap.put("PublicIp", "52.xxx.xxx.xxx");
+                queryParamsMap.put("PublicIp", "52.0.0.2");
+                break;
+            case "ReleaseAddress":
+                queryParamsMap.put("AllocationId", "eipalloc-abcdef12");
+                queryParamsMap.put("PublicIp", "52.0.0.2");
                 break;
             default:
                 throw new RuntimeException("You forgot to setup queryParamsMap naughty developer!");
