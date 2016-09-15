@@ -47,7 +47,7 @@ public class AmazonVolumeServiceImpl extends JCloudsService implements VolumeSer
     }
 
     void lazyInit(String region, boolean isDebugMode) {
-        this.region = InputsUtil.getDefaultStringInput(region, Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
+        this.region = InputsUtil.getDefaultStringInput(region, Constants.AwsParams.DEFAULT_AMAZON_REGION);
         init(isDebugMode);
     }
 

@@ -2,6 +2,7 @@ package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
+import io.cloudslang.content.jclouds.factory.helpers.ElasticIpHelper;
 import io.cloudslang.content.jclouds.factory.helpers.NetworkHelper;
 import io.cloudslang.content.jclouds.factory.helpers.VolumeHelper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
@@ -25,7 +26,7 @@ public class ParamsMapBuilder {
         if (StringUtils.isBlank(wrapper.getCommonInputs().getQueryParams())) {
             switch (wrapper.getAction()) {
                 case Constants.QueryApiActions.ALLOCATE_ADDRESS:
-                    queryParamsMap = new NetworkHelper().getAllocateAddressQueryParamsMap(wrapper);
+                    queryParamsMap = new ElasticIpHelper().getAllocateAddressQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.ASSOCIATE_ADDRESS:
                     queryParamsMap = new NetworkHelper().getAssociateAddressQueryParamsMap(wrapper);
@@ -47,6 +48,9 @@ public class ParamsMapBuilder {
                     break;
                 case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
                     queryParamsMap = new NetworkHelper().getDisassociateAddressQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.RELEASE_ADDRESS:
+                    queryParamsMap = new ElasticIpHelper().getReleaseAddressQueryParamsMap(wrapper);
                     break;
                 default:
                     throw new RuntimeException(UNSUPPORTED_QUERY_API);
