@@ -23,14 +23,13 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
  */
 public class ApplyXslTransformation {
     /**
-     *
-     * @param xmlDocument The location of the XML document to transform. Can be a local file path, an HTTP URL,
-     *                    or the actual xml to transform, as constant. This is optional as some stylesheets do not need
-     *                    an XML document and can create output based on runtime parameters.
-     * @param xslTemplate The location of the XSL stylesheet to use. Can be a local file path,
-     *                    an HTTP URL or the actual template as constant.
-     * @param outputFile The local file to write the output of the transformation. If an output file is not specified
-     *                   the output of the transformation will be returned as returnResult.
+     * @param xmlDocument     The location of the XML document to transform. Can be a local file path, an HTTP URL,
+     *                        or the actual xml to transform, as constant. This is optional as some stylesheets do not need
+     *                        an XML document and can create output based on runtime parameters.
+     * @param xslTemplate     The location of the XSL stylesheet to use. Can be a local file path,
+     *                        an HTTP URL or the actual template as constant.
+     * @param outputFile      The local file to write the output of the transformation. If an output file is not specified
+     *                        the output of the transformation will be returned as returnResult.
      * @param parsingFeatures The list of XML parsing features separated by new line (CRLF).
      *                        The feature name - value must be separated by empty space.
      *                        Setting specific features this field could be used to avoid XML security issues like
@@ -77,37 +76,6 @@ public class ApplyXslTransformation {
             return new ApplyXslTransformationService().execute(applyXslTransformationInputs);
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);
-        }
-    }
-
-    public static void main(String[] args) {
-        ApplyXslTransformation action = new ApplyXslTransformation();
-        Map<String, String> resultMap = action.applyXslTransformation(
-                "",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                        "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
-                        "    <xsl:param name=\"firstName\">OO</xsl:param>\n" +
-                        "    <xsl:param name=\"lastName\">User</xsl:param>\n" +
-                        "    <xsl:param name=\"color\">#000000</xsl:param>\n" +
-                        "    <xsl:template match=\"/\">\n" +
-                        "        <html>\n" +
-                        "            <body>\n" +
-                        "                <h2>\n" +
-                        "                    <font color=\"{$color}\">\n" +
-                        "                    Hello <xsl:value-of select=\"$firstName\"/><xsl:text> </xsl:text><xsl:value-of select=\"$lastName\"/>!\n" +
-                        "                    </font>\n" +
-                        "                </h2>\n" +
-                        "            </body>\t\t\n" +
-                        "        </html>\n" +
-                        "    </xsl:template>\n" +
-                        "</xsl:stylesheet>",
-//                "c:\\Users\\moldovas\\output.html"
-                "",
-                ""
-        );
-
-        for (Map.Entry entry : resultMap.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
 }
