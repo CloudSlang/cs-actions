@@ -56,6 +56,11 @@
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
             <version>0.1.67</version>
         </dependency>
@@ -78,6 +83,11 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.parsers</groupId>
+            <artifactId>jaxp-api</artifactId>
+            <version>1.4.5</version>
         </dependency>
         <!-- testing dependencies -->
         <dependency>

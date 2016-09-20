@@ -26,7 +26,7 @@ public class AppendChildService {
             Document doc = XmlUtils.getDocument(commonInputs);
             NamespaceContext context = XmlUtils.getNamespaceContext(commonInputs, doc);
 
-            Document childDoc = XmlUtils.parseXML(customInputs.getXmlElement(), commonInputs.getSecureProcessing());
+            Document childDoc = XmlUtils.parseXmlStringSecurely(customInputs.getXmlElement(), commonInputs.getSecureProcessing());
             Node childNode = doc.importNode(childDoc.getDocumentElement(), true);
 
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());

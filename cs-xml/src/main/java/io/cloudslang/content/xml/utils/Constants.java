@@ -1,9 +1,13 @@
 package io.cloudslang.content.xml.utils;
 
+import io.cloudslang.content.constants.OutputNames;
+
 /**
  * Created by markowis on 18/02/2016.
  */
 public class Constants {
+    public static final String INVALID_PARAMS = "The number of items in paramKey and paramValue input lists differ.  They must be the same.";
+    public static final String MALFORMED_TEMPLATE = "The template supplied is malformed";
     public static final String EMPTY_STRING = "";
     public static final String NAMESPACE_DELIMITER = ":";
     public static final String JSON_ATTRIBUTE_PREFIX = "@";
@@ -22,13 +26,10 @@ public class Constants {
     public static final String INDENT = "  ";
     public static final String UTF_8_ENCODING = "UTF-8";
 
-    public static final class Outputs {
-        public static final String RETURN_RESULT = "returnResult";
+    public static final class Outputs extends OutputNames {
         public static final String RESULT_TEXT = "result";
         public static final String SELECTED_VALUE = "selectedValue";
         public static final String RESULT_XML = "resultXML";
-        public static final String RETURN_CODE = "returnCode";
-        public static final String EXCEPTION = "exception";
         public static final String ERROR_MESSAGE = "errorMessage";
         public static final String NAMESPACES_URIS = "namespacesUris";
         public static final String NAMESPACES_PREFIXES = "namespacesPrefixes";
@@ -51,6 +52,10 @@ public class Constants {
         public static final String INCLUDE_ROOT = "includeRootElement";
         public static final String INCLUDE_ATTRIBUTES = "includeAttributes";
         public static final String PARSING_FEATURES = "parsingFeatures";
+
+        //ApplyXslTransformation
+        public static final String XSL_TEMPLATE = "xslTemplate";
+        public static final String OUTPUT_FILE = "outputFile";
 
         public static final String XML_DOCUMENT = "xmlDocument";
         public static final String XML_DOCUMENT_SOURCE = "xmlDocumentSource";
