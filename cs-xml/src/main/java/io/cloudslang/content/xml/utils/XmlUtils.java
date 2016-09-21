@@ -129,11 +129,11 @@ public class XmlUtils {
     }
 
     public static void parseXmlString(String xml, String features) throws Exception {
-        parseXmlInputStream(getStream(xml, Constants.EMPTY_STRING), features);
+        parseXmlInputStream(getStream(xml, ""), features);
     }
 
     public static void parseXmlFile(String xmlFile, String features) throws Exception {
-        parseXmlInputStream(getStream(Constants.EMPTY_STRING, xmlFile), features);
+        parseXmlInputStream(getStream("", xmlFile), features);
     }
 
     /**
