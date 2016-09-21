@@ -157,14 +157,14 @@ public class InputsUtilTest {
     }
 
     @Test
-    public void EnforcedBooleanConditionTrueTest() {
+    public void enforcedBooleanConditionTrueTest() {
         boolean flag = InputsUtil.getEnforcedBooleanCondition("null, empty, many empty chars, tRuE but not false", true);
 
         assertTrue(flag);
     }
 
     @Test
-    public void EnforcedBooleanConditionFalseTest() {
+    public void enforcedBooleanConditionFalseTest() {
         boolean flag = InputsUtil.getEnforcedBooleanCondition("null, empty, many empty chars, FaLsE but not true", false);
 
         assertFalse(flag);
