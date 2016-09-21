@@ -1,6 +1,8 @@
 package io.cloudslang.content.ssh.entities;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.ssh.utils.Constants;
+import io.cloudslang.content.ssh.utils.StringUtils;
 
 import java.util.Map;
 
@@ -26,6 +28,14 @@ public class SSHShellInputs {
     private String knownHostsPolicy;
     private String knownHostsPath;
     private String agentForwarding;
+    private String proxyHost;
+    private String proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private String privateKeyData;
+    private String allowedCiphers;
+    private boolean allowExpectCommands;
+    private int connectTimeout;
 
     public String getHost() {
         return host;
@@ -169,5 +179,70 @@ public class SSHShellInputs {
 
     public void setAgentForwarding(String agentForwarding) {
         this.agentForwarding = agentForwarding;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(String proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public void setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+    }
+
+    public void setPrivateKeyData(String privateKeyData) {
+        this.privateKeyData = privateKeyData;
+    }
+
+    public String getPrivateKeyData() {
+        return privateKeyData;
+    }
+
+    public String getAllowedCiphers() {
+        return allowedCiphers;
+    }
+
+    public void setAllowedCiphers(String allowedCiphers) {
+        this.allowedCiphers = allowedCiphers;
+    }
+
+    public void setAllowExpectCommands(String allowExpectCommands) {
+        this.allowExpectCommands =  StringUtils.toBoolean(allowExpectCommands, Constants.DEFAULT_ALLOW_EXPECT_COMMANDS);
+    }
+
+    public boolean isAllowExpectCommands() {
+        return allowExpectCommands;
+    }
+
+    public void setConnectTimeout(String connectTimeout) {
+        this.connectTimeout = StringUtils.toInt(connectTimeout, Constants.DEFAULT_CONNECT_TIMEOUT);
+
+    }
+
+    public int getConnectTimeout() {
+        return connectTimeout;
     }
 }

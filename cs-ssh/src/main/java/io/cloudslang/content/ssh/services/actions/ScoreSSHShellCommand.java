@@ -1,9 +1,16 @@
 package io.cloudslang.content.ssh.services.actions;
 
-import io.cloudslang.content.ssh.entities.*;
+import com.jcraft.jsch.ProxyHTTP;
+import io.cloudslang.content.ssh.entities.CommandResult;
+import io.cloudslang.content.ssh.entities.ConnectionDetails;
+import io.cloudslang.content.ssh.entities.IdentityKey;
+import io.cloudslang.content.ssh.entities.KnownHostsFile;
+import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 import io.cloudslang.content.ssh.utils.Constants;
+import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
+import io.cloudslang.content.ssh.utils.ProxyUtils;
 import io.cloudslang.content.ssh.utils.StringUtils;
 
 import java.nio.file.Path;
@@ -37,7 +44,8 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
 
             // configure ssh parameters
             ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber, sshShellInputs.getUsername(), sshShellInputs.getPassword());
-            KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
+            IdentityKey identityKey = IdentityKeyUtils.getIdentityKey(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPrivateKeyData(), sshShellInputs.getPassword());
+            //KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
             KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
 
             // get the cached SSH session
@@ -45,7 +53,8 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             boolean saveSSHSession = false;
             if (service == null || !service.isConnected()) {
                 saveSSHSession = true;
-                service = new SSHServiceImpl(connection, keyFile, knownHostsFile, Constants.DEFAULT_CONNECT_TIMEOUT);
+                ProxyHTTP proxyHTTP = ProxyUtils.getHTTPProxy(sshShellInputs.getProxyHost(), sshShellInputs.getProxyPort(), sshShellInputs.getProxyUsername(), sshShellInputs.getProxyPassword());
+                service = new SSHServiceImpl(connection, identityKey, knownHostsFile, sshShellInputs.getConnectTimeout(), sshShellInputs.isAllowExpectCommands(), proxyHTTP, sshShellInputs.getAllowedCiphers());
             }
 
             runSSHCommand(sshShellInputs, returnResult, service, sessionId, saveSSHSession);
@@ -83,7 +92,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
                 sshShellInputs.getCommand(),
                 sshShellInputs.getCharacterSet(),
                 usePseudoTerminal,
-                Constants.DEFAULT_CONNECT_TIMEOUT,
+                sshShellInputs.getConnectTimeout(),
                 timeoutNumber,
                 agentForwarding);
 

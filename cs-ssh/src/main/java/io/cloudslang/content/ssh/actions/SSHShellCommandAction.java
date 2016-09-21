@@ -30,6 +30,11 @@ public class SSHShellCommandAction {
      * @param username            The username of the account on the remote machine.
      * @param password            The password of the user. If using a private key file this will be used as the passphrase for the file.
      * @param privateKeyFile      The path to the private key file (OpenSSH type) on the machine where is the worker.
+     * @param privateKeyData      A string representing the private key (OpenSSH type) used for authenticating the user.
+     *                            This string is usually the content of a private key file. The 'privateKeyData' and the
+     *                            'privateKeyFile' inputs are mutually exclusive. For security reasons it is recommend
+     *                            that the private key be protected by a passphrase that should be provided through the
+     *                            'password' input.
      * @param knownHostsPolicy    The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
      * @param knownHostsPath      The path to the known hosts file.
      * @param command             The command(s) to execute.
@@ -40,6 +45,12 @@ public class SSHShellCommandAction {
      * @param agentForwarding     Enables or disables the forwarding of the authentication agent connection.
      *                            Agent forwarding should be enabled with caution.
      * @param timeout             Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
+     * @param connectTimeout      Time in milliseconds to wait for the connection to be made. Default value: 10000
+     * @param allowedCiphers      A comma separated list of ciphers that will be used in the client-server handshake
+     *                            mechanism when the connection is created. Check the notes section for security concerns
+     *                            regarding your choice of ciphers. The default value will be used even if the input is not
+     *                            added to the operation.
+     *                            Default value: aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc
      * @param globalSessionObject the sessionObject that holds the connection if the close session is false.
      * @param closeSession        If true it closes the SSH session at completion of this operation.
      *                            If false the SSH session will be cached for future calls of this operation during the life of the flow.
@@ -72,16 +83,24 @@ public class SSHShellCommandAction {
             @Param(value = Constants.InputNames.USERNAME, required = true) String username,
             @Param(value = Constants.InputNames.PASSWORD, encrypted = true) String password,
             @Param(Constants.PRIVATE_KEY_FILE) String privateKeyFile,
+            @Param(value = Constants.PRIVATE_KEY_DATA, encrypted = true) String privateKeyData,
             @Param(Constants.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
             @Param(Constants.KNOWN_HOSTS_PATH) String knownHostsPath,
+            @Param(Constants.ALLOWED_CIPHERS) String allowedCiphers,
             @Param(value = Constants.COMMAND, required = true) String command,
             @Param(value = Constants.ARGS, description = Constants.ARGS_IS_DEPRECATED) String arguments,
             @Param(Constants.InputNames.CHARACTER_SET) String characterSet,
             @Param(value = Constants.PTY) String pty,
             @Param(value = Constants.InputNames.AGENT_FORWARDING) String agentForwarding,
             @Param(Constants.InputNames.TIMEOUT) String timeout,
+            @Param(Constants.CONNECT_TIMEOUT) String connectTimeout,
             @Param(Constants.SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SSHConnection>> globalSessionObject,
-            @Param(Constants.CLOSE_SESSION) String closeSession) {
+            @Param(Constants.CLOSE_SESSION) String closeSession,
+            @Param(Constants.PROXY_HOST) String proxyHost,
+            @Param(Constants.PROXY_PORT) String proxyPort,
+            @Param(Constants.PROXY_USERNAME) String proxyUsername,
+            @Param(value = Constants.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+            @Param(Constants.ALLOW_EXPECT_COMMANDS) String allowExpectCommands) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
         sshShellInputs.setHost(host);
@@ -89,16 +108,24 @@ public class SSHShellCommandAction {
         sshShellInputs.setUsername(username);
         sshShellInputs.setPassword(password);
         sshShellInputs.setPrivateKeyFile(privateKeyFile);
+        sshShellInputs.setPrivateKeyData(privateKeyData);
         sshShellInputs.setCommand(command);
         sshShellInputs.setArguments(arguments);
         sshShellInputs.setCharacterSet(characterSet);
         sshShellInputs.setPty(pty);
         sshShellInputs.setAgentForwarding(agentForwarding);
         sshShellInputs.setTimeout(timeout);
+        sshShellInputs.setConnectTimeout(connectTimeout);
         sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
         sshShellInputs.setCloseSession(closeSession);
         sshShellInputs.setKnownHostsPolicy(knownHostsPolicy);
         sshShellInputs.setKnownHostsPath(knownHostsPath);
+        sshShellInputs.setAllowedCiphers(allowedCiphers);
+        sshShellInputs.setProxyHost(proxyHost);
+        sshShellInputs.setProxyPort(proxyPort);
+        sshShellInputs.setProxyUsername(proxyUsername);
+        sshShellInputs.setProxyPassword(proxyPassword);
+        sshShellInputs.setAllowExpectCommands(allowExpectCommands);
 
         return new ScoreSSHShellCommand().execute(sshShellInputs);
     }
