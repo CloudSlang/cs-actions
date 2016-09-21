@@ -2,12 +2,15 @@ package io.cloudslang.content.ssh.services.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;
+import io.cloudslang.content.ssh.entities.IdentityKey;
+import io.cloudslang.content.ssh.entities.KeyData;
 import io.cloudslang.content.ssh.entities.KeyFile;
 import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 import io.cloudslang.content.ssh.utils.CacheUtils;
+import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,10 +19,15 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -62,19 +70,21 @@ public class SSHShellAbstractTest {
 
     @Test
     public void testGetKeyFile() {
-        SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
-        };
         final String myPrivateKeyFileName = "myPrivateKeyFile";
         final String myPrivateKeyPassPhraseName = "myPrivateKeyPassPhrase";
-        KeyFile keyFile = sshShellAbstract.getKeyFile(myPrivateKeyFileName, myPrivateKeyPassPhraseName);
-        assertEquals(myPrivateKeyFileName, keyFile.getKeyFilePath());
-        assertEquals(myPrivateKeyPassPhraseName, keyFile.getPassPhrase());
+        final String myPrivatePassword = "myPrivatePassword";
+        IdentityKey keyFile = IdentityKeyUtils.getIdentityKey(myPrivateKeyFileName, null, myPrivatePassword);
+        assert(keyFile instanceof KeyFile);
+        assertEquals(myPrivatePassword, new String(keyFile.getPassPhrase(), StandardCharsets.UTF_8));
+        assertEquals(myPrivateKeyFileName, ((KeyFile) keyFile).getKeyFilePath());
 
-        keyFile = sshShellAbstract.getKeyFile(myPrivateKeyFileName, null);
-        assertEquals(myPrivateKeyFileName, keyFile.getKeyFilePath());
-        assertEquals(null, keyFile.getPassPhrase());
+        keyFile = IdentityKeyUtils.getIdentityKey(null, myPrivateKeyPassPhraseName, myPrivatePassword);
+        assert(keyFile instanceof KeyData);
+        assertEquals(myPrivatePassword, new String(keyFile.getPassPhrase(), StandardCharsets.UTF_8));
+        assertEquals(myPrivatePassword, new String(keyFile.getPassPhrase(), StandardCharsets.UTF_8));
+        assertEquals(IdentityKeyUtils.fixPrivateKeyFormat(myPrivateKeyPassPhraseName), new String(((KeyData) keyFile).getPrvKeyData(), StandardCharsets.UTF_8));
 
-        keyFile = sshShellAbstract.getKeyFile(null, myPrivateKeyPassPhraseName);
+        keyFile = IdentityKeyUtils.getIdentityKey(null, null, myPrivatePassword);
         assertNull(keyFile);
     }
 
