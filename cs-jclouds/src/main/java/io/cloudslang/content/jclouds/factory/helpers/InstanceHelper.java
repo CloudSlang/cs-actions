@@ -112,9 +112,9 @@ public class InstanceHelper {
                 if (NO_DEVICE.equalsIgnoreCase(deviceNamesArray[index])) {
                     queryParamsMap.put(NO_DEVICE, Constants.Miscellaneous.EMPTY);
                 } else {
-                    queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.BLOCK_DEVICE_MAPPING) +
+                    queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.AwsParams.BLOCK_DEVICE_MAPPING) +
                             BLOCK_DEVICE_MAPPING_DEVICE_NAME, deviceNamesArray[index]);
-                    InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.BLOCK_DEVICE_MAPPING) +
+                    InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(index, Constants.AwsParams.BLOCK_DEVICE_MAPPING) +
                             VIRTUAL_NAME, virtualNamesArray[index], !Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(virtualNamesArray[index]));
 
                     setOptionalQueryParam(queryParamsMap, wrapper.getEbsInputs().getDeleteOnTerminationsString(), Constants.Miscellaneous.EMPTY,
@@ -153,19 +153,20 @@ public class InstanceHelper {
                                             boolean condition) throws Exception {
         if (condition && Constants.AwsParams.ENCRYPTED.equalsIgnoreCase(customKey) && String.valueOf(Constants.Values.ONE).equalsIgnoreCase(inputArray[index])) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.EBS) + customKey, inputArray[index]);
-        } else if (condition && Constants.AwsParams.IOPS.equalsIgnoreCase(customKey) && queryParamsMap.containsValue(VolumeType.IO1.toString())) {
-            queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.EBS) + customKey, inputArray[index]);
         } else if (condition && Constants.AwsParams.VOLUME_TYPE.equalsIgnoreCase(customKey)) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.EBS) + customKey,
                     VolumeType.getValue(inputArray[index]));
+        } else if (condition && Constants.AwsParams.IOPS.equalsIgnoreCase(customKey) && queryParamsMap.containsValue(VolumeType.IO1.toString())) {
+            queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.EBS) + customKey, inputArray[index]);
         } else if (condition && VOLUME_SIZE.equalsIgnoreCase(customKey)
-                && queryParamsMap.keySet().toString().contains(Constants.Miscellaneous.BLOCK_DEVICE_MAPPING)) {
+                && queryParamsMap.keySet().toString().contains(Constants.AwsParams.BLOCK_DEVICE_MAPPING)) {
             String currentVolumeType = getCurrentVolumeType(queryParamsMap, index);
-            String currentValidSize = InputsUtil.getValidEbsSize(inputArray[index], currentVolumeType);
-            if (!Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(currentValidSize)) {
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.EBS) + customKey,
-                        InputsUtil.getValidEbsSize(inputArray[index], currentVolumeType));
-            }
+            String currentValidSize = StringUtils.isBlank(currentVolumeType) ?
+                    InputsUtil.getValidEbsSize(inputArray[index], Constants.AwsParams.STANDARD) :
+                    InputsUtil.getValidEbsSize(inputArray[index], currentVolumeType);
+            InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(index,
+                    Constants.Miscellaneous.EBS) + customKey, currentValidSize,
+                    !Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(currentValidSize));
         } else if (condition && DELETE_ON_TERMINATION.equalsIgnoreCase(customKey)
                 && Boolean.FALSE == InputsUtil.getEnforcedBooleanCondition(inputArray[index], true)) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(index, Constants.Miscellaneous.EBS) + customKey, inputArray[index]);
@@ -175,7 +176,7 @@ public class InstanceHelper {
     }
 
     private String getCurrentVolumeType(Map<String, String> queryParamsMap, int index) {
-        return queryParamsMap.get(Constants.Miscellaneous.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
+        return queryParamsMap.get(Constants.AwsParams.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
                 (index + Constants.Values.ONE) + Constants.Miscellaneous.DOT + Constants.Miscellaneous.EBS +
                 Constants.AwsParams.VOLUME_TYPE);
     }

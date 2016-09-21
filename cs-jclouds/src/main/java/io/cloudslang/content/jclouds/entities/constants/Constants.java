@@ -15,7 +15,6 @@ public class Constants {
 
     public static class Miscellaneous {
         public static final String AMPERSAND = "&";
-        public static final String BLOCK_DEVICE_MAPPING = "BlockDeviceMapping";
         public static final String COLON = ":";
         public static final String COMMA_DELIMITER = ",";
         public static final String EBS = "Ebs";
@@ -44,6 +43,7 @@ public class Constants {
         public static final String ALLOCATION_ID = "AllocationId";
         public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
         public static final String AWS_REQUEST_VERSION = "aws4_request";
+        public static final String BLOCK_DEVICE_MAPPING = "BlockDeviceMapping";
         public static final String DEFAULT_AMAZON_REGION = "us-east-1";
         public static final String ENCRYPTED = "Encrypted";
         public static final String HEADER_DELIMITER = "\\r?\\n";
@@ -55,6 +55,7 @@ public class Constants {
         public static final String PUBLIC_IP = "PublicIp";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String SNAPSHOT_ID = "SnapshotId";
+        public static final String STANDARD = "standard";
         public static final String SUBNET_ID = "SubnetId";
         public static final String VOLUME_TYPE = "VolumeType";
     }

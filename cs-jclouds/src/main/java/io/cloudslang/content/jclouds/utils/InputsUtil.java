@@ -1,7 +1,6 @@
 package io.cloudslang.content.jclouds.utils;
 
 import io.cloudslang.content.jclouds.entities.aws.InstanceState;
-import io.cloudslang.content.jclouds.entities.aws.VolumeType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
@@ -25,7 +24,6 @@ public final class InputsUtil {
     private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String SC1 = "sc1";
     private static final String ST1 = "st1";
-    private static final String STANDARD = "standard";
     private static final String VERSION = "Version";
 
     private static final int MAXIMUM_EBS_SIZE = 16384;
@@ -188,15 +186,16 @@ public final class InputsUtil {
         if (Constants.Miscellaneous.NETWORK.equalsIgnoreCase(specificArea)) {
             return PRIVATE_IP_ADDRESSES + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE) +
                     Constants.Miscellaneous.DOT;
-        } else if (Constants.Miscellaneous.BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
-            return Constants.Miscellaneous.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
+        } else if (Constants.AwsParams.BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
+            return Constants.AwsParams.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
                     String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT;
         } else if (Constants.Miscellaneous.EBS.equalsIgnoreCase(specificArea)) {
-            return Constants.Miscellaneous.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
+            return Constants.AwsParams.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
                     String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT + Constants.Miscellaneous.EBS +
                     Constants.Miscellaneous.DOT;
+        } else {
+            return Constants.Miscellaneous.EMPTY;
         }
-        return Constants.Miscellaneous.EMPTY;
     }
 
     public static String getValidIPv4Address(String input) {
@@ -209,35 +208,31 @@ public final class InputsUtil {
     public static String getValidEbsSize(String input, String ebsType) throws Exception {
         if (Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(input)) {
             return Constants.Miscellaneous.NOT_RELEVANT;
-        } else if (StringUtils.isNotBlank(ebsType)) {
-            switch (ebsType) {
-                case STANDARD:
-                    return (StringUtils.isBlank(input)) ? String.valueOf(Constants.Values.ONE) :
-                            String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
-                                    getValidationException(input, true), getValidationException(input, false)));
-                case IO1:
-                    return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_IO1_EBS_SIZE) :
-                            String.valueOf(getValidInt(input, MINIMUM_IO1_EBS_SIZE, MAXIMUM_EBS_SIZE,
-                                    getValidationException(input, true), getValidationException(input, false)));
-                case GP2:
-                    return StringUtils.isBlank(input) ? String.valueOf(Constants.Values.ONE) :
-                            String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_EBS_SIZE,
-                                    getValidationException(input, true), getValidationException(input, false)));
-                case SC1:
-                    return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
-                            String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
-                                    getValidationException(input, true), getValidationException(input, false)));
-                case ST1:
-                    return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
-                            String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
-                                    getValidationException(input, true), getValidationException(input, false)));
-                default:
-                    return String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
-                            getValidationException(input, true), getValidationException(input, false)));
-            }
-        } else {
-            return String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
-                    getValidationException(input, true), getValidationException(input, false)));
+        }
+        switch (ebsType) {
+            case Constants.AwsParams.STANDARD:
+                return (StringUtils.isBlank(input)) ? String.valueOf(Constants.Values.ONE) :
+                        String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
+                                getValidationException(input, true), getValidationException(input, false)));
+            case IO1:
+                return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_IO1_EBS_SIZE) :
+                        String.valueOf(getValidInt(input, MINIMUM_IO1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                                getValidationException(input, true), getValidationException(input, false)));
+            case GP2:
+                return StringUtils.isBlank(input) ? String.valueOf(Constants.Values.ONE) :
+                        String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_EBS_SIZE,
+                                getValidationException(input, true), getValidationException(input, false)));
+            case SC1:
+                return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                        String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                                getValidationException(input, true), getValidationException(input, false)));
+            case ST1:
+                return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                        String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                                getValidationException(input, true), getValidationException(input, false)));
+            default:
+                return String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
+                        getValidationException(input, true), getValidationException(input, false)));
         }
     }
 
