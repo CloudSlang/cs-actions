@@ -55,10 +55,12 @@ public class ApplyXslTransformation {
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
-                    @Output(EXCEPTION)},
+                    @Output(EXCEPTION)
+                      },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
-                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)
+                        })
     public Map<String, String> applyXslTransformation(
             @Param(value = Constants.Inputs.XML_DOCUMENT) String xmlDocument,
             @Param(value = Constants.Inputs.XSL_TEMPLATE, required = true) String xslTemplate,

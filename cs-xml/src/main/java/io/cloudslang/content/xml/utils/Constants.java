@@ -6,7 +6,6 @@ import io.cloudslang.content.constants.OutputNames;
  * Created by markowis on 18/02/2016.
  */
 public class Constants {
-    public static final String INVALID_PARAMS = "The number of items in paramKey and paramValue input lists differ.  They must be the same.";
     public static final String MALFORMED_TEMPLATE = "The template supplied is malformed";
     public static final String EMPTY_STRING = "";
     public static final String NAMESPACE_DELIMITER = ":";

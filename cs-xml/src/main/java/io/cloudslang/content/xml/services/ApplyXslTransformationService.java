@@ -3,6 +3,7 @@ package io.cloudslang.content.xml.services;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.xml.entities.inputs.ApplyXslTransformationInputs;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.XmlUtils;
 
 import javax.xml.transform.Result;
@@ -32,7 +33,6 @@ public class ApplyXslTransformationService {
             throws Exception {
         final Templates template = getTemplate(applyXslTransformationInputs);
         final Transformer xmlTransformer = template.newTransformer();
-        xmlTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
         final Source source = getSourceStream(applyXslTransformationInputs);
         final Result result = getResultStream(applyXslTransformationInputs);
@@ -69,7 +69,7 @@ public class ApplyXslTransformationService {
      * @throws Exception in case something went wrong
      */
     private Source readSource(String xmlDocument, String features) throws Exception {
-        if (xmlDocument.startsWith("http://") || xmlDocument.startsWith("https://")) {
+        if (xmlDocument.startsWith(Constants.Inputs.HTTP_PREFIX_STRING) || xmlDocument.startsWith(Constants.Inputs.HTTPS_PREFIX_STRING)) {
             URL xmlUrl = new URL(xmlDocument);
             InputStream xmlStream = xmlUrl.openStream();
             XmlUtils.parseXmlInputStream(xmlStream, features);
