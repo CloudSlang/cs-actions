@@ -92,4 +92,53 @@ public class StringUtils {
     public static boolean isEmpty(String value) {
         return value == null || value.length() == 0;
     }
+
+    public static boolean isNotEmpty(String str) {
+        return !isEmpty(str);
+    }
+
+    public static boolean isNotBlank(String str) {
+        return !isBlank(str);
+    }
+
+    public static boolean isBlank(String str) {
+        int strLen;
+        if(str != null && (strLen = str.length()) != 0) {
+            for(int i = 0; i < strLen; ++i) {
+                if(!Character.isWhitespace(str.charAt(i))) {
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Checks if a given value represents a valid port number and returns an int value representing that port number otherwise throws an exception when an invalid port value is provided.
+     * Valid port values: -1 and integer numbers greater than 0.
+     * Although network specifications state that port values need to be 16-bit unsigned integers, the value '-1' is considered valid by some party components.
+     *
+     * @param portStringValue String value representing the port number;
+     * @return int value representing a valid port number
+     */
+    public static int validatePortNumber(String portStringValue, String portInputName) {
+        final int portNumber;
+        final StringBuilder exceptionMessageBuilder = new StringBuilder();
+        exceptionMessageBuilder.append("Invalid value '").append(portStringValue)
+                .append("' for input '").append(portInputName)
+                .append("'. Valid Values: -1 and integer values greater than 0. ");
+
+        try {
+            portNumber = Integer.parseInt(portStringValue);
+            if ((portNumber < 1) && (portNumber != -1)) {
+                throw new IllegalArgumentException(exceptionMessageBuilder.toString());
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(exceptionMessageBuilder.toString(), e);
+        }
+        return portNumber;
+    }
 }

@@ -4,11 +4,13 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.CommandResult;
 import io.cloudslang.content.ssh.entities.ConnectionDetails;
 import io.cloudslang.content.ssh.entities.KeyFile;
 import io.cloudslang.content.ssh.entities.KnownHostsFile;
+import io.cloudslang.content.ssh.exceptions.SSHException;
 import io.cloudslang.content.ssh.services.SSHService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +40,8 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({SSHServiceImpl.class})
 public class SSHServiceImplTest {
 
+    public static final boolean AGENT_FORWARDING_FALSE = false;
+    public static final boolean AGENT_FORWARDING_TRUE = true;
     private static final String SHELL_PATH = "path";
     private static final String PASS_PHRASE = "passPhrase";
     private static final Path KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
@@ -51,27 +54,19 @@ public class SSHServiceImplTest {
     private static final int CONNECT_TIMEOUT = 10000;
     private static final int COMMAND_TIMEOUT = 200;
     private static final ConnectionDetails CONNECTION_DETAILS = new ConnectionDetails(HOST, PORT, USERNAME, PASSWORD);
-    public static final boolean AGENT_FORWARDING_FALSE = false;
-    public static final boolean AGENT_FORWARDING_TRUE = true;
     private static String XML_SUMMARY = "XML_SUMMARY";
-
-    @Mock
-    private Session sessionMock;
-
-    @Mock
-    private ChannelExec channelExecMock;
-
-    @Mock
-    private CommandResult commandResultMock;
-
-    @Mock
-    private JSch jSchMock;
-
-    @Mock
-    private InputStream inputStreamMock;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
+    @Mock
+    private Session sessionMock;
+    @Mock
+    private ChannelExec channelExecMock;
+    @Mock
+    private CommandResult commandResultMock;
+    @Mock
+    private JSch jSchMock;
+    @Mock
+    private InputStream inputStreamMock;
 
     @Before
     public void setUp() throws Exception {
@@ -89,25 +84,30 @@ public class SSHServiceImplTest {
         assertEquals(sshService.getExecChannel(), channelExecMock);
         assertEquals(sshService.getSSHSession(), sessionMock);
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, false);
-        assertEquals(null, sshService.getExecChannel());
-        assertEquals(sessionMock, sshService.getSSHSession());
+        ProxyHTTP proxyHTTP = null;
+        try {
+            sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, false, proxyHTTP, "");
+            assertEquals(null, sshService.getExecChannel());
+            assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
-        assertEquals(channelExecMock, sshService.getExecChannel());
-        assertEquals(sessionMock, sshService.getSSHSession());
+            sshService = new SSHServiceImpl(CONNECTION_DETAILS, null, new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true, proxyHTTP, "");
+            assertEquals(channelExecMock, sshService.getExecChannel());
+            assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
-        assertEquals(channelExecMock, sshService.getExecChannel());
-        assertEquals(sessionMock, sshService.getSSHSession());
+            sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true, proxyHTTP, "");
+            assertEquals(channelExecMock, sshService.getExecChannel());
+            assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true);
-        assertEquals(channelExecMock, sshService.getExecChannel());
-        assertEquals(sessionMock, sshService.getSSHSession());
+            sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, true, proxyHTTP, "");
+            assertEquals(channelExecMock, sshService.getExecChannel());
+            assertEquals(sessionMock, sshService.getSSHSession());
 
-        sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT);
-        assertEquals(null, sshService.getExecChannel());
-        assertEquals(sessionMock, sshService.getSSHSession());
+            sshService = new SSHServiceImpl(CONNECTION_DETAILS, new KeyFile(SHELL_PATH, PASS_PHRASE), new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY), CONNECT_TIMEOUT, false, proxyHTTP, "");
+            assertEquals(null, sshService.getExecChannel());
+            assertEquals(sessionMock, sshService.getSSHSession());
+        } catch (SSHException e) {
+            assert (false);
+        }
     }
 
     @Test
