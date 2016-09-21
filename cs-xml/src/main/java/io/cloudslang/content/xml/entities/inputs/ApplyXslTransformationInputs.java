@@ -47,7 +47,7 @@ public class ApplyXslTransformationInputs {
 
 
         public ApplyXslTransformationBuilder withXmlDocument(String inputValue) {
-            xmlDocument = inputValue;
+            xmlDocument = StringUtilities.isBlank(inputValue) ? Constants.EMPTY_STRING : inputValue;
             return this;
         }
 

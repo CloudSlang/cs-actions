@@ -1,6 +1,5 @@
 package io.cloudslang.content.xml.utils;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
@@ -129,11 +128,11 @@ public class XmlUtils {
     }
 
     public static void parseXmlString(String xml, String features) throws Exception {
-        parseXmlInputStream(getStream(xml, ""), features);
+        parseXmlInputStream(getStream(xml, Constants.EMPTY_STRING), features);
     }
 
     public static void parseXmlFile(String xmlFile, String features) throws Exception {
-        parseXmlInputStream(getStream("", xmlFile), features);
+        parseXmlInputStream(getStream(Constants.EMPTY_STRING, xmlFile), features);
     }
 
     /**
