@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.utils;
 
 import io.cloudslang.content.jclouds.entities.aws.InstanceState;
+import io.cloudslang.content.jclouds.entities.aws.VolumeType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
@@ -19,10 +20,20 @@ import java.util.regex.Pattern;
  */
 public final class InputsUtil {
     private static final String ACTION = "Action";
+    private static final String GP2 = "gp2";
+    private static final String IO1 = "io1";
+    private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
+    private static final String SC1 = "sc1";
+    private static final String ST1 = "st1";
+    private static final String STANDARD = "standard";
     private static final String VERSION = "Version";
 
+    private static final int MAXIMUM_EBS_SIZE = 16384;
+    private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
+    private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
+    private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
 
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
@@ -91,8 +102,30 @@ public final class InputsUtil {
         return InstanceState.getKey(input);
     }
 
-    public static boolean getImageNoRebootFlag(String input) {
-        return !isTrueOrFalse(input) || Boolean.parseBoolean(input);
+    public static void validateAgainstDuplicateDeviceNames(String input, String delimiter, String inputName, String[] toBeValidated) {
+        if (toBeValidated != null && StringUtils.isNotBlank(input)) {
+            Set<String> stringSet = InputsUtil.getStringsSet(input, delimiter);
+            if (stringSet != null && toBeValidated.length != stringSet.size()) {
+                throw new RuntimeException("The value provided for: " + inputName + " input contain duplicate names. " +
+                        "Please provide unique names for devices!");
+            }
+        }
+    }
+
+    /**
+     * If enforcedBoolean is "true" and string input is: null, empty, many empty chars, TrUe, tRuE... but not "false"
+     * then returns "true".
+     * If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
+     * then returns "false"
+     * This behavior is needed for inputs like: imageNoReboot when we want them to be set to "true" disregarding the
+     * value provided (null, empty, many empty chars, TrUe, tRuE) except the case when is "false"
+     *
+     * @param input           String to be evaluated.
+     * @param enforcedBoolean Enforcement boolean.
+     * @return A boolean according with above description.
+     */
+    public static boolean getEnforcedBooleanCondition(String input, boolean enforcedBoolean) {
+        return (enforcedBoolean) ? isTrueOrFalse(input) == Boolean.parseBoolean(input) : Boolean.parseBoolean(input);
     }
 
     public static long getValidLong(String input, long defaultValue) {
@@ -151,6 +184,21 @@ public final class InputsUtil {
         queryParamsMap.put(VERSION, version);
     }
 
+    public static String getQueryParamsSpecificString(int index, String specificArea) {
+        if (Constants.Miscellaneous.NETWORK.equalsIgnoreCase(specificArea)) {
+            return PRIVATE_IP_ADDRESSES + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE) +
+                    Constants.Miscellaneous.DOT;
+        } else if (Constants.Miscellaneous.BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
+            return Constants.Miscellaneous.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
+                    String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT;
+        } else if (Constants.Miscellaneous.EBS.equalsIgnoreCase(specificArea)) {
+            return Constants.Miscellaneous.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
+                    String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT + Constants.Miscellaneous.EBS +
+                    Constants.Miscellaneous.DOT;
+        }
+        return Constants.Miscellaneous.EMPTY;
+    }
+
     public static String getValidIPv4Address(String input) {
         if (StringUtils.isNotBlank(input) && !isValidIPv4Address(input)) {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid IPv4 address.");
@@ -158,7 +206,42 @@ public final class InputsUtil {
         return input;
     }
 
-    public static boolean isValidIPv4Address(String input) {
+    public static String getValidEbsSize(String input, String ebsType) throws Exception {
+        if (Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(input)) {
+            return Constants.Miscellaneous.NOT_RELEVANT;
+        } else if (StringUtils.isNotBlank(ebsType)) {
+            switch (ebsType) {
+                case STANDARD:
+                    return (StringUtils.isBlank(input)) ? String.valueOf(Constants.Values.ONE) :
+                            String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
+                                    getValidationException(input, true), getValidationException(input, false)));
+                case IO1:
+                    return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_IO1_EBS_SIZE) :
+                            String.valueOf(getValidInt(input, MINIMUM_IO1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                                    getValidationException(input, true), getValidationException(input, false)));
+                case GP2:
+                    return StringUtils.isBlank(input) ? String.valueOf(Constants.Values.ONE) :
+                            String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_EBS_SIZE,
+                                    getValidationException(input, true), getValidationException(input, false)));
+                case SC1:
+                    return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                            String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                                    getValidationException(input, true), getValidationException(input, false)));
+                case ST1:
+                    return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                            String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                                    getValidationException(input, true), getValidationException(input, false)));
+                default:
+                    return String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
+                            getValidationException(input, true), getValidationException(input, false)));
+            }
+        } else {
+            return String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
+                    getValidationException(input, true), getValidationException(input, false)));
+        }
+    }
+
+    private static boolean isValidIPv4Address(String input) {
         return new InetAddressValidator().isValidInet4Address(input);
     }
 
@@ -175,6 +258,7 @@ public final class InputsUtil {
 
     private static boolean isInt(String input) {
         try {
+            //noinspection ResultOfMethodCallIgnored
             Integer.parseInt(input);
         } catch (NumberFormatException nfe) {
             return false;

@@ -10,7 +10,7 @@ import java.util.*;
  * Created by Mihai Tusa.
  * 8/8/2016.
  */
-public class AWSSignatureHelper {
+public class AwsSignatureHelper {
     private static final String DATE_FORMAT = "yyyyMMdd'T'HHmmss'Z'";
     private static final String HYPHEN = "-";
     private static final String SEMICOLON = ";";
@@ -129,8 +129,7 @@ public class AWSSignatureHelper {
 
     private String entryToQuery(Map.Entry<String, String> entry) {
         String escapedKey = nullToEmpty(UriEncoder.escapeString(entry.getKey()));
-        String escapedValue;
-            escapedValue = nullToEmpty(UriEncoder.escapeString(entry.getValue()));
+        String escapedValue = nullToEmpty(UriEncoder.escapeString(entry.getValue()));
 
         return escapedKey + Constants.Miscellaneous.EQUAL + escapedValue + Constants.Miscellaneous.AMPERSAND;
     }

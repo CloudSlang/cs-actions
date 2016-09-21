@@ -2,7 +2,6 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceAttachmentStatus;
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceStatus;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
@@ -10,36 +9,37 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * 6/7/2016.
  */
 public class NetworkInputs {
-    private String networkInterfaceDescription;
-    private String networkInterfaceSubnetId;
-    private String networkInterfaceVpcId;
-    private String networkInterfaceId;
-    private String networkInterfaceOwnerId;
-    private String networkInterfaceAvailabilityZone;
-    private String networkInterfaceRequesterId;
-    private String networkInterfaceRequesterManaged;
-    private String networkInterfaceStatus;
-    private String networkInterfaceMacAddress;
-    private String networkInterfacePrivateDnsName;
-    private String networkInterfaceSourceDestinationCheck;
-    private String networkInterfaceGroupId;
-    private String networkInterfaceGroupName;
+    private String deviceIndex;
+    private String networkInterfaceAddressesPrimary;
     private String networkInterfaceAttachmentId;
-    private String networkInterfaceInstanceId;
-    private String networkInterfaceInstanceOwnerId;
-    private String networkInterfacePrivateIpAddress;
-    private String networkInterfaceDeviceIndex;
     private String networkInterfaceAttachmentStatus;
     private String networkInterfaceAttachTime;
+    private String networkInterfaceAvailabilityZone;
     private String networkInterfaceDeleteOnTermination;
-    private String networkInterfaceAddressesPrimary;
-    private String networkInterfacePublicIp;
+    private String networkInterfaceDescription;
+    private String networkInterfaceDeviceIndex;
+    private String networkInterfaceGroupId;
+    private String networkInterfaceGroupName;
+    private String networkInterfaceId;
+    private String networkInterfaceInstanceId;
+    private String networkInterfaceInstanceOwnerId;
     private String networkInterfaceIpOwnerId;
-    private String deviceIndex;
+    private String networkInterfaceMacAddress;
+    private String networkInterfaceOwnerId;
+    private String networkInterfacePrivateDnsName;
+    private String networkInterfacePrivateIpAddress;
+    private String networkInterfacePublicIp;
+    private String networkInterfaceRequesterId;
+    private String networkInterfaceRequesterManaged;
+    private String networkInterfaceSourceDestinationCheck;
+    private String networkInterfaceStatus;
+    private String networkInterfaceSubnetId;
+    private String networkInterfaceVpcId;
     private String secondaryPrivateIpAddressCount;
     private String securityGroupIdsString;
 
     private boolean forceDetach;
+    private boolean associatePublicIpAddress;
 
     private NetworkInputs(NetworkInputs.NetworkInputsBuilder builder) {
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
@@ -72,6 +72,7 @@ public class NetworkInputs {
         this.securityGroupIdsString = builder.securityGroupIdsString;
 
         this.forceDetach = builder.forceDetach;
+        this.associatePublicIpAddress = builder.associatePublicIpAddress;
     }
 
     public String getNetworkInterfaceDescription() {
@@ -190,6 +191,10 @@ public class NetworkInputs {
         return forceDetach;
     }
 
+    public boolean isAssociatePublicIpAddress() {
+        return associatePublicIpAddress;
+    }
+
     public static class NetworkInputsBuilder {
         private String networkInterfaceDescription;
         private String networkInterfaceSubnetId;
@@ -221,6 +226,7 @@ public class NetworkInputs {
         private String securityGroupIdsString;
 
         private boolean forceDetach;
+        private boolean associatePublicIpAddress;
 
         public NetworkInputs build() {
             return new NetworkInputs(this);
@@ -368,6 +374,11 @@ public class NetworkInputs {
 
         public NetworkInputs.NetworkInputsBuilder withForceDetach(String inputValue) {
             forceDetach = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withAssociatePublicIpAddress(String inputValue) {
+            associatePublicIpAddress = InputsUtil.getEnforcedBooleanCondition(inputValue, true);
             return this;
         }
     }

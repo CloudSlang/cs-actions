@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.aws.InstanceInitiatedShutdownBehavior;
 import io.cloudslang.content.jclouds.entities.aws.InstanceState;
 import io.cloudslang.content.jclouds.entities.aws.MonitoringState;
 import io.cloudslang.content.jclouds.entities.aws.Tenancy;
@@ -41,11 +42,16 @@ public class InstanceInputs {
     private String tenancy;
     private String publicIp;
     private String ipOwnerId;
+    private String instanceInitiatedShutdownBehavior;
+    private String userData;
 
     private int minCount;
     private int maxCount;
     private long checkStateTimeout;
     private long polingInterval;
+
+    private boolean disableApiTermination;
+    private boolean monitoring;
 
     private InstanceInputs(InstanceInputs.InstanceInputsBuilder builder) {
         this.customInputs = builder.customInputs;
@@ -76,11 +82,16 @@ public class InstanceInputs {
         this.tenancy = builder.tenancy;
         this.publicIp = builder.publicIp;
         this.ipOwnerId = builder.ipOwnerId;
+        this.instanceInitiatedShutdownBehavior = builder.instanceInitiatedShutdownBehavior;
+        this.userData = builder.userData;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
         this.checkStateTimeout = builder.checkStateTimeout;
         this.polingInterval = builder.polingInterval;
+
+        this.disableApiTermination = builder.disableApiTermination;
+        this.monitoring = builder.monitoring;
     }
 
     public CustomInputs getCustomInputs() {
@@ -191,6 +202,14 @@ public class InstanceInputs {
         return ipOwnerId;
     }
 
+    public String getInstanceInitiatedShutdownBehavior() {
+        return instanceInitiatedShutdownBehavior;
+    }
+
+    public String getUserData() {
+        return userData;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -205,6 +224,14 @@ public class InstanceInputs {
 
     public long getPolingInterval() {
         return polingInterval;
+    }
+
+    public boolean isDisableApiTermination() {
+        return disableApiTermination;
+    }
+
+    public boolean isMonitoring() {
+        return monitoring;
     }
 
     public static class InstanceInputsBuilder {
@@ -236,11 +263,16 @@ public class InstanceInputs {
         private String tenancy;
         private String publicIp;
         private String ipOwnerId;
+        private String instanceInitiatedShutdownBehavior;
+        private String userData;
 
         private int minCount;
         private int maxCount;
         private long checkStateTimeout;
         private long polingInterval;
+
+        private boolean disableApiTermination;
+        private boolean monitoring;
 
         public InstanceInputs build() {
             return new InstanceInputs(this);
@@ -331,37 +363,37 @@ public class InstanceInputs {
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPlacementGroupName(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withPlacementGroupName(String inputValue) {
             placementGroupName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPrivateDnsName(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withPrivateDnsName(String inputValue) {
             privateDnsName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPrivateIpAddress(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withPrivateIpAddress(String inputValue) {
             privateIpAddress = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withReason(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withReason(String inputValue) {
             reason = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withRequesterId(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withRequesterId(String inputValue) {
             requesterId = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withSourceDestinationCheck(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withSourceDestinationCheck(String inputValue) {
             sourceDestinationCheck = InputsUtil.getRelevantBooleanString(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withSpotInstanceRequestId(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withSpotInstanceRequestId(String inputValue) {
             spotInstanceRequestId = inputValue;
             return this;
         }
@@ -371,13 +403,23 @@ public class InstanceInputs {
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPublicIp(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withPublicIp(String inputValue) {
             publicIp = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withIpOwnerId(String inputValue) throws Exception {
+        public InstanceInputs.InstanceInputsBuilder withIpOwnerId(String inputValue) {
             ipOwnerId = inputValue;
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withInstanceInitiatedShutdownBehavior(String inputValue) throws Exception {
+            instanceInitiatedShutdownBehavior = InstanceInitiatedShutdownBehavior.getValue(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withUserData(String inputValue) {
+            userData = inputValue;
             return this;
         }
 
@@ -398,6 +440,16 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withPolingInterval(String inputValue) {
             polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_POLING_INTERVAL);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withDisableApiTermination(String inputValue) {
+            disableApiTermination = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withMonitoring(String inputValue) {
+            monitoring = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

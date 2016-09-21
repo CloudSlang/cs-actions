@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by Mihai Tusa.
@@ -156,9 +157,16 @@ public class InputsUtilTest {
     }
 
     @Test
-    public void getImageNoRebootFlag() {
-        boolean flag = InputsUtil.getImageNoRebootFlag("null or empty or anything but true");
+    public void EnforcedBooleanConditionTrueTest() {
+        boolean flag = InputsUtil.getEnforcedBooleanCondition("null, empty, many empty chars, tRuE but not false", true);
 
         assertTrue(flag);
+    }
+
+    @Test
+    public void EnforcedBooleanConditionFalseTest() {
+        boolean flag = InputsUtil.getEnforcedBooleanCondition("null, empty, many empty chars, FaLsE but not true", false);
+
+        assertFalse(flag);
     }
 }

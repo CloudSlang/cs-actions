@@ -102,7 +102,7 @@ public class DescribeInstancesAction {
      * @param groupName                              Optional - name of the security group for the instance.
      *                                               EC2-Classic only.
      * @param iamArn                                 Optional - instance profile associated with the instance. Specified
-     *                                               as an ARN.
+     *                                               as an IAM_INSTANCE_PROFILE_ARN.
      * @param instanceLifecycle                      Optional - indicates whether this is a Spot Instance or a Scheduled
      *                                               Instance - Valid values: "spot", "scheduled".
      * @param instanceStateCode                      Optional - state of the instance, as a 16-bit unsigned integer. The
@@ -232,7 +232,9 @@ public class DescribeInstancesAction {
                                        @Param(value = Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
                                        @Param(value = Inputs.CustomInputs.INSTANCE_TYPE) String instanceType,
 
-                                       @Param(value = Inputs.InstanceInputs.AFFINITY) String affinity,
+                                       @Param(value = Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
+                                       @Param(value = Inputs.ElasticIpInputs.PUBLIC_IP) String publicIp,
+
                                        @Param(value = Inputs.InstanceInputs.ATTACH_TIME) String attachTime,
                                        @Param(value = Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
                                        @Param(value = Inputs.InstanceInputs.DNS_NAME) String dnsName,
@@ -248,15 +250,14 @@ public class DescribeInstancesAction {
                                        @Param(value = Inputs.InstanceInputs.LAUNCH_INDEX) String launchIndex,
                                        @Param(value = Inputs.InstanceInputs.LAUNCH_TIME) String launchTime,
                                        @Param(value = Inputs.InstanceInputs.MONITORING_STATE) String monitoringState,
+                                       @Param(value = Inputs.InstanceInputs.AFFINITY) String affinity,
                                        @Param(value = Inputs.InstanceInputs.PLACEMENT_GROUP_NAME) String placementGroupName,
                                        @Param(value = Inputs.InstanceInputs.PRIVATE_DNS_NAME) String privateDnsName,
-                                       @Param(value = Inputs.InstanceInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
                                        @Param(value = Inputs.InstanceInputs.REASON) String reason,
                                        @Param(value = Inputs.InstanceInputs.REQUESTER_ID) String requesterId,
                                        @Param(value = Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
                                        @Param(value = Inputs.InstanceInputs.SPOT_INSTANCE_REQUEST_ID) String spotInstanceRequestId,
                                        @Param(value = Inputs.InstanceInputs.TENANCY) String tenancy,
-                                       @Param(value = Inputs.InstanceInputs.PUBLIC_IP) String publicIp,
                                        @Param(value = Inputs.InstanceInputs.IP_OWNER_ID) String ipOwnerId,
 
                                        @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,

@@ -87,7 +87,7 @@ public class ComputeSignatureV4 {
                                                 @Param(value = Inputs.CustomInputs.PAYLOAD_HASH) String payloadHash,
                                                 @Param(value = Inputs.CustomInputs.DATE) String date,
 
-                                                @Param(value = Inputs.AwsApiInputs.SECURITY_TOKEN) String securityToken) {
+                                                @Param(value = Inputs.IamInputs.SECURITY_TOKEN) String securityToken) {
         try {
             Map<String, String> headersMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), headers,
                     Constants.AwsParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true);
