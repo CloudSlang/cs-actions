@@ -47,26 +47,6 @@ public class Constants {
     // errors
     public static final String ARGS_IS_DEPRECATED = "This input is deprecated, use the command input to provide arguments.";
 
-    //we add this temporary (until platform provide us the constants)
-    public static final class OutputNames {
-
-        public static final String RETURN_RESULT = "returnResult";
-        public static final String EXCEPTION = "exception";
-        public static final String RETURN_CODE = "returnCode";
-    }
-
-    public static final class ReturnCodes {
-
-        public static final String RETURN_CODE_FAILURE = "-1";
-        public static final String RETURN_CODE_SUCCESS = "0";
-    }
-
-    public static final class ResponseNames {
-
-        public static final String SUCCESS = "success";
-        public static final String FAILURE = "failure";
-    }
-
     public static final class InputNames {
 
         public static final String HOST = "host";

@@ -17,7 +17,7 @@ import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.utils.CacheUtils;
 import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
-import io.cloudslang.content.ssh.utils.StringUtils;
+import io.cloudslang.content.utils.StringUtilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class SSHServiceImpl implements SSHService {
     public SSHServiceImpl(ConnectionDetails details, IdentityKey identityKey, KnownHostsFile knownHostsFile,
                           int connectTimeout, boolean keepContextForExpectCommand, ProxyHTTP proxyHTTP, String allowedCiphers) throws SSHException {
         JSch jsch = new JSch();
-        String finalListOfAllowedCiphers = StringUtils.isNotBlank(allowedCiphers) ? allowedCiphers : ALLOW_CIPHERS;
+        String finalListOfAllowedCiphers = StringUtilities.isNotBlank(allowedCiphers) ? allowedCiphers : ALLOW_CIPHERS;
         JSch.setConfig("cipher.s2c", finalListOfAllowedCiphers);
         JSch.setConfig("cipher.c2s", finalListOfAllowedCiphers);
         JSch.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");

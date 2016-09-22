@@ -1,6 +1,8 @@
 package io.cloudslang.content.ssh.services.actions;
 
 import com.jcraft.jsch.ProxyHTTP;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ssh.entities.CommandResult;
 import io.cloudslang.content.ssh.entities.ConnectionDetails;
 import io.cloudslang.content.ssh.entities.IdentityKey;
@@ -12,6 +14,7 @@ import io.cloudslang.content.ssh.utils.Constants;
 import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
 import io.cloudslang.content.ssh.utils.ProxyUtils;
 import io.cloudslang.content.ssh.utils.StringUtils;
+import io.cloudslang.content.utils.StringUtilities;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -29,7 +32,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         String sessionId = "";
 
         try {
-            if (StringUtils.isEmpty(sshShellInputs.getCommand())) {
+            if (StringUtilities.isEmpty(sshShellInputs.getCommand())) {
                 throw new RuntimeException(COMMAND_IS_NOT_SPECIFIED_MESSAGE);
             }
             if (sshShellInputs.getArguments() != null) {
@@ -45,7 +48,6 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
             // configure ssh parameters
             ConnectionDetails connection = new ConnectionDetails(sshShellInputs.getHost(), portNumber, sshShellInputs.getUsername(), sshShellInputs.getPassword());
             IdentityKey identityKey = IdentityKeyUtils.getIdentityKey(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPrivateKeyData(), sshShellInputs.getPassword());
-            //KeyFile keyFile = getKeyFile(sshShellInputs.getPrivateKeyFile(), sshShellInputs.getPassword());
             KnownHostsFile knownHostsFile = new KnownHostsFile(knownHostsPath, knownHostsPolicy);
 
             // get the cached SSH session
@@ -124,11 +126,11 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         returnResult.put(Constants.STDERR, commandResult.getStandardError());
         returnResult.put(Constants.STDOUT, commandResult.getStandardOutput());
         if (commandResult.getExitCode() >= 0) {
-            returnResult.put(Constants.OutputNames.RETURN_RESULT, commandResult.getStandardOutput());
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
+            returnResult.put(OutputNames.RETURN_RESULT, commandResult.getStandardOutput());
+            returnResult.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
         } else {
-            returnResult.put(Constants.OutputNames.RETURN_RESULT, commandResult.getStandardError());
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+            returnResult.put(OutputNames.RETURN_RESULT, commandResult.getStandardError());
+            returnResult.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
         }
         returnResult.put(Constants.EXIT_STATUS, String.valueOf(commandResult.getExitCode()));
     }

@@ -7,6 +7,7 @@ import io.cloudslang.content.ssh.entities.IdentityKey;
 import io.cloudslang.content.ssh.entities.KeyData;
 import io.cloudslang.content.ssh.entities.KeyFile;
 import io.cloudslang.content.ssh.exceptions.SSHException;
+import io.cloudslang.content.utils.StringUtilities;
 
 /**
  * User: sacalosb
@@ -21,17 +22,17 @@ public class IdentityKeyUtils {
 
     public static IdentityKey getIdentityKey(String privateKeyFile, String privateKeyString, String privateKeyPassphrase) {
         IdentityKey identityKey = null;
-        if (StringUtils.isNotEmpty(privateKeyFile)) {
+        if (StringUtilities.isNotEmpty(privateKeyFile)) {
             identityKey = new KeyFile(privateKeyFile);
         }
-        if (StringUtils.isNotEmpty(privateKeyString)) {
+        if (StringUtilities.isNotEmpty(privateKeyString)) {
             if (identityKey != null) {
                 throw new IllegalArgumentException(String.format("%s and %s inputs are mutually exclusive. They can't be both set at the same time.",
                         Constants.PRIVATE_KEY_FILE, Constants.PRIVATE_KEY_DATA));
             }
             identityKey = new KeyData(privateKeyString);
         }
-        if (identityKey != null && StringUtils.isNotEmpty(privateKeyPassphrase)) {
+        if (identityKey != null && StringUtilities.isNotEmpty(privateKeyPassphrase)) {
             identityKey.setPassPhrase(privateKeyPassphrase);
         }
         return identityKey;
@@ -54,10 +55,6 @@ public class IdentityKeyUtils {
         }
     }
 
-    /*
-    This method was added to fix a defect from Studio.
-    ALM#29569 Studio doesn’t support a multi lined sensitive data input
-     */
     public static String fixPrivateKeyFormat(String privateKeyString) {
         if (privateKeyString.contains(NEW_LINE)) {
             return privateKeyString;
@@ -85,10 +82,10 @@ public class IdentityKeyUtils {
         }
         // recreate the key
         processedKey = processedKey.replace(" ", NEW_LINE).trim();
-        if (StringUtils.isNotEmpty(dekInfo)) {
+        if (StringUtilities.isNotEmpty(dekInfo)) {
             processedKey = DEK_HEADER + dekInfo + NEW_LINE + NEW_LINE + processedKey;
         }
-        if (StringUtils.isNotEmpty(procType)) {
+        if (StringUtilities.isNotEmpty(procType)) {
             processedKey = TYPE_HEADER + procType + NEW_LINE + processedKey;
         }
         processedKey = KEY_HEADER + NEW_LINE + processedKey + NEW_LINE + KEY_FOOTER + NEW_LINE;
