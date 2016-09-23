@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Date: 07.01.2016
  */
 public abstract class IdentityKey {
-    public static final Charset keyEncoding = Charset.forName("UTF-8");
+    public static final Charset KEY_ENCODING = Charset.forName("UTF-8");
     protected byte[] passPhrase;
 
     public byte[] getPassPhrase() {
@@ -20,6 +20,6 @@ public abstract class IdentityKey {
     }
 
     public void setPassPhrase(String passPhrase) {
-        this.passPhrase = (passPhrase == null) ? null : passPhrase.getBytes(keyEncoding);
+        this.passPhrase = (passPhrase == null) ? null : passPhrase.getBytes(KEY_ENCODING);
     }
 }

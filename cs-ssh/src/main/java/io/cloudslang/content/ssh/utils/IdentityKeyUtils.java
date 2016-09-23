@@ -18,7 +18,9 @@ public class IdentityKeyUtils {
     private static final String KEY_FOOTER = "-----END RSA PRIVATE KEY-----";
     private static final String TYPE_HEADER = "Proc-Type: ";
     private static final String DEK_HEADER = "DEK-Info: ";
-    private static final String NEW_LINE = "\n";
+    private static final String NEW_LINE = System.getProperty("line.separator");
+    public static final String SPACE = " ";
+    public static final String EMPTY_STRING = "";
 
     public static IdentityKey getIdentityKey(String privateKeyFile, String privateKeyString, String privateKeyPassphrase) {
         IdentityKey identityKey = null;
@@ -48,7 +50,7 @@ public class IdentityKeyUtils {
             }
         } else {
             try {
-                jsch.addIdentity(((KeyData) identityKey).getKeyName(), ((KeyData) identityKey).getPrvKeyData(), null, passPhrase);
+                jsch.addIdentity(((KeyData) identityKey).getKeyName(), ((KeyData) identityKey).getPrivateKeyData(), null, passPhrase);
             } catch (JSchException e) {
                 throw new SSHException("The " + Constants.PRIVATE_KEY_DATA + " is invalid.", e);
             }
@@ -61,8 +63,8 @@ public class IdentityKeyUtils {
         }
         String processedKey = privateKeyString;
         // extract header and footer
-        processedKey = processedKey.replace(KEY_HEADER, "").trim();
-        processedKey = processedKey.replace(KEY_FOOTER, "").trim();
+        processedKey = processedKey.replace(KEY_HEADER, EMPTY_STRING).trim();
+        processedKey = processedKey.replace(KEY_FOOTER, EMPTY_STRING).trim();
         // process encryption headers
         String procType = null;
         String dekInfo = null;
@@ -81,7 +83,7 @@ public class IdentityKeyUtils {
             processedKey = processedKey.substring(dekInfoHeaderIndex, processedKey.length()).trim();
         }
         // recreate the key
-        processedKey = processedKey.replace(" ", NEW_LINE).trim();
+        processedKey = processedKey.replace(SPACE, NEW_LINE).trim();
         if (StringUtilities.isNotEmpty(dekInfo)) {
             processedKey = DEK_HEADER + dekInfo + NEW_LINE + NEW_LINE + processedKey;
         }

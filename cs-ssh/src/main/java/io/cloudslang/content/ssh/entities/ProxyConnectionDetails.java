@@ -1,6 +1,8 @@
 package io.cloudslang.content.ssh.entities;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 public class ProxyConnectionDetails {
 
     private String proxyHost;
@@ -24,23 +26,20 @@ public class ProxyConnectionDetails {
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProxyConnectionDetails that = (ProxyConnectionDetails) o;
-
-        if (proxyPort != that.proxyPort) {
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
             return false;
         }
-        if (proxyHost != null ? !proxyHost.equals(that.proxyHost) : that.proxyHost != null) {
-            return false;
-        }
-        if (proxyUsername != null ? !proxyUsername.equals(that.proxyUsername) : that.proxyUsername != null) {
-            return false;
-        }
-        return proxyPassword != null ? proxyPassword.equals(that.proxyPassword) : that.proxyPassword == null;
-
+        ProxyConnectionDetails that = (ProxyConnectionDetails) obj;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(obj))
+                .append(proxyPort, that.getProxyPort())
+                .append(proxyHost, that.getProxyHost())
+                .append(proxyUsername, that.getProxyUsername())
+                .append(proxyPassword, that.getProxyPassword())
+                .isEquals();
     }
 
     @Override
