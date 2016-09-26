@@ -12,7 +12,7 @@ public class ApplyXslTransformationInputs {
     private String outputFile;
     private String parsingFeatures;
 
-    private ApplyXslTransformationInputs(ApplyXslTransformationBuilder builder) {
+    private ApplyXslTransformationInputs(ApplyXslTransformationInputsBuilder builder) {
         this.xmlDocument = builder.xmlDocument;
         this.xslTemplate = builder.xslTemplate;
         this.outputFile = builder.outputFile;
@@ -35,7 +35,7 @@ public class ApplyXslTransformationInputs {
         return parsingFeatures;
     }
 
-    public static class ApplyXslTransformationBuilder {
+    public static class ApplyXslTransformationInputsBuilder {
         private String xmlDocument;
         private String xslTemplate;
         private String outputFile;
@@ -46,22 +46,22 @@ public class ApplyXslTransformationInputs {
         }
 
 
-        public ApplyXslTransformationBuilder withXmlDocument(String inputValue) {
-            xmlDocument = StringUtilities.isBlank(inputValue) ? Constants.EMPTY_STRING : inputValue;
+        public ApplyXslTransformationInputsBuilder withXmlDocument(String inputValue) {
+            xmlDocument = StringUtilities.defaultIfBlank(inputValue,Constants.EMPTY_STRING);
             return this;
         }
 
-        public ApplyXslTransformationBuilder withXslTemplate(String inputValue) {
+        public ApplyXslTransformationInputsBuilder withXslTemplate(String inputValue) {
             xslTemplate = inputValue;
             return this;
         }
 
-        public ApplyXslTransformationBuilder withOutputFile(String inputValue) {
-            outputFile = StringUtilities.isBlank(inputValue) ? Constants.EMPTY_STRING : inputValue;
+        public ApplyXslTransformationInputsBuilder withOutputFile(String inputValue) {
+            outputFile = StringUtilities.defaultIfBlank(inputValue, Constants.EMPTY_STRING);
             return this;
         }
 
-        public ApplyXslTransformationBuilder withParsingFeatures(String inputValue) {
+        public ApplyXslTransformationInputsBuilder withParsingFeatures(String inputValue) {
             parsingFeatures = inputValue;
             return this;
         }

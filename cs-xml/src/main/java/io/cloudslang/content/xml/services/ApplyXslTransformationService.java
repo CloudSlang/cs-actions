@@ -57,9 +57,9 @@ public class ApplyXslTransformationService {
         String xmlDocument = applyXslTransformationInputs.getXmlDocument();
         if (StringUtilities.isNotEmpty(xmlDocument)) {
             return readSource(xmlDocument, applyXslTransformationInputs.getParsingFeatures());
-        } else {
-            return new StreamSource();
         }
+        return new StreamSource();
+
     }
 
     /**
@@ -78,10 +78,10 @@ public class ApplyXslTransformationService {
             if (new File(xmlDocument).exists()) {
                 XmlUtils.parseXmlFile(xmlDocument, features);
                 return new StreamSource(new FileInputStream(xmlDocument));
-            } else {
-                XmlUtils.parseXmlString(xmlDocument, features);
-                return new StreamSource(new StringReader(xmlDocument));
             }
+            XmlUtils.parseXmlString(xmlDocument, features);
+            return new StreamSource(new StringReader(xmlDocument));
+
         }
     }
 

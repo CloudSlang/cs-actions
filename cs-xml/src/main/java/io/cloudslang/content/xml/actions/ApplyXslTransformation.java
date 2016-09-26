@@ -68,7 +68,7 @@ public class ApplyXslTransformation {
             @Param(value = Constants.Inputs.FEATURES) String parsingFeatures) {
 
         try {
-            final ApplyXslTransformationInputs applyXslTransformationInputs = new ApplyXslTransformationInputs.ApplyXslTransformationBuilder()
+            final ApplyXslTransformationInputs applyXslTransformationInputs = new ApplyXslTransformationInputs.ApplyXslTransformationInputsBuilder()
                     .withXmlDocument(xmlDocument)
                     .withXslTemplate(xslTemplate)
                     .withOutputFile(outputFile)
