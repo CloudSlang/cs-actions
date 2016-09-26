@@ -12,6 +12,7 @@ import io.cloudslang.content.xml.utils.ValidateUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Class used for creating @Action operation to edit xml documents.
@@ -97,9 +98,11 @@ public class EditXml {
             result.put(Constants.Outputs.RETURN_RESULT, operationService.execute(inputs));
             result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.SUCCESS));
         } catch (IllegalArgumentException e) {
-            result.put(Constants.Outputs.EXCEPTION, "Invalid action " + action);
+            result.put(Constants.Outputs.RETURN_RESULT, Constants.EMPTY_STRING);
+            result.put(Constants.Outputs.EXCEPTION, "Invalid action " + e.getMessage());
             result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
         } catch (Exception e) {
+            result.put(Constants.Outputs.RETURN_RESULT, Constants.EMPTY_STRING);
             result.put(Constants.Outputs.EXCEPTION, e.getMessage());
             result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
         }
