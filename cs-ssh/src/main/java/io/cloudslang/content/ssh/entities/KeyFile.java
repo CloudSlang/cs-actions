@@ -4,7 +4,7 @@ package io.cloudslang.content.ssh.entities;
  * @author ioanvranauhp
  *         Date: 10/29/14
  */
-public class KeyFile extends IdentityKey{
+public class KeyFile extends IdentityKey {
     private String keyFilePath;
 
     public KeyFile(String keyFilePath) {

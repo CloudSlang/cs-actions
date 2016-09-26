@@ -1,8 +1,6 @@
 package io.cloudslang.content.ssh.entities;
 
 
-import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -36,8 +34,7 @@ public class KeyData extends IdentityKey {
     }
 
     private void setPrivateKeyData(String privateKeyData) {
-        String fixedPrivateKey = IdentityKeyUtils.fixPrivateKeyFormat(privateKeyData);
-        this.privateKeyData = fixedPrivateKey.getBytes(KEY_ENCODING);
+        this.privateKeyData = privateKeyData.getBytes(KEY_ENCODING);
     }
 
     public String getKeyName() {

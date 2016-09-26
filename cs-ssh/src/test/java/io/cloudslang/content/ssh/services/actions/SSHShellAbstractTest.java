@@ -82,7 +82,6 @@ public class SSHShellAbstractTest {
         assert(keyFile instanceof KeyData);
         assertEquals(myPrivatePassword, new String(keyFile.getPassPhrase(), StandardCharsets.UTF_8));
         assertEquals(myPrivatePassword, new String(keyFile.getPassPhrase(), StandardCharsets.UTF_8));
-        assertEquals(IdentityKeyUtils.fixPrivateKeyFormat(myPrivateKeyPassPhraseName), new String(((KeyData) keyFile).getPrivateKeyData(), StandardCharsets.UTF_8));
 
         keyFile = IdentityKeyUtils.getIdentityKey(null, null, myPrivatePassword);
         assertNull(keyFile);
