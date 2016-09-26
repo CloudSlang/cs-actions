@@ -1,6 +1,8 @@
 package io.cloudslang.content.ssh.services.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ssh.entities.KeyFile;
 import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.entities.SSHShellInputs;
@@ -66,8 +68,8 @@ public abstract class SSHShellAbstract {
     }
 
     protected void populateResult(Map<String, String> returnResult, Throwable e) {
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, e.getMessage());
-        returnResult.put(Constants.OutputNames.EXCEPTION, StringUtils.getStackTraceAsString(e));
-        returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+        returnResult.put(OutputNames.RETURN_RESULT, e.getMessage());
+        returnResult.put(OutputNames.EXCEPTION, StringUtils.getStackTraceAsString(e));
+        returnResult.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
     }
 }
