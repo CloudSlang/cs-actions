@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.services;
 
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.jclouds.entities.inputs.AWSInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import org.junit.Test;
 
@@ -42,16 +42,22 @@ public class AmazonSignatureServiceTest {
                 .withEndpoint("https://examplebucket.s3.amazonaws.com")
                 .withIdentity("AKIAIOSFODNN7EXAMPLE")
                 .withCredential("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                .withApiService(API_SERVICE)
+                .withRequestUri(REQUEST_URI)
+                .withHttpClientMethod("GET")
+                .withRequestPayload("")
+                .withHeaders(HEADERS)
+                .withQueryParams("")
                 .build();
     }
 
-    private AWSInputsWrapper getWrapper() throws MalformedURLException {
-        return new AWSInputsWrapper.AWSInputsWrapperBuilder()
+    private InputsWrapper getWrapper() throws MalformedURLException {
+        return new InputsWrapper.InputsWrapperBuilder()
                 .withCommonInputs(getCommonInputs())
                 .withApiService(API_SERVICE)
                 .withRequestUri(REQUEST_URI)
-                .withHttpVerb(null)
-                .withRequestPayload(null)
+                .withHttpVerb("GET")
+                .withRequestPayload("")
                 .withDate(DATE)
                 .withHeaders(HEADERS)
                 .withQueryParams("")

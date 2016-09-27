@@ -109,7 +109,7 @@ public class AWSSignatureHelper {
      */
     public String getAmazonCredentialScope(String dateStamp, String awsRegion, String awsService) {
         return dateStamp + Constants.Miscellaneous.SCOPE_SEPARATOR + awsRegion + Constants.Miscellaneous.SCOPE_SEPARATOR +
-                awsService + Constants.Miscellaneous.SCOPE_SEPARATOR + Constants.AWSParams.AWS_REQUEST_VERSION;
+                awsService + Constants.Miscellaneous.SCOPE_SEPARATOR + Constants.AwsParams.AWS_REQUEST_VERSION;
     }
 
     /**
@@ -124,7 +124,7 @@ public class AWSSignatureHelper {
             endpoint = endpoint.substring(3);
             return endpoint.substring(0, endpoint.indexOf(DOT_CHAR));
         }
-        return Constants.Miscellaneous.DEFAULT_AMAZON_REGION;
+        return Constants.AwsParams.DEFAULT_AMAZON_REGION;
     }
 
     private String entryToQuery(Map.Entry<String, String> entry) {

@@ -6,11 +6,13 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.services.JsonService;
 import io.cloudslang.content.json.utils.Constants;
-import io.cloudslang.content.json.utils.StringUtils;
+import io.cloudslang.content.utils.OutputUtilities;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,29 +21,20 @@ import java.util.Map;
 public class RemoveEmptyElementAction {
     @Action(name = "Remove Empty Elements",
             outputs = {
-                    @Output(Constants.OutputNames.RETURN_CODE),
-                    @Output(Constants.OutputNames.RETURN_RESULT)
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.RETURN_RESULT)
             },
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> removeEmptyElements(@Param(value = Constants.InputNames.JSON_OBJECT, required = true) String json) {
-        Map<String, String> resultMap = new HashMap<String, String>();
-
         try {
-            JsonService jsonService = new JsonService();
-            String result = jsonService.removeEmptyElementsJson(json);
-
-            resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-            resultMap.put(Constants.OutputNames.RETURN_RESULT, result);
+            final String result = new JsonService().removeEmptyElementsJson(json);
+            return OutputUtilities.getSuccessResultsMap(result);
         } catch (Exception ex) {
-            resultMap.put(Constants.OutputNames.EXCEPTION, StringUtils.getStackTraceAsString(ex));
-            resultMap.put(Constants.OutputNames.ERROR_MESSAGE, ex.getMessage());
-            resultMap.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
-            return resultMap;
+            return OutputUtilities.getFailureResultsMap(ex);
         }
 
-        return resultMap;
     }
 }

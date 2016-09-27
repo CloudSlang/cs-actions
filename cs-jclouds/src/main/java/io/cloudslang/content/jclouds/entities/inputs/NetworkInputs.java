@@ -2,6 +2,8 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceAttachmentStatus;
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceStatus;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 /**
  * Created by Mihai Tusa.
@@ -33,6 +35,11 @@ public class NetworkInputs {
     private String networkInterfaceAddressesPrimary;
     private String networkInterfacePublicIp;
     private String networkInterfaceIpOwnerId;
+    private String deviceIndex;
+    private String secondaryPrivateIpAddressCount;
+    private String securityGroupIdsString;
+
+    private boolean forceDetach;
 
     private NetworkInputs(NetworkInputs.NetworkInputsBuilder builder) {
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
@@ -60,6 +67,11 @@ public class NetworkInputs {
         this.networkInterfaceAddressesPrimary = builder.networkInterfaceAddressesPrimary;
         this.networkInterfacePublicIp = builder.networkInterfacePublicIp;
         this.networkInterfaceIpOwnerId = builder.networkInterfaceIpOwnerId;
+        this.deviceIndex = builder.deviceIndex;
+        this.secondaryPrivateIpAddressCount = builder.secondaryPrivateIpAddressCount;
+        this.securityGroupIdsString = builder.securityGroupIdsString;
+
+        this.forceDetach = builder.forceDetach;
     }
 
     public String getNetworkInterfaceDescription() {
@@ -162,6 +174,22 @@ public class NetworkInputs {
         return networkInterfaceIpOwnerId;
     }
 
+    public String getDeviceIndex() {
+        return deviceIndex;
+    }
+
+    public String getSecondaryPrivateIpAddressCount() {
+        return secondaryPrivateIpAddressCount;
+    }
+
+    public String getSecurityGroupIdsString() {
+        return securityGroupIdsString;
+    }
+
+    public boolean isForceDetach() {
+        return forceDetach;
+    }
+
     public static class NetworkInputsBuilder {
         private String networkInterfaceDescription;
         private String networkInterfaceSubnetId;
@@ -188,6 +216,11 @@ public class NetworkInputs {
         private String networkInterfaceAddressesPrimary;
         private String networkInterfacePublicIp;
         private String networkInterfaceIpOwnerId;
+        private String deviceIndex;
+        private String secondaryPrivateIpAddressCount;
+        private String securityGroupIdsString;
+
+        private boolean forceDetach;
 
         public NetworkInputs build() {
             return new NetworkInputs(this);
@@ -315,6 +348,26 @@ public class NetworkInputs {
 
         public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceIpOwnerId(String inputValue) throws Exception {
             networkInterfaceIpOwnerId = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withDeviceIndex(String inputValue) {
+            deviceIndex = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withSecondaryPrivateIpAddressCount(String inputValue) {
+            secondaryPrivateIpAddressCount = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withSecurityGroupIdsString(String inputValue) {
+            securityGroupIdsString = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withForceDetach(String inputValue) {
+            forceDetach = Boolean.parseBoolean(inputValue);
             return this;
         }
     }

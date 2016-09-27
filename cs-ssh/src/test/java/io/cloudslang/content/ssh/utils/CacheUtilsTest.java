@@ -85,7 +85,7 @@ public class CacheUtilsTest {
         SSHService fromCache = CacheUtils.getFromCache(sessionResourceMock, sessionId);
         assertNotNull(fromCache);
         assertEquals(fromCache.getSSHSession(), sessionMock);
-        assertEquals(fromCache.getShellChannel(), null);
+        assertEquals(fromCache.getExecChannel(), null);
 
         fromCache = CacheUtils.getFromCache(null, null);
         assertNull(fromCache);

@@ -3,6 +3,7 @@ package io.cloudslang.content.jclouds.utils;
 import io.cloudslang.content.jclouds.entities.aws.InstanceState;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,6 +18,9 @@ import java.util.regex.Pattern;
  * 2/24/2016.
  */
 public final class InputsUtil {
+    private static final String ACTION = "Action";
+    private static final String VERSION = "Version";
+
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
 
@@ -62,7 +66,7 @@ public final class InputsUtil {
             sb.append(entry.getValue());
             sb.append(suffix);
         }
-        return sb.deleteCharAt(sb.length()-1).toString();
+        return sb.deleteCharAt(sb.length() - 1).toString();
     }
 
     public static String[] getStringsArray(String input, String condition, String delimiter) {
@@ -76,8 +80,7 @@ public final class InputsUtil {
         if (StringUtils.isBlank(input)) {
             return null;
         }
-        return new HashSet<>(Arrays.asList(input.split(Pattern
-                .quote(getDefaultStringInput(delimiter, Constants.Miscellaneous.COMMA_DELIMITER)))));
+        return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultStringInput(delimiter, Constants.Miscellaneous.COMMA_DELIMITER)))));
     }
 
     public static String getDefaultStringInput(String input, String defaultValue) {
@@ -113,10 +116,6 @@ public final class InputsUtil {
                         getValidationException(input, false));
     }
 
-    public static int getVolumeValidInt(String input, int min, int max, String errorMessage) {
-        return getValidInt(input, min, max, getValidationException(input, true), errorMessage);
-    }
-
     public static String getRelevantBooleanString(String input) {
         if (StringUtils.isNotBlank(input)
                 && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
@@ -139,6 +138,28 @@ public final class InputsUtil {
         } catch (NumberFormatException nfe) {
             throw new RuntimeException("The provided value: " + input + " input must be float.");
         }
+    }
+
+    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
+        if (condition) {
+            inputMap.put(key, value);
+        }
+    }
+
+    public static void setCommonQueryParamsMap(Map<String, String> queryParamsMap, String action, String version) {
+        queryParamsMap.put(ACTION, action);
+        queryParamsMap.put(VERSION, version);
+    }
+
+    public static String getValidIPv4Address(String input) {
+        if (StringUtils.isNotBlank(input) && !isValidIPv4Address(input)) {
+            throw new RuntimeException("The provided value for: " + input + " input must be a valid IPv4 address.");
+        }
+        return input;
+    }
+
+    public static boolean isValidIPv4Address(String input) {
+        return new InetAddressValidator().isValidInet4Address(input);
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {

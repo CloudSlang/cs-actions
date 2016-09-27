@@ -170,5 +170,6 @@
         <module>cs-date-time</module>
         <module>cs-vmware</module>
         <module>cs-lists</module>
+        <module>cs-commons</module>
     </modules>
 </project>

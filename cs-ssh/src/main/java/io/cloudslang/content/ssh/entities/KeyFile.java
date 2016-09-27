@@ -4,9 +4,8 @@ package io.cloudslang.content.ssh.entities;
  * @author ioanvranauhp
  *         Date: 10/29/14
  */
-public class KeyFile {
+public class KeyFile extends IdentityKey {
     private String keyFilePath;
-    private String passPhrase;
 
     public KeyFile(String keyFilePath) {
         this.keyFilePath = keyFilePath;
@@ -15,7 +14,7 @@ public class KeyFile {
 
     public KeyFile(String keyFilePath, String passPhrase) {
         this.keyFilePath = keyFilePath;
-        this.passPhrase = passPhrase;
+        this.setPassPhrase(passPhrase);
     }
 
     public String getKeyFilePath() {
@@ -24,13 +23,5 @@ public class KeyFile {
 
     public void setKeyFilePath(String keyFilePath) {
         this.keyFilePath = keyFilePath;
-    }
-
-    public String getPassPhrase() {
-        return passPhrase;
-    }
-
-    public void setPassPhrase(String passPhrase) {
-        this.passPhrase = passPhrase;
     }
 }

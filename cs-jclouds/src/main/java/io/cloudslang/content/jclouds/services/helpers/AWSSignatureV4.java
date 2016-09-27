@@ -86,7 +86,7 @@ public class AWSSignatureV4 {
             byte[] kRegion = calculateHmacSHA256(region, kDate);
             byte[] kService = calculateHmacSHA256(amazonApi, kRegion);
 
-            return calculateHmacSHA256(Constants.AWSParams.AWS_REQUEST_VERSION, kService);
+            return calculateHmacSHA256(Constants.AwsParams.AWS_REQUEST_VERSION, kService);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {
             throw new SignatureException(DERIVED_SIGNING_ERROR + e.getMessage());
         }
