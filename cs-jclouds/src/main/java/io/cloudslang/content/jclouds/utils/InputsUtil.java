@@ -2,6 +2,8 @@ package io.cloudslang.content.jclouds.utils;
 
 import io.cloudslang.content.jclouds.entities.aws.InstanceState;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
 
@@ -19,10 +21,12 @@ import java.util.regex.Pattern;
  */
 public final class InputsUtil {
     private static final String ACTION = "Action";
+    private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
     private static final String GP2 = "gp2";
     private static final String IO1 = "io1";
     private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String SC1 = "sc1";
+    private static final String SPECIFIC_QUERY_PARAM_PREFIX = Constants.AwsParams.NETWORK_INTERFACE + Constants.Miscellaneous.DOT;
     private static final String ST1 = "st1";
     private static final String VERSION = "Version";
 
@@ -100,22 +104,75 @@ public final class InputsUtil {
         return InstanceState.getKey(input);
     }
 
-    public static void validateAgainstDuplicateDeviceNames(String input, String delimiter, String inputName, String[] toBeValidated) {
-        if (toBeValidated != null && StringUtils.isNotBlank(input)) {
-            Set<String> stringSet = InputsUtil.getStringsSet(input, delimiter);
+    public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {
+        String[] currentArray = InputsUtil.getStringsArray(inputString, Constants.Miscellaneous.EMPTY, delimiter);
+        InputsUtil.validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
+        return currentArray;
+    }
+
+    public static void validateArrayAgainstDuplicateElements(String[] toBeValidated, String inputString, String delimiter,
+                                                             String inputName) {
+        if (toBeValidated != null && StringUtils.isNotBlank(inputString)) {
+            Set<String> stringSet = getStringsSet(inputString, delimiter);
             if (stringSet != null && toBeValidated.length != stringSet.size()) {
-                throw new RuntimeException("The value provided for: " + inputName + " input contain duplicate names. " +
-                        "Please provide unique names for devices!");
+                throw new RuntimeException("The value provided for: " + inputName + " input contain duplicate elements. " +
+                        "Please provide unique elements!");
             }
         }
+    }
+
+    public static void validateAgainstDifferentArraysLength(String[] firstArray, String[] secondArray,
+                                                            String firstInputName, String secondInputName) {
+        if (firstArray != null && firstArray.length > Constants.Values.START_INDEX && secondArray != null
+                && secondArray.length > Constants.Values.START_INDEX && firstArray.length != secondArray.length) {
+            throw new RuntimeException("The values provided: [" + firstInputName + "] and [" + secondInputName + "] " +
+                    "cannot have different length!");
+        }
+    }
+
+    public static void setNetworkInterfaceSpecificQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper,
+                                                              String[] referenceArray, int index) {
+        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription())) {
+            setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
+                    Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING, Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION,
+                    Constants.AwsParams.DESCRIPTION, wrapper.getCommonInputs().getDelimiter(), index);
+        }
+        if (StringUtils.isNotBlank(wrapper.getCustomInputs().getSubnetId())) {
+            setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getCustomInputs().getSubnetId(),
+                    Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING, Inputs.CustomInputs.SUBNET_ID, Constants.AwsParams.SUBNET_ID,
+                    wrapper.getCommonInputs().getDelimiter(), index);
+        }
+        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString())) {
+            setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString(),
+                    Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING, Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS,
+                    ASSOCIATE_PUBLIC_IP_ADDRESS, wrapper.getCommonInputs().getDelimiter(), index, false);
+        }
+        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination())) {
+            setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination(),
+                    Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING, Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION,
+                    Constants.AwsParams.DELETE_ON_TERMINATION, wrapper.getCommonInputs().getDelimiter(), index, true);
+        }
+
+        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex())) {
+            setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex(),
+                    Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING, Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX,
+                    Constants.AwsParams.DEVICE_INDEX, wrapper.getCommonInputs().getDelimiter(), index);
+        } else {
+            queryParamsMap.put(Constants.AwsParams.NETWORK_INTERFACE + Constants.Miscellaneous.DOT +
+                    String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT +
+                    Constants.AwsParams.DEVICE_INDEX, String.valueOf(index));
+        }
+
     }
 
     /**
      * If enforcedBoolean is "true" and string input is: null, empty, many empty chars, TrUe, tRuE... but not "false"
      * then returns "true".
+     * <p>
      * If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
      * then returns "false"
-     * This behavior is needed for inputs like: imageNoReboot when we want them to be set to "true" disregarding the
+     * <p>
+     * This behavior is needed for inputs like: "imageNoReboot" when we want them to be set to "true" disregarding the
      * value provided (null, empty, many empty chars, TrUe, tRuE) except the case when is "false"
      *
      * @param input           String to be evaluated.
@@ -182,7 +239,7 @@ public final class InputsUtil {
         queryParamsMap.put(VERSION, version);
     }
 
-    public static String getQueryParamsSpecificString(int index, String specificArea) {
+    public static String getQueryParamsSpecificString(String specificArea, int index) {
         if (Constants.Miscellaneous.NETWORK.equalsIgnoreCase(specificArea)) {
             return PRIVATE_IP_ADDRESSES + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE) +
                     Constants.Miscellaneous.DOT;
@@ -192,6 +249,11 @@ public final class InputsUtil {
         } else if (Constants.Miscellaneous.EBS.equalsIgnoreCase(specificArea)) {
             return Constants.AwsParams.BLOCK_DEVICE_MAPPING + Constants.Miscellaneous.DOT +
                     String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT + Constants.Miscellaneous.EBS +
+                    Constants.Miscellaneous.DOT;
+        } else if (Constants.AwsParams.NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
+            return Constants.AwsParams.NETWORK_INTERFACE + Constants.Miscellaneous.DOT +
+                    String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT + PRIVATE_IP_ADDRESSES +
+                    Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE) +
                     Constants.Miscellaneous.DOT;
         } else {
             return Constants.Miscellaneous.EMPTY;
@@ -234,6 +296,41 @@ public final class InputsUtil {
                 return String.valueOf(getValidInt(input, Constants.Values.ONE, MAXIMUM_STANDARD_EBS_SIZE,
                         getValidationException(input, true), getValidationException(input, false)));
         }
+    }
+
+    public static String getValidPositiveIntegerAsStringValue(String input, int minimumValue) {
+        return StringUtils.isBlank(input) ? Constants.Miscellaneous.EMPTY :
+                String.valueOf(getValidInt(input, minimumValue, Integer.MAX_VALUE,
+                        getValidationException(input, true), getValidationException(input, false)));
+
+    }
+
+    private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray, String inputString,
+                                                   String referenceInputName, String currentInputName, String suffix, String delimiter,
+                                                   int index) {
+        String[] currentArray = getValidStringArray(referenceArray, inputString, Constants.Miscellaneous.EMPTY,
+                delimiter, referenceInputName, currentInputName);
+        setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + String.valueOf(index + Constants.Values.ONE) +
+                Constants.Miscellaneous.DOT + suffix, currentArray[index], currentArray.length > Constants.Values.START_INDEX);
+    }
+
+    private static void setSpecificBooleanQueryParam(Map<String, String> queryParamsMap, String[] referenceArray,
+                                                     String inputString, String referenceInputName, String currentInputName,
+                                                     String suffix, String delimiter, int index, boolean enforcedBoolean) {
+        String[] currentArray = getValidStringArray(referenceArray, inputString, Constants.Miscellaneous.EMPTY, delimiter,
+                referenceInputName, currentInputName);
+        setOptionalMapEntry(queryParamsMap,
+                SPECIFIC_QUERY_PARAM_PREFIX + String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT + suffix,
+                String.valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)),
+                currentArray.length > Constants.Values.START_INDEX);
+    }
+
+    private static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,
+                                                String delimiter, String firstInputName, String secondInputName) {
+        String[] toValidateArray = getStringsArray(inputString, condition, delimiter);
+        validateAgainstDifferentArraysLength(referenceArray, toValidateArray, firstInputName, secondInputName);
+
+        return toValidateArray;
     }
 
     private static boolean isValidIPv4Address(String input) {

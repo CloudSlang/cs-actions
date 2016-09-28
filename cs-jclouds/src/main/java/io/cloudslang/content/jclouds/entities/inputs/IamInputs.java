@@ -8,11 +8,15 @@ public class IamInputs {
     private String iamInstanceProfileArn;
     private String iamInstanceProfileName;
     private String keyPairName;
+    private String securityGroupIdsString;
+    private String securityGroupNamesString;
 
     private IamInputs(IamInputs.IamInputsBuilder builder) {
         this.iamInstanceProfileArn = builder.iamInstanceProfileArn;
         this.iamInstanceProfileName = builder.iamInstanceProfileName;
         this.keyPairName = builder.keyPairName;
+        this.securityGroupIdsString = builder.securityGroupIdsString;
+        this.securityGroupNamesString = builder.securityGroupNamesString;
     }
 
     public String getIamInstanceProfileArn() {
@@ -27,10 +31,20 @@ public class IamInputs {
         return keyPairName;
     }
 
+    public String getSecurityGroupIdsString() {
+        return securityGroupIdsString;
+    }
+
+    public String getSecurityGroupNamesString() {
+        return securityGroupNamesString;
+    }
+
     public static class IamInputsBuilder {
         private String iamInstanceProfileArn;
         private String iamInstanceProfileName;
         private String keyPairName;
+        private String securityGroupIdsString;
+        private String securityGroupNamesString;
 
         public IamInputs build() {
             return new IamInputs(this);
@@ -48,6 +62,16 @@ public class IamInputs {
 
         public IamInputs.IamInputsBuilder withKeyPairName (String inputValue) {
             keyPairName = inputValue;
+            return this;
+        }
+
+        public IamInputs.IamInputsBuilder withSecurityGroupIdsString(String inputValue) {
+            securityGroupIdsString = inputValue;
+            return this;
+        }
+
+        public IamInputs.IamInputsBuilder withSecurityGroupNamesString(String inputValue) {
+            securityGroupNamesString = inputValue;
             return this;
         }
     }

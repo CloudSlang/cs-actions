@@ -120,7 +120,6 @@ public class Inputs {
     }
 
     public static class NetworkInputs {
-        public static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "associatePublicIpAddress";
         public static final String DEVICE_INDEX = "deviceIndex";
         public static final String FORCE_DETACH = "forceDetach";
         public static final String NETWORK_INTERFACE_ADDRESSES_PRIMARY = "networkInterfaceAddressesPrimary";
@@ -148,8 +147,8 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_STATUS = "networkInterfaceStatus";
         public static final String NETWORK_INTERFACE_SUBNET_ID = "networkInterfaceSubnetId";
         public static final String NETWORK_INTERFACE_VPC_ID = "networkInterfaceVpcId";
+        public static final String NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS = "networkInterfaceAssociatePublicIpAddress";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
-        public static final String SECURITY_GROUP_IDS_STRING = "securityGroupIdsString";
     }
 
     public static class VolumeInputs {
@@ -173,6 +172,8 @@ public class Inputs {
         public static final String IAM_INSTANCE_PROFILE_ARN = "iamInstanceProfileArn";
         public static final String IAM_INSTANCE_PROFILE_NAME = "iamInstanceProfileName";
         public static final String KEY_PAIR_NAME = "keyPairName";
+        public static final String SECURITY_GROUP_IDS_STRING = "securityGroupIdsString";
+        public static final String SECURITY_GROUP_NAMES_STRING = "networkInterfaceGroupNamesString";
         public static final String SECURITY_TOKEN = "securityToken";
     }
 
