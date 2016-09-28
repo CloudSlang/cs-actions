@@ -251,39 +251,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test startInstances server method. Positive scenario.
-     */
-    @Test
-    public void testStartInstances() {
-        addCommonMocksForInstanceApi();
-
-        Set<InstanceStateChange> instanceStateChangeSet = getInstanceStateChanges();
-        doReturn(instanceStateChangeSet).when(instanceApiMock).startInstancesInRegion(REGION, SERVER_ID);
-
-        String result = amazonComputeServiceImplSpy.startInstances(REGION, SERVER_ID, true);
-
-        verifyMocksInteractionInstanceApiForRegion();
-        verify(instanceApiMock, times(1)).startInstancesInRegion(REGION, SERVER_ID);
-
-        assertEquals(SERVER_START_SUCCESS_MESSAGE, result);
-    }
-
-
-    /**
-     * Test startInstances server method with invalid server id.
-     */
-    @Test
-    public void testStartInstancesWithInvalidServerId() {
-        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        addCommonMocksForInstanceApi();
-
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doThrow(toThrow).when(instanceApiMock).startInstancesInRegion(REGION, SERVER_ID);
-
-        amazonComputeServiceImplSpy.startInstances(REGION, SERVER_ID, false);
-    }
-
-    /**
      * Test stopInstances server method. Positive scenario.
      */
     @Test

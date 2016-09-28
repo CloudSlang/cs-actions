@@ -7,6 +7,7 @@ import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ public class InstanceHelper {
     private static final String EBS_OPTIMIZED = "EbsOptimized";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
+    private static final String INSTANCE_ID = "InstanceId";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
     private static final String INSTANCE_TYPE = "InstanceType";
     private static final String KERNEL_ID = "KernelId";
@@ -87,7 +89,23 @@ public class InstanceHelper {
         return queryParamsMap;
     }
 
-    private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper){
+    public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        String[] instanceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getInstanceId(),
+                Inputs.CustomInputs.INSTANCE_ID, wrapper.getCommonInputs().getDelimiter());
+        if (instanceIdsArray != null && instanceIdsArray.length > Constants.Values.START_INDEX){
+            for (int index = Constants.Values.START_INDEX; index < instanceIdsArray.length; index++) {
+                queryParamsMap.put(INSTANCE_ID + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE),
+                        instanceIdsArray[index]);
+            }
+        }
+
+        return queryParamsMap;
+    }
+
+    private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         IamHelper helper = new IamHelper();
         helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
                 Constants.AwsParams.SECURITY_GROUP, Constants.Miscellaneous.EMPTY, wrapper.getCommonInputs().getDelimiter());

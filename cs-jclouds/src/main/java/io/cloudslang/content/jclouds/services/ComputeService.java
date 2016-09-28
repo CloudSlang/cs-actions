@@ -25,8 +25,6 @@ public interface ComputeService {
 
     String terminateInstances(String region, String serverId, boolean isDebugMode);
 
-    String startInstances(String region, String serverId, boolean isDebugMode) throws Exception;
-
     String stopInstances(String region, String serverId, boolean isDebugMode) throws Exception;
 
     void rebootInstances(String region, String serverId, boolean isDebugMode);

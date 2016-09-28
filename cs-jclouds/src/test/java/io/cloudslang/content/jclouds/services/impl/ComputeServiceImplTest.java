@@ -280,18 +280,6 @@ public class ComputeServiceImplTest {
         verifyNoMoreInteractions(ComputeServiceImplSpy);
     }
 
-
-    /**
-     * Test startInstances server method.
-     */
-    @Test
-    public void testStart() throws Exception {
-        exception.expect(java.lang.Exception.class);
-        exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
-
-        ComputeServiceImplSpy.startInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
     /**
      * Test stopInstances server method.
      */

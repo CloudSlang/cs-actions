@@ -63,11 +63,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
     }
 
     @Override
-    public String startInstances(String region, String serverId, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
-    @Override
     public String stopInstances(String region, String serverId, boolean isDebugMode) throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
