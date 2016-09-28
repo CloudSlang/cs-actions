@@ -12,9 +12,13 @@ import java.util.Date;
  */
 public class DateUtilities {
     @NotNull
-    public static String getDateWithOffset(final int offset) {
+    public static String formatDate(@NotNull final Date date) {
         final DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY H:MM PM|AM");
-        final Date offsetDate = DateUtils.addSeconds(new Date(), offset);
-        return dateFormat.format(offsetDate);
+        return dateFormat.format(date);
+    }
+
+    @NotNull
+    public static Date getDateWithOffset(final int offset) {
+        return DateUtils.addSeconds(new Date(), offset);
     }
 }
