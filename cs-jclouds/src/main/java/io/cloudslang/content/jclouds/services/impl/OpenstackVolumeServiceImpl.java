@@ -3,8 +3,6 @@ package io.cloudslang.content.jclouds.services.impl;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.VolumeService;
-import org.jclouds.ec2.domain.Attachment;
-import org.jclouds.ec2.domain.Volume;
 
 /**
  * Created by Mihai Tusa.
@@ -17,12 +15,6 @@ public class OpenstackVolumeServiceImpl extends JCloudsService implements Volume
 
     @Override
     public void deleteVolumeInRegion(String region, String volumeId, boolean isDebugMode) {
-        throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    @Override
-    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device,
-                                           boolean isDebugMode) throws Exception {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 

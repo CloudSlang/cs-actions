@@ -5,13 +5,10 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
 import org.jclouds.ec2.features.InstanceApi;
-import org.jclouds.ec2.options.CreateVolumeOptions;
 import org.jclouds.ec2.options.DetachVolumeOptions;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -20,7 +17,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Properties;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -88,20 +84,11 @@ public class AmazonVolumeServiceImplTest {
     }
 
     @Test
-    public void deleteVolumeInRegion(){
+    public void deleteVolumeInRegion() {
         volumeSpy.deleteVolumeInRegion("some_region", "vol-b8d74e1c", false);
 
         verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).deleteVolumeInRegion(eq("some_region"), eq("vol-b8d74e1c"));
-        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
-    }
-
-    @Test
-    public void attachVolumeInRegionTest() {
-        volumeSpy.attachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh", false);
-
-        verify(volumeSpy, times(1)).lazyInit("some_region", false);
-        verify(ebsApiMock, times(1)).attachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq("i-2b84b0b1"), eq("/dev/sdh"));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 

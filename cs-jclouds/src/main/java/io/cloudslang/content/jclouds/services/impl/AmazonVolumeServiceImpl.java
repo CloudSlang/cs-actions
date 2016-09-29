@@ -8,7 +8,6 @@ import io.cloudslang.content.jclouds.services.helpers.FiltersHelper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.ec2.domain.Attachment;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
 import org.jclouds.ec2.options.DetachVolumeOptions;
 
@@ -28,11 +27,6 @@ public class AmazonVolumeServiceImpl extends JCloudsService implements VolumeSer
     @Override
     public void deleteVolumeInRegion(String region, String volumeId, boolean isDebugMode) {
         getEbsApi(region, true, isDebugMode).deleteVolumeInRegion(region, volumeId);
-    }
-
-    @Override
-    public Attachment attachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean isDebugMode) {
-        return getEbsApi(region, true, isDebugMode).attachVolumeInRegion(region, volumeId, instanceId, device);
     }
 
     @Override
