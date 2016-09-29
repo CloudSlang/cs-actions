@@ -3,13 +3,11 @@ package io.cloudslang.content.jclouds.services.impl;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.VolumeService;
-import io.cloudslang.content.jclouds.services.helpers.AmazonVolumeServiceHelper;
 import io.cloudslang.content.jclouds.services.helpers.FiltersHelper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
-import org.jclouds.ec2.options.DetachVolumeOptions;
 
 /**
  * Created by Mihai Tusa.
@@ -27,17 +25,6 @@ public class AmazonVolumeServiceImpl extends JCloudsService implements VolumeSer
     @Override
     public void deleteVolumeInRegion(String region, String volumeId, boolean isDebugMode) {
         getEbsApi(region, true, isDebugMode).deleteVolumeInRegion(region, volumeId);
-    }
-
-    @Override
-    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force,
-                                     boolean isDebugMode) {
-        DetachVolumeOptions[] detachVolumeOptions = new AmazonVolumeServiceHelper().getDetachVolumeOptions(instanceId, device);
-        if (detachVolumeOptions != null && detachVolumeOptions.length > 0) {
-            getEbsApi(region, true, isDebugMode).detachVolumeInRegion(region, volumeId, force, detachVolumeOptions);
-        } else {
-            getEbsApi(region, true, isDebugMode).detachVolumeInRegion(region, volumeId, force);
-        }
     }
 
     void lazyInit(String region, boolean isDebugMode) {

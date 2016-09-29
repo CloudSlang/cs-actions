@@ -6,6 +6,4 @@ package io.cloudslang.content.jclouds.services;
  */
 public interface VolumeService {
     void deleteVolumeInRegion(String region, String volumeId, boolean isDebugMode);
-
-    void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force, boolean isDebugMode);
 }

@@ -5,7 +5,6 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
 import org.jclouds.ec2.features.InstanceApi;
-import org.jclouds.ec2.options.DetachVolumeOptions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,25 +88,6 @@ public class AmazonVolumeServiceImplTest {
 
         verify(volumeSpy, times(1)).lazyInit("some_region", false);
         verify(ebsApiMock, times(1)).deleteVolumeInRegion(eq("some_region"), eq("vol-b8d74e1c"));
-        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
-    }
-
-    @Test
-    public void detachVolumeInRegionWithOptionsTest() throws Exception {
-        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "i-2b84b0b1", "/dev/sdh", false, false);
-
-        verify(volumeSpy, times(1)).lazyInit("some_region", false);
-        verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(false),
-                any(DetachVolumeOptions.class), any(DetachVolumeOptions.class));
-        MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
-    }
-
-    @Test
-    public void detachVolumeInRegionWithoutOptionsTest() throws Exception {
-        volumeSpy.detachVolumeInRegion("some_region", "vol-6dea0dc9", "", "", true, false);
-
-        verify(volumeSpy, times(1)).lazyInit("some_region", false);
-        verify(ebsApiMock, times(1)).detachVolumeInRegion(eq("some_region"), eq("vol-6dea0dc9"), eq(true));
         MockingHelper.commonVerifiersForMethods(optionalInstanceApiMock, ebsApiMock);
     }
 }

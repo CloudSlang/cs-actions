@@ -17,10 +17,4 @@ public class OpenstackVolumeServiceImpl extends JCloudsService implements Volume
     public void deleteVolumeInRegion(String region, String volumeId, boolean isDebugMode) {
         throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
-
-    @Override
-    public void detachVolumeInRegion(String region, String volumeId, String instanceId, String device, boolean force,
-                                     boolean isDebugMode) {
-        throw new RuntimeException(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
 }
