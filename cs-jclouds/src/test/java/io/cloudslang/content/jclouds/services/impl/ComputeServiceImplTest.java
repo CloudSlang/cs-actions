@@ -281,52 +281,6 @@ public class ComputeServiceImplTest {
     }
 
     /**
-     * Test reboot server method. Positive scenario.
-     */
-    @Test
-    public void testReboot() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doNothing().when(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.reboot(REGION, SERVER_ID, false);
-
-        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
-        verifyNoMoreInteractions(computeServiceMock);
-    }
-
-    /**
-     * Test reboot method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testRebootWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.reboot(REGION, SERVER_ID, false);
-    }
-
-    /**
-     * Test soft reboot server method.
-     */
-    @Test
-    public void testSoftReboot() {
-        doNothing().when(ComputeServiceImplSpy).reboot(REGION, SERVER_ID, false);
-
-        ComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID, false);
-
-        verify(ComputeServiceImplSpy).reboot(REGION, SERVER_ID, false);
-    }
-
-    /**
      * Test describeRegions method. Positive scenario.
      */
     @Test

@@ -15,6 +15,4 @@ public interface ComputeService {
 
     String updateInstanceType(String region, String instanceId, String instanceType, long checkStateTimeout,
                               long polingInterval, boolean isDebugMode) throws Exception;
-
-    void rebootInstances(String region, String serverId, boolean isDebugMode);
 }

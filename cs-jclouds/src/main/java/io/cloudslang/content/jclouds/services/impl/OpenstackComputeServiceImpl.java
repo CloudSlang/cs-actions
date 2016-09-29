@@ -7,7 +7,6 @@ import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 
@@ -18,7 +17,6 @@ import java.util.Set;
  */
 public class OpenstackComputeServiceImpl extends JCloudsService implements ComputeService {
     private static final String OPENSTACK_NOVA = "openstack-nova";
-    private static final String SERVER_DELETED = "Server deleted.";
 
     private String region;
 
@@ -50,13 +48,6 @@ public class OpenstackComputeServiceImpl extends JCloudsService implements Compu
         } else if (novaApi == null) {
             this.init(isDebugMode);
         }
-    }
-
-    @Override
-    public void rebootInstances(String region, String serverId, boolean isDebugMode) {
-        lazyInit(region, isDebugMode);
-        ServerApi serverApi = novaApi.getServerApi(region);
-        serverApi.reboot(serverId, RebootType.SOFT);
     }
 
     @Override

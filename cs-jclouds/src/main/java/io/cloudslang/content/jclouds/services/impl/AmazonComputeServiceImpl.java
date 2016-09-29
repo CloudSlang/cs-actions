@@ -93,12 +93,6 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
         return INSTANCE_SUCCESSFULLY_UPDATED;
     }
 
-    @Override
-    public void rebootInstances(String region, String serverId, boolean isDebugMode) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
-        instanceApi.rebootInstancesInRegion(region, serverId);
-    }
-
     void lazyInit(String region, boolean isDebugMode) {
         this.region = InputsUtil.getDefaultStringInput(region, Constants.AwsParams.DEFAULT_AMAZON_REGION);
         init(isDebugMode);

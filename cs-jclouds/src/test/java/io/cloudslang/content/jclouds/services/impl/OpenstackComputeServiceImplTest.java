@@ -265,44 +265,6 @@ public class OpenstackComputeServiceImplTest {
     }
 
     /**
-     * Test soft reboot server method. Positive scenario.
-     */
-    @Test
-    public void testSoftReboot() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doNothing().when(serverApiMock).reboot(SERVER_ID, RebootType.SOFT);
-
-        openstackComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID, false);
-
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).reboot(SERVER_ID, RebootType.SOFT);
-        verifyNoMoreInteractions(serverApiMock);
-    }
-
-    /**
-     * Test soft reboot method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testSoftRebootWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).reboot(INVALID_SERVER_ID, RebootType.SOFT);
-
-        openstackComputeServiceImplSpy.rebootInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-    /**
      * Test describeRegions method. Positive scenario.
      */
     @Test

@@ -18,7 +18,6 @@ import java.util.Set;
 public class ComputeServiceImpl extends JCloudsService implements ComputeService {
     private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
             "providers in the provider input";
-    private static final String SERVER_REMOVED = "Server Removed";
     private static final String SLASH = "/";
 
     org.jclouds.compute.ComputeService computeService = null;
@@ -50,10 +49,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
         } else if (computeService == null) {
             this.init(isDebugMode);
         }
-    }
-
-    public void rebootInstances(String region, String serverId, boolean isDebugMode) {
-        reboot(region, serverId, isDebugMode);
     }
 
     public Set<String> describeRegions(boolean isDebugMode) {

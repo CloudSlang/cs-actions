@@ -55,7 +55,6 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class AmazonComputeServiceImplTest {
     private static final String REGION = "us-east-1";
     private static final String SERVER_ID = "i-578dde87";
-    private static final String INVALID_SERVER_ID = "i-578dde88";
     private static final String ENDPOINT = "https://ec2.amazonaws.com";
     private static final String IDENTITY = "AKIAIQHVQ4UM7SO673TW";
     private static final String PASSWORD = "R1ZRPK4HPXU6cyBi1XY/IkYqQ+qR4Nfohkcd384Z";
@@ -65,11 +64,7 @@ public class AmazonComputeServiceImplTest {
     private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
-    private static final String SERVER_STOP_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=running, instanceId=i-578dde87, previousState=stopped, region=us-east-1]]";
-    private static final String SERVER_START_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=stopped, instanceId=i-578dde87, previousState=running, region=us-east-1]]";
-    private static final String REMOVE_SERVER_SUCCESS_MESSAGE = "[InstanceStateChange [currentState=terminated, instanceId=i-578dde87, previousState=stopped, region=us-east-1]]";
     private static final String CONNECTION_REFUSE_EXCEPTION_MESSAGE = "org.jclouds.http.HttpResponseException: Connection refused: connect connecting to POST http://11.11.11.11:5000/v2.0/tokens HTTP/1.1";
-    private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "The instance ID 'i-a7be737' does not exist";
 
     private AmazonComputeServiceImpl toTest;
 
@@ -248,36 +243,6 @@ public class AmazonComputeServiceImplTest {
         verify(amazonComputeServiceImplSpy).lazyInit(REGION, false);
         verify(amazonComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(amazonComputeServiceImplSpy);
-    }
-
-    /**
-     * Test soft reboot server method. Positive scenario.
-     */
-    @Test
-    public void testRebootInstances() {
-        addCommonMocksForInstanceApi();
-        doNothing().when(instanceApiMock).rebootInstancesInRegion(REGION, SERVER_ID);
-
-        amazonComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID, true);
-
-        verifyMocksInteractionInstanceApiForRegion();
-        verify(instanceApiMock).rebootInstancesInRegion(REGION, SERVER_ID);
-    }
-
-    /**
-     * Test soft reboot method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testRebootInstancesWithInvalidServerId() {
-        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        addCommonMocksForInstanceApi();
-
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doThrow(toThrow).when(instanceApiMock).rebootInstancesInRegion(REGION, INVALID_SERVER_ID);
-
-        amazonComputeServiceImplSpy.rebootInstances(REGION, INVALID_SERVER_ID, false);
     }
 
     /**
