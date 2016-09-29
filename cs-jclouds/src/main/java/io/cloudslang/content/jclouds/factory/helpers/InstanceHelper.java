@@ -23,7 +23,6 @@ public class InstanceHelper {
     private static final String FORCE = "Force";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
-    private static final String INSTANCE_ID = "InstanceId";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
     private static final String INSTANCE_TYPE = "InstanceType";
     private static final String KERNEL_ID = "KernelId";
@@ -118,8 +117,8 @@ public class InstanceHelper {
                 Inputs.CustomInputs.INSTANCE_ID, wrapper.getCommonInputs().getDelimiter());
         if (instanceIdsArray != null && instanceIdsArray.length > Constants.Values.START_INDEX) {
             for (int index = Constants.Values.START_INDEX; index < instanceIdsArray.length; index++) {
-                queryParamsMap.put(INSTANCE_ID + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE),
-                        instanceIdsArray[index]);
+                queryParamsMap.put(Constants.AwsParams.INSTANCE_ID + Constants.Miscellaneous.DOT +
+                        String.valueOf(index + Constants.Values.ONE), instanceIdsArray[index]);
             }
         }
         return queryParamsMap;

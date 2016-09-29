@@ -14,9 +14,11 @@ import java.util.Map;
  */
 public class VolumeHelper {
     private static final String AVAILABILITY_ZONE = "AvailabilityZone";
+    private static final String DEVICE = "Device";
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";
     private static final String STANDARD = "standard";
+    private static final String VOLUME_ID = "VolumeId";
 
     public Map<String, String> getCreateVolumeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
@@ -38,6 +40,17 @@ public class VolumeHelper {
                 wrapper.getVolumeInputs().isEncrypted());
         InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.IOPS, wrapper.getVolumeInputs().getIops(),
                 !Constants.Miscellaneous.NOT_RELEVANT.equals(wrapper.getVolumeInputs().getIops()));
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(DEVICE, wrapper.getVolumeInputs().getDeviceName());
+        queryParamsMap.put(Constants.AwsParams.INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
+        queryParamsMap.put(VOLUME_ID, wrapper.getCustomInputs().getVolumeId());
 
         return queryParamsMap;
     }

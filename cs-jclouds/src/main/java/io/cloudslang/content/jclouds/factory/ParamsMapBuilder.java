@@ -35,6 +35,9 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getAttachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.ATTACH_VOLUME:
+                    queryParamsMap = new VolumeHelper().getAttachVolumeQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.CREATE_VOLUME:
                     queryParamsMap = new VolumeHelper().getCreateVolumeQueryParamsMap(wrapper);
                     break;
