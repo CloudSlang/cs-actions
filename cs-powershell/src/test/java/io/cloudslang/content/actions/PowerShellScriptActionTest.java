@@ -1,7 +1,7 @@
-package io.cloudslang.content.azure.actions;
+package io.cloudslang.content.actions;
 
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.azure.services.WSManRemoteShellService;
+import io.cloudslang.content.services.WSManRemoteShellService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

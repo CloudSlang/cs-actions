@@ -1,4 +1,4 @@
-package io.cloudslang.content.azure.actions;
+package io.cloudslang.content.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.azure.services.WSManRemoteShellService;
+import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

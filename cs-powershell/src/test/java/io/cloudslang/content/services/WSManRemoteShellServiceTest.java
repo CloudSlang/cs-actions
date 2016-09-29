@@ -1,4 +1,4 @@
-package io.cloudslang.content.azure.services;
+package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.OutputStream;
 import io.cloudslang.content.entities.WSManRequestInputs;

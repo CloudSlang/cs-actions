@@ -1,4 +1,4 @@
-package io.cloudslang.content.azure.services;
+package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.EncoderDecoder;
 import io.cloudslang.content.entities.OutputStream;

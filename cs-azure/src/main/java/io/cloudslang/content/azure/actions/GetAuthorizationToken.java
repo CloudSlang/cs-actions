@@ -32,6 +32,18 @@ import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
  */
 public class GetAuthorizationToken {
 
+
+    /**
+     * Generates the authorization token for Azure API calls.
+     *
+     * @param identifier            The Identifier text box in the Credentials section of the Service Management API tab
+     *                              of System Settings
+     * @param primaryOrSecondaryKey The Primary Key or the Secondary Key in the Credentials section of the Service
+     *                              Management API tab of System Settings
+     * @param expiry                The expiration date and time for the access token, the value must be in the format "MM/DD/YYYY H:MM PM|AM"
+     *                              Example: 08/04/2014 10:03 PM
+     * @return The authorization token for Azure
+     */
     @Action(name = "Get the authorization token for Azure",
             outputs = {
                     @Output(RETURN_RESULT),

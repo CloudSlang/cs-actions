@@ -1,4 +1,4 @@
-package io.cloudslang.content.azure.actions;
+package io.cloudslang.content.actions;
 
 import org.junit.Test;
 
