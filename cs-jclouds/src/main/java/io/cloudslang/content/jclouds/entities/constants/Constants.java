@@ -79,5 +79,6 @@ public class Constants {
         public static final String RELEASE_ADDRESS = "ReleaseAddress";
         public static final String RUN_INSTANCES = "RunInstances";
         public static final String START_INSTANCES = "StartInstances";
+        public static final String STOP_INSTANCES = "StopInstances";
     }
 }

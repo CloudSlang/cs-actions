@@ -16,16 +16,10 @@ public interface ComputeService {
 
     Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception;
 
-    Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone, String imageId,
-                                                                int minCount, int maxCount, boolean isDebugMode,
-                                                                RunInstancesOptions... options) throws Exception;
-
     String updateInstanceType(String region, String instanceId, String instanceType, long checkStateTimeout,
                               long polingInterval, boolean isDebugMode) throws Exception;
 
     String terminateInstances(String region, String serverId, boolean isDebugMode);
-
-    String stopInstances(String region, String serverId, boolean isDebugMode) throws Exception;
 
     void rebootInstances(String region, String serverId, boolean isDebugMode);
 }

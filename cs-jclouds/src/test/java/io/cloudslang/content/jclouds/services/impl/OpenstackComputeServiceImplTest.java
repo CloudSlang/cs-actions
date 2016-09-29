@@ -265,45 +265,6 @@ public class OpenstackComputeServiceImplTest {
     }
 
     /**
-     * Test stopInstances server method. Positive scenario.
-     */
-    @Test
-    public void testStop() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doNothing().when(serverApiMock).stop(SERVER_ID);
-
-        String result = openstackComputeServiceImplSpy.stopInstances(REGION, SERVER_ID, false);
-
-        assertEquals(SERVER_STOP_SUCCESS_MESSAGE, result);
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).stop(SERVER_ID);
-        verifyNoMoreInteractions(serverApiMock);
-    }
-
-    /**
-     * Test stopInstances server method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testStopWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).stop(INVALID_SERVER_ID);
-
-        openstackComputeServiceImplSpy.stopInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-    /**
      * Test soft reboot server method. Positive scenario.
      */
     @Test

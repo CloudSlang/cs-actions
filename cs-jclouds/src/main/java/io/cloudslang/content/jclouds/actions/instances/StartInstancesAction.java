@@ -64,7 +64,7 @@ public class StartInstancesAction {
      * @param delimiter     Optional - delimiter that will be used.
      *                      Default: ","
      * @param instanceId    String that contains one or more values that represents instance IDs.
-     *                      Example: "i-12345678,i-abcdef12,i-5de1034b"
+     *                      Example: "i-12345678,i-abcdef12,i-12ab34cd"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request.
      */

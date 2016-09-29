@@ -59,6 +59,9 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.START_INSTANCES:
                     queryParamsMap = new InstanceHelper().getStartInstancesQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.STOP_INSTANCES:
+                    queryParamsMap = new InstanceHelper().getStopInstancesQueryParamsMap(wrapper);
+                    break;
                 default:
                     throw new RuntimeException(UNSUPPORTED_QUERY_API);
             }

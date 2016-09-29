@@ -281,17 +281,6 @@ public class ComputeServiceImplTest {
     }
 
     /**
-     * Test stopInstances server method.
-     */
-    @Test
-    public void testStop() throws Exception {
-        exception.expect(java.lang.Exception.class);
-        exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
-
-        ComputeServiceImplSpy.stopInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-    /**
      * Test reboot server method. Positive scenario.
      */
     @Test

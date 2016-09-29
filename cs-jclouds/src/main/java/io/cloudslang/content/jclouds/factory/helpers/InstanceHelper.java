@@ -20,6 +20,7 @@ public class InstanceHelper {
     private static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "DeviceName";
     private static final String DISABLE_API_TERMINATION = "DisableApiTermination";
     private static final String EBS_OPTIMIZED = "EbsOptimized";
+    private static final String FORCE = "Force";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
     private static final String INSTANCE_ID = "InstanceId";
@@ -90,18 +91,29 @@ public class InstanceHelper {
     }
 
     public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getStartAndStopCommonQueryParamsMap(wrapper);
+    }
+
+    public Map<String, String> getStopInstancesQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = getStartAndStopCommonQueryParamsMap(wrapper);
+        InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(wrapper.getInstanceInputs().isForceStop()),
+                wrapper.getInstanceInputs().isForceStop() == Boolean.TRUE);
+
+        return queryParamsMap;
+    }
+
+    private Map<String, String> getStartAndStopCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         String[] instanceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getInstanceId(),
                 Inputs.CustomInputs.INSTANCE_ID, wrapper.getCommonInputs().getDelimiter());
-        if (instanceIdsArray != null && instanceIdsArray.length > Constants.Values.START_INDEX){
+        if (instanceIdsArray != null && instanceIdsArray.length > Constants.Values.START_INDEX) {
             for (int index = Constants.Values.START_INDEX; index < instanceIdsArray.length; index++) {
                 queryParamsMap.put(INSTANCE_ID + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE),
                         instanceIdsArray[index]);
             }
         }
-
         return queryParamsMap;
     }
 

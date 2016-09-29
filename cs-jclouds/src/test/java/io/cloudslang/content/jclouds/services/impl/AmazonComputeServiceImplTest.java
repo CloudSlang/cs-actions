@@ -251,42 +251,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test stopInstances server method. Positive scenario.
-     */
-    @Test
-    public void testStopInstances() {
-        addCommonMocksForInstanceApi();
-
-        Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
-        InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.RUNNING, InstanceState.STOPPED);
-        instanceStateChangeSet.add(instanceStateChange);
-        doReturn(instanceStateChangeSet).when(instanceApiMock).stopInstancesInRegion(REGION, false, SERVER_ID);
-
-        String result = amazonComputeServiceImplSpy.stopInstances(REGION, SERVER_ID, true);
-
-        verifyMocksInteractionInstanceApiForRegion();
-        verify(instanceApiMock).stopInstancesInRegion(REGION, false, SERVER_ID);
-
-        assertEquals(SERVER_STOP_SUCCESS_MESSAGE, result);
-    }
-
-    /**
-     * Test stopInstances server method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testStopInstancesWithInvalidServerId() {
-        MockingHelper.setExpectedExceptions(exception, ResourceNotFoundException.class, INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        addCommonMocksForInstanceApi();
-
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doThrow(toThrow).when(instanceApiMock).stopInstancesInRegion(REGION, false, SERVER_ID);
-
-        amazonComputeServiceImplSpy.stopInstances(REGION, SERVER_ID, false);
-    }
-
-    /**
      * Test soft reboot server method. Positive scenario.
      */
     @Test
@@ -372,25 +336,6 @@ public class AmazonComputeServiceImplTest {
         doThrow(toThrow).when(ec2ApiMock).getConfiguredRegions();
 
         amazonComputeServiceImplSpy.describeRegions(false);
-    }
-
-    /**
-     * Test runInstancesInRegion method. Positive scenario.
-     */
-    @Test
-    public void testRunInstancesInRegion() throws Exception {
-        addCommonMocksForInstanceApi();
-        doReturn(serverCreatedMock).when(instanceApiMock).runInstancesInRegion(anyString(), anyString(), anyString(),
-                anyInt(), anyInt(), any(RunInstancesOptions.class));
-
-        amazonComputeServiceImplSpy.runInstancesInRegion("us-east-1", "", "", 1, 1, true);
-
-        verify(amazonComputeServiceImplSpy, times(1)).lazyInit(REGION, true);
-        verify(optionalInstanceApi, times(1)).get();
-        verify(ec2ApiMock, times(1)).getInstanceApiForRegion(eq(REGION));
-        verify(optionalInstanceApi, times(1)).get();
-        verify(instanceApiMock, times(1)).runInstancesInRegion(eq("us-east-1"), eq(""), eq(""), eq(1), eq(1),
-                eq(RunInstancesOptions.NONE));
     }
 
     /**

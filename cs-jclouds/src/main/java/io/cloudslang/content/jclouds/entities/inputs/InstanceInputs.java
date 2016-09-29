@@ -52,6 +52,7 @@ public class InstanceInputs {
 
     private boolean disableApiTermination;
     private boolean monitoring;
+    private boolean forceStop;
 
     private InstanceInputs(InstanceInputs.InstanceInputsBuilder builder) {
         this.customInputs = builder.customInputs;
@@ -92,6 +93,7 @@ public class InstanceInputs {
 
         this.disableApiTermination = builder.disableApiTermination;
         this.monitoring = builder.monitoring;
+        this.forceStop = builder.forceStop;
     }
 
     public CustomInputs getCustomInputs() {
@@ -234,6 +236,10 @@ public class InstanceInputs {
         return monitoring;
     }
 
+    public boolean isForceStop() {
+        return forceStop;
+    }
+
     public static class InstanceInputsBuilder {
         private CustomInputs customInputs;
         private NetworkInputs networkInputs;
@@ -273,6 +279,7 @@ public class InstanceInputs {
 
         private boolean disableApiTermination;
         private boolean monitoring;
+        private boolean forceStop;
 
         public InstanceInputs build() {
             return new InstanceInputs(this);
@@ -450,6 +457,11 @@ public class InstanceInputs {
 
         public InstanceInputs.InstanceInputsBuilder withMonitoring(String inputValue) {
             monitoring = Boolean.parseBoolean(inputValue);
+            return this;
+        }
+
+        public InstanceInputs.InstanceInputsBuilder withForceStop(String inputValue) {
+            forceStop = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
     }

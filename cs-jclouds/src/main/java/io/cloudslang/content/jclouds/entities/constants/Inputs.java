@@ -90,6 +90,7 @@ public class Inputs {
         public static final String CLIENT_TOKEN = "clientToken";
         public static final String DISABLE_API_TERMINATION = "DisableApiTermination";
         public static final String DNS_NAME = "dnsName";
+        public static final String FORCE_STOP = "forceStop";
         public static final String GROUP_NAME = "groupName";
         public static final String IAM_ARN = "iamArn";
         public static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "instanceInitiatedShutdownBehavior";

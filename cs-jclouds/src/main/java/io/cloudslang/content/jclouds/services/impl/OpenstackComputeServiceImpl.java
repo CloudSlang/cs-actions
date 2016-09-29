@@ -6,9 +6,6 @@ import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import org.jclouds.ContextBuilder;
-import org.jclouds.ec2.domain.Reservation;
-import org.jclouds.ec2.domain.RunningInstance;
-import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
@@ -21,8 +18,6 @@ import java.util.Set;
  */
 public class OpenstackComputeServiceImpl extends JCloudsService implements ComputeService {
     private static final String OPENSTACK_NOVA = "openstack-nova";
-    private static final String SERVER_IS_STARTING = "Server is starting.";
-    private static final String SERVER_IS_STOPPING = "Server is stopping.";
     private static final String SERVER_DELETED = "Server deleted.";
 
     private String region;
@@ -58,15 +53,6 @@ public class OpenstackComputeServiceImpl extends JCloudsService implements Compu
     }
 
     @Override
-    public String stopInstances(String region, String serverId, boolean isDebugMode) {
-        lazyInit(region, isDebugMode);
-        ServerApi serverApi = novaApi.getServerApi(region);
-        serverApi.stop(serverId);
-
-        return SERVER_IS_STOPPING;
-    }
-
-    @Override
     public void rebootInstances(String region, String serverId, boolean isDebugMode) {
         lazyInit(region, isDebugMode);
         ServerApi serverApi = novaApi.getServerApi(region);
@@ -86,14 +72,6 @@ public class OpenstackComputeServiceImpl extends JCloudsService implements Compu
     public Set<String> describeRegions(boolean isDebugMode) {
         lazyInit(isDebugMode);
         return novaApi.getConfiguredRegions();
-    }
-
-    @Override
-    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
-                                                                       String imageId, int minCount, int maxCount,
-                                                                       boolean isDebugMode, RunInstancesOptions... options)
-            throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 
     @Override

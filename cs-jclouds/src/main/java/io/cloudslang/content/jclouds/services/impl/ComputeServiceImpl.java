@@ -8,9 +8,6 @@ import io.cloudslang.content.jclouds.services.JCloudsService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.domain.Location;
-import org.jclouds.ec2.domain.Reservation;
-import org.jclouds.ec2.domain.RunningInstance;
-import org.jclouds.ec2.options.RunInstancesOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -62,11 +59,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
         return SERVER_REMOVED;
     }
 
-    @Override
-    public String stopInstances(String region, String serverId, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
     public void rebootInstances(String region, String serverId, boolean isDebugMode) {
         reboot(region, serverId, isDebugMode);
     }
@@ -85,14 +77,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
     @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
                                      long polingInterval, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
-    @Override
-    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
-                                                                       String imageId, int minCount, int maxCount,
-                                                                       boolean isDebugMode, RunInstancesOptions... options)
-            throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 

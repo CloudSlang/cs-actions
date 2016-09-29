@@ -17,7 +17,6 @@ import org.jclouds.ec2.domain.InstanceStateChange;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.features.InstanceApi;
-import org.jclouds.ec2.options.RunInstancesOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -66,14 +65,6 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
     }
 
     @Override
-    public String stopInstances(String region, String serverId, boolean isDebugMode) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
-        Set<? extends InstanceStateChange> instanceChanged = instanceApi.stopInstancesInRegion(region, false, serverId);
-
-        return instanceChanged.toString();
-    }
-
-    @Override
     public String terminateInstances(String region, String serverId, boolean isDebugMode) {
         InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
         Set<? extends InstanceStateChange> instanceChanged = instanceApi.terminateInstancesInRegion(region, serverId);
@@ -85,17 +76,6 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
     public Set<String> describeRegions(boolean isDebugMode) {
         init(isDebugMode);
         return ec2Api.getConfiguredRegions();
-    }
-
-    @Override
-    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
-                                                                       String imageId, int minCount, int maxCount,
-                                                                       boolean isDebugMode,
-                                                                       RunInstancesOptions... options) throws Exception {
-        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
-        RunInstancesOptions runInstancesOptions = RunInstancesOptions.NONE;
-
-        return instanceApi.runInstancesInRegion(region, availabilityZone, imageId, minCount, maxCount, runInstancesOptions);
     }
 
     @Override
