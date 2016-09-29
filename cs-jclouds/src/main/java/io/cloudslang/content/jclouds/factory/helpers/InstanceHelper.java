@@ -90,12 +90,16 @@ public class InstanceHelper {
         return queryParamsMap;
     }
 
+    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+    }
+
     public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
-        return getStartAndStopAndTerminateCommonQueryParamsMap(wrapper);
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
 
     public Map<String, String> getStopInstancesQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = getStartAndStopAndTerminateCommonQueryParamsMap(wrapper);
+        Map<String, String> queryParamsMap = getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
         InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(wrapper.getInstanceInputs().isForceStop()),
                 wrapper.getInstanceInputs().isForceStop() == Boolean.TRUE);
 
@@ -103,10 +107,10 @@ public class InstanceHelper {
     }
 
     public Map<String, String> getTerminateInstancesQueryParamsMap(InputsWrapper wrapper) {
-        return getStartAndStopAndTerminateCommonQueryParamsMap(wrapper);
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
 
-    private Map<String, String> getStartAndStopAndTerminateCommonQueryParamsMap(InputsWrapper wrapper) {
+    private Map<String, String> getRebootStartStopTerminateCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 

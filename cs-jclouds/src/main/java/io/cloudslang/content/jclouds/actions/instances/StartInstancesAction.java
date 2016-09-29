@@ -81,19 +81,19 @@ public class StartInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
-                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
-                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                       @Param(value = Inputs.CommonInputs.HEADERS) String headers,
-                                       @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
-                                       @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
-                                       @Param(value = Inputs.CommonInputs.DELIMITER, required = true) String delimiter,
+    public Map<String, String> startInstances(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
+                                              @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
+                                              @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
+                                              @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                              @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                              @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
+                                              @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                              @Param(value = Inputs.CommonInputs.HEADERS) String headers,
+                                              @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
+                                              @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
+                                              @Param(value = Inputs.CommonInputs.DELIMITER, required = true) String delimiter,
 
-                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) {
+                                              @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) {
         try {
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
                     .withEndpoint(endpoint)

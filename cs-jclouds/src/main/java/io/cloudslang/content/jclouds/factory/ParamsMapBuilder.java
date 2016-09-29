@@ -50,6 +50,9 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
                     queryParamsMap = new NetworkHelper().getDisassociateAddressQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.REBOOT_INSTANCES:
+                    queryParamsMap = new InstanceHelper().getRebootInstancesQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.RELEASE_ADDRESS:
                     queryParamsMap = new ElasticIpHelper().getReleaseAddressQueryParamsMap(wrapper);
                     break;

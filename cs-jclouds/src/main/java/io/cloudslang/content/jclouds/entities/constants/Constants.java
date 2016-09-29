@@ -76,6 +76,7 @@ public class Constants {
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
+        public static final String REBOOT_INSTANCES = "RebootInstances";
         public static final String RELEASE_ADDRESS = "ReleaseAddress";
         public static final String RUN_INSTANCES = "RunInstances";
         public static final String START_INSTANCES = "StartInstances";
