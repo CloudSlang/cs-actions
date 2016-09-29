@@ -22,8 +22,7 @@ import java.util.Map;
  */
 public class QueryApiExecutor {
     @SafeVarargs
-    public final <T> Map<String, String> execute(CommonInputs commonInputs, T... builders)
-            throws MalformedURLException, SignatureException {
+    public final <T> Map<String, String> execute(CommonInputs commonInputs, T... builders) throws Exception {
         InputsWrapper inputs = InputsWrapperBuilder.getWrapper(commonInputs, builders);
         Map<String, String> queryParamsMap = ParamsMapBuilder.getParamsMap(inputs);
 

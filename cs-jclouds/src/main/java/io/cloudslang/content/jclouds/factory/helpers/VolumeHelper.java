@@ -14,32 +14,29 @@ import java.util.Map;
  */
 public class VolumeHelper {
     private static final String AVAILABILITY_ZONE = "AvailabilityZone";
-    private static final String ENCRYPTED = "Encrypted";
-    private static final String IOPS = "Iops";
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";
-    private static final String SNAPSHOT_ID = "SnapshotId";
     private static final String STANDARD = "standard";
-    private static final String VOLUME_TYPE = "VolumeType";
 
     public Map<String, String> getCreateVolumeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getAction(), wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(AVAILABILITY_ZONE, wrapper.getCustomInputs().getAvailabilityZone());
 
         String volumeType = Constants.Miscellaneous.NOT_RELEVANT.equals(wrapper.getCustomInputs().getVolumeType()) ?
                 STANDARD : wrapper.getCustomInputs().getVolumeType();
-        queryParamsMap.put(VOLUME_TYPE, volumeType);
+        queryParamsMap.put(Constants.AwsParams.VOLUME_TYPE, volumeType);
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, KMS_KEY_ID, wrapper.getCustomInputs().getKmsKeyId(),
                 StringUtils.isNotBlank(wrapper.getCustomInputs().getKmsKeyId()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, SIZE, wrapper.getVolumeInputs().getSize(),
                 StringUtils.isNotBlank(wrapper.getVolumeInputs().getSize()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, SNAPSHOT_ID, wrapper.getVolumeInputs().getSnapshotId(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.SNAPSHOT_ID, wrapper.getVolumeInputs().getSnapshotId(),
                 StringUtils.isNotBlank(wrapper.getVolumeInputs().getSnapshotId()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, ENCRYPTED, Constants.Miscellaneous.SET_FLAG,
+        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.ENCRYPTED, String.valueOf(Constants.Values.ONE),
                 wrapper.getVolumeInputs().isEncrypted());
-        InputsUtil.setOptionalMapEntry(queryParamsMap, IOPS, wrapper.getVolumeInputs().getIops(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.IOPS, wrapper.getVolumeInputs().getIops(),
                 !Constants.Miscellaneous.NOT_RELEVANT.equals(wrapper.getVolumeInputs().getIops()));
 
         return queryParamsMap;

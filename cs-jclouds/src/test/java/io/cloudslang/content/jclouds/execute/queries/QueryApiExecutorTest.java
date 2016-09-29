@@ -98,7 +98,7 @@ public class QueryApiExecutorTest {
     @Test
     public void testCreateNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
-                getNetworkInputs(false));
+                getIamInputs(), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateNetworkInterface")));
@@ -220,6 +220,12 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
+    private IamInputs getIamInputs(){
+        return new IamInputs.IamInputsBuilder()
+                .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
+                .build();
+    }
+
     private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) throws Exception {
         if (withNetworkInterfaceId) {
             return new NetworkInputs.NetworkInputsBuilder()
@@ -228,7 +234,6 @@ public class QueryApiExecutorTest {
                     .withNetworkInterfaceId("eni-12345678")
                     .withNetworkInterfaceSubnetId("subnet-abcdef12")
                     .withSecondaryPrivateIpAddressCount("3")
-                    .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
                     .build();
         }
         return new NetworkInputs.NetworkInputsBuilder()
@@ -238,7 +243,6 @@ public class QueryApiExecutorTest {
                 .withNetworkInterfacePublicIp("52.0.0.2")
                 .withNetworkInterfaceSubnetId("subnet-abcdef12")
                 .withSecondaryPrivateIpAddressCount("3")
-                .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
                 .build();
     }
 

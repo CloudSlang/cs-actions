@@ -9,10 +9,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
-import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
-import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.entities.inputs.ElasticIpInputs;
-import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
+import io.cloudslang.content.jclouds.entities.inputs.*;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -108,10 +105,10 @@ public class CreateNetworkInterfaceAction {
 
                                                       @Param(value = Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
                                                       @Param(value = Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING) String privateIpAddressesString,
+                                                      @Param(value = Inputs.IamInputs.SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
 
                                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION, required = true) String networkInterfaceDescription,
-                                                      @Param(value = Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount,
-                                                      @Param(value = Inputs.NetworkInputs.SECURITY_GROUP_IDS_STRING) String securityGroupIdsString) {
+                                                      @Param(value = Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
                     .withEndpoint(endpoint)
@@ -139,13 +136,16 @@ public class CreateNetworkInterfaceAction {
                     .withPrivateIpAddressesString(privateIpAddressesString)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
-                    .withNetworkInterfaceDescription(networkInterfaceDescription)
-                    .withSecondaryPrivateIpAddressCount(secondaryPrivateIpAddressCount)
+            IamInputs iamInputs = new IamInputs.IamInputsBuilder()
                     .withSecurityGroupIdsString(securityGroupIdsString)
                     .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, networkInputs);
+            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+                    .withNetworkInterfaceDescription(networkInterfaceDescription)
+                    .withSecondaryPrivateIpAddressCount(secondaryPrivateIpAddressCount)
+                    .build();
+
+            return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, iamInputs, networkInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }
