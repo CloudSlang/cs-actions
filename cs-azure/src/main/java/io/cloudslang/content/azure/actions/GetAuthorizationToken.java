@@ -6,7 +6,11 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.azure.utils.DateUtilities;
 import io.cloudslang.content.constants.ReturnCodes;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +63,8 @@ public class GetAuthorizationToken {
                                        @Param(value = EXPIRY, required = true) final String expiry) {
         final List<String> exceptionMessages = verifyRequiredInputs(identifier, primaryOrSecondaryKey, expiry);
         if (!exceptionMessages.isEmpty()) {
-            return getFailureResultsMap(exceptionMessages.toString());
+            final String errorMessage = StringUtils.join(exceptionMessages, System.lineSeparator());
+            return getFailureResultsMap(errorMessage);
         }
         try {
             final Date expiryDate = DateUtilities.parseDate(expiry.trim());
