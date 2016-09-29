@@ -118,12 +118,4 @@ public class StringUtilsTest {
         pw.close();
         assertEquals("", StringUtils.getStackTraceAsString(null));
     }
-
-    @Test
-    public void testIsEmpty() {
-        assertEquals(true, StringUtils.isEmpty(""));
-        assertEquals(true, StringUtils.isEmpty(null));
-        assertEquals(false, StringUtils.isEmpty(" "));
-        assertEquals(false, StringUtils.isEmpty("not empty"));
-    }
 }

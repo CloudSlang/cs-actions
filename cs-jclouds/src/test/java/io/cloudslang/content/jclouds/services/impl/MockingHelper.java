@@ -1,19 +1,13 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.jclouds.entities.inputs.AWSInputsWrapper;
-import io.cloudslang.content.jclouds.services.AWSApiService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.ElasticBlockStoreApi;
 import org.jclouds.ec2.features.InstanceApi;
 import org.junit.rules.ExpectedException;
 import org.mockito.Matchers;
-import org.powermock.api.mockito.PowerMockito;
 
-import java.util.Map;
 import java.util.Properties;
 
 import static org.mockito.Matchers.anyString;
@@ -31,20 +25,13 @@ public class MockingHelper {
     private MockingHelper() {
     }
 
+    @SuppressWarnings("unchecked")
     public static void setExpectedExceptions(ExpectedException exception, Class<?> type, String message) {
         exception.expect((Class<? extends Throwable>) type);
         exception.expectMessage(message);
     }
 
-    static void addCommonMocksForQueryApiMethods(AWSApiService awsApiServiceSpy, CSHttpClient csHttpClientMock,
-                                                 Map<String, String> response) throws Exception {
-        whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
-        PowerMockito.when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(response);
-        whenNew(AWSApiService.class).withNoArguments().thenReturn(awsApiServiceSpy);
-        PowerMockito.doNothing().when(awsApiServiceSpy, "setQueryApiCallHeaders", any(AWSInputsWrapper.class),
-                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
-    }
-
+    @SuppressWarnings("unchecked")
     static void addCommonMocksForInitMethod(ContextBuilder contextBuilderMock, Properties propertiesMock) throws Exception {
         whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         doReturn(contextBuilderMock).when(ContextBuilder.class, "newBuilder", "ec2");
@@ -54,6 +41,7 @@ public class MockingHelper {
         doReturn(contextBuilderMock).when(contextBuilderMock).modules(Matchers.<Iterable>any());
     }
 
+    @SuppressWarnings("unchecked")
     static void commonVerifiersForInitMethod(ContextBuilder contextBuilderMock, Properties propertiesMock) throws Exception {
         verifyNew(Properties.class).withNoArguments();
         verify(contextBuilderMock).endpoint("https://ec2.amazonaws.com");
@@ -64,7 +52,6 @@ public class MockingHelper {
         verifyNoMoreInteractions(contextBuilderMock);
     }
 
-    // because the VolumeService and SnapshotService uses the same ElasticBlockStoreApi
     static <T> void addCommonMocksForMethods(AmazonVolumeServiceImpl volumeSpy, AmazonSnapshotServiceImpl snapshotSpy,
                                              EC2Api ec2ApiMock, Optional<? extends InstanceApi> optionalInstanceApiMock,
                                              ElasticBlockStoreApi ebsApiMock, Class<T> spy) {
@@ -85,19 +72,5 @@ public class MockingHelper {
     static void commonVerifiersForMethods(Optional<? extends InstanceApi> optionalInstanceApiMock, ElasticBlockStoreApi ebsApiMock) {
         verify(optionalInstanceApiMock, times(1)).get();
         verifyNoMoreInteractions(ebsApiMock);
-    }
-
-    static HttpClientInputs getHttpClientInputs(boolean withHeaders) {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setMethod("GET");
-        httpClientInputs.setAuthType("anonymous");
-        httpClientInputs.setQueryParamsAreURLEncoded("false");
-
-        if (withHeaders) {
-            httpClientInputs.setHeaders("Cache-Control:no-cache\r\n" +
-                    "Accept-Charset:UTF-8\r\n" + "Accept:application/xml\r\n");
-        }
-
-        return httpClientInputs;
     }
 }

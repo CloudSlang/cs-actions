@@ -5,11 +5,10 @@ import io.cloudslang.content.jclouds.entities.constants.Constants;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-class UriEncoder {
+public class UriEncoder {
     private static final Charset CHARSET_UTF_8 = Charset.forName(Constants.Miscellaneous.ENCODING);
 
     private UriEncoder() {
-        // no instances
     }
 
     /**
@@ -47,34 +46,12 @@ class UriEncoder {
     }
 
     /**
-     * Encode a string according to <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>,
-     * escaping all characters that don't exist in the provided unreserved char array.
-     *
-     * @param string          string to encode
-     * @param relax           if true, then any sequence of chars in the input string that have the form '%XX', where XX are
-     *                        two HEX digits, will not be encoded.
-     * @param unreservedChars an array of chars that indicates which characters are considered unreserved.
-     *                        unreserved chars are not encoded
-     * @return encoded US-ASCII string
-     */
-    public static String escapeString(String string, boolean relax, char[] unreservedChars) {
-        boolean[] unreservedBooleans = new boolean[128];
-        System.arraycopy(unreserved, 0, unreservedBooleans, 0, unreservedBooleans.length);
-
-        for (int i = 0; i < unreservedChars.length; i++) {
-            unreservedBooleans[unreservedChars[i]] = true;
-        }
-
-        return escapeString(string, relax, unreservedBooleans);
-    }
-
-    /**
      * Encode all characters other than unreserved according to <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>.
      *
      * @param string string to encode
      * @return encoded US-ASCII string
      */
-    static String escapeString(String string) {
+    public static String escapeString(String string) {
         return escapeString(string, false);
     }
 

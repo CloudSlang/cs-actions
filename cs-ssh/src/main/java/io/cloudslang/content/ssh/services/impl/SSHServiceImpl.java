@@ -1,13 +1,28 @@
 package io.cloudslang.content.ssh.services.impl;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.jcraft.jsch.*;
-import io.cloudslang.content.ssh.entities.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.ProxyHTTP;
+import com.jcraft.jsch.Session;
+import io.cloudslang.content.ssh.entities.CommandResult;
+import io.cloudslang.content.ssh.entities.ConnectionDetails;
+import io.cloudslang.content.ssh.entities.IdentityKey;
+import io.cloudslang.content.ssh.entities.KnownHostsFile;
+import io.cloudslang.content.ssh.entities.SSHConnection;
+import io.cloudslang.content.ssh.exceptions.SSHException;
 import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.utils.CacheUtils;
+import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
+import io.cloudslang.content.utils.StringUtilities;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -20,45 +35,44 @@ import java.util.Map;
  */
 public class SSHServiceImpl implements SSHService {
     private static final int POLLING_INTERVAL = 10;
-    private static final String SHELL_CHANNEL = "shell";
+    private static final String EXEC_CHANNEL = "exec";
     private static final String KNOWN_HOSTS_ALLOW = "allow";
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
+    private static final String ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
     private Session session;
-    private Channel shellChannel;
+    private Channel execChannel;
 
     public SSHServiceImpl(Session session, Channel channel) {
         this.session = session;
-        this.shellChannel = channel;
+        this.execChannel = channel;
     }
-
-    /**
-     * Open SSH session.
-     *
-     * @param details        The connection details.
-     * @param keyFile        The private key file.
-     * @param knownHostsFile The known_hosts file and policy.
-     * @param connectTimeout The open SSH session timeout.
-     */
-    public SSHServiceImpl(ConnectionDetails details, KeyFile keyFile, KnownHostsFile knownHostsFile, int connectTimeout) {
-        this(details, keyFile, knownHostsFile, connectTimeout, false);
-    }
-
-    /**
+        /**
      * Open SSH session.
      *
      * @param details                     The connection details.
-     * @param keyFile                     The private key file.
+     * @param identityKey                 The private key file or string.
      * @param knownHostsFile              The known_hosts file and policy.
      * @param connectTimeout              The open SSH session timeout.
      * @param keepContextForExpectCommand Use the same channel for the expect command.
+     * @param proxyHTTP                   The proxy settings, parse it as null if no proxy settings required
+     * @param allowedCiphers              The list of allowed ciphers. If not empty, it will be used to overwrite the default list.
      */
-    public SSHServiceImpl(ConnectionDetails details, KeyFile keyFile, KnownHostsFile knownHostsFile, int connectTimeout, boolean keepContextForExpectCommand) {
-        try {
-            JSch jsch = new JSch();
-            session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
-            session.setConfig("PreferredAuthentications", "publickey,password");
+    public SSHServiceImpl(ConnectionDetails details, IdentityKey identityKey, KnownHostsFile knownHostsFile,
+                          int connectTimeout, boolean keepContextForExpectCommand, ProxyHTTP proxyHTTP, String allowedCiphers) throws SSHException {
+        JSch jsch = new JSch();
+        String finalListOfAllowedCiphers = StringUtilities.isNotBlank(allowedCiphers) ? allowedCiphers : ALLOWED_CIPHERS;
+        JSch.setConfig("cipher.s2c", finalListOfAllowedCiphers);
+        JSch.setConfig("cipher.c2s", finalListOfAllowedCiphers);
+        JSch.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
 
+        try {
+            session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
+        } catch (JSchException e) {
+            throw new SSHException(e);
+        }
+
+        try {
             String policy = knownHostsFile.getPolicy();
             Path knownHostsFilePath = knownHostsFile.getPath();
             switch (policy.toLowerCase(Locale.ENGLISH)) {
@@ -71,44 +85,51 @@ public class SSHServiceImpl implements SSHService {
                     break;
                 case KNOWN_HOSTS_ADD:
                     if (!knownHostsFilePath.isAbsolute()) {
-                        throw new RuntimeException("The known_hosts file path should be absolute.");
+                        throw new SSHException("The known_hosts file path should be absolute.");
                     }
                     if (!Files.exists(knownHostsFilePath)) {
-                        Files.createDirectories(knownHostsFilePath.getParent());
+                        Path parent = knownHostsFilePath.getParent();
+                        if (parent != null) {
+                            Files.createDirectories(parent);
+                        }
                         Files.createFile(knownHostsFilePath);
                     }
                     jsch.setKnownHosts(knownHostsFilePath.toString());
                     session.setConfig("StrictHostKeyChecking", "no");
                     break;
                 default:
-                    throw new RuntimeException("Unknown known_hosts file policy.");
+                    throw new SSHException("Unknown known_hosts file policy.");
             }
+        } catch (JSchException e) {
+            throw new SSHException("The known_hosts file couldn't be set.", e);
+        } catch (IOException e) {
+            throw new SSHException("The known_hosts file couldn't be created.", e);
+        }
 
-            if (keyFile == null) {
-                // use the password
-                session.setPassword(details.getPassword());
-            } else {
-                // or use the OpenSSH private key file
-                String keyFilePath = keyFile.getKeyFilePath();
-                String passPhrase = keyFile.getPassPhrase();
-                if (passPhrase != null) {
-                    jsch.addIdentity(keyFilePath, passPhrase);
-                } else {
-                    jsch.addIdentity(keyFilePath);
-                }
-            }
+        if (identityKey == null) {
+            // use the password
+            session.setPassword(details.getPassword());
+        } else {
+            // or use the OpenSSH private key file or string
+            IdentityKeyUtils.setIdentity(jsch, identityKey);
+        }
 
+        if(proxyHTTP != null) {
+            session.setProxy(proxyHTTP);
+        }
+
+        try {
             session.connect(connectTimeout);
 
             if (keepContextForExpectCommand) {
-                // create shell channel
-                shellChannel = session.openChannel(SHELL_CHANNEL);
+                // create exec channel
+                execChannel = session.openChannel(EXEC_CHANNEL);
 
                 // connect to the channel and run the command(s)
-                shellChannel.connect(connectTimeout);
+                execChannel.connect(connectTimeout);
             }
-        } catch (JSchException | IOException e) {
-            throw new RuntimeException(e);
+        } catch (JSchException e) {
+            throw new SSHException(e);
         }
     }
 
@@ -125,16 +146,15 @@ public class SSHServiceImpl implements SSHService {
             if (!isConnected()) {
                 session.connect(connectTimeout);
             }
-            // create shell channel
-            Channel channel = session.openChannel(SHELL_CHANNEL);
-            ((ChannelShell) channel).setPty(usePseudoTerminal);
-            ((ChannelShell) channel).setAgentForwarding(agentForwarding);
-            InputStream in = new ByteArrayInputStream(command.getBytes(characterSet));
-            channel.setInputStream(in);
+            // create exec channel
+            ChannelExec channel = (ChannelExec) session.openChannel(EXEC_CHANNEL);
+            channel.setCommand(command.getBytes(characterSet));
+            channel.setPty(usePseudoTerminal);
+            channel.setAgentForwarding(agentForwarding);
             OutputStream out = new ByteArrayOutputStream();
             channel.setOutputStream(out);
             OutputStream err = new ByteArrayOutputStream();
-            channel.setExtOutputStream(err);
+            channel.setErrStream(err);
 
             // connect to the channel and run the command(s)
             channel.connect(connectTimeout);
@@ -154,7 +174,11 @@ public class SSHServiceImpl implements SSHService {
             // save the response
             CommandResult result = new CommandResult();
             result.setStandardOutput(((ByteArrayOutputStream) out).toString(characterSet));
-            result.setStandardError(((ByteArrayOutputStream) err).toString(characterSet));
+            if (usePseudoTerminal && channel.getExitStatus() != 0) {
+                result.setStandardError(((ByteArrayOutputStream) out).toString(characterSet));
+            } else {
+                result.setStandardError(((ByteArrayOutputStream) err).toString(characterSet));
+            }
 
             channel.disconnect();
             // The exit status is only available after the channel was closed (more exactly, just before the channel is closed).
@@ -186,9 +210,9 @@ public class SSHServiceImpl implements SSHService {
 
     @Override
     public void close() {
-        if (shellChannel != null) {
-            shellChannel.disconnect();
-            shellChannel = null;
+        if (execChannel != null) {
+            execChannel.disconnect();
+            execChannel = null;
         }
         session.disconnect();
         session = null;
@@ -196,7 +220,7 @@ public class SSHServiceImpl implements SSHService {
 
     @Override
     public boolean saveToCache(GlobalSessionObject<Map<String, SSHConnection>> sessionParam, String sessionId) {
-        return CacheUtils.saveSshSessionAndChannel(session, shellChannel, sessionParam, sessionId);
+        return CacheUtils.saveSshSessionAndChannel(session, execChannel, sessionParam, sessionId);
 
     }
 
@@ -211,7 +235,7 @@ public class SSHServiceImpl implements SSHService {
     }
 
     @Override
-    public Channel getShellChannel() {
-        return shellChannel;
+    public Channel getExecChannel() {
+        return execChannel;
     }
 }

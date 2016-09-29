@@ -10,7 +10,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-ssh</artifactId>
-    <version>0.0.34-SNAPSHOT</version>
+    <version>0.0.36-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>SSH java actions</description>
@@ -60,6 +60,11 @@
         </snapshotRepository>
     </distributionManagement>
     <dependencies>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>0.0.2</version>
+        </dependency>
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>

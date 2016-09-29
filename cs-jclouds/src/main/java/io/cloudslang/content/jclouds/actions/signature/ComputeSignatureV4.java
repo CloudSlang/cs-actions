@@ -10,7 +10,7 @@ import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
-import io.cloudslang.content.jclouds.entities.inputs.AWSInputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
@@ -66,8 +66,8 @@ public class ComputeSignatureV4 {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
                     @Output(Outputs.EXCEPTION),
-                    @Output(Constants.AWSParams.SIGNATURE_RESULT),
-                    @Output(Constants.AWSParams.AUTHORIZATION_HEADER_RESULT)
+                    @Output(Constants.AwsParams.SIGNATURE_RESULT),
+                    @Output(Constants.AwsParams.AUTHORIZATION_HEADER_RESULT)
             },
             responses = {
                     @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.SUCCESS_RETURN_CODE,
@@ -78,19 +78,19 @@ public class ComputeSignatureV4 {
     public Map<String, String> computeSignature(@Param(value = Inputs.CommonInputs.ENDPOINT) String endpoint,
                                                 @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
                                                 @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
+                                                @Param(value = Inputs.CommonInputs.HEADERS) String headers,
+                                                @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
 
                                                 @Param(value = Inputs.CustomInputs.AMAZON_API) String amazonApi,
                                                 @Param(value = Inputs.CustomInputs.URI) String uri,
                                                 @Param(value = Inputs.CustomInputs.HTTP_VERB) String httpVerb,
                                                 @Param(value = Inputs.CustomInputs.PAYLOAD_HASH) String payloadHash,
                                                 @Param(value = Inputs.CustomInputs.DATE) String date,
-                                                @Param(value = Inputs.CustomInputs.HEADERS) String headers,
-                                                @Param(value = Inputs.CustomInputs.QUERY_PARAMS) String queryParams,
 
-                                                @Param(value = Inputs.AWSApiInputs.SECURITY_TOKEN) String securityToken) {
+                                                @Param(value = Inputs.IamInputs.SECURITY_TOKEN) String securityToken) {
         try {
             Map<String, String> headersMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), headers,
-                    Constants.AWSParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true);
+                    Constants.AwsParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true);
             Map<String, String> queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), queryParams,
                     Constants.Miscellaneous.AMPERSAND, Constants.Miscellaneous.EQUAL, false);
 
@@ -100,7 +100,7 @@ public class ComputeSignatureV4 {
                     .withCredential(credential)
                     .build();
 
-            AWSInputsWrapper wrapper = new AWSInputsWrapper.AWSInputsWrapperBuilder()
+            InputsWrapper wrapper = new InputsWrapper.InputsWrapperBuilder()
                     .withCommonInputs(commonInputs)
                     .withApiService(amazonApi)
                     .withRequestUri(uri)

@@ -6,15 +6,13 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.jclouds.entities.aws.HttpClientMethod;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
-import io.cloudslang.content.jclouds.entities.inputs.AWSInputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.services.impl.AWSApiNetworkServiceImpl;
+import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
+import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -39,22 +37,28 @@ public class AttachNetworkInterfaceAction {
      * @param credential         Secret access key associated with your Amazon AWS or IAM account.
      *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost          Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
+     *                           Default: ""
      * @param proxyPort          Optional - proxy server port. You must either specify values for both <proxyHost> and
      *                           <proxyPort> inputs or leave them both empty.
+     *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
+     *                           Default: ""
      * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
+     *                           Default: ""
      * @param instanceId         Optional - ID of the instance that will be attached to the network interface. The instance
      *                           should be running (hot attach) or stopped (warm attach).
      *                           Example: "i-abcdef12"
      * @param headers            Optional - string containing the headers to use for the request separated by new line
      *                           (CRLF). The header name-value pair will be separated by ":"
      *                           Format: Conforming with HTTP standard for headers (RFC 2616)
-     *                           Examples: Accept:text/plain
+     *                           Examples: "Accept:text/plain"
+     *                           Default: ""
      * @param queryParams        Optional - string containing query parameters that will be appended to the URL. The names
      *                           and the values must not be URL encoded because if they are encoded then a double encoded
      *                           will occur. The separator between name-value pairs is "&" symbol. The query name will be
-     *                           separated from query value by "="
+     *                           separated from query value by "=".
      *                           Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
+     *                           Default: ""
      * @param networkInterfaceId Optional - ID of the network interface to attach.
      *                           Example: "eni-12345678"
      * @param deviceIndex        Optional - ID of the device for the network interface attachment on the instance.
@@ -83,52 +87,42 @@ public class AttachNetworkInterfaceAction {
                                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                                       @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
                                                       @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                                      @Param(value = Inputs.CommonInputs.HEADERS) String headers,
+                                                      @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
+                                                      @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
 
                                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID) String instanceId,
-                                                      @Param(value = Inputs.CustomInputs.HEADERS) String headers,
-                                                      @Param(value = Inputs.CustomInputs.QUERY_PARAMS) String queryParams,
 
-                                                      @Param(value = Inputs.AWSApiInputs.NETWORK_INTERFACE_ID) String networkInterfaceId,
-                                                      @Param(value = Inputs.AWSApiInputs.DEVICE_INDEX) String deviceIndex,
-                                                      @Param(value = Inputs.AWSApiInputs.VERSION, required = true) String version) {
+                                                      @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID) String networkInterfaceId,
+                                                      @Param(value = Inputs.NetworkInputs.DEVICE_INDEX) String deviceIndex) {
 
         try {
-            HttpClientInputs httpClientInputs = new HttpClientInputs();
-            httpClientInputs.setUrl(endpoint);
-            httpClientInputs.setProxyHost(proxyHost);
-            httpClientInputs.setProxyPort(proxyPort);
-            httpClientInputs.setProxyUsername(proxyUsername);
-            httpClientInputs.setProxyPassword(proxyPassword);
-            httpClientInputs.setHeaders(headers);
-            httpClientInputs.setQueryParams(queryParams);
-            httpClientInputs.setMethod(HttpClientMethod.GET.toString());
-            httpClientInputs.setAuthType(Constants.AWSParams.AUTHORIZATION_TYPE_ANONYMOUS);
-            httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
-
             CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+                    .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
-                    .withEndpoint(endpoint)
-                    .build();
-
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
-                    .withInstanceId(instanceId)
-                    .build();
-
-            AWSInputsWrapper wrapper = new AWSInputsWrapper.AWSInputsWrapperBuilder()
-                    .withCommonInputs(commonInputs)
-                    .withCustomInputs(customInputs)
-                    .withHttpClientInputs(httpClientInputs)
-                    .withNetworkInterfaceId(networkInterfaceId)
-                    .withDeviceIndex(deviceIndex)
+                    .withProxyHost(proxyHost)
+                    .withProxyPort(proxyPort)
+                    .withProxyUsername(proxyUsername)
+                    .withProxyPassword(proxyPassword)
+                    .withHeaders(headers)
+                    .withQueryParams(queryParams)
                     .withVersion(version)
+                    .withAction(Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpVerb(HttpClientMethod.GET.toString())
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            return new AWSApiNetworkServiceImpl().attachNetworkInterface(wrapper);
+            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withInstanceId(instanceId).build();
+
+            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+                    .withNetworkInterfaceId(networkInterfaceId)
+                    .withDeviceIndex(deviceIndex)
+                    .build();
+
+            return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

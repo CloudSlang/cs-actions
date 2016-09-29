@@ -3,7 +3,6 @@ package io.cloudslang.content.jclouds.entities.inputs;
 import io.cloudslang.content.jclouds.entities.aws.*;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Mihai Tusa.
@@ -49,6 +48,8 @@ public class CustomInputs {
     private String instanceType;
     private String resourceIdsString;
     private String kmsKeyId;
+    private String attachmentId;
+    private String domain;
 
     private CustomInputs(CustomInputsBuilder builder) {
         this.region = builder.region;
@@ -90,6 +91,8 @@ public class CustomInputs {
         this.instanceType = builder.instanceType;
         this.resourceIdsString = builder.resourceIdsString;
         this.kmsKeyId = builder.kmsKeyId;
+        this.attachmentId = builder.attachmentId;
+        this.domain = builder.domain;
     }
 
     public String getRegion() {
@@ -248,6 +251,14 @@ public class CustomInputs {
         return kmsKeyId;
     }
 
+    public String getAttachmentId() {
+        return attachmentId;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
     public static class CustomInputsBuilder {
         private String region;
         private String instanceId;
@@ -288,13 +299,15 @@ public class CustomInputs {
         private String instanceType;
         private String resourceIdsString;
         private String kmsKeyId;
+        private String attachmentId;
+        private String domain;
 
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
         public CustomInputsBuilder withRegion(String inputValue) {
-            region = (StringUtils.isBlank(inputValue)) ? Constants.Miscellaneous.DEFAULT_AMAZON_REGION : inputValue;
+            region = InputsUtil.getDefaultStringInput(inputValue, Constants.AwsParams.DEFAULT_AMAZON_REGION);
             return this;
         }
 
@@ -485,6 +498,16 @@ public class CustomInputs {
 
         public CustomInputsBuilder withKmsKeyId(String inputValue) {
             kmsKeyId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withAttachmentId(String inputValue) {
+            attachmentId = inputValue;
+            return this;
+        }
+
+        public CustomInputsBuilder withDomain(String inputValue) {
+            domain = Domain.getValue(inputValue);
             return this;
         }
     }

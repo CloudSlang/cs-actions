@@ -7,7 +7,7 @@ import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.services.ImageService;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import io.cloudslang.content.jclouds.services.helpers.AmazonImageServiceHelper;
-import io.cloudslang.content.jclouds.services.helpers.Utils;
+import io.cloudslang.content.jclouds.services.helpers.FiltersHelper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
@@ -106,13 +106,13 @@ public class AmazonImageServiceImpl extends JCloudsService implements ImageServi
     }
 
     void lazyInit(String region, boolean isDebugMode) {
-        this.region = InputsUtil.getDefaultStringInput(region, Constants.Miscellaneous.DEFAULT_AMAZON_REGION);
+        this.region = InputsUtil.getDefaultStringInput(region, Constants.AwsParams.DEFAULT_AMAZON_REGION);
         init(isDebugMode);
     }
 
     void init(boolean isDebugMode) {
         ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
-        ec2Api = new Utils().getEC2Api(contextBuilder);
+        ec2Api = new FiltersHelper().getEC2Api(contextBuilder);
     }
 
     private AMIApi getAMIApi(String region, boolean isForRegion, boolean isDebugMode) {

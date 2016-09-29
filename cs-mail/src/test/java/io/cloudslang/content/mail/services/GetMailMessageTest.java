@@ -207,6 +207,7 @@ public class GetMailMessageTest {
 
         Map<String, String> result = getMailMessageSpy.execute(inputs);
         assertEquals(subjectTest, result.get(RETURN_RESULT));
+        assertEquals(subjectTest, result.get(SUBJECT_RESULT));
         verify(getMailMessageSpy).getMessage();
         verify(messageMock).setFlag(Flags.Flag.DELETED, true);
         verify(messageMock).getSubject();
@@ -233,6 +234,7 @@ public class GetMailMessageTest {
 
         Map<String, String> result = getMailMessageSpy.execute(inputs);
         assertEquals(SUBJECT_TEST, result.get(RETURN_RESULT));
+        assertEquals(SUBJECT_TEST, result.get(SUBJECT_RESULT));
         verify(getMailMessageSpy).getMessage();
         verify(messageMock).getHeader("Subject");
         verify(getMailMessageSpy).changeHeaderCharset(anyString(), anyString());

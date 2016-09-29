@@ -2,9 +2,9 @@ package io.cloudslang.content.jclouds.services;
 
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.inputs.AWSInputsWrapper;
-import io.cloudslang.content.jclouds.services.helpers.AWSSignatureHelper;
-import io.cloudslang.content.jclouds.services.helpers.AWSSignatureV4;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
+import io.cloudslang.content.jclouds.services.helpers.AwsSignatureHelper;
+import io.cloudslang.content.jclouds.services.helpers.AwsSignatureV4;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,12 +26,13 @@ public class AmazonSignatureService {
     private static final String T_REGEX_STRING = "T";
     private static final String X_AMZ_DATE = "X-Amz-Date";
     private static final String X_AMZ_SECURITY_TOKEN = "X-Amz-Security-Token";
+    private static final String AMAZON_HOSTNAME = "amazonaws.com";
 
-    private AWSSignatureV4 awsSignatureV4 = new AWSSignatureV4();
+    private AwsSignatureV4 awsSignatureV4 = new AwsSignatureV4();
 
-    public AuthorizationHeader signRequestHeaders(AWSInputsWrapper wrapper, Map<String, String> headersMap,
+    public AuthorizationHeader signRequestHeaders(InputsWrapper wrapper, Map<String, String> headersMap,
                                                   Map<String, String> queryParamsMap) throws SignatureException, MalformedURLException {
-        AWSSignatureHelper signatureUtils = new AWSSignatureHelper();
+        AwsSignatureHelper signatureUtils = new AwsSignatureHelper();
         String amazonDate = StringUtils.isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
         String dateStamp = amazonDate.split(T_REGEX_STRING)[0];
 
@@ -64,7 +65,7 @@ public class AmazonSignatureService {
         return new AuthorizationHeader(getSignedRequestHeadersString(requestHeaders), signature);
     }
 
-    private Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, AWSInputsWrapper wrapper) {
+    private Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         if (queryParamsMap == null || queryParamsMap.isEmpty()) {
             queryParamsMap = new HashMap<>();
         }
@@ -89,8 +90,8 @@ public class AmazonSignatureService {
 
     private String getRequestEndpoint(String requestEndpoint) throws MalformedURLException {
         requestEndpoint = InputsUtil.getDefaultStringInput(requestEndpoint, Constants.Apis.AMAZON_EC2_API +
-                Constants.Miscellaneous.DOT + Constants.AWSParams.AMAZON_HOSTNAME);
-        if (!requestEndpoint.contains(Constants.AWSParams.AMAZON_HOSTNAME)) {
+                Constants.Miscellaneous.DOT + AMAZON_HOSTNAME);
+        if (!requestEndpoint.contains(AMAZON_HOSTNAME)) {
             requestEndpoint = InputsUtil.getEndpointFromUrl(requestEndpoint);
         }
 
@@ -104,7 +105,7 @@ public class AmazonSignatureService {
         }
 
         if (StringUtils.isNotBlank(headers)) {
-            headersMap = InputsUtil.getHeadersOrQueryParamsMap(headersMap, headers, Constants.AWSParams.HEADER_DELIMITER,
+            headersMap = InputsUtil.getHeadersOrQueryParamsMap(headersMap, headers, Constants.AwsParams.HEADER_DELIMITER,
                     Constants.Miscellaneous.COLON, true);
         }
 

@@ -11,7 +11,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-json</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Data format java actions</description>
@@ -61,23 +61,29 @@
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
-            <version>1.5</version>
+            <version>1.10.6</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>0.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <version>1.2.0</version>
+            <version>2.2.0</version>
         </dependency>
         <!-- Json provider required for Jayway in order to handle single quoted JSONs-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.3</version>
+            <version>2.7</version>
         </dependency>
+        <!-- The gson dependency is required for the json-path dependecy-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.5.1</version>
+            <version>2.8.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -86,9 +92,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>15.0</version>
         </dependency>
 
     </dependencies>
