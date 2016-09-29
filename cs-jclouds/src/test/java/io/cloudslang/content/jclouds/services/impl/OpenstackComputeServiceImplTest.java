@@ -302,45 +302,6 @@ public class OpenstackComputeServiceImplTest {
         openstackComputeServiceImplSpy.rebootInstances(REGION, INVALID_SERVER_ID, false);
     }
 
-
-    /**
-     * Test remove server method. Positive scenario.
-     */
-    @Test
-    public void testRemoveServer() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doReturn(true).when(serverApiMock).delete(SERVER_ID);
-
-        openstackComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
-
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).delete(SERVER_ID);
-        verifyNoMoreInteractions(serverApiMock);
-    }
-
-    /**
-     * Test terminateInstances method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testRemoveServerWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).delete(INVALID_SERVER_ID);
-
-        openstackComputeServiceImplSpy.terminateInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
     /**
      * Test describeRegions method. Positive scenario.
      */

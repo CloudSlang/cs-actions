@@ -327,41 +327,6 @@ public class ComputeServiceImplTest {
     }
 
     /**
-     * Test remove server method. Positive scenario.
-     */
-    @Test
-    public void testRemoveServer() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doNothing().when(computeServiceMock).destroyNode(SERVER_ID);
-
-        String result = ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
-
-        assertEquals("Server Removed", result);
-        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).destroyNode(SERVER_ID);
-        verifyNoMoreInteractions(computeServiceMock);
-    }
-
-    /**
-     * Test terminateInstances method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testRemoveServerWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).destroyNode(SERVER_ID);
-
-        ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
-    }
-
-    /**
      * Test describeRegions method. Positive scenario.
      */
     @Test

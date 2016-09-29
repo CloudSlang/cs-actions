@@ -281,28 +281,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test remove server method. Positive scenario.
-     */
-    @Test
-    public void testTerminateInstances() {
-        addCommonMocksForInstanceApi();
-
-        Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
-        InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.TERMINATED,
-                InstanceState.STOPPED);
-        instanceStateChangeSet.add(instanceStateChange);
-
-        doReturn(instanceStateChangeSet).when(instanceApiMock).terminateInstancesInRegion(REGION, SERVER_ID);
-
-        String result = amazonComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, true);
-
-        verifyMocksInteractionInstanceApiForRegion();
-        verify(instanceApiMock).terminateInstancesInRegion(REGION, SERVER_ID);
-
-        assertEquals(REMOVE_SERVER_SUCCESS_MESSAGE, result);
-    }
-
-    /**
      * Test describeRegions method. Positive scenario.
      */
     @Test

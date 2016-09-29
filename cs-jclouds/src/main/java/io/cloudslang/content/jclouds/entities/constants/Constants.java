@@ -80,5 +80,6 @@ public class Constants {
         public static final String RUN_INSTANCES = "RunInstances";
         public static final String START_INSTANCES = "StartInstances";
         public static final String STOP_INSTANCES = "StopInstances";
+        public static final String TERMINATE_INSTANCES = "TerminateInstances";
     }
 }

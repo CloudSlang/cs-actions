@@ -52,13 +52,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
         }
     }
 
-    @Override
-    public String terminateInstances(String region, String serverId, boolean isDebugMode) {
-        lazyInit(region, isDebugMode);
-        computeService.destroyNode(serverId);
-        return SERVER_REMOVED;
-    }
-
     public void rebootInstances(String region, String serverId, boolean isDebugMode) {
         reboot(region, serverId, isDebugMode);
     }

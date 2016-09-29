@@ -60,15 +60,6 @@ public class OpenstackComputeServiceImpl extends JCloudsService implements Compu
     }
 
     @Override
-    public String terminateInstances(String region, String serverId, boolean isDebugMode) {
-        lazyInit(region, isDebugMode);
-        ServerApi serverApi = novaApi.getServerApi(region);
-        serverApi.delete(serverId);
-
-        return SERVER_DELETED;
-    }
-
-    @Override
     public Set<String> describeRegions(boolean isDebugMode) {
         lazyInit(isDebugMode);
         return novaApi.getConfiguredRegions();

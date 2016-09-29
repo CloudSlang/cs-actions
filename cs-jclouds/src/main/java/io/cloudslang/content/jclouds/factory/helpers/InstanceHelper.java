@@ -91,18 +91,22 @@ public class InstanceHelper {
     }
 
     public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
-        return getStartAndStopCommonQueryParamsMap(wrapper);
+        return getStartAndStopAndTerminateCommonQueryParamsMap(wrapper);
     }
 
     public Map<String, String> getStopInstancesQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = getStartAndStopCommonQueryParamsMap(wrapper);
+        Map<String, String> queryParamsMap = getStartAndStopAndTerminateCommonQueryParamsMap(wrapper);
         InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(wrapper.getInstanceInputs().isForceStop()),
                 wrapper.getInstanceInputs().isForceStop() == Boolean.TRUE);
 
         return queryParamsMap;
     }
 
-    private Map<String, String> getStartAndStopCommonQueryParamsMap(InputsWrapper wrapper) {
+    public Map<String, String> getTerminateInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getStartAndStopAndTerminateCommonQueryParamsMap(wrapper);
+    }
+
+    private Map<String, String> getStartAndStopAndTerminateCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 

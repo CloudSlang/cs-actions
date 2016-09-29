@@ -65,14 +65,6 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
     }
 
     @Override
-    public String terminateInstances(String region, String serverId, boolean isDebugMode) {
-        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, true);
-        Set<? extends InstanceStateChange> instanceChanged = instanceApi.terminateInstancesInRegion(region, serverId);
-
-        return instanceChanged.toString();
-    }
-
-    @Override
     public Set<String> describeRegions(boolean isDebugMode) {
         init(isDebugMode);
         return ec2Api.getConfiguredRegions();
