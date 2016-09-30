@@ -456,7 +456,7 @@ public class InstanceInputs {
         }
 
         public InstanceInputs.InstanceInputsBuilder withMonitoring(String inputValue) {
-            monitoring = Boolean.parseBoolean(inputValue);
+            monitoring = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 

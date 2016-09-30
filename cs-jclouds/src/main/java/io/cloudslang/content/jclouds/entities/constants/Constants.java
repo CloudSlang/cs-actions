@@ -49,6 +49,7 @@ public class Constants {
         public static final String DESCRIPTION = "Description";
         public static final String DEVICE_INDEX = "DeviceIndex";
         public static final String ENCRYPTED = "Encrypted";
+        public static final String FORCE = "Force";
         public static final String HEADER_DELIMITER = "\\r?\\n";
         public static final String HTTP_CLIENT_METHOD_GET = "GET";
         public static final String IMAGE_ID = "ImageId";
@@ -77,6 +78,7 @@ public class Constants {
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
+        public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
         public static final String REBOOT_INSTANCES = "RebootInstances";
         public static final String RELEASE_ADDRESS = "ReleaseAddress";

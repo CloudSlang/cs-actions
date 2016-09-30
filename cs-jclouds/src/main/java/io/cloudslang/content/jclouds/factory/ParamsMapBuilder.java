@@ -50,6 +50,9 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDetachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DETACH_VOLUME:
+                    queryParamsMap = new VolumeHelper().getDetachVolumeQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
                     queryParamsMap = new NetworkHelper().getDisassociateAddressQueryParamsMap(wrapper);
                     break;

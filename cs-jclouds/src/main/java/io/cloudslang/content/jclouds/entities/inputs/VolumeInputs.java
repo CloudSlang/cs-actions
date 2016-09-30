@@ -1,6 +1,7 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
+import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -111,12 +112,12 @@ public class VolumeInputs {
         }
 
         public VolumeInputsBuilder withEncrypted(String inputValue) {
-            encrypted = Boolean.parseBoolean(inputValue);
+            encrypted = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
         public VolumeInputsBuilder withForce(String inputValue) {
-            force = Boolean.parseBoolean(inputValue);
+            force = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
     }

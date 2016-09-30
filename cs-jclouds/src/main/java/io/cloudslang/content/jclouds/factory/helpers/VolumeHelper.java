@@ -45,6 +45,18 @@ public class VolumeHelper {
     }
 
     public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
+        return getAttachDetachVolumeCommonQueryParamsMap(wrapper);
+    }
+
+    public Map<String, String> getDetachVolumeQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = getAttachDetachVolumeCommonQueryParamsMap(wrapper);
+        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.FORCE, String.valueOf(wrapper.getVolumeInputs().isForce()),
+                wrapper.getVolumeInputs().isForce());
+
+        return queryParamsMap;
+    }
+
+    private Map<String, String> getAttachDetachVolumeCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());

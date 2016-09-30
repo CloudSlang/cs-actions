@@ -20,7 +20,6 @@ public class InstanceHelper {
     private static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "DeviceName";
     private static final String DISABLE_API_TERMINATION = "DisableApiTermination";
     private static final String EBS_OPTIMIZED = "EbsOptimized";
-    private static final String FORCE = "Force";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
@@ -99,8 +98,8 @@ public class InstanceHelper {
 
     public Map<String, String> getStopInstancesQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
-        InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(wrapper.getInstanceInputs().isForceStop()),
-                wrapper.getInstanceInputs().isForceStop() == Boolean.TRUE);
+        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.FORCE, String.valueOf(wrapper.getInstanceInputs().isForceStop()),
+                wrapper.getInstanceInputs().isForceStop());
 
         return queryParamsMap;
     }

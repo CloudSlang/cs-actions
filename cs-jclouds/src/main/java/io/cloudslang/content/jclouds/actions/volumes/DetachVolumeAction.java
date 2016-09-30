@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 6/24/2016.
  */
-public class DetachVolumeInRegionAction {
+public class DetachVolumeAction {
     /**
      * Detaches an EBS volume from an instance.
      * <p>
@@ -73,7 +73,7 @@ public class DetachVolumeInRegionAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Detach Volume in Region",
+    @Action(name = "Detach Volume",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -114,7 +114,7 @@ public class DetachVolumeInRegionAction {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
-                    .withAction(Constants.QueryApiActions.ATTACH_VOLUME)
+                    .withAction(Constants.QueryApiActions.DETACH_VOLUME)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
