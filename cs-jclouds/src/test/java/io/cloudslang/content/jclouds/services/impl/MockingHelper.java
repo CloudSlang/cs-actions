@@ -52,14 +52,10 @@ public class MockingHelper {
         verifyNoMoreInteractions(contextBuilderMock);
     }
 
-    static <T> void addCommonMocksForMethods(AmazonVolumeServiceImpl volumeSpy, AmazonSnapshotServiceImpl snapshotSpy,
-                                             EC2Api ec2ApiMock, Optional<? extends InstanceApi> optionalInstanceApiMock,
+    static <T> void addCommonMocksForMethods(AmazonSnapshotServiceImpl snapshotSpy, EC2Api ec2ApiMock,
+                                             Optional<? extends InstanceApi> optionalInstanceApiMock,
                                              ElasticBlockStoreApi ebsApiMock, Class<T> spy) {
-        if (spy == AmazonVolumeServiceImpl.class) {
-            doNothing().when(volumeSpy).lazyInit(anyString(), anyBoolean());
-            doNothing().when(volumeSpy).init(anyBoolean());
-            volumeSpy.ec2Api = ec2ApiMock;
-        } else if (spy == AmazonSnapshotServiceImpl.class) {
+        if (spy == AmazonSnapshotServiceImpl.class) {
             doNothing().when(snapshotSpy).lazyInit(anyString(), anyBoolean());
             doNothing().when(snapshotSpy).init(anyBoolean());
             snapshotSpy.ec2Api = ec2ApiMock;

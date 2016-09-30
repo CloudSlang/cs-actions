@@ -53,7 +53,7 @@ public class AmazonSnapshotServiceImplTest {
     @Before
     public void init() throws Exception {
         mockStatic(ContextBuilder.class);
-        MockingHelper.addCommonMocksForMethods(null, snapshotSpy, ec2ApiMock, optionalInstanceApiMock, ebsApiMock,
+        MockingHelper.addCommonMocksForMethods(snapshotSpy, ec2ApiMock, optionalInstanceApiMock, ebsApiMock,
                 AmazonSnapshotServiceImpl.class);
 
         toTest = new AmazonSnapshotServiceImpl("https://ec2.amazonaws.com", "AKIAIQHVQ4UM7SO673TW",
