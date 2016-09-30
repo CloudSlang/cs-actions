@@ -20,6 +20,10 @@ public class VolumeHelper {
     private static final String STANDARD = "standard";
     private static final String VOLUME_ID = "VolumeId";
 
+    public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
+        return getAttachDetachVolumeCommonQueryParamsMap(wrapper);
+    }
+
     public Map<String, String> getCreateVolumeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
@@ -44,14 +48,19 @@ public class VolumeHelper {
         return queryParamsMap;
     }
 
-    public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
-        return getAttachDetachVolumeCommonQueryParamsMap(wrapper);
-    }
-
     public Map<String, String> getDetachVolumeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = getAttachDetachVolumeCommonQueryParamsMap(wrapper);
         InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.FORCE, String.valueOf(wrapper.getVolumeInputs().isForce()),
                 wrapper.getVolumeInputs().isForce());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getDeleteVolumeQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(VOLUME_ID, wrapper.getCustomInputs().getVolumeId());
 
         return queryParamsMap;
     }
