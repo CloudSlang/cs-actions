@@ -73,8 +73,4 @@ public class GetAuthorizationToken {
             return getFailureResultsMap(exception);
         }
     }
-
-    public static void main(String[] args) {
-        System.out.println(new GetAuthorizationToken().execute("53dd860e1b72ff0467030003", "pXeTVcmdbU9XxH6fPcPlq8Y9D9G3Cdo5Eh2nMSgKj/DWqeSFFXDdmpz5Trv+L2hQNM+nGa704Rf8Z22W9O1jdQ==", "08/04/2014 10:03 PM"));
-    }
 }
