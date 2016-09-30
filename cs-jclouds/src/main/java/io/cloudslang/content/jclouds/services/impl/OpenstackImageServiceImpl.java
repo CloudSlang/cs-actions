@@ -19,30 +19,7 @@ public class OpenstackImageServiceImpl extends JCloudsService implements ImageSe
     }
 
     @Override
-    public String createImageInRegion(String region, String name, String instanceId, String imageDescription,
-                                      boolean imageNoReboot, boolean isDebugMode) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    @Override
-    public String deregisterImageInRegion(String region, String imageId, boolean isDebugMode) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    @Override
     public Set<? extends Image> describeImagesInRegion(CommonInputs commonInputs, ImageInputs imageInputs) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    @Override
-    public org.jclouds.ec2.domain.Permission getLaunchPermissionForImage(String region, String imageId,
-                                                                         boolean isDebugMode) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    @Override
-    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId,
-                                              boolean isDebugMode) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }
 

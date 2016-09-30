@@ -6,12 +6,13 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
-import io.cloudslang.content.jclouds.execute.images.AddLaunchPermissionsToImageInRegionExecutor;
+import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -20,7 +21,11 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 5/10/2016.
  */
-public class AddLaunchPermissionsToImageInRegionAction {
+public class AddLaunchPermissionsToImageAction {
+
+    public static final String ADD_OPERATION = "add";
+    public static final String LAUNCH_PERMISSION = "launchPermission";
+
     /**
      * Adds launch permission to the specified AMI.
      * Note:
@@ -47,7 +52,8 @@ public class AddLaunchPermissionsToImageInRegionAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Add Launch Permissions to Image in Region",
+    //TODO add tests
+    @Action(name = "Add Launch Permissions to Image",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -83,10 +89,17 @@ public class AddLaunchPermissionsToImageInRegionAction {
                 .withProxyPort(proxyPort)
                 .withDelimiter(delimiter)
                 .withDebugMode(debugMode)
+                .withAction(Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE)
+                .withApiService(Constants.Apis.AMAZON_EC2_API)
+                .withRequestUri(Constants.Miscellaneous.EMPTY)
+                .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                 .build();
 
         CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withRegion(region)
+                .withAttribute(LAUNCH_PERMISSION)
+                .withOperationType(ADD_OPERATION)
                 .withImageId(imageId)
                 .build();
 
@@ -97,7 +110,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
                 .build();
 
         try {
-            return new AddLaunchPermissionsToImageInRegionExecutor().execute(inputs, imageInputs);
+            return new QueryApiExecutor().execute(inputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

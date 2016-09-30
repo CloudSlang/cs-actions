@@ -3,6 +3,7 @@ package io.cloudslang.content.jclouds.factory;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.factory.helpers.ElasticIpHelper;
+import io.cloudslang.content.jclouds.factory.helpers.ImageHelper;
 import io.cloudslang.content.jclouds.factory.helpers.InstanceHelper;
 import io.cloudslang.content.jclouds.factory.helpers.NetworkHelper;
 import io.cloudslang.content.jclouds.factory.helpers.VolumeHelper;
@@ -35,6 +36,9 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getAttachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.CREATE_IMAGE:
+                    queryParamsMap = new ImageHelper().getCreateImageQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.CREATE_VOLUME:
                     queryParamsMap = new VolumeHelper().getCreateVolumeQueryParamsMap(wrapper);
                     break;
@@ -44,11 +48,20 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDeleteNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DEREGISTER_IMAGE:
+                    queryParamsMap = new ImageHelper().getDeregisterImageQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDetachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
                     queryParamsMap = new NetworkHelper().getDisassociateAddressQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.DESCRIBE_IMAGE_ATTRIBUTE:
+                    queryParamsMap = new ImageHelper().getDescribeImageAttributeQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE:
+                    queryParamsMap = new ImageHelper().getModifyImageAttributeQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.RELEASE_ADDRESS:
                     queryParamsMap = new ElasticIpHelper().getReleaseAddressQueryParamsMap(wrapper);

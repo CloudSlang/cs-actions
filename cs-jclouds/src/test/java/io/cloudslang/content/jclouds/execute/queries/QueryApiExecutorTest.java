@@ -3,7 +3,14 @@ package io.cloudslang.content.jclouds.execute.queries;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.jclouds.entities.inputs.*;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.jclouds.entities.inputs.IamInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
+import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.services.impl.MockingHelper;
 import org.junit.After;
@@ -22,11 +29,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyMapOf;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by Mihai Tusa.
@@ -36,12 +48,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
-
-    private QueryApiExecutor toTest;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
+    private QueryApiExecutor toTest;
     @Mock
     private CSHttpClient csHttpClientMock;
 
@@ -106,6 +115,27 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateImage() throws Exception {
+        toTest.execute(getCommonInputs("CreateImage", HEADERS, ""), getCreateImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateImage")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private ImageInputs getCreateImageInputs() {
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withInstanceId("i-b0e2ad1b")
+                .build();
+        return new ImageInputs.ImageInputsBuilder()
+                .withCustomInputs(customInputs)
+                .withImageName("img-name")
+                .withDescription("Some description")
+                .withImageNoReboot("true")
+                .build();
+    }
+
+    @Test
     public void testCreateVolume() throws Exception {
         toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(),
                 getNetworkInputs(false));
@@ -121,6 +151,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDeregisterImage() throws Exception {
+        toTest.execute(getCommonInputs("DeregisterImage", HEADERS, ""), getImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeregisterImage")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -151,6 +190,22 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ReleaseAddress")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testGetLaunchPermissionForImage() throws Exception {
+        toTest.execute(getCommonInputs("DescribeImageAttribute", HEADERS, ""), getLaunchPermissionForImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeImageAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private CustomInputs getLaunchPermissionForImageInputs() {
+        return new CustomInputs.CustomInputsBuilder()
+                .withAttribute("launchPermission")
+                .withImageId("ami-abcd1234")
+                .build();
     }
 
     @Test
@@ -194,6 +249,12 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
+    private CustomInputs getImageInputs() {
+        return new CustomInputs.CustomInputsBuilder()
+                .withImageId("ami-abcd1234")
+                .build();
+    }
+
     private CustomInputs getCustomInputs() throws Exception {
         return new CustomInputs.CustomInputsBuilder()
                 .withAllocationId("eipalloc-abcdef12")
@@ -220,7 +281,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private IamInputs getIamInputs(){
+    private IamInputs getIamInputs() {
         return new IamInputs.IamInputsBuilder()
                 .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
                 .build();
@@ -289,6 +350,12 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("SecurityGroupId.1", "sg-12345678");
                 queryParamsMap.put("SecurityGroupId.2", "sg-abcdef12");
                 break;
+            case "CreateImage":
+                queryParamsMap.put("Description", "Some description");
+                queryParamsMap.put("InstanceId", "i-b0e2ad1b");
+                queryParamsMap.put("Name", "img-name");
+                queryParamsMap.put("NoReboot", "true");
+                break;
             case "CreateVolume":
                 queryParamsMap.put("VolumeType", "standard");
                 queryParamsMap.put("Size", "10");
@@ -297,12 +364,19 @@ public class QueryApiExecutorTest {
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
                 break;
+            case "DeregisterImage":
+                queryParamsMap.put("ImageId", "ami-abcd1234");
+                break;
             case "DetachNetworkInterface":
                 queryParamsMap.put("AttachmentId", "eni-attach-12345678");
                 break;
             case "DisassociateAddress":
                 queryParamsMap.put("AssociationId", "eipassoc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
+                break;
+            case "DescribeImageAttribute":
+                queryParamsMap.put("ImageId", "ami-abcd1234");
+                queryParamsMap.put("Attribute", "launchPermission");
                 break;
             case "ReleaseAddress":
                 queryParamsMap.put("AllocationId", "eipalloc-abcdef12");

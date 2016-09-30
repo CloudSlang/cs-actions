@@ -6,12 +6,13 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
-import io.cloudslang.content.jclouds.execute.images.CreateImageInRegionExecutor;
+import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 5/4/2016.
  */
-public class CreateImageInRegionAction {
+public class CreateImageAction {
     /**
      * Creates an Amazon EBS-backed AMI from an Amazon EBS-backed instance that is either running or stopped.
      *
@@ -48,7 +49,7 @@ public class CreateImageInRegionAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Create Image in Region",
+    @Action(name = "Create Image",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -75,31 +76,35 @@ public class CreateImageInRegionAction {
                                        @Param(value = Inputs.ImageInputs.IMAGE_DESCRIPTION) String description,
                                        @Param(value = Inputs.ImageInputs.NAME, required = true) String name,
                                        @Param(value = Inputs.ImageInputs.NO_REBOOT) String noReboot) throws Exception {
-
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
-                .withProvider(provider)
-                .withEndpoint(endpoint)
-                .withIdentity(identity)
-                .withCredential(credential)
-                .withProxyHost(proxyHost)
-                .withProxyPort(proxyPort)
-                .withDebugMode(debugMode)
-                .build();
-
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
-                .withRegion(region)
-                .withInstanceId(instanceId)
-                .build();
-
-        ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
-                .withCustomInputs(customInputs)
-                .withImageName(name)
-                .withImageDescription(description)
-                .withImageNoReboot(noReboot)
-                .build();
-
         try {
-            return new CreateImageInRegionExecutor().execute(inputs, imageInputs);
+            CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+                    .withProvider(provider)
+                    .withEndpoint(endpoint)
+                    .withIdentity(identity)
+                    .withCredential(credential)
+                    .withProxyHost(proxyHost)
+                    .withProxyPort(proxyPort)
+                    .withDebugMode(debugMode)
+                    .withAction(Constants.QueryApiActions.CREATE_IMAGE)
+                    .withApiService(Constants.Apis.AMAZON_EC2_API)
+                    .withRequestUri(Constants.Miscellaneous.EMPTY)
+                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
+                    .build();
+
+            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                    .withRegion(region)//TODO remove region
+                    .withInstanceId(instanceId)
+                    .build();
+
+            ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+                    .withCustomInputs(customInputs)
+                    .withImageName(name)
+                    .withDescription(description)
+                    .withImageNoReboot(noReboot)
+                    .build();
+
+            return new QueryApiExecutor().execute(inputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

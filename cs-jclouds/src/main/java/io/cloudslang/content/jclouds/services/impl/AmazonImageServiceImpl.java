@@ -12,9 +12,7 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.Image;
-import org.jclouds.ec2.domain.Permission;
 import org.jclouds.ec2.features.AMIApi;
-import org.jclouds.ec2.options.CreateImageOptions;
 import org.jclouds.ec2.options.DescribeImagesOptions;
 
 import java.util.Set;
@@ -40,28 +38,6 @@ public class AmazonImageServiceImpl extends JCloudsService implements ImageServi
     }
 
     @Override
-    public String createImageInRegion(String region, String name, String instanceId, String imageDescription,
-                                      boolean imageNoReboot, boolean isDebugMode) {
-        CreateImageOptions options = new CreateImageOptions().withDescription(imageDescription);
-        if (imageNoReboot) {
-            options.noReboot();
-        }
-
-        if (Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(name)) {
-            throw new RuntimeException(IMAGE_NAME_INPUT_REQUIRED);
-        }
-
-        return getAMIApi(region, true, isDebugMode).createImageInRegion(region, name, instanceId, options);
-    }
-
-    @Override
-    public String deregisterImageInRegion(String region, String imageId, boolean isDebugMode) {
-        getAMIApi(region, true, isDebugMode).deregisterImageInRegion(region, imageId);
-
-        return IMAGE_SUCCESSFULLY_DEREGISTER;
-    }
-
-    @Override
     public Set<? extends Image> describeImagesInRegion(CommonInputs commonInputs, ImageInputs imageInputs) {
         AmazonImageServiceHelper helper = new AmazonImageServiceHelper();
         DescribeImagesOptions options = helper.getDescribeImagesOptions(imageInputs, commonInputs.getDelimiter());
@@ -74,19 +50,6 @@ public class AmazonImageServiceImpl extends JCloudsService implements ImageServi
 
         return getAMIApi(imageInputs.getCustomInputs().getRegion(), true, commonInputs.isDebugMode())
                 .describeImagesInRegionWithFilter(imageInputs.getCustomInputs().getRegion(), filtersMap, options);
-    }
-
-    @Override
-    public Permission getLaunchPermissionForImage(String region, String imageId, boolean isDebugMode) {
-        return getAMIApi(region, true, isDebugMode).getLaunchPermissionForImageInRegion(region, imageId);
-    }
-
-    @Override
-    public String addLaunchPermissionsToImage(String region, Set<String> userIds, Set<String> userGroups, String imageId,
-                                              boolean isDebugMode) {
-        getAMIApi(region, true, isDebugMode).addLaunchPermissionsToImageInRegion(region, userIds, userGroups, imageId);
-
-        return LAUNCH_PERMISSIONS_SUCCESSFULLY_ADDED;
     }
 
     @Override

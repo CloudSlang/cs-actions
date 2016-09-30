@@ -10,7 +10,6 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.features.AMIApi;
 import org.jclouds.ec2.features.InstanceApi;
-import org.jclouds.ec2.options.CreateImageOptions;
 import org.jclouds.ec2.options.DescribeImagesOptions;
 import org.junit.After;
 import org.junit.Before;
@@ -29,11 +28,12 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anySetOf;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 /**
  * Created by Mihai Tusa.
@@ -94,46 +94,6 @@ public class AmazonImageServiceImplTest {
         toTest.lazyInit("us-east-1", true);
 
         MockingHelper.commonVerifiersForInitMethod(contextBuilderMock, propertiesMock);
-    }
-
-    @Test
-    public void createImageInRegionTest() {
-        imageSpy.createImageInRegion("", "", "", "", true, false);
-
-        verify(imageSpy, times(1)).lazyInit(eq(""), eq(false));
-        verify(amiApiMock, times(1)).createImageInRegion(anyString(), anyString(), anyString(), any(CreateImageOptions.class));
-        commonVerifiersForMethods();
-    }
-
-    @Test
-    public void deregisterImageInRegionTest() {
-        imageSpy.deregisterImageInRegion("", "", false);
-
-        verify(imageSpy, times(1)).lazyInit(eq(""), eq(false));
-        verify(amiApiMock, times(1)).deregisterImageInRegion(eq(""), eq(""));
-        commonVerifiersForMethods();
-    }
-
-    @Test
-    public void getLaunchPermissionForImageTest() {
-        imageSpy.getLaunchPermissionForImage("us-east-1", "ami-abcdef16", false);
-
-        verify(imageSpy, times(1)).lazyInit(eq("us-east-1"), eq(false));
-        verify(amiApiMock, times(1)).getLaunchPermissionForImageInRegion(eq("us-east-1"), eq("ami-abcdef16"));
-        commonVerifiersForMethods();
-    }
-
-    @Test
-    public void addLaunchPermissionsToImageTest() {
-        Set<String> userIds = InputsUtil.getStringsSet("firstId|secondId|thirdId", "|");
-        Set<String> userGroups = InputsUtil.getStringsSet("firstGroup,secondGroup,thirdGroup", ",");
-
-        imageSpy.addLaunchPermissionsToImage("some_region", userIds, userGroups, "ami-abcdef16", false);
-
-        verify(imageSpy, times(1)).lazyInit(eq("some_region"), eq(false));
-        verify(amiApiMock, times(1)).addLaunchPermissionsToImageInRegion(eq("some_region"), anySetOf(String.class),
-                anySetOf(String.class), eq("ami-abcdef16"));
-        commonVerifiersForMethods();
     }
 
     @Test

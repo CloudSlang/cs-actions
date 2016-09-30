@@ -6,11 +6,12 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
-import io.cloudslang.content.jclouds.execute.images.DeregisterImageInRegionExecutor;
+import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 5/5/2016.
  */
-public class DeregisterImageInRegionAction {
+public class DeregisterImageAction {
     /**
      * De-register the specified AMI. After you de-register an AMI, it can't be used to launch new instances.
      * This command does not delete the AMI.
@@ -40,7 +41,7 @@ public class DeregisterImageInRegionAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Deregister Image in Region",
+    @Action(name = "Deregister Image",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -63,24 +64,29 @@ public class DeregisterImageInRegionAction {
 
                                        @Param(value = Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId) throws Exception {
-
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
-                .withProvider(provider)
-                .withEndpoint(endpoint)
-                .withIdentity(identity)
-                .withCredential(credential)
-                .withProxyHost(proxyHost)
-                .withProxyPort(proxyPort)
-                .withDebugMode(debugMode)
-                .build();
-
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
-                .withRegion(region)
-                .withImageId(imageId)
-                .build();
-
         try {
-            return new DeregisterImageInRegionExecutor().execute(inputs, customInputs);
+            CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+                    .withProvider(provider)
+                    .withEndpoint(endpoint)
+                    .withIdentity(identity)
+                    .withCredential(credential)
+                    .withProxyHost(proxyHost)
+                    .withProxyPort(proxyPort)
+                    .withDebugMode(debugMode)
+                    .withAction(Constants.QueryApiActions.DEREGISTER_IMAGE)
+                    .withApiService(Constants.Apis.AMAZON_EC2_API)
+                    .withRequestUri(Constants.Miscellaneous.EMPTY)
+                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
+                    .build();
+
+            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                    .withRegion(region)
+                    .withImageId(imageId)
+                    .build();
+
+
+            return new QueryApiExecutor().execute(inputs, customInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }
