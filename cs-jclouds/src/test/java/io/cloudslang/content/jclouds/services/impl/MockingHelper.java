@@ -50,22 +50,4 @@ public class MockingHelper {
         verify(contextBuilderMock).buildApi(EC2Api.class);
         verifyNoMoreInteractions(contextBuilderMock);
     }
-
-    static <T> void addCommonMocksForMethods(AmazonSnapshotServiceImpl snapshotSpy, EC2Api ec2ApiMock,
-                                             Optional<? extends InstanceApi> optionalInstanceApiMock,
-                                             ElasticBlockStoreApi ebsApiMock, Class<T> spy) {
-        if (spy == AmazonSnapshotServiceImpl.class) {
-            doNothing().when(snapshotSpy).lazyInit(anyString(), anyBoolean());
-            doNothing().when(snapshotSpy).init(anyBoolean());
-            snapshotSpy.ec2Api = ec2ApiMock;
-        }
-        doReturn(optionalInstanceApiMock).when(ec2ApiMock).getElasticBlockStoreApiForRegion(anyString());
-        doReturn(optionalInstanceApiMock).when(ec2ApiMock).getElasticBlockStoreApi();
-        doReturn(ebsApiMock).when(optionalInstanceApiMock).get();
-    }
-
-    static void commonVerifiersForMethods(Optional<? extends InstanceApi> optionalInstanceApiMock, ElasticBlockStoreApi ebsApiMock) {
-        verify(optionalInstanceApiMock, times(1)).get();
-        verifyNoMoreInteractions(ebsApiMock);
-    }
 }
