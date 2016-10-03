@@ -47,6 +47,9 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDeleteNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DELETE_SNAPSHOT:
+                    queryParamsMap = new SnapshotHelper().getDeleteSnapshotQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.DELETE_VOLUME:
                     queryParamsMap = new VolumeHelper().getDeleteVolumeQueryParamsMap(wrapper);
                     break;

@@ -79,6 +79,7 @@ public class Constants {
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
+        public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
         public static final String DELETE_VOLUME = "DeleteVolume";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";

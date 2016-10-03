@@ -24,4 +24,13 @@ public class SnapshotHelper {
 
         return queryParamsMap;
     }
+
+    public Map<String, String> getDeleteSnapshotQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(Constants.AwsParams.SNAPSHOT_ID, wrapper.getVolumeInputs().getSnapshotId());
+
+        return queryParamsMap;
+    }
 }
