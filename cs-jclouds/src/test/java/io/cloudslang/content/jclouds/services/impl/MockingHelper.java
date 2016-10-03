@@ -10,7 +10,6 @@ import org.mockito.Matchers;
 
 import java.util.Properties;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;

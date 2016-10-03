@@ -2,10 +2,7 @@ package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
-import io.cloudslang.content.jclouds.factory.helpers.ElasticIpHelper;
-import io.cloudslang.content.jclouds.factory.helpers.InstanceHelper;
-import io.cloudslang.content.jclouds.factory.helpers.NetworkHelper;
-import io.cloudslang.content.jclouds.factory.helpers.VolumeHelper;
+import io.cloudslang.content.jclouds.factory.helpers.*;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,11 +35,14 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.ATTACH_VOLUME:
                     queryParamsMap = new VolumeHelper().getAttachVolumeQueryParamsMap(wrapper);
                     break;
-                case Constants.QueryApiActions.CREATE_VOLUME:
-                    queryParamsMap = new VolumeHelper().getCreateVolumeQueryParamsMap(wrapper);
-                    break;
                 case Constants.QueryApiActions.CREATE_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getCreateNetworkInterfaceQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.CREATE_SNAPSHOT:
+                    queryParamsMap = new SnapshotHelper().getCreateSnapshotQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.CREATE_VOLUME:
+                    queryParamsMap = new VolumeHelper().getCreateVolumeQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkHelper().getDeleteNetworkInterfaceQueryParamsMap(wrapper);

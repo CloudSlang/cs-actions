@@ -66,6 +66,7 @@ public class Constants {
         public static final String SNAPSHOT_ID = "SnapshotId";
         public static final String STANDARD = "standard";
         public static final String SUBNET_ID = "SubnetId";
+        public static final String VOLUME_ID = "VolumeId";
         public static final String VOLUME_TYPE = "VolumeType";
     }
 
@@ -74,8 +75,9 @@ public class Constants {
         public static final String ASSOCIATE_ADDRESS = "AssociateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
         public static final String ATTACH_VOLUME = "AttachVolume";
-        public static final String CREATE_VOLUME = "CreateVolume";
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
+        public static final String CREATE_SNAPSHOT = "CreateSnapshot";
+        public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DELETE_VOLUME = "DeleteVolume";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
