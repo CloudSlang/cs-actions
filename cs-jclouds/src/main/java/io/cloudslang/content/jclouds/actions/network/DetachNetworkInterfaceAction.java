@@ -37,22 +37,29 @@ public class DetachNetworkInterfaceAction {
      * @param credential    Secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
+     *                      Default: ""
      * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and
      *                      <proxyPort> inputs or leave them both empty.
+     *                      Default: ""
      * @param proxyUsername Optional - proxy server user name.
+     *                      Default: ""
      * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     *                      Default: ""
      * @param headers       Optional - string containing the headers to use for the request separated by new line
-     *                      (CRLF). The header name-value pair will be separated by ":"
+     *                      (CRLF). The header name-value pair will be separated by ":".
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
-     *                      Examples: Accept:text/plain
+     *                      Examples: "Accept:text/plain"
+     *                      Default: ""
      * @param queryParams   Optional - string containing query parameters that will be appended to the URL. The names
      *                      and the values must not be URL encoded because if they are encoded then a double encoded
      *                      will occur. The separator between name-value pairs is "&" symbol. The query name will be
-     *                      separated from query value by "="
+     *                      separated from query value by "=".
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
+     *                      Default: ""
      * @param attachmentId  ID of the attachment.
      *                      Example: "eni-attach-12345678"
-     * @param forceDetach   Optional - specifies whether to force a detachment or not - Valid values: "true", "false".
+     * @param forceDetach   Optional - specifies whether to force a detachment or not.
+     *                      Valid values: "true", "false".
      *                      Default: "false"
      * @param version       Version of the web service to made the call against it.
      *                      Example: "2014-06-15"
@@ -102,7 +109,7 @@ public class DetachNetworkInterfaceAction {
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withAttachmentId(attachmentId).build();

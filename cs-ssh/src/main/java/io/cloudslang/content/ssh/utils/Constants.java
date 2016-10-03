@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 public class Constants {
     public static final String EMPTY_STRING = "";
     // inputs
+    public static final String PRIVATE_KEY_DATA = "privateKeyData";
     public static final String PRIVATE_KEY_FILE = "privateKeyFile";
     public static final String COMMAND = "command";
     public static final String ARGS = "arguments";
@@ -18,12 +19,21 @@ public class Constants {
     public static final String CLOSE_SESSION = "closeSession";
     public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
     public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
+    public static final String ALLOWED_CIPHERS = "allowedCiphers";
+    public static final String ALLOW_EXPECT_COMMANDS = "allowExpectCommands";
+    public static final String PROXY_HOST = "proxyHost";
+    public static final String PROXY_PORT = "proxyPort";
+    public static final String PROXY_USERNAME = "proxyUsername";
+    public static final String PROXY_PASSWORD = "proxyPassword";
+    public static final String CONNECT_TIMEOUT = "connectTimeout";
     // outputs
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
     public static final String EXIT_STATUS = "exitStatus";
     // default values
     public static final int DEFAULT_PORT = 22;
+    public static final int DEFAULT_PROXY_PORT = 8080;
+    public static final boolean DEFAULT_ALLOW_EXPECT_COMMANDS = false;
     public static final int DEFAULT_TIMEOUT = 90000; //90 seconds
     public static final int DEFAULT_CONNECT_TIMEOUT = 10000; //10 seconds
     public static final boolean DEFAULT_USE_PSEUDO_TERMINAL = false;
@@ -36,26 +46,6 @@ public class Constants {
 
     // errors
     public static final String ARGS_IS_DEPRECATED = "This input is deprecated, use the command input to provide arguments.";
-
-    //we add this temporary (until platform provide us the constants)
-    public static final class OutputNames {
-
-        public static final String RETURN_RESULT = "returnResult";
-        public static final String EXCEPTION = "exception";
-        public static final String RETURN_CODE = "returnCode";
-    }
-
-    public static final class ReturnCodes {
-
-        public static final String RETURN_CODE_FAILURE = "-1";
-        public static final String RETURN_CODE_SUCCESS = "0";
-    }
-
-    public static final class ResponseNames {
-
-        public static final String SUCCESS = "success";
-        public static final String FAILURE = "failure";
-    }
 
     public static final class InputNames {
 

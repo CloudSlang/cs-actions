@@ -44,7 +44,7 @@ public class AllocateAddressAction {
      * @param headers       Optional - string containing the headers to use for the request separated by new line
      *                      (CRLF). The header name-value pair will be separated by ":"
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
-     *                      Examples: Accept:text/plain
+     *                      Examples: "Accept:text/plain"
      *                      Default: ""
      * @param queryParams   Optional - string containing query parameters that will be appended to the URL. The names
      *                      and the values must not be URL encoded because if they are encoded then a double encoded
@@ -100,7 +100,7 @@ public class AllocateAddressAction {
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withDomain(domain).build();

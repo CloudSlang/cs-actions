@@ -26,7 +26,7 @@ public class InsertBeforeService {
             Document doc = XmlUtils.getDocument(commonInputs);
             NamespaceContext context = XmlUtils.getNamespaceContext(commonInputs, doc);
 
-            Document beforeDoc = XmlUtils.parseXML(customInputs.getXmlElement(), commonInputs.getSecureProcessing());
+            Document beforeDoc = XmlUtils.parseXmlStringSecurely(customInputs.getXmlElement(), commonInputs.getSecureProcessing());
             Node beforeNode = doc.importNode(beforeDoc.getDocumentElement(), true);
 
             NodeList nodeList = XmlUtils.evaluateXPathQuery(doc, context, commonInputs.getXPathQuery());

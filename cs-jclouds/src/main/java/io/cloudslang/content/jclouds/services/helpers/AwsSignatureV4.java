@@ -15,7 +15,7 @@ import java.security.SignatureException;
  * Created by Mihai Tusa.
  * 8/8/2016.
  */
-public class AWSSignatureV4 {
+public class AwsSignatureV4 {
     private static final String AWS_SIGNATURE_VERSION = "AWS4";
     private static final String AWS4_SIGNING_ALGORITHM = "AWS4-HMAC-SHA256";
     private static final String HASH_ALGORITHM = "SHA-256";

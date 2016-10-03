@@ -3,8 +3,8 @@ package io.cloudslang.content.jclouds.services;
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
-import io.cloudslang.content.jclouds.services.helpers.AWSSignatureHelper;
-import io.cloudslang.content.jclouds.services.helpers.AWSSignatureV4;
+import io.cloudslang.content.jclouds.services.helpers.AwsSignatureHelper;
+import io.cloudslang.content.jclouds.services.helpers.AwsSignatureV4;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,11 +28,11 @@ public class AmazonSignatureService {
     private static final String X_AMZ_SECURITY_TOKEN = "X-Amz-Security-Token";
     private static final String AMAZON_HOSTNAME = "amazonaws.com";
 
-    private AWSSignatureV4 awsSignatureV4 = new AWSSignatureV4();
+    private AwsSignatureV4 awsSignatureV4 = new AwsSignatureV4();
 
     public AuthorizationHeader signRequestHeaders(InputsWrapper wrapper, Map<String, String> headersMap,
                                                   Map<String, String> queryParamsMap) throws SignatureException, MalformedURLException {
-        AWSSignatureHelper signatureUtils = new AWSSignatureHelper();
+        AwsSignatureHelper signatureUtils = new AwsSignatureHelper();
         String amazonDate = StringUtils.isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
         String dateStamp = amazonDate.split(T_REGEX_STRING)[0];
 

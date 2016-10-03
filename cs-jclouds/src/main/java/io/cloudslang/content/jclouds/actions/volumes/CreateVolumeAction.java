@@ -57,10 +57,10 @@ public class CreateVolumeAction {
      * @param iops             Optional - Only valid for Provisioned IOPS SSD volumes. The number of I/O operations per
      *                         second (IOPS) to provision for the volume, with a maximum ratio of 30 IOPS/GiB.
      *                         Constraint: range is 100 to 20000 for Provisioned IOPS SSD volumes.
-     * @param kmsKeyId         Optional - The full ARN of the AWS Key Management Service (AWS KMS) customer master key
+     * @param kmsKeyId         Optional - The full IAM_INSTANCE_PROFILE_ARN of the AWS Key Management Service (AWS KMS) customer master key
      *                         (CMK) to use when creating the encrypted volume. This parameter is only required if you
      *                         want to use a non-default CMK; if this parameter is not specified, the default CMK for EBS
-     *                         is used. The ARN contains the arn:aws:kms namespace, followed by the region of the CMK, the
+     *                         is used. The IAM_INSTANCE_PROFILE_ARN contains the arn:aws:kms namespace, followed by the region of the CMK, the
      *                         AWS account ID of the CMK owner, the key namespace, and then the CMK ID.
      *                         Note: If a KmsKeyId is specified, the <encrypted> input must be set on "true".
      *                         Example: "arn:aws:kms:us-east-1:012345678910:key/abcd1234-a123-456a-a12b-a123b4cd56ef"
@@ -129,7 +129,7 @@ public class CreateVolumeAction {
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpClientMethod(Constants.QueryApiActions.HTTP_CLIENT_METHOD_GET)
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()

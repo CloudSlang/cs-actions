@@ -68,17 +68,18 @@ public class SSLConnectionSocketFactoryBuilder {
         boolean trustAllRoots = Boolean.parseBoolean(trustAllRootsStr);
 
         SSLContextBuilder sslContextBuilder = SSLContexts.custom();
+        String changeit = "changeit";
+        String javaKeystore = System.getProperty("java.home") + "/lib/security/cacerts";
         if (!trustAllRoots) {
-            boolean useClientCert = !StringUtils.isEmpty(keystore);
+            boolean useClientCert = StringUtils.isNotEmpty(keystore);
             //validate SSL certificates sent by the server
-            boolean useTrustCert = !StringUtils.isEmpty(trustKeystore);
+            boolean useTrustCert = StringUtils.isNotEmpty(trustKeystore);
 
-            String javaKeystore = System.getProperty("java.home") + "/lib/security/cacerts";
             boolean storeExists = new File(javaKeystore).exists();
 
             if (!useClientCert && storeExists) {
                 keystore = "file:" + javaKeystore;
-                keystorePassword = (StringUtils.isEmpty(keystorePassword)) ? "changeit" : keystorePassword;
+                keystorePassword = StringUtils.isNotEmpty(keystorePassword) ? keystorePassword : changeit;
                 useClientCert = true;
             } else if (useClientCert && !keystore.startsWith("http")) {
                 keystore = "file:" + keystore;
@@ -86,7 +87,7 @@ public class SSLConnectionSocketFactoryBuilder {
 
             if (!useTrustCert && storeExists) {
                 trustKeystore = "file:" + javaKeystore;
-                trustPassword = (StringUtils.isEmpty(trustPassword)) ? "changeit" : trustPassword;
+                trustPassword = StringUtils.isNotEmpty(trustPassword) ? trustPassword : changeit;
                 useTrustCert = true;
             } else if (useTrustCert && !trustKeystore.startsWith("http")) {
                 trustKeystore = "file:" + trustKeystore;
@@ -97,7 +98,9 @@ public class SSLConnectionSocketFactoryBuilder {
         } else {
             try {
                 //need to override isTrusted() method to accept CA certs because the Apache HTTP Client ver.4.3 will only accepts self-signed certificates
-                sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy() {
+                KeyStore keyStore = createKeyStore(new URL("file:" + javaKeystore), changeit);
+
+                sslContextBuilder.loadTrustMaterial(keyStore, new TrustSelfSignedStrategy() {
                     @Override
                     public boolean isTrusted(X509Certificate[] chain, String authType)
                             throws CertificateException {
