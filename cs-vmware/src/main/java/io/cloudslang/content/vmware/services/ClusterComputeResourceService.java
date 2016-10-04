@@ -143,4 +143,23 @@ public class ClusterComputeResourceService {
         }
         throw new RuntimeException(String.format(ANOTHER_FAILURE_MSG, clusterName));
     }
+
+    public static void main(String[] args) throws Exception {
+        HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+                .withHost("Hfvcvsa01.ftc.hpeswlab.net")
+                .withPort("443")
+                .withProtocol("https")
+                .withUsername("devadmin")
+                .withPassword("Ovbu2003!")
+                .withTrustEveryone("true")
+                .build();
+
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withHostname("ftcesx0134.ftc.hpeswlab.net")
+                .withVirtualMachineName("centosForRelocationTests")
+                .build();
+
+        Map<String, String> result = new ClusterComputeResourceService().updateOrAddVmOverride(httpInputs, vmInputs, "HF Dev Cluster", "low");
+        System.out.println(result);
+    }
 }
