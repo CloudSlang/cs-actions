@@ -72,6 +72,10 @@ public class Constants {
         public static final String OPERATION_TYPE = "OperationType";
         public static final String USER_ID = "UserId";
         public static final String USER_GROUP = "UserGroup";
+        public static final String FILTER_NAME = "Filter.%d.Name";
+        public static final String FILTER_VALUE = "Filter.%d.Value";
+        public static final String EXECUTABLE_BY = "ExecutableBy";
+        public static final String OWNER = "Owner";
     }
 
     public static class QueryApiActions {
@@ -83,11 +87,13 @@ public class Constants {
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
+        public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
         public static final String MODIFY_IMAGE_ATTRIBUTE = "ModifyImageAttribute";
         public static final String RELEASE_ADDRESS = "ReleaseAddress";
         public static final String RUN_INSTANCES = "RunInstances";
+        public static final String RESET_IMAGE_ATTRIBUTE = "ResetImageAttribute";
     }
 }

@@ -76,6 +76,28 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testAddLaunchPermissionsToImage() throws Exception {
+        toTest.execute(getCommonInputs("ModifyImageAttribute", HEADERS, ""), getAddLaunchPermissionsToImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("ModifyImageAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private ImageInputs getAddLaunchPermissionsToImageInputs() {
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withAttribute("launchPermission")
+                .withOperationType("add")
+                .withImageId("ami-abcd1234")
+                .build();
+        return new ImageInputs.ImageInputsBuilder()
+                .withCustomInputs(customInputs)
+                .withUserIdsString("1,2")
+                .withUserGroupsString("g1,g2")
+                .build();
+    }
+
+    @Test
     public void testAllocateAddress() throws Exception {
         toTest.execute(getCommonInputs("AllocateAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(true));
@@ -377,6 +399,15 @@ public class QueryApiExecutorTest {
             case "DescribeImageAttribute":
                 queryParamsMap.put("ImageId", "ami-abcd1234");
                 queryParamsMap.put("Attribute", "launchPermission");
+                break;
+            case "ModifyImageAttribute":
+                queryParamsMap.put("Attribute", "launchPermission");
+                queryParamsMap.put("OperationType", "add");
+                queryParamsMap.put("ImageId", "ami-abcd1234");
+                queryParamsMap.put("UserId.1", "1");
+                queryParamsMap.put("UserId.2", "2");
+                queryParamsMap.put("UserGroup.1", "g1");
+                queryParamsMap.put("UserGroup.2", "g2");
                 break;
             case "ReleaseAddress":
                 queryParamsMap.put("AllocationId", "eipalloc-abcdef12");

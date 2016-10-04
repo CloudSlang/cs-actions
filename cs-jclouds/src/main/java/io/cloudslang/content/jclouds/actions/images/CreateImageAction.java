@@ -25,18 +25,16 @@ public class CreateImageAction {
     /**
      * Creates an Amazon EBS-backed AMI from an Amazon EBS-backed instance that is either running or stopped.
      *
-     * @param provider    Cloud provider on which you have the instance.
-     *                    Default: "amazon"
      * @param endpoint    Endpoint to which request will be sent.
      *                    Example: "https://ec2.amazonaws.com"
      * @param identity    Optional - Username of your account or the Access Key ID.
      * @param credential  Optional - Password of the user or the Secret Access Key that correspond to the identity input.
+     * @param version     Version of the web service to made the call against it.
+     *                    Example: "2016-04-01"
+     *                    Default: ""
      * @param proxyHost   Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort   Optional - Proxy server port.
      * @param debugMode   Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param region      Optional - Region where image will be created. ListRegionAction can be used in order to
-     *                    get all regions. For further details check: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-     *                    Default: "us-east-1".
      * @param instanceId  ID of the server (instance) to be used to create image.
      * @param name        A name for the new image.
      * @param description Optional - A description for the new image.
@@ -66,16 +64,16 @@ public class CreateImageAction {
                                        @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
                                        @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
                                        @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
-                                       @Param(value = Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId,
 
                                        @Param(value = Inputs.ImageInputs.IMAGE_DESCRIPTION) String description,
                                        @Param(value = Inputs.ImageInputs.NAME, required = true) String name,
-                                       @Param(value = Inputs.ImageInputs.NO_REBOOT) String noReboot) throws Exception {
+                                       @Param(value = Inputs.ImageInputs.NO_REBOOT) String noReboot) {
         try {
             CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                     .withProvider(provider)
@@ -85,6 +83,7 @@ public class CreateImageAction {
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
                     .withDebugMode(debugMode)
+                    .withVersion(version)
                     .withAction(Constants.QueryApiActions.CREATE_IMAGE)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
@@ -93,7 +92,6 @@ public class CreateImageAction {
                     .build();
 
             CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
-                    .withRegion(region)//TODO remove region
                     .withInstanceId(instanceId)
                     .build();
 

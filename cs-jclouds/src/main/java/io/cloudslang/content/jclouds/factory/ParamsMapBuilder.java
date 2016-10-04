@@ -57,6 +57,9 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
                     queryParamsMap = new NetworkHelper().getDisassociateAddressQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DESCRIBE_IMAGES:
+                    queryParamsMap = new ImageHelper().getDescribeImagesQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.DESCRIBE_IMAGE_ATTRIBUTE:
                     queryParamsMap = new ImageHelper().getDescribeImageAttributeQueryParamsMap(wrapper);
                     break;
@@ -65,6 +68,9 @@ public class ParamsMapBuilder {
                     break;
                 case Constants.QueryApiActions.RELEASE_ADDRESS:
                     queryParamsMap = new ElasticIpHelper().getReleaseAddressQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.RESET_IMAGE_ATTRIBUTE:
+                    queryParamsMap = new ImageHelper().getResetImageAttributeQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.RUN_INSTANCES:
                     queryParamsMap = new InstanceHelper().getRunInstancesQueryParamsMap(wrapper);
