@@ -11,10 +11,10 @@ public class TransferVmdkToUrl implements ITransferVmdkTo {
 
     private OutputStream os;
 
-    public TransferVmdkToUrl(String cookie, URL uploadURL, boolean create)
+    public TransferVmdkToUrl(URL uploadURL, boolean create)
             throws IOException {
 
-        HttpsURLConnection conn = Uploader.getHTTPSUploadConnection(uploadURL, cookie, CHUNK_LENGTH, 0, create);
+        HttpsURLConnection conn = Uploader.getHTTPSUploadConnection(uploadURL, CHUNK_LENGTH, 0, create);
 
         os = conn.getOutputStream();
     }

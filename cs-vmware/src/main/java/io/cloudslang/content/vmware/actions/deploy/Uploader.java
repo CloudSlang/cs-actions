@@ -12,12 +12,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+import static io.cloudslang.content.vmware.constants.Constants.SIZE_4K;
+
 public class Uploader {
 
     private static final Logger logger = LoggerFactory.getLogger(Uploader.class);
 
-    public static HttpsURLConnection getHTTPSUploadConnection(URL url, String cookieStr, int chunkLength, long contentLength, boolean put) throws IOException {
-        HttpsURLConnection conn = getBasicHTTPSConnection(url, cookieStr);
+    public static HttpsURLConnection getHTTPSUploadConnection(URL url, int chunkLength, long contentLength, boolean put) throws IOException {
+        HttpsURLConnection conn = getBasicHTTPSConnection(url);
 
         conn.setChunkedStreamingMode(chunkLength);
         if (put) {
@@ -33,7 +35,7 @@ public class Uploader {
         return conn;
     }
 
-    private static HttpsURLConnection getBasicHTTPSConnection(URL url, String cookieStr) throws IOException {
+    private static HttpsURLConnection getBasicHTTPSConnection(URL url) throws IOException {
 
         HostnameVerifier hv = new HostnameVerifier() {
             public boolean verify(String urlHostName, SSLSession session) {
@@ -46,22 +48,6 @@ public class Uploader {
         conn.setDoInput(true);
         conn.setDoOutput(true);
         conn.setAllowUserInteraction(false);
-        conn.setRequestProperty("Cookie", cookieStr);
         return conn;
-    }
-
-    public static long copyAll(InputStream inputStream, OutputStream outputStream, ProgressUpdater progressUpdater) throws Exception {
-        long bytesCopied = 0;
-        byte[] buffer = new byte[Constants.SIZE_4K];
-        int read;
-        while ((read = inputStream.read(buffer)) >= 0) {
-            outputStream.write(buffer, 0, read);
-            outputStream.flush();
-            bytesCopied += read;
-            progressUpdater.updateBytesSent(read);
-            logger.info("update progress bar with: " + read);
-            System.out.println("Thread id: " + Thread.currentThread().getId() + " thread name: " + Thread.currentThread().getName());
-        }
-        return bytesCopied;
     }
 }

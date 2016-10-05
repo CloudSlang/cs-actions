@@ -11,8 +11,8 @@ import com.vmware.vim25.ImportSpec;
 import com.vmware.vim25.InsufficientResourcesFaultFaultMsg;
 import com.vmware.vim25.InvalidDatastoreFaultMsg;
 import com.vmware.vim25.InvalidNameFaultMsg;
-import com.vmware.vim25.InvalidPropertyFaultMsg;
 import com.vmware.vim25.InvalidStateFaultMsg;
+import com.vmware.vim25.LocalizedMethodFault;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.ObjectContent;
 import com.vmware.vim25.OutOfBoundsFaultMsg;
@@ -26,16 +26,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.List;
 
-import static io.cloudslang.content.vmware.constants.Constants.SIZE_4K;
 import static org.apache.commons.io.IOUtils.toByteArray;
 
 public class OvfUtils {
+
+    private final static PathMatcher ovaMatcher = FileSystems.getDefault().getPathMatcher("glob:**.ova");
+    private final static PathMatcher ovfMatcher = FileSystems.getDefault().getPathMatcher("glob:**.ovf");
+    private final static PathMatcher vmdkMatcher = FileSystems.getDefault().getPathMatcher("glob:**.vmdk");
+    private static final String LEASE_COULD_NOT_BE_OBTAINED = "HttpNfcLeaseInfo could not be obtained";
+    private static final String LEASE_STATE_COULD_NOT_BE_OBTAINED = "HttpNfcLease state could not be obtained!";
+    private static final String LEASE_ERROR_STATE_COULD_NOT_BE_OBTAINED = "HttpNfcLease error state could not be obtained!";
 
     public static ManagedObjectReference getHttpNfcLease(ConnectionResources connectionResources, ImportSpec importSpec,
                                                          ManagedObjectReference resourcePool, ManagedObjectReference hostMor, ManagedObjectReference folderMor)
@@ -46,38 +52,47 @@ public class OvfUtils {
     }
 
     @NotNull
-    public static HttpNfcLeaseInfo getHttpNfcLeaseInfo(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, httpNfcLease, new String[]{"info"});
-        HttpNfcLeaseInfo httpNfcLeaseInfo = null;
-        if (objectContents != null && objectContents.length == 1) {
-            List<DynamicProperty> dynamicProperties = objectContents[0].getPropSet();
-            if (dynamicProperties != null && dynamicProperties.size() == 1 && dynamicProperties.get(0).getVal() instanceof HttpNfcLeaseInfo) {
-                httpNfcLeaseInfo = (HttpNfcLeaseInfo) dynamicProperties.get(0).getVal();
-            }
+    public static HttpNfcLeaseInfo getHttpNfcLeaseInfo(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) throws Exception {
+        final ObjectContent objectContent = GetObjectProperties.getObjectProperty(connectionResources, httpNfcLease, "info");
+        final List<DynamicProperty> dynamicProperties = objectContent.getPropSet();
+        if (dynamicProperties.size() != 0 && dynamicProperties.get(0).getVal() instanceof HttpNfcLeaseInfo) {
+            return (HttpNfcLeaseInfo) dynamicProperties.get(0).getVal();
         }
-        if (httpNfcLeaseInfo == null) {
-            throw new RuntimeException("HttpNfcLeaseInfo could not be obtained");
-        }
-        return httpNfcLeaseInfo;
+        throw new RuntimeException(LEASE_COULD_NOT_BE_OBTAINED);
     }
 
-    public static String gethttpNfcLeaseState(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, httpNfcLease, new String[]{"state"});
-        if (objectContents != null && objectContents.length == 1) {
-            List<DynamicProperty> dynamicProperties = objectContents[0].getPropSet();
-            if (dynamicProperties != null && dynamicProperties.size() == 1) {
-                return ((TextImpl) ((ElementNSImpl) dynamicProperties.get(0).getVal()).getFirstChild()).getData();
-            }
+    public static String getHttpNfcLeaseState(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) throws Exception {
+        final ObjectContent objectContent = GetObjectProperties.getObjectProperty(connectionResources, httpNfcLease, "state");
+        final List<DynamicProperty> dynamicProperties = objectContent.getPropSet();
+        if (dynamicProperties.size() != 0) {
+            return ((TextImpl) ((ElementNSImpl) dynamicProperties.get(0).getVal()).getFirstChild()).getData();
         }
-        return null; //TODO: possibly throw exception
+        throw new Exception(LEASE_STATE_COULD_NOT_BE_OBTAINED);
     }
 
-    public static String getHttpNfcLeaseError(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) {
-        return null;   //TODO: get error message
+    public static String getHttpNfcLeaseErrorState(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) throws Exception {
+        final ObjectContent objectContent = GetObjectProperties.getObjectProperty(connectionResources, httpNfcLease, "error");
+        final List<DynamicProperty> dynamicProperties = objectContent.getPropSet();
+        if (dynamicProperties.size() != 0 && dynamicProperties.get(0).getVal() instanceof LocalizedMethodFault) {
+            return ((LocalizedMethodFault) dynamicProperties.get(0).getVal()).getLocalizedMessage();
+        }
+        throw new Exception(LEASE_ERROR_STATE_COULD_NOT_BE_OBTAINED);
     }
 
     public static String writeToString(final InputStream inputStream, final long length) throws IOException {
         byte[] byteArray = toByteArray(inputStream, length);
         return IOUtils.toString(byteArray, StandardCharsets.UTF_8.toString());
+    }
+
+    public static boolean isOva(final Path filePath) {
+        return ovaMatcher.matches(filePath);
+    }
+
+    public static boolean isVmdk(final Path filePath) {
+        return vmdkMatcher.matches(filePath);
+    }
+
+    public static boolean isOvf(final Path filePath) {
+        return ovfMatcher.matches(filePath);
     }
 }
