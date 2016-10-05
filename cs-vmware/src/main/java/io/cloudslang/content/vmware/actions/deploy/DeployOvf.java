@@ -15,11 +15,14 @@ import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -51,8 +54,7 @@ public class DeployOvf {
 
 
 
-    public void deployOvf(HttpInputs httpInputs, VmInputs vmInputs, String ovfPath, String vmName, boolean parallel) throws Exception {
-
+    public void deployOva(HttpInputs httpInputs, VmInputs vmInputs, String ovaPath, String vmName, boolean parallel) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         ManagedObjectReference ovfManager = getOvfManager(connectionResources);
         VmUtils vmUtils = new VmUtils();
@@ -63,7 +65,43 @@ public class DeployOvf {
 
         //get a lease in ready state. Create the VMs and/or vApps that make up the entity.
         OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType().
-                createImportSpec(ovfManager, getOvfString(ovfPath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmName, hostMor));
+                createImportSpec(ovfManager, getOvfTemplateAsString(ovaPath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmName, hostMor));
+
+        ManagedObjectReference httpNfcLease = OvfUtils.getHttpNfcLease(connectionResources, importSpecResult.getImportSpec(), resourcePool, hostMor, folderMor);
+
+        HttpNfcLeaseInfo httpNfcLeaseInfo = getHttpNfcLeaseInfoWhenReady(connectionResources, httpNfcLease);
+
+        //The client must call HttpNfcLeaseProgress on the lease periodically to keep the lease alive and report progress to the server.
+        // Failure to do so will cause the lease to time out, and the import process will be aborted.
+
+        List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
+
+        final ProgressUpdater progressUpdater = parallel ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources) : new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
+        if (parallel) {
+            executor.execute(progressUpdater);
+        }
+        System.out.println("start");
+        long time1 = System.currentTimeMillis();
+        transferVmdkFiles(ovaPath, importSpecResult, deviceUrls, progressUpdater, parallel);
+        if (parallel) {
+            executor.shutdown();
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        }
+        System.out.println("completed in: " + String.valueOf((System.currentTimeMillis() - time1) / 1000));
+    }
+
+    public void deployOvf(HttpInputs httpInputs, VmInputs vmInputs, String ovfPath, String vmName, boolean parallel) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ManagedObjectReference ovfManager = getOvfManager(connectionResources);
+        VmUtils vmUtils = new VmUtils();
+        ManagedObjectReference resourcePool = vmUtils.getMorResourcePool(null, connectionResources);
+        ManagedObjectReference hostMor = vmUtils.getMorHost(vmInputs.getHostname(), connectionResources, null);
+        ManagedObjectReference datastoreMor = vmUtils.getMorDataStore(vmInputs.getDataStore(), connectionResources, null, vmInputs);
+        ManagedObjectReference folderMor = vmUtils.getMorFolder(vmInputs.getFolderName(), connectionResources);
+
+        //get a lease in ready state. Create the VMs and/or vApps that make up the entity.
+        OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType().
+                createImportSpec(ovfManager, getOvfTemplateAsString(ovfPath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmName, hostMor));
 
         ManagedObjectReference httpNfcLease = OvfUtils.getHttpNfcLease(connectionResources, importSpecResult.getImportSpec(), resourcePool, hostMor, folderMor);
 
@@ -140,14 +178,27 @@ public class DeployOvf {
     }
 
     @NotNull
-    private String getOvfString(String ovfPath) throws IOException {
-        BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(ovfPath), StandardCharsets.UTF_8);
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while (bufferedReader.ready() && (line = bufferedReader.readLine()) != null) {
-            stringBuilder.append(line).append(System.lineSeparator());
+    private String getOvfTemplateAsString(String templatePath) throws IOException {
+        if (templatePath.endsWith("ova")) {
+            try (TarArchiveInputStream tar = new TarArchiveInputStream(new FileInputStream(templatePath))) {
+                TarArchiveEntry entry;
+                while ((entry = tar.getNextTarEntry()) != null) {
+                    if (entry.getName().endsWith(".ovf")) {
+                        long entrySize = entry.getSize();
+                        return OvfUtils.writeToString(tar, entrySize);
+                    }
+                }
+            }
+        } else {
+            BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(templatePath), StandardCharsets.UTF_8);
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while (bufferedReader.ready() && (line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append(System.lineSeparator());
+            }
+            return stringBuilder.toString();
         }
-        return stringBuilder.toString();
+        throw new RuntimeException("Template file could not be read!");
     }
 
 

@@ -1,5 +1,6 @@
 package io.cloudslang.content.vmware.actions.deploy;
 
+import io.cloudslang.content.vmware.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,6 @@ import java.net.URL;
 public class Uploader {
 
     private static final Logger logger = LoggerFactory.getLogger(Uploader.class);
-    private static final int DEFAULT_BUFFER_SIZE = 1 << 12;
 
     public static HttpsURLConnection getHTTPSUploadConnection(URL url, String cookieStr, int chunkLength, long contentLength, boolean put) throws IOException {
         HttpsURLConnection conn = getBasicHTTPSConnection(url, cookieStr);
@@ -52,7 +52,7 @@ public class Uploader {
 
     public static long copyAll(InputStream inputStream, OutputStream outputStream, ProgressUpdater progressUpdater) throws Exception {
         long bytesCopied = 0;
-        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        byte[] buffer = new byte[Constants.SIZE_4K];
         int read;
         while ((read = inputStream.read(buffer)) >= 0) {
             outputStream.write(buffer, 0, read);

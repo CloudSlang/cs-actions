@@ -21,15 +21,24 @@ import com.vmware.vim25.TaskInProgressFaultMsg;
 import com.vmware.vim25.VmConfigFaultFaultMsg;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import static io.cloudslang.content.vmware.constants.Constants.SIZE_4K;
+import static org.apache.commons.io.IOUtils.toByteArray;
 
 public class OvfUtils {
 
     public static ManagedObjectReference getHttpNfcLease(ConnectionResources connectionResources, ImportSpec importSpec,
-                                                   ManagedObjectReference resourcePool, ManagedObjectReference hostMor, ManagedObjectReference folderMor)
+                                                         ManagedObjectReference resourcePool, ManagedObjectReference hostMor, ManagedObjectReference folderMor)
             throws ConcurrentAccessFaultMsg, FileFaultFaultMsg, InvalidDatastoreFaultMsg, InvalidStateFaultMsg, RuntimeFaultFaultMsg, TaskInProgressFaultMsg, VmConfigFaultFaultMsg, IOException, DuplicateNameFaultMsg, InsufficientResourcesFaultFaultMsg, InvalidNameFaultMsg, OutOfBoundsFaultMsg {
 
         return connectionResources.getVimPortType().
@@ -58,12 +67,17 @@ public class OvfUtils {
             List<DynamicProperty> dynamicProperties = objectContents[0].getPropSet();
             if (dynamicProperties != null && dynamicProperties.size() == 1) {
                 return ((TextImpl) ((ElementNSImpl) dynamicProperties.get(0).getVal()).getFirstChild()).getData();
-                }
             }
+        }
         return null; //TODO: possibly throw exception
     }
 
     public static String getHttpNfcLeaseError(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) {
         return null;   //TODO: get error message
+    }
+
+    public static String writeToString(final InputStream inputStream, final long length) throws IOException {
+        byte[] byteArray = toByteArray(inputStream, length);
+        return IOUtils.toString(byteArray, StandardCharsets.UTF_8.toString());
     }
 }
