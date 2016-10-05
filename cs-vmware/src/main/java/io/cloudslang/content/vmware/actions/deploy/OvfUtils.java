@@ -60,7 +60,7 @@ public class OvfUtils {
                 return ((TextImpl) ((ElementNSImpl) dynamicProperties.get(0).getVal()).getFirstChild()).getData();
                 }
             }
-        return null;
+        return null; //TODO: possibly throw exception
     }
 
     public static String getHttpNfcLeaseError(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) {

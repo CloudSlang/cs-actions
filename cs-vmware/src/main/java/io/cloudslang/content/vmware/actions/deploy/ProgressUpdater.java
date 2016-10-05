@@ -1,64 +1,46 @@
 package io.cloudslang.content.vmware.actions.deploy;
 
-import com.vmware.vim25.InvalidPropertyFaultMsg;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFaultFaultMsg;
 import com.vmware.vim25.TimedoutFaultMsg;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ProgressUpdater implements Runnable {
+import static java.lang.Math.floor;
 
+/**
+ * Created by giloan on 10/5/2016.
+ */
+public abstract class ProgressUpdater implements Runnable {
+
+    protected final long totalNoBytes;
+    protected final ManagedObjectReference httpNfcLease;
+    protected final ConnectionResources connectionResources;
     final private Logger logger = LoggerFactory.getLogger(ProgressUpdater.class);
+    protected long bytesSent;
 
-    private final long totalNoBytes;
-    private final ManagedObjectReference httpNfcLease;
-    private final ConnectionResources connectionResources;
-    private volatile long bytesSent;
-
-    private volatile boolean shutdown;
-
-    public ProgressUpdater(long totalNoBytes, ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) {
+    public ProgressUpdater(long totalNoBytes, ManagedObjectReference httpNfcLease, ConnectionResources connectionResources) {
         this.totalNoBytes = totalNoBytes;
-        this.connectionResources = connectionResources;
         this.httpNfcLease = httpNfcLease;
-        updateBytesSent(0);
-        logger.info("Progress updater was created! Amount to transfer is: " + totalNoBytes);
+        this.connectionResources = connectionResources;
+        this.bytesSent = 0;
     }
 
-    public void updateBytesSent(long addedValue) {
-        if (0 < addedValue) {
-            this.bytesSent += addedValue;
-        }
-        logger.info("The bytesSent value was increased. It's now: " + bytesSent);
+    abstract void updateBytesSent(final long bytesSent) throws Exception;
+
+    protected final synchronized void updateLeaseProgress(final int percentage) throws RuntimeFaultFaultMsg, TimedoutFaultMsg {
+        logger.info("HttpNfcLease progress is updated to " + getFloorPercentage() + "%. (totalSize: " + totalNoBytes + "; bytesSent: " + bytesSent + ")");
+        connectionResources.getVimPortType().httpNfcLeaseProgress(httpNfcLease, percentage);
     }
 
-    @Override
-    public void run() {
-        try {
-            while (!shutdown) {
-                int percentage = (int) (((float) bytesSent / totalNoBytes) * 100);
-                logger.info("HttpNfcLease progress is updated to " + percentage + "%. (totalSize: " + totalNoBytes + "; bytesSent: " + bytesSent + ")");
-                connectionResources.getVimPortType().httpNfcLeaseProgress(httpNfcLease, percentage);
-                logger.info("HttpNfcLease progress was updated!");
-                Thread.sleep(3000);
-            }
-        } catch (RuntimeFaultFaultMsg runtimeFaultFaultMsg) {
-            logger.error(ExceptionUtils.getStackTrace(runtimeFaultFaultMsg));
-        } catch (InterruptedException e) {
-            logger.error(ExceptionUtils.getStackTrace(e));
-        } catch (TimedoutFaultMsg timedoutFaultMsg) {
-            logger.error(ExceptionUtils.getStackTrace(timedoutFaultMsg));
-        }
+    protected final void updateProgressCompleted() throws Exception {
+        connectionResources.getVimPortType().httpNfcLeaseComplete(httpNfcLease);
+        logger.info("HttpNfcLease is completed!");
     }
 
-    private boolean leaseIsReady() throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        return "ready" == OvfUtils.gethttpNfcLeaseState(connectionResources, httpNfcLease);
+    protected final int getFloorPercentage() {
+        return (int) floor(((float) this.bytesSent / this.totalNoBytes) * 100);
     }
 
-    public void shutdown() {
-        shutdown = true;
-    }
 }

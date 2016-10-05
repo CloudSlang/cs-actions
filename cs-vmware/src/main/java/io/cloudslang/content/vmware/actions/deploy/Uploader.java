@@ -14,7 +14,7 @@ import java.net.URL;
 public class Uploader {
 
     private static final Logger logger = LoggerFactory.getLogger(Uploader.class);
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+    private static final int DEFAULT_BUFFER_SIZE = 1 << 12;
 
     public static HttpsURLConnection getHTTPSUploadConnection(URL url, String cookieStr, int chunkLength, long contentLength, boolean put) throws IOException {
         HttpsURLConnection conn = getBasicHTTPSConnection(url, cookieStr);
@@ -50,7 +50,7 @@ public class Uploader {
         return conn;
     }
 
-    public static long copyAll(InputStream inputStream, OutputStream outputStream, ProgressUpdater progressUpdater) throws IOException {
+    public static long copyAll(InputStream inputStream, OutputStream outputStream, ProgressUpdater progressUpdater) throws Exception {
         long bytesCopied = 0;
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int read;
@@ -59,6 +59,8 @@ public class Uploader {
             outputStream.flush();
             bytesCopied += read;
             progressUpdater.updateBytesSent(read);
+            logger.info("update progress bar with: " + read);
+            System.out.println("Thread id: " + Thread.currentThread().getId() + " thread name: " + Thread.currentThread().getName());
         }
         return bytesCopied;
     }

@@ -25,11 +25,11 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by giloan on 9/26/2016.
@@ -37,6 +37,19 @@ import java.util.Map;
 public class DeployOvf {
 
     private static final int DISK_DRIVE_CIM_TYPE = 17;
+    private final ThreadPoolExecutor executor;
+    private final boolean parallel;
+
+    public DeployOvf(final boolean parallel) {
+        this.parallel = parallel;
+        if (parallel) {
+            this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        } else {
+            this.executor = null;
+        }
+    }
+
+
 
     public void deployOvf(HttpInputs httpInputs, VmInputs vmInputs, String ovfPath, String vmName, boolean parallel) throws Exception {
 
@@ -61,47 +74,40 @@ public class DeployOvf {
 
         List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
 
-        ProgressUpdater progressUpdater = new ProgressUpdater(getDisksTotalNoBytes(importSpecResult), connectionResources, httpNfcLease);
-        new Thread(progressUpdater).start();
-
-        List<TransferVmdk> transferVmdkThreads = transferVmdkFiles(ovfPath, parallel, importSpecResult, deviceUrls, progressUpdater);
-
+        final ProgressUpdater progressUpdater = parallel ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources) : new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
         if (parallel) {
-            joinAllTransferVmdkThreads(transferVmdkThreads);
+            executor.execute(progressUpdater);
         }
-
-        progressUpdater.shutdown();
-        connectionResources.getVimPortType().httpNfcLeaseProgress(httpNfcLease, 100);
-        connectionResources.getVimPortType().httpNfcLeaseComplete(httpNfcLease);
+        System.out.println("start");
+        long time1 = System.currentTimeMillis();
+        transferVmdkFiles(ovfPath, importSpecResult, deviceUrls, progressUpdater, parallel);
+        if (parallel) {
+            executor.shutdown();
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        }
+        System.out.println("completed in: " + String.valueOf((System.currentTimeMillis() - time1) / 1000));
     }
 
     @NotNull
-    private List<TransferVmdk> transferVmdkFiles(String ovfPath, boolean parallel, OvfCreateImportSpecResult importSpecResult, List<HttpNfcLeaseDeviceUrl> deviceUrls, ProgressUpdater progressUpdater) throws IOException, RuntimeFaultFaultMsg, TimedoutFaultMsg, InterruptedException {
-        List<TransferVmdk> transferVmdkThreads = new ArrayList<>();
+    private void transferVmdkFiles(final String ovfPath, final OvfCreateImportSpecResult importSpecResult,
+                                   final List<HttpNfcLeaseDeviceUrl> deviceUrls, final ProgressUpdater progressUpdater, final boolean parallel) throws IOException, RuntimeFaultFaultMsg, TimedoutFaultMsg, InterruptedException {
         for (HttpNfcLeaseDeviceUrl deviceUrl : deviceUrls) {
-            String deviceKey = deviceUrl.getImportKey();
+            final String deviceKey = deviceUrl.getImportKey();
             for (OvfFileItem fileItem : importSpecResult.getFileItem()) {
                 if (deviceKey.equals(fileItem.getDeviceId())) {
-                    URL vmDiskUrl = new URL(deviceUrl.getUrl());
+                    final URL vmDiskUrl = new URL(deviceUrl.getUrl());
+                    final ITransferVmdkFrom fromFile = getTransferVmdK(ovfPath, fileItem.getPath());
+                    final TransferVmdkToUrl toUrl = new TransferVmdkToUrl("", vmDiskUrl, fileItem.isCreate());
 
-                    ITransferVmdkFrom fromFile = getTransferVmdK(ovfPath, fileItem.getPath());
-                    TransferVmdkToUrl toUrl = new TransferVmdkToUrl("", vmDiskUrl, fileItem.isCreate());
-
-                    TransferVmdk transferVmdkThread = new TransferVmdk(deviceKey, fromFile, toUrl, progressUpdater);
-                    transferVmdkThreads.add(transferVmdkThread);
-                    transferVmdkThread.start();
-                    if (!parallel) {
-                        transferVmdkThread.join();
+                    final TransferVmdkTask transferVmdkTask = new TransferVmdkTask(fromFile, toUrl, progressUpdater);
+                    if (parallel) {
+                        executor.execute(transferVmdkTask);
+                    } else {
+                        transferVmdkTask.run();
                     }
+                    break;
                 }
             }
-        }
-        return transferVmdkThreads;
-    }
-
-    private void joinAllTransferVmdkThreads(List<TransferVmdk> transferVmdkThreads) throws InterruptedException {
-        for (TransferVmdk transferVmdkThread : transferVmdkThreads) {
-            transferVmdkThread.join();
         }
     }
 
@@ -116,14 +122,6 @@ public class DeployOvf {
         return new TransferVmdkFromFile(new File(new File(ovfFilePath).getParent(), vmdkPath));
     }
 
-    private Map<String, Long> getDeviceIdFromDeviceUrl(final List<HttpNfcLeaseDeviceUrl> deviceUrls) {
-        HashMap<String, Long> toReturn = new HashMap<>();
-        for (HttpNfcLeaseDeviceUrl deviceUrl : deviceUrls) {
-            toReturn.put(deviceUrl.getKey(), deviceUrl.getFileSize());
-        }
-        return toReturn;
-    }
-
     @NotNull
     private HttpNfcLeaseInfo getHttpNfcLeaseInfoWhenReady(ConnectionResources connectionResources, ManagedObjectReference httpNfcLease) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         String leaseState = OvfUtils.gethttpNfcLeaseState(connectionResources, httpNfcLease);
@@ -133,7 +131,7 @@ public class DeployOvf {
                 throw new RuntimeException("Failed to get a HTTP NFC Lease: " + OvfUtils.getHttpNfcLeaseError(connectionResources, httpNfcLease));
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 //TODO: log exception
             }
