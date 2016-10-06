@@ -63,11 +63,11 @@ public class DeleteSnapshotInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
+        return new CommonInputs.Builder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder().withRegion("testRegion").build();
+        return new CustomInputs.Builder().withRegion("testRegion").build();
     }
 
     private VolumeInputs getVolumeInputs() throws Exception {

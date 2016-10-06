@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 9/9/2016.
  */
-public class VolumeHelper {
+public class VolumeUtils {
     private static final String AVAILABILITY_ZONE = "AvailabilityZone";
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";

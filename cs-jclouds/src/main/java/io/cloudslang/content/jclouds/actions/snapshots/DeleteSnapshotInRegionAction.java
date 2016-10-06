@@ -71,7 +71,7 @@ public class DeleteSnapshotInRegionAction {
                                        @Param(value = Inputs.VolumeInputs.SNAPSHOT_ID, required = true) String snapshotId)
             throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -81,7 +81,7 @@ public class DeleteSnapshotInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .build();
 

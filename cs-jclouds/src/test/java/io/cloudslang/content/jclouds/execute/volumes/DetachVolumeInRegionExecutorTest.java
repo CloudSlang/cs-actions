@@ -64,11 +64,11 @@ public class DetachVolumeInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
+        return new CommonInputs.Builder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withRegion("testRegion")
                 .withVolumeId("vol-abcdef12")
                 .withInstanceId("i-abcdef12")

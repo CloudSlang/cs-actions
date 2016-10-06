@@ -114,7 +114,7 @@ public class CreateVolumeAction {
                                             @Param(value = Inputs.VolumeInputs.SNAPSHOT_ID) String snapshotId) throws Exception {
 
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withEndpoint(endpoint)
@@ -132,7 +132,7 @@ public class CreateVolumeAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withAvailabilityZone(availabilityZone)
                     .withKmsKeyId(kmsKeyId)
                     .withVolumeType(volumeType)

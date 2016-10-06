@@ -63,11 +63,11 @@ public class DeleteVolumeInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
+        return new CommonInputs.Builder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder().withRegion("testRegion").withVolumeId("vol-abcdef12").build();
+        return new CustomInputs.Builder().withRegion("testRegion").withVolumeId("vol-abcdef12").build();
     }
 
     private VolumeInputs getVolumeInputs() throws Exception {

@@ -572,7 +572,7 @@ public class AmazonComputeServiceImplTest {
     }
 
     private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) throws Exception {
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(REGION)
                 .withKeyTagsString(tagKeys)
                 .withValueTagsString(tagValues)
@@ -589,6 +589,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("TrUe").withDelimiter(",").build();
+        return new CommonInputs.Builder().withDebugMode("TrUe").withDelimiter(",").build();
     }
 }

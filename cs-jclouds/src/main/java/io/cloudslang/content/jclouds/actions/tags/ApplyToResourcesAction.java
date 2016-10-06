@@ -76,7 +76,7 @@ public class ApplyToResourcesAction {
                                        @Param(value = Inputs.CustomInputs.RESOURCE_IDS_STRING, required = true) String resourceIdsString)
             throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -87,7 +87,7 @@ public class ApplyToResourcesAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withKeyTagsString(keyTagsString)
                 .withValueTagsString(valueTagsString)

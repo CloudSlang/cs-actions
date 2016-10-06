@@ -67,7 +67,7 @@ public class DeleteVolumeInRegionAction {
                                        @Param(value = Inputs.CustomInputs.VOLUME_ID, required = true) String volumeId)
             throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -77,7 +77,7 @@ public class DeleteVolumeInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withRegion(region).withVolumeId(volumeId).build();
+        CustomInputs customInputs = new CustomInputs.Builder().withRegion(region).withVolumeId(volumeId).build();
         VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder().withCustomInputs(customInputs).build();
 
         try {

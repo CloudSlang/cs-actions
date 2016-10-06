@@ -69,7 +69,7 @@ public class StartServerExecutorTest {
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
-        return new CommonInputs.CommonInputsBuilder()
+        return new CommonInputs.Builder()
                 .withProvider(inputs.getProvider())
                 .withEndpoint(inputs.getEndpoint())
                 .withIdentity(inputs.getIdentity())
@@ -80,7 +80,7 @@ public class StartServerExecutorTest {
     }
 
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withRegion(inputs.getRegion())
                 .withInstanceId(inputs.getServerId())
                 .build();

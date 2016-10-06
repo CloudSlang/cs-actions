@@ -81,7 +81,7 @@ public class DetachVolumeInRegionAction {
                                        @Param(value = Inputs.VolumeInputs.DEVICE_NAME) String deviceName,
                                        @Param(value = Inputs.VolumeInputs.FORCE) String force) throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -91,7 +91,7 @@ public class DetachVolumeInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withVolumeId(volumeId)
                 .withInstanceId(instanceId)

@@ -75,7 +75,7 @@ public class UpdateInstanceTypeAction {
                                        @Param(value = Inputs.InstanceInputs.POOLING_INTERVAL) String poolingInterval)
             throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -85,7 +85,7 @@ public class UpdateInstanceTypeAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withInstanceId(instanceId)
                 .withInstanceType(instanceType)

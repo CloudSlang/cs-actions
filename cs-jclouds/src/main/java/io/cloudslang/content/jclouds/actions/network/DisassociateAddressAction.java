@@ -92,7 +92,7 @@ public class DisassociateAddressAction {
 
                                                    @Param(value = Inputs.ElasticIpInputs.PUBLIC_IP) String publicIp) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -110,7 +110,7 @@ public class DisassociateAddressAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withAssociationId(associationId).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withAssociationId(associationId).build();
             ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder().withPublicIp(publicIp).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);

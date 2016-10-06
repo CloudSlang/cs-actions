@@ -33,7 +33,7 @@ public class CommonInputs {
 
     private boolean debugMode;
 
-    private CommonInputs(CommonInputsBuilder builder) {
+    private CommonInputs(Builder builder) {
         this.provider = builder.provider;
         this.endpoint = builder.endpoint;
         this.identity = builder.identity;
@@ -127,7 +127,7 @@ public class CommonInputs {
         return debugMode;
     }
 
-    public static class CommonInputsBuilder {
+    public static class Builder {
         private String provider;
         private String endpoint;
         private String identity;
@@ -152,12 +152,12 @@ public class CommonInputs {
             return new CommonInputs(this);
         }
 
-        public CommonInputsBuilder withProvider(String inputValue) throws Exception {
+        public Builder withProvider(String inputValue) throws Exception {
             provider = Providers.getValue(inputValue);
             return this;
         }
 
-        public CommonInputsBuilder withEndpoint(String inputValue) throws MalformedURLException {
+        public Builder withEndpoint(String inputValue) throws MalformedURLException {
             if (StringUtils.isBlank(inputValue)) {
                 throw new RuntimeException("The required " + inputValue + " input is not specified!");
             }
@@ -165,82 +165,82 @@ public class CommonInputs {
             return this;
         }
 
-        public CommonInputsBuilder withIdentity(String inputValue) {
+        public Builder withIdentity(String inputValue) {
             identity = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withCredential(String inputValue) {
+        public Builder withCredential(String inputValue) {
             credential = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withProxyHost(String inputValue) {
+        public Builder withProxyHost(String inputValue) {
             proxyHost = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withProxyPort(String inputValue) {
+        public Builder withProxyPort(String inputValue) {
             proxyPort = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withProxyUsername(String inputValue) {
+        public Builder withProxyUsername(String inputValue) {
             proxyUsername = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withProxyPassword(String inputValue) {
+        public Builder withProxyPassword(String inputValue) {
             proxyPassword = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withDelimiter(String inputValue) {
+        public Builder withDelimiter(String inputValue) {
             delimiter = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.COMMA_DELIMITER);
             return this;
         }
 
-        public CommonInputsBuilder withVersion(String inputValue) {
+        public Builder withVersion(String inputValue) {
             version = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withHeaders(String inputValue) {
+        public Builder withHeaders(String inputValue) {
             headers = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withQueryParams(String inputValue) {
+        public Builder withQueryParams(String inputValue) {
             queryParams = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withApiService(String inputValue) {
+        public Builder withApiService(String inputValue) {
             apiService = InputsUtil.getDefaultStringInput(inputValue, Constants.Apis.AMAZON_EC2_API);
             return this;
         }
 
-        public CommonInputsBuilder withRequestUri(String inputValue) {
+        public Builder withRequestUri(String inputValue) {
             requestUri = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public CommonInputsBuilder withAction(String inputValue) {
+        public Builder withAction(String inputValue) {
             action = inputValue;
             return this;
         }
 
-        public CommonInputsBuilder withRequestPayload(String inputValue) {
+        public Builder withRequestPayload(String inputValue) {
             requestPayload = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public CommonInputsBuilder withHttpClientMethod(String inputValue) {
+        public Builder withHttpClientMethod(String inputValue) {
             httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HttpClientMethod.GET.toString());
             return this;
         }
 
-        public CommonInputsBuilder withDebugMode(String inputValue) {
+        public Builder withDebugMode(String inputValue) {
             debugMode = Boolean.parseBoolean(inputValue);
             return this;
         }
