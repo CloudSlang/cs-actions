@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 9/23/2016.
  */
-public class IamHelper {
+public class IamUtils {
     void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, String inputString, String prefix,
                                      String suffix, String delimiter) {
         if (StringUtils.isNotBlank(inputString)) {

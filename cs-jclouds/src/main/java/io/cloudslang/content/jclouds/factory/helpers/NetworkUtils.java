@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 9/9/2016.
  */
-public class NetworkHelper {
+public class NetworkUtils {
     private static final String ALLOW_REASSOCIATION = "AllowReassociation";
     private static final String ASSOCIATION_ID = "AssociationId";
     private static final String ATTACHMENT_ID = "AttachmentId";
@@ -79,7 +79,7 @@ public class NetworkHelper {
 
         setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, Constants.Miscellaneous.NETWORK, wrapper.getCommonInputs().getDelimiter());
         setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
-        new IamHelper().setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+        new IamUtils().setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 Constants.AwsParams.SECURITY_GROUP_ID, Constants.Miscellaneous.EMPTY, wrapper.getCommonInputs().getDelimiter());
 
         return queryParamsMap;
