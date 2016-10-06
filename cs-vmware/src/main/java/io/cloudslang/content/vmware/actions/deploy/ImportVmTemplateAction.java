@@ -46,9 +46,9 @@ public class ImportVmTemplateAction {
                                               @Param(value = Inputs.DATACENTER, required = true) String datacenter,
                                               @Param(value = Inputs.VM_FOLDER, required = true) String vmFolder,
                                               @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
-                                              @Param(value = Inputs.THIN_PROVISION) String thinProvision,
+                                              @Param(value = Inputs.HOST_SYSTEM, required = true) String hostSystem,
+                                              @Param(value = Inputs.DISK_PROVISIONING) String diskProvisioning,
 //                                              @Param(value = Inputs.HS_IDENTIFIER_TYPE) String hsIdentifierType,
-                                              @Param(value = Inputs.HOST_SYSTEM) String hostSystem,
 //                                              @Param(value = Inputs.CLUSTER_NAME) String clusterName,
                                               @Param(value = Inputs.RESOURCE_POOL) String resourcePool,
 //                                              @Param(value = Inputs.OVF_NETWORK_JS) String ovfNetworkJS,
@@ -84,11 +84,10 @@ public class ImportVmTemplateAction {
                     .withResourcePool(resourcePool)
                     .withIpProtocol(ipProtocol)
                     .withIpAllocScheme(ipAllocScheme)
+                    .withDiskProvisioning(diskProvisioning)
                     .build();
 
-            InputUtils.addDiskProvisioining(vmInputs, thinProvision);
-
-            new ImportTemplatesService(Boolean.parseBoolean(parallel)).deployTemplate(httpInputs, vmInputs, path);
+            new ImportTemplatesService(InputUtils.getBooleanInput(parallel, true)).deployTemplate(httpInputs, vmInputs, path);
             resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_SUCCESS);
             resultMap.put(Outputs.RETURN_RESULT, SUCCESSFULLY_DEPLOYMENT);
         } catch (Exception ex) {

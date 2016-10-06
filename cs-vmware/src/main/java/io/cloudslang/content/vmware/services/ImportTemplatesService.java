@@ -173,6 +173,7 @@ public class ImportTemplatesService {
         ovfCreateImportSpecParams.setEntityName(vmInputs.getVirtualMachineName());
         ovfCreateImportSpecParams.setIpAllocationPolicy(vmInputs.getIpAllocScheme());
         ovfCreateImportSpecParams.setIpProtocol(vmInputs.getIpProtocol());
+        ovfCreateImportSpecParams.setDiskProvisioning(vmInputs.getDiskProvisioning());
         ovfCreateImportSpecParams.setHostSystem(hostSystem);
         return ovfCreateImportSpecParams;
     }

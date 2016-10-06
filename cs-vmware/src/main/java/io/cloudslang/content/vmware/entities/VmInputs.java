@@ -41,6 +41,7 @@ public class VmInputs {
     private Locale locale;
     private String ipProtocol;
     private String ipAllocScheme;
+    private String diskProvisioning;
 
     public VmInputs(VmInputsBuilder builder) {
         this.dataCenterName = builder.dataCenterName;
@@ -70,6 +71,7 @@ public class VmInputs {
         this.locale = builder.locale;
         this.ipProtocol = builder.ipProtocol;
         this.ipAllocScheme = builder.ipAllocScheme;
+        this.diskProvisioning = builder.diskProvisioning;
     }
 
     public String getDataCenterName() {
@@ -172,6 +174,10 @@ public class VmInputs {
         return this.ipAllocScheme;
     }
 
+    public String getDiskProvisioning() {
+        return this.diskProvisioning;
+    }
+
     public static class VmInputsBuilder {
         private String dataCenterName;
         private String hostname;
@@ -200,6 +206,7 @@ public class VmInputs {
         private Locale locale;
         private String ipProtocol;
         private String ipAllocScheme;
+        private String diskProvisioning;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -327,6 +334,11 @@ public class VmInputs {
 
         public VmInputsBuilder withIpAllocScheme(String ipAllocScheme) {
             this.ipAllocScheme = ipAllocScheme;
+            return this;
+        }
+
+        public VmInputsBuilder withDiskProvisioning(String diskProvisioning) {
+            this.diskProvisioning = diskProvisioning;
             return this;
         }
     }

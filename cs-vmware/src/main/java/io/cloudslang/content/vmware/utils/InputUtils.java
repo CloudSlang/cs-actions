@@ -123,12 +123,4 @@ public class InputUtils {
         }
         return locale;
     }
-
-    public static void addDiskProvisioining(VmInputs vmInputs, String thinProvision) {
-        if (StringUtils.isNotBlank(thinProvision)) {
-            if (!BooleanUtils.toBoolean(thinProvision)) {
-                vmInputs.isThickProvision();
-            }
-        }
-    }
 }

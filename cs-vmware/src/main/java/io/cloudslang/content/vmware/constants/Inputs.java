@@ -79,7 +79,7 @@ public class Inputs {
     public static final String NAME = "name";
     public static final String DATACENTER = "datacenter";
     public static final String VM_FOLDER = "vmFolder";
-    public static final String THIN_PROVISION = "thinProvision";
+    public static final String DISK_PROVISIONING = "diskProvisioning";
     public static final String HS_IDENTIFIER_TYPE = "hsIdentifierType";
     public static final String HOST_SYSTEM = "hostSystem";
     public static final String OVF_NETWORK_JS = "ovfNetworkJS";
