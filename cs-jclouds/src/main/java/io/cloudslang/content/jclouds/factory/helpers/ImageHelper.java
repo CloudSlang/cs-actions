@@ -175,8 +175,8 @@ public class ImageHelper {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(ATTRIBUTE, wrapper.getImageInputs().getCustomInputs().getAttribute());
-        queryParamsMap.put(Constants.AwsParams.IMAGE_ID, wrapper.getImageInputs().getCustomInputs().getImageId());
+        queryParamsMap.put(ATTRIBUTE, wrapper.getCustomInputs().getAttribute());
+        queryParamsMap.put(Constants.AwsParams.IMAGE_ID, wrapper.getCustomInputs().getImageId());
 
         return queryParamsMap;
     }

@@ -89,7 +89,6 @@ public class DescribeImagesAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    //TODO add tests
     @Action(name = "Describe Images in Region",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

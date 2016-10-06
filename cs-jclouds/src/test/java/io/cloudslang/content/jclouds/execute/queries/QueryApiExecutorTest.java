@@ -186,6 +186,54 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeImagesOnImage() throws Exception {
+        toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeImages")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private ImageInputs getDescribeImagesInputs() throws Exception {
+        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+                .withIdentityId("my-id")
+                .withArchitecture("i386")
+                .withDeleteOnTermination("true")
+                .withBlockMappingDeviceName("/dev/sdh")
+                .withBlockDeviceMappingSnapshotId("my-id")
+                .withVolumeSize("25")
+                .withVolumeType("gp2")
+                .withHypervisor("ovm")
+                .withImageId("ami-abcd1234")
+                .withKernelId("kernel-id")
+                .withOwnerAlias("amazon")
+                .withOwnerId("o-id")
+                .withPlatform("windows")
+                .withProductCode("p-code")
+                .withProductCodeType("devpay")
+                .withRamdiskId("id-ram")
+                .withRootDeviceName("/dev/sda1")
+                .withRootDeviceType("available")
+                .withStateReasonCode("r-code")
+                .withStateReasonMessage("r-message")
+                .withKeyTagsString("my-key-tags")
+                .withValueTagsString("my-value-tags")
+                .withVirtualizationType("paravirtual")
+                .build();
+        return new ImageInputs.ImageInputsBuilder()
+                .withCustomInputs(customInputs)
+                .withDescription("some-desc")
+                .withImageIdsString("i_id1,i_id2")
+                .withOwnersString("o_id1,o_id2")
+                .withType("machine")
+                .withIsPublic("true")
+                .withManifestLocation("manif-location")
+                .withImageName("img-name")
+                .withState("available")
+                .build();
+    }
+
+    @Test
     public void testDetachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
 
@@ -212,6 +260,22 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ReleaseAddress")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testResetLaunchPermissionOnImage() throws Exception {
+        toTest.execute(getCommonInputs("ResetImageAttribute", HEADERS, ""), getResetLaunchPermissionOnImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("ResetImageAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private CustomInputs getResetLaunchPermissionOnImageInputs() {
+        return new CustomInputs.CustomInputsBuilder()
+                .withAttribute("launchPermission")
+                .withImageId("ami-abcd1234")
+                .build();
     }
 
     @Test
@@ -400,6 +464,69 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("ImageId", "ami-abcd1234");
                 queryParamsMap.put("Attribute", "launchPermission");
                 break;
+            case "DescribeImages":
+                queryParamsMap.put("Filter.2.Value", "true");
+                queryParamsMap.put("Filter.27.Name", "name");
+                queryParamsMap.put("Filter.21.Name", "tag-value");
+                queryParamsMap.put("Filter.13.Name", "product-code");
+                queryParamsMap.put("Filter.7.Name", "hypervisor");
+                queryParamsMap.put("Filter.28.Value", "available");
+                queryParamsMap.put("Filter.9.Value", "kernel-id");
+                queryParamsMap.put("Filter.18.Name", "state-reason-code");
+                queryParamsMap.put("Filter.6.Name", "block-device-mapping.volume-type");
+                queryParamsMap.put("Filter.11.Value", "o-id");
+                queryParamsMap.put("Filter.21.Value", "my-value-tags");
+                queryParamsMap.put("Filter.6.Value", "gp2");
+                queryParamsMap.put("Filter.22.Name", "virtualization-type");
+                queryParamsMap.put("Filter.26.Name", "manifest-location");
+                queryParamsMap.put("Filter.14.Name", "product-code.type");
+                queryParamsMap.put("Filter.19.Value", "r-message");
+                queryParamsMap.put("Filter.3.Value", "/dev/sdh");
+                queryParamsMap.put("Filter.24.Value", "machine");
+                queryParamsMap.put("Filter.1.Value", "i386");
+                queryParamsMap.put("Filter.12.Value", "windows");
+                queryParamsMap.put("Filter.27.Value", "img-name");
+                queryParamsMap.put("Filter.20.Value", "my-key-tags");
+                queryParamsMap.put("Filter.18.Value", "r-code");
+                queryParamsMap.put("Filter.7.Value", "ovm");
+                queryParamsMap.put("Filter.19.Name", "state-reason-message");
+                queryParamsMap.put("Filter.4.Name", "block-device-mapping.snapshot-id");
+                queryParamsMap.put("Filter.1.Name", "architecture");
+                queryParamsMap.put("Filter.16.Name", "root-device-name");
+                queryParamsMap.put("Filter.15.Value", "id-ram");
+                queryParamsMap.put("Filter.24.Name", "image-type");
+                queryParamsMap.put("Filter.10.Name", "owner-alias");
+                queryParamsMap.put("Filter.23.Value", "some-desc");
+                queryParamsMap.put("Filter.4.Value", "my-id");
+                queryParamsMap.put("Filter.13.Value", "p-code");
+                queryParamsMap.put("Owner.1", "o_id1");
+                queryParamsMap.put("Owner.2", "o_id2");
+                queryParamsMap.put("Filter.3.Name", "block-device-mapping.device-name");
+                queryParamsMap.put("Filter.15.Name", "ramdisk-id");
+                queryParamsMap.put("Filter.25.Name", "is-public");
+                queryParamsMap.put("Filter.26.Value", "manif-location");
+                queryParamsMap.put("Filter.16.Value", "/dev/sda1");
+                queryParamsMap.put("Filter.11.Name", "owner-id");
+                queryParamsMap.put("ExecutableBy.1", "my-id");
+                queryParamsMap.put("Filter.9.Name", "kernel-id");
+                queryParamsMap.put("Filter.8.Value", "ami-abcd1234");
+                queryParamsMap.put("Filter.14.Value", "devpay");
+                queryParamsMap.put("Filter.8.Name", "image-id");
+                queryParamsMap.put("Filter.23.Name", "description");
+                queryParamsMap.put("Filter.20.Name", "tag-key");
+                queryParamsMap.put("Filter.2.Name", "block-device-mapping.delete-on-termination");
+                queryParamsMap.put("Filter.17.Name", "root-device-type");
+                queryParamsMap.put("Filter.22.Value", "paravirtual");
+                queryParamsMap.put("ImageId.1", "i_id1");
+                queryParamsMap.put("Filter.12.Name", "platform");
+                queryParamsMap.put("Filter.5.Name", "block-device-mapping.volume-size");
+                queryParamsMap.put("Filter.17.Value", "available");
+                queryParamsMap.put("ImageId.2", "i_id2");
+                queryParamsMap.put("Filter.28.Name", "state");
+                queryParamsMap.put("Filter.5.Value", "25.0");
+                queryParamsMap.put("Filter.25.Value", "true");
+                queryParamsMap.put("Filter.10.Value", "amazon");
+                break;
             case "ModifyImageAttribute":
                 queryParamsMap.put("Attribute", "launchPermission");
                 queryParamsMap.put("OperationType", "add");
@@ -412,6 +539,10 @@ public class QueryApiExecutorTest {
             case "ReleaseAddress":
                 queryParamsMap.put("AllocationId", "eipalloc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
+                break;
+            case "ResetImageAttribute":
+                queryParamsMap.put("Attribute", "launchPermission");
+                queryParamsMap.put("ImageId", "ami-abcd1234");
                 break;
             default:
                 throw new RuntimeException("You forgot to setup queryParamsMap naughty developer!");
