@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.deploy;
+package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.HttpNfcLeaseDeviceUrl;
 import com.vmware.vim25.HttpNfcLeaseInfo;
@@ -8,16 +8,24 @@ import com.vmware.vim25.OvfCreateImportSpecResult;
 import com.vmware.vim25.OvfFileItem;
 import com.vmware.vim25.RuntimeFaultFaultMsg;
 import com.vmware.vim25.ServiceContent;
-import com.vmware.vim25.TimedoutFaultMsg;
 import com.vmware.vim25.VimPortType;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
+import io.cloudslang.content.vmware.entities.AsyncProgressUpdater;
+import io.cloudslang.content.vmware.entities.CustomExecutor;
+import io.cloudslang.content.vmware.entities.ITransferVmdkFrom;
+import io.cloudslang.content.vmware.entities.ProgressUpdater;
+import io.cloudslang.content.vmware.entities.SyncProgressUpdater;
+import io.cloudslang.content.vmware.entities.TransferVmdkFromFile;
+import io.cloudslang.content.vmware.entities.TransferVmdkFromInputStream;
+import io.cloudslang.content.vmware.entities.TransferVmdkTask;
+import io.cloudslang.content.vmware.entities.TransferVmdkToUrl;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
+import io.cloudslang.content.vmware.utils.OvfUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,29 +38,26 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 
-import static io.cloudslang.content.vmware.actions.deploy.OvfUtils.getHttpNfcLeaseErrorState;
-import static io.cloudslang.content.vmware.actions.deploy.OvfUtils.getHttpNfcLeaseInfo;
-import static io.cloudslang.content.vmware.actions.deploy.OvfUtils.getHttpNfcLeaseState;
-import static io.cloudslang.content.vmware.actions.deploy.OvfUtils.isOva;
-import static io.cloudslang.content.vmware.actions.deploy.OvfUtils.isOvf;
+import static io.cloudslang.content.vmware.constants.Constants.DISK_DRIVE_CIM_TYPE;
+import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseErrorState;
+import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseInfo;
+import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseState;
+import static io.cloudslang.content.vmware.utils.OvfUtils.isOva;
+import static io.cloudslang.content.vmware.utils.OvfUtils.isOvf;
 import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * Created by giloan on 9/26/2016.
- */
-public class DeployTemplates {
+public class ImportTemplatesService {
 
-    private static final int DISK_DRIVE_CIM_TYPE = 17;
     private final CustomExecutor executor;
 
-    public DeployTemplates(final boolean parallel) {
+    public ImportTemplatesService(final boolean parallel) {
         this.executor = new CustomExecutor(parallel);
     }
 
-    public void deployTemplate(final HttpInputs httpInputs, final VmInputs vmInputs, final String templatePath, final String vmName) throws Exception {
+    public void deployTemplate(final HttpInputs httpInputs, final VmInputs vmInputs, final String templatePath) throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair = createLeaseSetup(connectionResources, vmInputs, templatePath, vmName);
+        final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair = createLeaseSetup(connectionResources, vmInputs, templatePath);
         final ManagedObjectReference httpNfcLease = pair.left;
         final OvfCreateImportSpecResult importSpecResult = pair.right;
 
@@ -61,32 +66,29 @@ public class DeployTemplates {
         final ProgressUpdater progressUpdater = executor.isParallel() ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources) : new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
 
         executor.execute(progressUpdater);
-        System.out.println("start");
-        long time1 = System.currentTimeMillis();
         transferVmdkFiles(templatePath, importSpecResult, deviceUrls, progressUpdater);
         executor.shutdown();
-        System.out.println("completed in: " + String.valueOf((System.currentTimeMillis() - time1) / 1000));
     }
 
-    private ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> createLeaseSetup(final ConnectionResources connectionResources,
-                                                                                              final VmInputs vmInputs, final String templatePath, final String vmName) throws Exception {
+    private ImmutablePair<ManagedObjectReference,
+            OvfCreateImportSpecResult> createLeaseSetup(final ConnectionResources connectionResources,
+                                                        final VmInputs vmInputs, final String templatePath) throws Exception {
         final ManagedObjectReference ovfManager = getOvfManager(connectionResources);
         final VmUtils vmUtils = new VmUtils();
-        final ManagedObjectReference resourcePool = vmUtils.getMorResourcePool(null, connectionResources);
+        final ManagedObjectReference resourcePool = vmUtils.getMorResourcePool(vmInputs.getResourcePool(), connectionResources);
         final ManagedObjectReference hostMor = vmUtils.getMorHost(vmInputs.getHostname(), connectionResources, null);
         final ManagedObjectReference datastoreMor = vmUtils.getMorDataStore(vmInputs.getDataStore(), connectionResources, null, vmInputs);
         final ManagedObjectReference folderMor = vmUtils.getMorFolder(vmInputs.getFolderName(), connectionResources);
 
-        //get a lease in ready state. Create the VMs and/or vApps that make up the entity.
         final OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType().
-                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmName, hostMor));
+                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmInputs, hostMor));
 
         final ManagedObjectReference httpNfcLease = OvfUtils.getHttpNfcLease(connectionResources, importSpecResult.getImportSpec(), resourcePool, hostMor, folderMor);
         return ImmutablePair.of(httpNfcLease, importSpecResult);
     }
 
     private void transferVmdkFiles(final String ovfPath, final OvfCreateImportSpecResult importSpecResult,
-                                   final List<HttpNfcLeaseDeviceUrl> deviceUrls, final ProgressUpdater progressUpdater) throws IOException, RuntimeFaultFaultMsg, TimedoutFaultMsg, InterruptedException {
+                                   final List<HttpNfcLeaseDeviceUrl> deviceUrls, final ProgressUpdater progressUpdater) throws Exception {
         for (HttpNfcLeaseDeviceUrl deviceUrl : deviceUrls) {
             final String deviceKey = deviceUrl.getImportKey();
             for (OvfFileItem fileItem : importSpecResult.getFileItem()) {
@@ -100,7 +102,7 @@ public class DeployTemplates {
     }
 
     @NotNull
-    private TransferVmdkTask getTransferVmdkTask(String ovfPath, ProgressUpdater progressUpdater, HttpNfcLeaseDeviceUrl deviceUrl, OvfFileItem fileItem) throws IOException, RuntimeFaultFaultMsg, TimedoutFaultMsg {
+    private TransferVmdkTask getTransferVmdkTask(final String ovfPath, final ProgressUpdater progressUpdater, final HttpNfcLeaseDeviceUrl deviceUrl, final OvfFileItem fileItem) throws Exception {
         final URL vmDiskUrl = new URL(deviceUrl.getUrl());
         final ITransferVmdkFrom transferVmdkFrom = getTransferVmdK(ovfPath, fileItem.getPath());
         final TransferVmdkToUrl toUrl = new TransferVmdkToUrl(vmDiskUrl, fileItem.isCreate());
@@ -146,7 +148,7 @@ public class DeployTemplates {
     }
 
     @NotNull
-    private String getOvfTemplateAsString(String templatePath) throws IOException {
+    private String getOvfTemplateAsString(final String templatePath) throws IOException {
         if (isOva(Paths.get(templatePath))) {
             try (final TarArchiveInputStream tar = new TarArchiveInputStream(new FileInputStream(templatePath))) {
                 TarArchiveEntry entry;
@@ -164,12 +166,13 @@ public class DeployTemplates {
     }
 
 
-    public OvfCreateImportSpecParams getOvfCreateImportSpecParams(String vmName, ManagedObjectReference hostSystem) {
-        OvfCreateImportSpecParams ovfCreateImportSpecParams = new OvfCreateImportSpecParams();
+    public OvfCreateImportSpecParams getOvfCreateImportSpecParams(final VmInputs vmInputs, final ManagedObjectReference hostSystem) {
+        final OvfCreateImportSpecParams ovfCreateImportSpecParams = new OvfCreateImportSpecParams();
         ovfCreateImportSpecParams.setDeploymentOption("");
         ovfCreateImportSpecParams.setLocale(Locale.getDefault().toString());
-        ovfCreateImportSpecParams.setEntityName(vmName);
-        ovfCreateImportSpecParams.setIpAllocationPolicy("dhcpPolicy");
+        ovfCreateImportSpecParams.setEntityName(vmInputs.getVirtualMachineName());
+        ovfCreateImportSpecParams.setIpAllocationPolicy(vmInputs.getIpAllocScheme());
+        ovfCreateImportSpecParams.setIpProtocol(vmInputs.getIpProtocol());
         ovfCreateImportSpecParams.setHostSystem(hostSystem);
         return ovfCreateImportSpecParams;
     }

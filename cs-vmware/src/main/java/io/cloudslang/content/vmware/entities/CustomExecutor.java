@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.deploy;
+package io.cloudslang.content.vmware.entities;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;

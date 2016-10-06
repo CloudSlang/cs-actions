@@ -71,7 +71,7 @@ public class GetObjectProperties {
                                                   final String property) throws Exception {
         final ObjectContent[] objectContents = getObjectProperties(connectionResources, mor, new String[]{property});
         if (objectContents.length != 0 && objectContents[0] != null) {
-            return objectContents[0]; //not the best solution, but life is too short. It's not the management fault! Nooooo
+            return objectContents[0]; //not the best solution, but life is too short. It's not because of management! Nooooo
         } else {
             throw new Exception();
         }

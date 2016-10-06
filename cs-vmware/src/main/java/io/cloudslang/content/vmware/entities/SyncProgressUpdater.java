@@ -1,13 +1,9 @@
-package io.cloudslang.content.vmware.actions.deploy;
+package io.cloudslang.content.vmware.entities;
 
 import com.vmware.vim25.ManagedObjectReference;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SyncProgressUpdater extends ProgressUpdater {
-
-    final private Logger logger = LoggerFactory.getLogger(SyncProgressUpdater.class);
 
     public SyncProgressUpdater(final long totalNoBytes, final ManagedObjectReference httpNfcLease, final ConnectionResources connectionResources) {
         super(totalNoBytes, httpNfcLease, connectionResources);
@@ -16,8 +12,7 @@ public class SyncProgressUpdater extends ProgressUpdater {
     @Override
     public final void updateBytesSent(final long addedValue) throws Exception {
         int oldPercentage = getFloorPercentage();
-        logger.info("oldPercentage = " + oldPercentage);
-        this.bytesSent += addedValue;
+        this.bytesSent += addedValue; //getFloorPercentage() could return a different value now
         if (bytesSent == totalNoBytes) {
             updateProgressCompleted();
         } else if (getFloorPercentage() != oldPercentage) {

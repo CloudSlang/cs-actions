@@ -51,9 +51,9 @@ public class VmUtils {
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference folder;
         if (StringUtils.isNotBlank(folderName)) {
-            ManagedObjectReference reference = connectionResources.getMorRootFolder();
-            folder = new MorObjectHandler().getSpecificMor(connectionResources, reference,
-                    VmParameter.FOLDER.getValue(), folderName);
+            ManagedObjectReference morRootFolder = connectionResources.getMorRootFolder();
+            folder = new MorObjectHandler().getSpecificMor(connectionResources, morRootFolder,
+                    VmParameter.FOLDER.getValue(), escapeSpecialCharacters(folderName));
             if (folder == null) {
                 throw new RuntimeException(ErrorMessages.FOLDER_NOT_FOUND);
             }
@@ -61,6 +61,15 @@ public class VmUtils {
             folder = connectionResources.getVmFolderMor();
         }
         return folder;
+    }
+
+    /**
+     * The slash (/), backslash (\) and percent (%) will be escaped using the URL syntax.
+     * @param string
+     * @return
+     */
+    private String escapeSpecialCharacters(String string) {
+        return StringUtils.replaceEach(string, new String[]{"/", "\\", "%"}, new String[]{"%2f", "%5c", "%25"});
     }
 
     public VirtualMachineRelocateSpec getVirtualMachineRelocateSpec(ManagedObjectReference resourcePool,

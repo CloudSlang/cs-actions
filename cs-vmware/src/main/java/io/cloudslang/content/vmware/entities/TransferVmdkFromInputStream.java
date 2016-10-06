@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.deploy;
+package io.cloudslang.content.vmware.entities;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,7 +23,7 @@ public class TransferVmdkFromInputStream implements ITransferVmdkFrom {
     }
 
     @Override
-    public long uploadTo(OutputStream outputStream, ProgressUpdater progressUpdater) throws Exception {
+    public long uploadTo(final OutputStream outputStream, final ProgressUpdater progressUpdater) throws Exception {
         long bytesCopied = 0;
         final byte[] buffer = new byte[SIZE_4K];
         try (InputStream is = inputStream) {
@@ -36,8 +36,6 @@ public class TransferVmdkFromInputStream implements ITransferVmdkFrom {
                 outputStream.flush();
                 bytesCopied += bytesRead;
                 progressUpdater.updateBytesSent(bytesRead);
-//            logger.info("update progress bar with: " + bytesRead);
-                System.out.println("Thread id: " + Thread.currentThread().getId() + " thread name: " + Thread.currentThread().getName());
             }
         }
         return bytesCopied;

@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.deploy;
+package io.cloudslang.content.vmware.entities;
 
 import com.vmware.vim25.RuntimeFaultFaultMsg;
 import com.vmware.vim25.TimedoutFaultMsg;
@@ -16,7 +16,7 @@ public class TransferVmdkTask implements Runnable {
     private final TransferVmdkToUrl destination;
     private final ProgressUpdater progressUpdater;
 
-    public TransferVmdkTask(ITransferVmdkFrom fromFile, TransferVmdkToUrl toUrl,
+    public TransferVmdkTask(final ITransferVmdkFrom fromFile, final TransferVmdkToUrl toUrl,
                             ProgressUpdater progressUpdater) throws RuntimeFaultFaultMsg, TimedoutFaultMsg {
         this.source = fromFile;
         this.destination = toUrl;

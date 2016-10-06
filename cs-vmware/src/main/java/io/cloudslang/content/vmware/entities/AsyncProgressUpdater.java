@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.deploy;
+package io.cloudslang.content.vmware.entities;
 
 import com.vmware.vim25.ManagedObjectReference;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
@@ -21,7 +21,6 @@ public class AsyncProgressUpdater extends ProgressUpdater {
     @Override
     public final synchronized void updateBytesSent(final long bytesSent) throws Exception {
         this.bytesSent += bytesSent;
-        logger.info("Sent bytes were updated. Updated value is: " + this.bytesSent);
     }
 
     @Override
@@ -30,18 +29,15 @@ public class AsyncProgressUpdater extends ProgressUpdater {
         try {
             while (bytesSent != totalNoBytes) {
                 sleep(100);
-                logger.info("Total no bytes: " + totalNoBytes);
-                logger.info("Bytes Sent: " + bytesSent);
-                logger.info("Current percentage: " + getFloorPercentage());
                 final int newPercentage = getFloorPercentage();
                 if (newPercentage != percentage) {
-                    logger.info("Percentage changed: " + getFloorPercentage());
                     updateLeaseProgress(newPercentage);
                     percentage = newPercentage;
                 }
             }
             updateProgressCompleted();
         } catch (Exception e) {
+            //TODO: log maybe
         }
     }
 }
