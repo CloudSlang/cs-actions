@@ -84,7 +84,7 @@ public class AttachVolumeInRegionAction {
                                        @Param(value = Inputs.VolumeInputs.DEVICE_NAME, required = true) String deviceName)
             throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -94,7 +94,7 @@ public class AttachVolumeInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withVolumeId(volumeId)
                 .withInstanceId(instanceId)

@@ -79,7 +79,7 @@ public class CreateSnapshotInRegionAction {
                                        @Param(value = Inputs.VolumeInputs.SNAPSHOT_DESCRIPTION) String snapshotDescription)
             throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -89,7 +89,7 @@ public class CreateSnapshotInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withVolumeId(volumeId)
                 .build();

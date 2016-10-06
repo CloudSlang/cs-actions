@@ -26,7 +26,7 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsPara
  * Created by Tirla Alin.
  * Date: 30/9/2016.
  */
-public class ImageHelper {
+public class ImageUtils {
 
     public static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "block-device-mapping.device-name";
     public static final String BLOCK_DEVICE_MAPPING_SNAPSHOT_ID = "block-device-mapping.snapshot-id";

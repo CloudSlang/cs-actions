@@ -64,7 +64,7 @@ public class GetLaunchPermissionForImageAction {
 
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId) {
         try {
-            CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -79,7 +79,7 @@ public class GetLaunchPermissionForImageAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withImageId(imageId)
                     .withAttribute(LAUNCH_PERMISSION)
                     .build();

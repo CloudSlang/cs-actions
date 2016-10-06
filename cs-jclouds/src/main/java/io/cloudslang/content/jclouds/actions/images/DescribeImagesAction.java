@@ -144,7 +144,7 @@ public class DescribeImagesAction {
                                        @Param(value = Inputs.ImageInputs.NAME) String name,
                                        @Param(value = Inputs.ImageInputs.STATE) String state) {
         try {
-            CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -160,7 +160,7 @@ public class DescribeImagesAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withIdentityId(identityId)
                     .withArchitecture(architecture)
                     .withDeleteOnTermination(deleteOnTermination)
@@ -186,7 +186,7 @@ public class DescribeImagesAction {
                     .withVirtualizationType(virtualizationType)
                     .build();
 
-            ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+            ImageInputs imageInputs = new ImageInputs.Builder()
                     .withCustomInputs(customInputs)
                     .withDescription(description)
                     .withImageIdsString(idsString)

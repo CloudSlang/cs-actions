@@ -75,7 +75,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                                        @Param(value = Inputs.ImageInputs.USER_IDS_STRING) String userIdsString,
                                        @Param(value = Inputs.ImageInputs.USER_GROUPS_STRING) String userGroupsString) {
         try {
-            CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -91,13 +91,13 @@ public class RemoveLaunchPermissionsFromImageAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withAttribute(LAUNCH_PERMISSION)
                     .withOperationType(REMOVE_OPERATION)
                     .withImageId(imageId)
                     .build();
 
-            ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+            ImageInputs imageInputs = new ImageInputs.Builder()
                     .withCustomInputs(customInputs)
                     .withUserIdsString(userIdsString)
                     .withUserGroupsString(userGroupsString)

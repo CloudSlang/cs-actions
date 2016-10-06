@@ -75,7 +75,7 @@ public class CreateImageAction {
                                        @Param(value = Inputs.ImageInputs.NAME, required = true) String name,
                                        @Param(value = Inputs.ImageInputs.NO_REBOOT) String noReboot) {
         try {
-            CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs inputs = new CommonInputs.Builder()
                     .withProvider(provider)
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
@@ -91,11 +91,11 @@ public class CreateImageAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withInstanceId(instanceId)
                     .build();
 
-            ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+            ImageInputs imageInputs = new ImageInputs.Builder()
                     .withCustomInputs(customInputs)
                     .withImageName(name)
                     .withDescription(description)

@@ -94,7 +94,7 @@ public class ComputeSignatureV4 {
             Map<String, String> queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), queryParams,
                     Constants.Miscellaneous.AMPERSAND, Constants.Miscellaneous.EQUAL, false);
 
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)

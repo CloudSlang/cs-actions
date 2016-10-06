@@ -56,7 +56,7 @@ public class DescribeRegionsAction {
                                        @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
                                        @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode) throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)

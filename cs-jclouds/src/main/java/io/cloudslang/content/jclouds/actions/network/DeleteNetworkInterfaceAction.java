@@ -83,7 +83,7 @@ public class DeleteNetworkInterfaceAction {
                                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
 
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)

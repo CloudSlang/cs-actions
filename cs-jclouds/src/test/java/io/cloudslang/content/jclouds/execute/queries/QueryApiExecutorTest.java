@@ -85,12 +85,12 @@ public class QueryApiExecutorTest {
     }
 
     private ImageInputs getAddLaunchPermissionsToImageInputs() {
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withAttribute("launchPermission")
                 .withOperationType("add")
                 .withImageId("ami-abcd1234")
                 .build();
-        return new ImageInputs.ImageInputsBuilder()
+        return new ImageInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withUserIdsString("1,2")
                 .withUserGroupsString("g1,g2")
@@ -146,10 +146,10 @@ public class QueryApiExecutorTest {
     }
 
     private ImageInputs getCreateImageInputs() {
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withInstanceId("i-b0e2ad1b")
                 .build();
-        return new ImageInputs.ImageInputsBuilder()
+        return new ImageInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withImageName("img-name")
                 .withDescription("Some description")
@@ -195,7 +195,7 @@ public class QueryApiExecutorTest {
     }
 
     private ImageInputs getDescribeImagesInputs() throws Exception {
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withIdentityId("my-id")
                 .withArchitecture("i386")
                 .withDeleteOnTermination("true")
@@ -220,7 +220,7 @@ public class QueryApiExecutorTest {
                 .withValueTagsString("my-value-tags")
                 .withVirtualizationType("paravirtual")
                 .build();
-        return new ImageInputs.ImageInputsBuilder()
+        return new ImageInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withDescription("some-desc")
                 .withImageIdsString("i_id1,i_id2")
@@ -272,7 +272,7 @@ public class QueryApiExecutorTest {
     }
 
     private CustomInputs getResetLaunchPermissionOnImageInputs() {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withAttribute("launchPermission")
                 .withImageId("ami-abcd1234")
                 .build();
@@ -288,7 +288,7 @@ public class QueryApiExecutorTest {
     }
 
     private CustomInputs getLaunchPermissionForImageInputs() {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withAttribute("launchPermission")
                 .withImageId("ami-abcd1234")
                 .build();
@@ -326,7 +326,7 @@ public class QueryApiExecutorTest {
 
     private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString)
             throws MalformedURLException {
-        return new CommonInputs.CommonInputsBuilder()
+        return new CommonInputs.Builder()
                 .withAction(action)
                 .withHeaders(headersString)
                 .withQueryParams(queryParamsString)
@@ -336,13 +336,13 @@ public class QueryApiExecutorTest {
     }
 
     private CustomInputs getImageInputs() {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withImageId("ami-abcd1234")
                 .build();
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withAllocationId("eipalloc-abcdef12")
                 .withAssociationId("eipassoc-abcdef12")
                 .withAttachmentId("eni-attach-12345678")
