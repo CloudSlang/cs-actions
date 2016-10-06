@@ -531,8 +531,8 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Attribute", "launchPermission");
                 queryParamsMap.put("OperationType", "add");
                 queryParamsMap.put("ImageId", "ami-abcd1234");
-                queryParamsMap.put("UserId.1", "1");
-                queryParamsMap.put("UserId.2", "2");
+                queryParamsMap.put("UserId.2", "1");
+                queryParamsMap.put("UserId.1", "2");
                 queryParamsMap.put("UserGroup.2", "g1");
                 queryParamsMap.put("UserGroup.1", "g2");
                 break;
