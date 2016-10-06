@@ -499,8 +499,8 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.23.Value", "some-desc");
                 queryParamsMap.put("Filter.4.Value", "my-id");
                 queryParamsMap.put("Filter.13.Value", "p-code");
-                queryParamsMap.put("Owner.1", "o_id1");
-                queryParamsMap.put("Owner.2", "o_id2");
+                queryParamsMap.put("Owner.2", "o_id1");
+                queryParamsMap.put("Owner.1", "o_id2");
                 queryParamsMap.put("Filter.3.Name", "block-device-mapping.device-name");
                 queryParamsMap.put("Filter.15.Name", "ramdisk-id");
                 queryParamsMap.put("Filter.25.Name", "is-public");
@@ -517,11 +517,11 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.2.Name", "block-device-mapping.delete-on-termination");
                 queryParamsMap.put("Filter.17.Name", "root-device-type");
                 queryParamsMap.put("Filter.22.Value", "paravirtual");
-                queryParamsMap.put("ImageId.1", "i_id1");
+                queryParamsMap.put("ImageId.2", "i_id1");
                 queryParamsMap.put("Filter.12.Name", "platform");
                 queryParamsMap.put("Filter.5.Name", "block-device-mapping.volume-size");
                 queryParamsMap.put("Filter.17.Value", "available");
-                queryParamsMap.put("ImageId.2", "i_id2");
+                queryParamsMap.put("ImageId.1", "i_id2");
                 queryParamsMap.put("Filter.28.Name", "state");
                 queryParamsMap.put("Filter.5.Value", "25.0");
                 queryParamsMap.put("Filter.25.Value", "true");
@@ -533,8 +533,8 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("ImageId", "ami-abcd1234");
                 queryParamsMap.put("UserId.1", "1");
                 queryParamsMap.put("UserId.2", "2");
-                queryParamsMap.put("UserGroup.1", "g1");
-                queryParamsMap.put("UserGroup.2", "g2");
+                queryParamsMap.put("UserGroup.2", "g1");
+                queryParamsMap.put("UserGroup.1", "g2");
                 break;
             case "ReleaseAddress":
                 queryParamsMap.put("AllocationId", "eipalloc-abcdef12");
