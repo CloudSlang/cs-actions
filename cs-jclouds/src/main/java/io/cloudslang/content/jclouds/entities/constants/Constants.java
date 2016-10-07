@@ -84,11 +84,14 @@ public class Constants {
         public static final String ALLOCATE_ADDRESS = "AllocateAddress";
         public static final String ASSOCIATE_ADDRESS = "AssociateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
+        public static final String ATTACH_VOLUME = "AttachVolume";
         public static final String CREATE_IMAGE = "CreateImage";
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
+        public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
+        public static final String DELETE_VOLUME = "DeleteVolume";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
