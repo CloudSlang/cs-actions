@@ -85,8 +85,9 @@ public class Constants {
         public static final String ASSOCIATE_ADDRESS = "AssociateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
         public static final String CREATE_IMAGE = "CreateImage";
-        public static final String CREATE_VOLUME = "CreateVolume";
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
+        public static final String CREATE_SNAPSHOT = "CreateSnapshot";
+        public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
@@ -95,8 +96,12 @@ public class Constants {
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
         public static final String MODIFY_IMAGE_ATTRIBUTE = "ModifyImageAttribute";
+        public static final String REBOOT_INSTANCES = "RebootInstances";
         public static final String RELEASE_ADDRESS = "ReleaseAddress";
-        public static final String RUN_INSTANCES = "RunInstances";
         public static final String RESET_IMAGE_ATTRIBUTE = "ResetImageAttribute";
+        public static final String RUN_INSTANCES = "RunInstances";
+        public static final String START_INSTANCES = "StartInstances";
+        public static final String STOP_INSTANCES = "StopInstances";
+        public static final String TERMINATE_INSTANCES = "TerminateInstances";
     }
 }
