@@ -102,7 +102,7 @@ public class AttachVolumeAction {
 
                                             @Param(value = Inputs.VolumeInputs.DEVICE_NAME, required = true) String deviceName) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -120,12 +120,12 @@ public class AttachVolumeAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withInstanceId(instanceId)
                     .withVolumeId(volumeId)
                     .build();
 
-            VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder()
+            VolumeInputs volumeInputs = new VolumeInputs.Builder()
                     .withDeviceName(deviceName)
                     .build();
 

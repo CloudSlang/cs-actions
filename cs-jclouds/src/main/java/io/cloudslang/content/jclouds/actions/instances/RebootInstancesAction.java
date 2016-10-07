@@ -91,7 +91,7 @@ public class RebootInstancesAction {
 
                                                @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -110,7 +110,7 @@ public class RebootInstancesAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withInstanceId(instanceId).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception e) {

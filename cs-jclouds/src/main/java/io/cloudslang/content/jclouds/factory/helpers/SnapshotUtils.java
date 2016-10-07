@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by Mihai Tusa
  * 10/3/2016.
  */
-public class SnapshotHelper {
+public class SnapshotUtils {
     public Map<String, String> getCreateSnapshotQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),

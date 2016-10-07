@@ -62,15 +62,15 @@ public class DescribeImagesInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().build();
+        return new CommonInputs.Builder().build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().build();
+        return new CustomInputs.Builder().build();
     }
 
     private ImageInputs getImageInputs() {
-        return new ImageInputs.ImageInputsBuilder()
+        return new ImageInputs.Builder()
                 .withCustomInputs(getCustomInputs())
                 .withImageIdsString("")
                 .withOwnersString("")

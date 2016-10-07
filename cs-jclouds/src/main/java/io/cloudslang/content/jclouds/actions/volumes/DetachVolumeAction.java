@@ -103,7 +103,7 @@ public class DetachVolumeAction {
                                             @Param(value = Inputs.VolumeInputs.DEVICE_NAME) String deviceName,
                                             @Param(value = Inputs.VolumeInputs.FORCE) String force) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -121,12 +121,12 @@ public class DetachVolumeAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withVolumeId(volumeId)
                     .withInstanceId(instanceId)
                     .build();
 
-            VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder()
+            VolumeInputs volumeInputs = new VolumeInputs.Builder()
                     .withDeviceName(deviceName)
                     .withForce(force)
                     .build();

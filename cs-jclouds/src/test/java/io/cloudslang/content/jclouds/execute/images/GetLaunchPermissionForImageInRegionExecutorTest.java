@@ -65,10 +65,10 @@ public class GetLaunchPermissionForImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
+        return new CommonInputs.Builder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().withRegion("some region").withImageId("i-abcdef12").build();
+        return new CustomInputs.Builder().withRegion("some region").withImageId("i-abcdef12").build();
     }
 }

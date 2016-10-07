@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 9/14/2016.
  */
-public class ElasticIpHelper {
+public class ElasticIpUtils {
     private static final String DOMAIN = "Domain";
 
     public Map<String, String> getAllocateAddressQueryParamsMap(InputsWrapper wrapper) {

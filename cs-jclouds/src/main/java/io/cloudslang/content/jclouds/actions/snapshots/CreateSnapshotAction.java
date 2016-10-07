@@ -98,7 +98,7 @@ public class CreateSnapshotAction {
 
                                               @Param(value = Inputs.VolumeInputs.SNAPSHOT_DESCRIPTION) String snapshotDescription) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -116,8 +116,8 @@ public class CreateSnapshotAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withVolumeId(volumeId).build();
-            VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder().withDescription(snapshotDescription).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
+            VolumeInputs volumeInputs = new VolumeInputs.Builder().withDescription(snapshotDescription).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
         } catch (Exception e) {

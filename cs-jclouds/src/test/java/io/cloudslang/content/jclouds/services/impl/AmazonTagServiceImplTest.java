@@ -139,26 +139,26 @@ public class AmazonTagServiceImplTest {
     }
 
     private CommonInputs getCommonInputs() {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("tRuE").withDelimiter(",").build();
+        return new CommonInputs.Builder().withDebugMode("tRuE").withDelimiter(",").build();
     }
 
     private CustomInputs getCustomInputs(String condition) throws Exception {
         if ("positive".equalsIgnoreCase(condition)) {
-            return new CustomInputs.CustomInputsBuilder()
+            return new CustomInputs.Builder()
                     .withRegion("some region")
                     .withKeyTagsString("firstKey,secondKey,thirdKey")
                     .withValueTagsString("firstValue,secondValue,thirdValue")
                     .withResourceIdsString("i-abcdef12,ami-abcdef12")
                     .build();
         } else if ("limit".equalsIgnoreCase(condition)) {
-            return new CustomInputs.CustomInputsBuilder()
+            return new CustomInputs.Builder()
                     .withRegion("some region")
                     .withKeyTagsString("1,2,3,4,5,6,7,8,9,10,11")
                     .withValueTagsString("a,b,c,d,e,f,g,h,i,j,k")
                     .withResourceIdsString("snap-abcdef12")
                     .build();
         } else {
-            return new CustomInputs.CustomInputsBuilder()
+            return new CustomInputs.Builder()
                     .withRegion("some region")
                     .withKeyTagsString("1")
                     .withValueTagsString("a")

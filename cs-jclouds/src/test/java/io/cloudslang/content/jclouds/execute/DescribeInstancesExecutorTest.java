@@ -72,7 +72,7 @@ public class DescribeInstancesExecutorTest {
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
-        return new CommonInputs.CommonInputsBuilder()
+        return new CommonInputs.Builder()
                 .withProvider(inputs.getProvider())
                 .withEndpoint(inputs.getEndpoint())
                 .withIdentity(inputs.getIdentity())
@@ -84,8 +84,8 @@ public class DescribeInstancesExecutorTest {
     }
 
     private InstanceInputs getInstanceInputs() {
-        return new InstanceInputs.InstanceInputsBuilder()
-                .withCustomInputs(new CustomInputs.CustomInputsBuilder().build())
+        return new InstanceInputs.Builder()
+                .withCustomInputs(new CustomInputs.Builder().build())
                 .build();
     }
 }

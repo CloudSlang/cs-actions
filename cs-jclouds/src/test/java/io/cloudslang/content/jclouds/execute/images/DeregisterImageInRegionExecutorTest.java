@@ -60,10 +60,10 @@ public class DeregisterImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("tRuE").build();
+        return new CommonInputs.Builder().withDebugMode("tRuE").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().withRegion("some region").withImageId("i-abcdef12").build();
+        return new CustomInputs.Builder().withRegion("some region").withImageId("i-abcdef12").build();
     }
 }

@@ -396,7 +396,7 @@ public class RunInstancesAction {
                                             @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID) String networkInterfaceId,
                                             @Param(value = Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -415,7 +415,7 @@ public class RunInstancesAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withAvailabilityZone(availabilityZone)
                     .withHostId(hostId)
                     .withImageId(imageId)
@@ -425,7 +425,7 @@ public class RunInstancesAction {
                     .withSubnetId(subnetId)
                     .build();
 
-            EbsInputs ebsInputs = new EbsInputs.EbsInputsBuilder()
+            EbsInputs ebsInputs = new EbsInputs.Builder()
                     .withBlockDeviceMappingDeviceNamesString(blockDeviceMappingDeviceNamesString)
                     .withBlockDeviceMappingVirtualNamesString(blockDeviceMappingVirtualNamesString)
                     .withDeleteOnTerminationsString(deleteOnTerminationsString)
@@ -437,12 +437,12 @@ public class RunInstancesAction {
                     .withVolumeTypesString(volumeTypesString)
                     .build();
 
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder()
+            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder()
                     .withPrivateIpAddress(privateIpAddress)
                     .withPrivateIpAddressesString(privateIpAddressesString)
                     .build();
 
-            IamInputs iamInputs = new IamInputs.IamInputsBuilder()
+            IamInputs iamInputs = new IamInputs.Builder()
                     .withIamInstanceProfileArn(iamInstanceProfileArn)
                     .withIamInstanceProfileName(iamInstanceProfileName)
                     .withKeyPairName(keyPairName)
@@ -450,7 +450,7 @@ public class RunInstancesAction {
                     .withSecurityGroupNamesString(securityGroupNamesString)
                     .build();
 
-            InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
+            InstanceInputs instanceInputs = new InstanceInputs.Builder()
                     .withAffinity(affinity)
                     .withClientToken(clientToken)
                     .withDisableApiTermination(disableApiTermination)
@@ -463,7 +463,7 @@ public class RunInstancesAction {
                     .withUserData(userData)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfacesAssociatePublicIpAddressesString(networkInterfaceAssociatePublicIpAddress)
                     .withNetworkInterfaceDeleteOnTermination(networkInterfaceDeleteOnTerminationString)
                     .withNetworkInterfaceDescription(networkInterfaceDescription)

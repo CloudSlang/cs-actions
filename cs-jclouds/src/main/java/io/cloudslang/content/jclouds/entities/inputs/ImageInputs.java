@@ -26,7 +26,7 @@ public class ImageInputs {
 
     private boolean imageNoReboot;
 
-    private ImageInputs(ImageInputs.ImageInputsBuilder builder) {
+    private ImageInputs(Builder builder) {
         this.customInputs = builder.customInputs;
 
         this.imageName = builder.imageName;
@@ -96,7 +96,7 @@ public class ImageInputs {
         return imageNoReboot;
     }
 
-    public static class ImageInputsBuilder {
+    public static class Builder {
         private CustomInputs customInputs;
 
         private String imageName;
@@ -117,67 +117,67 @@ public class ImageInputs {
             return new ImageInputs(this);
         }
 
-        public ImageInputs.ImageInputsBuilder withCustomInputs(CustomInputs inputs) {
+        public Builder withCustomInputs(CustomInputs inputs) {
             customInputs = inputs;
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withImageName(String inputValue) {
+        public Builder withImageName(String inputValue) {
             imageName = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.NOT_RELEVANT);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withImageIdsString(String inputValue) {
+        public Builder withImageIdsString(String inputValue) {
             imageIdsString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withOwnersString(String inputValue) {
+        public Builder withOwnersString(String inputValue) {
             ownersString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withImageDescription(String inputValue) {
+        public Builder withImageDescription(String inputValue) {
             imageDescription = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withUserIdsString(String inputValue) {
+        public Builder withUserIdsString(String inputValue) {
             userIdsString = inputValue;
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withUserGroupsString(String inputValue) {
+        public Builder withUserGroupsString(String inputValue) {
             userGroupsString = inputValue;
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withDescription(String inputValue) {
+        public Builder withDescription(String inputValue) {
             description = inputValue;
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withType(String inputValue) throws Exception {
+        public Builder withType(String inputValue) throws Exception {
             type = ImageType.getValue(inputValue);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withIsPublic(String inputValue) {
+        public Builder withIsPublic(String inputValue) {
             isPublic = InputsUtil.getRelevantBooleanString(inputValue);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withManifestLocation(String inputValue) {
+        public Builder withManifestLocation(String inputValue) {
             manifestLocation = inputValue;
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withState(String inputValue) throws Exception {
+        public Builder withState(String inputValue) throws Exception {
             state = ImageState.getValue(inputValue);
             return this;
         }
 
-        public ImageInputs.ImageInputsBuilder withImageNoReboot(String inputValue) {
+        public Builder withImageNoReboot(String inputValue) {
             imageNoReboot = InputsUtil.getEnforcedBooleanCondition(inputValue, true);
             return this;
         }

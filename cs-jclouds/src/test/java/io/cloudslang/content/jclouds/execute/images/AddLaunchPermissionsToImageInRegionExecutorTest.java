@@ -78,19 +78,19 @@ public class AddLaunchPermissionsToImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withDebugMode("").build();
+        return new CommonInputs.Builder().withProvider("amazon").withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().withRegion("").withImageId("ami-abcdef12").build();
+        return new CustomInputs.Builder().withRegion("").withImageId("ami-abcdef12").build();
     }
 
     private ImageInputs getImageInputs() {
-        return new ImageInputs.ImageInputsBuilder().withCustomInputs(getCustomInputs()).build();
+        return new ImageInputs.Builder().withCustomInputs(getCustomInputs()).build();
     }
 
     private ImageInputs getPopulatedImageInputs() {
-        return new ImageInputs.ImageInputsBuilder()
+        return new ImageInputs.Builder()
                 .withCustomInputs(getCustomInputs())
                 .withUserIdsString("firstId,secondId")
                 .withUserGroupsString("firstGroup,secondGroup")

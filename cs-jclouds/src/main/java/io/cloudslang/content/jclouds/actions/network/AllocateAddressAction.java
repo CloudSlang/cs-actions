@@ -85,7 +85,7 @@ public class AllocateAddressAction {
                                                @Param(value = Inputs.CustomInputs.DOMAIN) String domain) {
 
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -103,7 +103,7 @@ public class AllocateAddressAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withDomain(domain).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withDomain(domain).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception exception) {

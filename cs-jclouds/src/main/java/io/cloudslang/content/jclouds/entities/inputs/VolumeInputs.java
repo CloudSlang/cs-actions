@@ -20,7 +20,7 @@ public class VolumeInputs {
     private boolean encrypted;
     private boolean force;
 
-    private VolumeInputs(VolumeInputs.VolumeInputsBuilder builder) {
+    private VolumeInputs(Builder builder) {
         this.customInputs = builder.customInputs;
 
         this.snapshotId = builder.snapshotId;
@@ -65,7 +65,7 @@ public class VolumeInputs {
         return force;
     }
 
-    public static class VolumeInputsBuilder {
+    public static class Builder {
         private CustomInputs customInputs;
 
         private String snapshotId;
@@ -81,42 +81,42 @@ public class VolumeInputs {
             return new VolumeInputs(this);
         }
 
-        public VolumeInputsBuilder withCustomInputs(CustomInputs inputs) {
+        public Builder withCustomInputs(CustomInputs inputs) {
             customInputs = inputs;
             return this;
         }
 
-        public VolumeInputsBuilder withSnapshotId(String inputValue) {
+        public Builder withSnapshotId(String inputValue) {
             snapshotId = inputValue;
             return this;
         }
 
-        public VolumeInputsBuilder withSize(String inputValue) {
+        public Builder withSize(String inputValue) {
             size = inputValue;
             return this;
         }
 
-        public VolumeInputsBuilder withIops(String inputValue) {
+        public Builder withIops(String inputValue) {
             iops = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.NOT_RELEVANT : inputValue;
             return this;
         }
 
-        public VolumeInputsBuilder withDeviceName(String inputValue) {
+        public Builder withDeviceName(String inputValue) {
             deviceName = inputValue;
             return this;
         }
 
-        public VolumeInputsBuilder withDescription(String inputValue) {
+        public Builder withDescription(String inputValue) {
             description = inputValue;
             return this;
         }
 
-        public VolumeInputsBuilder withEncrypted(String inputValue) {
+        public Builder withEncrypted(String inputValue) {
             encrypted = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
-        public VolumeInputsBuilder withForce(String inputValue) {
+        public Builder withForce(String inputValue) {
             force = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }

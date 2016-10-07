@@ -146,7 +146,7 @@ public class DescribeImagesInRegionAction {
                                        @Param(value = Inputs.ImageInputs.NAME) String name,
                                        @Param(value = Inputs.ImageInputs.STATE) String state) throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -157,7 +157,7 @@ public class DescribeImagesInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withIdentityId(identityId)
                 .withArchitecture(architecture)
@@ -184,7 +184,7 @@ public class DescribeImagesInRegionAction {
                 .withVirtualizationType(virtualizationType)
                 .build();
 
-        ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+        ImageInputs imageInputs = new ImageInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withDescription(description)
                 .withImageIdsString(idsString)

@@ -199,18 +199,18 @@ public class AmazonImageServiceImplTest {
     }
 
     private CommonInputs getCommonInputs(String delimiter) {
-        return new CommonInputs.CommonInputsBuilder().withDelimiter(delimiter).build();
+        return new CommonInputs.Builder().withDelimiter(delimiter).build();
     }
 
     private ImageInputs getImageInputs(String region, String identityId, String platform, String imageIdsString,
                                        String ownersString) throws Exception {
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withIdentityId(identityId)
                 .withPlatform(platform)
                 .build();
 
-        return new ImageInputs.ImageInputsBuilder()
+        return new ImageInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withImageIdsString(imageIdsString)
                 .withOwnersString(ownersString)

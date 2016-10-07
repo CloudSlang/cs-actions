@@ -35,7 +35,7 @@ public class AmazonInputs {
 
     static {
         try {
-            commonInputs = new CommonInputs.CommonInputsBuilder()
+            commonInputs = new CommonInputs.Builder()
                     .withProvider(PROVIDER)
                     .withIdentity(IDENTITY)
                     .withCredential(CREDENTIAL)
@@ -45,7 +45,7 @@ public class AmazonInputs {
                     .withDelimiter(DELIMITER)
                     .build();
 
-            customInputs = new CustomInputs.CustomInputsBuilder()
+            customInputs = new CustomInputs.Builder()
                     .withRegion(REGION)
                     .withInstanceId(SERVER_ID)
                     .withImageId(IMAGE_ID)

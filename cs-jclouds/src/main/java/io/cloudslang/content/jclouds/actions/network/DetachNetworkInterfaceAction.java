@@ -94,7 +94,7 @@ public class DetachNetworkInterfaceAction {
                                                       @Param(value = Inputs.NetworkInputs.FORCE_DETACH) String forceDetach) {
 
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -112,8 +112,8 @@ public class DetachNetworkInterfaceAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withAttachmentId(attachmentId).build();
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder().withForceDetach(forceDetach).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withAttachmentId(attachmentId).build();
+            NetworkInputs networkInputs = new NetworkInputs.Builder().withForceDetach(forceDetach).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
         } catch (Exception exception) {

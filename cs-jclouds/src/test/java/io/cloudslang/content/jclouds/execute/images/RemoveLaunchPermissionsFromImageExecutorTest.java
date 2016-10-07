@@ -78,22 +78,22 @@ public class RemoveLaunchPermissionsFromImageExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withProvider("amazon").withDebugMode("anything in here").build();
+        return new CommonInputs.Builder().withProvider("amazon").withDebugMode("anything in here").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder().withRegion("some region").withImageId("ami-abcdef12").build();
+        return new CustomInputs.Builder().withRegion("some region").withImageId("ami-abcdef12").build();
     }
 
     private ImageInputs getPopulatedImageInputs(boolean withUser) {
         if (withUser) {
-            return new ImageInputs.ImageInputsBuilder()
+            return new ImageInputs.Builder()
                     .withCustomInputs(getCustomInputs())
                     .withUserIdsString("firstId,secondId")
                     .withUserGroupsString("firstGroup,secondGroup")
                     .build();
         }
 
-        return new ImageInputs.ImageInputsBuilder().withCustomInputs(getCustomInputs()).build();
+        return new ImageInputs.Builder().withCustomInputs(getCustomInputs()).build();
     }
 }

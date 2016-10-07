@@ -184,7 +184,7 @@ public class QueryApiExecutorTest {
 
     private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString)
             throws MalformedURLException {
-        return new CommonInputs.CommonInputsBuilder()
+        return new CommonInputs.Builder()
                 .withAction(action)
                 .withHeaders(headersString)
                 .withQueryParams(queryParamsString)
@@ -194,7 +194,7 @@ public class QueryApiExecutorTest {
     }
 
     private CustomInputs getCustomInputs() throws Exception {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withAllocationId("eipalloc-abcdef12")
                 .withAssociationId("eipassoc-abcdef12")
                 .withAttachmentId("eni-attach-12345678")
@@ -207,11 +207,11 @@ public class QueryApiExecutorTest {
     }
 
     private VolumeInputs getVolumeInputs() {
-        return new VolumeInputs.VolumeInputsBuilder().withSize("10").withIops("").build();
+        return new VolumeInputs.Builder().withSize("10").withIops("").build();
     }
 
     private ElasticIpInputs getElasticIpInputs() {
-        return new ElasticIpInputs.ElasticIpInputsBuilder()
+        return new ElasticIpInputs.Builder()
                 .withAllowReassociation("tRuE")
                 .withPublicIp("52.0.0.2")
                 .withPrivateIpAddress("10.0.0.129")
@@ -220,14 +220,14 @@ public class QueryApiExecutorTest {
     }
 
     private IamInputs getIamInputs(){
-        return new IamInputs.IamInputsBuilder()
+        return new IamInputs.Builder()
                 .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
                 .build();
     }
 
     private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) throws Exception {
         if (withNetworkInterfaceId) {
-            return new NetworkInputs.NetworkInputsBuilder()
+            return new NetworkInputs.Builder()
                     .withDeviceIndex("25")
                     .withNetworkInterfaceDescription("anything in here")
                     .withNetworkInterfaceId("eni-12345678")
@@ -235,7 +235,7 @@ public class QueryApiExecutorTest {
                     .withSecondaryPrivateIpAddressCount("3")
                     .build();
         }
-        return new NetworkInputs.NetworkInputsBuilder()
+        return new NetworkInputs.Builder()
                 .withDeviceIndex("25")
                 .withNetworkInterfaceDescription("anything in here")
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")

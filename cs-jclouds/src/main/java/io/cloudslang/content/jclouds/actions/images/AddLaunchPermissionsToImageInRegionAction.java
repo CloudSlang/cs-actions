@@ -74,7 +74,7 @@ public class AddLaunchPermissionsToImageInRegionAction {
                                        @Param(value = Inputs.ImageInputs.USER_IDS_STRING) String userIdsString,
                                        @Param(value = Inputs.ImageInputs.USER_GROUPS_STRING) String userGroupsString) throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -85,12 +85,12 @@ public class AddLaunchPermissionsToImageInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withImageId(imageId)
                 .build();
 
-        ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+        ImageInputs imageInputs = new ImageInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withUserIdsString(userIdsString)
                 .withUserGroupsString(userGroupsString)

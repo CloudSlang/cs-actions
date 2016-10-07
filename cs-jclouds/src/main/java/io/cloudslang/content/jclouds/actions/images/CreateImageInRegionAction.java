@@ -76,7 +76,7 @@ public class CreateImageInRegionAction {
                                        @Param(value = Inputs.ImageInputs.NAME, required = true) String name,
                                        @Param(value = Inputs.ImageInputs.NO_REBOOT) String noReboot) throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -86,12 +86,12 @@ public class CreateImageInRegionAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withInstanceId(instanceId)
                 .build();
 
-        ImageInputs imageInputs = new ImageInputs.ImageInputsBuilder()
+        ImageInputs imageInputs = new ImageInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withImageName(name)
                 .withImageDescription(description)

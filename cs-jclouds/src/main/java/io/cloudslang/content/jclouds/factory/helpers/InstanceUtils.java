@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 9/15/2016.
  */
-public class InstanceHelper {
+public class InstanceUtils {
     private static final String CLIENT_TOKEN = "ClientToken";
     private static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "DeviceName";
     private static final String DISABLE_API_TERMINATION = "DisableApiTermination";
@@ -124,7 +124,7 @@ public class InstanceHelper {
     }
 
     private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        IamHelper helper = new IamHelper();
+        IamUtils helper = new IamUtils();
         helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
                 Constants.AwsParams.SECURITY_GROUP, Constants.Miscellaneous.EMPTY, wrapper.getCommonInputs().getDelimiter());
         helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
@@ -132,12 +132,12 @@ public class InstanceHelper {
     }
 
     private void setNetworkInterfaceQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        NetworkHelper helper = new NetworkHelper();
+        NetworkUtils helper = new NetworkUtils();
         helper.setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, Constants.AwsParams.NETWORK_INTERFACE,
                 wrapper.getCommonInputs().getDelimiter());
         helper.setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
         if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacePrivateIpAddress())) {
-            new IamHelper().setNetworkSecurityGroupsQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+            new IamUtils().setNetworkSecurityGroupsQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                     wrapper.getCommonInputs().getDelimiter());
         }
     }

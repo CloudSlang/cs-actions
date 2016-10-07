@@ -109,7 +109,7 @@ public class StopInstancesAction {
 
                                              @Param(value = Inputs.InstanceInputs.FORCE_STOP, required = true) String forceStop) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -128,8 +128,8 @@ public class StopInstancesAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withInstanceId(instanceId).build();
-            InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder().withForceStop(forceStop).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+            InstanceInputs instanceInputs = new InstanceInputs.Builder().withForceStop(forceStop).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, instanceInputs);
         } catch (Exception e) {

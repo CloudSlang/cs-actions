@@ -424,23 +424,23 @@ public class AmazonComputeServiceImplTest {
     }
 
     private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) throws Exception {
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(REGION)
                 .withKeyTagsString(tagKeys)
                 .withValueTagsString(tagValues)
                 .build();
 
         NetworkInputs networkInputs = (filter.length > 0) ?
-                new NetworkInputs.NetworkInputsBuilder().withNetworkInterfacePublicIp(filter[0]).build() :
-                new NetworkInputs.NetworkInputsBuilder().build();
+                new NetworkInputs.Builder().withNetworkInterfacePublicIp(filter[0]).build() :
+                new NetworkInputs.Builder().build();
 
-        return new InstanceInputs.InstanceInputsBuilder()
+        return new InstanceInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
                 .build();
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("TrUe").withDelimiter(",").build();
+        return new CommonInputs.Builder().withDebugMode("TrUe").withDelimiter(",").build();
     }
 }

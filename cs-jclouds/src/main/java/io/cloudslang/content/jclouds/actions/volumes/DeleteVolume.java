@@ -84,7 +84,7 @@ public class DeleteVolume {
 
                                             @Param(value = Inputs.CustomInputs.VOLUME_ID, required = true) String volumeId) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -102,7 +102,7 @@ public class DeleteVolume {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withVolumeId(volumeId).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception e) {

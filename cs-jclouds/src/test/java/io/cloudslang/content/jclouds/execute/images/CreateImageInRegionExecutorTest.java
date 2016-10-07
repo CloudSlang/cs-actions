@@ -62,18 +62,18 @@ public class CreateImageInRegionExecutorTest {
     }
 
     private CommonInputs getCommonInputs() throws Exception {
-        return new CommonInputs.CommonInputsBuilder().withDebugMode("").build();
+        return new CommonInputs.Builder().withDebugMode("").build();
     }
 
     private CustomInputs getCustomInputs() {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withRegion("some region")
                 .withInstanceId("i-abcdef12")
                 .build();
     }
 
     private ImageInputs getImageInputs() {
-        return new ImageInputs.ImageInputsBuilder()
+        return new ImageInputs.Builder()
                 .withCustomInputs(getCustomInputs())
                 .withImageName("testName")
                 .withImageDescription("anything in here")

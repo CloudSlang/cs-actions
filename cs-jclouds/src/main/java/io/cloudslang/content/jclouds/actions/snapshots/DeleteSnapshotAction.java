@@ -88,7 +88,7 @@ public class DeleteSnapshotAction {
 
                                               @Param(value = Inputs.VolumeInputs.SNAPSHOT_ID, required = true) String snapshotId) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -106,7 +106,7 @@ public class DeleteSnapshotAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder().withSnapshotId(snapshotId).build();
+            VolumeInputs volumeInputs = new VolumeInputs.Builder().withSnapshotId(snapshotId).build();
 
             return new QueryApiExecutor().execute(commonInputs, volumeInputs);
         } catch (Exception e) {
