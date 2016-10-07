@@ -1,6 +1,15 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.aws.*;
+import io.cloudslang.content.jclouds.entities.aws.Architecture;
+import io.cloudslang.content.jclouds.entities.aws.BlockDeviceMappingStatus;
+import io.cloudslang.content.jclouds.entities.aws.Domain;
+import io.cloudslang.content.jclouds.entities.aws.Hypervisor;
+import io.cloudslang.content.jclouds.entities.aws.InstanceType;
+import io.cloudslang.content.jclouds.entities.aws.Platform;
+import io.cloudslang.content.jclouds.entities.aws.ProductCodeType;
+import io.cloudslang.content.jclouds.entities.aws.RootDeviceType;
+import io.cloudslang.content.jclouds.entities.aws.VirtualizationType;
+import io.cloudslang.content.jclouds.entities.aws.VolumeType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
@@ -9,6 +18,8 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * 2/18/2016.
  */
 public class CustomInputs {
+    private String operationType;
+    private String attribute;
     private String region;
     private String instanceId;
     private String imageId;
@@ -93,6 +104,8 @@ public class CustomInputs {
         this.kmsKeyId = builder.kmsKeyId;
         this.attachmentId = builder.attachmentId;
         this.domain = builder.domain;
+        this.attribute = builder.attribute;
+        this.operationType = builder.operationType;
     }
 
     public String getRegion() {
@@ -259,6 +272,14 @@ public class CustomInputs {
         return domain;
     }
 
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
     public static class Builder {
         private String region;
         private String instanceId;
@@ -301,6 +322,8 @@ public class CustomInputs {
         private String kmsKeyId;
         private String attachmentId;
         private String domain;
+        private String attribute;
+        private String operationType;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -508,6 +531,16 @@ public class CustomInputs {
 
         public Builder withDomain(String inputValue) {
             domain = Domain.getValue(inputValue);
+            return this;
+        }
+
+        public Builder withAttribute(String inputValue) {
+            attribute = inputValue;
+            return this;
+        }
+
+        public Builder withOperationType(String inputValue) {
+            operationType = inputValue;
             return this;
         }
     }

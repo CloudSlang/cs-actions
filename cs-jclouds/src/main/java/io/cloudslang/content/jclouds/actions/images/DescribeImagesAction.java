@@ -6,12 +6,13 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
-import io.cloudslang.content.jclouds.execute.images.DescribeImagesInRegionExecutor;
+import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Map;
  * Created by Mihai Tusa.
  * 5/6/2016.
  */
-public class DescribeImagesInRegionAction {
+public class DescribeImagesAction {
     /**
      * Describes one or more of the images (AMIs, AKIs, and ARIs) available to you. Images available to you include
      * public images, private images that you own, and private images owned by other AWS accounts but for which you have
@@ -28,19 +29,17 @@ public class DescribeImagesInRegionAction {
      * Note:
      * De-registered images are included in the returned results for an unspecified interval after de-registration.
      *
-     * @param provider                     Cloud provider on which you have the images - Default: "amazon"
      * @param endpoint                     Endpoint to which request will be sent - Example: "https://ec2.amazonaws.com"
      * @param identity                     Optional - Username of your account or the Access Key ID.
      * @param credential                   Optional - Password of the user or the Secret Access Key that correspond to
      *                                     the identity input.
+     * @param version                      Version of the web service to made the call against it.
+     *                                     Example: "2016-04-01"
+     *                                     Default: ""
      * @param proxyHost                    Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort                    Optional - Proxy server port - Default: "8080"
      * @param delimiter                    Optional - Delimiter that will be used - Default: ","
      * @param debugMode                    Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param region                       Optional - Region where image will be created. ListRegionAction can be used
-     *                                     in order to get all regions. For further details check:
-     *                                     http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-     *                                     Default: "us-east-1".
      * @param identityId                   Optional - Scopes the images by users with explicit launch permissions. Specify
      *                                     an AWS account ID, "self" (the sender of the request), or "all" (public AMIs).
      *                                     Valid values: "self", "all" or AWS account ID - Default: ""
@@ -103,16 +102,15 @@ public class DescribeImagesInRegionAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
                                        @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
                                        @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
+                                       @Param(value = Inputs.CommonInputs.VERSION, encrypted = true) String version,
                                        @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
                                        @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
                                        @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
-                                       @Param(value = Inputs.CustomInputs.REGION) String region,
                                        @Param(value = Inputs.CustomInputs.IDENTITY_ID) String identityId,
                                        @Param(value = Inputs.CustomInputs.ARCHITECTURE) String architecture,
                                        @Param(value = Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
@@ -144,60 +142,63 @@ public class DescribeImagesInRegionAction {
                                        @Param(value = Inputs.ImageInputs.IS_PUBLIC) String isPublic,
                                        @Param(value = Inputs.ImageInputs.MANIFEST_LOCATION) String manifestLocation,
                                        @Param(value = Inputs.ImageInputs.NAME) String name,
-                                       @Param(value = Inputs.ImageInputs.STATE) String state) throws Exception {
-
-        CommonInputs inputs = new CommonInputs.Builder()
-                .withProvider(provider)
-                .withEndpoint(endpoint)
-                .withIdentity(identity)
-                .withCredential(credential)
-                .withProxyHost(proxyHost)
-                .withProxyPort(proxyPort)
-                .withDelimiter(delimiter)
-                .withDebugMode(debugMode)
-                .build();
-
-        CustomInputs customInputs = new CustomInputs.Builder()
-                .withRegion(region)
-                .withIdentityId(identityId)
-                .withArchitecture(architecture)
-                .withDeleteOnTermination(deleteOnTermination)
-                .withBlockMappingDeviceName(blockMappingDeviceName)
-                .withBlockDeviceMappingSnapshotId(blockDeviceMappingSnapshotId)
-                .withVolumeSize(volumeSize)
-                .withVolumeType(volumeType)
-                .withHypervisor(hypervisor)
-                .withImageId(imageId)
-                .withKernelId(kernelId)
-                .withOwnerAlias(ownerAlias)
-                .withOwnerId(ownerId)
-                .withPlatform(platform)
-                .withProductCode(productCode)
-                .withProductCodeType(productCodeType)
-                .withRamdiskId(ramdiskId)
-                .withRootDeviceName(rootDeviceName)
-                .withRootDeviceType(rootDeviceType)
-                .withStateReasonCode(stateReasonCode)
-                .withStateReasonMessage(stateReasonMessage)
-                .withKeyTagsString(keyTagsString)
-                .withValueTagsString(valueTagsString)
-                .withVirtualizationType(virtualizationType)
-                .build();
-
-        ImageInputs imageInputs = new ImageInputs.Builder()
-                .withCustomInputs(customInputs)
-                .withDescription(description)
-                .withImageIdsString(idsString)
-                .withOwnersString(ownersString)
-                .withType(type)
-                .withIsPublic(isPublic)
-                .withManifestLocation(manifestLocation)
-                .withImageName(name)
-                .withState(state)
-                .build();
-
+                                       @Param(value = Inputs.ImageInputs.STATE) String state) {
         try {
-            return new DescribeImagesInRegionExecutor().execute(inputs, imageInputs);
+            CommonInputs inputs = new CommonInputs.Builder()
+                    .withEndpoint(endpoint)
+                    .withIdentity(identity)
+                    .withCredential(credential)
+                    .withProxyHost(proxyHost)
+                    .withProxyPort(proxyPort)
+                    .withDelimiter(delimiter)
+                    .withDebugMode(debugMode)
+                    .withVersion(version)
+                    .withAction(Constants.QueryApiActions.DESCRIBE_IMAGES)
+                    .withApiService(Constants.Apis.AMAZON_EC2_API)
+                    .withRequestUri(Constants.Miscellaneous.EMPTY)
+                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
+                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
+                    .build();
+
+            CustomInputs customInputs = new CustomInputs.Builder()
+                    .withIdentityId(identityId)
+                    .withArchitecture(architecture)
+                    .withDeleteOnTermination(deleteOnTermination)
+                    .withBlockMappingDeviceName(blockMappingDeviceName)
+                    .withBlockDeviceMappingSnapshotId(blockDeviceMappingSnapshotId)
+                    .withVolumeSize(volumeSize)
+                    .withVolumeType(volumeType)
+                    .withHypervisor(hypervisor)
+                    .withImageId(imageId)
+                    .withKernelId(kernelId)
+                    .withOwnerAlias(ownerAlias)
+                    .withOwnerId(ownerId)
+                    .withPlatform(platform)
+                    .withProductCode(productCode)
+                    .withProductCodeType(productCodeType)
+                    .withRamdiskId(ramdiskId)
+                    .withRootDeviceName(rootDeviceName)
+                    .withRootDeviceType(rootDeviceType)
+                    .withStateReasonCode(stateReasonCode)
+                    .withStateReasonMessage(stateReasonMessage)
+                    .withKeyTagsString(keyTagsString)
+                    .withValueTagsString(valueTagsString)
+                    .withVirtualizationType(virtualizationType)
+                    .build();
+
+            ImageInputs imageInputs = new ImageInputs.Builder()
+                    .withCustomInputs(customInputs)
+                    .withDescription(description)
+                    .withImageIdsString(idsString)
+                    .withOwnersString(ownersString)
+                    .withType(type)
+                    .withIsPublic(isPublic)
+                    .withManifestLocation(manifestLocation)
+                    .withImageName(name)
+                    .withState(state)
+                    .build();
+
+            return new QueryApiExecutor().execute(inputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }
