@@ -28,16 +28,12 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
-<<<<<<< HEAD
-import static org.mockito.Mockito.*;
-=======
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
->>>>>>> master
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -371,13 +367,8 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-<<<<<<< HEAD
     private IamInputs getIamInputs(){
         return new IamInputs.Builder()
-=======
-    private IamInputs getIamInputs() {
-        return new IamInputs.IamInputsBuilder()
->>>>>>> master
                 .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
                 .build();
     }

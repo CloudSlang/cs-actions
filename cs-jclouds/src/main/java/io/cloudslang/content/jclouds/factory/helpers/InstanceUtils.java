@@ -88,7 +88,6 @@ public class InstanceUtils {
         return queryParamsMap;
     }
 
-<<<<<<< HEAD:cs-jclouds/src/main/java/io/cloudslang/content/jclouds/factory/helpers/InstanceUtils.java
     public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
         return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
@@ -125,9 +124,6 @@ public class InstanceUtils {
     }
 
     private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-=======
-    private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper){
->>>>>>> master:cs-jclouds/src/main/java/io/cloudslang/content/jclouds/factory/helpers/InstanceUtils.java
         IamUtils helper = new IamUtils();
         helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
                 Constants.AwsParams.SECURITY_GROUP, Constants.Miscellaneous.EMPTY, wrapper.getCommonInputs().getDelimiter());

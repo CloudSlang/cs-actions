@@ -81,7 +81,6 @@ public class StartInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-<<<<<<< HEAD
     public Map<String, String> startInstances(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
                                               @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
                                               @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
@@ -93,34 +92,6 @@ public class StartInstancesAction {
                                               @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
                                               @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
                                               @Param(value = Inputs.CommonInputs.DELIMITER, required = true) String delimiter,
-=======
-    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
-
-                                       @Param(value = Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId)
-            throws Exception {
-
-        CommonInputs inputs = new CommonInputs.Builder()
-                .withProvider(provider)
-                .withEndpoint(endpoint)
-                .withIdentity(identity)
-                .withCredential(credential)
-                .withProxyHost(proxyHost)
-                .withProxyPort(proxyPort)
-                .withDebugMode(debugMode)
-                .build();
-
-        CustomInputs customInputs = new CustomInputs.Builder()
-                .withRegion(region)
-                .withInstanceId(instanceId)
-                .build();
->>>>>>> master
 
                                               @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) {
         try {

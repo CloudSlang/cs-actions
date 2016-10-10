@@ -111,11 +111,7 @@ public class DisassociateAddressAction {
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder().withAssociationId(associationId).build();
-<<<<<<< HEAD
             ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder().withPublicIp(publicIp).build();
-=======
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder().withPublicIp(publicIp).build();
->>>>>>> master
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
         } catch (Exception exception) {
