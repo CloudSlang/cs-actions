@@ -6,9 +6,13 @@ import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.entities.http.Protocol;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
+import java.util.Locale;
+
+import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
 
 /**
  * Created by Mihai Tusa.
@@ -105,5 +109,18 @@ public class InputUtils {
     private static boolean isValidUpdateOperation(VmInputs vmInputs) {
         return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())
                 || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
+    }
+
+    public static Locale getLocale(String localeLang, String localeCountry) throws Exception {
+        Locale locale;
+        if (StringUtils.isEmpty(localeLang) && StringUtils.isEmpty(localeCountry)) {
+            locale = Locale.getDefault();
+        } else {
+            locale = new Locale(localeLang, localeCountry);
+            if (!isAvailableLocale(locale)) {
+                throw new Exception("Locale not found");
+            }
+        }
+        return locale;
     }
 }

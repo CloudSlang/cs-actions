@@ -71,4 +71,24 @@ public class Inputs {
 
     // Miscellaneous
     public static final String DELIMITER = "delimiter";
+    public static final String USER = "user";
+
+    //template upload inputs
+    public static final String CLOSE_SESSION = "closeSession";
+    public static final String PATH = "path";
+    public static final String NAME = "name";
+    public static final String DATACENTER = "datacenter";
+    public static final String VM_FOLDER = "vmFolder";
+    public static final String DISK_PROVISIONING = "diskProvisioning";
+    public static final String HS_IDENTIFIER_TYPE = "hsIdentifierType";
+    public static final String HOST_SYSTEM = "hostSystem";
+    public static final String OVF_NETWORK_JS = "ovfNetworkJS";
+    public static final String NET_PORT_GROUP_JS = "netPortGroupJS";
+    public static final String OVF_PROP_KEY_JS = "ovfPropKeyJS";
+    public static final String OVF_PROP_VALUE_JS = "ovfPropValueJS";
+    public static final String IP_PROTOCOL = "ipProtocol";
+    public static final String IP_ALLOC_SCHEME = "ipAllocScheme";
+    public static final String LOCALE_LANG = "localeLang";
+    public static final String LOCALE_COUNTRY = "localeCountry";
+    public static final String PARALLEL = "parallel";
 }
