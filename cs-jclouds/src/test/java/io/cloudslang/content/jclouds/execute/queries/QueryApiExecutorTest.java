@@ -9,6 +9,7 @@ import io.cloudslang.content.jclouds.entities.inputs.ElasticIpInputs;
 import io.cloudslang.content.jclouds.entities.inputs.IamInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
 import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
@@ -263,6 +264,45 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testStartInstances() throws Exception {
+        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getStartInstancesInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("StartInstances")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private CustomInputs getStartInstancesInputs() {
+        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
+    }
+
+    @Test
+    public void testStopInstances() throws Exception {
+        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getInstanceCustomInputs(), getStopInstancesInstanceInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("StopInstances")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private InstanceInputs getStopInstancesInstanceInputs() {
+        return new InstanceInputs.Builder().withForceStop("true").build();
+    }
+
+    @Test
+    public void testRebootInstances() throws Exception {
+        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getInstanceCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("RebootInstances")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private CustomInputs getInstanceCustomInputs() {
+        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
+    }
+
+    @Test
     public void testResetLaunchPermissionOnImage() throws Exception {
         toTest.execute(getCommonInputs("ResetImageAttribute", HEADERS, ""), getResetLaunchPermissionOnImageInputs());
 
@@ -284,6 +324,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeImageAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testTerminateInstances() throws Exception {
+        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getInstanceCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("TerminateInstances")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -536,6 +585,9 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("UserGroup.2", "g1");
                 queryParamsMap.put("UserGroup.1", "g2");
                 break;
+            case "RebootInstances":
+                queryParamsMap.put("InstanceId.1", "i-12345678");
+                break;
             case "ReleaseAddress":
                 queryParamsMap.put("AllocationId", "eipalloc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
@@ -543,6 +595,16 @@ public class QueryApiExecutorTest {
             case "ResetImageAttribute":
                 queryParamsMap.put("Attribute", "launchPermission");
                 queryParamsMap.put("ImageId", "ami-abcd1234");
+                break;
+            case "StartInstances":
+                queryParamsMap.put("InstanceId.1", "i-12345678");
+                break;
+            case "StopInstances":
+                queryParamsMap.put("InstanceId.1", "i-12345678");
+                queryParamsMap.put("Force", "true");
+                break;
+            case "TerminateInstances":
+                queryParamsMap.put("InstanceId.1", "i-12345678");
                 break;
             default:
                 throw new RuntimeException("You forgot to setup queryParamsMap naughty developer!");
