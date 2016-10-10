@@ -3,7 +3,14 @@ package io.cloudslang.content.jclouds.execute.queries;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.jclouds.entities.inputs.*;
+import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
+import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.jclouds.entities.inputs.IamInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
+import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
+import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
+import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.services.impl.MockingHelper;
 import org.junit.After;
@@ -21,11 +28,21 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
+<<<<<<< HEAD
 import static org.mockito.Mockito.*;
+=======
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.anyMapOf;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+>>>>>>> master
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by Mihai Tusa.
@@ -35,12 +52,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
-
-    private QueryApiExecutor toTest;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
+    private QueryApiExecutor toTest;
     @Mock
     private CSHttpClient csHttpClientMock;
 
@@ -63,6 +77,28 @@ public class QueryApiExecutorTest {
     public void tearDown() {
         toTest = null;
         queryApiExecutorSpy = null;
+    }
+
+    @Test
+    public void testAddLaunchPermissionsToImage() throws Exception {
+        toTest.execute(getCommonInputs("ModifyImageAttribute", HEADERS, ""), getAddLaunchPermissionsToImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("ModifyImageAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private ImageInputs getAddLaunchPermissionsToImageInputs() {
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withAttribute("launchPermission")
+                .withOperationType("add")
+                .withImageId("ami-abcd1234")
+                .build();
+        return new ImageInputs.Builder()
+                .withCustomInputs(customInputs)
+                .withUserIdsString("1,2")
+                .withUserGroupsString("g1,g2")
+                .build();
     }
 
     @Test
@@ -105,6 +141,27 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateImage() throws Exception {
+        toTest.execute(getCommonInputs("CreateImage", HEADERS, ""), getCreateImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateImage")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private ImageInputs getCreateImageInputs() {
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withInstanceId("i-b0e2ad1b")
+                .build();
+        return new ImageInputs.Builder()
+                .withCustomInputs(customInputs)
+                .withImageName("img-name")
+                .withDescription("Some description")
+                .withImageNoReboot("true")
+                .build();
+    }
+
+    @Test
     public void testCreateVolume() throws Exception {
         toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(),
                 getNetworkInputs(false));
@@ -121,6 +178,63 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDeregisterImage() throws Exception {
+        toTest.execute(getCommonInputs("DeregisterImage", HEADERS, ""), getImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeregisterImage")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeImagesOnImage() throws Exception {
+        toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeImages")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private ImageInputs getDescribeImagesInputs() throws Exception {
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withIdentityId("my-id")
+                .withArchitecture("i386")
+                .withDeleteOnTermination("true")
+                .withBlockMappingDeviceName("/dev/sdh")
+                .withBlockDeviceMappingSnapshotId("my-id")
+                .withVolumeSize("25")
+                .withVolumeType("gp2")
+                .withHypervisor("ovm")
+                .withImageId("ami-abcd1234")
+                .withKernelId("kernel-id")
+                .withOwnerAlias("amazon")
+                .withOwnerId("o-id")
+                .withPlatform("windows")
+                .withProductCode("p-code")
+                .withProductCodeType("devpay")
+                .withRamdiskId("id-ram")
+                .withRootDeviceName("/dev/sda1")
+                .withRootDeviceType("available")
+                .withStateReasonCode("r-code")
+                .withStateReasonMessage("r-message")
+                .withKeyTagsString("my-key-tags")
+                .withValueTagsString("my-value-tags")
+                .withVirtualizationType("paravirtual")
+                .build();
+        return new ImageInputs.Builder()
+                .withCustomInputs(customInputs)
+                .withDescription("some-desc")
+                .withImageIdsString("i_id1,i_id2")
+                .withOwnersString("o_id1,o_id2")
+                .withType("machine")
+                .withIsPublic("true")
+                .withManifestLocation("manif-location")
+                .withImageName("img-name")
+                .withState("available")
+                .build();
     }
 
     @Test
@@ -150,6 +264,38 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ReleaseAddress")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testResetLaunchPermissionOnImage() throws Exception {
+        toTest.execute(getCommonInputs("ResetImageAttribute", HEADERS, ""), getResetLaunchPermissionOnImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("ResetImageAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private CustomInputs getResetLaunchPermissionOnImageInputs() {
+        return new CustomInputs.Builder()
+                .withAttribute("launchPermission")
+                .withImageId("ami-abcd1234")
+                .build();
+    }
+
+    @Test
+    public void testGetLaunchPermissionForImage() throws Exception {
+        toTest.execute(getCommonInputs("DescribeImageAttribute", HEADERS, ""), getLaunchPermissionForImageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeImageAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private CustomInputs getLaunchPermissionForImageInputs() {
+        return new CustomInputs.Builder()
+                .withAttribute("launchPermission")
+                .withImageId("ami-abcd1234")
+                .build();
     }
 
     @Test
@@ -193,6 +339,12 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
+    private CustomInputs getImageInputs() {
+        return new CustomInputs.Builder()
+                .withImageId("ami-abcd1234")
+                .build();
+    }
+
     private CustomInputs getCustomInputs() throws Exception {
         return new CustomInputs.Builder()
                 .withAllocationId("eipalloc-abcdef12")
@@ -219,8 +371,13 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
+<<<<<<< HEAD
     private IamInputs getIamInputs(){
         return new IamInputs.Builder()
+=======
+    private IamInputs getIamInputs() {
+        return new IamInputs.IamInputsBuilder()
+>>>>>>> master
                 .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
                 .build();
     }
@@ -288,6 +445,12 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("SecurityGroupId.1", "sg-12345678");
                 queryParamsMap.put("SecurityGroupId.2", "sg-abcdef12");
                 break;
+            case "CreateImage":
+                queryParamsMap.put("Description", "Some description");
+                queryParamsMap.put("InstanceId", "i-b0e2ad1b");
+                queryParamsMap.put("Name", "img-name");
+                queryParamsMap.put("NoReboot", "true");
+                break;
             case "CreateVolume":
                 queryParamsMap.put("VolumeType", "standard");
                 queryParamsMap.put("Size", "10");
@@ -296,6 +459,9 @@ public class QueryApiExecutorTest {
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
                 break;
+            case "DeregisterImage":
+                queryParamsMap.put("ImageId", "ami-abcd1234");
+                break;
             case "DetachNetworkInterface":
                 queryParamsMap.put("AttachmentId", "eni-attach-12345678");
                 break;
@@ -303,9 +469,89 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("AssociationId", "eipassoc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
                 break;
+            case "DescribeImageAttribute":
+                queryParamsMap.put("ImageId", "ami-abcd1234");
+                queryParamsMap.put("Attribute", "launchPermission");
+                break;
+            case "DescribeImages":
+                queryParamsMap.put("Filter.2.Value", "true");
+                queryParamsMap.put("Filter.27.Name", "name");
+                queryParamsMap.put("Filter.21.Name", "tag-value");
+                queryParamsMap.put("Filter.13.Name", "product-code");
+                queryParamsMap.put("Filter.7.Name", "hypervisor");
+                queryParamsMap.put("Filter.28.Value", "available");
+                queryParamsMap.put("Filter.9.Value", "kernel-id");
+                queryParamsMap.put("Filter.18.Name", "state-reason-code");
+                queryParamsMap.put("Filter.6.Name", "block-device-mapping.volume-type");
+                queryParamsMap.put("Filter.11.Value", "o-id");
+                queryParamsMap.put("Filter.21.Value", "my-value-tags");
+                queryParamsMap.put("Filter.6.Value", "gp2");
+                queryParamsMap.put("Filter.22.Name", "virtualization-type");
+                queryParamsMap.put("Filter.26.Name", "manifest-location");
+                queryParamsMap.put("Filter.14.Name", "product-code.type");
+                queryParamsMap.put("Filter.19.Value", "r-message");
+                queryParamsMap.put("Filter.3.Value", "/dev/sdh");
+                queryParamsMap.put("Filter.24.Value", "machine");
+                queryParamsMap.put("Filter.1.Value", "i386");
+                queryParamsMap.put("Filter.12.Value", "windows");
+                queryParamsMap.put("Filter.27.Value", "img-name");
+                queryParamsMap.put("Filter.20.Value", "my-key-tags");
+                queryParamsMap.put("Filter.18.Value", "r-code");
+                queryParamsMap.put("Filter.7.Value", "ovm");
+                queryParamsMap.put("Filter.19.Name", "state-reason-message");
+                queryParamsMap.put("Filter.4.Name", "block-device-mapping.snapshot-id");
+                queryParamsMap.put("Filter.1.Name", "architecture");
+                queryParamsMap.put("Filter.16.Name", "root-device-name");
+                queryParamsMap.put("Filter.15.Value", "id-ram");
+                queryParamsMap.put("Filter.24.Name", "image-type");
+                queryParamsMap.put("Filter.10.Name", "owner-alias");
+                queryParamsMap.put("Filter.23.Value", "some-desc");
+                queryParamsMap.put("Filter.4.Value", "my-id");
+                queryParamsMap.put("Filter.13.Value", "p-code");
+                queryParamsMap.put("Owner.2", "o_id1");
+                queryParamsMap.put("Owner.1", "o_id2");
+                queryParamsMap.put("Filter.3.Name", "block-device-mapping.device-name");
+                queryParamsMap.put("Filter.15.Name", "ramdisk-id");
+                queryParamsMap.put("Filter.25.Name", "is-public");
+                queryParamsMap.put("Filter.26.Value", "manif-location");
+                queryParamsMap.put("Filter.16.Value", "/dev/sda1");
+                queryParamsMap.put("Filter.11.Name", "owner-id");
+                queryParamsMap.put("ExecutableBy.1", "my-id");
+                queryParamsMap.put("Filter.9.Name", "kernel-id");
+                queryParamsMap.put("Filter.8.Value", "ami-abcd1234");
+                queryParamsMap.put("Filter.14.Value", "devpay");
+                queryParamsMap.put("Filter.8.Name", "image-id");
+                queryParamsMap.put("Filter.23.Name", "description");
+                queryParamsMap.put("Filter.20.Name", "tag-key");
+                queryParamsMap.put("Filter.2.Name", "block-device-mapping.delete-on-termination");
+                queryParamsMap.put("Filter.17.Name", "root-device-type");
+                queryParamsMap.put("Filter.22.Value", "paravirtual");
+                queryParamsMap.put("ImageId.2", "i_id1");
+                queryParamsMap.put("Filter.12.Name", "platform");
+                queryParamsMap.put("Filter.5.Name", "block-device-mapping.volume-size");
+                queryParamsMap.put("Filter.17.Value", "available");
+                queryParamsMap.put("ImageId.1", "i_id2");
+                queryParamsMap.put("Filter.28.Name", "state");
+                queryParamsMap.put("Filter.5.Value", "25.0");
+                queryParamsMap.put("Filter.25.Value", "true");
+                queryParamsMap.put("Filter.10.Value", "amazon");
+                break;
+            case "ModifyImageAttribute":
+                queryParamsMap.put("Attribute", "launchPermission");
+                queryParamsMap.put("OperationType", "add");
+                queryParamsMap.put("ImageId", "ami-abcd1234");
+                queryParamsMap.put("UserId.2", "1");
+                queryParamsMap.put("UserId.1", "2");
+                queryParamsMap.put("UserGroup.2", "g1");
+                queryParamsMap.put("UserGroup.1", "g2");
+                break;
             case "ReleaseAddress":
                 queryParamsMap.put("AllocationId", "eipalloc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
+                break;
+            case "ResetImageAttribute":
+                queryParamsMap.put("Attribute", "launchPermission");
+                queryParamsMap.put("ImageId", "ami-abcd1234");
                 break;
             default:
                 throw new RuntimeException("You forgot to setup queryParamsMap naughty developer!");

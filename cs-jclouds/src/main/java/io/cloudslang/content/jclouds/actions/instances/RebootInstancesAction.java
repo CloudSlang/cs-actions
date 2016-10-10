@@ -89,6 +89,7 @@ public class RebootInstancesAction {
                                                @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
                                                @Param(value = Inputs.CommonInputs.DELIMITER, required = true) String delimiter,
 
+<<<<<<< HEAD
                                                @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
@@ -111,6 +112,25 @@ public class RebootInstancesAction {
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+=======
+                                       @Param(value = Inputs.CustomInputs.REGION) String region,
+                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) throws Exception {
+
+        CommonInputs inputs = new CommonInputs.Builder()
+                .withProvider(provider)
+                .withEndpoint(endpoint)
+                .withIdentity(identity)
+                .withCredential(credential)
+                .withProxyHost(proxyHost)
+                .withProxyPort(proxyPort)
+                .withDebugMode(debugMode)
+                .build();
+
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withRegion(region)
+                .withInstanceId(instanceId)
+                .build();
+>>>>>>> master
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception e) {

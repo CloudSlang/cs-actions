@@ -107,6 +107,7 @@ public class StopInstancesAction {
 
                                              @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId,
 
+<<<<<<< HEAD
                                              @Param(value = Inputs.InstanceInputs.FORCE_STOP, required = true) String forceStop) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
@@ -130,6 +131,22 @@ public class StopInstancesAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
             InstanceInputs instanceInputs = new InstanceInputs.Builder().withForceStop(forceStop).build();
+=======
+        CommonInputs inputs = new CommonInputs.Builder()
+                .withProvider(provider)
+                .withEndpoint(endpoint)
+                .withIdentity(identity)
+                .withCredential(credential)
+                .withProxyHost(proxyHost)
+                .withProxyPort(proxyPort)
+                .withDebugMode(debugMode)
+                .build();
+
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withRegion(region)
+                .withInstanceId(instanceId)
+                .build();
+>>>>>>> master
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, instanceInputs);
         } catch (Exception e) {

@@ -113,7 +113,11 @@ public class DetachNetworkInterfaceAction {
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder().withAttachmentId(attachmentId).build();
+<<<<<<< HEAD
             NetworkInputs networkInputs = new NetworkInputs.Builder().withForceDetach(forceDetach).build();
+=======
+            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder().withForceDetach(forceDetach).build();
+>>>>>>> master
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
         } catch (Exception exception) {

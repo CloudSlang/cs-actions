@@ -84,14 +84,22 @@ public class Constants {
         public static final String ALLOCATE_ADDRESS = "AllocateAddress";
         public static final String ASSOCIATE_ADDRESS = "AssociateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
+<<<<<<< HEAD
         public static final String ATTACH_VOLUME = "AttachVolume";
         public static final String CREATE_IMAGE = "CreateImage";
+=======
+        public static final String CREATE_IMAGE = "CreateImage";
+        public static final String CREATE_VOLUME = "CreateVolume";
+>>>>>>> master
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
+<<<<<<< HEAD
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
         public static final String DELETE_VOLUME = "DeleteVolume";
+=======
+>>>>>>> master
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
@@ -99,12 +107,19 @@ public class Constants {
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
         public static final String MODIFY_IMAGE_ATTRIBUTE = "ModifyImageAttribute";
+<<<<<<< HEAD
         public static final String REBOOT_INSTANCES = "RebootInstances";
+=======
+>>>>>>> master
         public static final String RELEASE_ADDRESS = "ReleaseAddress";
         public static final String RESET_IMAGE_ATTRIBUTE = "ResetImageAttribute";
         public static final String RUN_INSTANCES = "RunInstances";
+<<<<<<< HEAD
         public static final String START_INSTANCES = "StartInstances";
         public static final String STOP_INSTANCES = "StopInstances";
         public static final String TERMINATE_INSTANCES = "TerminateInstances";
+=======
+        public static final String RESET_IMAGE_ATTRIBUTE = "ResetImageAttribute";
+>>>>>>> master
     }
 }
