@@ -175,6 +175,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateSnapshot() throws Exception {
+        toTest.execute(getCommonInputs("CreateSnapshot", HEADERS, ""), getVolumeCustomInputs(), getVolumeInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateSnapshot")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testCreateVolume() throws Exception {
         toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(),
                 getNetworkInputs(false));
@@ -190,6 +199,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDeleteSnapshot() throws Exception {
+        toTest.execute(getCommonInputs("DeleteSnapshot", HEADERS, ""), getVolumeInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteSnapshot")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -438,7 +456,13 @@ public class QueryApiExecutorTest {
     }
 
     private VolumeInputs getVolumeInputs() {
-        return new VolumeInputs.Builder().withSize("10").withIops("").withDeviceName("device-name").build();
+        return new VolumeInputs.Builder()
+                .withSnapshotId("snap-id")
+                .withDeviceName("device-name")
+                .withDescription("some-desc")
+                .withSize("10")
+                .withIops("")
+                .build();
     }
 
     private ElasticIpInputs getElasticIpInputs() {
@@ -530,13 +554,21 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Name", "img-name");
                 queryParamsMap.put("NoReboot", "true");
                 break;
+            case "CreateSnapshot":
+                queryParamsMap.put("Description", "some-desc");
+                queryParamsMap.put("VolumeId", "v-12345678");
+                break;
             case "CreateVolume":
                 queryParamsMap.put("VolumeType", "standard");
                 queryParamsMap.put("Size", "10");
+                queryParamsMap.put("SnapshotId", "snap-id");
                 queryParamsMap.put("AvailabilityZone", "us-east-1d");
                 break;
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
+                break;
+            case "DeleteSnapshot":
+                queryParamsMap.put("SnapshotId", "snap-id");
                 break;
             case "DeleteVolume":
                 queryParamsMap.put("VolumeId", "v-12345678");
