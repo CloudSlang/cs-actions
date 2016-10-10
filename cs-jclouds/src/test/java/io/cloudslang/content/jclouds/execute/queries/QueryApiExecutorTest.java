@@ -128,6 +128,22 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testAttachVolume() throws Exception {
+        toTest.execute(getCommonInputs("AttachVolume", HEADERS, ""), getVolumeCustomInputs(), getVolumeInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("AttachVolume")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private CustomInputs getVolumeCustomInputs() {
+        return new CustomInputs.Builder()
+                .withInstanceId("i-12345678")
+                .withVolumeId("v-12345678")
+                .build();
+    }
+
+    @Test
     public void testCreateNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
                 getIamInputs(), getNetworkInputs(false));
@@ -174,6 +190,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDeleteVolume() throws Exception {
+        toTest.execute(getCommonInputs("DeleteVolume", HEADERS, ""), getVolumeCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteVolume")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -240,6 +265,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachNetworkInterface")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDetachVolume() throws Exception {
+        toTest.execute(getCommonInputs("DetachVolume", HEADERS, ""), getVolumeCustomInputs(), getVolumeInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DetachVolume")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -404,7 +438,7 @@ public class QueryApiExecutorTest {
     }
 
     private VolumeInputs getVolumeInputs() {
-        return new VolumeInputs.Builder().withSize("10").withIops("").build();
+        return new VolumeInputs.Builder().withSize("10").withIops("").withDeviceName("device-name").build();
     }
 
     private ElasticIpInputs getElasticIpInputs() {
@@ -471,6 +505,11 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
                 queryParamsMap.put("DeviceIndex", "25");
                 break;
+            case "AttachVolume":
+                queryParamsMap.put("VolumeId", "v-12345678");
+                queryParamsMap.put("InstanceId", "i-12345678");
+                queryParamsMap.put("Device", "device-name");
+                break;
             case "CreateNetworkInterface":
                 queryParamsMap.put("SubnetId", "subnet-abcdef12");
                 queryParamsMap.put("Description", "anything in here");
@@ -499,11 +538,19 @@ public class QueryApiExecutorTest {
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
                 break;
+            case "DeleteVolume":
+                queryParamsMap.put("VolumeId", "v-12345678");
+                break;
             case "DeregisterImage":
                 queryParamsMap.put("ImageId", "ami-abcd1234");
                 break;
             case "DetachNetworkInterface":
                 queryParamsMap.put("AttachmentId", "eni-attach-12345678");
+                break;
+            case "DetachVolume":
+                queryParamsMap.put("InstanceId", "i-12345678");
+                queryParamsMap.put("Device", "device-name");
+                queryParamsMap.put("VolumeId", "v-12345678");
                 break;
             case "DisassociateAddress":
                 queryParamsMap.put("AssociationId", "eipassoc-abcdef12");
