@@ -27,35 +27,34 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsPara
  * Date: 30/9/2016.
  */
 public class ImageUtils {
-
-    public static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "block-device-mapping.device-name";
-    public static final String BLOCK_DEVICE_MAPPING_SNAPSHOT_ID = "block-device-mapping.snapshot-id";
-    public static final String BLOCK_DEVICE_MAPPING_VOLUME_SIZE = "block-device-mapping.volume-size";
-    public static final String BLOCK_DEVICE_MAPPING_VOLUME_TYPE = "block-device-mapping.volume-type";
-    public static final String HYPERVISOR = "hypervisor";
-    public static final String IMAGE_ID = "image-id";
-    public static final String KERNEL_ID = "kernel-id";
-    public static final String OWNER_ALIAS = "owner-alias";
-    public static final String OWNER_ID = "owner-id";
-    public static final String PLATFORM = "platform";
-    public static final String PRODUCT_CODE = "product-code";
-    public static final String PRODUCT_CODE_TYPE = "product-code.type";
-    public static final String RAMDISK_ID = "ramdisk-id";
-    public static final String ROOT_DEVICE_NAME = "root-device-name";
-    public static final String ROOT_DEVICE_TYPE = "root-device-type";
-    public static final String STATE_REASON_CODE = "state-reason-code";
-    public static final String STATE_REASON_MESSAGE = "state-reason-message";
-    public static final String TAG_KEY = "tag-key";
-    public static final String TAG_VALUE = "tag-value";
-    public static final String VIRTUALIZATION_TYPE = "virtualization-type";
-    public static final String DESCRIPTION = "description";
-    public static final String IS_PUBLIC = "is-public";
-    public static final String IMAGE_TYPE = "image-type";
-    public static final String MANIFEST_LOCATION = "manifest-location";
-    public static final String NAME = "name";
-    public static final String STATE = "state";
-    public static final String ARCHITECTURE = "architecture";
-    public static final String BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION = "block-device-mapping.delete-on-termination";
+    private static final String ARCHITECTURE = "architecture";
+    private static final String BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION = "block-device-mapping.delete-on-termination";
+    private static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "block-device-mapping.device-name";
+    private static final String BLOCK_DEVICE_MAPPING_SNAPSHOT_ID = "block-device-mapping.snapshot-id";
+    private static final String BLOCK_DEVICE_MAPPING_VOLUME_SIZE = "block-device-mapping.volume-size";
+    private static final String BLOCK_DEVICE_MAPPING_VOLUME_TYPE = "block-device-mapping.volume-type";
+    private static final String DESCRIPTION = "description";
+    private static final String HYPERVISOR = "hypervisor";
+    private static final String IMAGE_ID = "image-id";
+    private static final String IMAGE_TYPE = "image-type";
+    private static final String IS_PUBLIC = "is-public";
+    private static final String KERNEL_ID = "kernel-id";
+    private static final String MANIFEST_LOCATION = "manifest-location";
+    private static final String NAME = "name";
+    private static final String OWNER_ALIAS = "owner-alias";
+    private static final String OWNER_ID = "owner-id";
+    private static final String PLATFORM = "platform";
+    private static final String PRODUCT_CODE = "product-code";
+    private static final String PRODUCT_CODE_TYPE = "product-code.type";
+    private static final String RAMDISK_ID = "ramdisk-id";
+    private static final String ROOT_DEVICE_NAME = "root-device-name";
+    private static final String ROOT_DEVICE_TYPE = "root-device-type";
+    private static final String STATE = "state";
+    private static final String STATE_REASON_CODE = "state-reason-code";
+    private static final String STATE_REASON_MESSAGE = "state-reason-message";
+    private static final String TAG_KEY = "tag-key";
+    private static final String TAG_VALUE = "tag-value";
+    private static final String VIRTUALIZATION_TYPE = "virtualization-type";
 
     public Map<String, String> getDeregisterImageQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
@@ -70,8 +69,10 @@ public class ImageUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
+
         queryParamsMap.put(INSTANCE_ID, wrapper.getImageInputs().getCustomInputs().getInstanceId());
         queryParamsMap.put(Constants.AwsParams.NAME, wrapper.getImageInputs().getImageName());
+
         InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.DESCRIPTION, wrapper.getImageInputs().getDescription(),
                 StringUtils.isNotBlank(wrapper.getImageInputs().getDescription()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, NO_REBOOT, String.valueOf(wrapper.getImageInputs().isImageNoReboot()),
@@ -94,9 +95,11 @@ public class ImageUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         Set<String> userIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getUserIdsString(), wrapper.getCommonInputs().getDelimiter());
         Set<String> userGroupIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getUserGroupsString(), wrapper.getCommonInputs().getDelimiter());
+
         if (userIds == null && userGroupIds == null) {
             throw new RuntimeException(Constants.ErrorMessages.BOTH_PERMISSION_INPUTS_EMPTY);
         }
+
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTRIBUTE, wrapper.getImageInputs().getCustomInputs().getAttribute());
@@ -108,24 +111,19 @@ public class ImageUtils {
         return queryParamsMap;
     }
 
-    private void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
-        int step;
-        Iterator<String> iterator = set.iterator();
-        for (step = 1; iterator.hasNext(); step++) {
-            String curValue = iterator.next();
-            queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
-        }
-    }
-
     public Map<String, String> getDescribeImagesQueryParamsMap(InputsWrapper wrapper) {
-        int currentIndex = 1;
-        Map<String, String> queryParamsMap = new HashMap<>();
         Set<String> imageIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getImageIdsString(), wrapper.getCommonInputs().getDelimiter());
         Set<String> ownerIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getOwnersString(), wrapper.getCommonInputs().getDelimiter());
+
+        Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
-        InputsUtil.setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + ".1", String.valueOf(wrapper.getImageInputs().getCustomInputs().getIdentityId()),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + Constants.Miscellaneous.DOT + Constants.Values.ONE,
+                String.valueOf(wrapper.getImageInputs().getCustomInputs().getIdentityId()),
                 StringUtils.isNotBlank(String.valueOf(wrapper.getImageInputs().getCustomInputs().getIdentityId())));
+
+        int currentIndex = Constants.Values.ONE;
+
         currentIndex = appendOptionalFilters(queryParamsMap, ARCHITECTURE, currentIndex, wrapper.getImageInputs().getCustomInputs().getArchitecture());
         currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION, currentIndex, wrapper.getImageInputs().getCustomInputs().getDeleteOnTermination());
         currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DEVICE_NAME, currentIndex, wrapper.getImageInputs().getCustomInputs().getBlockMappingDeviceName());
@@ -149,26 +147,38 @@ public class ImageUtils {
         currentIndex = appendOptionalFilters(queryParamsMap, TAG_VALUE, currentIndex, wrapper.getImageInputs().getCustomInputs().getValueTagsString());
         currentIndex = appendOptionalFilters(queryParamsMap, VIRTUALIZATION_TYPE, currentIndex, wrapper.getImageInputs().getCustomInputs().getVirtualizationType());
         currentIndex = appendOptionalFilters(queryParamsMap, DESCRIPTION, currentIndex, wrapper.getImageInputs().getDescription());
+
         putCollectionInQueryMap(queryParamsMap, Constants.AwsParams.IMAGE_ID, imageIds);
         putCollectionInQueryMap(queryParamsMap, Constants.AwsParams.OWNER, ownerIds);
+
         currentIndex = appendOptionalFilters(queryParamsMap, IMAGE_TYPE, currentIndex, wrapper.getImageInputs().getType());
         currentIndex = appendOptionalFilters(queryParamsMap, IS_PUBLIC, currentIndex, wrapper.getImageInputs().getIsPublic());
         currentIndex = appendOptionalFilters(queryParamsMap, MANIFEST_LOCATION, currentIndex, wrapper.getImageInputs().getManifestLocation());
         currentIndex = appendOptionalFilters(queryParamsMap, NAME, currentIndex, wrapper.getImageInputs().getImageName());
+
         appendOptionalFilters(queryParamsMap, STATE, currentIndex, wrapper.getImageInputs().getState());
 
         return queryParamsMap;
     }
 
+    private void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
+        int step;
+        Iterator<String> iterator = set.iterator();
+        for (step = Constants.Values.ONE; iterator.hasNext(); step++) {
+            String curValue = iterator.next();
+            queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
+        }
+    }
+
     private int appendOptionalFilters(Map<String, String> queryParamsMap, String filterName, int filterIndex, String filterValue) {
-        boolean isNotBlankInput = StringUtils.isNotBlank(filterValue);
-        if(isNotBlankInput) {
+        if (StringUtils.isNotBlank(filterValue)) {
             queryParamsMap.put(String.format(FILTER_NAME, filterIndex), filterName);
             queryParamsMap.put(String.format(FILTER_VALUE, filterIndex), filterValue);
-            return filterIndex + 1;
-        } else {
-            return filterIndex;
+
+            return filterIndex + Constants.Values.ONE;
         }
+
+        return filterIndex;
     }
 
     public Map<String, String> getResetImageAttributeQueryParamsMap(InputsWrapper wrapper) {

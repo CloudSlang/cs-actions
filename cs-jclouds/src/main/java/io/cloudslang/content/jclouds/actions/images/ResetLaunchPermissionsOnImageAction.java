@@ -21,8 +21,6 @@ import java.util.Map;
  * 5/18/2016.
  */
 public class ResetLaunchPermissionsOnImageAction {
-    private static final String LAUNCH_PERMISSION = "launchPermission";
-
     /**
      * Resets the launch permission attribute of a specified AMI to its default value.
      * Note:
@@ -81,8 +79,8 @@ public class ResetLaunchPermissionsOnImageAction {
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder()
+                    .withAttribute(Constants.AwsParams.LAUNCH_PERMISSION)
                     .withImageId(imageId)
-                    .withAttribute(LAUNCH_PERMISSION)
                     .build();
 
             return new QueryApiExecutor().execute(inputs, customInputs);

@@ -21,9 +21,6 @@ import java.util.Map;
  * 5/10/2016.
  */
 public class GetLaunchPermissionForImageAction {
-
-    private static final String LAUNCH_PERMISSION = "launchPermission";
-
     /**
      * Describes the launch permission of the specified AMI.
      *
@@ -80,8 +77,8 @@ public class GetLaunchPermissionForImageAction {
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder()
+                    .withAttribute(Constants.AwsParams.LAUNCH_PERMISSION)
                     .withImageId(imageId)
-                    .withAttribute(LAUNCH_PERMISSION)
                     .build();
 
             return new QueryApiExecutor().execute(inputs, customInputs);
