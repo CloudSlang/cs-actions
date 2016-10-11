@@ -14,17 +14,19 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class InputsValidation {
 
     @NotNull
-    public static List<String> verifyRequiredInputs(@Nullable final String identifier, @Nullable final String primaryOrSecondaryKey, @Nullable final String expiry) {
+    public static List<String> verifyRequiredInputs(@Nullable final String username, @Nullable final String password, @Nullable final String clientId) {
         final List<String> exceptionMessages = new ArrayList<>();
-        if (isBlank(identifier)) {
-            exceptionMessages.add("The identifier can't be null or empty.");
+        if (isBlank(username)) {
+            exceptionMessages.add("The username can't be null or empty.");
         }
-        if (isBlank(primaryOrSecondaryKey)) {
-            exceptionMessages.add("The primaryOrSecondaryKey can't be null or empty.");
+        if (isBlank(password)) {
+            exceptionMessages.add("The password can't be null or empty.");
         }
-        if (isBlank(expiry)) {
-            exceptionMessages.add("The expiry can't be null or empty.");
+        if (isBlank(clientId)) {
+            exceptionMessages.add("The clientId can't be null or empty.");
         }
         return exceptionMessages;
     }
+
+
 }
