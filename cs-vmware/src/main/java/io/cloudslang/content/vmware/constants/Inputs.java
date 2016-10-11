@@ -16,7 +16,11 @@ public class Inputs {
     // VM specific inputs
     public static final String DATA_CENTER_NAME = "dataCenterName";
     public static final String HOSTNAME = "hostname";
+    public static final String HOST_GROUP_NAME = "hostGroupName";
+    public static final String HOST_LIST = "hostList";
     public static final String VM_NAME = "virtualMachineName";
+    public static final String VM_GROUP_NAME = "vmGroupName";
+    public static final String VM_LIST = "vmList";
     public static final String VM_DESCRIPTION = "description";
     public static final String DATA_STORE = "dataStore";
     public static final String VM_CPU_COUNT = "numCPUs";
@@ -39,6 +43,10 @@ public class Inputs {
     public static final String CLONE_RESOURCE_POOL = "cloneResourcePool";
     public static final String CLONE_HOST = "cloneHost";
     public static final String CLONE_DATA_STORE = "cloneDataStore";
+    public static final String RULE_NAME = "ruleName";
+    public static final String AFFINE_HOST_GROUP_NAME = "affineHostGroupName";
+    public static final String ANTI_AFFINE_HOST_GROUP_NAME = "antiAffineHostGroupName";
+    public static final String ENABLE_RULE = "enableRule";
 
     // Guest specific inputs
     public static final String REBOOT_OPTION = "rebootOption";

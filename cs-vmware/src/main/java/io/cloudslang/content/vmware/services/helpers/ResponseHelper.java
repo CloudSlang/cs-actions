@@ -4,7 +4,7 @@ import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.connection.helpers.WaitForValues;
 import io.cloudslang.content.vmware.constants.Outputs;
-import io.cloudslang.content.vmware.entities.VmParameter;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
 
 import java.util.Map;
@@ -33,8 +33,8 @@ public class ResponseHelper {
     protected boolean getTaskResultAfterDone(ConnectionResources connectionResources, ManagedObjectReference task)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
         WaitForValues waitForValues = new WaitForValues(connectionResources.getConnection());
-        Object[] result = waitForValues.wait(task, new String[]{VmParameter.INFO_STATE.getValue(),
-                        VmParameter.INFO_ERROR.getValue()}, new String[]{VmParameter.STATE.getValue()},
+        Object[] result = waitForValues.wait(task, new String[]{ManagedObjectType.INFO_STATE.getValue(),
+                        ManagedObjectType.INFO_ERROR.getValue()}, new String[]{ManagedObjectType.STATE.getValue()},
                 new Object[][]{new Object[]{TaskInfoState.SUCCESS, TaskInfoState.ERROR}});
 
         if (result[1] instanceof LocalizedMethodFault) {

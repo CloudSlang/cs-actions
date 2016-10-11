@@ -6,7 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.vmware.constants.Inputs;
+import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -19,11 +19,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.HOSTNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.RESTART_PRIORITY;
+import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
+import static io.cloudslang.content.vmware.constants.Inputs.VM_NAME;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.CLUSTER_RESTART_PRIORITY;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.DISABLED;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.HIGH;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.LOW;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.MEDIUM;
+
+import static io.cloudslang.content.vmware.constants.Inputs.HOST;
+import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
+import static io.cloudslang.content.vmware.constants.Inputs.PORT;
+import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
+import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
 
 /**
  * Created by giloan on 9/1/2016.
@@ -45,16 +56,16 @@ public class ModifyVmOverrides {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> modifyVmOverrides(@Param(value = Inputs.HOST, required = true) String host,
-                                       @Param(value = Inputs.PORT) String port,
-                                       @Param(value = Inputs.PROTOCOL) String protocol,
-                                       @Param(value = Inputs.USERNAME, required = true) String username,
-                                       @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                       @Param(value = Inputs.TRUST_EVERYONE) String trustEveryone,
-                                       @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-                                       @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                       @Param(value = Inputs.CLUSTER_NAME, required = true) String clusterName,
-                                       @Param(value = Inputs.RESTART_PRIORITY, required = true) String restartPriority) {
+    public Map<String, String> modifyVmOverrides(@Param(value = HOST, required = true) String host,
+                                       @Param(value = PORT) String port,
+                                       @Param(value = PROTOCOL) String protocol,
+                                       @Param(value = USERNAME, required = true) String username,
+                                       @Param(value = PASSWORD, encrypted = true) String password,
+                                       @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                       @Param(value = HOSTNAME, required = true) String hostname,
+                                       @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                       @Param(value = CLUSTER_NAME, required = true) String clusterName,
+                                       @Param(value = RESTART_PRIORITY, required = true) String restartPriority) {
 
         Map<String, String> resultMap;
         try {
@@ -68,19 +79,16 @@ public class ModifyVmOverrides {
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                    .withClusterName(clusterName)
                     .withHostname(hostname)
                     .withVirtualMachineName(virtualMachineName)
                     .build();
 
-            resultMap = new ClusterComputeResourceService().updateOrAddVmOverride(httpInputs, vmInputs, clusterName,
+            return new ClusterComputeResourceService().updateOrAddVmOverride(httpInputs, vmInputs,
                     validateRestartPriority(restartPriority));
         } catch (Exception ex) {
-            resultMap = new HashMap<>();
-            resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            resultMap.put(Outputs.RETURN_RESULT, ex.getMessage());
-            resultMap.put(Outputs.EXCEPTION, ExceptionUtils.getStackTrace(ex));
+            return OutputUtilities.getFailureResultsMap(ex);
         }
-        return resultMap;
     }
 
     private String validateRestartPriority(String restartPriority) {
