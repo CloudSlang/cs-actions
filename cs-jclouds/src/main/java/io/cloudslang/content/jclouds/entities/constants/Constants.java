@@ -40,7 +40,9 @@ public class Constants {
     }
 
     public static class AwsParams {
+        public static final String ADD_OPERATION_TYPE = "add";
         public static final String ALLOCATION_ID = "AllocationId";
+        public static final String ATTRIBUTE = "Attribute";
         public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
         public static final String AWS_REQUEST_VERSION = "aws4_request";
         public static final String BLOCK_DEVICE_MAPPING = "BlockDeviceMapping";
@@ -49,35 +51,36 @@ public class Constants {
         public static final String DESCRIPTION = "Description";
         public static final String DEVICE_INDEX = "DeviceIndex";
         public static final String ENCRYPTED = "Encrypted";
+        public static final String EXECUTABLE_BY = "ExecutableBy";
+        public static final String FILTER_NAME = "Filter.%d.Name";
+        public static final String FILTER_VALUE = "Filter.%d.Value";
         public static final String FORCE = "Force";
         public static final String HEADER_DELIMITER = "\\r?\\n";
         public static final String HTTP_CLIENT_METHOD_GET = "GET";
+        public static final String IOPS = "Iops";
         public static final String IMAGE_ID = "ImageId";
-        public static final String ATTRIBUTE = "Attribute";
         public static final String INSTANCE_ID = "InstanceId";
+        public static final String LAUNCH_PERMISSION = "launchPermission";
         public static final String NAME = "Name";
         public static final String NO_REBOOT = "NoReboot";
-        public static final String IOPS = "Iops";
         public static final String NETWORK_INTERFACE = "NetworkInterface";
         public static final String NETWORK_INTERFACE_ID = "NetworkInterfaceId";
+        public static final String OPERATION_TYPE = "OperationType";
+        public static final String OWNER = "Owner";
         public static final String PRIMARY = "Primary";
         public static final String PRIVATE_IP_ADDRESS = "PrivateIpAddress";
         public static final String PUBLIC_IP = "PublicIp";
+        public static final String REMOVE_OPERATION_TYPE = "remove";
         public static final String SECURITY_GROUP = "SecurityGroup";
         public static final String SECURITY_GROUP_ID = "SecurityGroupId";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String SNAPSHOT_ID = "SnapshotId";
         public static final String STANDARD = "standard";
         public static final String SUBNET_ID = "SubnetId";
+        public static final String USER_GROUP = "UserGroup";
+        public static final String USER_ID = "UserId";
         public static final String VOLUME_ID = "VolumeId";
         public static final String VOLUME_TYPE = "VolumeType";
-        public static final String OPERATION_TYPE = "OperationType";
-        public static final String USER_ID = "UserId";
-        public static final String USER_GROUP = "UserGroup";
-        public static final String FILTER_NAME = "Filter.%d.Name";
-        public static final String FILTER_VALUE = "Filter.%d.Value";
-        public static final String EXECUTABLE_BY = "ExecutableBy";
-        public static final String OWNER = "Owner";
     }
 
     public static class QueryApiActions {

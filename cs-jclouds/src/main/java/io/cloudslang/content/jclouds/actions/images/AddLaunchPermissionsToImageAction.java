@@ -22,10 +22,6 @@ import java.util.Map;
  * 5/10/2016.
  */
 public class AddLaunchPermissionsToImageAction {
-
-    private static final String ADD_OPERATION = "add";
-    private static final String LAUNCH_PERMISSION = "launchPermission";
-
     /**
      * Adds launch permission to the specified AMI.
      * Note:
@@ -73,6 +69,7 @@ public class AddLaunchPermissionsToImageAction {
                                        @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
                                        @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
+
                                        @Param(value = Inputs.ImageInputs.USER_IDS_STRING) String userIdsString,
                                        @Param(value = Inputs.ImageInputs.USER_GROUPS_STRING) String userGroupsString) {
         try {
@@ -93,8 +90,8 @@ public class AddLaunchPermissionsToImageAction {
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder()
-                    .withAttribute(LAUNCH_PERMISSION)
-                    .withOperationType(ADD_OPERATION)
+                    .withAttribute(Constants.AwsParams.LAUNCH_PERMISSION)
+                    .withOperationType(Constants.AwsParams.ADD_OPERATION_TYPE)
                     .withImageId(imageId)
                     .build();
 

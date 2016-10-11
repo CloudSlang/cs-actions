@@ -25,12 +25,12 @@ public class OutputsUtil {
     }
 
     public static String getElementsString(Set<String> elements, String delimiter) {
-        if (elements.size() > 0) {
-            int index = 0;
+        if (elements.size() > Constants.Values.START_INDEX) {
+            int index = Constants.Values.START_INDEX;
             StringBuilder sb = new StringBuilder();
             for (String element : elements) {
                 sb.append(element);
-                if (index < elements.size() - 1) {
+                if (index < elements.size() - Constants.Values.ONE) {
                     sb.append(delimiter);
                 }
                 index++;

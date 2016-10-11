@@ -77,10 +77,7 @@ public class DeregisterImageAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
-                    .withImageId(imageId)
-                    .build();
-
+            CustomInputs customInputs = new CustomInputs.Builder().withImageId(imageId).build();
 
             return new QueryApiExecutor().execute(inputs, customInputs);
         } catch (Exception exception) {

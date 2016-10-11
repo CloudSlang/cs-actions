@@ -35,8 +35,6 @@ import static org.mockito.Mockito.*;
 @PrepareForTest({ComputeServiceImpl.class, ContextBuilder.class, ComputeService.class})
 public class ComputeServiceImplTest {
     private static final String REGION = "RegionOne";
-    private static final String SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e5";
-    private static final String INVALID_SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e6";
     private static final String ENDPOINT = "http://11.11.11.11:5000/v2.0";
     private static final String IDENTITY = "anyAlias:actulUsername";
     private static final String PASSWORD = "secretpasswrord";
@@ -49,7 +47,6 @@ public class ComputeServiceImplTest {
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
     private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "{\"itemNotFound\": {\"message\": \"Instance not found\", \"code\": 404}}";
-    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' providers in the provider input";
 
     private ComputeServiceImpl toTest;
 

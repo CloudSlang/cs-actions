@@ -17,7 +17,6 @@ public class VolumeUtils {
     private static final String DEVICE = "Device";
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";
-    private static final String STANDARD = "standard";
 
     public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
         return getAttachDetachVolumeCommonQueryParamsMap(wrapper);
@@ -30,7 +29,7 @@ public class VolumeUtils {
         queryParamsMap.put(AVAILABILITY_ZONE, wrapper.getCustomInputs().getAvailabilityZone());
 
         String volumeType = Constants.Miscellaneous.NOT_RELEVANT.equals(wrapper.getCustomInputs().getVolumeType()) ?
-                STANDARD : wrapper.getCustomInputs().getVolumeType();
+                Constants.AwsParams.STANDARD : wrapper.getCustomInputs().getVolumeType();
         queryParamsMap.put(Constants.AwsParams.VOLUME_TYPE, volumeType);
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, KMS_KEY_ID, wrapper.getCustomInputs().getKmsKeyId(),

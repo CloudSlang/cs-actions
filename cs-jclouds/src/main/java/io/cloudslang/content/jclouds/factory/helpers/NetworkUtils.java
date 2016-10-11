@@ -18,8 +18,6 @@ public class NetworkUtils {
     private static final String ALLOW_REASSOCIATION = "AllowReassociation";
     private static final String ASSOCIATION_ID = "AssociationId";
     private static final String ATTACHMENT_ID = "AttachmentId";
-    private static final String FORCE = "Force";
-    private static final String INSTANCE_ID = "InstanceId";
     private static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "SecondaryPrivateIpAddressCount";
 
     public Map<String, String> getAssociateAddressQueryParamsMap(InputsWrapper wrapper) {
@@ -50,7 +48,7 @@ public class NetworkUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
+        queryParamsMap.put(Constants.AwsParams.INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
         queryParamsMap.put(Constants.AwsParams.NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
         queryParamsMap.put(Constants.AwsParams.DEVICE_INDEX, wrapper.getNetworkInputs().getDeviceIndex());
 
@@ -100,7 +98,7 @@ public class NetworkUtils {
                 wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTACHMENT_ID, wrapper.getCustomInputs().getAttachmentId());
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(Constants.Values.ONE),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.FORCE, String.valueOf(Constants.Values.ONE),
                 wrapper.getNetworkInputs().isForceDetach());
 
         return queryParamsMap;
