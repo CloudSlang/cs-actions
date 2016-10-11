@@ -117,7 +117,7 @@ public class AttachNetworkInterfaceAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceId(networkInterfaceId)
                     .withDeviceIndex(deviceIndex)
                     .build();

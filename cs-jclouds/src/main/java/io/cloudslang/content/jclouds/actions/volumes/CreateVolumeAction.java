@@ -138,7 +138,7 @@ public class CreateVolumeAction {
                     .withVolumeType(volumeType)
                     .build();
 
-            VolumeInputs volumeInputs = new VolumeInputs.VolumeInputsBuilder()
+            VolumeInputs volumeInputs = new VolumeInputs.Builder()
                     .withEncrypted(encrypted)
                     .withIops(iops)
                     .withSize(size)

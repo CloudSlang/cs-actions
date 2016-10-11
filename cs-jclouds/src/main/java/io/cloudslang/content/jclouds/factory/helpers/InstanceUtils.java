@@ -7,6 +7,7 @@ import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -87,7 +88,42 @@ public class InstanceUtils {
         return queryParamsMap;
     }
 
-    private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper){
+    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+    }
+
+    public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+    }
+
+    public Map<String, String> getStopInstancesQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.FORCE, String.valueOf(wrapper.getInstanceInputs().isForceStop()),
+                wrapper.getInstanceInputs().isForceStop());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getTerminateInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+    }
+
+    private Map<String, String> getRebootStartStopTerminateCommonQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        String[] instanceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getInstanceId(),
+                Inputs.CustomInputs.INSTANCE_ID, wrapper.getCommonInputs().getDelimiter());
+        if (instanceIdsArray != null && instanceIdsArray.length > Constants.Values.START_INDEX) {
+            for (int index = Constants.Values.START_INDEX; index < instanceIdsArray.length; index++) {
+                queryParamsMap.put(Constants.AwsParams.INSTANCE_ID + Constants.Miscellaneous.DOT +
+                        String.valueOf(index + Constants.Values.ONE), instanceIdsArray[index]);
+            }
+        }
+        return queryParamsMap;
+    }
+
+    private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         IamUtils helper = new IamUtils();
         helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
                 Constants.AwsParams.SECURITY_GROUP, Constants.Miscellaneous.EMPTY, wrapper.getCommonInputs().getDelimiter());

@@ -89,7 +89,7 @@ public class UpdateServerTypeExecutorTest {
     }
 
     private InstanceInputs getInstanceInputs(AmazonInputs inputs) {
-        return new InstanceInputs.InstanceInputsBuilder()
+        return new InstanceInputs.Builder()
                 .withCustomInputs(getCustomInputs(inputs))
                 .build();
     }

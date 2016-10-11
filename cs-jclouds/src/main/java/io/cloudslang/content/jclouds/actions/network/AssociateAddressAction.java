@@ -142,13 +142,13 @@ public class AssociateAddressAction {
                     .withInstanceId(instanceId)
                     .build();
 
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder()
+            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder()
                     .withAllowReassociation(allowReassociation)
                     .withPrivateIpAddress(privateIpAddress)
                     .withPublicIp(publicIp)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceId(networkInterfaceId)
                     .build();
 

@@ -100,7 +100,7 @@ public class ComputeSignatureV4 {
                     .withCredential(credential)
                     .build();
 
-            InputsWrapper wrapper = new InputsWrapper.InputsWrapperBuilder()
+            InputsWrapper wrapper = new InputsWrapper.Builder()
                     .withCommonInputs(commonInputs)
                     .withApiService(amazonApi)
                     .withRequestUri(uri)

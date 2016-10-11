@@ -26,7 +26,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
@@ -278,110 +277,6 @@ public class ComputeServiceImplTest {
         verify(ComputeServiceImplSpy).lazyInit(REGION, false);
         verify(ComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
-    }
-
-
-    /**
-     * Test startInstances server method.
-     */
-    @Test
-    public void testStart() throws Exception {
-        exception.expect(java.lang.Exception.class);
-        exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
-
-        ComputeServiceImplSpy.startInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-    /**
-     * Test stopInstances server method.
-     */
-    @Test
-    public void testStop() throws Exception {
-        exception.expect(java.lang.Exception.class);
-        exception.expectMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
-
-        ComputeServiceImplSpy.stopInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-    /**
-     * Test reboot server method. Positive scenario.
-     */
-    @Test
-    public void testReboot() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doNothing().when(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.reboot(REGION, SERVER_ID, false);
-
-        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
-        verifyNoMoreInteractions(computeServiceMock);
-    }
-
-    /**
-     * Test reboot method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testRebootWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).rebootNode(REGION + "/" + SERVER_ID);
-
-        ComputeServiceImplSpy.reboot(REGION, SERVER_ID, false);
-    }
-
-    /**
-     * Test soft reboot server method.
-     */
-    @Test
-    public void testSoftReboot() {
-        doNothing().when(ComputeServiceImplSpy).reboot(REGION, SERVER_ID, false);
-
-        ComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID, false);
-
-        verify(ComputeServiceImplSpy).reboot(REGION, SERVER_ID, false);
-    }
-
-    /**
-     * Test remove server method. Positive scenario.
-     */
-    @Test
-    public void testRemoveServer() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doNothing().when(computeServiceMock).destroyNode(SERVER_ID);
-
-        String result = ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
-
-        assertEquals("Server Removed", result);
-        verify(ComputeServiceImplSpy).lazyInit(REGION, false);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).destroyNode(SERVER_ID);
-        verifyNoMoreInteractions(computeServiceMock);
-    }
-
-    /**
-     * Test terminateInstances method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testRemoveServerWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).destroyNode(SERVER_ID);
-
-        ComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
     }
 
     /**

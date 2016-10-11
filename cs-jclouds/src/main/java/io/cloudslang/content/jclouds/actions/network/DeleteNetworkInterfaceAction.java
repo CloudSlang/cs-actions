@@ -101,7 +101,7 @@ public class DeleteNetworkInterfaceAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceId(networkInterfaceId)
                     .build();
 

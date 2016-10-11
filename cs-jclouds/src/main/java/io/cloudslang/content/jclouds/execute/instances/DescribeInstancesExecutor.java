@@ -5,8 +5,6 @@ import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.factory.ComputeFactory;
 import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.utils.OutputsUtil;
-import org.jclouds.ec2.domain.Reservation;
-import org.jclouds.ec2.domain.RunningInstance;
 
 import java.util.Map;
 import java.util.Set;

@@ -10,7 +10,6 @@ import org.mockito.Matchers;
 
 import java.util.Properties;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -50,27 +49,5 @@ public class MockingHelper {
         verify(contextBuilderMock).modules(Matchers.<Iterable>any());
         verify(contextBuilderMock).buildApi(EC2Api.class);
         verifyNoMoreInteractions(contextBuilderMock);
-    }
-
-    static <T> void addCommonMocksForMethods(AmazonVolumeServiceImpl volumeSpy, AmazonSnapshotServiceImpl snapshotSpy,
-                                             EC2Api ec2ApiMock, Optional<? extends InstanceApi> optionalInstanceApiMock,
-                                             ElasticBlockStoreApi ebsApiMock, Class<T> spy) {
-        if (spy == AmazonVolumeServiceImpl.class) {
-            doNothing().when(volumeSpy).lazyInit(anyString(), anyBoolean());
-            doNothing().when(volumeSpy).init(anyBoolean());
-            volumeSpy.ec2Api = ec2ApiMock;
-        } else if (spy == AmazonSnapshotServiceImpl.class) {
-            doNothing().when(snapshotSpy).lazyInit(anyString(), anyBoolean());
-            doNothing().when(snapshotSpy).init(anyBoolean());
-            snapshotSpy.ec2Api = ec2ApiMock;
-        }
-        doReturn(optionalInstanceApiMock).when(ec2ApiMock).getElasticBlockStoreApiForRegion(anyString());
-        doReturn(optionalInstanceApiMock).when(ec2ApiMock).getElasticBlockStoreApi();
-        doReturn(ebsApiMock).when(optionalInstanceApiMock).get();
-    }
-
-    static void commonVerifiersForMethods(Optional<? extends InstanceApi> optionalInstanceApiMock, ElasticBlockStoreApi ebsApiMock) {
-        verify(optionalInstanceApiMock, times(1)).get();
-        verifyNoMoreInteractions(ebsApiMock);
     }
 }

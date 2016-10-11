@@ -52,7 +52,7 @@ public class AmazonSignatureServiceTest {
     }
 
     private InputsWrapper getWrapper() throws MalformedURLException {
-        return new InputsWrapper.InputsWrapperBuilder()
+        return new InputsWrapper.Builder()
                 .withCommonInputs(getCommonInputs())
                 .withApiService(API_SERVICE)
                 .withRequestUri(REQUEST_URI)

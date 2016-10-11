@@ -131,16 +131,16 @@ public class CreateNetworkInterfaceAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withSubnetId(subnetId).build();
 
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder()
+            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder()
                     .withPrivateIpAddress(privateIpAddress)
                     .withPrivateIpAddressesString(privateIpAddressesString)
                     .build();
 
-            IamInputs iamInputs = new IamInputs.IamInputsBuilder()
+            IamInputs iamInputs = new IamInputs.Builder()
                     .withSecurityGroupIdsString(securityGroupIdsString)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceDescription(networkInterfaceDescription)
                     .withSecondaryPrivateIpAddressCount(secondaryPrivateIpAddressCount)
                     .build();

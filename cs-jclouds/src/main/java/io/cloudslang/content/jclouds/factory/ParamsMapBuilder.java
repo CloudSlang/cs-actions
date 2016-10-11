@@ -6,6 +6,7 @@ import io.cloudslang.content.jclouds.factory.helpers.ElasticIpUtils;
 import io.cloudslang.content.jclouds.factory.helpers.ImageUtils;
 import io.cloudslang.content.jclouds.factory.helpers.InstanceUtils;
 import io.cloudslang.content.jclouds.factory.helpers.NetworkUtils;
+import io.cloudslang.content.jclouds.factory.helpers.SnapshotUtils;
 import io.cloudslang.content.jclouds.factory.helpers.VolumeUtils;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -36,26 +37,29 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.ATTACH_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkUtils().getAttachNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.ATTACH_VOLUME:
+                    queryParamsMap = new VolumeUtils().getAttachVolumeQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.CREATE_IMAGE:
                     queryParamsMap = new ImageUtils().getCreateImageQueryParamsMap(wrapper);
-                    break;
-                case Constants.QueryApiActions.CREATE_VOLUME:
-                    queryParamsMap = new VolumeUtils().getCreateVolumeQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.CREATE_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkUtils().getCreateNetworkInterfaceQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.CREATE_SNAPSHOT:
+                    queryParamsMap = new SnapshotUtils().getCreateSnapshotQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.CREATE_VOLUME:
+                    queryParamsMap = new VolumeUtils().getCreateVolumeQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.DELETE_NETWORK_INTERFACE:
                     queryParamsMap = new NetworkUtils().getDeleteNetworkInterfaceQueryParamsMap(wrapper);
                     break;
-                case Constants.QueryApiActions.DEREGISTER_IMAGE:
-                    queryParamsMap = new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
+                case Constants.QueryApiActions.DELETE_SNAPSHOT:
+                    queryParamsMap = new SnapshotUtils().getDeleteSnapshotQueryParamsMap(wrapper);
                     break;
-                case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
-                    queryParamsMap = new NetworkUtils().getDetachNetworkInterfaceQueryParamsMap(wrapper);
-                    break;
-                case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
-                    queryParamsMap = new NetworkUtils().getDisassociateAddressQueryParamsMap(wrapper);
+                case Constants.QueryApiActions.DELETE_VOLUME:
+                    queryParamsMap = new VolumeUtils().getDeleteVolumeQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.DESCRIBE_IMAGES:
                     queryParamsMap = new ImageUtils().getDescribeImagesQueryParamsMap(wrapper);
@@ -63,8 +67,23 @@ public class ParamsMapBuilder {
                 case Constants.QueryApiActions.DESCRIBE_IMAGE_ATTRIBUTE:
                     queryParamsMap = new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
                     break;
+                case Constants.QueryApiActions.DEREGISTER_IMAGE:
+                    queryParamsMap = new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.DETACH_NETWORK_INTERFACE:
+                    queryParamsMap = new NetworkUtils().getDetachNetworkInterfaceQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.DETACH_VOLUME:
+                    queryParamsMap = new VolumeUtils().getDetachVolumeQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.DISASSOCIATE_ADDRESS:
+                    queryParamsMap = new NetworkUtils().getDisassociateAddressQueryParamsMap(wrapper);
+                    break;
                 case Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE:
                     queryParamsMap = new ImageUtils().getModifyImageAttributeQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.REBOOT_INSTANCES:
+                    queryParamsMap = new InstanceUtils().getRebootInstancesQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.RELEASE_ADDRESS:
                     queryParamsMap = new ElasticIpUtils().getReleaseAddressQueryParamsMap(wrapper);
@@ -74,6 +93,15 @@ public class ParamsMapBuilder {
                     break;
                 case Constants.QueryApiActions.RUN_INSTANCES:
                     queryParamsMap = new InstanceUtils().getRunInstancesQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.START_INSTANCES:
+                    queryParamsMap = new InstanceUtils().getStartInstancesQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.STOP_INSTANCES:
+                    queryParamsMap = new InstanceUtils().getStopInstancesQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.TERMINATE_INSTANCES:
+                    queryParamsMap = new InstanceUtils().getTerminateInstancesQueryParamsMap(wrapper);
                     break;
                 default:
                     throw new RuntimeException(UNSUPPORTED_QUERY_API);

@@ -110,7 +110,7 @@ public class ReleaseAddressAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withAllocationId(allocationId).build();
 
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder().withPublicIp(publicIp).build();
+            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder().withPublicIp(publicIp).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
         } catch (Exception exception) {

@@ -91,7 +91,7 @@ public class UpdateInstanceTypeAction {
                 .withInstanceType(instanceType)
                 .build();
 
-        InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withCheckStateTimeout(operationTimeout)
                 .withPolingInterval(poolingInterval)

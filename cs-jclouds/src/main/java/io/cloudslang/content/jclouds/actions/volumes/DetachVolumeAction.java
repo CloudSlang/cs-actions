@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.actions.instances;
+package io.cloudslang.content.jclouds.actions.volumes;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -11,31 +11,26 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by Mihai Tusa.
+ * 6/24/2016.
  */
-public class TerminateInstancesAction {
+public class DetachVolumeAction {
     /**
-     * Shuts down one or more instances.
-     * Note: This operation is idempotent; if you terminate an instance more than once, each call succeeds.
-     * If you specify multiple instances and the request fails (for example, because of a single incorrect instance
-     * ID), none of the instances are terminated.
-     * Terminated instances remain visible after termination (for approximately one hour).
-     * By default, Amazon EC2 deletes all EBS volumes that were attached when the instance launched. Volumes attached
-     * after instance launch continue running.
-     * You can stop, start, and terminate EBS-backed instances. You can only terminate instance store-backed instances.
-     * What happens to an instance differs if you stop it or terminate it. For example, when you stop an instance,
-     * the root device and any other devices attached to the instance persist. When you terminate an instance, any
-     * attached EBS volumes with the DeleteOnTermination block device mapping parameter set to true are automatically
-     * deleted. For more information about the differences between stopping and terminating instances, see Instance
-     * Lifecycle in the Amazon Elastic Compute Cloud User Guide.
-     * For more information about troubleshooting, see Troubleshooting Terminating Your Instance in the Amazon Elastic
-     * Compute Cloud User Guide.
+     * Detaches an EBS volume from an instance.
+     * <p>
+     * Note: Make sure to un-mount any file systems on the device within your operating system before detaching the volume.
+     * Failure to do so results in the volume being stuck in a busy state while detaching. If an Amazon EBS volume is the
+     * root device of an instance, it can't be detached while the instance is running. To detach the root volume, stop the
+     * instance first. When a volume with an AWS Marketplace product code is detached from an instance, the product code
+     * is no longer associated with the instance. For more information, see Detaching an Amazon EBS Volume in the Amazon
+     * Elastic Compute Cloud User Guide.
      *
      * @param endpoint      Endpoint to which request will be sent.
      *                      Default: "https://ec2.amazonaws.com"
@@ -65,14 +60,20 @@ public class TerminateInstancesAction {
      *                      Default: ""
      * @param version       Version of the web service to made the call against it.
      *                      Example: "2016-04-01"
-     * @param delimiter     Optional - delimiter that will be used.
-     *                      Default: ","
-     * @param instanceId    String that contains one or more values that represents instance IDs.
-     *                      Example: "i-12345678,i-abcdef12,i-12ab34cd"
+     * @param instanceId    ID of the instance.
+     * @param volumeId      ID of the EBS volume. The volume and instance must be within the same Availability Zone.
+     * @param deviceName    Device name to expose to the instance.
+     *                      Example: "/dev/sdh", "xvdh"
+     * @param force         Optional - forces detachment if the previous detachment attempt did not occur cleanly (for example,
+     *                      logging into an instance, un-mounting the volume, and detaching normally). This option can lead
+     *                      to data loss or a corrupted file system. Use this option only as a last resort to detach a volume
+     *                      from a failed instance. The instance won't have an opportunity to flush file system caches or file
+     *                      system metadata. If you use this option, you must perform file system check and repair procedures.
+     *                      Default: "false"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Terminate Instances",
+    @Action(name = "Detach Volume",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -85,19 +86,22 @@ public class TerminateInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> terminateInstances(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                                  @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
-                                                  @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
-                                                  @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                                  @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                                  @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
-                                                  @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                                  @Param(value = Inputs.CommonInputs.HEADERS) String headers,
-                                                  @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
-                                                  @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
-                                                  @Param(value = Inputs.CommonInputs.DELIMITER, required = true) String delimiter,
+    public Map<String, String> detachVolume(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
+                                            @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
+                                            @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
+                                            @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
+                                            @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                            @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
+                                            @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                            @Param(value = Inputs.CommonInputs.HEADERS) String headers,
+                                            @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
+                                            @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
 
-                                                  @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) {
+                                            @Param(value = Inputs.CustomInputs.INSTANCE_ID) String instanceId,
+                                            @Param(value = Inputs.CustomInputs.VOLUME_ID, required = true) String volumeId,
+
+                                            @Param(value = Inputs.VolumeInputs.DEVICE_NAME) String deviceName,
+                                            @Param(value = Inputs.VolumeInputs.FORCE) String force) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
@@ -110,17 +114,24 @@ public class TerminateInstancesAction {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
-                    .withDelimiter(delimiter)
-                    .withAction(Constants.QueryApiActions.TERMINATE_INSTANCES)
+                    .withAction(Constants.QueryApiActions.DETACH_VOLUME)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+            CustomInputs customInputs = new CustomInputs.Builder()
+                    .withVolumeId(volumeId)
+                    .withInstanceId(instanceId)
+                    .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs);
+            VolumeInputs volumeInputs = new VolumeInputs.Builder()
+                    .withDeviceName(deviceName)
+                    .withForce(force)
+                    .build();
+
+            return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

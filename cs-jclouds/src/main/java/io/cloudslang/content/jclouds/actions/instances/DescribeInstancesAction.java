@@ -333,7 +333,7 @@ public class DescribeInstancesAction {
                 .withInstanceType(instanceType)
                 .build();
 
-        NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+        NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .withNetworkInterfaceDescription(networkInterfaceDescription)
                 .withNetworkInterfaceSubnetId(networkInterfaceSubnetId)
                 .withNetworkInterfaceVpcId(networkInterfaceVpcId)
@@ -361,7 +361,7 @@ public class DescribeInstancesAction {
                 .withNetworkInterfaceIpOwnerId(networkInterfaceIpOwnerId)
                 .build();
 
-        InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
                 .withAffinity(affinity)
