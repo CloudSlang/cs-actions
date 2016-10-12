@@ -60,6 +60,7 @@ public class Constants {
         public static final String IOPS = "Iops";
         public static final String IMAGE_ID = "ImageId";
         public static final String INSTANCE_ID = "InstanceId";
+        public static final String KEY = "Key";
         public static final String LAUNCH_PERMISSION = "launchPermission";
         public static final String NAME = "Name";
         public static final String NO_REBOOT = "NoReboot";
@@ -71,14 +72,17 @@ public class Constants {
         public static final String PRIVATE_IP_ADDRESS = "PrivateIpAddress";
         public static final String PUBLIC_IP = "PublicIp";
         public static final String REMOVE_OPERATION_TYPE = "remove";
+        public static final String RESOURCE_ID = "ResourceId";
         public static final String SECURITY_GROUP = "SecurityGroup";
         public static final String SECURITY_GROUP_ID = "SecurityGroupId";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String SNAPSHOT_ID = "SnapshotId";
         public static final String STANDARD = "standard";
         public static final String SUBNET_ID = "SubnetId";
+        public static final String TAG = "Tag";
         public static final String USER_GROUP = "UserGroup";
         public static final String USER_ID = "UserId";
+        public static final String VALUE = "Value";
         public static final String VOLUME_ID = "VolumeId";
         public static final String VOLUME_TYPE = "VolumeType";
     }
@@ -91,6 +95,7 @@ public class Constants {
         public static final String CREATE_IMAGE = "CreateImage";
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
+        public static final String CREATE_TAGS = "CreateTags";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";

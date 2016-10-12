@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 public final class InputsUtil {
     private static final String ACTION = "Action";
     private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
+    private static final String EXCEPTED_KEY_STRING = "aws:";
     private static final String GP2 = "gp2";
     private static final String IO1 = "io1";
     private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
@@ -30,12 +31,14 @@ public final class InputsUtil {
     private static final String ST1 = "st1";
     private static final String VERSION = "Version";
 
+    private static final int KEY_TAG_LENGTH_CONSTRAIN = 127;
     private static final int MAXIMUM_EBS_SIZE = 16384;
     private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
+    private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
 
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
@@ -229,6 +232,16 @@ public final class InputsUtil {
         }
     }
 
+    public static String getValidKeyOrValueTag(String input, int validLength, boolean isKey) {
+        if (isKey && (input.startsWith(EXCEPTED_KEY_STRING) || input.length() > KEY_TAG_LENGTH_CONSTRAIN)) {
+            throw new RuntimeException(getValidationException(input, false));
+        } else if (!isKey && input.length() > VALUE_TAG_LENGTH_CONSTRAIN) {
+            throw new RuntimeException(getValidationException(input, false));
+        }
+
+        return input;
+    }
+
     public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
         if (condition) {
             inputMap.put(key, value);
@@ -256,6 +269,14 @@ public final class InputsUtil {
                     String.valueOf(index + Constants.Values.ONE) + Constants.Miscellaneous.DOT + PRIVATE_IP_ADDRESSES +
                     Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE) +
                     Constants.Miscellaneous.DOT;
+        } else if (Constants.AwsParams.RESOURCE_ID.equalsIgnoreCase(specificArea)) {
+            return Constants.AwsParams.RESOURCE_ID + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE);
+        } else if (Constants.AwsParams.KEY.equalsIgnoreCase(specificArea)) {
+            return Constants.AwsParams.TAG + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE) +
+                    Constants.Miscellaneous.DOT + Constants.AwsParams.KEY;
+        } else if (Constants.AwsParams.VALUE.equalsIgnoreCase(specificArea)) {
+            return Constants.AwsParams.TAG + Constants.Miscellaneous.DOT + String.valueOf(index + Constants.Values.ONE) +
+                    Constants.Miscellaneous.DOT + Constants.AwsParams.VALUE;
         } else {
             return Constants.Miscellaneous.EMPTY;
         }

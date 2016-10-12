@@ -2,12 +2,7 @@ package io.cloudslang.content.jclouds.factory;
 
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
-import io.cloudslang.content.jclouds.factory.helpers.ElasticIpUtils;
-import io.cloudslang.content.jclouds.factory.helpers.ImageUtils;
-import io.cloudslang.content.jclouds.factory.helpers.InstanceUtils;
-import io.cloudslang.content.jclouds.factory.helpers.NetworkUtils;
-import io.cloudslang.content.jclouds.factory.helpers.SnapshotUtils;
-import io.cloudslang.content.jclouds.factory.helpers.VolumeUtils;
+import io.cloudslang.content.jclouds.factory.helpers.*;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,6 +43,9 @@ public class ParamsMapBuilder {
                     break;
                 case Constants.QueryApiActions.CREATE_SNAPSHOT:
                     queryParamsMap = new SnapshotUtils().getCreateSnapshotQueryParamsMap(wrapper);
+                    break;
+                case Constants.QueryApiActions.CREATE_TAGS:
+                    queryParamsMap = new TagUtils().getCreateTagsQueryParamsMap(wrapper);
                     break;
                 case Constants.QueryApiActions.CREATE_VOLUME:
                     queryParamsMap = new VolumeUtils().getCreateVolumeQueryParamsMap(wrapper);
