@@ -139,15 +139,4 @@ public class CreateTagsAction {
             return ExceptionProcessor.getExceptionResult(e);
         }
     }
-
-    public static void main(String[] args) {
-        CreateTagsAction action = new CreateTagsAction();
-        Map<String, String> results = action.createTags("https://ec2.amazonaws.com", "AKIAJV4ZY6TPMXWDMTXQ",
-                "3xdh4iiayBtnATbVEWl9nmRsxFbO8l42PLg5RBHd", "", "", "", "", "", "",
-                "2016-09-15", "",
-                "i-1be6cb0d,i-30fe3226",
-                "Name,webserver,stack,scope",
-                "Tagged from API call,Not relevant,Testing,For testing purposes");
-        System.out.println(results.get("returnResult"));
-    }
 }
