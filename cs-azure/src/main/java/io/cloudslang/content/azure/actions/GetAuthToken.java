@@ -18,6 +18,10 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.AUTHORITY;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.CLIENT_ID;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PASSWORD;
+import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HOST;
+import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
+import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
+import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.RESOURCE;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_AUTHORITY;
@@ -36,6 +40,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
  * Created by victor on 27.09.2016.
  */
 public class GetAuthToken {
+
 
     /**
      * @param username
@@ -59,7 +64,11 @@ public class GetAuthToken {
                                        @Param(value = PASSWORD, required = true, encrypted = true) final String password,
                                        @Param(value = CLIENT_ID, required = true) final String clientId,
                                        @Param(value = AUTHORITY) final String authority,
-                                       @Param(value = RESOURCE) final String resource) {
+                                       @Param(value = RESOURCE) final String resource,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword) {
         final String checkedAuthority = StringUtilities.defaultIfEmpty(authority, DEFAULT_AUTHORITY);
         final String checkedResource = StringUtilities.defaultIfEmpty(resource, DEFAULT_RESOURCE);
         final List<String> exceptionMessages = verifyRequiredInputs(username, password, clientId);
@@ -75,5 +84,4 @@ public class GetAuthToken {
             return getFailureResultsMap(exception);
         }
     }
-
 }

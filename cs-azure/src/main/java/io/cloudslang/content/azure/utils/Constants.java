@@ -5,6 +5,6 @@ package io.cloudslang.content.azure.utils;
  */
 public class Constants {
     public static final String NEW_LINE = "\n";
-    public static final String DEFAULT_AUTHORITY = "https://login.microsoftonline.com/common/";
+    public static final String DEFAULT_AUTHORITY = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
     public static final String DEFAULT_RESOURCE = "https://resources.azure.com/";
 }

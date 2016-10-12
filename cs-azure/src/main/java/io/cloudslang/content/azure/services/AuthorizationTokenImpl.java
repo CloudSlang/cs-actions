@@ -8,6 +8,8 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Mac;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -34,8 +36,15 @@ public class AuthorizationTokenImpl {
                                                 @NotNull final String clientId, @NotNull final String resource) throws Exception {
         final ExecutorService service = Executors.newSingleThreadExecutor();
         final AuthenticationContext context = new AuthenticationContext(authority, false, service);
+        context.setProxy(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved("web-proxy.eu.hpecorp.net", 8080)));
         final Future<AuthenticationResult> future = context.acquireToken(resource, clientId, username, password, null);
         service.shutdown();
         return future.get();
     }
+
+//    @NotNull
+//    public static Proxy getProxy(@NotNull final String proxyHost, @NotNull final String proxyPort, @NotNull final String proxyUsername, @NotNull final String proxyPassword) {
+////        Proxy proxy = new Proxy(Proxy.Type.SOCKS)
+//        return null;
+//    }
 }
