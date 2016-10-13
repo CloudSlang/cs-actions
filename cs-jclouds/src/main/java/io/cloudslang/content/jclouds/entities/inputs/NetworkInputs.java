@@ -43,7 +43,7 @@ public class NetworkInputs {
 
     private boolean forceDetach;
 
-    private NetworkInputs(NetworkInputs.NetworkInputsBuilder builder) {
+    private NetworkInputs(Builder builder) {
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
         this.networkInterfaceSubnetId = builder.networkInterfaceSubnetId;
         this.networkInterfaceVpcId = builder.networkInterfaceVpcId;
@@ -192,7 +192,7 @@ public class NetworkInputs {
         return forceDetach;
     }
 
-    public static class NetworkInputsBuilder {
+    public static class Builder {
         private String deviceIndex;
         private String networkInterfaceAddressesPrimary;
         private String networkInterfacesAssociatePublicIpAddressesString;
@@ -228,149 +228,149 @@ public class NetworkInputs {
             return new NetworkInputs(this);
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceDescription(String inputValue) {
+        public Builder withNetworkInterfaceDescription(String inputValue) {
             networkInterfaceDescription = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withDeviceIndex(String inputValue) {
+        public Builder withDeviceIndex(String inputValue) {
             deviceIndex = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceSubnetId(String inputValue) {
+        public Builder withNetworkInterfaceSubnetId(String inputValue) {
             networkInterfaceSubnetId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceVpcId(String inputValue) {
+        public Builder withNetworkInterfaceVpcId(String inputValue) {
             networkInterfaceVpcId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceId(String inputValue) {
+        public Builder withNetworkInterfaceId(String inputValue) {
             networkInterfaceId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceOwnerId(String inputValue) {
+        public Builder withNetworkInterfaceOwnerId(String inputValue) {
             networkInterfaceOwnerId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAvailabilityZone(String inputValue) {
+        public Builder withNetworkInterfaceAvailabilityZone(String inputValue) {
             networkInterfaceAvailabilityZone = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceRequesterId(String inputValue) {
+        public Builder withNetworkInterfaceRequesterId(String inputValue) {
             networkInterfaceRequesterId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceRequesterManaged(String inputValue) {
+        public Builder withNetworkInterfaceRequesterManaged(String inputValue) {
             networkInterfaceRequesterManaged = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceStatus(String inputValue) {
+        public Builder withNetworkInterfaceStatus(String inputValue) {
             networkInterfaceStatus = NetworkInterfaceStatus.getValue(inputValue);
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceMacAddress(String inputValue) {
+        public Builder withNetworkInterfaceMacAddress(String inputValue) {
             networkInterfaceMacAddress = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfacePrivateDnsName(String inputValue) {
+        public Builder withNetworkInterfacePrivateDnsName(String inputValue) {
             networkInterfacePrivateDnsName = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceSourceDestinationCheck(String inputValue) {
+        public Builder withNetworkInterfaceSourceDestinationCheck(String inputValue) {
             networkInterfaceSourceDestinationCheck = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceGroupId(String inputValue) {
+        public Builder withNetworkInterfaceGroupId(String inputValue) {
             networkInterfaceGroupId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceGroupName(String inputValue) {
+        public Builder withNetworkInterfaceGroupName(String inputValue) {
             networkInterfaceGroupName = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAttachmentId(String inputValue) {
+        public Builder withNetworkInterfaceAttachmentId(String inputValue) {
             networkInterfaceAttachmentId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceInstanceId(String inputValue) {
+        public Builder withNetworkInterfaceInstanceId(String inputValue) {
             networkInterfaceInstanceId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceInstanceOwnerId(String inputValue) {
+        public Builder withNetworkInterfaceInstanceOwnerId(String inputValue) {
             networkInterfaceInstanceOwnerId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfacePrivateIpAddress(String inputValue) {
+        public Builder withNetworkInterfacePrivateIpAddress(String inputValue) {
             networkInterfacePrivateIpAddress = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceDeviceIndex(String inputValue) {
+        public Builder withNetworkInterfaceDeviceIndex(String inputValue) {
             networkInterfaceDeviceIndex = InputsUtil
                     .getValidPositiveIntegerAsStringValue(inputValue, Constants.Values.START_INDEX);
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAttachmentStatus(String inputValue) throws Exception {
+        public Builder withNetworkInterfaceAttachmentStatus(String inputValue) throws Exception {
             networkInterfaceAttachmentStatus = NetworkInterfaceAttachmentStatus.getValue(inputValue);
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAttachTime(String inputValue) {
+        public Builder withNetworkInterfaceAttachTime(String inputValue) {
             networkInterfaceAttachTime = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceDeleteOnTermination(String inputValue) {
+        public Builder withNetworkInterfaceDeleteOnTermination(String inputValue) {
             networkInterfaceDeleteOnTermination = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAddressesPrimary(String inputValue) {
+        public Builder withNetworkInterfaceAddressesPrimary(String inputValue) {
             networkInterfaceAddressesPrimary = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfacePublicIp(String inputValue) {
+        public Builder withNetworkInterfacePublicIp(String inputValue) {
             networkInterfacePublicIp = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceIpOwnerId(String inputValue) {
+        public Builder withNetworkInterfaceIpOwnerId(String inputValue) {
             networkInterfaceIpOwnerId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withSecondaryPrivateIpAddressCount(String inputValue) {
+        public Builder withSecondaryPrivateIpAddressCount(String inputValue) {
             secondaryPrivateIpAddressCount = InputsUtil
                     .getValidPositiveIntegerAsStringValue(inputValue, MINIMUM_PRIVATE_SECONDARY_IP_ADDRESSES_COUNT);
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfacesAssociatePublicIpAddressesString(String inputValue) {
+        public Builder withNetworkInterfacesAssociatePublicIpAddressesString(String inputValue) {
             networkInterfacesAssociatePublicIpAddressesString = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withForceDetach(String inputValue) {
+        public Builder withForceDetach(String inputValue) {
             forceDetach = InputsUtil.getEnforcedBooleanCondition(inputValue, Boolean.FALSE);
             return this;
         }

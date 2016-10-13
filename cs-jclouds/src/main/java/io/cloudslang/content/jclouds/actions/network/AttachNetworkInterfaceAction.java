@@ -97,7 +97,7 @@ public class AttachNetworkInterfaceAction {
                                                       @Param(value = Inputs.NetworkInputs.DEVICE_INDEX) String deviceIndex) {
 
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -115,9 +115,9 @@ public class AttachNetworkInterfaceAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withInstanceId(instanceId).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceId(networkInterfaceId)
                     .withDeviceIndex(deviceIndex)
                     .build();

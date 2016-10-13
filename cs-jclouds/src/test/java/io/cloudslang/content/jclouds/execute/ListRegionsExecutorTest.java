@@ -19,7 +19,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -79,7 +78,7 @@ public class ListRegionsExecutorTest {
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
-        return new CommonInputs.CommonInputsBuilder()
+        return new CommonInputs.Builder()
                 .withProvider(inputs.getProvider())
                 .withEndpoint(inputs.getEndpoint())
                 .withIdentity(inputs.getIdentity())

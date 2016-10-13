@@ -28,14 +28,13 @@ public class AmazonInputs {
     private String delimiter;
 
     private String region;
-    private String serverId;
 
     private static CommonInputs commonInputs;
     private static CustomInputs customInputs;
 
     static {
         try {
-            commonInputs = new CommonInputs.CommonInputsBuilder()
+            commonInputs = new CommonInputs.Builder()
                     .withProvider(PROVIDER)
                     .withIdentity(IDENTITY)
                     .withCredential(CREDENTIAL)
@@ -45,9 +44,8 @@ public class AmazonInputs {
                     .withDelimiter(DELIMITER)
                     .build();
 
-            customInputs = new CustomInputs.CustomInputsBuilder()
+            customInputs = new CustomInputs.Builder()
                     .withRegion(REGION)
-                    .withInstanceId(SERVER_ID)
                     .withImageId(IMAGE_ID)
                     .build();
         } catch (Exception e) {
@@ -65,7 +63,6 @@ public class AmazonInputs {
         this.delimiter = commonInputs.getDelimiter();
 
         this.region = customInputs.getRegion();
-        this.serverId = customInputs.getInstanceId();
     }
 
     static AmazonInputs getAmazonInstance() {
@@ -98,10 +95,6 @@ public class AmazonInputs {
 
     String getRegion() {
         return region;
-    }
-
-    String getServerId() {
-        return serverId;
     }
 
     String getDelimiter() {

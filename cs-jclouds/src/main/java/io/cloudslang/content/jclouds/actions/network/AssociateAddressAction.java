@@ -119,7 +119,7 @@ public class AssociateAddressAction {
 
                                                 @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID) String networkInterfaceId) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -137,18 +137,18 @@ public class AssociateAddressAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+            CustomInputs customInputs = new CustomInputs.Builder()
                     .withAllocationId(allocationId)
                     .withInstanceId(instanceId)
                     .build();
 
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder()
+            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder()
                     .withAllowReassociation(allowReassociation)
                     .withPrivateIpAddress(privateIpAddress)
                     .withPublicIp(publicIp)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceId(networkInterfaceId)
                     .build();
 

@@ -14,7 +14,7 @@ public class ElasticIpInputs {
 
     private boolean allowReassociation;
 
-    private ElasticIpInputs(ElasticIpInputsBuilder builder) {
+    private ElasticIpInputs(Builder builder) {
         this.publicIp = builder.publicIp;
         this.privateIpAddress = builder.privateIpAddress;
         this.privateIpAddressesString = builder.privateIpAddressesString;
@@ -38,7 +38,7 @@ public class ElasticIpInputs {
         return allowReassociation;
     }
 
-    public static class ElasticIpInputsBuilder {
+    public static class Builder {
         private String publicIp;
         private String privateIpAddress;
         private String privateIpAddressesString;
@@ -49,22 +49,22 @@ public class ElasticIpInputs {
             return new ElasticIpInputs(this);
         }
 
-        public ElasticIpInputs.ElasticIpInputsBuilder withPublicIp(String inputValue) {
+        public Builder withPublicIp(String inputValue) {
             publicIp = InputsUtil.getValidIPv4Address(inputValue);
             return this;
         }
 
-        public ElasticIpInputs.ElasticIpInputsBuilder withPrivateIpAddress(String inputValue) {
+        public Builder withPrivateIpAddress(String inputValue) {
             privateIpAddress = InputsUtil.getValidIPv4Address(inputValue);
             return this;
         }
 
-        public ElasticIpInputs.ElasticIpInputsBuilder withPrivateIpAddressesString(String inputValue) {
+        public Builder withPrivateIpAddressesString(String inputValue) {
             privateIpAddressesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public ElasticIpInputs.ElasticIpInputsBuilder withAllowReassociation(String inputValue) {
+        public Builder withAllowReassociation(String inputValue) {
             allowReassociation = Boolean.parseBoolean(inputValue);
             return this;
         }

@@ -18,13 +18,11 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 5/18/2016.
+ * 5/10/2016.
  */
-public class ResetLaunchPermissionsOnImageAction {
+public class GetLaunchPermissionForImageAction {
     /**
-     * Resets the launch permission attribute of a specified AMI to its default value.
-     * Note:
-     * The productCodes attribute can't be reset.
+     * Describes the launch permission of the specified AMI.
      *
      * @param endpoint   Endpoint to which request will be sent.
      *                   Example: "https://ec2.amazonaws.com"
@@ -36,11 +34,11 @@ public class ResetLaunchPermissionsOnImageAction {
      * @param proxyHost  Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort  Optional - Proxy server port.
      * @param debugMode  Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param imageId    ID of the image to resets the launch permission attribute for
+     * @param imageId    ID of the specified image to retrieve launch permission for.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Reset Launch Permissions On Image",
+    @Action(name = "Get Launch Permission for Image",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -71,7 +69,7 @@ public class ResetLaunchPermissionsOnImageAction {
                     .withProxyPort(proxyPort)
                     .withDebugMode(debugMode)
                     .withVersion(version)
-                    .withAction(Constants.QueryApiActions.RESET_IMAGE_ATTRIBUTE)
+                    .withAction(Constants.QueryApiActions.DESCRIBE_IMAGE_ATTRIBUTE)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)

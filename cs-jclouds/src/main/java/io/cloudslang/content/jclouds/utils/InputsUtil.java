@@ -107,6 +107,7 @@ public final class InputsUtil {
     public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {
         String[] currentArray = InputsUtil.getStringsArray(inputString, Constants.Miscellaneous.EMPTY, delimiter);
         InputsUtil.validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
+
         return currentArray;
     }
 
