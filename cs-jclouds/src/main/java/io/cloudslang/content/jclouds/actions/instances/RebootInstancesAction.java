@@ -6,7 +6,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
@@ -15,6 +14,11 @@ import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.QueryApiActions.REBOOT_INSTANCES;
 
 /**
  * Created by persdana on 6/22/2015.
@@ -103,11 +107,11 @@ public class RebootInstancesAction {
                     .withQueryParams(queryParams)
                     .withVersion(version)
                     .withDelimiter(delimiter)
-                    .withAction(Constants.QueryApiActions.REBOOT_INSTANCES)
-                    .withApiService(Constants.Apis.AMAZON_EC2_API)
-                    .withRequestUri(Constants.Miscellaneous.EMPTY)
-                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
+                    .withAction(REBOOT_INSTANCES)
+                    .withApiService(AMAZON_EC2_API)
+                    .withRequestUri(EMPTY)
+                    .withRequestPayload(EMPTY)
+                    .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
