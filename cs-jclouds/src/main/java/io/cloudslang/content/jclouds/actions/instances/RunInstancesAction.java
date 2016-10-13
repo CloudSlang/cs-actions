@@ -410,7 +410,6 @@ public class RunInstancesAction {
                                             @Param(value = QUERY_PARAMS) String queryParams,
                                             @Param(value = VERSION, required = true) String version,
                                             @Param(value = DELIMITER) String delimiter,
-
                                             @Param(value = AVAILABILITY_ZONE) String availabilityZone,
                                             @Param(value = HOST_ID) String hostId,
                                             @Param(value = IMAGE_ID, required = true) String imageId,
@@ -418,7 +417,6 @@ public class RunInstancesAction {
                                             @Param(value = KERNEL_ID) String kernelId,
                                             @Param(value = RAMDISK_ID) String ramdiskId,
                                             @Param(value = SUBNET_ID) String subnetId,
-
                                             @Param(value = BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING) String blockDeviceMappingDeviceNamesString,
                                             @Param(value = BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING) String blockDeviceMappingVirtualNamesString,
                                             @Param(value = DELETE_ON_TERMINATIONS_STRING) String deleteOnTerminationsString,
@@ -428,16 +426,13 @@ public class RunInstancesAction {
                                             @Param(value = SNAPSHOT_IDS_STRING) String snapshotIdsString,
                                             @Param(value = VOLUME_SIZES_STRING) String volumeSizesString,
                                             @Param(value = VOLUME_TYPES_STRING) String volumeTypesString,
-
                                             @Param(value = PRIVATE_IP_ADDRESS) String privateIpAddress,
                                             @Param(value = PRIVATE_IP_ADDRESSES_STRING) String privateIpAddressesString,
-
                                             @Param(value = IAM_INSTANCE_PROFILE_ARN) String iamInstanceProfileArn,
                                             @Param(value = IAM_INSTANCE_PROFILE_NAME) String iamInstanceProfileName,
                                             @Param(value = KEY_PAIR_NAME) String keyPairName,
                                             @Param(value = SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
                                             @Param(value = SECURITY_GROUP_NAMES_STRING) String securityGroupNamesString,
-
                                             @Param(value = AFFINITY) String affinity,
                                             @Param(value = CLIENT_TOKEN) String clientToken,
                                             @Param(value = DISABLE_API_TERMINATION) String disableApiTermination,
@@ -448,7 +443,6 @@ public class RunInstancesAction {
                                             @Param(value = PLACEMENT_GROUP_NAME) String placementGroupName,
                                             @Param(value = TENANCY) String tenancy,
                                             @Param(value = USER_DATA) String userData,
-
                                             @Param(value = NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS) String networkInterfaceAssociatePublicIpAddress,
                                             @Param(value = NETWORK_INTERFACE_DELETE_ON_TERMINATION) String networkInterfaceDeleteOnTerminationString,
                                             @Param(value = NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,

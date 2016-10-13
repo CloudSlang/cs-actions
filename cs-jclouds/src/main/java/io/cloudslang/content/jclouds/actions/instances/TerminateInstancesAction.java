@@ -113,7 +113,6 @@ public class TerminateInstancesAction {
                                                   @Param(value = QUERY_PARAMS) String queryParams,
                                                   @Param(value = VERSION, required = true) String version,
                                                   @Param(value = DELIMITER, required = true) String delimiter,
-
                                                   @Param(value = INSTANCE_ID, required = true) String instanceId) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
