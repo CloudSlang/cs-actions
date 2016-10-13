@@ -8,12 +8,10 @@ import org.jclouds.collect.PagedIterable;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -262,159 +260,6 @@ public class OpenstackComputeServiceImplTest {
         verify(openstackComputeServiceImplSpy).setRegion(REGION + " dasda");
         verify(openstackComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(openstackComputeServiceImplSpy);
-    }
-
-
-    /**
-     * Test startInstances server method. Positive scenario.
-     */
-    @Test
-    public void testStart() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doNothing().when(serverApiMock).start(SERVER_ID);
-
-        String result = openstackComputeServiceImplSpy.startInstances(REGION, SERVER_ID, false);
-
-        assertEquals(SERVER_START_SUCCESS_MESSAGE, result);
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).start(SERVER_ID);
-        verifyNoMoreInteractions(serverApiMock);
-    }
-
-    /**
-     * Test startInstances server method with invalid server id.
-     */
-    @Test
-    public void testStartWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).start(INVALID_SERVER_ID);
-
-        openstackComputeServiceImplSpy.startInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-    /**
-     * Test stopInstances server method. Positive scenario.
-     */
-    @Test
-    public void testStop() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doNothing().when(serverApiMock).stop(SERVER_ID);
-
-        String result = openstackComputeServiceImplSpy.stopInstances(REGION, SERVER_ID, false);
-
-        assertEquals(SERVER_STOP_SUCCESS_MESSAGE, result);
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).stop(SERVER_ID);
-        verifyNoMoreInteractions(serverApiMock);
-    }
-
-    /**
-     * Test stopInstances server method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testStopWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).stop(INVALID_SERVER_ID);
-
-        openstackComputeServiceImplSpy.stopInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-    /**
-     * Test soft reboot server method. Positive scenario.
-     */
-    @Test
-    public void testSoftReboot() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doNothing().when(serverApiMock).reboot(SERVER_ID, RebootType.SOFT);
-
-        openstackComputeServiceImplSpy.rebootInstances(REGION, SERVER_ID, false);
-
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).reboot(SERVER_ID, RebootType.SOFT);
-        verifyNoMoreInteractions(serverApiMock);
-    }
-
-    /**
-     * Test soft reboot method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testSoftRebootWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).reboot(INVALID_SERVER_ID, RebootType.SOFT);
-
-        openstackComputeServiceImplSpy.rebootInstances(REGION, INVALID_SERVER_ID, false);
-    }
-
-
-    /**
-     * Test remove server method. Positive scenario.
-     */
-    @Test
-    public void testRemoveServer() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        Mockito.doReturn(true).when(serverApiMock).delete(SERVER_ID);
-
-        openstackComputeServiceImplSpy.terminateInstances(REGION, SERVER_ID, false);
-
-        verify(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        verify(novaApiMock).getServerApi(REGION);
-        verifyNoMoreInteractions(novaApiMock);
-        verify(serverApiMock).delete(SERVER_ID);
-        verifyNoMoreInteractions(serverApiMock);
-    }
-
-    /**
-     * Test terminateInstances method with invalid server id.
-     * this should throw an "org.jclouds.rest.ResourceNotFoundException"
-     * with the message "{"itemNotFound": {"message": "Instance not found", "code": 404}}"
-     */
-    @Test
-    public void testRemoveServerWithInvalidServerId() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(REGION, false);
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Mockito.doReturn(serverApiMock).when(novaApiMock).getServerApi(REGION);
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(serverApiMock).delete(INVALID_SERVER_ID);
-
-        openstackComputeServiceImplSpy.terminateInstances(REGION, INVALID_SERVER_ID, false);
     }
 
     /**

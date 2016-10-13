@@ -69,6 +69,34 @@ public class Inputs {
         public static final String VPC_ID = "vpcId";
     }
 
+    public static class ElasticIpInputs {
+        public static final String ALLOW_REASSOCIATION = "allowReassociation";
+        public static final String PUBLIC_IP = "publicIp";
+        public static final String PRIVATE_IP_ADDRESS = "privateIpAddress";
+        public static final String PRIVATE_IP_ADDRESSES_STRING = "privateIpAddressesString";
+    }
+
+    public static class EbsInputs {
+        public static final String EBS_OPTIMIZED = "ebsOptimized";
+        public static final String BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING = "blockDeviceMappingDeviceNamesString";
+        public static final String BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING = "blockDeviceMappingVirtualNamesString";
+        public static final String DELETE_ON_TERMINATIONS_STRING = "deleteOnTerminationsString";
+        public static final String ENCRYPTED_STRING = "encryptedString";
+        public static final String IOPS_STRING = "iopsString";
+        public static final String SNAPSHOT_IDS_STRING = "snapshotIdsString";
+        public static final String VOLUME_SIZES_STRING = "volumeSizesString";
+        public static final String VOLUME_TYPES_STRING = "volumeTypesString";
+    }
+
+    public static class IamInputs {
+        public static final String IAM_INSTANCE_PROFILE_ARN = "iamInstanceProfileArn";
+        public static final String IAM_INSTANCE_PROFILE_NAME = "iamInstanceProfileName";
+        public static final String KEY_PAIR_NAME = "keyPairName";
+        public static final String SECURITY_GROUP_IDS_STRING = "securityGroupIdsString";
+        public static final String SECURITY_GROUP_NAMES_STRING = "networkInterfaceGroupNamesString";
+        public static final String SECURITY_TOKEN = "securityToken";
+    }
+
     public static class ImageInputs {
         public static final String IDS_STRING = "idsString";
         public static final String IMAGE_DESCRIPTION = "description";
@@ -90,6 +118,7 @@ public class Inputs {
         public static final String CLIENT_TOKEN = "clientToken";
         public static final String DISABLE_API_TERMINATION = "DisableApiTermination";
         public static final String DNS_NAME = "dnsName";
+        public static final String FORCE_STOP = "forceStop";
         public static final String GROUP_NAME = "groupName";
         public static final String IAM_ARN = "iamArn";
         public static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "instanceInitiatedShutdownBehavior";
@@ -159,33 +188,5 @@ public class Inputs {
         public static final String SIZE = "size";
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
         public static final String SNAPSHOT_ID = "snapshotId";
-    }
-
-    public static class ElasticIpInputs {
-        public static final String ALLOW_REASSOCIATION = "allowReassociation";
-        public static final String PUBLIC_IP = "publicIp";
-        public static final String PRIVATE_IP_ADDRESS = "privateIpAddress";
-        public static final String PRIVATE_IP_ADDRESSES_STRING = "privateIpAddressesString";
-    }
-
-    public static class IamInputs {
-        public static final String IAM_INSTANCE_PROFILE_ARN = "iamInstanceProfileArn";
-        public static final String IAM_INSTANCE_PROFILE_NAME = "iamInstanceProfileName";
-        public static final String KEY_PAIR_NAME = "keyPairName";
-        public static final String SECURITY_GROUP_IDS_STRING = "securityGroupIdsString";
-        public static final String SECURITY_GROUP_NAMES_STRING = "networkInterfaceGroupNamesString";
-        public static final String SECURITY_TOKEN = "securityToken";
-    }
-
-    public static class EbsInputs {
-        public static final String EBS_OPTIMIZED = "ebsOptimized";
-        public static final String BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING = "blockDeviceMappingDeviceNamesString";
-        public static final String BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING = "blockDeviceMappingVirtualNamesString";
-        public static final String DELETE_ON_TERMINATIONS_STRING = "deleteOnTerminationsString";
-        public static final String ENCRYPTED_STRING = "encryptedString";
-        public static final String IOPS_STRING = "iopsString";
-        public static final String SNAPSHOT_IDS_STRING = "snapshotIdsString";
-        public static final String VOLUME_SIZES_STRING = "volumeSizesString";
-        public static final String VOLUME_TYPES_STRING = "volumeTypesString";
     }
 }

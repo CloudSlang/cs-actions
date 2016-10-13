@@ -287,7 +287,7 @@ public class DescribeInstancesAction {
                                        @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_IP_OWNER_ID) String networkInterfaceIpOwnerId)
             throws Exception {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        CommonInputs inputs = new CommonInputs.Builder()
                 .withProvider(provider)
                 .withEndpoint(endpoint)
                 .withIdentity(identity)
@@ -298,7 +298,7 @@ public class DescribeInstancesAction {
                 .withDebugMode(debugMode)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(region)
                 .withVolumeId(volumeId)
                 .withGroupId(groupId)
@@ -333,7 +333,7 @@ public class DescribeInstancesAction {
                 .withInstanceType(instanceType)
                 .build();
 
-        NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+        NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .withNetworkInterfaceDescription(networkInterfaceDescription)
                 .withNetworkInterfaceSubnetId(networkInterfaceSubnetId)
                 .withNetworkInterfaceVpcId(networkInterfaceVpcId)
@@ -361,7 +361,7 @@ public class DescribeInstancesAction {
                 .withNetworkInterfaceIpOwnerId(networkInterfaceIpOwnerId)
                 .build();
 
-        InstanceInputs instanceInputs = new InstanceInputs.InstanceInputsBuilder()
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withCustomInputs(customInputs)
                 .withNetworkInputs(networkInputs)
                 .withAffinity(affinity)

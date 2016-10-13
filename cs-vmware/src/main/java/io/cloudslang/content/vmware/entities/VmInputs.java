@@ -1,6 +1,7 @@
 package io.cloudslang.content.vmware.entities;
 
 import io.cloudslang.content.vmware.utils.InputUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
 
@@ -46,6 +47,7 @@ public class VmInputs {
     private String vmGroupName;
     private String hostGroupName;
     private String ruleName;
+    private String clusterName;
 
     public VmInputs(VmInputsBuilder builder) {
         this.dataCenterName = builder.dataCenterName;
@@ -80,6 +82,7 @@ public class VmInputs {
         this.vmGroupName = builder.vmGroupName;
         this.hostGroupName = builder.hostGroupName;
         this.ruleName = builder.ruleName;
+        this.clusterName = builder.clusterName;
     }
 
     public String getDataCenterName() {
@@ -186,6 +189,10 @@ public class VmInputs {
         return this.diskProvisioning;
     }
 
+    public String getClusterName() {
+        return this.clusterName;
+    }
+
     public String getClusterName() {return clusterName; }
 
     public String getVmGroupName() {
@@ -231,6 +238,7 @@ public class VmInputs {
         private String vmGroupName;
         private String hostGroupName;
         private String ruleName;
+        private String clusterName;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -362,7 +370,16 @@ public class VmInputs {
         }
 
         public VmInputsBuilder withDiskProvisioning(String diskProvisioning) {
-            this.diskProvisioning = diskProvisioning;
+            if (StringUtils.isBlank(diskProvisioning)) {
+                this.diskProvisioning = null;
+            } else {
+                this.diskProvisioning = diskProvisioning;
+            }
+            return this;
+        }
+
+        public VmInputsBuilder withClusterName(String clusterName) {
+            this.clusterName = clusterName;
             return this;
         }
 

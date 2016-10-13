@@ -7,7 +7,6 @@ import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.entities.http.Protocol;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -120,7 +119,7 @@ public class InputUtils {
         } else {
             locale = new Locale(localeLang, localeCountry);
             if (!isAvailableLocale(locale)) {
-                throw new Exception("Locale not found");
+                throw new Exception("Locale not found!");
             }
         }
         return locale;

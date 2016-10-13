@@ -72,7 +72,7 @@ public class UpdateServerTypeExecutorTest {
     }
 
     private CommonInputs getCommonInputs(AmazonInputs inputs) throws Exception {
-        return new CommonInputs.CommonInputsBuilder()
+        return new CommonInputs.Builder()
                 .withProvider(inputs.getProvider())
                 .withEndpoint(inputs.getEndpoint())
                 .withIdentity(inputs.getIdentity())
@@ -83,13 +83,13 @@ public class UpdateServerTypeExecutorTest {
     }
 
     private CustomInputs getCustomInputs(AmazonInputs inputs) {
-        return new CustomInputs.CustomInputsBuilder()
+        return new CustomInputs.Builder()
                 .withRegion(inputs.getRegion())
                 .build();
     }
 
     private InstanceInputs getInstanceInputs(AmazonInputs inputs) {
-        return new InstanceInputs.InstanceInputsBuilder()
+        return new InstanceInputs.Builder()
                 .withCustomInputs(getCustomInputs(inputs))
                 .build();
     }

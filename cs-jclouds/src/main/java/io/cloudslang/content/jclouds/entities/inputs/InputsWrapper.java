@@ -30,7 +30,7 @@ public class InputsWrapper {
     private String headers;
     private String queryParams;
 
-    private InputsWrapper(InputsWrapperBuilder builder) {
+    private InputsWrapper(Builder builder) {
         this.httpClientInputs = builder.httpClientInputs;
         this.commonInputs = builder.commonInputs;
         this.customInputs = builder.customInputs;
@@ -153,7 +153,7 @@ public class InputsWrapper {
         return queryParams;
     }
 
-    public static class InputsWrapperBuilder {
+    public static class Builder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
         private CustomInputs customInputs;
@@ -171,57 +171,57 @@ public class InputsWrapper {
             return new InputsWrapper(this);
         }
 
-        public InputsWrapperBuilder withHttpClientInputs(HttpClientInputs inputs) {
+        public Builder withHttpClientInputs(HttpClientInputs inputs) {
             httpClientInputs = inputs;
             return this;
         }
 
-        public InputsWrapperBuilder withCommonInputs(CommonInputs inputs) {
+        public Builder withCommonInputs(CommonInputs inputs) {
             commonInputs = inputs;
             return this;
         }
 
-        public InputsWrapperBuilder withCustomInputs(CustomInputs inputs) {
+        public Builder withCustomInputs(CustomInputs inputs) {
             customInputs = inputs;
             return this;
         }
 
-        public InputsWrapperBuilder withApiService(String inputValue) {
+        public Builder withApiService(String inputValue) {
             apiService = AmazonApiServiceType.getValue(inputValue);
             return this;
         }
 
-        public InputsWrapperBuilder withRequestUri(String inputValue) {
+        public Builder withRequestUri(String inputValue) {
             requestUri = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.SCOPE_SEPARATOR);
             return this;
         }
 
-        public InputsWrapperBuilder withRequestPayload(String inputValue) {
+        public Builder withRequestPayload(String inputValue) {
             requestPayload = inputValue;
             return this;
         }
 
-        public InputsWrapperBuilder withDate(String inputValue) {
+        public Builder withDate(String inputValue) {
             date = inputValue;
             return this;
         }
 
-        public InputsWrapperBuilder withSecurityToken(String inputValue) {
+        public Builder withSecurityToken(String inputValue) {
             securityToken = inputValue;
             return this;
         }
 
-        public InputsWrapperBuilder withHttpVerb(String inputValue) {
+        public Builder withHttpVerb(String inputValue) {
             httpVerb = inputValue;
             return this;
         }
 
-        public InputsWrapperBuilder withHeaders(String inputValue) {
+        public Builder withHeaders(String inputValue) {
             headers = inputValue;
             return this;
         }
 
-        public InputsWrapperBuilder withQueryParams(String inputValue) {
+        public Builder withQueryParams(String inputValue) {
             queryParams = inputValue;
             return this;
         }
