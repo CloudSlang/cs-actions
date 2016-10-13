@@ -6,7 +6,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
@@ -14,6 +13,20 @@ import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.VERSION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.DELIMITER;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
@@ -81,19 +94,19 @@ public class RebootInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> rebootInstances(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                               @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
-                                               @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
-                                               @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                               @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                               @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
-                                               @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                               @Param(value = Inputs.CommonInputs.HEADERS) String headers,
-                                               @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
-                                               @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
-                                               @Param(value = Inputs.CommonInputs.DELIMITER, required = true) String delimiter,
+    public Map<String, String> rebootInstances(@Param(value = ENDPOINT, required = true) String endpoint,
+                                               @Param(value = IDENTITY, required = true) String identity,
+                                               @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+                                               @Param(value = PROXY_HOST) String proxyHost,
+                                               @Param(value = PROXY_PORT) String proxyPort,
+                                               @Param(value = PROXY_USERNAME) String proxyUsername,
+                                               @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                               @Param(value = HEADERS) String headers,
+                                               @Param(value = QUERY_PARAMS) String queryParams,
+                                               @Param(value = VERSION, required = true) String version,
+                                               @Param(value = DELIMITER, required = true) String delimiter,
 
-                                               @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId) {
+                                               @Param(value = INSTANCE_ID, required = true) String instanceId) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
