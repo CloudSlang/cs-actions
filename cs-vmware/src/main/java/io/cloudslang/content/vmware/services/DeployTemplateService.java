@@ -2,17 +2,24 @@ package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.HttpNfcLeaseDeviceUrl;
 import com.vmware.vim25.HttpNfcLeaseInfo;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.KeyValue;
+import com.vmware.vim25.LocalizedMethodFault;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.OvfCreateImportSpecParams;
 import com.vmware.vim25.OvfCreateImportSpecResult;
 import com.vmware.vim25.OvfFileItem;
+import com.vmware.vim25.OvfNetworkMapping;
 import com.vmware.vim25.RuntimeFaultFaultMsg;
 import com.vmware.vim25.ServiceContent;
 import com.vmware.vim25.VimPortType;
+import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.entities.AsyncProgressUpdater;
+import io.cloudslang.content.vmware.entities.ClusterParameter;
 import io.cloudslang.content.vmware.entities.CustomExecutor;
 import io.cloudslang.content.vmware.entities.ITransferVmdkFrom;
+import io.cloudslang.content.vmware.entities.ManagedObject;
 import io.cloudslang.content.vmware.entities.ProgressUpdater;
 import io.cloudslang.content.vmware.entities.SyncProgressUpdater;
 import io.cloudslang.content.vmware.entities.TransferVmdkFromFile;
@@ -21,6 +28,7 @@ import io.cloudslang.content.vmware.entities.TransferVmdkTask;
 import io.cloudslang.content.vmware.entities.TransferVmdkToUrl;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
 import io.cloudslang.content.vmware.utils.OvfUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -35,8 +43,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 import static io.cloudslang.content.vmware.constants.Constants.DISK_DRIVE_CIM_TYPE;
 import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseErrorState;
@@ -47,44 +56,84 @@ import static io.cloudslang.content.vmware.utils.OvfUtils.isOvf;
 import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ImportTemplatesService {
+public class DeployTemplateService {
 
     private final CustomExecutor executor;
 
-    public ImportTemplatesService(final boolean parallel) {
+    public DeployTemplateService(final boolean parallel) {
         this.executor = new CustomExecutor(parallel);
     }
 
-    public void deployTemplate(final HttpInputs httpInputs, final VmInputs vmInputs, final String templatePath) throws Exception {
+    public void deployTemplate(final HttpInputs httpInputs, final VmInputs vmInputs, final String templatePath,
+                               final Map<String, String> ovfNetworkMap, final Map<String, String> ovfPropertyMap) throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair = createLeaseSetup(connectionResources, vmInputs, templatePath);
+        final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair =
+                createLeaseSetup(connectionResources, vmInputs, templatePath, ovfNetworkMap, ovfPropertyMap);
         final ManagedObjectReference httpNfcLease = pair.left;
         final OvfCreateImportSpecResult importSpecResult = pair.right;
 
         final HttpNfcLeaseInfo httpNfcLeaseInfo = getHttpNfcLeaseInfoWhenReady(connectionResources, httpNfcLease);
         final List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
-        final ProgressUpdater progressUpdater = executor.isParallel() ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources) : new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
+        final ProgressUpdater progressUpdater = executor.isParallel() ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources)
+                : new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
 
         executor.execute(progressUpdater);
         transferVmdkFiles(templatePath, importSpecResult, deviceUrls, progressUpdater);
         executor.shutdown();
     }
 
-    private ImmutablePair<ManagedObjectReference,
-            OvfCreateImportSpecResult> createLeaseSetup(final ConnectionResources connectionResources,
-                                                        final VmInputs vmInputs, final String templatePath) throws Exception {
+    private ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> createLeaseSetup(
+            final ConnectionResources connectionResources, final VmInputs vmInputs, final String templatePath,
+            final Map<String, String> ovfNetworkMap, final Map<String, String> ovfPropertyMap) throws Exception {
         final ManagedObjectReference ovfManager = getOvfManager(connectionResources);
         final VmUtils vmUtils = new VmUtils();
-        final ManagedObjectReference resourcePool = vmUtils.getMorResourcePool(vmInputs.getResourcePool(), connectionResources);
+        final ManagedObjectReference resourcePool;
+        if (StringUtilities.isBlank(vmInputs.getClusterName())) {
+            resourcePool = vmUtils.getMorResourcePool(vmInputs.getResourcePool(), connectionResources);
+        } else {
+            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            resourcePool = vmUtils.getMorResourcePoolFromCluster(connectionResources, clusterMor, vmInputs.getResourcePool());
+        }
         final ManagedObjectReference hostMor = vmUtils.getMorHost(vmInputs.getHostname(), connectionResources, null);
         final ManagedObjectReference datastoreMor = vmUtils.getMorDataStore(vmInputs.getDataStore(), connectionResources, null, vmInputs);
         final ManagedObjectReference folderMor = vmUtils.getMorFolder(vmInputs.getFolderName(), connectionResources);
+        final List<OvfNetworkMapping> ovfNetworkMappings = getOvfNetworkMappings(ovfNetworkMap, connectionResources);
+        final List<KeyValue> ovfPropertyMappings = getOvfPropertyMappings(ovfPropertyMap);
 
         final OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType().
-                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmInputs, hostMor));
+                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmInputs, hostMor, ovfNetworkMappings));
+
+        checkImportSpecResultForErrors(importSpecResult);
 
         final ManagedObjectReference httpNfcLease = OvfUtils.getHttpNfcLease(connectionResources, importSpecResult.getImportSpec(), resourcePool, hostMor, folderMor);
         return ImmutablePair.of(httpNfcLease, importSpecResult);
+    }
+
+    private List<KeyValue> getOvfPropertyMappings(Map<String, String> ovfPropertyMap) {
+        return null;//TODO
+    }
+
+    private List<OvfNetworkMapping> getOvfNetworkMappings(Map<String, String> ovfNetworkMap, ConnectionResources connectionResources) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        List<OvfNetworkMapping> mappings = new ArrayList<>();
+        for (Map.Entry<String, String> entry : ovfNetworkMap.entrySet()) {
+            OvfNetworkMapping mapping = new OvfNetworkMapping();
+            mapping.setNetwork(new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ManagedObject.NETWORK.getName(), entry.getValue()));
+            mapping.setName(entry.getKey());
+            mappings.add(mapping);
+        }
+        return mappings;
+    }
+
+    private void checkImportSpecResultForErrors(OvfCreateImportSpecResult importSpecResult) throws Exception {
+        if (0 < importSpecResult.getError().size()) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (LocalizedMethodFault fault : importSpecResult.getError()) {
+                stringBuilder.append(fault.getLocalizedMessage()).append(System.lineSeparator());
+            }
+            throw new Exception(stringBuilder.toString());
+        }
     }
 
     private void transferVmdkFiles(final String ovfPath, final OvfCreateImportSpecResult importSpecResult,
@@ -166,16 +215,17 @@ public class ImportTemplatesService {
     }
 
 
-    public OvfCreateImportSpecParams getOvfCreateImportSpecParams(final VmInputs vmInputs, final ManagedObjectReference hostSystem) {
-        final OvfCreateImportSpecParams ovfCreateImportSpecParams = new OvfCreateImportSpecParams();
-        ovfCreateImportSpecParams.setDeploymentOption("");
-        ovfCreateImportSpecParams.setLocale(Locale.getDefault().toString());
-        ovfCreateImportSpecParams.setEntityName(vmInputs.getVirtualMachineName());
-        ovfCreateImportSpecParams.setIpAllocationPolicy(vmInputs.getIpAllocScheme());
-        ovfCreateImportSpecParams.setIpProtocol(vmInputs.getIpProtocol());
-        ovfCreateImportSpecParams.setDiskProvisioning(vmInputs.getDiskProvisioning());
-        ovfCreateImportSpecParams.setHostSystem(hostSystem);
-        return ovfCreateImportSpecParams;
+    public OvfCreateImportSpecParams getOvfCreateImportSpecParams(final VmInputs vmInputs, final ManagedObjectReference hostSystem, List ovfNetworkMappings) {
+        final OvfCreateImportSpecParams params = new OvfCreateImportSpecParams();
+        params.setHostSystem(hostSystem);
+        params.setDeploymentOption("");
+        params.setLocale(String.valueOf(vmInputs.getLocale()));
+        params.setEntityName(vmInputs.getVirtualMachineName());
+        params.setIpAllocationPolicy(vmInputs.getIpAllocScheme());
+        params.setIpProtocol(vmInputs.getIpProtocol());
+        params.setDiskProvisioning(vmInputs.getDiskProvisioning());
+        params.getNetworkMapping().addAll(ovfNetworkMappings);
+        return params;
     }
 
     public long getDisksTotalNoBytes(final OvfCreateImportSpecResult importSpecResult) {

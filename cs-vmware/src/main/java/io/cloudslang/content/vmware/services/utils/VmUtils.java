@@ -1,10 +1,15 @@
 package io.cloudslang.content.vmware.services.utils;
 
 import com.vmware.vim25.*;
+import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
-import io.cloudslang.content.vmware.entities.*;
+import io.cloudslang.content.vmware.entities.DiskMode;
+import io.cloudslang.content.vmware.entities.Level;
+import io.cloudslang.content.vmware.entities.Operation;
+import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.utils.InputUtils;
@@ -25,6 +30,17 @@ public class VmUtils {
 
     private static final int DISK_AMOUNT_MULTIPLIER = 1024;
     private static final int DEFAULT_CORES_PER_SOCKET = 1;
+
+
+    public ManagedObjectReference getMorResourcePoolFromCluster(ConnectionResources connectionResources, ManagedObjectReference clusterMor, String resourcePoolName) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        if (StringUtilities.isNotBlank(resourcePoolName)) {
+            return new MorObjectHandler().getSpecificMor(connectionResources, clusterMor,
+                    VmParameter.RESOURCE_POOL.getValue(), resourcePoolName);
+        } else {
+            return new MorObjectHandler().getSpecificMor(connectionResources, clusterMor,
+                    VmParameter.RESOURCE_POOL.getValue(), VmParameter.RESOURCES.getValue());
+        }
+    }
 
     public ManagedObjectReference getMorResourcePool(String resourcePoolName, ConnectionResources connectionResources)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
@@ -65,6 +81,7 @@ public class VmUtils {
 
     /**
      * The slash (/), backslash (\) and percent (%) will be escaped using the URL syntax.
+     *
      * @param string
      * @return
      */

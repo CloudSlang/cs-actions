@@ -1,5 +1,6 @@
 package io.cloudslang.content.vmware.utils;
 
+import com.google.gson.Gson;
 import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
 import com.sun.org.apache.xerces.internal.dom.TextImpl;
 import com.vmware.vim25.DynamicProperty;
@@ -19,7 +20,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.io.IOUtils.toByteArray;
 
@@ -82,5 +85,34 @@ public class OvfUtils {
 
     public static boolean isOvf(final Path filePath) {
         return ovfMatcher.matches(filePath);
+    }
+
+    public static Map<String, String> getOvfMappings(String keysJson, String valuesJson) throws Exception {
+        Map<String, String> map = new HashMap<>();
+        List<String> keys = resolveJSONStringArrayParm(keysJson);
+        List<String> values = resolveJSONStringArrayParm(valuesJson);
+        if (keys != null || values != null) {
+            if (keys.size() != values.size()) {
+                throw new Exception("The array length of the json keys and values inputs must match!");
+            } else {
+                for (int i = 0; i < keys.size(); i++) {
+                    map.put(keys.get(i), values.get(i));
+                }
+            }
+        }
+        return map;
+
+//        List<OvfNetworkMapping> networkMappings = new ArrayList<>();
+//        for (Map.Entry<String, String> entry : networkMap.entrySet()) {
+//            OvfNetworkMapping ovfNetworkMapping = new OvfNetworkMapping();
+//            ovfNetworkMapping.setName(entry.getKey());
+//            ovfNetworkMapping.setNetwork(getNetwork(computeResource, entry.getValue()));
+//            networkMappings.add(ovfNetworkMapping);
+//        }
+//        return (OvfNetworkMapping[]) networkMappings.toArray();
+    }
+
+    public static List<String> resolveJSONStringArrayParm(String jsonString) {
+        return new Gson().fromJson(jsonString, List.class);
     }
 }
