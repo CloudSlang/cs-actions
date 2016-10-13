@@ -19,6 +19,10 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.
  * 10/12/2016.
  */
 public class TagUtils {
+    private static final String MORE_THAN_50_TAGS_ERROR_MESSAGE = "The resources cannot be tagged with more than 50 tags!";
+
+    private static final int MAXIMUM_TAGS_ALLOWED = 50;
+
     public Map<String, String> getCreateTagsQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
@@ -34,32 +38,28 @@ public class TagUtils {
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(RESOURCE_ID, index), resourceIdsArray[index]);
             }
         }
-        setResourcesTags(queryParamsMap, wrapper);
+        setResourcesTags(queryParamsMap, wrapper.getCustomInputs().getKeyTagsString(), wrapper.getCustomInputs().getValueTagsString(),
+                wrapper.getCommonInputs().getDelimiter());
 
         return queryParamsMap;
     }
 
-    private void setResourcesTags(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        String[] keyTagsStringArray = InputsUtil.getStringsArray(wrapper.getCustomInputs().getKeyTagsString(), EMPTY,
-                wrapper.getCommonInputs().getDelimiter());
-        String[] valueTagsStringArray = InputsUtil.getStringsArray(wrapper.getCustomInputs().getValueTagsString(), EMPTY,
-                wrapper.getCommonInputs().getDelimiter());
+    private void setResourcesTags(Map<String, String> queryParamsMap, String keyTagsString, String valueTagsString, String delimiter) {
+        String[] keyTagsStringArray = InputsUtil.getStringsArray(keyTagsString, EMPTY, delimiter);
+        String[] valueTagsStringArray = InputsUtil.getStringsArray(valueTagsString, EMPTY, delimiter);
         InputsUtil.validateAgainstDifferentArraysLength(keyTagsStringArray, valueTagsStringArray, Inputs.CustomInputs.KEY_TAGS_STRING,
                 Inputs.CustomInputs.VALUE_TAGS_STRING);
-
 
         if (keyTagsStringArray != null && keyTagsStringArray.length > START_INDEX
                 && valueTagsStringArray != null && valueTagsStringArray.length > START_INDEX) {
 
-            if (keyTagsStringArray.length > 50) {
-                throw new RuntimeException("Resources: " + wrapper.getCustomInputs().getResourceIdsString() + " cannot " +
-                        "be tagged with more than 50 tags!");
+            if (keyTagsStringArray.length > MAXIMUM_TAGS_ALLOWED) {
+                throw new RuntimeException(MORE_THAN_50_TAGS_ERROR_MESSAGE);
             }
 
             for (int index = START_INDEX; index < keyTagsStringArray.length; index++) {
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(KEY, index), keyTagsStringArray[index]);
-                String currentValue = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ?
-                        EMPTY : valueTagsStringArray[index];
+                String currentValue = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ? EMPTY : valueTagsStringArray[index];
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUE, index), currentValue);
             }
         }
