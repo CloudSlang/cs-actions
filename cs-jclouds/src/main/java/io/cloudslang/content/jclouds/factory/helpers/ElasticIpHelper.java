@@ -17,7 +17,8 @@ public class ElasticIpHelper {
 
     public Map<String, String> getAllocateAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getAction(), wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(DOMAIN, wrapper.getCustomInputs().getDomain());
 
         return queryParamsMap;
@@ -25,7 +26,8 @@ public class ElasticIpHelper {
 
     public Map<String, String> getReleaseAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getAction(), wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.ALLOCATION_ID, wrapper.getCustomInputs().getAllocationId(),
                 StringUtils.isNotBlank(wrapper.getCustomInputs().getAllocationId()));

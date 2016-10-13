@@ -13,7 +13,9 @@ public class InputsWrapper {
     private HttpClientInputs httpClientInputs;
     private CommonInputs commonInputs;
     private CustomInputs customInputs;
+    private EbsInputs ebsInputs;
     private ElasticIpInputs elasticIpInputs;
+    private IamInputs iamInputs;
     private ImageInputs imageInputs;
     private InstanceInputs instanceInputs;
     private NetworkInputs networkInputs;
@@ -27,7 +29,6 @@ public class InputsWrapper {
     private String httpVerb;
     private String headers;
     private String queryParams;
-    private String action;
 
     private InputsWrapper(InputsWrapperBuilder builder) {
         this.httpClientInputs = builder.httpClientInputs;
@@ -42,7 +43,6 @@ public class InputsWrapper {
         this.httpVerb = builder.httpVerb;
         this.headers = builder.headers;
         this.queryParams = builder.queryParams;
-        this.action = builder.action;
     }
 
     public HttpClientInputs getHttpClientInputs() {
@@ -65,12 +65,28 @@ public class InputsWrapper {
         this.customInputs = customInputs;
     }
 
+    public EbsInputs getEbsInputs() {
+        return ebsInputs;
+    }
+
+    public void setEbsInputs(EbsInputs ebsInputs) {
+        this.ebsInputs = ebsInputs;
+    }
+
     public ElasticIpInputs getElasticIpInputs() {
         return elasticIpInputs;
     }
 
     public void setElasticIpInputs(ElasticIpInputs elasticIpInputs) {
         this.elasticIpInputs = elasticIpInputs;
+    }
+
+    public IamInputs getIamInputs() {
+        return iamInputs;
+    }
+
+    public void setIamInputs(IamInputs iamInputs) {
+        this.iamInputs = iamInputs;
     }
 
     public ImageInputs getImageInputs() {
@@ -137,10 +153,6 @@ public class InputsWrapper {
         return queryParams;
     }
 
-    public String getAction() {
-        return action;
-    }
-
     public static class InputsWrapperBuilder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
@@ -154,7 +166,6 @@ public class InputsWrapper {
         private String httpVerb;
         private String headers;
         private String queryParams;
-        private String action;
 
         public InputsWrapper build() {
             return new InputsWrapper(this);
@@ -212,11 +223,6 @@ public class InputsWrapper {
 
         public InputsWrapperBuilder withQueryParams(String inputValue) {
             queryParams = inputValue;
-            return this;
-        }
-
-        public InputsWrapperBuilder withAction(String inputValue) {
-            action = inputValue;
             return this;
         }
     }

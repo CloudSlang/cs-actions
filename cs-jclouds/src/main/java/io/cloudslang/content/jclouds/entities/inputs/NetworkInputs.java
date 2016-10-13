@@ -10,34 +10,36 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * 6/7/2016.
  */
 public class NetworkInputs {
-    private String networkInterfaceDescription;
-    private String networkInterfaceSubnetId;
-    private String networkInterfaceVpcId;
-    private String networkInterfaceId;
-    private String networkInterfaceOwnerId;
-    private String networkInterfaceAvailabilityZone;
-    private String networkInterfaceRequesterId;
-    private String networkInterfaceRequesterManaged;
-    private String networkInterfaceStatus;
-    private String networkInterfaceMacAddress;
-    private String networkInterfacePrivateDnsName;
-    private String networkInterfaceSourceDestinationCheck;
-    private String networkInterfaceGroupId;
-    private String networkInterfaceGroupName;
+    private static final int MINIMUM_PRIVATE_SECONDARY_IP_ADDRESSES_COUNT = 2;
+
+    private String deviceIndex;
+    private String networkInterfaceAddressesPrimary;
     private String networkInterfaceAttachmentId;
-    private String networkInterfaceInstanceId;
-    private String networkInterfaceInstanceOwnerId;
-    private String networkInterfacePrivateIpAddress;
-    private String networkInterfaceDeviceIndex;
     private String networkInterfaceAttachmentStatus;
     private String networkInterfaceAttachTime;
-    private String networkInterfaceDeleteOnTermination;
-    private String networkInterfaceAddressesPrimary;
-    private String networkInterfacePublicIp;
+    private String networkInterfaceAvailabilityZone;
+    private String networkInterfaceDescription;
+    private String networkInterfaceDeviceIndex;
+    private String networkInterfaceGroupId;
+    private String networkInterfaceGroupName;
+    private String networkInterfaceId;
+    private String networkInterfaceInstanceId;
+    private String networkInterfaceInstanceOwnerId;
     private String networkInterfaceIpOwnerId;
-    private String deviceIndex;
+    private String networkInterfaceMacAddress;
+    private String networkInterfaceOwnerId;
+    private String networkInterfacePrivateDnsName;
+    private String networkInterfacePrivateIpAddress;
+    private String networkInterfacePublicIp;
+    private String networkInterfaceRequesterId;
+    private String networkInterfaceRequesterManaged;
+    private String networkInterfaceSourceDestinationCheck;
+    private String networkInterfaceStatus;
+    private String networkInterfaceSubnetId;
+    private String networkInterfaceVpcId;
     private String secondaryPrivateIpAddressCount;
-    private String securityGroupIdsString;
+    private String networkInterfacesAssociatePublicIpAddressesString;
+    private String networkInterfaceDeleteOnTermination;
 
     private boolean forceDetach;
 
@@ -45,7 +47,6 @@ public class NetworkInputs {
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
         this.networkInterfaceSubnetId = builder.networkInterfaceSubnetId;
         this.networkInterfaceVpcId = builder.networkInterfaceVpcId;
-        this.networkInterfaceId = builder.networkInterfaceId;
         this.networkInterfaceOwnerId = builder.networkInterfaceOwnerId;
         this.networkInterfaceAvailabilityZone = builder.networkInterfaceAvailabilityZone;
         this.networkInterfaceRequesterId = builder.networkInterfaceRequesterId;
@@ -67,9 +68,10 @@ public class NetworkInputs {
         this.networkInterfaceAddressesPrimary = builder.networkInterfaceAddressesPrimary;
         this.networkInterfacePublicIp = builder.networkInterfacePublicIp;
         this.networkInterfaceIpOwnerId = builder.networkInterfaceIpOwnerId;
+        this.networkInterfaceId = builder.networkInterfaceId;
         this.deviceIndex = builder.deviceIndex;
         this.secondaryPrivateIpAddressCount = builder.secondaryPrivateIpAddressCount;
-        this.securityGroupIdsString = builder.securityGroupIdsString;
+        this.networkInterfacesAssociatePublicIpAddressesString = builder.networkInterfacesAssociatePublicIpAddressesString;
 
         this.forceDetach = builder.forceDetach;
     }
@@ -158,10 +160,6 @@ public class NetworkInputs {
         return networkInterfaceAttachTime;
     }
 
-    public String getNetworkInterfaceDeleteOnTermination() {
-        return networkInterfaceDeleteOnTermination;
-    }
-
     public String getNetworkInterfaceAddressesPrimary() {
         return networkInterfaceAddressesPrimary;
     }
@@ -182,8 +180,12 @@ public class NetworkInputs {
         return secondaryPrivateIpAddressCount;
     }
 
-    public String getSecurityGroupIdsString() {
-        return securityGroupIdsString;
+    public String getNetworkInterfacesAssociatePublicIpAddressesString() {
+        return networkInterfacesAssociatePublicIpAddressesString;
+    }
+
+    public String getNetworkInterfaceDeleteOnTermination() {
+        return networkInterfaceDeleteOnTermination;
     }
 
     public boolean isForceDetach() {
@@ -191,34 +193,34 @@ public class NetworkInputs {
     }
 
     public static class NetworkInputsBuilder {
-        private String networkInterfaceDescription;
-        private String networkInterfaceSubnetId;
-        private String networkInterfaceVpcId;
-        private String networkInterfaceId;
-        private String networkInterfaceOwnerId;
-        private String networkInterfaceAvailabilityZone;
-        private String networkInterfaceRequesterId;
-        private String networkInterfaceRequesterManaged;
-        private String networkInterfaceStatus;
-        private String networkInterfaceMacAddress;
-        private String networkInterfacePrivateDnsName;
-        private String networkInterfaceSourceDestinationCheck;
-        private String networkInterfaceGroupId;
-        private String networkInterfaceGroupName;
+        private String deviceIndex;
+        private String networkInterfaceAddressesPrimary;
+        private String networkInterfacesAssociatePublicIpAddressesString;
         private String networkInterfaceAttachmentId;
-        private String networkInterfaceInstanceId;
-        private String networkInterfaceInstanceOwnerId;
-        private String networkInterfacePrivateIpAddress;
-        private String networkInterfaceDeviceIndex;
         private String networkInterfaceAttachmentStatus;
         private String networkInterfaceAttachTime;
-        private String networkInterfaceDeleteOnTermination;
-        private String networkInterfaceAddressesPrimary;
-        private String networkInterfacePublicIp;
-        private String networkInterfaceIpOwnerId;
-        private String deviceIndex;
+        private String networkInterfaceAvailabilityZone;
+        private String networkInterfaceDescription;
+        private String networkInterfaceDeviceIndex;
+        private String networkInterfaceGroupId;
+        private String networkInterfaceGroupName;
+        private String networkInterfaceId;
+        private String networkInterfaceInstanceOwnerId;
         private String secondaryPrivateIpAddressCount;
-        private String securityGroupIdsString;
+        private String networkInterfaceIpOwnerId;
+        private String networkInterfaceInstanceId;
+        private String networkInterfaceOwnerId;
+        private String networkInterfaceMacAddress;
+        private String networkInterfacePrivateDnsName;
+        private String networkInterfacePrivateIpAddress;
+        private String networkInterfacePublicIp;
+        private String networkInterfaceRequesterId;
+        private String networkInterfaceRequesterManaged;
+        private String networkInterfaceSourceDestinationCheck;
+        private String networkInterfaceStatus;
+        private String networkInterfaceSubnetId;
+        private String networkInterfaceVpcId;
+        private String networkInterfaceDeleteOnTermination;
 
         private boolean forceDetach;
 
@@ -228,6 +230,11 @@ public class NetworkInputs {
 
         public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceDescription(String inputValue) {
             networkInterfaceDescription = inputValue;
+            return this;
+        }
+
+        public NetworkInputs.NetworkInputsBuilder withDeviceIndex(String inputValue) {
+            deviceIndex = inputValue;
             return this;
         }
 
@@ -317,7 +324,8 @@ public class NetworkInputs {
         }
 
         public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceDeviceIndex(String inputValue) {
-            networkInterfaceDeviceIndex = inputValue;
+            networkInterfaceDeviceIndex = InputsUtil
+                    .getValidPositiveIntegerAsStringValue(inputValue, Constants.Values.START_INDEX);
             return this;
         }
 
@@ -326,48 +334,44 @@ public class NetworkInputs {
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAttachTime(String inputValue) throws Exception {
+        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAttachTime(String inputValue) {
             networkInterfaceAttachTime = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceDeleteOnTermination(String inputValue) throws Exception {
+        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceDeleteOnTermination(String inputValue) {
             networkInterfaceDeleteOnTermination = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAddressesPrimary(String inputValue) throws Exception {
+        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceAddressesPrimary(String inputValue) {
             networkInterfaceAddressesPrimary = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfacePublicIp(String inputValue) throws Exception {
+        public NetworkInputs.NetworkInputsBuilder withNetworkInterfacePublicIp(String inputValue) {
             networkInterfacePublicIp = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceIpOwnerId(String inputValue) throws Exception {
+        public NetworkInputs.NetworkInputsBuilder withNetworkInterfaceIpOwnerId(String inputValue) {
             networkInterfaceIpOwnerId = inputValue;
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withDeviceIndex(String inputValue) {
-            deviceIndex = inputValue;
-            return this;
-        }
-
         public NetworkInputs.NetworkInputsBuilder withSecondaryPrivateIpAddressCount(String inputValue) {
-            secondaryPrivateIpAddressCount = inputValue;
+            secondaryPrivateIpAddressCount = InputsUtil
+                    .getValidPositiveIntegerAsStringValue(inputValue, MINIMUM_PRIVATE_SECONDARY_IP_ADDRESSES_COUNT);
             return this;
         }
 
-        public NetworkInputs.NetworkInputsBuilder withSecurityGroupIdsString(String inputValue) {
-            securityGroupIdsString = inputValue;
+        public NetworkInputs.NetworkInputsBuilder withNetworkInterfacesAssociatePublicIpAddressesString(String inputValue) {
+            networkInterfacesAssociatePublicIpAddressesString = inputValue;
             return this;
         }
 
         public NetworkInputs.NetworkInputsBuilder withForceDetach(String inputValue) {
-            forceDetach = Boolean.parseBoolean(inputValue);
+            forceDetach = InputsUtil.getEnforcedBooleanCondition(inputValue, Boolean.FALSE);
             return this;
         }
     }
