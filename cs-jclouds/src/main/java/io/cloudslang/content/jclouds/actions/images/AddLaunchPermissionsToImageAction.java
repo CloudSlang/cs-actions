@@ -11,6 +11,7 @@ import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
+import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
@@ -18,29 +19,34 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 5/18/2016.
+ * 5/10/2016.
  */
-public class ResetLaunchPermissionsOnImageAction {
+public class AddLaunchPermissionsToImageAction {
     /**
-     * Resets the launch permission attribute of a specified AMI to its default value.
+     * Adds launch permission to the specified AMI.
      * Note:
-     * The productCodes attribute can't be reset.
+     * AWS Marketplace product codes cannot be modified. Images with an AWS Marketplace product code cannot be made public.
      *
-     * @param endpoint   Endpoint to which request will be sent.
-     *                   Example: "https://ec2.amazonaws.com"
-     * @param identity   Optional - Username of your account or the Access Key ID.
-     * @param credential Optional - Password of the user or the Secret Access Key that correspond to the identity input.
-     * @param version    Version of the web service to made the call against it.
-     *                   Example: "2016-04-01"
-     *                   Default: ""
-     * @param proxyHost  Optional - Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort  Optional - Proxy server port.
-     * @param debugMode  Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param imageId    ID of the image to resets the launch permission attribute for
+     * @param endpoint         Endpoint to which request will be sent.
+     *                         Example: "https://ec2.amazonaws.com"
+     * @param identity         Optional - Username of your account or the Access Key ID.
+     * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity
+     *                         input.
+     * @param version          Version of the web service to made the call against it.
+     *                         Example: "2016-04-01"
+     *                         Default: ""
+     * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
+     * @param proxyPort        Optional - Proxy server port.
+     * @param debugMode        Optional - If "true" then the execution logs will be shown in CLI console.
+     * @param imageId          ID of the specified image to add launch permission for.
+     * @param userIdsString    Optional - A string that contains: none, one or more user IDs separated by delimiter.
+     *                         Default: ""
+     * @param userGroupsString Optional - A string that contains: none, one or more user groups separated by delimiter.
+     *                         Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Reset Launch Permissions On Image",
+    @Action(name = "Add Launch Permissions to Image",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -59,9 +65,13 @@ public class ResetLaunchPermissionsOnImageAction {
                                        @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
                                        @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
                                        @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
+                                       @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
                                        @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
 
-                                       @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId) {
+                                       @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
+
+                                       @Param(value = Inputs.ImageInputs.USER_IDS_STRING) String userIdsString,
+                                       @Param(value = Inputs.ImageInputs.USER_GROUPS_STRING) String userGroupsString) {
         try {
             CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
@@ -69,9 +79,10 @@ public class ResetLaunchPermissionsOnImageAction {
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
+                    .withDelimiter(delimiter)
                     .withDebugMode(debugMode)
                     .withVersion(version)
-                    .withAction(Constants.QueryApiActions.RESET_IMAGE_ATTRIBUTE)
+                    .withAction(Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
@@ -80,10 +91,17 @@ public class ResetLaunchPermissionsOnImageAction {
 
             CustomInputs customInputs = new CustomInputs.Builder()
                     .withAttribute(Constants.AwsParams.LAUNCH_PERMISSION)
+                    .withOperationType(Constants.AwsParams.ADD_OPERATION_TYPE)
                     .withImageId(imageId)
                     .build();
 
-            return new QueryApiExecutor().execute(inputs, customInputs);
+            ImageInputs imageInputs = new ImageInputs.Builder()
+                    .withCustomInputs(customInputs)
+                    .withUserIdsString(userIdsString)
+                    .withUserGroupsString(userGroupsString)
+                    .build();
+
+            return new QueryApiExecutor().execute(inputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

@@ -1,6 +1,15 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.aws.*;
+import io.cloudslang.content.jclouds.entities.aws.Architecture;
+import io.cloudslang.content.jclouds.entities.aws.BlockDeviceMappingStatus;
+import io.cloudslang.content.jclouds.entities.aws.Domain;
+import io.cloudslang.content.jclouds.entities.aws.Hypervisor;
+import io.cloudslang.content.jclouds.entities.aws.InstanceType;
+import io.cloudslang.content.jclouds.entities.aws.Platform;
+import io.cloudslang.content.jclouds.entities.aws.ProductCodeType;
+import io.cloudslang.content.jclouds.entities.aws.RootDeviceType;
+import io.cloudslang.content.jclouds.entities.aws.VirtualizationType;
+import io.cloudslang.content.jclouds.entities.aws.VolumeType;
 import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
@@ -9,6 +18,8 @@ import io.cloudslang.content.jclouds.utils.InputsUtil;
  * 2/18/2016.
  */
 public class CustomInputs {
+    private String operationType;
+    private String attribute;
     private String region;
     private String instanceId;
     private String imageId;
@@ -51,7 +62,7 @@ public class CustomInputs {
     private String attachmentId;
     private String domain;
 
-    private CustomInputs(CustomInputsBuilder builder) {
+    private CustomInputs(Builder builder) {
         this.region = builder.region;
         this.instanceId = builder.instanceId;
         this.imageId = builder.imageId;
@@ -93,6 +104,8 @@ public class CustomInputs {
         this.kmsKeyId = builder.kmsKeyId;
         this.attachmentId = builder.attachmentId;
         this.domain = builder.domain;
+        this.attribute = builder.attribute;
+        this.operationType = builder.operationType;
     }
 
     public String getRegion() {
@@ -259,7 +272,15 @@ public class CustomInputs {
         return domain;
     }
 
-    public static class CustomInputsBuilder {
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public static class Builder {
         private String region;
         private String instanceId;
         private String imageId;
@@ -301,213 +322,225 @@ public class CustomInputs {
         private String kmsKeyId;
         private String attachmentId;
         private String domain;
+        private String attribute;
+        private String operationType;
 
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
-        public CustomInputsBuilder withRegion(String inputValue) {
+        public Builder withRegion(String inputValue) {
             region = InputsUtil.getDefaultStringInput(inputValue, Constants.AwsParams.DEFAULT_AMAZON_REGION);
             return this;
         }
 
-        public CustomInputsBuilder withInstanceId(String inputValue) {
+        public Builder withInstanceId(String inputValue) {
             instanceId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withImageId(String inputValue) {
+        public Builder withImageId(String inputValue) {
             imageId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withIdentityId(String inputValue) {
+        public Builder withIdentityId(String inputValue) {
             identityId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withVolumeId(String inputValue) {
+        public Builder withVolumeId(String inputValue) {
             volumeId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withGroupId(String inputValue) {
+        public Builder withGroupId(String inputValue) {
             groupId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withHostId(String inputValue) {
+        public Builder withHostId(String inputValue) {
             hostId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withKernelId(String inputValue) {
+        public Builder withKernelId(String inputValue) {
             kernelId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withOwnerId(String inputValue) {
+        public Builder withOwnerId(String inputValue) {
             ownerId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withRamdiskId(String inputValue) {
+        public Builder withRamdiskId(String inputValue) {
             ramdiskId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withReservationId(String inputValue) {
+        public Builder withReservationId(String inputValue) {
             reservationId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withSubnetId(String inputValue) {
+        public Builder withSubnetId(String inputValue) {
             subnetId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withVpcId(String inputValue) {
+        public Builder withVpcId(String inputValue) {
             vpcId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withAllocationId(String inputValue) {
+        public Builder withAllocationId(String inputValue) {
             allocationId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withAssociationId(String inputValue) {
+        public Builder withAssociationId(String inputValue) {
             associationId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withArchitecture(String inputValue) {
+        public Builder withArchitecture(String inputValue) {
             architecture = Architecture.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withBlockMappingDeviceName(String inputValue) {
+        public Builder withBlockMappingDeviceName(String inputValue) {
             blockMappingDeviceName = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withDeleteOnTermination(String inputValue) {
+        public Builder withDeleteOnTermination(String inputValue) {
             deleteOnTermination = InputsUtil.getRelevantBooleanString(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withBlockDeviceMappingSnapshotId(String inputValue) {
+        public Builder withBlockDeviceMappingSnapshotId(String inputValue) {
             blockDeviceMappingSnapshotId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withAttachTime(String inputValue) {
+        public Builder withAttachTime(String inputValue) {
             attachTime = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withBlockDeviceMappingStatus(String inputValue) {
+        public Builder withBlockDeviceMappingStatus(String inputValue) {
             blockDeviceMappingStatus = BlockDeviceMappingStatus.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withVolumeSize(String inputValue) {
+        public Builder withVolumeSize(String inputValue) {
             volumeSize = InputsUtil.getValidVolumeAmount(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withVolumeType(String inputValue) throws Exception {
+        public Builder withVolumeType(String inputValue) throws Exception {
             volumeType = VolumeType.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withHypervisor(String inputValue) {
+        public Builder withHypervisor(String inputValue) {
             hypervisor = Hypervisor.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withOwnerAlias(String inputValue) {
+        public Builder withOwnerAlias(String inputValue) {
             ownerAlias = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withPlatform(String inputValue) throws Exception {
+        public Builder withPlatform(String inputValue) throws Exception {
             platform = Platform.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withProductCode(String inputValue) throws Exception {
+        public Builder withProductCode(String inputValue) throws Exception {
             productCode = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withProductCodeType(String inputValue) throws Exception {
+        public Builder withProductCodeType(String inputValue) throws Exception {
             productCodeType = ProductCodeType.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withRootDeviceName(String inputValue) throws Exception {
+        public Builder withRootDeviceName(String inputValue) throws Exception {
             rootDeviceName = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withRootDeviceType(String inputValue) throws Exception {
+        public Builder withRootDeviceType(String inputValue) throws Exception {
             rootDeviceType = RootDeviceType.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withStateReasonCode(String inputValue) throws Exception {
+        public Builder withStateReasonCode(String inputValue) throws Exception {
             stateReasonCode = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withStateReasonMessage(String inputValue) throws Exception {
+        public Builder withStateReasonMessage(String inputValue) throws Exception {
             stateReasonMessage = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withKeyTagsString(String inputValue) throws Exception {
+        public Builder withKeyTagsString(String inputValue) throws Exception {
             keyTagsString = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withValueTagsString(String inputValue) throws Exception {
+        public Builder withValueTagsString(String inputValue) throws Exception {
             valueTagsString = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withVirtualizationType(String inputValue) throws Exception {
+        public Builder withVirtualizationType(String inputValue) throws Exception {
             virtualizationType = VirtualizationType.getValue(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withAvailabilityZone(String inputValue) {
+        public Builder withAvailabilityZone(String inputValue) {
             availabilityZone = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withInstanceType(String inputValue) {
+        public Builder withInstanceType(String inputValue) {
             instanceType = InstanceType.getInstanceType(inputValue);
             return this;
         }
 
-        public CustomInputsBuilder withResourceIdsString(String inputValue) {
+        public Builder withResourceIdsString(String inputValue) {
             resourceIdsString = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withKmsKeyId(String inputValue) {
+        public Builder withKmsKeyId(String inputValue) {
             kmsKeyId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withAttachmentId(String inputValue) {
+        public Builder withAttachmentId(String inputValue) {
             attachmentId = inputValue;
             return this;
         }
 
-        public CustomInputsBuilder withDomain(String inputValue) {
+        public Builder withDomain(String inputValue) {
             domain = Domain.getValue(inputValue);
+            return this;
+        }
+
+        public Builder withAttribute(String inputValue) {
+            attribute = inputValue;
+            return this;
+        }
+
+        public Builder withOperationType(String inputValue) {
+            operationType = inputValue;
             return this;
         }
     }

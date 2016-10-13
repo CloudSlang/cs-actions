@@ -18,13 +18,12 @@ import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
- * 5/18/2016.
+ * 5/5/2016.
  */
-public class ResetLaunchPermissionsOnImageAction {
+public class DeregisterImageAction {
     /**
-     * Resets the launch permission attribute of a specified AMI to its default value.
-     * Note:
-     * The productCodes attribute can't be reset.
+     * De-register the specified AMI. After you de-register an AMI, it can't be used to launch new instances.
+     * This command does not delete the AMI.
      *
      * @param endpoint   Endpoint to which request will be sent.
      *                   Example: "https://ec2.amazonaws.com"
@@ -36,11 +35,11 @@ public class ResetLaunchPermissionsOnImageAction {
      * @param proxyHost  Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort  Optional - Proxy server port.
      * @param debugMode  Optional - If "true" then the execution logs will be shown in CLI console.
-     * @param imageId    ID of the image to resets the launch permission attribute for
+     * @param imageId    ID of the image to be de-registered
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Reset Launch Permissions On Image",
+    @Action(name = "Deregister Image",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -71,17 +70,14 @@ public class ResetLaunchPermissionsOnImageAction {
                     .withProxyPort(proxyPort)
                     .withDebugMode(debugMode)
                     .withVersion(version)
-                    .withAction(Constants.QueryApiActions.RESET_IMAGE_ATTRIBUTE)
+                    .withAction(Constants.QueryApiActions.DEREGISTER_IMAGE)
                     .withApiService(Constants.Apis.AMAZON_EC2_API)
                     .withRequestUri(Constants.Miscellaneous.EMPTY)
                     .withRequestPayload(Constants.Miscellaneous.EMPTY)
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
-                    .withAttribute(Constants.AwsParams.LAUNCH_PERMISSION)
-                    .withImageId(imageId)
-                    .build();
+            CustomInputs customInputs = new CustomInputs.Builder().withImageId(imageId).build();
 
             return new QueryApiExecutor().execute(inputs, customInputs);
         } catch (Exception exception) {

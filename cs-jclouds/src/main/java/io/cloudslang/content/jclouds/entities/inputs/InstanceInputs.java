@@ -52,8 +52,9 @@ public class InstanceInputs {
 
     private boolean disableApiTermination;
     private boolean monitoring;
+    private boolean forceStop;
 
-    private InstanceInputs(InstanceInputs.InstanceInputsBuilder builder) {
+    private InstanceInputs(Builder builder) {
         this.customInputs = builder.customInputs;
         this.networkInputs = builder.networkInputs;
 
@@ -92,6 +93,7 @@ public class InstanceInputs {
 
         this.disableApiTermination = builder.disableApiTermination;
         this.monitoring = builder.monitoring;
+        this.forceStop = builder.forceStop;
     }
 
     public CustomInputs getCustomInputs() {
@@ -234,7 +236,11 @@ public class InstanceInputs {
         return monitoring;
     }
 
-    public static class InstanceInputsBuilder {
+    public boolean isForceStop() {
+        return forceStop;
+    }
+
+    public static class Builder {
         private CustomInputs customInputs;
         private NetworkInputs networkInputs;
 
@@ -273,183 +279,189 @@ public class InstanceInputs {
 
         private boolean disableApiTermination;
         private boolean monitoring;
+        private boolean forceStop;
 
         public InstanceInputs build() {
             return new InstanceInputs(this);
         }
 
-        public InstanceInputs.InstanceInputsBuilder withCustomInputs(CustomInputs inputs) {
+        public Builder withCustomInputs(CustomInputs inputs) {
             customInputs = inputs;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withNetworkInputs(NetworkInputs inputs) {
+        public Builder withNetworkInputs(NetworkInputs inputs) {
             networkInputs = inputs;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withAffinity(String inputValue) {
+        public Builder withAffinity(String inputValue) {
             affinity = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withClientToken(String inputValue) {
+        public Builder withClientToken(String inputValue) {
             clientToken = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withDnsName(String inputValue) {
+        public Builder withDnsName(String inputValue) {
             dnsName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withGroupName(String inputValue) {
+        public Builder withGroupName(String inputValue) {
             groupName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withIamArn(String inputValue) {
+        public Builder withIamArn(String inputValue) {
             iamArn = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withInstanceLifecycle(String inputValue) {
+        public Builder withInstanceLifecycle(String inputValue) {
             instanceLifecycle = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withInstanceStateCode(String inputValue) {
+        public Builder withInstanceStateCode(String inputValue) {
             instanceStateCode = String.valueOf(InputsUtil.getValidInstanceStateCode(inputValue));
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withInstanceStateName(String inputValue) {
+        public Builder withInstanceStateName(String inputValue) {
             instanceStateName = InstanceState.getValue(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withInstanceGroupId(String inputValue) {
+        public Builder withInstanceGroupId(String inputValue) {
             instanceGroupId = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withInstanceGroupName(String inputValue) {
+        public Builder withInstanceGroupName(String inputValue) {
             instanceGroupName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withIpAddress(String inputValue) {
+        public Builder withIpAddress(String inputValue) {
             ipAddress = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withKeyName(String inputValue) {
+        public Builder withKeyName(String inputValue) {
             keyName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withLaunchIndex(String inputValue) {
+        public Builder withLaunchIndex(String inputValue) {
             launchIndex = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withLaunchTime(String inputValue) {
+        public Builder withLaunchTime(String inputValue) {
             launchTime = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withMonitoringState(String inputValue) throws Exception {
+        public Builder withMonitoringState(String inputValue) throws Exception {
             monitoringState = MonitoringState.getValue(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPlacementGroupName(String inputValue) {
+        public Builder withPlacementGroupName(String inputValue) {
             placementGroupName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPrivateDnsName(String inputValue) {
+        public Builder withPrivateDnsName(String inputValue) {
             privateDnsName = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPrivateIpAddress(String inputValue) {
+        public Builder withPrivateIpAddress(String inputValue) {
             privateIpAddress = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withReason(String inputValue) {
+        public Builder withReason(String inputValue) {
             reason = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withRequesterId(String inputValue) {
+        public Builder withRequesterId(String inputValue) {
             requesterId = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withSourceDestinationCheck(String inputValue) {
+        public Builder withSourceDestinationCheck(String inputValue) {
             sourceDestinationCheck = InputsUtil.getRelevantBooleanString(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withSpotInstanceRequestId(String inputValue) {
+        public Builder withSpotInstanceRequestId(String inputValue) {
             spotInstanceRequestId = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withTenancy(String inputValue) throws Exception {
+        public Builder withTenancy(String inputValue) throws Exception {
             tenancy = Tenancy.getValue(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPublicIp(String inputValue) {
+        public Builder withPublicIp(String inputValue) {
             publicIp = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withIpOwnerId(String inputValue) {
+        public Builder withIpOwnerId(String inputValue) {
             ipOwnerId = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withInstanceInitiatedShutdownBehavior(String inputValue) throws Exception {
+        public Builder withInstanceInitiatedShutdownBehavior(String inputValue) throws Exception {
             instanceInitiatedShutdownBehavior = InstanceInitiatedShutdownBehavior.getValue(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withUserData(String inputValue) {
+        public Builder withUserData(String inputValue) {
             userData = inputValue;
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withMinCount(String inputValue) {
+        public Builder withMinCount(String inputValue) {
             minCount = InputsUtil.getValidInstancesCount(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withMaxCount(String inputValue) {
+        public Builder withMaxCount(String inputValue) {
             maxCount = InputsUtil.getValidInstancesCount(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withCheckStateTimeout(String inputValue) {
+        public Builder withCheckStateTimeout(String inputValue) {
             checkStateTimeout = InputsUtil.getValidLong(inputValue, DEFAULT_CHECK_STATE_TIMEOUT);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withPolingInterval(String inputValue) {
+        public Builder withPolingInterval(String inputValue) {
             polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_POLING_INTERVAL);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withDisableApiTermination(String inputValue) {
+        public Builder withDisableApiTermination(String inputValue) {
             disableApiTermination = Boolean.parseBoolean(inputValue);
             return this;
         }
 
-        public InstanceInputs.InstanceInputsBuilder withMonitoring(String inputValue) {
-            monitoring = Boolean.parseBoolean(inputValue);
+        public Builder withMonitoring(String inputValue) {
+            monitoring = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            return this;
+        }
+
+        public Builder withForceStop(String inputValue) {
+            forceStop = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
     }

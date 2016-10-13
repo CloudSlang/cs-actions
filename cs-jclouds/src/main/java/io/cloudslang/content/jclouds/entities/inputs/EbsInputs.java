@@ -19,7 +19,7 @@ public class EbsInputs {
 
     private boolean ebsOptimized;
 
-    private EbsInputs(EbsInputs.EbsInputsBuilder builder) {
+    private EbsInputs(Builder builder) {
         this.blockDeviceMappingDeviceNamesString = builder.blockDeviceMappingDeviceNamesString;
         this.blockDeviceMappingVirtualNamesString = builder.blockDeviceMappingVirtualNamesString;
         this.deleteOnTerminationsString = builder.deleteOnTerminationsString;
@@ -68,7 +68,7 @@ public class EbsInputs {
         return ebsOptimized;
     }
 
-    public static class EbsInputsBuilder {
+    public static class Builder {
         private String blockDeviceMappingDeviceNamesString;
         private String blockDeviceMappingVirtualNamesString;
         private String deleteOnTerminationsString;
@@ -84,47 +84,47 @@ public class EbsInputs {
             return new EbsInputs(this);
         }
 
-        public EbsInputs.EbsInputsBuilder withBlockDeviceMappingDeviceNamesString(String inputValue) {
+        public Builder withBlockDeviceMappingDeviceNamesString(String inputValue) {
             blockDeviceMappingDeviceNamesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withBlockDeviceMappingVirtualNamesString(String inputValue) {
+        public Builder withBlockDeviceMappingVirtualNamesString(String inputValue) {
             blockDeviceMappingVirtualNamesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withDeleteOnTerminationsString(String inputValue) {
+        public Builder withDeleteOnTerminationsString(String inputValue) {
             deleteOnTerminationsString = inputValue;
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withEncryptedString(String inputValue) {
+        public Builder withEncryptedString(String inputValue) {
             encryptedString = inputValue;
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withIopsString(String inputValue) {
+        public Builder withIopsString(String inputValue) {
             iopsString = inputValue;
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withSnapshotIdsString(String inputValue) {
+        public Builder withSnapshotIdsString(String inputValue) {
             snapshotIdsString = inputValue;
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withVolumeSizesString(String inputValue) {
+        public Builder withVolumeSizesString(String inputValue) {
             volumeSizesString = inputValue;
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withVolumeTypesString(String inputValue) {
+        public Builder withVolumeTypesString(String inputValue) {
             volumeTypesString = inputValue;
             return this;
         }
 
-        public EbsInputs.EbsInputsBuilder withEbsOptimized(String inputValue) {
+        public Builder withEbsOptimized(String inputValue) {
             ebsOptimized = Boolean.parseBoolean(inputValue);
             return this;
         }

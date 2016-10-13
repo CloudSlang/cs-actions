@@ -110,7 +110,7 @@ public class CreateNetworkInterfaceAction {
                                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION, required = true) String networkInterfaceDescription,
                                                       @Param(value = Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
-            CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -129,18 +129,18 @@ public class CreateNetworkInterfaceAction {
                     .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.CustomInputsBuilder().withSubnetId(subnetId).build();
+            CustomInputs customInputs = new CustomInputs.Builder().withSubnetId(subnetId).build();
 
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.ElasticIpInputsBuilder()
+            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder()
                     .withPrivateIpAddress(privateIpAddress)
                     .withPrivateIpAddressesString(privateIpAddressesString)
                     .build();
 
-            IamInputs iamInputs = new IamInputs.IamInputsBuilder()
+            IamInputs iamInputs = new IamInputs.Builder()
                     .withSecurityGroupIdsString(securityGroupIdsString)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.NetworkInputsBuilder()
+            NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceDescription(networkInterfaceDescription)
                     .withSecondaryPrivateIpAddressCount(secondaryPrivateIpAddressCount)
                     .build();

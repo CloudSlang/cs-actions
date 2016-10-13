@@ -11,7 +11,7 @@ public class IamInputs {
     private String securityGroupIdsString;
     private String securityGroupNamesString;
 
-    private IamInputs(IamInputs.IamInputsBuilder builder) {
+    private IamInputs(Builder builder) {
         this.iamInstanceProfileArn = builder.iamInstanceProfileArn;
         this.iamInstanceProfileName = builder.iamInstanceProfileName;
         this.keyPairName = builder.keyPairName;
@@ -39,7 +39,7 @@ public class IamInputs {
         return securityGroupNamesString;
     }
 
-    public static class IamInputsBuilder {
+    public static class Builder {
         private String iamInstanceProfileArn;
         private String iamInstanceProfileName;
         private String keyPairName;
@@ -50,27 +50,27 @@ public class IamInputs {
             return new IamInputs(this);
         }
 
-        public IamInputs.IamInputsBuilder withIamInstanceProfileArn(String inputValue) {
+        public Builder withIamInstanceProfileArn(String inputValue) {
             iamInstanceProfileArn = inputValue;
             return this;
         }
 
-        public IamInputs.IamInputsBuilder withIamInstanceProfileName(String inputValue) {
+        public Builder withIamInstanceProfileName(String inputValue) {
             iamInstanceProfileName = inputValue;
             return this;
         }
 
-        public IamInputs.IamInputsBuilder withKeyPairName (String inputValue) {
+        public Builder withKeyPairName (String inputValue) {
             keyPairName = inputValue;
             return this;
         }
 
-        public IamInputs.IamInputsBuilder withSecurityGroupIdsString(String inputValue) {
+        public Builder withSecurityGroupIdsString(String inputValue) {
             securityGroupIdsString = inputValue;
             return this;
         }
 
-        public IamInputs.IamInputsBuilder withSecurityGroupNamesString(String inputValue) {
+        public Builder withSecurityGroupNamesString(String inputValue) {
             securityGroupNamesString = inputValue;
             return this;
         }

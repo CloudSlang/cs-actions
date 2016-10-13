@@ -8,9 +8,6 @@ import io.cloudslang.content.jclouds.services.JCloudsService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.domain.Location;
-import org.jclouds.ec2.domain.Reservation;
-import org.jclouds.ec2.domain.RunningInstance;
-import org.jclouds.ec2.options.RunInstancesOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +18,6 @@ import java.util.Set;
 public class ComputeServiceImpl extends JCloudsService implements ComputeService {
     private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
             "providers in the provider input";
-    private static final String SERVER_REMOVED = "Server Removed";
     private static final String SLASH = "/";
 
     org.jclouds.compute.ComputeService computeService = null;
@@ -55,27 +51,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
         }
     }
 
-    @Override
-    public String terminateInstances(String region, String serverId, boolean isDebugMode) {
-        lazyInit(region, isDebugMode);
-        computeService.destroyNode(serverId);
-        return SERVER_REMOVED;
-    }
-
-    @Override
-    public String startInstances(String region, String serverId, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
-    @Override
-    public String stopInstances(String region, String serverId, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
-    public void rebootInstances(String region, String serverId, boolean isDebugMode) {
-        reboot(region, serverId, isDebugMode);
-    }
-
     public Set<String> describeRegions(boolean isDebugMode) {
         lazyInit(isDebugMode);
         Set<? extends Location> locationsSet = computeService.listAssignableLocations();
@@ -90,14 +65,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
     @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
                                      long polingInterval, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    }
-
-    @Override
-    public Reservation<? extends RunningInstance> runInstancesInRegion(String region, String availabilityZone,
-                                                                       String imageId, int minCount, int maxCount,
-                                                                       boolean isDebugMode, RunInstancesOptions... options)
-            throws Exception {
         throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
