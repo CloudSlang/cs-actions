@@ -1,6 +1,5 @@
 package io.cloudslang.content.jclouds.factory.helpers;
 
-import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
@@ -13,6 +12,10 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsPara
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.RESOURCE_IDS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
 
 /**
  * Created by TusaM
@@ -31,7 +34,7 @@ public class TagUtils {
         String[] resourceIdsArray = InputsUtil.getStringsArray(wrapper.getCustomInputs().getResourceIdsString(),
                 EMPTY, wrapper.getCommonInputs().getDelimiter());
         InputsUtil.validateArrayAgainstDuplicateElements(resourceIdsArray, wrapper.getCustomInputs().getResourceIdsString(),
-                wrapper.getCommonInputs().getDelimiter(), Inputs.CustomInputs.RESOURCE_IDS_STRING);
+                wrapper.getCommonInputs().getDelimiter(), RESOURCE_IDS_STRING);
 
         if (resourceIdsArray != null && resourceIdsArray.length > START_INDEX) {
             for (int index = START_INDEX; index < resourceIdsArray.length; index++) {
@@ -47,8 +50,7 @@ public class TagUtils {
     private void setResourcesTags(Map<String, String> queryParamsMap, String keyTagsString, String valueTagsString, String delimiter) {
         String[] keyTagsStringArray = InputsUtil.getStringsArray(keyTagsString, EMPTY, delimiter);
         String[] valueTagsStringArray = InputsUtil.getStringsArray(valueTagsString, EMPTY, delimiter);
-        InputsUtil.validateAgainstDifferentArraysLength(keyTagsStringArray, valueTagsStringArray, Inputs.CustomInputs.KEY_TAGS_STRING,
-                Inputs.CustomInputs.VALUE_TAGS_STRING);
+        InputsUtil.validateAgainstDifferentArraysLength(keyTagsStringArray, valueTagsStringArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
 
         if (keyTagsStringArray != null && keyTagsStringArray.length > START_INDEX
                 && valueTagsStringArray != null && valueTagsStringArray.length > START_INDEX) {
@@ -58,9 +60,9 @@ public class TagUtils {
             }
 
             for (int index = START_INDEX; index < keyTagsStringArray.length; index++) {
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(KEY, index), keyTagsStringArray[index]);
+                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(KEY, index), InputsUtil.getValidKeyOrValueTag(keyTagsStringArray[index], true));
                 String currentValue = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ? EMPTY : valueTagsStringArray[index];
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUE, index), currentValue);
+                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUE, index), InputsUtil.getValidKeyOrValueTag(currentValue, false));
             }
         }
     }

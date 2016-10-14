@@ -3,10 +3,11 @@ package io.cloudslang.content.jclouds.factory;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.factory.helpers.*;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.QueryApiActions.*;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.AMPERSAND;
@@ -24,7 +25,7 @@ public class ParamsMapBuilder {
 
     public static Map<String, String> getParamsMap(InputsWrapper wrapper) throws Exception {
         Map<String, String> queryParamsMap;
-        if (StringUtils.isBlank(wrapper.getCommonInputs().getQueryParams())) {
+        if (isBlank(wrapper.getCommonInputs().getQueryParams())) {
             switch (wrapper.getCommonInputs().getAction()) {
                 case ALLOCATE_ADDRESS:
                     queryParamsMap = new ElasticIpUtils().getAllocateAddressQueryParamsMap(wrapper);

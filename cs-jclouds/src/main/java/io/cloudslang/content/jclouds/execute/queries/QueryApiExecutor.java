@@ -8,12 +8,13 @@ import io.cloudslang.content.jclouds.factory.InputsWrapperBuilder;
 import io.cloudslang.content.jclouds.factory.ParamsMapBuilder;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.AMPERSAND;
@@ -30,8 +31,7 @@ public class QueryApiExecutor {
         InputsWrapper inputs = InputsWrapperBuilder.getWrapper(commonInputs, builders);
         Map<String, String> queryParamsMap = ParamsMapBuilder.getParamsMap(inputs);
 
-        Map<String, String> headersMap = StringUtils.isBlank(inputs.getCommonInputs().getHeaders()) ?
-                new HashMap<String, String>() :
+        Map<String, String> headersMap = isBlank(inputs.getCommonInputs().getHeaders()) ? new HashMap<String, String>() :
                 InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), inputs.getCommonInputs().getHeaders(),
                         HEADER_DELIMITER, COLON, true);
 

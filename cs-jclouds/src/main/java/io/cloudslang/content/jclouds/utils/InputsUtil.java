@@ -2,7 +2,6 @@ package io.cloudslang.content.jclouds.utils;
 
 import io.cloudslang.content.jclouds.entities.aws.InstanceState;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
@@ -13,7 +12,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.split;
 
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
 
@@ -120,18 +121,18 @@ public final class InputsUtil {
         if (condition.equals(input)) {
             return null;
         }
-        return StringUtils.split(input, delimiter);
+        return split(input, delimiter);
     }
 
     public static Set<String> getStringsSet(String input, String delimiter) {
-        if (StringUtils.isBlank(input)) {
+        if (isBlank(input)) {
             return null;
         }
         return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
     }
 
     public static String getDefaultStringInput(String input, String defaultValue) {
-        return StringUtils.isBlank(input) ? defaultValue : input;
+        return isBlank(input) ? defaultValue : input;
     }
 
     public static int getValidInstanceStateCode(String input) {
@@ -147,7 +148,7 @@ public final class InputsUtil {
 
     public static void validateArrayAgainstDuplicateElements(String[] toBeValidated, String inputString, String delimiter,
                                                              String inputName) {
-        if (toBeValidated != null && StringUtils.isNotBlank(inputString)) {
+        if (toBeValidated != null && isNotBlank(inputString)) {
             Set<String> stringSet = getStringsSet(inputString, delimiter);
             if (stringSet != null && toBeValidated.length != stringSet.size()) {
                 throw new RuntimeException("The value provided for: " + inputName + " input contain duplicate elements. " +
@@ -167,26 +168,26 @@ public final class InputsUtil {
 
     public static void setNetworkInterfaceSpecificQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper,
                                                               String[] referenceArray, int index) {
-        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription())) {
+        if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription())) {
             setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DESCRIPTION, DESCRIPTION, wrapper.getCommonInputs().getDelimiter(), index);
         }
-        if (StringUtils.isNotBlank(wrapper.getCustomInputs().getSubnetId())) {
+        if (isNotBlank(wrapper.getCustomInputs().getSubnetId())) {
             setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getCustomInputs().getSubnetId(),
                     PRIVATE_IP_ADDRESSES_STRING, SUBNET_ID_INPUT, SUBNET_ID, wrapper.getCommonInputs().getDelimiter(), index);
         }
-        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString())) {
+        if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString())) {
             setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS, ASSOCIATE_PUBLIC_IP_ADDRESS,
                     wrapper.getCommonInputs().getDelimiter(), index, false);
         }
-        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination())) {
+        if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination())) {
             setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DELETE_ON_TERMINATION, DELETE_ON_TERMINATION,
                     wrapper.getCommonInputs().getDelimiter(), index, true);
         }
 
-        if (StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex())) {
+        if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex())) {
             setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DEVICE_INDEX, DEVICE_INDEX, wrapper.getCommonInputs().getDelimiter(), index);
         } else {
@@ -214,7 +215,7 @@ public final class InputsUtil {
     }
 
     public static long getValidLong(String input, long defaultValue) {
-        if (StringUtils.isBlank(input)) {
+        if (isBlank(input)) {
             return defaultValue;
         }
         try {
@@ -229,13 +230,13 @@ public final class InputsUtil {
     }
 
     public static int getValidInstancesCount(String input) {
-        return StringUtils.isBlank(input) ? MINIMUM_INSTANCES_NUMBER :
+        return isBlank(input) ? MINIMUM_INSTANCES_NUMBER :
                 getValidInt(input, MINIMUM_INSTANCES_NUMBER, MAXIMUM_INSTANCES_NUMBER, getValidationException(input, true),
                         getValidationException(input, false));
     }
 
     public static String getRelevantBooleanString(String input) {
-        if (StringUtils.isNotBlank(input)
+        if (isNotBlank(input)
                 && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
             return input.toLowerCase();
         }
@@ -243,7 +244,7 @@ public final class InputsUtil {
     }
 
     public static String getValidVolumeAmount(String input) {
-        if (StringUtils.isBlank(input)) {
+        if (isBlank(input)) {
             return NOT_RELEVANT;
         }
         try {
@@ -258,7 +259,7 @@ public final class InputsUtil {
         }
     }
 
-    public static String getValidKeyOrValueTag(String input, int validLength, boolean isKey) {
+    public static String getValidKeyOrValueTag(String input, boolean isKey) {
         if (isKey && (input.startsWith(EXCEPTED_KEY_STRING) || input.length() > KEY_TAG_LENGTH_CONSTRAIN)) {
             throw new RuntimeException(getValidationException(input, false));
         } else if (!isKey && input.length() > VALUE_TAG_LENGTH_CONSTRAIN) {
@@ -301,7 +302,7 @@ public final class InputsUtil {
     }
 
     public static String getValidIPv4Address(String input) {
-        if (StringUtils.isNotBlank(input) && !isValidIPv4Address(input)) {
+        if (isNotBlank(input) && !isValidIPv4Address(input)) {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid IPv4 address.");
         }
         return input;
@@ -313,23 +314,23 @@ public final class InputsUtil {
         }
         switch (ebsType) {
             case STANDARD:
-                return (StringUtils.isBlank(input)) ? String.valueOf(ONE) :
+                return (isBlank(input)) ? String.valueOf(ONE) :
                         String.valueOf(getValidInt(input, ONE, MAXIMUM_STANDARD_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case IO1:
-                return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_IO1_EBS_SIZE) :
+                return isBlank(input) ? String.valueOf(MINIMUM_IO1_EBS_SIZE) :
                         String.valueOf(getValidInt(input, MINIMUM_IO1_EBS_SIZE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case GP2:
-                return StringUtils.isBlank(input) ? String.valueOf(ONE) :
+                return isBlank(input) ? String.valueOf(ONE) :
                         String.valueOf(getValidInt(input, ONE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case SC1:
-                return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                return isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
                         String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case ST1:
-                return StringUtils.isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                return isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
                         String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             default:
@@ -339,7 +340,7 @@ public final class InputsUtil {
     }
 
     public static String getValidPositiveIntegerAsStringValue(String input, int minimumValue) {
-        return StringUtils.isBlank(input) ? EMPTY :
+        return isBlank(input) ? EMPTY :
                 String.valueOf(getValidInt(input, minimumValue, Integer.MAX_VALUE,
                         getValidationException(input, true), getValidationException(input, false)));
 

@@ -13,7 +13,6 @@ public class ImageInputs {
     private CustomInputs customInputs;
 
     private String imageName;
-    private String imageDescription;
     private String imageIdsString;
     private String ownersString;
     private String userIdsString;
@@ -30,7 +29,6 @@ public class ImageInputs {
         this.customInputs = builder.customInputs;
 
         this.imageName = builder.imageName;
-        this.imageDescription = builder.imageDescription;
         this.imageIdsString = builder.imageIdsString;
         this.ownersString = builder.ownersString;
         this.userIdsString = builder.userIdsString;
@@ -50,10 +48,6 @@ public class ImageInputs {
 
     public String getImageName() {
         return imageName;
-    }
-
-    public String getImageDescription() {
-        return imageDescription;
     }
 
     public String getImageIdsString() {
@@ -100,7 +94,6 @@ public class ImageInputs {
         private CustomInputs customInputs;
 
         private String imageName;
-        private String imageDescription;
         private String imageIdsString;
         private String ownersString;
         private String userIdsString;
@@ -134,11 +127,6 @@ public class ImageInputs {
 
         public Builder withOwnersString(String inputValue) {
             ownersString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
-            return this;
-        }
-
-        public Builder withImageDescription(String inputValue) {
-            imageDescription = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
             return this;
         }
 
