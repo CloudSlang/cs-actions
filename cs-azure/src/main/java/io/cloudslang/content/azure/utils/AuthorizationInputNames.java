@@ -5,7 +5,7 @@ import io.cloudslang.content.constants.InputNames;
 /**
  * Created by victor on 28.09.2016.
  */
-public class AuthorizationInputNames extends InputNames {
+public final class AuthorizationInputNames extends InputNames {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String CLIENT_ID = "clientId";
