@@ -1,12 +1,19 @@
 package io.cloudslang.content.jclouds.utils;
 
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.ONE;
 
 /**
  * Created by Mihai Tusa.
@@ -25,26 +32,26 @@ public class OutputsUtil {
     }
 
     public static String getElementsString(Set<String> elements, String delimiter) {
-        if (elements.size() > Constants.Values.START_INDEX) {
-            int index = Constants.Values.START_INDEX;
+        if (elements.size() > START_INDEX) {
+            int index = START_INDEX;
             StringBuilder sb = new StringBuilder();
             for (String element : elements) {
                 sb.append(element);
-                if (index < elements.size() - Constants.Values.ONE) {
+                if (index < elements.size() - ONE) {
                     sb.append(delimiter);
                 }
                 index++;
             }
             return sb.toString();
         }
-        return Constants.Miscellaneous.EMPTY;
+        return EMPTY;
     }
 
     public static Map<String, String> populateSignatureResultsMap(AuthorizationHeader authorizationHeader) {
         Map<String, String> signatureReturnResultMap = getResultsMap(authorizationHeader.getSignature());
 
-        signatureReturnResultMap.put(Constants.AwsParams.SIGNATURE_RESULT, authorizationHeader.getSignature());
-        signatureReturnResultMap.put(Constants.AwsParams.AUTHORIZATION_HEADER_RESULT, authorizationHeader.getAuthorizationHeader());
+        signatureReturnResultMap.put(SIGNATURE_RESULT, authorizationHeader.getSignature());
+        signatureReturnResultMap.put(AUTHORIZATION_HEADER_RESULT, authorizationHeader.getAuthorizationHeader());
 
         return signatureReturnResultMap;
     }

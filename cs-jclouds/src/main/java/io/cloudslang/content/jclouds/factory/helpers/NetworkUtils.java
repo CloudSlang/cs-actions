@@ -1,7 +1,5 @@
 package io.cloudslang.content.jclouds.factory.helpers;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +7,27 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.ALLOCATION_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DESCRIPTION;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DEVICE_INDEX;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.FORCE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.INSTANCE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.NETWORK_INTERFACE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.PRIMARY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.PRIVATE_IP_ADDRESS;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.PUBLIC_IP;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SUBNET_ID;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NETWORK;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.ONE;
 
 /**
  * Created by Mihai Tusa.
@@ -25,20 +44,16 @@ public class NetworkUtils {
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.ALLOCATION_ID,
-                wrapper.getCustomInputs().getAllocationId(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ALLOCATION_ID, wrapper.getCustomInputs().getAllocationId(),
                 StringUtils.isNotBlank(wrapper.getCustomInputs().getAllocationId()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, ALLOW_REASSOCIATION,
                 String.valueOf(wrapper.getElasticIpInputs().isAllowReassociation()),
                 wrapper.getElasticIpInputs().isAllowReassociation());
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.PRIVATE_IP_ADDRESS,
-                wrapper.getElasticIpInputs().getPrivateIpAddress(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, PRIVATE_IP_ADDRESS, wrapper.getElasticIpInputs().getPrivateIpAddress(),
                 StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddress()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.PUBLIC_IP,
-                wrapper.getElasticIpInputs().getPublicIp(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
                 StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.NETWORK_INTERFACE_ID,
-                wrapper.getNetworkInputs().getNetworkInterfaceId(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId(),
                 StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceId()));
 
         return queryParamsMap;
@@ -48,9 +63,9 @@ public class NetworkUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(Constants.AwsParams.INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
-        queryParamsMap.put(Constants.AwsParams.NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
-        queryParamsMap.put(Constants.AwsParams.DEVICE_INDEX, wrapper.getNetworkInputs().getDeviceIndex());
+        queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
+        queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
+        queryParamsMap.put(DEVICE_INDEX, wrapper.getNetworkInputs().getDeviceIndex());
 
         return queryParamsMap;
     }
@@ -59,26 +74,22 @@ public class NetworkUtils {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(Constants.AwsParams.SUBNET_ID, wrapper.getCustomInputs().getSubnetId());
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.DESCRIPTION,
-                wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
+        queryParamsMap.put(SUBNET_ID, wrapper.getCustomInputs().getSubnetId());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
                 StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription()));
 
         String privateIpAddress = InputsUtil.getValidIPv4Address(wrapper.getElasticIpInputs().getPrivateIpAddress());
-        InputsUtil.setOptionalMapEntry(queryParamsMap,
-                InputsUtil.getQueryParamsSpecificString(Constants.Miscellaneous.NETWORK, Constants.Values.START_INDEX) +
-                        Constants.AwsParams.PRIMARY, Boolean.TRUE.toString().toLowerCase(), StringUtils.isNotBlank(privateIpAddress));
-        InputsUtil.setOptionalMapEntry(queryParamsMap,
-                InputsUtil.getQueryParamsSpecificString(Constants.Miscellaneous.NETWORK, Constants.Values.START_INDEX) +
-                        Constants.AwsParams.PRIVATE_IP_ADDRESS, privateIpAddress, StringUtils.isNotBlank(privateIpAddress));
-        InputsUtil.setOptionalMapEntry(queryParamsMap,
-                InputsUtil.getQueryParamsSpecificString(Constants.Miscellaneous.NETWORK, Constants.Values.START_INDEX) +
-                        Constants.AwsParams.PRIVATE_IP_ADDRESS, privateIpAddress, StringUtils.isNotBlank(privateIpAddress));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(NETWORK, START_INDEX) + PRIMARY,
+                Boolean.TRUE.toString().toLowerCase(), StringUtils.isNotBlank(privateIpAddress));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(NETWORK, START_INDEX) + PRIVATE_IP_ADDRESS,
+                privateIpAddress, StringUtils.isNotBlank(privateIpAddress));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(NETWORK, START_INDEX) + PRIVATE_IP_ADDRESS,
+                privateIpAddress, StringUtils.isNotBlank(privateIpAddress));
 
-        setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, Constants.Miscellaneous.NETWORK, wrapper.getCommonInputs().getDelimiter());
+        setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, NETWORK, wrapper.getCommonInputs().getDelimiter());
         setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
         new IamUtils().setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
-                Constants.AwsParams.SECURITY_GROUP_ID, Constants.Miscellaneous.EMPTY, wrapper.getCommonInputs().getDelimiter());
+                SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
 
         return queryParamsMap;
     }
@@ -87,7 +98,7 @@ public class NetworkUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(Constants.AwsParams.NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
+        queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
 
         return queryParamsMap;
     }
@@ -98,8 +109,7 @@ public class NetworkUtils {
                 wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTACHMENT_ID, wrapper.getCustomInputs().getAttachmentId());
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.FORCE, String.valueOf(Constants.Values.ONE),
-                wrapper.getNetworkInputs().isForceDetach());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(ONE), wrapper.getNetworkInputs().isForceDetach());
 
         return queryParamsMap;
     }
@@ -110,7 +120,7 @@ public class NetworkUtils {
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, ASSOCIATION_ID, wrapper.getCustomInputs().getAssociationId(),
                 StringUtils.isNotBlank(wrapper.getCustomInputs().getAssociationId()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
                 StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
 
         return queryParamsMap;
@@ -120,29 +130,23 @@ public class NetworkUtils {
                                           String delimiter) {
         if (StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddressesString())) {
             String[] privateIpAddressesArray = InputsUtil.getStringsArray(wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
-                    Constants.Miscellaneous.EMPTY, delimiter);
+                    EMPTY, delimiter);
             InputsUtil.validateArrayAgainstDuplicateElements(privateIpAddressesArray, wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
-                    wrapper.getCommonInputs().getDelimiter(), Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING);
-            if (privateIpAddressesArray != null && privateIpAddressesArray.length > Constants.Values.START_INDEX) {
-                for (int index = Constants.Values.START_INDEX; index < privateIpAddressesArray.length; index++) {
+                    wrapper.getCommonInputs().getDelimiter(), PRIVATE_IP_ADDRESSES_STRING);
+            if (privateIpAddressesArray != null && privateIpAddressesArray.length > START_INDEX) {
+                for (int index = START_INDEX; index < privateIpAddressesArray.length; index++) {
                     privateIpAddressesArray[index] = InputsUtil.getValidIPv4Address(privateIpAddressesArray[index]);
-                    if (index == Constants.Values.START_INDEX
-                            && !queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(specificArea,
-                            Constants.Values.START_INDEX) + Constants.AwsParams.PRIMARY)
+                    if (index == START_INDEX
+                            && !queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(specificArea, START_INDEX) + PRIMARY)
                             && !queryParamsMap.containsValue(Boolean.TRUE.toString().toLowerCase())) {
-                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, index) +
-                                Constants.AwsParams.PRIMARY, Boolean.TRUE.toString().toLowerCase());
-                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, index) +
-                                Constants.AwsParams.PRIVATE_IP_ADDRESS, privateIpAddressesArray[index]);
+                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, index) + PRIMARY, Boolean.TRUE.toString().toLowerCase());
+                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, index) + PRIVATE_IP_ADDRESS, privateIpAddressesArray[index]);
                     } else {
-                        int startIndex = Constants.AwsParams.NETWORK_INTERFACE.equalsIgnoreCase(specificArea) ?
-                                index : index + Constants.Values.ONE;
-                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, startIndex) +
-                                Constants.AwsParams.PRIMARY, Boolean.FALSE.toString().toLowerCase());
-                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, startIndex) +
-                                Constants.AwsParams.PRIVATE_IP_ADDRESS, privateIpAddressesArray[index]);
+                        int startIndex = NETWORK_INTERFACE.equalsIgnoreCase(specificArea) ? index : index + ONE;
+                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, startIndex) + PRIMARY, Boolean.FALSE.toString().toLowerCase());
+                        queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, startIndex) + PRIVATE_IP_ADDRESS, privateIpAddressesArray[index]);
                     }
-                    if (Constants.AwsParams.NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
+                    if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
                         InputsUtil.setNetworkInterfaceSpecificQueryParams(queryParamsMap, wrapper, privateIpAddressesArray, index);
                     }
                 }
@@ -151,8 +155,7 @@ public class NetworkUtils {
     }
 
     void setSecondaryPrivateIpAddressCountQueryParams(Map<String, String> queryParamsMap, String inputString) {
-        if (!queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(Constants.Miscellaneous.NETWORK, Constants.Values.ONE) +
-                Constants.AwsParams.PRIMARY)
+        if (!queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(NETWORK, ONE) + PRIMARY)
                 && !queryParamsMap.containsValue(Boolean.FALSE.toString().toLowerCase())) {
             InputsUtil.setOptionalMapEntry(queryParamsMap, SECONDARY_PRIVATE_IP_ADDRESS_COUNT, inputString,
                     StringUtils.isNotBlank(inputString));

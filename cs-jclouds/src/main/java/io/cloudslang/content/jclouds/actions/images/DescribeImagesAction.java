@@ -6,8 +6,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
@@ -16,6 +14,56 @@ import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.VERSION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.DELIMITER;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.ARCHITECTURE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.BLOCK_MAPPING_DEVICE_NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.DELETE_ON_TERMINATION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.HYPERVISOR;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.IDENTITY_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.IMAGE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.KERNEL_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.OWNER_ALIAS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.OWNER_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.PLATFORM;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.PRODUCT_CODE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.PRODUCT_CODE_TYPE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.RAMDISK_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.ROOT_DEVICE_NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.ROOT_DEVICE_TYPE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.STATE_REASON_CODE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.STATE_REASON_MESSAGE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.VIRTUALIZATION_TYPE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.VOLUME_SIZE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.VOLUME_TYPE;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.IDS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.IMAGE_DESCRIPTION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.IS_PUBLIC;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.MANIFEST_LOCATION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.OWNERS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.STATE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ImageInputs.TYPE;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.QueryApiActions.DESCRIBE_IMAGES;
 
 /**
  * Created by Mihai Tusa.
@@ -33,13 +81,25 @@ public class DescribeImagesAction {
      * @param identity                     Optional - Username of your account or the Access Key ID.
      * @param credential                   Optional - Password of the user or the Secret Access Key that correspond to
      *                                     the identity input.
+     * @param proxyHost                    Optional - Proxy server used to access the web site. If empty no proxy will be
+     *                                     used.
+     * @param proxyPort                    Optional - Proxy server port - Default: "8080"
+     * @param proxyUsername                Optional - proxy server user name.
+     * @param proxyPassword                Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param headers                      Optional - string containing the headers to use for the request separated by
+     *                                     new line (CRLF).
+     *                                     The header name-value pair will be separated by ":".
+     *                                     Format: Conforming with HTTP standard for headers (RFC 2616)
+     *                                     Examples: "Accept:text/plain"
+     * @param queryParams                  Optional - string containing query parameters that will be appended to the URL.
+     *                                     The names and the values must not be URL encoded because if they are encoded
+     *                                     then a double encoded will occur. The separator between name-value pairs is
+     *                                     "&" symbol. The query name will be separated from query value by "=".
+     *                                     Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      * @param version                      Version of the web service to made the call against it.
      *                                     Example: "2016-04-01"
      *                                     Default: ""
-     * @param proxyHost                    Optional - Proxy server used to access the web site. If empty no proxy will be used.
-     * @param proxyPort                    Optional - Proxy server port - Default: "8080"
      * @param delimiter                    Optional - Delimiter that will be used - Default: ","
-     * @param debugMode                    Optional - If "true" then the execution logs will be shown in CLI console.
      * @param identityId                   Optional - Scopes the images by users with explicit launch permissions. Specify
      *                                     an AWS account ID, "self" (the sender of the request), or "all" (public AMIs).
      *                                     Valid values: "self", "all" or AWS account ID - Default: ""
@@ -71,7 +131,8 @@ public class DescribeImagesAction {
      *                                     by delimiter - Default: ""
      * @param valueTagsString              Optional - A string that contains: none, one or more tag values separated
      *                                     by delimiter - Default: ""
-     * @param virtualizationType           Optional - virtualization type of the instance - Valid values: "paravirtual", "hvm".
+     * @param virtualizationType           Optional - virtualization type of the instance
+     *                                     Valid values: "paravirtual", "hvm".
      * @param idsString                    Optional - A string that contains: none, one or more image IDs separated by
      *                                     delimiter - Default: ","
      * @param ownersString                 Optional - Filters the images by the owner. Specify an AWS account ID,
@@ -102,62 +163,66 @@ public class DescribeImagesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(value = Inputs.CommonInputs.VERSION, encrypted = true) String version,
-                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
-
-                                       @Param(value = Inputs.CustomInputs.IDENTITY_ID) String identityId,
-                                       @Param(value = Inputs.CustomInputs.ARCHITECTURE) String architecture,
-                                       @Param(value = Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
-                                       @Param(value = Inputs.CustomInputs.BLOCK_MAPPING_DEVICE_NAME) String blockMappingDeviceName,
-                                       @Param(value = Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockDeviceMappingSnapshotId,
-                                       @Param(value = Inputs.CustomInputs.VOLUME_SIZE) String volumeSize,
-                                       @Param(value = Inputs.CustomInputs.VOLUME_TYPE) String volumeType,
-                                       @Param(value = Inputs.CustomInputs.HYPERVISOR) String hypervisor,
-                                       @Param(value = Inputs.CustomInputs.IMAGE_ID) String imageId,
-                                       @Param(value = Inputs.CustomInputs.KERNEL_ID) String kernelId,
-                                       @Param(value = Inputs.CustomInputs.OWNER_ALIAS) String ownerAlias,
-                                       @Param(value = Inputs.CustomInputs.OWNER_ID) String ownerId,
-                                       @Param(value = Inputs.CustomInputs.PLATFORM) String platform,
-                                       @Param(value = Inputs.CustomInputs.PRODUCT_CODE) String productCode,
-                                       @Param(value = Inputs.CustomInputs.PRODUCT_CODE_TYPE) String productCodeType,
-                                       @Param(value = Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
-                                       @Param(value = Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
-                                       @Param(value = Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
-                                       @Param(value = Inputs.CustomInputs.STATE_REASON_CODE) String stateReasonCode,
-                                       @Param(value = Inputs.CustomInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
-                                       @Param(value = Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
-                                       @Param(value = Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
-                                       @Param(value = Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
-
-                                       @Param(value = Inputs.ImageInputs.IMAGE_DESCRIPTION) String description,
-                                       @Param(value = Inputs.ImageInputs.IDS_STRING) String idsString,
-                                       @Param(value = Inputs.ImageInputs.OWNERS_STRING) String ownersString,
-                                       @Param(value = Inputs.ImageInputs.TYPE) String type,
-                                       @Param(value = Inputs.ImageInputs.IS_PUBLIC) String isPublic,
-                                       @Param(value = Inputs.ImageInputs.MANIFEST_LOCATION) String manifestLocation,
-                                       @Param(value = Inputs.ImageInputs.NAME) String name,
-                                       @Param(value = Inputs.ImageInputs.STATE) String state) {
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+                                       @Param(value = IDENTITY) String identity,
+                                       @Param(value = CREDENTIAL, encrypted = true) String credential,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = HEADERS) String headers,
+                                       @Param(value = QUERY_PARAMS) String queryParams,
+                                       @Param(value = VERSION, encrypted = true) String version,
+                                       @Param(value = DELIMITER) String delimiter,
+                                       @Param(value = IDENTITY_ID) String identityId,
+                                       @Param(value = ARCHITECTURE) String architecture,
+                                       @Param(value = DELETE_ON_TERMINATION) String deleteOnTermination,
+                                       @Param(value = BLOCK_MAPPING_DEVICE_NAME) String blockMappingDeviceName,
+                                       @Param(value = BLOCK_DEVICE_MAPPING_SNAPSHOT_ID) String blockDeviceMappingSnapshotId,
+                                       @Param(value = VOLUME_SIZE) String volumeSize,
+                                       @Param(value = VOLUME_TYPE) String volumeType,
+                                       @Param(value = HYPERVISOR) String hypervisor,
+                                       @Param(value = IMAGE_ID) String imageId,
+                                       @Param(value = KERNEL_ID) String kernelId,
+                                       @Param(value = OWNER_ALIAS) String ownerAlias,
+                                       @Param(value = OWNER_ID) String ownerId,
+                                       @Param(value = PLATFORM) String platform,
+                                       @Param(value = PRODUCT_CODE) String productCode,
+                                       @Param(value = PRODUCT_CODE_TYPE) String productCodeType,
+                                       @Param(value = RAMDISK_ID) String ramdiskId,
+                                       @Param(value = ROOT_DEVICE_NAME) String rootDeviceName,
+                                       @Param(value = ROOT_DEVICE_TYPE) String rootDeviceType,
+                                       @Param(value = STATE_REASON_CODE) String stateReasonCode,
+                                       @Param(value = STATE_REASON_MESSAGE) String stateReasonMessage,
+                                       @Param(value = KEY_TAGS_STRING) String keyTagsString,
+                                       @Param(value = VALUE_TAGS_STRING) String valueTagsString,
+                                       @Param(value = VIRTUALIZATION_TYPE) String virtualizationType,
+                                       @Param(value = IMAGE_DESCRIPTION) String description,
+                                       @Param(value = IDS_STRING) String idsString,
+                                       @Param(value = OWNERS_STRING) String ownersString,
+                                       @Param(value = TYPE) String type,
+                                       @Param(value = IS_PUBLIC) String isPublic,
+                                       @Param(value = MANIFEST_LOCATION) String manifestLocation,
+                                       @Param(value = NAME) String name,
+                                       @Param(value = STATE) String state) {
         try {
-            CommonInputs inputs = new CommonInputs.Builder()
+            CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
-                    .withDelimiter(delimiter)
-                    .withDebugMode(debugMode)
+                    .withProxyUsername(proxyUsername)
+                    .withProxyPassword(proxyPassword)
+                    .withHeaders(headers)
+                    .withQueryParams(queryParams)
                     .withVersion(version)
-                    .withAction(Constants.QueryApiActions.DESCRIBE_IMAGES)
-                    .withApiService(Constants.Apis.AMAZON_EC2_API)
-                    .withRequestUri(Constants.Miscellaneous.EMPTY)
-                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
+                    .withDelimiter(delimiter)
+                    .withAction(DESCRIBE_IMAGES)
+                    .withApiService(AMAZON_EC2_API)
+                    .withRequestUri(EMPTY)
+                    .withRequestPayload(EMPTY)
+                    .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder()
@@ -187,7 +252,6 @@ public class DescribeImagesAction {
                     .build();
 
             ImageInputs imageInputs = new ImageInputs.Builder()
-                    .withCustomInputs(customInputs)
                     .withDescription(description)
                     .withImageIdsString(idsString)
                     .withOwnersString(ownersString)
@@ -198,7 +262,7 @@ public class DescribeImagesAction {
                     .withState(state)
                     .build();
 
-            return new QueryApiExecutor().execute(inputs, imageInputs);
+            return new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

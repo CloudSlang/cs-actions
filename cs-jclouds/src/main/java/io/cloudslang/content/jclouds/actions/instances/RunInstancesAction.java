@@ -6,14 +6,74 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.*;
 import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.VERSION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.DELIMITER;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.HOST_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.IMAGE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.INSTANCE_TYPE;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.KERNEL_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.RAMDISK_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.SUBNET_ID;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.DELETE_ON_TERMINATIONS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.EBS_OPTIMIZED;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.ENCRYPTED_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.IOPS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.SNAPSHOT_IDS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.VOLUME_SIZES_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.VOLUME_TYPES_STRING;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.IamInputs.IAM_INSTANCE_PROFILE_ARN;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.IamInputs.IAM_INSTANCE_PROFILE_NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.IamInputs.KEY_PAIR_NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.IamInputs.SECURITY_GROUP_NAMES_STRING;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.AFFINITY;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.CLIENT_TOKEN;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.DISABLE_API_TERMINATION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.MAX_COUNT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.MIN_COUNT;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.MONITORING;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.PLACEMENT_GROUP_NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.TENANCY;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.USER_DATA;
+
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.QueryApiActions.RUN_INSTANCES;
 
 /**
  * Created by Mihai Tusa.
@@ -339,62 +399,56 @@ public class RunInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> runInstances(@Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                            @Param(value = Inputs.CommonInputs.IDENTITY, required = true) String identity,
-                                            @Param(value = Inputs.CommonInputs.CREDENTIAL, required = true, encrypted = true) String credential,
-                                            @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                            @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                            @Param(value = Inputs.CommonInputs.PROXY_USERNAME) String proxyUsername,
-                                            @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                            @Param(value = Inputs.CommonInputs.HEADERS) String headers,
-                                            @Param(value = Inputs.CommonInputs.QUERY_PARAMS) String queryParams,
-                                            @Param(value = Inputs.CommonInputs.VERSION, required = true) String version,
-                                            @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
-
-                                            @Param(value = Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
-                                            @Param(value = Inputs.CustomInputs.HOST_ID) String hostId,
-                                            @Param(value = Inputs.CustomInputs.IMAGE_ID, required = true) String imageId,
-                                            @Param(value = Inputs.CustomInputs.INSTANCE_TYPE) String instanceType,
-                                            @Param(value = Inputs.CustomInputs.KERNEL_ID) String kernelId,
-                                            @Param(value = Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
-                                            @Param(value = Inputs.CustomInputs.SUBNET_ID) String subnetId,
-
-                                            @Param(value = Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING) String blockDeviceMappingDeviceNamesString,
-                                            @Param(value = Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING) String blockDeviceMappingVirtualNamesString,
-                                            @Param(value = Inputs.EbsInputs.DELETE_ON_TERMINATIONS_STRING) String deleteOnTerminationsString,
-                                            @Param(value = Inputs.EbsInputs.EBS_OPTIMIZED) String ebsOptimized,
-                                            @Param(value = Inputs.EbsInputs.ENCRYPTED_STRING) String encryptedString,
-                                            @Param(value = Inputs.EbsInputs.IOPS_STRING) String iopsString,
-                                            @Param(value = Inputs.EbsInputs.SNAPSHOT_IDS_STRING) String snapshotIdsString,
-                                            @Param(value = Inputs.EbsInputs.VOLUME_SIZES_STRING) String volumeSizesString,
-                                            @Param(value = Inputs.EbsInputs.VOLUME_TYPES_STRING) String volumeTypesString,
-
-                                            @Param(value = Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
-                                            @Param(value = Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING) String privateIpAddressesString,
-
-                                            @Param(value = Inputs.IamInputs.IAM_INSTANCE_PROFILE_ARN) String iamInstanceProfileArn,
-                                            @Param(value = Inputs.IamInputs.IAM_INSTANCE_PROFILE_NAME) String iamInstanceProfileName,
-                                            @Param(value = Inputs.IamInputs.KEY_PAIR_NAME) String keyPairName,
-                                            @Param(value = Inputs.IamInputs.SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
-                                            @Param(value = Inputs.IamInputs.SECURITY_GROUP_NAMES_STRING) String securityGroupNamesString,
-
-                                            @Param(value = Inputs.InstanceInputs.AFFINITY) String affinity,
-                                            @Param(value = Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
-                                            @Param(value = Inputs.InstanceInputs.DISABLE_API_TERMINATION) String disableApiTermination,
-                                            @Param(value = Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
-                                            @Param(value = Inputs.InstanceInputs.MAX_COUNT) String maxCount,
-                                            @Param(value = Inputs.InstanceInputs.MIN_COUNT) String minCount,
-                                            @Param(value = Inputs.InstanceInputs.MONITORING) String monitoring,
-                                            @Param(value = Inputs.InstanceInputs.PLACEMENT_GROUP_NAME) String placementGroupName,
-                                            @Param(value = Inputs.InstanceInputs.TENANCY) String tenancy,
-                                            @Param(value = Inputs.InstanceInputs.USER_DATA) String userData,
-
-                                            @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS) String networkInterfaceAssociatePublicIpAddress,
-                                            @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION) String networkInterfaceDeleteOnTerminationString,
-                                            @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
-                                            @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX) String networkInterfaceDeviceIndex,
-                                            @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID) String networkInterfaceId,
-                                            @Param(value = Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
+    public Map<String, String> runInstances(@Param(value = ENDPOINT, required = true) String endpoint,
+                                            @Param(value = IDENTITY, required = true) String identity,
+                                            @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+                                            @Param(value = PROXY_HOST) String proxyHost,
+                                            @Param(value = PROXY_PORT) String proxyPort,
+                                            @Param(value = PROXY_USERNAME) String proxyUsername,
+                                            @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                            @Param(value = HEADERS) String headers,
+                                            @Param(value = QUERY_PARAMS) String queryParams,
+                                            @Param(value = VERSION, required = true) String version,
+                                            @Param(value = DELIMITER) String delimiter,
+                                            @Param(value = AVAILABILITY_ZONE) String availabilityZone,
+                                            @Param(value = HOST_ID) String hostId,
+                                            @Param(value = IMAGE_ID, required = true) String imageId,
+                                            @Param(value = INSTANCE_TYPE) String instanceType,
+                                            @Param(value = KERNEL_ID) String kernelId,
+                                            @Param(value = RAMDISK_ID) String ramdiskId,
+                                            @Param(value = SUBNET_ID) String subnetId,
+                                            @Param(value = BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING) String blockDeviceMappingDeviceNamesString,
+                                            @Param(value = BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING) String blockDeviceMappingVirtualNamesString,
+                                            @Param(value = DELETE_ON_TERMINATIONS_STRING) String deleteOnTerminationsString,
+                                            @Param(value = EBS_OPTIMIZED) String ebsOptimized,
+                                            @Param(value = ENCRYPTED_STRING) String encryptedString,
+                                            @Param(value = IOPS_STRING) String iopsString,
+                                            @Param(value = SNAPSHOT_IDS_STRING) String snapshotIdsString,
+                                            @Param(value = VOLUME_SIZES_STRING) String volumeSizesString,
+                                            @Param(value = VOLUME_TYPES_STRING) String volumeTypesString,
+                                            @Param(value = PRIVATE_IP_ADDRESS) String privateIpAddress,
+                                            @Param(value = PRIVATE_IP_ADDRESSES_STRING) String privateIpAddressesString,
+                                            @Param(value = IAM_INSTANCE_PROFILE_ARN) String iamInstanceProfileArn,
+                                            @Param(value = IAM_INSTANCE_PROFILE_NAME) String iamInstanceProfileName,
+                                            @Param(value = KEY_PAIR_NAME) String keyPairName,
+                                            @Param(value = SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
+                                            @Param(value = SECURITY_GROUP_NAMES_STRING) String securityGroupNamesString,
+                                            @Param(value = AFFINITY) String affinity,
+                                            @Param(value = CLIENT_TOKEN) String clientToken,
+                                            @Param(value = DISABLE_API_TERMINATION) String disableApiTermination,
+                                            @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
+                                            @Param(value = MAX_COUNT) String maxCount,
+                                            @Param(value = MIN_COUNT) String minCount,
+                                            @Param(value = MONITORING) String monitoring,
+                                            @Param(value = PLACEMENT_GROUP_NAME) String placementGroupName,
+                                            @Param(value = TENANCY) String tenancy,
+                                            @Param(value = USER_DATA) String userData,
+                                            @Param(value = NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS) String networkInterfaceAssociatePublicIpAddress,
+                                            @Param(value = NETWORK_INTERFACE_DELETE_ON_TERMINATION) String networkInterfaceDeleteOnTerminationString,
+                                            @Param(value = NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
+                                            @Param(value = NETWORK_INTERFACE_DEVICE_INDEX) String networkInterfaceDeviceIndex,
+                                            @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
+                                            @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
@@ -408,11 +462,11 @@ public class RunInstancesAction {
                     .withQueryParams(queryParams)
                     .withVersion(version)
                     .withDelimiter(delimiter)
-                    .withAction(Constants.QueryApiActions.RUN_INSTANCES)
-                    .withApiService(Constants.Apis.AMAZON_EC2_API)
-                    .withRequestUri(Constants.Miscellaneous.EMPTY)
-                    .withRequestPayload(Constants.Miscellaneous.EMPTY)
-                    .withHttpClientMethod(Constants.AwsParams.HTTP_CLIENT_METHOD_GET)
+                    .withAction(RUN_INSTANCES)
+                    .withApiService(AMAZON_EC2_API)
+                    .withRequestUri(EMPTY)
+                    .withRequestPayload(EMPTY)
+                    .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
             CustomInputs customInputs = new CustomInputs.Builder()

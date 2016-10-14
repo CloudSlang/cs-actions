@@ -49,9 +49,12 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
+
+    private QueryApiExecutor toTest;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    private QueryApiExecutor toTest;
+
     @Mock
     private CSHttpClient csHttpClientMock;
 
@@ -83,19 +86,6 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ModifyImageAttribute")));
         runCommonVerifiersForQueryApi();
-    }
-
-    private ImageInputs getAddLaunchPermissionsToImageInputs() {
-        CustomInputs customInputs = new CustomInputs.Builder()
-                .withAttribute("launchPermission")
-                .withOperationType("add")
-                .withImageId("ami-abcd1234")
-                .build();
-        return new ImageInputs.Builder()
-                .withCustomInputs(customInputs)
-                .withUserIdsString("1,2")
-                .withUserGroupsString("g1,g2")
-                .build();
     }
 
     @Test
@@ -136,13 +126,6 @@ public class QueryApiExecutorTest {
         runCommonVerifiersForQueryApi();
     }
 
-    private CustomInputs getVolumeCustomInputs() {
-        return new CustomInputs.Builder()
-                .withInstanceId("i-12345678")
-                .withVolumeId("v-12345678")
-                .build();
-    }
-
     @Test
     public void testCreateNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
@@ -162,24 +145,21 @@ public class QueryApiExecutorTest {
         runCommonVerifiersForQueryApi();
     }
 
-    private ImageInputs getCreateImageInputs() {
-        CustomInputs customInputs = new CustomInputs.Builder()
-                .withInstanceId("i-b0e2ad1b")
-                .build();
-        return new ImageInputs.Builder()
-                .withCustomInputs(customInputs)
-                .withImageName("img-name")
-                .withDescription("Some description")
-                .withImageNoReboot("true")
-                .build();
-    }
-
     @Test
     public void testCreateSnapshot() throws Exception {
         toTest.execute(getCommonInputs("CreateSnapshot", HEADERS, ""), getVolumeCustomInputs(), getVolumeInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateSnapshot")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testCreateTags() throws Exception {
+        toTest.execute(getCommonInputs("CreateTags", HEADERS, ""), getCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateTags")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -238,45 +218,6 @@ public class QueryApiExecutorTest {
         runCommonVerifiersForQueryApi();
     }
 
-    private ImageInputs getDescribeImagesInputs() throws Exception {
-        CustomInputs customInputs = new CustomInputs.Builder()
-                .withIdentityId("my-id")
-                .withArchitecture("i386")
-                .withDeleteOnTermination("true")
-                .withBlockMappingDeviceName("/dev/sdh")
-                .withBlockDeviceMappingSnapshotId("my-id")
-                .withVolumeSize("25")
-                .withVolumeType("gp2")
-                .withHypervisor("ovm")
-                .withImageId("ami-abcd1234")
-                .withKernelId("kernel-id")
-                .withOwnerAlias("amazon")
-                .withOwnerId("o-id")
-                .withPlatform("windows")
-                .withProductCode("p-code")
-                .withProductCodeType("devpay")
-                .withRamdiskId("id-ram")
-                .withRootDeviceName("/dev/sda1")
-                .withRootDeviceType("available")
-                .withStateReasonCode("r-code")
-                .withStateReasonMessage("r-message")
-                .withKeyTagsString("my-key-tags")
-                .withValueTagsString("my-value-tags")
-                .withVirtualizationType("paravirtual")
-                .build();
-        return new ImageInputs.Builder()
-                .withCustomInputs(customInputs)
-                .withDescription("some-desc")
-                .withImageIdsString("i_id1,i_id2")
-                .withOwnersString("o_id1,o_id2")
-                .withType("machine")
-                .withIsPublic("true")
-                .withManifestLocation("manif-location")
-                .withImageName("img-name")
-                .withState("available")
-                .build();
-    }
-
     @Test
     public void testDetachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
@@ -324,10 +265,6 @@ public class QueryApiExecutorTest {
         runCommonVerifiersForQueryApi();
     }
 
-    private CustomInputs getStartInstancesInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
-    }
-
     @Test
     public void testStopInstances() throws Exception {
         toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getInstanceCustomInputs(), getStopInstancesInstanceInputs());
@@ -337,10 +274,6 @@ public class QueryApiExecutorTest {
         runCommonVerifiersForQueryApi();
     }
 
-    private InstanceInputs getStopInstancesInstanceInputs() {
-        return new InstanceInputs.Builder().withForceStop("true").build();
-    }
-
     @Test
     public void testRebootInstances() throws Exception {
         toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getInstanceCustomInputs());
@@ -348,10 +281,6 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RebootInstances")));
         runCommonVerifiersForQueryApi();
-    }
-
-    private CustomInputs getInstanceCustomInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
     }
 
     @Test
@@ -452,6 +381,9 @@ public class QueryApiExecutorTest {
                 .withInstanceId("i-abcdef12")
                 .withVolumeType("")
                 .withSubnetId("subnet-abcdef12")
+                .withResourceIdsString("i-abcdef12,i-12345678")
+                .withKeyTagsString("Name,webserver,stack,scope")
+                .withValueTagsString("Tagged from API call,Not relevant,Testing,For testing purposes")
                 .build();
     }
 
@@ -474,7 +406,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private IamInputs getIamInputs(){
+    private IamInputs getIamInputs() {
         return new IamInputs.Builder()
                 .withSecurityGroupIdsString("sg-12345678,sg-abcdef12")
                 .build();
@@ -553,6 +485,18 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("InstanceId", "i-b0e2ad1b");
                 queryParamsMap.put("Name", "img-name");
                 queryParamsMap.put("NoReboot", "true");
+                break;
+            case "CreateTags":
+                queryParamsMap.put("ResourceId.1", "i-abcdef12");
+                queryParamsMap.put("ResourceId.2", "i-12345678");
+                queryParamsMap.put("Tag.1.Key", "Name");
+                queryParamsMap.put("Tag.1.Value", "Tagged from API call");
+                queryParamsMap.put("Tag.2.Key", "webserver");
+                queryParamsMap.put("Tag.2.Value", "");
+                queryParamsMap.put("Tag.3.Key", "stack");
+                queryParamsMap.put("Tag.3.Value", "Testing");
+                queryParamsMap.put("Tag.4.Key", "scope");
+                queryParamsMap.put("Tag.4.Value", "For testing purposes");
                 break;
             case "CreateSnapshot":
                 queryParamsMap.put("Description", "some-desc");
@@ -690,5 +634,88 @@ public class QueryApiExecutorTest {
         }
 
         return queryParamsMap;
+    }
+
+    private CustomInputs getVolumeCustomInputs() {
+        return new CustomInputs.Builder()
+                .withInstanceId("i-12345678")
+                .withVolumeId("v-12345678")
+                .build();
+    }
+
+    private ImageInputs getAddLaunchPermissionsToImageInputs() {
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withAttribute("launchPermission")
+                .withOperationType("add")
+                .withImageId("ami-abcd1234")
+                .build();
+        return new ImageInputs.Builder()
+                .withCustomInputs(customInputs)
+                .withUserIdsString("1,2")
+                .withUserGroupsString("g1,g2")
+                .build();
+    }
+
+    private ImageInputs getCreateImageInputs() {
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withInstanceId("i-b0e2ad1b")
+                .build();
+        return new ImageInputs.Builder()
+                .withCustomInputs(customInputs)
+                .withImageName("img-name")
+                .withDescription("Some description")
+                .withImageNoReboot("true")
+                .build();
+    }
+
+    private ImageInputs getDescribeImagesInputs() throws Exception {
+        CustomInputs customInputs = new CustomInputs.Builder()
+                .withIdentityId("my-id")
+                .withArchitecture("i386")
+                .withDeleteOnTermination("true")
+                .withBlockMappingDeviceName("/dev/sdh")
+                .withBlockDeviceMappingSnapshotId("my-id")
+                .withVolumeSize("25")
+                .withVolumeType("gp2")
+                .withHypervisor("ovm")
+                .withImageId("ami-abcd1234")
+                .withKernelId("kernel-id")
+                .withOwnerAlias("amazon")
+                .withOwnerId("o-id")
+                .withPlatform("windows")
+                .withProductCode("p-code")
+                .withProductCodeType("devpay")
+                .withRamdiskId("id-ram")
+                .withRootDeviceName("/dev/sda1")
+                .withRootDeviceType("available")
+                .withStateReasonCode("r-code")
+                .withStateReasonMessage("r-message")
+                .withKeyTagsString("my-key-tags")
+                .withValueTagsString("my-value-tags")
+                .withVirtualizationType("paravirtual")
+                .build();
+        return new ImageInputs.Builder()
+                .withCustomInputs(customInputs)
+                .withDescription("some-desc")
+                .withImageIdsString("i_id1,i_id2")
+                .withOwnersString("o_id1,o_id2")
+                .withType("machine")
+                .withIsPublic("true")
+                .withManifestLocation("manif-location")
+                .withImageName("img-name")
+                .withState("available")
+                .build();
+    }
+
+    private InstanceInputs getStopInstancesInstanceInputs() {
+        return new InstanceInputs.Builder().withForceStop("true").build();
+    }
+
+    private CustomInputs getInstanceCustomInputs() {
+        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
+    }
+
+    private CustomInputs getStartInstancesInputs() {
+        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
     }
 }

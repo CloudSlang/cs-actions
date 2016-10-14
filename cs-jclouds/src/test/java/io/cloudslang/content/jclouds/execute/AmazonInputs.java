@@ -16,7 +16,6 @@ public class AmazonInputs {
     private static final String DELIMITER = ";;";
 
     private static final String REGION = "us-east-1";
-    private static final String SERVER_ID = "i-578dde87";
     private static final String IMAGE_ID = "ami-4cfc1121";
 
     private String provider;
