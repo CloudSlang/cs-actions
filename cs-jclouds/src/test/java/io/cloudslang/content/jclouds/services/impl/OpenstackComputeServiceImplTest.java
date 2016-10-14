@@ -39,8 +39,6 @@ import static org.mockito.Mockito.*;
 @PrepareForTest({OpenstackComputeServiceImpl.class, ContextBuilder.class})
 public class OpenstackComputeServiceImplTest {
     private static final String REGION = "RegionOne";
-    private static final String SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e5";
-    private static final String INVALID_SERVER_ID = "3d95572b-b237-48e9-968c-a8d51ef1d9e6";
     private static final String ENDPOINT = "http://11.11.11.11:5000/v2.0";
     private static final String IDENTITY = "anyAlias:actulUsername";
     private static final String PASSWORD = "secretpasswrord";
@@ -52,15 +50,8 @@ public class OpenstackComputeServiceImplTest {
     private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
-    private static final String SERVER_STOP_SUCCESS_MESSAGE = "Server is stopping.";
-    private static final String SERVER_START_SUCCESS_MESSAGE = "Server is starting.";
-    private static final String CONNECTION_REFUSE_EXCEPTION_MESSAGE = "org.jclouds.http.HttpResponseException: Connection refused: connect connecting to POST http://11.11.11.11:5000/v2.0/tokens HTTP/1.1";
-    private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "{\"itemNotFound\": {\"message\": \"Instance not found\", \"code\": 404}}";
 
     private OpenstackComputeServiceImpl toTest;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Mock
     private SLF4JLoggingModule loggingModuleMock;
@@ -260,42 +251,6 @@ public class OpenstackComputeServiceImplTest {
         verify(openstackComputeServiceImplSpy).setRegion(REGION + " dasda");
         verify(openstackComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(openstackComputeServiceImplSpy);
-    }
-
-    /**
-     * Test describeRegions method. Positive scenario.
-     */
-    @Test
-    public void testListRegions() {
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(anyBoolean());
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        Set<String> regions = Sets.newIdentityHashSet();
-        regions.add(REGION);
-        Mockito.doReturn(regions).when(novaApiMock).getConfiguredRegions();
-
-        Set<String> returnedRegions = openstackComputeServiceImplSpy.describeRegions(false);
-
-        assertEquals(1, returnedRegions.size());
-        assertTrue(returnedRegions.contains(REGION));
-        verify(openstackComputeServiceImplSpy).lazyInit(false);
-        verify(novaApiMock).getConfiguredRegions();
-        verifyNoMoreInteractions(novaApiMock);
-    }
-
-    /**
-     * Test describeRegions method with invalid endpoint set in init().
-     * This scenario is equivalent to invalid credentials.
-     */
-    @Test
-    public void testListRegionsOnInvalidEndpoint() {
-        exception.expect(HttpResponseException.class);
-        exception.expectMessage(CONNECTION_REFUSE_EXCEPTION_MESSAGE);
-        doNothing().when(openstackComputeServiceImplSpy).lazyInit(anyBoolean());
-        openstackComputeServiceImplSpy.novaApi = novaApiMock; //this would be set by lazyInit
-        HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
-        Mockito.doThrow(toThrow).when(novaApiMock).getConfiguredRegions();
-
-        openstackComputeServiceImplSpy.describeRegions(false);
     }
 
     /**

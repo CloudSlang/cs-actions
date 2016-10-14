@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.quote;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -28,13 +27,17 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsPara
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DEVICE_INDEX;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.FILTER;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.KEY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.REGION_NAME;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.RESOURCE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.STANDARD;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SUBNET_ID;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.TAG;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.VALUE;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.RESOURCE_ID;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SUBNET_ID;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.STANDARD;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.VALUES;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.COLON;
@@ -288,6 +291,8 @@ public final class InputsUtil {
             return BLOCK_DEVICE_MAPPING + DOT + String.valueOf(index + ONE) + DOT;
         } else if (EBS.equalsIgnoreCase(specificArea)) {
             return BLOCK_DEVICE_MAPPING + DOT + String.valueOf(index + ONE) + DOT + EBS + DOT;
+        } else if (NAME.equalsIgnoreCase(specificArea)) {
+            return FILTER + DOT + String.valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
             return NETWORK_INTERFACE + DOT + String.valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
                     String.valueOf(index + ONE) + DOT;
@@ -297,6 +302,10 @@ public final class InputsUtil {
             return TAG + DOT + String.valueOf(index + ONE) + DOT + KEY;
         } else if (VALUE.equalsIgnoreCase(specificArea)) {
             return TAG + DOT + String.valueOf(index + ONE) + DOT + VALUE;
+        } else if (VALUES.equalsIgnoreCase(specificArea)) {
+            return FILTER + DOT + String.valueOf(index + ONE) + DOT + VALUE;
+        } else if (REGION_NAME.equalsIgnoreCase(specificArea)) {
+            return REGION_NAME + DOT + String.valueOf(index + ONE);
         } else {
             return EMPTY;
         }

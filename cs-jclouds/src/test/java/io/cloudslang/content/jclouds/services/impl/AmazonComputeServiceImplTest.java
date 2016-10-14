@@ -243,42 +243,6 @@ public class AmazonComputeServiceImplTest {
     }
 
     /**
-     * Test describeRegions method. Positive scenario.
-     */
-    @Test
-    public void testListRegions() {
-        addCommonMocksForInstanceApi();
-
-        Set<String> regions = Sets.newIdentityHashSet();
-        regions.add(REGION);
-
-        doReturn(regions).when(ec2ApiMock).getConfiguredRegions();
-
-        Set<String> returnedRegions = amazonComputeServiceImplSpy.describeRegions(false);
-
-        assertTrue(returnedRegions.contains(REGION));
-        verify(amazonComputeServiceImplSpy).init(false);
-        verify(ec2ApiMock, times(1)).getConfiguredRegions();
-
-        assertEquals(1, returnedRegions.size());
-    }
-
-    /**
-     * Test describeRegions method with invalid endpoint set in init().
-     * This scenario is equivalent to invalid credentials.
-     */
-    @Test
-    public void testListRegionsOnInvalidEndpoint() {
-        MockingHelper.setExpectedExceptions(exception, HttpResponseException.class, CONNECTION_REFUSE_EXCEPTION_MESSAGE);
-        addCommonMocksForInstanceApi();
-
-        HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
-        doThrow(toThrow).when(ec2ApiMock).getConfiguredRegions();
-
-        amazonComputeServiceImplSpy.describeRegions(false);
-    }
-
-    /**
      * Test updateServer method. Positive scenario.
      */
     @Test

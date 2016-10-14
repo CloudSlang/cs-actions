@@ -46,12 +46,8 @@ public class ComputeServiceImplTest {
     private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
-    private static final String INVALID_SERVER_ID_EXCEPTION_MESSAGE = "{\"itemNotFound\": {\"message\": \"Instance not found\", \"code\": 404}}";
 
     private ComputeServiceImpl toTest;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Mock
     private SLF4JLoggingModule loggingModuleMock;
@@ -274,48 +270,5 @@ public class ComputeServiceImplTest {
         verify(ComputeServiceImplSpy).lazyInit(REGION, false);
         verify(ComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(ComputeServiceImplSpy);
-    }
-
-    /**
-     * Test describeRegions method. Positive scenario.
-     */
-    @Test
-    public void testListRegions() {
-        doNothing().when(ComputeServiceImplSpy).lazyInit(false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        Mockito.doReturn(locationsSetMock).when(computeServiceMock).listAssignableLocations();
-        Mockito.doReturn(locationIteratorMock).when(locationsSetMock).iterator();
-        Mockito.doReturn(true).doReturn(false).when(locationIteratorMock).hasNext();
-        Mockito.doReturn(locationMock).when(locationIteratorMock).next();
-        Mockito.doReturn("locationDrescription").when(locationMock).getDescription();
-
-        Set<String> result = ComputeServiceImplSpy.describeRegions(false);
-
-        assertEquals("[locationDrescription]", result.toString());
-        verify(ComputeServiceImplSpy).lazyInit(false);
-        verifyNoMoreInteractions(computeServiceContextMock);
-        verify(computeServiceMock).listAssignableLocations();
-        verifyNoMoreInteractions(computeServiceMock);
-        verify(locationsSetMock).iterator();
-        verifyNoMoreInteractions(locationsSetMock);
-        verify(locationIteratorMock, times(2)).hasNext();
-        verify(locationIteratorMock).next();
-        verify(locationMock).getDescription();
-    }
-
-    /**
-     * Test describeRegions method with invalid endpoint set in init().
-     * This scenario is equivalent to invalid credentials.
-     */
-    @Test
-    public void testListRegionsOnInvalidEndpoint() {
-        exception.expect(org.jclouds.rest.ResourceNotFoundException.class);
-        exception.expectMessage(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        doNothing().when(ComputeServiceImplSpy).lazyInit(REGION, false);
-        ComputeServiceImplSpy.computeService = computeServiceMock;
-        ResourceNotFoundException toThrow = new ResourceNotFoundException(INVALID_SERVER_ID_EXCEPTION_MESSAGE);
-        Mockito.doThrow(toThrow).when(computeServiceMock).listAssignableLocations();
-
-        ComputeServiceImplSpy.describeRegions(false);
     }
 }
