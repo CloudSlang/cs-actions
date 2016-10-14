@@ -6,12 +6,13 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
+
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -84,7 +85,7 @@ public final class InputsUtil {
         String[] values;
 
         for (String headersOrParamsItem : headersOrParamsArray) {
-            values = headersOrParamsItem.split(Pattern.quote(customDelimiter), 2);
+            values = headersOrParamsItem.split(quote(customDelimiter), 2);
             String key = trim ? values[START_INDEX].trim().toLowerCase() : values[START_INDEX];
 
             if (values.length > ONE) {
@@ -128,7 +129,7 @@ public final class InputsUtil {
         if (isBlank(input)) {
             return null;
         }
-        return new HashSet<>(Arrays.asList(input.split(Pattern.quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
+        return new HashSet<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
     }
 
     public static String getDefaultStringInput(String input, String defaultValue) {
