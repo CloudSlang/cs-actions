@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Created by victor on 28.09.2016.
  */
-public class DateUtilities {
+public final class DateUtilities {
     @NotNull
     public static String formatDate(@NotNull final Date date) {
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'");
