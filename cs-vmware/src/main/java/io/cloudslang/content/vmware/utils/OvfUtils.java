@@ -34,6 +34,7 @@ public class OvfUtils {
     private static final String LEASE_COULD_NOT_BE_OBTAINED = "HttpNfcLeaseInfo could not be obtained";
     private static final String LEASE_STATE_COULD_NOT_BE_OBTAINED = "HttpNfcLease state could not be obtained!";
     private static final String LEASE_ERROR_STATE_COULD_NOT_BE_OBTAINED = "HttpNfcLease error state could not be obtained!";
+    private static final String ARRAYS_LENGTH_MUST_MATCH = "The array length of the json keys and values inputs must match!";
 
     public static ManagedObjectReference getHttpNfcLease(final ConnectionResources connectionResources, final ImportSpec importSpec,
                                                          final ManagedObjectReference resourcePool, final ManagedObjectReference hostMor,
@@ -42,7 +43,6 @@ public class OvfUtils {
                 importVApp(resourcePool, importSpec, folderMor, hostMor);
     }
 
-    @NotNull
     public static HttpNfcLeaseInfo getHttpNfcLeaseInfo(final ConnectionResources connectionResources, final ManagedObjectReference httpNfcLease) throws Exception {
         final ObjectContent objectContent = GetObjectProperties.getObjectProperty(connectionResources, httpNfcLease, "info");
         final List<DynamicProperty> dynamicProperties = objectContent.getPropSet();
@@ -93,7 +93,7 @@ public class OvfUtils {
         List<String> values = resolveJSONStringArrayParm(valuesJson);
         if (keys != null || values != null) {
             if (keys.size() != values.size()) {
-                throw new Exception("The array length of the json keys and values inputs must match!");
+                throw new Exception(ARRAYS_LENGTH_MUST_MATCH);
             } else {
                 for (int i = 0; i < keys.size(); i++) {
                     map.put(keys.get(i), values.get(i));
@@ -101,15 +101,6 @@ public class OvfUtils {
             }
         }
         return map;
-
-//        List<OvfNetworkMapping> networkMappings = new ArrayList<>();
-//        for (Map.Entry<String, String> entry : networkMap.entrySet()) {
-//            OvfNetworkMapping ovfNetworkMapping = new OvfNetworkMapping();
-//            ovfNetworkMapping.setName(entry.getKey());
-//            ovfNetworkMapping.setNetwork(getNetwork(computeResource, entry.getValue()));
-//            networkMappings.add(ovfNetworkMapping);
-//        }
-//        return (OvfNetworkMapping[]) networkMappings.toArray();
     }
 
     public static List<String> resolveJSONStringArrayParm(String jsonString) {

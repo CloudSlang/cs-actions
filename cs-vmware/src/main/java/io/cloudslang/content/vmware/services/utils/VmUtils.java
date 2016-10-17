@@ -32,7 +32,8 @@ public class VmUtils {
     private static final int DEFAULT_CORES_PER_SOCKET = 1;
 
 
-    public ManagedObjectReference getMorResourcePoolFromCluster(ConnectionResources connectionResources, ManagedObjectReference clusterMor, String resourcePoolName) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+    public ManagedObjectReference getMorResourcePoolFromCluster(final ConnectionResources connectionResources, final ManagedObjectReference clusterMor,
+                                                                final String resourcePoolName) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         if (StringUtilities.isNotBlank(resourcePoolName)) {
             return new MorObjectHandler().getSpecificMor(connectionResources, clusterMor,
                     VmParameter.RESOURCE_POOL.getValue(), resourcePoolName);

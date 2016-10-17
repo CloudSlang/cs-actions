@@ -102,7 +102,7 @@ public class DeployTemplateService {
         final List<KeyValue> ovfPropertyMappings = getOvfPropertyMappings(ovfPropertyMap);
 
         final OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType().
-                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmInputs, hostMor, ovfNetworkMappings));
+                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmInputs, hostMor, ovfNetworkMappings, ovfPropertyMappings));
 
         checkImportSpecResultForErrors(importSpecResult);
 
@@ -110,14 +110,21 @@ public class DeployTemplateService {
         return ImmutablePair.of(httpNfcLease, importSpecResult);
     }
 
-    private List<KeyValue> getOvfPropertyMappings(Map<String, String> ovfPropertyMap) {
-        return null;//TODO
+    private List<KeyValue> getOvfPropertyMappings(final Map<String, String> ovfPropertyMap) {
+        final List<KeyValue> mappings = new ArrayList<>();
+        for (Map.Entry<String, String> entry : ovfPropertyMap.entrySet()) {
+            final KeyValue keyValue = new KeyValue();
+            keyValue.setKey(entry.getKey());
+            keyValue.setValue(entry.getValue());
+            mappings.add(keyValue);
+        }
+        return mappings;
     }
 
-    private List<OvfNetworkMapping> getOvfNetworkMappings(Map<String, String> ovfNetworkMap, ConnectionResources connectionResources) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        List<OvfNetworkMapping> mappings = new ArrayList<>();
+    private List<OvfNetworkMapping> getOvfNetworkMappings(final Map<String, String> ovfNetworkMap, final ConnectionResources connectionResources) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        final List<OvfNetworkMapping> mappings = new ArrayList<>();
         for (Map.Entry<String, String> entry : ovfNetworkMap.entrySet()) {
-            OvfNetworkMapping mapping = new OvfNetworkMapping();
+            final OvfNetworkMapping mapping = new OvfNetworkMapping();
             mapping.setNetwork(new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                     ManagedObject.NETWORK.getName(), entry.getValue()));
             mapping.setName(entry.getKey());
@@ -215,7 +222,8 @@ public class DeployTemplateService {
     }
 
 
-    public OvfCreateImportSpecParams getOvfCreateImportSpecParams(final VmInputs vmInputs, final ManagedObjectReference hostSystem, List ovfNetworkMappings) {
+    public OvfCreateImportSpecParams getOvfCreateImportSpecParams(final VmInputs vmInputs, final ManagedObjectReference hostSystem,
+                                                                  final List ovfNetworkMappings, final List<KeyValue> ovfPropertyMappings) {
         final OvfCreateImportSpecParams params = new OvfCreateImportSpecParams();
         params.setHostSystem(hostSystem);
         params.setDeploymentOption("");
@@ -225,6 +233,7 @@ public class DeployTemplateService {
         params.setIpProtocol(vmInputs.getIpProtocol());
         params.setDiskProvisioning(vmInputs.getDiskProvisioning());
         params.getNetworkMapping().addAll(ovfNetworkMappings);
+        params.getPropertyMapping().addAll(ovfPropertyMappings);
         return params;
     }
 

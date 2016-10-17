@@ -14,14 +14,13 @@ import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.DeployTemplateService;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import io.cloudslang.content.vmware.utils.OvfUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.Locale;
 import java.util.Map;
 
 public class DeployVmTemplateAction {
 
-    private static final String SUCCESSFULLY_DEPLOYMENT = "Template was deployed successfully!";
+    private static final String SUCCESSFULLY_DEPLOYED = "Template was deployed successfully!";
 
     /**
      * @param host             VMware host or IP - Example: "vc6.subdomain.example.com"
@@ -54,13 +53,28 @@ public class DeployVmTemplateAction {
      *                         - Valid values:
      *                         dhcpPolicy - Specifies that DHCP must be used to allocate IP addresses to the vApp.
      *                         fixedPolicy - The IP addresses are allocated when the vApp is deployed and
-     *                         will be kept with the server as long as it is deployed.
+     *                              will be kept with the server as long as it is deployed.
      *                         transientPolicy - The IP addresses are allocated when needed, typically
-     *                         at power-on, and deallocated during power-off.
+     *                              at power-on, and deallocated during power-off.
      * @param localeLang       The locale language in which to process the OVF. If you do not specify a value for this input,
      *                         the default locale language of the system will be used.
      * @param localeCountry    The locale country in which to process the OVF. If you do not specify a value for this input,
      *                         the default locale country of the system will be used.
+     * @param ovfNetworkJS     A JSON array of network in the ovf template to be mapped to vm port groups. The netPortGroupJS input will
+     *                         be a complimentary array that defined the target port groups for these networks.
+     *                         - Example: ["Network 1","Network 2"].
+     * @param netPortGroupJS   A JSON array of port groups that the ovf networks in the template will attach to.  The ovfNetworkJS input
+     *                         defined the source networks in the ovf template for these portgroups.
+     *                         - Example: ["VM Network", "dvPortGroup"].
+     *                         Including the example from ovfNetworkJS input, "Network 1" will be mapped to "VM Network" and
+     *                         "Network 2" will be mapped to "dvPortGroup".
+     * @param ovfPropKeyJS     A JSON array of property names to be configured during import of the ovf template.
+     *                         - Example: ["vami.ip0.vmName","vami.ip1.vmName"]
+     * @param ovfPropValueJS   A JSON array of property values respective to the property names defined in ovfPropKeyJS to be applied
+     *                         during import of the ovf template.
+     *                         - Example: ["10.10.10.10","10.20.30.40"].
+     *                         Including the example from ovfPropKeyJS input, property "vami.ip0.vmName" will have value
+     *                         "10.10.10.10" and "vami.ip1.vmName" will have value "10.20.30.40".
      * @param parallel         If the ovf template has multiple .vmdk files, should they be uploaded in parallel?
      *                         If true, all .vmdk files will be uploaded using separate threads.
      *                         If false, .vmdk files will be uploaded individually.  Depending on the performance characteristics
@@ -134,56 +148,9 @@ public class DeployVmTemplateAction {
             Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
 
             new DeployTemplateService(InputUtils.getBooleanInput(parallel, true)).deployTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);
-            return OutputUtilities.getSuccessResultsMap(SUCCESSFULLY_DEPLOYMENT);
+            return OutputUtilities.getSuccessResultsMap(SUCCESSFULLY_DEPLOYED);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        String ovfNetworkJS = "[\"Network 1\",\"Network 2\"]";
-        String netPortGroupJS = "[\"VM Network\", \"dvPortGroup\"]";
-        String ovfPropKeyJS = "";
-        String ovfPropValueJS = "";
-        Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
-        Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
-//        String[] ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
-        String vmName = "importedLightweightUbuntuFromOva16";
-        String ovfPath = "c:\\Users\\giloan\\Documents\\#WORK\\Groot_Release\\Hellfire\\ImportOVA\\lightweightUbuntu.ova";
-//        String ovfPath = "\\\\URSAN1\\Share\\lightweightUbuntu.ova";
-
-        HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
-                .withHost("oovc6.hpswlabs.adapps.hp.com")
-                .withPort("443")
-                .withProtocol("https")
-                .withUsername("Administrator@vsphere.local")
-                .withPassword("oovc64testingHP!")
-                .withTrustEveryone("true")
-                .build();
-
-        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
-                .withHostname("rosesx0056.hpswlabs.adapps.hp.com")
-                .withVirtualMachineName(vmName)
-                .withDataStore("datastore2")
-                .withCloneDataStore("datastore2")
-                .withDataCenterName("Datacenter1")
-                .withClusterName("Cluster1")
-                .withResourcePool("")
-                .withIpAllocScheme("dhcpPolicy")
-                .withFolderName("Giloan")
-                .withLocale(InputUtils.getLocale("", ""))
-                .build();
-
-//        String ovfPath = "c:\\Users\\giloan\\Documents\\#WORK\\Groot_Release\\Hellfire\\ImportOVA\\lightweightUbuntu\\lightweightUbuntu.ovf";
-//        String ovfPath = "c:\\Users\\giloan\\Documents\\#WORK\\Groot_Release\\Hellfire\\ImportOVA\\centosforrelocationtest\\centosForRelocationTests\\centosForRelocationTests.ovf";
-//        String ovfPath = "\\\\GILOAN3\\Users\\giloan\\share\\lightweightUbuntu.ova";
-//        String vmName = "importedLightweightUbuntu18";
-//        String vmName = "importedCentosForRelocationTests1";
-        String parallel = "true";
-        try {
-            new DeployTemplateService(Boolean.parseBoolean(parallel)).deployTemplate(httpInputs, vmInputs, ovfPath, ovfNetworkMappings, ovfPropertyMappings);
-        } catch (Exception e) {
-            System.out.println(ExceptionUtils.getStackTrace(e));
         }
     }
 }
