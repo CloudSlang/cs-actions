@@ -18,9 +18,11 @@ public class DateTimeUtils {
     public static boolean isUnix(String locale) {
         return Constants.Miscellaneous.UNIX.equals(locale);
     }
+
     public static boolean isMilliseconds(String locale) {
         return Constants.Miscellaneous.MILLISECONDS.equals(locale);
     }
+
     /**
      * Because the date passed as argument can be in java format, and because not all formats are compatible
      * with joda-time, this method checks if the date string is valid with java. In this way we can use the
@@ -56,10 +58,9 @@ public class DateTimeUtils {
      * @param date date passed as argument
      * @return the DateTime if it could parse it
      */
-    public static DateTime getJodaOrJavaDate(DateTimeFormatter dateFormatter, String date) throws Exception {
+    public static DateTime getJodaOrJavaDate(final DateTimeFormatter dateFormatter, final String date) throws Exception {
         if (DateTimeUtils.isDateValid(date, dateFormatter.getLocale())) {
-            DateFormat dateFormat = DateFormat
-                    .getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, dateFormatter.getLocale());
+            DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, dateFormatter.getLocale());
 
             Calendar dateCalendar = GregorianCalendar.getInstance();
             dateCalendar.setTime(dateFormat.parse(date));

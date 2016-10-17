@@ -9,6 +9,9 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -34,34 +37,31 @@ public class GetCurrentDateTimeTest {
 
     @Test
     public void testExecuteAllValid() {
-        result = getCurrentDateTime.execute("fr", "FR");
-
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
+        result = getCurrentDateTime.execute("fr", "FR", "PST", null);
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
     }
 
     @Test
     public void testLocaleLangNull() {
-        result = getCurrentDateTime.execute(null, "DK");
-
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
+        result = getCurrentDateTime.execute(null, "DK", "GMT+1", null);
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
     }
 
     @Test
     public void testLocaleCountryNull() {
-        result = getCurrentDateTime.execute("da", null);
-
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
+        result = getCurrentDateTime.execute("da", null, null, null);
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
     }
 
     @Test
     public void testExecuteTimestamp() {
-        result = getCurrentDateTime.execute("unix", "DK");
-        String currentTimeUnix =  String.valueOf(DateTime.now().getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
-        assertTrue(result.get("returnResult").startsWith(currentTimeUnix.substring(0,6)));
+        result = getCurrentDateTime.execute("unix", "DK", null, null);
+        String currentTimeUnix = String.valueOf(DateTime.now().getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
+        assertTrue(result.get(RETURN_RESULT).startsWith(currentTimeUnix.substring(0, 6)));
     }
 }
