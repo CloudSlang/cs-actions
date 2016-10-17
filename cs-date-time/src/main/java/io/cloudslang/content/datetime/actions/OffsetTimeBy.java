@@ -8,13 +8,24 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.datetime.services.DateTimeService;
-import io.cloudslang.content.datetime.utils.Constants;
+import io.cloudslang.content.utils.OutputUtilities;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.datetime.utils.DatetimeInputs.LOCALE_COUNTRY;
+import static io.cloudslang.content.datetime.utils.DatetimeInputs.LOCALE_DATE;
+import static io.cloudslang.content.datetime.utils.DatetimeInputs.LOCALE_LANG;
+import static io.cloudslang.content.datetime.utils.DatetimeInputs.LOCALE_OFFSET;
 
 public class OffsetTimeBy {
 
@@ -34,35 +45,23 @@ public class OffsetTimeBy {
     @Action(name = "Offset Time By",
             description = "Changes the time represented by a date by the specified number of seconds",
             outputs = {
-                    @Output(Constants.OutputNames.RETURN_RESULT),
-                    @Output(Constants.OutputNames.RETURN_CODE),
-                    @Output(Constants.OutputNames.EXCEPTION)
+                    @Output(RETURN_RESULT),
+                    @Output(RETURN_CODE),
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RETURN_CODE,
-                            value = Constants.ReturnCodes.RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL,
-                            responseType = ResponseType.RESOLVED),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE,
-                            value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL,
-                            responseType = ResponseType.ERROR, isOnFail = true)})
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true)})
 
     public Map<String, String> execute(
-            @Param(value = Constants.InputNames.LOCALE_DATE, required = true) String date,
-            @Param(value = Constants.InputNames.LOCALE_OFFSET, required = true) String offset,
-            @Param(Constants.InputNames.LOCALE_LANG) String localeLang,
-            @Param(Constants.InputNames.LOCALE_COUNTRY) String localeCountry) {
-
-        Map<String, String> returnResult = new HashMap<>();
+            @Param(value = LOCALE_DATE, required = true) String date,
+            @Param(value = LOCALE_OFFSET, required = true) String offset,
+            @Param(value = LOCALE_LANG) String localeLang,
+            @Param(value = LOCALE_COUNTRY) String localeCountry) {
         try {
-            String returnValue = new DateTimeService().offsetTimeBy(date, offset, localeLang, localeCountry);
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_SUCCESS);
-            returnResult.put(Constants.OutputNames.RETURN_RESULT, returnValue);
+            return OutputUtilities.getSuccessResultsMap(DateTimeService.offsetTimeBy(date, offset, localeLang, localeCountry));
         } catch (Exception exception) {
-            returnResult.put(Constants.OutputNames.EXCEPTION, exception.toString());
-            returnResult.put(Constants.OutputNames.RETURN_RESULT, exception.getMessage());
-            returnResult.put(Constants.OutputNames.RETURN_CODE, Constants.ReturnCodes.RETURN_CODE_FAILURE);
+            return OutputUtilities.getFailureResultsMap(exception);
         }
-
-        return returnResult;
     }
 }
