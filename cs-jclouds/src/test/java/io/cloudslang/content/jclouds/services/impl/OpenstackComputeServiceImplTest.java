@@ -11,7 +11,6 @@ import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
