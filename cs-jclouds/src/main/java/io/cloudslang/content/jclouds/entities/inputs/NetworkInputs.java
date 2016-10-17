@@ -2,8 +2,9 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceAttachmentStatus;
 import io.cloudslang.content.jclouds.entities.aws.NetworkInterfaceStatus;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
 
 /**
  * Created by Mihai Tusa.
@@ -325,7 +326,7 @@ public class NetworkInputs {
 
         public Builder withNetworkInterfaceDeviceIndex(String inputValue) {
             networkInterfaceDeviceIndex = InputsUtil
-                    .getValidPositiveIntegerAsStringValue(inputValue, Constants.Values.START_INDEX);
+                    .getValidPositiveIntegerAsStringValue(inputValue, START_INDEX);
             return this;
         }
 

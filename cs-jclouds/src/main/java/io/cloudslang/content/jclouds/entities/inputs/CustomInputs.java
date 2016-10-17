@@ -10,8 +10,9 @@ import io.cloudslang.content.jclouds.entities.aws.ProductCodeType;
 import io.cloudslang.content.jclouds.entities.aws.RootDeviceType;
 import io.cloudslang.content.jclouds.entities.aws.VirtualizationType;
 import io.cloudslang.content.jclouds.entities.aws.VolumeType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DEFAULT_AMAZON_REGION;
 
 /**
  * Created by Mihai Tusa.
@@ -351,7 +352,7 @@ public class CustomInputs {
         }
 
         public Builder withRegion(String inputValue) {
-            region = InputsUtil.getDefaultStringInput(inputValue, Constants.AwsParams.DEFAULT_AMAZON_REGION);
+            region = InputsUtil.getDefaultStringInput(inputValue, DEFAULT_AMAZON_REGION);
             return this;
         }
 

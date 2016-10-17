@@ -1,9 +1,10 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 /**
  * Created by Mihai Tusa.
  * 6/22/2016.
@@ -82,7 +83,7 @@ public class VolumeInputs {
         }
 
         public Builder withIops(String inputValue) {
-            iops = isBlank(inputValue) ? Constants.Miscellaneous.NOT_RELEVANT : inputValue;
+            iops = isBlank(inputValue) ? NOT_RELEVANT : inputValue;
             return this;
         }
 

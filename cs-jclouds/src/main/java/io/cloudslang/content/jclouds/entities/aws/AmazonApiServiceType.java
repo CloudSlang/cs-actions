@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -11,15 +11,14 @@ public enum AmazonApiServiceType {
     S3;
 
     public static String getValue(String input) throws RuntimeException {
-        if (StringUtils.isBlank(input)) {
+        if (isBlank(input)) {
             return EC2.toString().toLowerCase();
         }
 
         try {
             return valueOf(input.toUpperCase()).toString().toLowerCase();
         } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. " +
-                    "Valid values: ec2, s3.");
+            throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. Valid values: ec2, s3.");
         }
     }
 }

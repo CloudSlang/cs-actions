@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -17,7 +17,7 @@ public enum HttpClientMethod {
     TRACE;
 
     public static String getValue(String input) throws RuntimeException {
-        if (StringUtils.isBlank(input)) {
+        if (isBlank(input)) {
             return GET.toString();
         }
 

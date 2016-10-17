@@ -1,7 +1,8 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
 
 /**
  * Created by Mihai Tusa.
@@ -85,12 +86,12 @@ public class EbsInputs {
         }
 
         public Builder withBlockDeviceMappingDeviceNamesString(String inputValue) {
-            blockDeviceMappingDeviceNamesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            blockDeviceMappingDeviceNamesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withBlockDeviceMappingVirtualNamesString(String inputValue) {
-            blockDeviceMappingVirtualNamesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            blockDeviceMappingVirtualNamesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 

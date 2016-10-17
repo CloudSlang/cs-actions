@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-import org.apache.commons.lang3.StringUtils;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -12,8 +12,8 @@ public enum Architecture {
     X86_64;
 
     public static String getValue(String input) throws RuntimeException {
-        if (StringUtils.isBlank(input)) {
-            return Constants.Miscellaneous.NOT_RELEVANT;
+        if (isBlank(input)) {
+            return NOT_RELEVANT;
         }
 
         try {
