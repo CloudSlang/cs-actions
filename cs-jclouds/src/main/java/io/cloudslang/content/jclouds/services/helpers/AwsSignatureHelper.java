@@ -1,9 +1,9 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.AWS_REQUEST_VERSION;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DEFAULT_AMAZON_REGION;
@@ -13,6 +13,9 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscell
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.LINE_SEPARATOR;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.ONE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
 
 /**
  * Created by Mihai Tusa.
@@ -42,8 +45,8 @@ public class AwsSignatureHelper {
             queryString.append(entryToQuery(entry));
         }
 
-        if (queryString.length() > 0) {
-            queryString.deleteCharAt(queryString.length() - 1);   //removing last '&'
+        if (queryString.length() > START_INDEX) {
+            queryString.deleteCharAt(queryString.length() - ONE);   //removing last '&'
         }
 
         return queryString.toString();
@@ -85,7 +88,7 @@ public class AwsSignatureHelper {
 
         StringBuilder signedHeaderString = new StringBuilder();
         for (String header : sortedList) {
-            if (signedHeaderString.length() > 0) {
+            if (signedHeaderString.length() > START_INDEX) {
                 signedHeaderString.append(SEMICOLON);
             }
             signedHeaderString.append(nullToEmpty(header).toLowerCase());
@@ -126,9 +129,9 @@ public class AwsSignatureHelper {
      * @return A (lowercase alphanumeric) string representing the AWS region.
      */
     public String getAmazonRegion(String endpoint) {
-        if (StringUtils.isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
+        if (isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
             endpoint = endpoint.substring(3);
-            return endpoint.substring(0, endpoint.indexOf(DOT_CHAR));
+            return endpoint.substring(START_INDEX, endpoint.indexOf(DOT_CHAR));
         }
         return DEFAULT_AMAZON_REGION;
     }

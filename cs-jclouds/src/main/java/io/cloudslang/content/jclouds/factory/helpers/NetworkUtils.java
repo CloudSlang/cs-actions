@@ -2,11 +2,13 @@ package io.cloudslang.content.jclouds.factory.helpers;
 
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static java.lang.String.valueOf;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
 
@@ -41,28 +43,25 @@ public class NetworkUtils {
 
     public Map<String, String> getAssociateAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, ALLOCATION_ID, wrapper.getCustomInputs().getAllocationId(),
-                StringUtils.isNotBlank(wrapper.getCustomInputs().getAllocationId()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, ALLOW_REASSOCIATION,
-                String.valueOf(wrapper.getElasticIpInputs().isAllowReassociation()),
+                isNotBlank(wrapper.getCustomInputs().getAllocationId()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ALLOW_REASSOCIATION, valueOf(wrapper.getElasticIpInputs().isAllowReassociation()),
                 wrapper.getElasticIpInputs().isAllowReassociation());
         InputsUtil.setOptionalMapEntry(queryParamsMap, PRIVATE_IP_ADDRESS, wrapper.getElasticIpInputs().getPrivateIpAddress(),
-                StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddress()));
+                isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddress()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
-                StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
+                isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId(),
-                StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceId()));
+                isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceId()));
 
         return queryParamsMap;
     }
 
     public Map<String, String> getAttachNetworkInterfaceQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
         queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
         queryParamsMap.put(DEVICE_INDEX, wrapper.getNetworkInputs().getDeviceIndex());
@@ -72,19 +71,18 @@ public class NetworkUtils {
 
     public Map<String, String> getCreateNetworkInterfaceQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(SUBNET_ID, wrapper.getCustomInputs().getSubnetId());
         InputsUtil.setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
-                StringUtils.isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription()));
+                isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription()));
 
         String privateIpAddress = InputsUtil.getValidIPv4Address(wrapper.getElasticIpInputs().getPrivateIpAddress());
         InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(NETWORK, START_INDEX) + PRIMARY,
-                Boolean.TRUE.toString().toLowerCase(), StringUtils.isNotBlank(privateIpAddress));
+                Boolean.TRUE.toString().toLowerCase(), isNotBlank(privateIpAddress));
         InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(NETWORK, START_INDEX) + PRIVATE_IP_ADDRESS,
-                privateIpAddress, StringUtils.isNotBlank(privateIpAddress));
+                privateIpAddress, isNotBlank(privateIpAddress));
         InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(NETWORK, START_INDEX) + PRIVATE_IP_ADDRESS,
-                privateIpAddress, StringUtils.isNotBlank(privateIpAddress));
+                privateIpAddress, isNotBlank(privateIpAddress));
 
         setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, NETWORK, wrapper.getCommonInputs().getDelimiter());
         setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
@@ -96,8 +94,7 @@ public class NetworkUtils {
 
     public Map<String, String> getDeleteNetworkInterfaceQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
 
         return queryParamsMap;
@@ -105,11 +102,10 @@ public class NetworkUtils {
 
     public Map<String, String> getDetachNetworkInterfaceQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTACHMENT_ID, wrapper.getCustomInputs().getAttachmentId());
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(ONE), wrapper.getNetworkInputs().isForceDetach());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, valueOf(ONE), wrapper.getNetworkInputs().isForceDetach());
 
         return queryParamsMap;
     }
@@ -117,20 +113,17 @@ public class NetworkUtils {
     public Map<String, String> getDisassociateAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
-
         InputsUtil.setOptionalMapEntry(queryParamsMap, ASSOCIATION_ID, wrapper.getCustomInputs().getAssociationId(),
-                StringUtils.isNotBlank(wrapper.getCustomInputs().getAssociationId()));
+                isNotBlank(wrapper.getCustomInputs().getAssociationId()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
-                StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
+                isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
 
         return queryParamsMap;
     }
 
-    void setPrivateIpAddressesQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper, String specificArea,
-                                          String delimiter) {
-        if (StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddressesString())) {
-            String[] privateIpAddressesArray = InputsUtil.getStringsArray(wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
-                    EMPTY, delimiter);
+    void setPrivateIpAddressesQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper, String specificArea, String delimiter) {
+        if (isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddressesString())) {
+            String[] privateIpAddressesArray = InputsUtil.getStringsArray(wrapper.getElasticIpInputs().getPrivateIpAddressesString(), EMPTY, delimiter);
             InputsUtil.validateArrayAgainstDuplicateElements(privateIpAddressesArray, wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
                     wrapper.getCommonInputs().getDelimiter(), PRIVATE_IP_ADDRESSES_STRING);
             if (privateIpAddressesArray != null && privateIpAddressesArray.length > START_INDEX) {
@@ -158,7 +151,7 @@ public class NetworkUtils {
         if (!queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(NETWORK, ONE) + PRIMARY)
                 && !queryParamsMap.containsValue(Boolean.FALSE.toString().toLowerCase())) {
             InputsUtil.setOptionalMapEntry(queryParamsMap, SECONDARY_PRIVATE_IP_ADDRESS_COUNT, inputString,
-                    StringUtils.isNotBlank(inputString));
+                    isNotBlank(inputString));
         }
     }
 }

@@ -24,7 +24,6 @@ public class AmazonInputs {
     private String endpoint;
     private String proxyHost;
     private String proxyPort;
-    private String delimiter;
 
     private String region;
 
@@ -59,7 +58,6 @@ public class AmazonInputs {
         this.endpoint = commonInputs.getEndpoint();
         this.proxyHost = commonInputs.getProxyHost();
         this.proxyPort = commonInputs.getProxyPort();
-        this.delimiter = commonInputs.getDelimiter();
 
         this.region = customInputs.getRegion();
     }
@@ -94,9 +92,5 @@ public class AmazonInputs {
 
     String getRegion() {
         return region;
-    }
-
-    String getDelimiter() {
-        return delimiter;
     }
 }

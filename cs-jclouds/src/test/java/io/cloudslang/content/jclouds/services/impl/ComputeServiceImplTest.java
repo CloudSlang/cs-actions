@@ -8,10 +8,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.domain.Location;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
-import org.jclouds.rest.ResourceNotFoundException;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -25,7 +22,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**

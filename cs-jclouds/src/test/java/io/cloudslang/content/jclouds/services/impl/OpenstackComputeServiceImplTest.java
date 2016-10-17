@@ -1,18 +1,15 @@
 package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Sets;
 import org.jclouds.ContextBuilder;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
-import org.jclouds.http.HttpResponseException;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.extensions.ServerAdminApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
@@ -26,10 +23,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**

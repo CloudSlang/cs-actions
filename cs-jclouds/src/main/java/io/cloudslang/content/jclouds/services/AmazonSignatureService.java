@@ -5,13 +5,15 @@ import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.services.helpers.AwsSignatureHelper;
 import io.cloudslang.content.jclouds.services.helpers.AwsSignatureV4;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
@@ -41,7 +43,7 @@ public class AmazonSignatureService {
     public AuthorizationHeader signRequestHeaders(InputsWrapper wrapper, Map<String, String> headersMap,
                                                   Map<String, String> queryParamsMap) throws SignatureException, MalformedURLException {
         AwsSignatureHelper signatureUtils = new AwsSignatureHelper();
-        String amazonDate = StringUtils.isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
+        String amazonDate = isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
         String dateStamp = amazonDate.split(T_REGEX_STRING)[0];
 
         String requestEndpoint = getRequestEndpoint(wrapper.getCommonInputs().getEndpoint());
@@ -66,8 +68,7 @@ public class AmazonSignatureService {
         byte[] key = awsSignatureV4.getDerivedSigningKey(wrapper.getCommonInputs().getCredential(), dateStamp, region, apiService);
         String signature = awsSignatureV4.getSignature(stringToSign, key);
 
-        String authorizationHeader = AWS4_SIGNING_ALGORITHM + " Credential=" + amzCredential +
-                ", SignedHeaders=" + signedHeadersString + ", Signature=" + signature;
+        String authorizationHeader = AWS4_SIGNING_ALGORITHM + " Credential=" + amzCredential + ", SignedHeaders=" + signedHeadersString + ", Signature=" + signature;
         requestHeaders.put(AUTHORIZATION, authorizationHeader);
 
         return new AuthorizationHeader(getSignedRequestHeadersString(requestHeaders), signature);
@@ -78,7 +79,7 @@ public class AmazonSignatureService {
             queryParamsMap = new HashMap<>();
         }
 
-        queryParamsMap = StringUtils.isBlank(wrapper.getQueryParams()) ? queryParamsMap :
+        queryParamsMap = isBlank(wrapper.getQueryParams()) ? queryParamsMap :
                 InputsUtil.getHeadersOrQueryParamsMap(queryParamsMap, wrapper.getQueryParams(), AMPERSAND, EQUAL, false);
 
         return queryParamsMap;
@@ -110,7 +111,7 @@ public class AmazonSignatureService {
             headersMap = new HashMap<>();
         }
 
-        if (StringUtils.isNotBlank(headers)) {
+        if (isNotBlank(headers)) {
             headersMap = InputsUtil.getHeadersOrQueryParamsMap(headersMap, headers, HEADER_DELIMITER, COLON, true);
         }
 
@@ -126,7 +127,7 @@ public class AmazonSignatureService {
         }
 
 
-        if (StringUtils.isNotBlank(securityToken)) {
+        if (isNotBlank(securityToken)) {
             headersMap.put(X_AMZ_SECURITY_TOKEN, securityToken);
         }
 
