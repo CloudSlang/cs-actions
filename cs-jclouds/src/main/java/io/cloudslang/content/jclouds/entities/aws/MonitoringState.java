@@ -16,10 +16,12 @@ public enum MonitoringState {
             return NOT_RELEVANT;
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid monitoringState value: [" + input + "]. Valid values: disabled, enabled.");
+        for (MonitoringState member : MonitoringState.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Invalid monitoringState value: [" + input + "]. Valid values: disabled, enabled.");
     }
 }

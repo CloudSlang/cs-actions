@@ -16,10 +16,12 @@ public enum Hypervisor {
             return NOT_RELEVANT;
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid hypervisor value: [" + input + "]. Valid values: ovm, xen.");
+        for (Hypervisor member : Hypervisor.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Invalid hypervisor value: [" + input + "]. Valid values: ovm, xen.");
     }
 }

@@ -12,15 +12,17 @@ public enum InstanceInitiatedShutdownBehavior {
 
     public static String getValue(String input) throws Exception {
         if (isBlank(input)) {
-            return STOP.toString().toLowerCase();
+            return STOP.name().toLowerCase();
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. " +
-                    "Valid values are: stop, terminate.");
-
+        for (ImageType member : ImageType.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. " +
+                "Valid values are: stop, terminate.");
+
     }
 }

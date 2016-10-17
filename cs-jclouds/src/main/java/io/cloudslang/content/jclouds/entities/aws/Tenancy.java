@@ -17,10 +17,12 @@ public enum Tenancy {
             return NOT_RELEVANT;
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized tenancy value: [" + input + "]. Valid values are: dedicated, default, host.");
+        for (Tenancy member : Tenancy.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Unrecognized tenancy value: [" + input + "]. Valid values are: dedicated, default, host.");
     }
 }

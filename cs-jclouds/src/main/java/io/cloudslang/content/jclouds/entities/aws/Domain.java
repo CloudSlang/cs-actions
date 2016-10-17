@@ -12,13 +12,15 @@ public enum Domain {
 
     public static String getValue(String input) throws RuntimeException {
         if (isBlank(input)) {
-            return STANDARD.toString().toLowerCase();
+            return STANDARD.name().toLowerCase();
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid Amazon domain: [" + input + "]. Valid values: standard, vpc.");
+        for (Domain member : Domain.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Invalid Amazon domain: [" + input + "]. Valid values: standard, vpc.");
     }
 }

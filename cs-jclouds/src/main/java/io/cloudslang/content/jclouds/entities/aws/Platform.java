@@ -27,6 +27,7 @@ public enum Platform {
                 return member.value;
             }
         }
+
         throw new RuntimeException("Invalid platform value: [" + input + "]. Valid values: \"\" (empty string), windows.");
     }
 }

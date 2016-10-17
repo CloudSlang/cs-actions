@@ -8,10 +8,12 @@ public enum Providers {
     AMAZON;
 
     public static String getValue(String input) throws Exception {
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized provider value: [" + input + "]. Valid values are: openstack, amazon.");
+        for (Providers member : Providers.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Unrecognized provider value: [" + input + "]. Valid values are: openstack, amazon.");
     }
 }

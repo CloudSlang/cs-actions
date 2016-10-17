@@ -15,38 +15,39 @@ public enum InstanceState {
     STOPPING(64),
     STOPPED(80);
 
-    private final int key;
+    private final Integer key;
 
-    InstanceState(int key) {
+    InstanceState(Integer key) {
         this.key = key;
     }
 
-    public int getKey() {
+    public Integer getKey() {
         return key;
     }
 
     public static int getKey(String input) throws RuntimeException {
-        if (isBlank(input)) {
-            return NOT_RELEVANT.getKey();
-        }
-        try {
-            return valueOf(input.toUpperCase()).getKey();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid instanceStateCode value: [" + input + "]. Valid values: " +
-                    "pending, running, shutting-down, terminated, stopping, stopped.");
-        }
+        return isBlank(input) ? NOT_RELEVANT.getKey() : (Integer) getKeyOrValue(input, true);
     }
 
     public static String getValue(String input) throws RuntimeException {
-        if (isBlank(input)) {
-            return NOT_RELEVANT.toString();
-        }
+        return isBlank(input) ?
+                io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT.toLowerCase() :
+                (String) getKeyOrValue(input, false);
+    }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid instanceStateName value: [" + input + "]. Valid values: " +
-                    "pending, running, shutting-down, terminated, stopping, stopped.");
+    @SuppressWarnings("unchecked")
+    private static <T> T getKeyOrValue(String input, boolean isKey) {
+        for (InstanceState member : InstanceState.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return isKey ? (T) member.getKey() : (T) member.name().toLowerCase();
+            }
         }
+        throw new RuntimeException(getErrorMessage(input, isKey));
+    }
+
+    private static String getErrorMessage(String input, boolean isKey) {
+        return isKey ? "Invalid instanceStateCode value: [" + input + "]. Valid values: pending, running, shutting-down, " +
+                "terminated, stopping, stopped." : "Invalid instanceStateName value: [" + input + "]. Valid values: " +
+                "pending, running, shutting-down, terminated, stopping, stopped.";
     }
 }

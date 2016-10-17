@@ -16,10 +16,12 @@ public enum Architecture {
             return NOT_RELEVANT;
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid architecture value: [" + input + "]. Valid values: i386, x86_64.");
+        for (Architecture member : Architecture.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Invalid architecture value: [" + input + "]. Valid values: i386, x86_64.");
     }
 }

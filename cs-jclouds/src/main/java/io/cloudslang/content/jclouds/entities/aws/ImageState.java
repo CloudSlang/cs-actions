@@ -17,10 +17,12 @@ public enum ImageState {
             return NOT_RELEVANT;
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized image state value: [" + input + "]. Valid values are: available, pending, failed.");
+        for (ImageState member : ImageState.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Unrecognized image state value: [" + input + "]. Valid values are: available, pending, failed.");
     }
 }

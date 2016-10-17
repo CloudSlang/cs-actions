@@ -18,11 +18,13 @@ public enum NetworkInterfaceAttachmentStatus {
             return NOT_RELEVANT;
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized networkInterfaceAttachmentStatus value: [" + input + "]. " +
-                    "Valid values are: attaching, attached, detaching, detached.");
+        for (NetworkInterfaceAttachmentStatus member : NetworkInterfaceAttachmentStatus.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Unrecognized networkInterfaceAttachmentStatus value: [" + input + "]. " +
+                "Valid values are: attaching, attached, detaching, detached.");
     }
 }

@@ -27,6 +27,7 @@ public enum NetworkInterfaceStatus {
                 return member.value;
             }
         }
+
         throw new RuntimeException("Unrecognized network interface status value: [" + input + "]. " +
                 "Valid values are: available, in-use.");
     }

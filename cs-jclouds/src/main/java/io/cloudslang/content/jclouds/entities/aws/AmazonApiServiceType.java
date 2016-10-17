@@ -12,13 +12,15 @@ public enum AmazonApiServiceType {
 
     public static String getValue(String input) throws RuntimeException {
         if (isBlank(input)) {
-            return EC2.toString().toLowerCase();
+            return EC2.name().toLowerCase();
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. Valid values: ec2, s3.");
+        for (AmazonApiServiceType member : AmazonApiServiceType.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. Valid values: ec2, s3.");
     }
 }
