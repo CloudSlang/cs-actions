@@ -43,6 +43,13 @@ public class GetCurrentDateTimeTest {
     }
 
     @Test
+    public void testExecuteAllValidWithFormat() {
+        result = getCurrentDateTime.execute("fr", "FR", "GMT+3", "dd-M-yyyy HH:mm:ss");
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
+    }
+
+    @Test
     public void testLocaleLangNull() {
         result = getCurrentDateTime.execute(null, "DK", "GMT+1", null);
         assertEquals(SUCCESS, result.get(RETURN_CODE));
