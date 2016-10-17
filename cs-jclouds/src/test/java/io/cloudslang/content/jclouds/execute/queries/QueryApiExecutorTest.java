@@ -219,6 +219,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeRegions() throws Exception {
+        toTest.execute(getCommonInputs("DescribeRegions", HEADERS, ""), getCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeRegions")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDetachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
 
@@ -384,6 +393,7 @@ public class QueryApiExecutorTest {
                 .withResourceIdsString("i-abcdef12,i-12345678")
                 .withKeyTagsString("Name,webserver,stack,scope")
                 .withValueTagsString("Tagged from API call,Not relevant,Testing,For testing purposes")
+                .withRegionsString("us-east-1,eu-central-1")
                 .build();
     }
 
@@ -598,6 +608,10 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.5.Value", "25.0");
                 queryParamsMap.put("Filter.25.Value", "true");
                 queryParamsMap.put("Filter.10.Value", "amazon");
+                break;
+            case "DescribeRegions":
+                queryParamsMap.put("RegionName.1", "us-east-1");
+                queryParamsMap.put("RegionName.2", "eu-central-1");
                 break;
             case "ModifyImageAttribute":
                 queryParamsMap.put("Attribute", "launchPermission");

@@ -51,17 +51,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
         }
     }
 
-    public Set<String> describeRegions(boolean isDebugMode) {
-        lazyInit(isDebugMode);
-        Set<? extends Location> locationsSet = computeService.listAssignableLocations();
-        Set<String> regionsSet = new HashSet<>();
-        for (Location location : locationsSet) {
-            regionsSet.add(location.getDescription());
-        }
-
-        return regionsSet;
-    }
-
     @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
                                      long polingInterval, boolean isDebugMode) throws Exception {
@@ -71,10 +60,5 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
     @Override
     public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    protected void reboot(String region, String serverId, boolean isDebugMode) {
-        lazyInit(region, isDebugMode);
-        computeService.rebootNode(region + SLASH + serverId);
     }
 }

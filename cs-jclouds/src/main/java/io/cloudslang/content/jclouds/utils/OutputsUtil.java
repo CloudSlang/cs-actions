@@ -5,15 +5,9 @@ import io.cloudslang.content.jclouds.entities.constants.Outputs;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
-
-import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
-
-import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.ONE;
 
 /**
  * Created by Mihai Tusa.
@@ -29,22 +23,6 @@ public class OutputsUtil {
         results.put(Outputs.RETURN_RESULT, returnResult);
 
         return results;
-    }
-
-    public static String getElementsString(Set<String> elements, String delimiter) {
-        if (elements.size() > START_INDEX) {
-            int index = START_INDEX;
-            StringBuilder sb = new StringBuilder();
-            for (String element : elements) {
-                sb.append(element);
-                if (index < elements.size() - ONE) {
-                    sb.append(delimiter);
-                }
-                index++;
-            }
-            return sb.toString();
-        }
-        return EMPTY;
     }
 
     public static Map<String, String> populateSignatureResultsMap(AuthorizationHeader authorizationHeader) {

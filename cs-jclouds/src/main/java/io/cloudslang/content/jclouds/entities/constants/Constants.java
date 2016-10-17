@@ -52,6 +52,7 @@ public class Constants {
         public static final String DEVICE_INDEX = "DeviceIndex";
         public static final String ENCRYPTED = "Encrypted";
         public static final String EXECUTABLE_BY = "ExecutableBy";
+        public static final String FILTER = "Filter";
         public static final String FILTER_NAME = "Filter.%d.Name";
         public static final String FILTER_VALUE = "Filter.%d.Value";
         public static final String FORCE = "Force";
@@ -71,6 +72,7 @@ public class Constants {
         public static final String PRIMARY = "Primary";
         public static final String PRIVATE_IP_ADDRESS = "PrivateIpAddress";
         public static final String PUBLIC_IP = "PublicIp";
+        public static final String REGION_NAME = "RegionName";
         public static final String REMOVE_OPERATION_TYPE = "remove";
         public static final String RESOURCE_ID = "ResourceId";
         public static final String SECURITY_GROUP = "SecurityGroup";
@@ -83,6 +85,7 @@ public class Constants {
         public static final String USER_GROUP = "UserGroup";
         public static final String USER_ID = "UserId";
         public static final String VALUE = "Value";
+        public static final String VALUES = "Values";
         public static final String VOLUME_ID = "VolumeId";
         public static final String VOLUME_TYPE = "VolumeType";
     }
@@ -103,6 +106,7 @@ public class Constants {
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
+        public static final String DESCRIBE_REGIONS = "DescribeRegions";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";

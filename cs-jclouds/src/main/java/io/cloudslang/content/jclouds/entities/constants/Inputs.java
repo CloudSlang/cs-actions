@@ -67,6 +67,9 @@ public class Inputs {
         public static final String VOLUME_SIZE = "volumeSize";
         public static final String VOLUME_TYPE = "volumeType";
         public static final String VPC_ID = "vpcId";
+        public static final String KEY_FILTERS_STRING = "keyFiltersString";
+        public static final String VALUE_FILTERS_STRING = "valueFiltersString";
+        public static final String REGIONS_STRING = "regionsString";
     }
 
     public static class ElasticIpInputs {
