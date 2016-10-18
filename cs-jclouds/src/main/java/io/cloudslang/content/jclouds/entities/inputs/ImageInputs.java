@@ -2,8 +2,10 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.aws.ImageState;
 import io.cloudslang.content.jclouds.entities.aws.ImageType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 
 /**
  * Created by Mihai Tusa.
@@ -116,17 +118,17 @@ public class ImageInputs {
         }
 
         public Builder withImageName(String inputValue) {
-            imageName = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.NOT_RELEVANT);
+            imageName = InputsUtil.getDefaultStringInput(inputValue, NOT_RELEVANT);
             return this;
         }
 
         public Builder withImageIdsString(String inputValue) {
-            imageIdsString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            imageIdsString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withOwnersString(String inputValue) {
-            ownersString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            ownersString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 

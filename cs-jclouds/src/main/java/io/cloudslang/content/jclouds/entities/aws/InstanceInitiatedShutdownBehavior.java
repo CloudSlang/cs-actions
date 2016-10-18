@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -11,16 +11,18 @@ public enum InstanceInitiatedShutdownBehavior {
     TERMINATE;
 
     public static String getValue(String input) throws Exception {
-        if (StringUtils.isBlank(input)) {
-            return STOP.toString().toLowerCase();
+        if (isBlank(input)) {
+            return STOP.name().toLowerCase();
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. " +
-                    "Valid values are: stop, terminate.");
-
+        for (ImageType member : ImageType.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. " +
+                "Valid values are: stop, terminate.");
+
     }
 }

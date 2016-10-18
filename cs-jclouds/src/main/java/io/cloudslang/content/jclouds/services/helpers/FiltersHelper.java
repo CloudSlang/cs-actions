@@ -6,11 +6,12 @@ import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
@@ -135,13 +136,13 @@ public class FiltersHelper {
     }
 
     private void addFiltersMapRelevantEntry(Multimap<String, String> filtersMap, String filterKey, String filterValue) {
-        if (StringUtils.isNotBlank(filterValue) && !NOT_RELEVANT.equalsIgnoreCase(filterValue)) {
+        if (isNotBlank(filterValue) && !NOT_RELEVANT.equalsIgnoreCase(filterValue)) {
             filtersMap.put(filterKey, filterValue);
         }
     }
 
     private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {
-        if (StringUtils.isNotBlank(value)) {
+        if (isNotBlank(value)) {
             map.put(key, value);
         }
     }

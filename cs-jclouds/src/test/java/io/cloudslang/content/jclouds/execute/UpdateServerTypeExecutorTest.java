@@ -51,11 +51,6 @@ public class UpdateServerTypeExecutorTest {
         inputs = null;
     }
 
-    /**
-     * Tests the execute method. Positive scenario.
-     *
-     * @throws Exception
-     */
     @Test
     public void execute() throws Exception {
         when(ComputeFactory.getComputeService(any(CommonInputs.class))).thenReturn(computeServiceMock);

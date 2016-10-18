@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -96,7 +96,7 @@ public enum InstanceType {
     }
 
     public static String getInstanceType(String input) {
-        if (StringUtils.isBlank(input)) {
+        if (isBlank(input)) {
             return M1_SMALL.getValue();
         }
         for (InstanceType type : InstanceType.values()) {

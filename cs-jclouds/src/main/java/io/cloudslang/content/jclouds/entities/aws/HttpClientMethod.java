@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -17,15 +17,17 @@ public enum HttpClientMethod {
     TRACE;
 
     public static String getValue(String input) throws RuntimeException {
-        if (StringUtils.isBlank(input)) {
-            return GET.toString();
+        if (isBlank(input)) {
+            return GET.name();
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid Http Client method value: [" + input + "]. " +
-                    "Valid values: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT, TRACE.");
+        for (HttpClientMethod member : HttpClientMethod.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name();
+            }
         }
+
+        throw new RuntimeException("Invalid Http Client method value: [" + input + "]. " +
+                "Valid values: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT, TRACE.");
     }
 }

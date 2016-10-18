@@ -2,13 +2,16 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.aws.HttpClientMethod;
 import io.cloudslang.content.jclouds.entities.aws.Providers;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
 
 /**
  * Created by persdana on 5/27/2015.
@@ -197,7 +200,7 @@ public class CommonInputs {
         }
 
         public Builder withDelimiter(String inputValue) {
-            delimiter = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.COMMA_DELIMITER);
+            delimiter = InputsUtil.getDefaultStringInput(inputValue, COMMA_DELIMITER);
             return this;
         }
 
@@ -217,12 +220,12 @@ public class CommonInputs {
         }
 
         public Builder withApiService(String inputValue) {
-            apiService = InputsUtil.getDefaultStringInput(inputValue, Constants.Apis.AMAZON_EC2_API);
+            apiService = InputsUtil.getDefaultStringInput(inputValue, AMAZON_EC2_API);
             return this;
         }
 
         public Builder withRequestUri(String inputValue) {
-            requestUri = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            requestUri = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
@@ -232,7 +235,7 @@ public class CommonInputs {
         }
 
         public Builder withRequestPayload(String inputValue) {
-            requestPayload = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            requestPayload = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
