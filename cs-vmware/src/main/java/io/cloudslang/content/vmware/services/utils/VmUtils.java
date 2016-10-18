@@ -1,15 +1,41 @@
 package io.cloudslang.content.vmware.services.utils;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.ArrayOfManagedObjectReference;
+import com.vmware.vim25.ConfigTarget;
+import com.vmware.vim25.DatastoreSummary;
+import com.vmware.vim25.DynamicProperty;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.ObjectContent;
+import com.vmware.vim25.ResourceAllocationInfo;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.SharesInfo;
+import com.vmware.vim25.SharesLevel;
+import com.vmware.vim25.VirtualCdrom;
+import com.vmware.vim25.VirtualCdromIsoBackingInfo;
+import com.vmware.vim25.VirtualDevice;
+import com.vmware.vim25.VirtualDeviceConfigSpec;
+import com.vmware.vim25.VirtualDeviceConfigSpecFileOperation;
+import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
+import com.vmware.vim25.VirtualDisk;
+import com.vmware.vim25.VirtualDiskFlatVer2BackingInfo;
+import com.vmware.vim25.VirtualEthernetCard;
+import com.vmware.vim25.VirtualEthernetCardNetworkBackingInfo;
+import com.vmware.vim25.VirtualMachineConfigSpec;
+import com.vmware.vim25.VirtualMachineDatastoreInfo;
+import com.vmware.vim25.VirtualMachineRelocateSpec;
+import com.vmware.vim25.VirtualMachineRelocateTransformation;
+import com.vmware.vim25.VirtualMachineSummary;
+import com.vmware.vim25.VirtualPCNet32;
 import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.DiskMode;
 import io.cloudslang.content.vmware.entities.Level;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.utils.InputUtils;
@@ -35,10 +61,10 @@ public class VmUtils {
     public ManagedObjectReference getMorResourcePoolFromCluster(ConnectionResources connectionResources, ManagedObjectReference clusterMor, String resourcePoolName) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         if (StringUtilities.isNotBlank(resourcePoolName)) {
             return new MorObjectHandler().getSpecificMor(connectionResources, clusterMor,
-                    VmParameter.RESOURCE_POOL.getValue(), resourcePoolName);
+                    ManagedObjectType.RESOURCE_POOL.getValue(), resourcePoolName);
         } else {
             return new MorObjectHandler().getSpecificMor(connectionResources, clusterMor,
-                    VmParameter.RESOURCE_POOL.getValue(), VmParameter.RESOURCES.getValue());
+                    ManagedObjectType.RESOURCE_POOL.getValue(), ManagedObjectType.RESOURCES.getValue());
         }
     }
 

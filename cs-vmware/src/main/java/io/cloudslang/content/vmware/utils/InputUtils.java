@@ -12,7 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.net.URL;
 import java.util.Locale;
 
-import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AT_LEAST_ONE_INPUT;
+import static io.cloudslang.content.utils.StringUtilities.*;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
 import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
 
 /**
@@ -92,7 +93,7 @@ public class InputUtils {
         return true;
     }
 
-   public static byte getByteInput(String input, byte defaultValue) {
+    public static byte getByteInput(String input, byte defaultValue) {
         byte byteInput;
         try {
             byteInput = StringUtils.isBlank(input) ? defaultValue : Byte.parseByte(input);
@@ -126,8 +127,8 @@ public class InputUtils {
     }
 
     public static void checkHostGroups(String affineHostGroupName, String antiAffineHostGroupName) {
-        if (StringUtilities.isBlank(affineHostGroupName) && StringUtils.isBlank(antiAffineHostGroupName)) {
-            throw new IllegalArgumentException(PROVIDE_AT_LEAST_ONE_INPUT);
+        if (isBlank(affineHostGroupName) == isBlank(antiAffineHostGroupName)) {
+            throw new IllegalArgumentException(PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP);
         }
     }
 }

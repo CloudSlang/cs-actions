@@ -16,9 +16,9 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
-import static io.cloudslang.content.constants.InputNames.DELIMITER;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
 import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.DELIMITER;
 import static io.cloudslang.content.vmware.constants.Inputs.HOST;
 import static io.cloudslang.content.vmware.constants.Inputs.HOST_GROUP_NAME;
 import static io.cloudslang.content.vmware.constants.Inputs.HOST_LIST;

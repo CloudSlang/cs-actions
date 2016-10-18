@@ -42,7 +42,7 @@ public class CreateAffinityRule {
             responses = {
                     @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_SUCCESS,
+                    @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> createAffinityRule(@Param(value = HOST, required = true) String host,
@@ -71,6 +71,7 @@ public class CreateAffinityRule {
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withClusterName(clusterName)
                     .withVmGroupName(vmGroupName)
+                    .withRuleName(ruleName)
                     .build();
 
             return new ClusterComputeResourceService().createAffinityRule(httpInputs, vmInputs, affineHostGroupName, antiAffineHostGroupName);

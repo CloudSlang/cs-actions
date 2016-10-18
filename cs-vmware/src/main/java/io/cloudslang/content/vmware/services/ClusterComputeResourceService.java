@@ -285,9 +285,11 @@ public class ClusterComputeResourceService {
                                                            VmInputs vmInputs, String affineHostGroupName, String antiAffineHostGroupName) throws Exception {
         ClusterVmHostRuleInfo clusterVmHostRuleInfo = new ClusterVmHostRuleInfo();
         clusterVmHostRuleInfo.setName(vmInputs.getRuleName());
-        clusterVmHostRuleInfo = addAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, affineHostGroupName);
-        clusterVmHostRuleInfo = addAntiAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, antiAffineHostGroupName);
-
+        if (StringUtilities.isNotBlank(affineHostGroupName)) {
+            clusterVmHostRuleInfo = addAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, affineHostGroupName);
+        } else {
+            clusterVmHostRuleInfo = addAntiAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, antiAffineHostGroupName);
+        }
         if (existsVmGroup(clusterConfigInfoEx, vmInputs.getVmGroupName())) {
             clusterVmHostRuleInfo.setVmGroupName(vmInputs.getVmGroupName());
             clusterVmHostRuleInfo.setMandatory(true);
@@ -299,23 +301,19 @@ public class ClusterComputeResourceService {
     }
 
     private ClusterVmHostRuleInfo addAntiAffineGroupToRule(ClusterVmHostRuleInfo clusterVmHostRuleInfo, ClusterConfigInfoEx clusterConfigInfoEx, String antiAffineHostGroupName) throws Exception {
-        if (StringUtilities.isNotBlank(antiAffineHostGroupName)) {
-            if (existsHostGroup(clusterConfigInfoEx, antiAffineHostGroupName)) {
-                clusterVmHostRuleInfo.setAntiAffineHostGroupName(antiAffineHostGroupName);
-            } else {
-                throw new Exception(ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST);
-            }
+        if (existsHostGroup(clusterConfigInfoEx, antiAffineHostGroupName)) {
+            clusterVmHostRuleInfo.setAntiAffineHostGroupName(antiAffineHostGroupName);
+        } else {
+            throw new Exception(ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST);
         }
         return clusterVmHostRuleInfo;
     }
 
     private ClusterVmHostRuleInfo addAffineGroupToRule(ClusterVmHostRuleInfo clusterVmHostRuleInfo, ClusterConfigInfoEx clusterConfigInfoEx, String affineHostGroupName) throws Exception {
-        if (StringUtilities.isNotBlank(affineHostGroupName)) {
-            if (existsHostGroup(clusterConfigInfoEx, affineHostGroupName)) {
-                clusterVmHostRuleInfo.setAffineHostGroupName(affineHostGroupName);
-            } else {
-                throw new Exception(AFFINE_HOST_GROUP_DOES_NOT_EXIST);
-            }
+        if (existsHostGroup(clusterConfigInfoEx, affineHostGroupName)) {
+            clusterVmHostRuleInfo.setAffineHostGroupName(affineHostGroupName);
+        } else {
+            throw new Exception(AFFINE_HOST_GROUP_DOES_NOT_EXIST);
         }
         return clusterVmHostRuleInfo;
     }

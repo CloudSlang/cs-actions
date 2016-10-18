@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.vmware.constants.ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AT_LEAST_ONE_INPUT;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Matchers.any;
@@ -70,7 +70,7 @@ public class CreateAffinityRuleTest {
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get(OutputNames.RETURN_CODE)));
-        assertEquals(PROVIDE_AT_LEAST_ONE_INPUT, resultMap.get(OutputNames.RETURN_RESULT));
+        assertEquals(PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP, resultMap.get(OutputNames.RETURN_RESULT));
     }
 
     @Test

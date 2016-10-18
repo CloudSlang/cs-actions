@@ -36,7 +36,7 @@ public class DeleteHostGroup {
             responses = {
                     @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
+                    @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> deleteHostGroup(@Param(value = HOST, required = true) String host,
@@ -61,9 +61,8 @@ public class DeleteHostGroup {
                     .withHostGroupName(hostGroupName)
                     .build();
             return new ClusterComputeResourceService().deleteHostGroup(httpInputs, vmInputs);
+        } catch (Exception ex) {
+            return OutputUtilities.getFailureResultsMap(ex);
         }
-          catch (Exception ex) {
-              return OutputUtilities.getFailureResultsMap(ex);
-          }
     }
 }

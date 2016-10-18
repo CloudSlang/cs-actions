@@ -43,7 +43,6 @@ public class VmInputs {
     private String ipProtocol;
     private String ipAllocScheme;
     private String diskProvisioning;
-    private String clusterName;
     private String vmGroupName;
     private String hostGroupName;
     private String ruleName;
@@ -193,8 +192,6 @@ public class VmInputs {
         return this.clusterName;
     }
 
-    public String getClusterName() {return clusterName; }
-
     public String getVmGroupName() {
         return vmGroupName;
     }
@@ -203,7 +200,9 @@ public class VmInputs {
         return hostGroupName;
     }
 
-    public String getRuleName() { return ruleName; }
+    public String getRuleName() {
+        return ruleName;
+    }
 
     public static class VmInputsBuilder {
         private String dataCenterName;
@@ -238,7 +237,6 @@ public class VmInputs {
         private String vmGroupName;
         private String hostGroupName;
         private String ruleName;
-        private String clusterName;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -375,11 +373,6 @@ public class VmInputs {
             } else {
                 this.diskProvisioning = diskProvisioning;
             }
-            return this;
-        }
-
-        public VmInputsBuilder withClusterName(String clusterName) {
-            this.clusterName = clusterName;
             return this;
         }
 
