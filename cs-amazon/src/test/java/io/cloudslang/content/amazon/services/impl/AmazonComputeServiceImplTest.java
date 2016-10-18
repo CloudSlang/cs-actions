@@ -54,9 +54,9 @@ public class AmazonComputeServiceImplTest {
     private static final String PROXY_HOST = "proxy.some.host.com";
     private static final String PROXY_PORT = "8080";
     private static final String AMAZON_PROVIDER = "ec2";
-    private static final String PROPERTY_PROXY_HOST = "amazon.proxy-host";
-    private static final String PROPERTY_PROXY_PORT = "amazon.proxy-port";
-    private static final String PROPERTY_REGIONS = "amazon.regions";
+    private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
+    private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
+    private static final String PROPERTY_REGIONS = "jclouds.regions";
 
     private AmazonComputeServiceImpl toTest;
 
