@@ -6,7 +6,7 @@ import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.Device;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.VmParameter;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
@@ -40,7 +40,7 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
-                    .getEnvironmentBrowser(connectionResources, VmParameter.ENVIRONMENT_BROWSER.getValue());
+                    .getEnvironmentBrowser(connectionResources, ManagedObjectType.ENVIRONMENT_BROWSER.getValue());
             VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                     .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
 
@@ -100,7 +100,7 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
-                    VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().destroyTask(vmMor);
 
@@ -130,7 +130,7 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
-                    VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().powerOnVMTask(vmMor, null);
 
@@ -160,7 +160,7 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
-                    VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().powerOffVMTask(vmMor);
 
@@ -191,7 +191,7 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             Map<String, ManagedObjectReference> virtualMachinesMorMap = new MorObjectHandler()
-                    .getSpecificObjectsMap(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue());
+                    .getSpecificObjectsMap(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue());
             Set<String> virtualMachineNamesList = virtualMachinesMorMap.keySet();
 
             if (virtualMachineNamesList.size() > 0) {
@@ -220,9 +220,9 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
-                    VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
-                    new String[]{VmParameter.SUMMARY.getValue()});
+                    new String[]{ManagedObjectType.SUMMARY.getValue()});
 
             if (objectContents != null) {
                 Map<String, String> vmDetails = new HashMap<>();
@@ -262,7 +262,7 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
-                    VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
                 String device = Device.getValue(vmInputs.getDevice()).toLowerCase();
@@ -301,7 +301,7 @@ public class VmService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
-                    VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
             if (vmMor != null) {
                 VmUtils utils = new VmUtils();

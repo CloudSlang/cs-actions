@@ -6,7 +6,7 @@ import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.VmParameter;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.helpers.ResponseHelper;
@@ -38,7 +38,7 @@ public class GuestService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler()
-                    .getVmMor(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    .getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 CustomizationSpec customizationSpec = isWin ? new GuestConfigSpecs().getWinCustomizationSpec(guestInputs)
                         : new GuestConfigSpecs().getLinuxCustomizationSpec(guestInputs);
@@ -73,7 +73,7 @@ public class GuestService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler()
-                    .getVmMor(connectionResources, VmParameter.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    .getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 connectionResources.getVimPortType().mountToolsInstaller(vmMor);
                 return ResponseUtils.getResultsMap(INITIATED_TOOLS_INSTALLER_MOUNT + vmInputs.getVirtualMachineName(),

@@ -15,8 +15,8 @@ public class VmInputs {
     private static final long DEFAULT_VM_DISK_SIZE_MB = 1024;
     private static final long DEFAULT_VM_MEMORY_SIZE_MB = 1024;
     private String dataCenterName;
-
     private String hostname;
+
     private String virtualMachineName;
     private String description;
     private String dataStore;
@@ -33,16 +33,19 @@ public class VmInputs {
     private String cloneDataStore;
     private String coresPerSocket;
     private int intNumCPUs;
-
     private long longVmDiskSize;
+
     private long longVmMemorySize;
     private boolean thickProvision;
-
     private boolean template;
+
     private Locale locale;
     private String ipProtocol;
     private String ipAllocScheme;
     private String diskProvisioning;
+    private String vmGroupName;
+    private String hostGroupName;
+    private String ruleName;
     private String clusterName;
 
     public VmInputs(VmInputsBuilder builder) {
@@ -74,6 +77,10 @@ public class VmInputs {
         this.ipProtocol = builder.ipProtocol;
         this.ipAllocScheme = builder.ipAllocScheme;
         this.diskProvisioning = builder.diskProvisioning;
+        this.clusterName = builder.clusterName;
+        this.vmGroupName = builder.vmGroupName;
+        this.hostGroupName = builder.hostGroupName;
+        this.ruleName = builder.ruleName;
         this.clusterName = builder.clusterName;
     }
 
@@ -185,6 +192,18 @@ public class VmInputs {
         return this.clusterName;
     }
 
+    public String getVmGroupName() {
+        return vmGroupName;
+    }
+
+    public String getHostGroupName() {
+        return hostGroupName;
+    }
+
+    public String getRuleName() {
+        return ruleName;
+    }
+
     public static class VmInputsBuilder {
         private String dataCenterName;
         private String hostname;
@@ -215,6 +234,9 @@ public class VmInputs {
         private String ipAllocScheme;
         private String diskProvisioning;
         private String clusterName;
+        private String vmGroupName;
+        private String hostGroupName;
+        private String ruleName;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -356,6 +378,21 @@ public class VmInputs {
 
         public VmInputsBuilder withClusterName(String clusterName) {
             this.clusterName = clusterName;
+            return this;
+        }
+
+        public VmInputsBuilder withVmGroupName(String vmGroupName) {
+            this.vmGroupName = vmGroupName;
+            return this;
+        }
+
+        public VmInputsBuilder withHostGroupName(String hostGroupName) {
+            this.hostGroupName = hostGroupName;
+            return this;
+        }
+
+        public VmInputsBuilder withRuleName(String ruleName) {
+            this.ruleName = ruleName;
             return this;
         }
     }

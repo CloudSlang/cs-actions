@@ -4,7 +4,7 @@ package io.cloudslang.content.vmware.entities;
  * Created by Mihai Tusa.
  * 3/10/2016.
  */
-public enum VmParameter {
+public enum ManagedObjectType {
     SERVICE_INSTANCE("ServiceInstance"),
     DATA_CENTER("Datacenter"),
     HOST_SYSTEM("HostSystem"),
@@ -39,7 +39,7 @@ public enum VmParameter {
      *
      * @param input the parameter
      */
-    VmParameter(String input) {
+    ManagedObjectType(String input) {
         this.parameter = input;
     }
 

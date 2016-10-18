@@ -3,7 +3,7 @@ package io.cloudslang.content.vmware.connection.impl;
 import com.vmware.vim25.*;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.exceptions.ConnectionException;
-import io.cloudslang.content.vmware.entities.VmParameter;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 
 import javax.xml.ws.BindingProvider;
 import java.security.KeyManagementException;
@@ -32,8 +32,8 @@ public class BasicConnection implements Connection {
     public ManagedObjectReference getServiceInstanceReference() {
         if (serviceInstanceReference == null) {
             ManagedObjectReference morRef = new ManagedObjectReference();
-            morRef.setType(VmParameter.SERVICE_INSTANCE.getValue());
-            morRef.setValue(VmParameter.SERVICE_INSTANCE.getValue());
+            morRef.setType(ManagedObjectType.SERVICE_INSTANCE.getValue());
+            morRef.setValue(ManagedObjectType.SERVICE_INSTANCE.getValue());
             serviceInstanceReference = morRef;
         }
         return serviceInstanceReference;

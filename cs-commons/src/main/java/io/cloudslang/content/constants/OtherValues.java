@@ -6,4 +6,5 @@ package io.cloudslang.content.constants;
 public class OtherValues {
     public static final String EMPTY_STRING = "";
     public static final String NULL_STRING = "null";
+    public static final String COMMA_DELIMITER = ",";
 }
