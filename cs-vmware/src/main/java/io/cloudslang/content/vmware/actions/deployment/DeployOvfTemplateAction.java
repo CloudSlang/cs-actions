@@ -1,4 +1,4 @@
-package io.cloudslang.content.vmware.actions.deploy;
+package io.cloudslang.content.vmware.actions.deployment;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -11,14 +11,14 @@ import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
-import io.cloudslang.content.vmware.services.DeployTemplateService;
+import io.cloudslang.content.vmware.services.DeployOvfTemplateService;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import io.cloudslang.content.vmware.utils.OvfUtils;
 
 import java.util.Locale;
 import java.util.Map;
 
-public class DeployVmTemplateAction {
+public class DeployOvfTemplateAction {
 
     private static final String SUCCESSFULLY_DEPLOYED = "Template was deployed successfully!";
 
@@ -147,7 +147,7 @@ public class DeployVmTemplateAction {
             Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
             Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
 
-            new DeployTemplateService(InputUtils.getBooleanInput(parallel, true)).deployTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);
+            new DeployOvfTemplateService(InputUtils.getBooleanInput(parallel, true)).deployOvfTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);
             return OutputUtilities.getSuccessResultsMap(SUCCESSFULLY_DEPLOYED);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);

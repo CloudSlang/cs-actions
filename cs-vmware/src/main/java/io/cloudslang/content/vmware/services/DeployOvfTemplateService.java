@@ -56,25 +56,32 @@ import static io.cloudslang.content.vmware.utils.OvfUtils.isOvf;
 import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class DeployTemplateService {
+public class DeployOvfTemplateService {
 
+    private static final String NOT_OVA_OR_OVF = "Template file is not ova or ovf!";
+    private static final String FAILED_TO_GET_LEASE = "Failed to get a HTTP NFC Lease: ";
+    private static final String READY = "ready";
+    private static final String ERROR = "error";
+    private static final String FILE_COULD_NOT_BE_READ = "Template file could not be read!";
     private final CustomExecutor executor;
 
-    public DeployTemplateService(final boolean parallel) {
+    public DeployOvfTemplateService(final boolean parallel) {
         this.executor = new CustomExecutor(parallel);
     }
 
-    public void deployTemplate(final HttpInputs httpInputs, final VmInputs vmInputs, final String templatePath,
-                               final Map<String, String> ovfNetworkMap, final Map<String, String> ovfPropertyMap) throws Exception {
+    public void deployOvfTemplate(final HttpInputs httpInputs, final VmInputs vmInputs, final String templatePath,
+                                  final Map<String, String> ovfNetworkMap, final Map<String, String> ovfPropertyMap)
+            throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair =
                 createLeaseSetup(connectionResources, vmInputs, templatePath, ovfNetworkMap, ovfPropertyMap);
-        final ManagedObjectReference httpNfcLease = pair.left;
-        final OvfCreateImportSpecResult importSpecResult = pair.right;
+        final ManagedObjectReference httpNfcLease = pair.getLeft();
+        final OvfCreateImportSpecResult importSpecResult = pair.getRight();
 
         final HttpNfcLeaseInfo httpNfcLeaseInfo = getHttpNfcLeaseInfoWhenReady(connectionResources, httpNfcLease);
         final List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
-        final ProgressUpdater progressUpdater = executor.isParallel() ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources)
+        final ProgressUpdater progressUpdater = executor.isParallel()
+                ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources)
                 : new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
 
         executor.execute(progressUpdater);
@@ -91,8 +98,8 @@ public class DeployTemplateService {
         if (StringUtilities.isBlank(vmInputs.getClusterName())) {
             resourcePool = vmUtils.getMorResourcePool(vmInputs.getResourcePool(), connectionResources);
         } else {
-            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources,
+                    connectionResources.getMorRootFolder(), ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
             resourcePool = vmUtils.getMorResourcePoolFromCluster(connectionResources, clusterMor, vmInputs.getResourcePool());
         }
         final ManagedObjectReference hostMor = vmUtils.getMorHost(vmInputs.getHostname(), connectionResources, null);
@@ -102,11 +109,13 @@ public class DeployTemplateService {
         final List<KeyValue> ovfPropertyMappings = getOvfPropertyMappings(ovfPropertyMap);
 
         final OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType().
-                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor, getOvfCreateImportSpecParams(vmInputs, hostMor, ovfNetworkMappings, ovfPropertyMappings));
+                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor,
+                        getOvfCreateImportSpecParams(vmInputs, hostMor, ovfNetworkMappings, ovfPropertyMappings));
 
         checkImportSpecResultForErrors(importSpecResult);
 
-        final ManagedObjectReference httpNfcLease = OvfUtils.getHttpNfcLease(connectionResources, importSpecResult.getImportSpec(), resourcePool, hostMor, folderMor);
+        final ManagedObjectReference httpNfcLease = OvfUtils.getHttpNfcLease(connectionResources,
+                importSpecResult.getImportSpec(), resourcePool, hostMor, folderMor);
         return ImmutablePair.of(httpNfcLease, importSpecResult);
     }
 
@@ -121,7 +130,9 @@ public class DeployTemplateService {
         return mappings;
     }
 
-    private List<OvfNetworkMapping> getOvfNetworkMappings(final Map<String, String> ovfNetworkMap, final ConnectionResources connectionResources) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+    private List<OvfNetworkMapping> getOvfNetworkMappings(final Map<String, String> ovfNetworkMap,
+                                                          final ConnectionResources connectionResources)
+            throws Exception {
         final List<OvfNetworkMapping> mappings = new ArrayList<>();
         for (Map.Entry<String, String> entry : ovfNetworkMap.entrySet()) {
             final OvfNetworkMapping mapping = new OvfNetworkMapping();
@@ -144,7 +155,8 @@ public class DeployTemplateService {
     }
 
     private void transferVmdkFiles(final String ovfPath, final OvfCreateImportSpecResult importSpecResult,
-                                   final List<HttpNfcLeaseDeviceUrl> deviceUrls, final ProgressUpdater progressUpdater) throws Exception {
+                                   final List<HttpNfcLeaseDeviceUrl> deviceUrls, final ProgressUpdater progressUpdater)
+            throws Exception {
         for (HttpNfcLeaseDeviceUrl deviceUrl : deviceUrls) {
             final String deviceKey = deviceUrl.getImportKey();
             for (OvfFileItem fileItem : importSpecResult.getFileItem()) {
@@ -158,7 +170,9 @@ public class DeployTemplateService {
     }
 
     @NotNull
-    private TransferVmdkTask getTransferVmdkTask(final String ovfPath, final ProgressUpdater progressUpdater, final HttpNfcLeaseDeviceUrl deviceUrl, final OvfFileItem fileItem) throws Exception {
+    private TransferVmdkTask getTransferVmdkTask(final String ovfPath, final ProgressUpdater progressUpdater,
+                                                 final HttpNfcLeaseDeviceUrl deviceUrl, final OvfFileItem fileItem)
+            throws Exception {
         final URL vmDiskUrl = new URL(deviceUrl.getUrl());
         final ITransferVmdkFrom transferVmdkFrom = getTransferVmdK(ovfPath, fileItem.getPath());
         final TransferVmdkToUrl toUrl = new TransferVmdkToUrl(vmDiskUrl, fileItem.isCreate());
@@ -187,16 +201,17 @@ public class DeployTemplateService {
             final Path vmdkPath = templateFilePath.getParent().resolve(vmdkName);
             return new TransferVmdkFromFile(vmdkPath.toFile());
         }
-        throw new RuntimeException("Template file is not ova or ovf!");
+        throw new RuntimeException(NOT_OVA_OR_OVF);
     }
 
     @NotNull
-    private HttpNfcLeaseInfo getHttpNfcLeaseInfoWhenReady(final ConnectionResources connectionResources, final ManagedObjectReference httpNfcLease) throws Exception {
+    private HttpNfcLeaseInfo getHttpNfcLeaseInfoWhenReady(final ConnectionResources connectionResources,
+                                                          final ManagedObjectReference httpNfcLease) throws Exception {
         String leaseState = getHttpNfcLeaseState(connectionResources, httpNfcLease);
-        while (!"ready".equals(leaseState)) {
+        while (!READY.equals(leaseState)) {
             leaseState = getHttpNfcLeaseState(connectionResources, httpNfcLease);
-            if ("error".equals(leaseState)) {
-                throw new RuntimeException("Failed to get a HTTP NFC Lease: " + getHttpNfcLeaseErrorState(connectionResources, httpNfcLease));
+            if (ERROR.equals(leaseState)) {
+                throw new RuntimeException(FAILED_TO_GET_LEASE + getHttpNfcLeaseErrorState(connectionResources, httpNfcLease));
             }
             sleep(100);
         }
@@ -218,7 +233,7 @@ public class DeployTemplateService {
             final InputStream inputStream = new FileInputStream(templatePath);
             return IOUtils.toString(inputStream, UTF_8);
         }
-        throw new RuntimeException("Template file could not be read!");
+        throw new RuntimeException(FILE_COULD_NOT_BE_READ);
     }
 
 
