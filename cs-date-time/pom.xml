@@ -32,6 +32,12 @@
     </scm>
     <developers>
         <developer>
+            <name>Victor Ursan</name>
+            <email>victor.ursan@hpe.com</email>
+            <organization>Hewlett Packard Enterprise</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
             <name>Curelea Stefan</name>
             <email>curelea.stefan@hpe.com</email>
             <organization>HP Software</organization>
@@ -62,6 +68,7 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
@@ -77,9 +84,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>0.0.2</version>
         </dependency>
 
         <dependency>

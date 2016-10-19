@@ -1,10 +1,21 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.AWS_REQUEST_VERSION;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DEFAULT_AMAZON_REGION;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.AMPERSAND;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.COLON;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EQUAL;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.LINE_SEPARATOR;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.ONE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
 
 /**
  * Created by Mihai Tusa.
@@ -34,8 +45,8 @@ public class AwsSignatureHelper {
             queryString.append(entryToQuery(entry));
         }
 
-        if (queryString.length() > 0) {
-            queryString.deleteCharAt(queryString.length() - 1);   //removing last '&'
+        if (queryString.length() > START_INDEX) {
+            queryString.deleteCharAt(queryString.length() - ONE);   //removing last '&'
         }
 
         return queryString.toString();
@@ -59,8 +70,7 @@ public class AwsSignatureHelper {
         for (Map.Entry<String, String> ent : sortedList) {
             header = nullToEmpty(ent.getKey()).toLowerCase();
             headerValue = nullToEmpty(ent.getValue()).trim();
-            headerString.append(header).append(Constants.Miscellaneous.COLON)
-                    .append(headerValue).append(Constants.Miscellaneous.LINE_SEPARATOR);
+            headerString.append(header).append(COLON).append(headerValue).append(LINE_SEPARATOR);
         }
 
         return headerString.toString();
@@ -78,7 +88,7 @@ public class AwsSignatureHelper {
 
         StringBuilder signedHeaderString = new StringBuilder();
         for (String header : sortedList) {
-            if (signedHeaderString.length() > 0) {
+            if (signedHeaderString.length() > START_INDEX) {
                 signedHeaderString.append(SEMICOLON);
             }
             signedHeaderString.append(nullToEmpty(header).toLowerCase());
@@ -108,8 +118,7 @@ public class AwsSignatureHelper {
      * @return A string representing the AWS credential scope.
      */
     public String getAmazonCredentialScope(String dateStamp, String awsRegion, String awsService) {
-        return dateStamp + Constants.Miscellaneous.SCOPE_SEPARATOR + awsRegion + Constants.Miscellaneous.SCOPE_SEPARATOR +
-                awsService + Constants.Miscellaneous.SCOPE_SEPARATOR + Constants.AwsParams.AWS_REQUEST_VERSION;
+        return dateStamp + SCOPE_SEPARATOR + awsRegion + SCOPE_SEPARATOR + awsService + SCOPE_SEPARATOR + AWS_REQUEST_VERSION;
     }
 
     /**
@@ -120,23 +129,23 @@ public class AwsSignatureHelper {
      * @return A (lowercase alphanumeric) string representing the AWS region.
      */
     public String getAmazonRegion(String endpoint) {
-        if (StringUtils.isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
+        if (isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
             endpoint = endpoint.substring(3);
-            return endpoint.substring(0, endpoint.indexOf(DOT_CHAR));
+            return endpoint.substring(START_INDEX, endpoint.indexOf(DOT_CHAR));
         }
-        return Constants.AwsParams.DEFAULT_AMAZON_REGION;
+        return DEFAULT_AMAZON_REGION;
     }
 
     private String entryToQuery(Map.Entry<String, String> entry) {
         String escapedKey = nullToEmpty(UriEncoder.escapeString(entry.getKey()));
         String escapedValue = nullToEmpty(UriEncoder.escapeString(entry.getValue()));
 
-        return escapedKey + Constants.Miscellaneous.EQUAL + escapedValue + Constants.Miscellaneous.AMPERSAND;
+        return escapedKey + EQUAL + escapedValue + AMPERSAND;
     }
 
     private String nullToEmpty(String inputString) {
         if (inputString == null) {
-            return Constants.Miscellaneous.EMPTY;
+            return EMPTY;
         }
         return inputString;
     }

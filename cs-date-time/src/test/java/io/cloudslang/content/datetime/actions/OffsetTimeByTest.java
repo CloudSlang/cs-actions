@@ -10,6 +10,11 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.datetime.utils.DateTimeUtils.getDateFormatter;
+import static io.cloudslang.content.datetime.utils.DateTimeUtils.getJodaOrJavaDate;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -35,10 +40,10 @@ public class OffsetTimeByTest {
     @Test
     public void testLocaleEnglish() throws Exception {
         result = offsetTimeBy.execute("April 26, 2016 1:32:20 PM EEST", "30", "en", "US");
-        DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("dd-MM-yyyy HH:mm:ss", "en", "US");
-        DateTime dateTime = DateTimeUtils.getJodaOrJavaDate(dateTimeFormatter, result.get("returnResult"));
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
+        final DateTimeFormatter dateTimeFormatter = getDateFormatter("dd-MM-yyyy HH:mm:ss", "en", "US");
+        final DateTime dateTime = getJodaOrJavaDate(dateTimeFormatter, result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals(dateTimeFormatter.print(dateTime), "26-04-2016 13:32:50");
 
     }
@@ -46,42 +51,38 @@ public class OffsetTimeByTest {
     @Test
     public void testLocaleFrench() throws Exception {
         result = offsetTimeBy.execute("4 mai 2016 18:09:41", "12", "fr", "FR");
-
-        DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("dd-MM-yyyy HH:mm:ss", "fr", "FR");
-        DateTime dateTime = DateTimeUtils.getJodaOrJavaDate(dateTimeFormatter, result.get("returnResult"));
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
+        final DateTimeFormatter dateTimeFormatter = getDateFormatter("dd-MM-yyyy HH:mm:ss", "fr", "FR");
+        final DateTime dateTime = getJodaOrJavaDate(dateTimeFormatter, result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals(dateTimeFormatter.print(dateTime), "04-05-2016 18:09:53");
     }
 
     @Test
     public void testLocaleUnix() {
         result = offsetTimeBy.execute("1000", "12", "unix", "US");
-
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
-        assertEquals(result.get("returnResult"), "1012");
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
+        assertEquals(result.get(RETURN_RESULT), "1012");
     }
 
     @Test
     public void testLocaleLangNull() throws Exception {
         result = offsetTimeBy.execute("April 26, 2016 1:32:20 PM EEST", "20", null, "US");
-
-        DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("dd-MM-yyyy HH:mm:ss", "en", "US");
-        DateTime dateTime = DateTimeUtils.getJodaOrJavaDate(dateTimeFormatter, result.get("returnResult"));
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
+        final DateTimeFormatter dateTimeFormatter = getDateFormatter("dd-MM-yyyy HH:mm:ss", "en", "US");
+        final DateTime dateTime = getJodaOrJavaDate(dateTimeFormatter, result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals(dateTimeFormatter.print(dateTime), "26-04-2016 13:32:40");
     }
 
     @Test
     public void testLocaleCountryNull() throws Exception {
         result = offsetTimeBy.execute("April 26, 2016 1:32:20 PM EEST", "15", "en", null);
-
-        DateTimeFormatter dateTimeFormatter = DateTimeUtils.getDateFormatter("dd-MM-yyyy HH:mm:ss", "en", "US");
-        DateTime dateTime = DateTimeUtils.getJodaOrJavaDate(dateTimeFormatter, result.get("returnResult"));
-        assertEquals("0", result.get("returnCode"));
-        assertFalse(result.get("returnResult").isEmpty());
+        final DateTimeFormatter dateTimeFormatter = getDateFormatter("dd-MM-yyyy HH:mm:ss", "en", "US");
+        final DateTime dateTime = getJodaOrJavaDate(dateTimeFormatter, result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertFalse(result.get(RETURN_RESULT).isEmpty());
         assertEquals(dateTimeFormatter.print(dateTime), "26-04-2016 13:32:35");
     }
 }

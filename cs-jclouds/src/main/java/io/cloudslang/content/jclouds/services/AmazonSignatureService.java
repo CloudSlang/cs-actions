@@ -1,18 +1,28 @@
 package io.cloudslang.content.jclouds.services;
 
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.services.helpers.AwsSignatureHelper;
 import io.cloudslang.content.jclouds.services.helpers.AwsSignatureV4;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.AMPERSAND;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.COLON;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.DOT;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EQUAL;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.LINE_SEPARATOR;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
 
 /**
  * Created by Mihai Tusa.
@@ -33,16 +43,16 @@ public class AmazonSignatureService {
     public AuthorizationHeader signRequestHeaders(InputsWrapper wrapper, Map<String, String> headersMap,
                                                   Map<String, String> queryParamsMap) throws SignatureException, MalformedURLException {
         AwsSignatureHelper signatureUtils = new AwsSignatureHelper();
-        String amazonDate = StringUtils.isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
+        String amazonDate = isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
         String dateStamp = amazonDate.split(T_REGEX_STRING)[0];
 
         String requestEndpoint = getRequestEndpoint(wrapper.getCommonInputs().getEndpoint());
         String region = signatureUtils.getAmazonRegion(requestEndpoint);
 
-        String apiService = InputsUtil.getDefaultStringInput(wrapper.getApiService(), Constants.Apis.AMAZON_EC2_API);
+        String apiService = InputsUtil.getDefaultStringInput(wrapper.getApiService(), AMAZON_EC2_API);
 
         String credentialScope = signatureUtils.getAmazonCredentialScope(dateStamp, region, apiService);
-        String amzCredential = wrapper.getCommonInputs().getIdentity() + Constants.Miscellaneous.SCOPE_SEPARATOR + credentialScope;
+        String amzCredential = wrapper.getCommonInputs().getIdentity() + SCOPE_SEPARATOR + credentialScope;
 
         Map<String, String> requestHeaders = getRequestHeadersMap(headersMap, wrapper.getHeaders(), requestEndpoint,
                 wrapper.getSecurityToken(), amazonDate);
@@ -58,8 +68,7 @@ public class AmazonSignatureService {
         byte[] key = awsSignatureV4.getDerivedSigningKey(wrapper.getCommonInputs().getCredential(), dateStamp, region, apiService);
         String signature = awsSignatureV4.getSignature(stringToSign, key);
 
-        String authorizationHeader = AWS4_SIGNING_ALGORITHM + " Credential=" + amzCredential +
-                ", SignedHeaders=" + signedHeadersString + ", Signature=" + signature;
+        String authorizationHeader = AWS4_SIGNING_ALGORITHM + " Credential=" + amzCredential + ", SignedHeaders=" + signedHeadersString + ", Signature=" + signature;
         requestHeaders.put(AUTHORIZATION, authorizationHeader);
 
         return new AuthorizationHeader(getSignedRequestHeadersString(requestHeaders), signature);
@@ -70,9 +79,8 @@ public class AmazonSignatureService {
             queryParamsMap = new HashMap<>();
         }
 
-        queryParamsMap = StringUtils.isBlank(wrapper.getQueryParams()) ? queryParamsMap :
-                InputsUtil.getHeadersOrQueryParamsMap(queryParamsMap, wrapper.getQueryParams(),
-                        Constants.Miscellaneous.AMPERSAND, Constants.Miscellaneous.EQUAL, false);
+        queryParamsMap = isBlank(wrapper.getQueryParams()) ? queryParamsMap :
+                InputsUtil.getHeadersOrQueryParamsMap(queryParamsMap, wrapper.getQueryParams(), AMPERSAND, EQUAL, false);
 
         return queryParamsMap;
     }
@@ -81,16 +89,15 @@ public class AmazonSignatureService {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
             sb.append(entry.getKey());
-            sb.append(Constants.Miscellaneous.COLON);
+            sb.append(COLON);
             sb.append(entry.getValue());
-            sb.append(Constants.Miscellaneous.LINE_SEPARATOR);
+            sb.append(LINE_SEPARATOR);
         }
         return sb.toString();
     }
 
     private String getRequestEndpoint(String requestEndpoint) throws MalformedURLException {
-        requestEndpoint = InputsUtil.getDefaultStringInput(requestEndpoint, Constants.Apis.AMAZON_EC2_API +
-                Constants.Miscellaneous.DOT + AMAZON_HOSTNAME);
+        requestEndpoint = InputsUtil.getDefaultStringInput(requestEndpoint, AMAZON_EC2_API + DOT + AMAZON_HOSTNAME);
         if (!requestEndpoint.contains(AMAZON_HOSTNAME)) {
             requestEndpoint = InputsUtil.getEndpointFromUrl(requestEndpoint);
         }
@@ -104,9 +111,8 @@ public class AmazonSignatureService {
             headersMap = new HashMap<>();
         }
 
-        if (StringUtils.isNotBlank(headers)) {
-            headersMap = InputsUtil.getHeadersOrQueryParamsMap(headersMap, headers, Constants.AwsParams.HEADER_DELIMITER,
-                    Constants.Miscellaneous.COLON, true);
+        if (isNotBlank(headers)) {
+            headersMap = InputsUtil.getHeadersOrQueryParamsMap(headersMap, headers, HEADER_DELIMITER, COLON, true);
         }
 
         if (!(headersMap.containsKey(HOST.toLowerCase()) || headersMap.containsKey(HOST))) {
@@ -121,7 +127,7 @@ public class AmazonSignatureService {
         }
 
 
-        if (StringUtils.isNotBlank(securityToken)) {
+        if (isNotBlank(securityToken)) {
             headersMap.put(X_AMZ_SECURITY_TOKEN, securityToken);
         }
 

@@ -2,19 +2,24 @@ package io.cloudslang.content.jclouds.execute.queries;
 
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.factory.InputsWrapperBuilder;
 import io.cloudslang.content.jclouds.factory.ParamsMapBuilder;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.AMPERSAND;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.COLON;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EQUAL;
 
 /**
  * Created by Mihai Tusa.
@@ -26,10 +31,9 @@ public class QueryApiExecutor {
         InputsWrapper inputs = InputsWrapperBuilder.getWrapper(commonInputs, builders);
         Map<String, String> queryParamsMap = ParamsMapBuilder.getParamsMap(inputs);
 
-        Map<String, String> headersMap = StringUtils.isBlank(inputs.getCommonInputs().getHeaders()) ?
-                new HashMap<String, String>() :
+        Map<String, String> headersMap = isBlank(inputs.getCommonInputs().getHeaders()) ? new HashMap<String, String>() :
                 InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), inputs.getCommonInputs().getHeaders(),
-                        Constants.AwsParams.HEADER_DELIMITER, Constants.Miscellaneous.COLON, true);
+                        HEADER_DELIMITER, COLON, true);
 
         setQueryApiParams(inputs, queryParamsMap);
         setQueryApiHeaders(inputs, headersMap, queryParamsMap);
@@ -44,8 +48,7 @@ public class QueryApiExecutor {
     }
 
     private void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
-        String queryParamsString = InputsUtil.getParamsString(queryParamsMap, Constants.Miscellaneous.EQUAL,
-                Constants.Miscellaneous.AMPERSAND);
+        String queryParamsString = InputsUtil.getParamsString(queryParamsMap, EQUAL, AMPERSAND);
         inputs.getHttpClientInputs().setQueryParams(queryParamsString);
     }
 }

@@ -1,6 +1,6 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -11,14 +11,16 @@ public enum Domain {
     VPC;
 
     public static String getValue(String input) throws RuntimeException {
-        if (StringUtils.isBlank(input)) {
-            return STANDARD.toString().toLowerCase();
+        if (isBlank(input)) {
+            return STANDARD.name().toLowerCase();
         }
 
-        try {
-            return valueOf(input.toUpperCase()).toString().toLowerCase();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Invalid Amazon domain: [" + input + "]. Valid values: standard, vpc.");
+        for (Domain member : Domain.values()) {
+            if (member.name().equalsIgnoreCase(input)) {
+                return member.name().toLowerCase();
+            }
         }
+
+        throw new RuntimeException("Invalid Amazon domain: [" + input + "]. Valid values: standard, vpc.");
     }
 }
