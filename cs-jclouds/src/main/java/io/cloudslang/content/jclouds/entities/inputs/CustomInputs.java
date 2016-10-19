@@ -10,8 +10,9 @@ import io.cloudslang.content.jclouds.entities.aws.ProductCodeType;
 import io.cloudslang.content.jclouds.entities.aws.RootDeviceType;
 import io.cloudslang.content.jclouds.entities.aws.VirtualizationType;
 import io.cloudslang.content.jclouds.entities.aws.VolumeType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DEFAULT_AMAZON_REGION;
 
 /**
  * Created by Mihai Tusa.
@@ -61,6 +62,9 @@ public class CustomInputs {
     private String kmsKeyId;
     private String attachmentId;
     private String domain;
+    private String regionsString;
+    private String keyFiltersString;
+    private String valueFiltersString;
 
     private CustomInputs(Builder builder) {
         this.region = builder.region;
@@ -106,6 +110,9 @@ public class CustomInputs {
         this.domain = builder.domain;
         this.attribute = builder.attribute;
         this.operationType = builder.operationType;
+        this.regionsString = builder.regionsString;
+        this.keyFiltersString = builder.keyFiltersString;
+        this.valueFiltersString = builder.valueFiltersString;
     }
 
     public String getRegion() {
@@ -280,6 +287,18 @@ public class CustomInputs {
         return operationType;
     }
 
+    public String getRegionsString() {
+        return regionsString;
+    }
+
+    public String getKeyFiltersString() {
+        return keyFiltersString;
+    }
+
+    public String getValueFiltersString() {
+        return valueFiltersString;
+    }
+
     public static class Builder {
         private String region;
         private String instanceId;
@@ -324,13 +343,16 @@ public class CustomInputs {
         private String domain;
         private String attribute;
         private String operationType;
+        private String regionsString;
+        private String keyFiltersString;
+        private String valueFiltersString;
 
         public CustomInputs build() {
             return new CustomInputs(this);
         }
 
         public Builder withRegion(String inputValue) {
-            region = InputsUtil.getDefaultStringInput(inputValue, Constants.AwsParams.DEFAULT_AMAZON_REGION);
+            region = InputsUtil.getDefaultStringInput(inputValue, DEFAULT_AMAZON_REGION);
             return this;
         }
 
@@ -541,6 +563,21 @@ public class CustomInputs {
 
         public Builder withOperationType(String inputValue) {
             operationType = inputValue;
+            return this;
+        }
+
+        public Builder withRegionsString(String inputValue) {
+            regionsString = inputValue;
+            return this;
+        }
+
+        public Builder withKeyFiltersString(String inputValue) {
+            keyFiltersString = inputValue;
+            return this;
+        }
+
+        public Builder withValueFiltersString(String inputValue) {
+            valueFiltersString = inputValue;
             return this;
         }
     }

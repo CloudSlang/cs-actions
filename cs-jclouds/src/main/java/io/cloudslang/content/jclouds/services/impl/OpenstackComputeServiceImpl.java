@@ -51,12 +51,6 @@ public class OpenstackComputeServiceImpl extends JCloudsService implements Compu
     }
 
     @Override
-    public Set<String> describeRegions(boolean isDebugMode) {
-        lazyInit(isDebugMode);
-        return novaApi.getConfiguredRegions();
-    }
-
-    @Override
     public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
                                      long polingInterval, boolean isDebugMode) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);

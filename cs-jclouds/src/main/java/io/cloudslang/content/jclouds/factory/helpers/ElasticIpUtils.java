@@ -1,12 +1,14 @@
 package io.cloudslang.content.jclouds.factory.helpers;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.ALLOCATION_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.PUBLIC_IP;
 
 /**
  * Created by Mihai Tusa.
@@ -29,9 +31,9 @@ public class ElasticIpUtils {
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.ALLOCATION_ID, wrapper.getCustomInputs().getAllocationId(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ALLOCATION_ID, wrapper.getCustomInputs().getAllocationId(),
                 StringUtils.isNotBlank(wrapper.getCustomInputs().getAllocationId()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, Constants.AwsParams.PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
+        InputsUtil.setOptionalMapEntry(queryParamsMap, PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
                 StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
 
         return queryParamsMap;

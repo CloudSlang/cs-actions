@@ -15,12 +15,12 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by victor on 29.09.2016.
  */
-public class GetAuthorizationTokenTest {
-    private GetAuthorizationToken authorizationToken;
+public class GetSharedAccessKeyTokenTest {
+    private GetSharedAccessKeyToken authorizationToken;
 
     @Before
     public void setUp() throws Exception {
-        authorizationToken = new GetAuthorizationToken();
+        authorizationToken = new GetSharedAccessKeyToken();
     }
 
     @After

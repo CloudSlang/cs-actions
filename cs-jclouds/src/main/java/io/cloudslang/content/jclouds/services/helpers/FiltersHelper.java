@@ -2,18 +2,20 @@ package io.cloudslang.content.jclouds.services.helpers;
 
 import com.google.common.collect.Multimap;
 import io.cloudslang.content.jclouds.entities.aws.*;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ImageInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.START_INDEX;
 
 /**
  * Created by Mihai Tusa.
@@ -25,29 +27,13 @@ public class FiltersHelper {
     private static final String EQUAL = "=";
     private static final String TAG_KEYS_TAG_VALUES_MISMATCH = "Incorrect supplied values for: [keyTagsString] and/or " +
             "[valueTagsString] inputs. Number of tag keys should be the same with number of tag values.";
-    private static final String RESOURCE_IDS_STRING_EMPTY = "Value for supplied for: [resourceIdsString] input " +
-            "cannot be empty. Please provide at least one resource id to apply tags to.";
     private static final String MAXIMUM_TAGS_LIMIT_EXCEEDED = "Incorrect supplied values for: [keyTagsString] and/or " +
             "[valueTagsString] inputs. A resource can have a maximum of 10 tags.";
 
+    private static final int MAXIMUM_TAGS_LIMIT = 10;
+
     public EC2Api getEC2Api(ContextBuilder contextBuilder) {
         return contextBuilder.buildApi(EC2Api.class);
-    }
-
-    public Map<String, String> getTagsMap(CustomInputs customInputs, String delimiter) {
-        Map<String, String> tagsMap = new HashMap<>();
-        setTags(customInputs, tagsMap, delimiter);
-
-        return tagsMap;
-    }
-
-    public Set<String> getResourcesIdsList(String resourceIdsString, String delimiter) {
-        Set<String> resourceIdsSet = InputsUtil.getStringsSet(resourceIdsString, delimiter);
-        if (resourceIdsSet == null) {
-            throw new RuntimeException(RESOURCE_IDS_STRING_EMPTY);
-        }
-
-        return resourceIdsSet;
     }
 
     void updateInstanceFiltersMap(InstanceInputs instanceInputs, Multimap<String, String> filtersMap, String delimiter) {
@@ -150,13 +136,13 @@ public class FiltersHelper {
     }
 
     private void addFiltersMapRelevantEntry(Multimap<String, String> filtersMap, String filterKey, String filterValue) {
-        if (StringUtils.isNotBlank(filterValue) && !Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(filterValue)) {
+        if (isNotBlank(filterValue) && !NOT_RELEVANT.equalsIgnoreCase(filterValue)) {
             filtersMap.put(filterKey, filterValue);
         }
     }
 
     private void updateFiltersMapEntry(Multimap<String, String> map, String key, String value) {
-        if (StringUtils.isNotBlank(value)) {
+        if (isNotBlank(value)) {
             map.put(key, value);
         }
     }
@@ -167,24 +153,18 @@ public class FiltersHelper {
         String[] tagValues;
 
         if (inputs instanceof InstanceInputs) {
-            tagKeys = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getKeyTagsString(),
-                    Constants.Miscellaneous.EMPTY, delimiter);
-            tagValues = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getValueTagsString(),
-                    Constants.Miscellaneous.EMPTY, delimiter);
+            tagKeys = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getKeyTagsString(), EMPTY, delimiter);
+            tagValues = InputsUtil.getStringsArray(((InstanceInputs) inputs).getCustomInputs().getValueTagsString(), EMPTY, delimiter);
 
             updateTagFiltersMap((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
         } else if (inputs instanceof ImageInputs) {
-            tagKeys = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getKeyTagsString(),
-                    Constants.Miscellaneous.EMPTY, delimiter);
-            tagValues = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getValueTagsString(),
-                    Constants.Miscellaneous.EMPTY, delimiter);
+            tagKeys = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getKeyTagsString(), EMPTY, delimiter);
+            tagValues = InputsUtil.getStringsArray(((ImageInputs) inputs).getCustomInputs().getValueTagsString(), EMPTY, delimiter);
 
             updateTagFiltersMap((Multimap<String, String>) multipurposeMap, tagKeys, tagValues);
         } else if (inputs instanceof CustomInputs) {
-            tagKeys = InputsUtil.getStringsArray(((CustomInputs) inputs).getKeyTagsString(),
-                    Constants.Miscellaneous.EMPTY, delimiter);
-            tagValues = InputsUtil.getStringsArray(((CustomInputs) inputs).getValueTagsString(),
-                    Constants.Miscellaneous.EMPTY, delimiter);
+            tagKeys = InputsUtil.getStringsArray(((CustomInputs) inputs).getKeyTagsString(), EMPTY, delimiter);
+            tagValues = InputsUtil.getStringsArray(((CustomInputs) inputs).getValueTagsString(), EMPTY, delimiter);
 
             updateTagsMap((Map<String, String>) multipurposeMap, tagKeys, tagValues);
         }
@@ -195,7 +175,7 @@ public class FiltersHelper {
         if (tagKeys != null && tagValues != null) {
             validateArraysLength(tagKeys, tagValues);
 
-            for (int counter = Constants.Values.START_INDEX; counter < tagKeys.length; counter++) {
+            for (int counter = START_INDEX; counter < tagKeys.length; counter++) {
                 filtersMap.put(TAG, tagKeys[counter] + EQUAL + tagValues[counter]);
             }
         }
@@ -205,11 +185,11 @@ public class FiltersHelper {
         if (tagKeys != null && tagValues != null) {
             validateArraysLength(tagKeys, tagValues);
 
-            if (tagKeys.length > 10) {
+            if (tagKeys.length > MAXIMUM_TAGS_LIMIT) {
                 throw new RuntimeException(MAXIMUM_TAGS_LIMIT_EXCEEDED);
             }
 
-            for (int counter = Constants.Values.START_INDEX; counter < tagKeys.length; counter++) {
+            for (int counter = START_INDEX; counter < tagKeys.length; counter++) {
                 tagsMap.put(tagKeys[counter], tagValues[counter]);
             }
         }

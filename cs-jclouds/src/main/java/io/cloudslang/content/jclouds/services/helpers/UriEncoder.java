@@ -1,12 +1,12 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public class UriEncoder {
-    private static final Charset CHARSET_UTF_8 = Charset.forName(Constants.Miscellaneous.ENCODING);
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.ENCODING;
+
+class UriEncoder {
+    private static final Charset CHARSET_UTF_8 = Charset.forName(ENCODING);
 
     private UriEncoder() {
     }
@@ -51,7 +51,7 @@ public class UriEncoder {
      * @param string string to encode
      * @return encoded US-ASCII string
      */
-    public static String escapeString(String string) {
+    static String escapeString(String string) {
         return escapeString(string, false);
     }
 

@@ -2,8 +2,10 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.jclouds.entities.aws.ImageState;
 import io.cloudslang.content.jclouds.entities.aws.ImageType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 
 /**
  * Created by Mihai Tusa.
@@ -13,7 +15,6 @@ public class ImageInputs {
     private CustomInputs customInputs;
 
     private String imageName;
-    private String imageDescription;
     private String imageIdsString;
     private String ownersString;
     private String userIdsString;
@@ -30,7 +31,6 @@ public class ImageInputs {
         this.customInputs = builder.customInputs;
 
         this.imageName = builder.imageName;
-        this.imageDescription = builder.imageDescription;
         this.imageIdsString = builder.imageIdsString;
         this.ownersString = builder.ownersString;
         this.userIdsString = builder.userIdsString;
@@ -50,10 +50,6 @@ public class ImageInputs {
 
     public String getImageName() {
         return imageName;
-    }
-
-    public String getImageDescription() {
-        return imageDescription;
     }
 
     public String getImageIdsString() {
@@ -100,7 +96,6 @@ public class ImageInputs {
         private CustomInputs customInputs;
 
         private String imageName;
-        private String imageDescription;
         private String imageIdsString;
         private String ownersString;
         private String userIdsString;
@@ -123,22 +118,17 @@ public class ImageInputs {
         }
 
         public Builder withImageName(String inputValue) {
-            imageName = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.NOT_RELEVANT);
+            imageName = InputsUtil.getDefaultStringInput(inputValue, NOT_RELEVANT);
             return this;
         }
 
         public Builder withImageIdsString(String inputValue) {
-            imageIdsString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            imageIdsString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withOwnersString(String inputValue) {
-            ownersString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
-            return this;
-        }
-
-        public Builder withImageDescription(String inputValue) {
-            imageDescription = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            ownersString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 

@@ -2,8 +2,9 @@ package io.cloudslang.content.jclouds.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.jclouds.entities.aws.AmazonApiServiceType;
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
 
 /**
  * Created by Mihai Tusa.
@@ -192,7 +193,7 @@ public class InputsWrapper {
         }
 
         public Builder withRequestUri(String inputValue) {
-            requestUri = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.SCOPE_SEPARATOR);
+            requestUri = InputsUtil.getDefaultStringInput(inputValue, SCOPE_SEPARATOR);
             return this;
         }
 

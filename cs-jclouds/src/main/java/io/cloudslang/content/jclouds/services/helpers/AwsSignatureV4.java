@@ -1,6 +1,5 @@
 package io.cloudslang.content.jclouds.services.helpers;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import org.bouncycastle.util.encoders.Hex;
 
 import javax.crypto.Mac;
@@ -10,6 +9,10 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.AWS_REQUEST_VERSION;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.ENCODING;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.LINE_SEPARATOR;
 
 /**
  * Created by Mihai Tusa.
@@ -41,10 +44,9 @@ public class AwsSignatureV4 {
     public String getCanonicalRequest(String httpRequestMethod, String canonicalURI, String canonicalQueryString,
                                       String canonicalHeaders, String signedHeaders, String requestPayload) throws SignatureException {
         try {
-            return httpRequestMethod + Constants.Miscellaneous.LINE_SEPARATOR + canonicalURI + Constants.Miscellaneous.LINE_SEPARATOR +
-                    canonicalQueryString + Constants.Miscellaneous.LINE_SEPARATOR + canonicalHeaders +
-                    Constants.Miscellaneous.LINE_SEPARATOR + signedHeaders + Constants.Miscellaneous.LINE_SEPARATOR +
-                    new String(Hex.encode(calculateHash(requestPayload)), Constants.Miscellaneous.ENCODING);
+            return httpRequestMethod + LINE_SEPARATOR + canonicalURI + LINE_SEPARATOR + canonicalQueryString + LINE_SEPARATOR +
+                    canonicalHeaders + LINE_SEPARATOR + signedHeaders + LINE_SEPARATOR +
+                    new String(Hex.encode(calculateHash(requestPayload)), ENCODING);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             throw new SignatureException(REQUEST_PAYLOAD_DIGEST + e.getMessage());
         }
@@ -61,9 +63,8 @@ public class AwsSignatureV4 {
      */
     public String getStringToSign(String requestDate, String credentialScope, String canonicalRequest) throws SignatureException {
         try {
-            return AWS4_SIGNING_ALGORITHM + Constants.Miscellaneous.LINE_SEPARATOR + requestDate +
-                    Constants.Miscellaneous.LINE_SEPARATOR + credentialScope + Constants.Miscellaneous.LINE_SEPARATOR +
-                    new String(Hex.encode(calculateHash(canonicalRequest)), Constants.Miscellaneous.ENCODING);
+            return AWS4_SIGNING_ALGORITHM + LINE_SEPARATOR + requestDate + LINE_SEPARATOR + credentialScope + LINE_SEPARATOR +
+                    new String(Hex.encode(calculateHash(canonicalRequest)), ENCODING);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             throw new SignatureException(CANONICAL_REQUEST_DIGEST_ERROR + e.getMessage());
         }
@@ -81,12 +82,12 @@ public class AwsSignatureV4 {
     public byte[] getDerivedSigningKey(String secretAccessKey, String dateStamp, String region, String amazonApi)
             throws SignatureException {
         try {
-            byte[] kSecret = (AWS_SIGNATURE_VERSION + secretAccessKey).getBytes(Constants.Miscellaneous.ENCODING);
+            byte[] kSecret = (AWS_SIGNATURE_VERSION + secretAccessKey).getBytes(ENCODING);
             byte[] kDate = calculateHmacSHA256(dateStamp, kSecret);
             byte[] kRegion = calculateHmacSHA256(region, kDate);
             byte[] kService = calculateHmacSHA256(amazonApi, kRegion);
 
-            return calculateHmacSHA256(Constants.AwsParams.AWS_REQUEST_VERSION, kService);
+            return calculateHmacSHA256(AWS_REQUEST_VERSION, kService);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {
             throw new SignatureException(DERIVED_SIGNING_ERROR + e.getMessage());
         }
@@ -101,7 +102,7 @@ public class AwsSignatureV4 {
      */
     public String getSignature(String stringToSign, byte[] derivedSigningKey) throws SignatureException {
         try {
-            return new String(Hex.encode(calculateHmacSHA256(stringToSign, derivedSigningKey)), Constants.Miscellaneous.ENCODING);
+            return new String(Hex.encode(calculateHmacSHA256(stringToSign, derivedSigningKey)), ENCODING);
         } catch (NoSuchAlgorithmException | InvalidKeyException | UnsupportedEncodingException e) {
             throw new SignatureException(SIGNATURE_ERROR + e.getMessage());
         }
@@ -115,7 +116,7 @@ public class AwsSignatureV4 {
      */
     private byte[] calculateHash(String data) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
-        md.update(data.getBytes(Constants.Miscellaneous.ENCODING));
+        md.update(data.getBytes(ENCODING));
         return md.digest();
     }
 
@@ -130,6 +131,6 @@ public class AwsSignatureV4 {
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         Mac mac = Mac.getInstance(HMAC_ALGORITHM);
         mac.init(new SecretKeySpec(key, HMAC_ALGORITHM));
-        return mac.doFinal(data.getBytes(Constants.Miscellaneous.ENCODING));
+        return mac.doFinal(data.getBytes(ENCODING));
     }
 }

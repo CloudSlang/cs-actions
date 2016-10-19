@@ -1,7 +1,7 @@
 package io.cloudslang.content.jclouds.entities.aws;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
-import org.apache.commons.lang3.StringUtils;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -18,8 +18,8 @@ public enum NetworkInterfaceStatus {
     }
 
     public static String getValue(String input) {
-        if (StringUtils.isBlank(input)) {
-            return Constants.Miscellaneous.NOT_RELEVANT;
+        if (isBlank(input)) {
+            return NOT_RELEVANT;
         }
 
         for (NetworkInterfaceStatus member : NetworkInterfaceStatus.values()) {
@@ -27,6 +27,7 @@ public enum NetworkInterfaceStatus {
                 return member.value;
             }
         }
+
         throw new RuntimeException("Unrecognized network interface status value: [" + input + "]. " +
                 "Valid values are: available, in-use.");
     }

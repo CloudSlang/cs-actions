@@ -1,16 +1,15 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 /**
  * Created by Mihai Tusa.
  * 6/22/2016.
  */
 public class VolumeInputs {
-    private CustomInputs customInputs;
-
     private String snapshotId;
     private String size;
     private String iops;
@@ -21,8 +20,6 @@ public class VolumeInputs {
     private boolean force;
 
     private VolumeInputs(Builder builder) {
-        this.customInputs = builder.customInputs;
-
         this.snapshotId = builder.snapshotId;
         this.size = builder.size;
         this.iops = builder.iops;
@@ -31,10 +28,6 @@ public class VolumeInputs {
 
         this.encrypted = builder.encrypted;
         this.force = builder.force;
-    }
-
-    public CustomInputs getCustomInputs() {
-        return customInputs;
     }
 
     public String getSnapshotId() {
@@ -66,8 +59,6 @@ public class VolumeInputs {
     }
 
     public static class Builder {
-        private CustomInputs customInputs;
-
         private String snapshotId;
         private String size;
         private String iops;
@@ -81,11 +72,6 @@ public class VolumeInputs {
             return new VolumeInputs(this);
         }
 
-        public Builder withCustomInputs(CustomInputs inputs) {
-            customInputs = inputs;
-            return this;
-        }
-
         public Builder withSnapshotId(String inputValue) {
             snapshotId = inputValue;
             return this;
@@ -97,7 +83,7 @@ public class VolumeInputs {
         }
 
         public Builder withIops(String inputValue) {
-            iops = StringUtils.isBlank(inputValue) ? Constants.Miscellaneous.NOT_RELEVANT : inputValue;
+            iops = isBlank(inputValue) ? NOT_RELEVANT : inputValue;
             return this;
         }
 

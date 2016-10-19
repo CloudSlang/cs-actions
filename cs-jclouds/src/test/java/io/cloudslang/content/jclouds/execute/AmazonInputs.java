@@ -16,7 +16,6 @@ public class AmazonInputs {
     private static final String DELIMITER = ";;";
 
     private static final String REGION = "us-east-1";
-    private static final String SERVER_ID = "i-578dde87";
     private static final String IMAGE_ID = "ami-4cfc1121";
 
     private String provider;
@@ -25,7 +24,6 @@ public class AmazonInputs {
     private String endpoint;
     private String proxyHost;
     private String proxyPort;
-    private String delimiter;
 
     private String region;
 
@@ -60,7 +58,6 @@ public class AmazonInputs {
         this.endpoint = commonInputs.getEndpoint();
         this.proxyHost = commonInputs.getProxyHost();
         this.proxyPort = commonInputs.getProxyPort();
-        this.delimiter = commonInputs.getDelimiter();
 
         this.region = customInputs.getRegion();
     }
@@ -95,9 +92,5 @@ public class AmazonInputs {
 
     String getRegion() {
         return region;
-    }
-
-    String getDelimiter() {
-        return delimiter;
     }
 }

@@ -2,7 +2,6 @@ package io.cloudslang.content.jclouds.services.impl;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Sets;
 import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
@@ -14,7 +13,6 @@ import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.*;
 import org.jclouds.ec2.features.AMIApi;
 import org.jclouds.ec2.features.InstanceApi;
-import org.jclouds.http.HttpResponseException;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
@@ -36,9 +34,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
@@ -61,7 +57,6 @@ public class AmazonComputeServiceImplTest {
     private static final String PROPERTY_PROXY_HOST = "jclouds.proxy-host";
     private static final String PROPERTY_PROXY_PORT = "jclouds.proxy-port";
     private static final String PROPERTY_REGIONS = "jclouds.regions";
-    private static final String CONNECTION_REFUSE_EXCEPTION_MESSAGE = "org.jclouds.http.HttpResponseException: Connection refused: connect connecting to POST http://11.11.11.11:5000/v2.0/tokens HTTP/1.1";
 
     private AmazonComputeServiceImpl toTest;
 
@@ -240,42 +235,6 @@ public class AmazonComputeServiceImplTest {
         verify(amazonComputeServiceImplSpy).lazyInit(REGION, false);
         verify(amazonComputeServiceImplSpy).init(false);
         verifyNoMoreInteractions(amazonComputeServiceImplSpy);
-    }
-
-    /**
-     * Test describeRegions method. Positive scenario.
-     */
-    @Test
-    public void testListRegions() {
-        addCommonMocksForInstanceApi();
-
-        Set<String> regions = Sets.newIdentityHashSet();
-        regions.add(REGION);
-
-        doReturn(regions).when(ec2ApiMock).getConfiguredRegions();
-
-        Set<String> returnedRegions = amazonComputeServiceImplSpy.describeRegions(false);
-
-        assertTrue(returnedRegions.contains(REGION));
-        verify(amazonComputeServiceImplSpy).init(false);
-        verify(ec2ApiMock, times(1)).getConfiguredRegions();
-
-        assertEquals(1, returnedRegions.size());
-    }
-
-    /**
-     * Test describeRegions method with invalid endpoint set in init().
-     * This scenario is equivalent to invalid credentials.
-     */
-    @Test
-    public void testListRegionsOnInvalidEndpoint() {
-        MockingHelper.setExpectedExceptions(exception, HttpResponseException.class, CONNECTION_REFUSE_EXCEPTION_MESSAGE);
-        addCommonMocksForInstanceApi();
-
-        HttpResponseException toThrow = new HttpResponseException(CONNECTION_REFUSE_EXCEPTION_MESSAGE, null, null);
-        doThrow(toThrow).when(ec2ApiMock).getConfiguredRegions();
-
-        amazonComputeServiceImplSpy.describeRegions(false);
     }
 
     /**

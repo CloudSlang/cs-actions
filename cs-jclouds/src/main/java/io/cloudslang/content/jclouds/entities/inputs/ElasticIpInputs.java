@@ -1,7 +1,8 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
 
 /**
  * Created by Mihai Tusa.
@@ -60,7 +61,7 @@ public class ElasticIpInputs {
         }
 
         public Builder withPrivateIpAddressesString(String inputValue) {
-            privateIpAddressesString = InputsUtil.getDefaultStringInput(inputValue, Constants.Miscellaneous.EMPTY);
+            privateIpAddressesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 

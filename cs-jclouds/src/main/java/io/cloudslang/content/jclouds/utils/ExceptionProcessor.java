@@ -1,12 +1,13 @@
 package io.cloudslang.content.jclouds.utils;
 
-import io.cloudslang.content.jclouds.entities.constants.Constants;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
 
 /**
  * Created by persdana on 7/13/2015.
@@ -15,7 +16,7 @@ public final class ExceptionProcessor {
     public static Map<String, String> getExceptionResult(Exception exception) {
         StringWriter writer = new StringWriter();
         exception.printStackTrace(new PrintWriter(writer));
-        String exceptionString = writer.toString().replace(Constants.Miscellaneous.EMPTY + (char) 0x00, Constants.Miscellaneous.EMPTY);
+        String exceptionString = writer.toString().replace(EMPTY + (char) 0x00, EMPTY);
 
         return getResultsMap(exception, exceptionString);
     }
