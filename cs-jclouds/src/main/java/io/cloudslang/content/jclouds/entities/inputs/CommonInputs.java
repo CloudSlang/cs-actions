@@ -156,7 +156,7 @@ public class CommonInputs {
             return new CommonInputs(this);
         }
 
-        public Builder withProvider(String inputValue) throws Exception {
+        public Builder withProvider(String inputValue) {
             provider = Providers.getValue(inputValue);
             return this;
         }

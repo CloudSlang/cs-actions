@@ -11,7 +11,7 @@ public enum ProductCodeType {
     DEVPAY,
     MARKETPLACE;
 
-    public static String getValue(String input) throws Exception {
+    public static String getValue(String input) {
         if (isBlank(input)) {
             return NOT_RELEVANT;
         }

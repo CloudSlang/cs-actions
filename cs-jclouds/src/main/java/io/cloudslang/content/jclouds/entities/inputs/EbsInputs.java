@@ -1,6 +1,5 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
-import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;

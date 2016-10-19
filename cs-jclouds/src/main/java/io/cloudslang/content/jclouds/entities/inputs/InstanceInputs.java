@@ -364,7 +364,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withMonitoringState(String inputValue) throws Exception {
+        public Builder withMonitoringState(String inputValue) {
             monitoringState = MonitoringState.getValue(inputValue);
             return this;
         }
@@ -404,7 +404,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withTenancy(String inputValue) throws Exception {
+        public Builder withTenancy(String inputValue) {
             tenancy = Tenancy.getValue(inputValue);
             return this;
         }
@@ -419,7 +419,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withInstanceInitiatedShutdownBehavior(String inputValue) throws Exception {
+        public Builder withInstanceInitiatedShutdownBehavior(String inputValue) {
             instanceInitiatedShutdownBehavior = InstanceInitiatedShutdownBehavior.getValue(inputValue);
             return this;
         }

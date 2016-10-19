@@ -33,12 +33,10 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Created by persdana on 6/19/2015.
@@ -344,7 +342,7 @@ public class AmazonComputeServiceImplTest {
         return instanceStateChangeSet;
     }
 
-    private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) throws Exception {
+    private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) {
         CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(REGION)
                 .withKeyTagsString(tagKeys)
@@ -361,7 +359,7 @@ public class AmazonComputeServiceImplTest {
                 .build();
     }
 
-    private CommonInputs getCommonInputs() throws Exception {
+    private CommonInputs getCommonInputs() {
         return new CommonInputs.Builder().withDebugMode("TrUe").withDelimiter(",").build();
     }
 }

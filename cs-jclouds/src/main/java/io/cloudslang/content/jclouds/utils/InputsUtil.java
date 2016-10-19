@@ -318,7 +318,7 @@ public final class InputsUtil {
         return input;
     }
 
-    public static String getValidEbsSize(String input, String ebsType) throws Exception {
+    public static String getValidEbsSize(String input, String ebsType) {
         if (NOT_RELEVANT.equalsIgnoreCase(input)) {
             return NOT_RELEVANT;
         }

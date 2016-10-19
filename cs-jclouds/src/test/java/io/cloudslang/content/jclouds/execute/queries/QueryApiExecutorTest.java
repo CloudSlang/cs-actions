@@ -25,7 +25,6 @@ import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -363,8 +362,7 @@ public class QueryApiExecutorTest {
         verifyNoMoreInteractions(csHttpClientMock);
     }
 
-    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString)
-            throws MalformedURLException {
+    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString) {
         return new CommonInputs.Builder()
                 .withAction(action)
                 .withHeaders(headersString)
@@ -422,7 +420,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) throws Exception {
+    private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) {
         if (withNetworkInterfaceId) {
             return new NetworkInputs.Builder()
                     .withDeviceIndex("25")
