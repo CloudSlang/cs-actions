@@ -87,6 +87,9 @@ public class ParamsMapBuilder {
                 case MODIFY_IMAGE_ATTRIBUTE:
                     queryParamsMap = new ImageUtils().getModifyImageAttributeQueryParamsMap(wrapper);
                     break;
+                case MODIFY_INSTANCE_ATTRIBUTE:
+                    queryParamsMap = new InstanceUtils().getModifyInstanceAttributeQueryParamsMap(wrapper);
+                    break;
                 case REBOOT_INSTANCES:
                     queryParamsMap = new InstanceUtils().getRebootInstancesQueryParamsMap(wrapper);
                     break;

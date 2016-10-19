@@ -1,5 +1,6 @@
 package io.cloudslang.content.jclouds.entities.inputs;
 
+import io.cloudslang.content.jclouds.entities.constants.Inputs;
 import io.cloudslang.content.jclouds.utils.InputsUtil;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -126,7 +127,7 @@ public class EbsInputs {
         }
 
         public Builder withEbsOptimized(String inputValue) {
-            ebsOptimized = Boolean.parseBoolean(inputValue);
+            ebsOptimized = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
     }

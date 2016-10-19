@@ -118,9 +118,11 @@ public class Inputs {
     public static class InstanceInputs {
         public static final String AFFINITY = "affinity";
         public static final String ATTACH_TIME = "attachTime";
+        public static final String ATTRIBUTE = "attribute";
         public static final String CLIENT_TOKEN = "clientToken";
-        public static final String DISABLE_API_TERMINATION = "DisableApiTermination";
+        public static final String DISABLE_API_TERMINATION = "disableApiTermination";
         public static final String DNS_NAME = "dnsName";
+        public static final String ENA_SUPPORT = "enaSupport";
         public static final String FORCE_STOP = "forceStop";
         public static final String GROUP_NAME = "groupName";
         public static final String IAM_ARN = "iamArn";
@@ -139,8 +141,6 @@ public class Inputs {
         public static final String MIN_COUNT = "minCount";
         public static final String MONITORING = "monitoring";
         public static final String MONITORING_STATE = "monitoringState";
-        public static final String OPERATION_TIMEOUT = "operationTimeout";
-        public static final String POOLING_INTERVAL = "poolingInterval";
         public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
         public static final String PRIVATE_DNS_NAME = "privateDnsName";
         public static final String REASON = "reason";

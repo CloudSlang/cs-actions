@@ -7,19 +7,13 @@ import io.cloudslang.content.jclouds.services.ComputeService;
 import io.cloudslang.content.jclouds.services.JCloudsService;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.domain.Location;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by persdana on 6/5/2015.
  */
 public class ComputeServiceImpl extends JCloudsService implements ComputeService {
-    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
-            "providers in the provider input";
-    private static final String SLASH = "/";
-
     org.jclouds.compute.ComputeService computeService = null;
 
     private String provider;
@@ -49,12 +43,6 @@ public class ComputeServiceImpl extends JCloudsService implements ComputeService
         } else if (computeService == null) {
             this.init(isDebugMode);
         }
-    }
-
-    @Override
-    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
-                                     long polingInterval, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override

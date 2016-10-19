@@ -51,12 +51,6 @@ public class OpenstackComputeServiceImpl extends JCloudsService implements Compu
     }
 
     @Override
-    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
-                                     long polingInterval, boolean isDebugMode) throws Exception {
-        throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
-    }
-
-    @Override
     public Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception {
         throw new Exception(Constants.ErrorMessages.NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE);
     }

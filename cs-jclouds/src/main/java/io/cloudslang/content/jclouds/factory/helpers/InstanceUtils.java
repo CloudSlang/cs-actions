@@ -9,23 +9,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.*;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.ENCRYPTED;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.FORCE;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.IMAGE_ID;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.INSTANCE_ID;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.IOPS;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SECURITY_GROUP;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SNAPSHOT_ID;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.STANDARD;
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.VOLUME_TYPE;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.DOT;
@@ -40,10 +27,12 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.
  * 9/15/2016.
  */
 public class InstanceUtils {
+    private static final String ATTRIBUTE = "Attribute";
     private static final String CLIENT_TOKEN = "ClientToken";
     private static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "DeviceName";
     private static final String DISABLE_API_TERMINATION = "DisableApiTermination";
     private static final String EBS_OPTIMIZED = "EbsOptimized";
+    private static final String ENA_SUPPORT = "EnaSupport";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
@@ -63,6 +52,26 @@ public class InstanceUtils {
     private static final String USER_DATA = "UserData";
     private static final String VOLUME_SIZE = "VolumeSize";
     private static final String VIRTUAL_NAME = "VirtualName";
+
+    public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ATTRIBUTE, wrapper.getInstanceInputs().getAttribute(),
+                isNotBlank(wrapper.getInstanceInputs().getAttribute()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, DISABLE_API_TERMINATION + DOT + VALUE,
+                valueOf(wrapper.getInstanceInputs().isDisableApiTermination()), wrapper.getInstanceInputs().isDisableApiTermination());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, EBS_OPTIMIZED + DOT + VALUE,
+                valueOf(wrapper.getEbsInputs().isEbsOptimized()), wrapper.getEbsInputs().isEbsOptimized());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ENA_SUPPORT + DOT + VALUE,
+                valueOf(wrapper.getInstanceInputs().isEnaSupport()), wrapper.getInstanceInputs().isEnaSupport());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+    }
 
     public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) throws Exception {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -110,10 +119,6 @@ public class InstanceUtils {
         }
 
         return queryParamsMap;
-    }
-
-    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
-        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
 
     public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
