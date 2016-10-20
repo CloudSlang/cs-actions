@@ -5,11 +5,11 @@
         <jclouds.version>1.9.2</jclouds.version>
     </properties>
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-jclouds</artifactId>
+    <artifactId>cs-amazon</artifactId>
     <version>0.0.11-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>jClouds java actions</description>
+    <description>Java actions for amazon integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
     <licenses>
         <license>
@@ -45,6 +45,12 @@
         <developer>
             <name>Mihail Cristian Tusa</name>
             <email>mihail-cristian.tusa@hpe.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Tirla Florin-Alin</name>
+            <email>alin.tirla@hpe.com</email>
             <organization>HP Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
