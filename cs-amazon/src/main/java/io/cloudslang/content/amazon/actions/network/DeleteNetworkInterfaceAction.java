@@ -85,17 +85,17 @@ public class DeleteNetworkInterfaceAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> deleteNetworkInterface(@Param(value = ENDPOINT, required = true) String endpoint,
-                                                      @Param(value = IDENTITY, required = true) String identity,
-                                                      @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
-                                                      @Param(value = PROXY_HOST) String proxyHost,
-                                                      @Param(value = PROXY_PORT) String proxyPort,
-                                                      @Param(value = PROXY_USERNAME) String proxyUsername,
-                                                      @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                                      @Param(value = HEADERS) String headers,
-                                                      @Param(value = QUERY_PARAMS) String queryParams,
-                                                      @Param(value = VERSION) String version,
-                                                      @Param(value = NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+                                       @Param(value = IDENTITY, required = true) String identity,
+                                       @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = HEADERS) String headers,
+                                       @Param(value = QUERY_PARAMS) String queryParams,
+                                       @Param(value = VERSION) String version,
+                                       @Param(value = NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             CommonInputs commonInputs = new CommonInputs.Builder()

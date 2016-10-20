@@ -111,19 +111,19 @@ public class StopInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> stopInstances(@Param(value = ENDPOINT, required = true) String endpoint,
-                                             @Param(value = IDENTITY, required = true) String identity,
-                                             @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
-                                             @Param(value = PROXY_HOST) String proxyHost,
-                                             @Param(value = PROXY_PORT) String proxyPort,
-                                             @Param(value = PROXY_USERNAME) String proxyUsername,
-                                             @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                             @Param(value = HEADERS) String headers,
-                                             @Param(value = QUERY_PARAMS) String queryParams,
-                                             @Param(value = VERSION) String version,
-                                             @Param(value = DELIMITER, required = true) String delimiter,
-                                             @Param(value = INSTANCE_ID, required = true) String instanceId,
-                                             @Param(value = FORCE_STOP, required = true) String forceStop) {
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+                                       @Param(value = IDENTITY, required = true) String identity,
+                                       @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = HEADERS) String headers,
+                                       @Param(value = QUERY_PARAMS) String queryParams,
+                                       @Param(value = VERSION) String version,
+                                       @Param(value = DELIMITER, required = true) String delimiter,
+                                       @Param(value = INSTANCE_ID, required = true) String instanceId,
+                                       @Param(value = FORCE_STOP, required = true) String forceStop) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             CommonInputs commonInputs = new CommonInputs.Builder()
