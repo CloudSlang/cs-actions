@@ -233,7 +233,7 @@ public class InstanceUtils {
 
     private void setOptionalQueryParam(Map<String, String> queryParamsMap, String inputString, String toTest,
                                        String delimiter, String firstInputName, String secondInputName, String customKey,
-                                       String[] referenceArray, int index) throws Exception {
+                                       String[] referenceArray, int index) {
         String[] inputsArray = InputsUtil.getStringsArray(inputString, toTest, delimiter);
         boolean setOptionalQueryParamEntryFlag = getOptionalsSetterFlag(referenceArray, inputsArray, firstInputName, secondInputName);
         setOptionalQueryParamEntry(queryParamsMap, inputsArray, customKey, index, setOptionalQueryParamEntryFlag);

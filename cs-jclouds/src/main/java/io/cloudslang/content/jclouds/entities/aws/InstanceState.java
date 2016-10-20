@@ -21,7 +21,7 @@ public enum InstanceState {
         this.key = key;
     }
 
-    public Integer getKey() {
+    private Integer getKey() {
         return key;
     }
 
@@ -46,8 +46,7 @@ public enum InstanceState {
     }
 
     private static String getErrorMessage(String input, boolean isKey) {
-        return isKey ? "Invalid instanceStateCode value: [" + input + "]. Valid values: pending, running, shutting-down, " +
-                "terminated, stopping, stopped." : "Invalid instanceStateName value: [" + input + "]. Valid values: " +
-                "pending, running, shutting-down, terminated, stopping, stopped.";
+        return isKey ? "Invalid instanceStateCode value: [" + input + "]. Valid values: pending, running, shutting-down, terminated, stopping, stopped." :
+                "Invalid instanceStateName value: [" + input + "]. Valid values: pending, running, shutting-down, terminated, stopping, stopped.";
     }
 }
