@@ -8,8 +8,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
-import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
+import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
@@ -18,27 +18,23 @@ import io.cloudslang.content.amazon.utils.OutputsUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AMAZON_API;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.DATE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.HTTP_VERB;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.PAYLOAD_HASH;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.URI;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_TOKEN;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
 
 /**
  * Created by Mihai Tusa.
@@ -96,18 +92,18 @@ public class ComputeSignatureV4 {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
-                                                @Param(value = IDENTITY, required = true) String identity,
-                                                @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
-                                                @Param(value = HEADERS) String headers,
-                                                @Param(value = QUERY_PARAMS) String queryParams,
+                                       @Param(value = IDENTITY, required = true) String identity,
+                                       @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+                                       @Param(value = HEADERS) String headers,
+                                       @Param(value = QUERY_PARAMS) String queryParams,
 
-                                                @Param(value = AMAZON_API) String amazonApi,
-                                                @Param(value = URI) String uri,
-                                                @Param(value = HTTP_VERB) String httpVerb,
-                                                @Param(value = PAYLOAD_HASH) String payloadHash,
-                                                @Param(value = DATE) String date,
+                                       @Param(value = AMAZON_API) String amazonApi,
+                                       @Param(value = URI) String uri,
+                                       @Param(value = HTTP_VERB) String httpVerb,
+                                       @Param(value = PAYLOAD_HASH) String payloadHash,
+                                       @Param(value = DATE) String date,
 
-                                                @Param(value = SECURITY_TOKEN) String securityToken) {
+                                       @Param(value = SECURITY_TOKEN) String securityToken) {
         try {
             Map<String, String> headersMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
                     headers, HEADER_DELIMITER, COLON, true);

@@ -88,17 +88,17 @@ public class DeleteVolume {
             }
     )
     public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
-                                            @Param(value = IDENTITY) String identity,
-                                            @Param(value = CREDENTIAL, encrypted = true) String credential,
-                                            @Param(value = PROXY_HOST) String proxyHost,
-                                            @Param(value = PROXY_PORT) String proxyPort,
-                                            @Param(value = PROXY_USERNAME) String proxyUsername,
-                                            @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                            @Param(value = HEADERS) String headers,
-                                            @Param(value = QUERY_PARAMS) String queryParams,
-                                            @Param(value = VERSION) String version,
+                                       @Param(value = IDENTITY) String identity,
+                                       @Param(value = CREDENTIAL, encrypted = true) String credential,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = HEADERS) String headers,
+                                       @Param(value = QUERY_PARAMS) String queryParams,
+                                       @Param(value = VERSION) String version,
 
-                                            @Param(value = VOLUME_ID, required = true) String volumeId) {
+                                       @Param(value = VOLUME_ID, required = true) String volumeId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             CommonInputs commonInputs = new CommonInputs.Builder()
