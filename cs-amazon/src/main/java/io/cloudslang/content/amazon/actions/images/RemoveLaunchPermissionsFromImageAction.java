@@ -12,32 +12,30 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
 import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
+import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.IMAGE_ID;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.USER_GROUPS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.USER_IDS_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LAUNCH_PERMISSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REMOVE_OPERATION_TYPE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.IMAGE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.USER_GROUPS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.USER_IDS_STRING;
 
 /**
  * Created by Mihai Tusa.
@@ -69,7 +67,7 @@ public class RemoveLaunchPermissionsFromImageAction {
      *                         Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      * @param version          Version of the web service to made the call against it.
      *                         Example: "2016-04-01"
-     *                         Default: ""
+     *                         Default: "2016-04-01"
      * @param delimiter        Optional - The delimiter that will be used - Default: ","
      * @param imageId          ID of the specified image to remove launch permission for.
      * @param userIdsString    Optional - A string that contains: none, one or more user IDs separated by delimiter.
@@ -107,6 +105,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                                        @Param(value = USER_IDS_STRING) String userIdsString,
                                        @Param(value = USER_GROUPS_STRING) String userGroupsString) {
         try {
+            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)

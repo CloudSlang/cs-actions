@@ -250,4 +250,12 @@ public class InstanceUtils {
         }
         return Boolean.FALSE;
     }
+
+    public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+
+        return queryParamsMap;
+    }
 }

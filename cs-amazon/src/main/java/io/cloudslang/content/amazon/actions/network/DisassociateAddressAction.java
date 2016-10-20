@@ -12,28 +12,26 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
 import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
+import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.ASSOCIATION_ID;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PUBLIC_IP;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.DISASSOCIATE_ADDRESS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.ASSOCIATION_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PUBLIC_IP;
 
 /**
  * Created by Mihai Tusa.
@@ -65,6 +63,7 @@ public class DisassociateAddressAction {
      *                      Default: ""
      * @param version       Version of the web service to made the call against it.
      *                      Example: "2016-04-01"
+     *                      Default: "2016-04-01"
      * @param headers       Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                      The header name-value pair will be separated by ":".
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -108,6 +107,7 @@ public class DisassociateAddressAction {
                                                    @Param(value = ASSOCIATION_ID) String associationId,
                                                    @Param(value = PUBLIC_IP) String publicIp) {
         try {
+            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)

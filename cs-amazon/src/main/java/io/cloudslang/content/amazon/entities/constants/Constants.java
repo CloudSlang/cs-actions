@@ -61,6 +61,7 @@ public class Constants {
         public static final String IOPS = "Iops";
         public static final String IMAGE_ID = "ImageId";
         public static final String INSTANCE_ID = "InstanceId";
+        public static final String INSTANCE_TYPE = "instanceType";
         public static final String KEY = "Key";
         public static final String LAUNCH_PERMISSION = "launchPermission";
         public static final String NAME = "Name";
@@ -111,6 +112,7 @@ public class Constants {
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
         public static final String MODIFY_IMAGE_ATTRIBUTE = "ModifyImageAttribute";
+        public static final String MODIFY_INSTANCE_ATTRIBUTE = "ModifyInstanceAttribute";
         public static final String REBOOT_INSTANCES = "RebootInstances";
         public static final String RELEASE_ADDRESS = "ReleaseAddress";
         public static final String RESET_IMAGE_ATTRIBUTE = "ResetImageAttribute";

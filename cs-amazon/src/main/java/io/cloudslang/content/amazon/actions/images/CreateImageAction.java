@@ -12,30 +12,28 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
 import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
+import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.IMAGE_DESCRIPTION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.NAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.NO_REBOOT;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.CREATE_IMAGE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.IMAGE_DESCRIPTION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.NO_REBOOT;
 
 /**
  * Created by Mihai Tusa.
@@ -64,7 +62,7 @@ public class CreateImageAction {
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      * @param version       Version of the web service to made the call against it.
      *                      Example: "2016-04-01"
-     *                      Default: ""
+     *                      Default: "2016-04-01"
      * @param instanceId    ID of the server (instance) to be used to create image.
      * @param name          A name for the new image.
      * @param description   Optional - A description for the new image.
@@ -105,6 +103,7 @@ public class CreateImageAction {
                                        @Param(value = NAME, required = true) String name,
                                        @Param(value = NO_REBOOT) String noReboot) {
         try {
+            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)

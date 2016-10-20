@@ -7,24 +7,34 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
-import io.cloudslang.content.amazon.entities.inputs.*;
+import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
+import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
+import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
+import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.amazon.entities.inputs.IamInputs;
+import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
+import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
+import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.RUN_INSTANCES;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.HOST_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.IMAGE_ID;
@@ -32,7 +42,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KERNEL_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.RAMDISK_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.SUBNET_ID;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.DELETE_ON_TERMINATIONS_STRING;
@@ -42,16 +51,13 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.I
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.SNAPSHOT_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_SIZES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_TYPES_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.IAM_INSTANCE_PROFILE_ARN;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.IAM_INSTANCE_PROFILE_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.KEY_PAIR_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_NAMES_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.AFFINITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.CLIENT_TOKEN;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.DISABLE_API_TERMINATION;
@@ -62,18 +68,12 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInp
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.PLACEMENT_GROUP_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.TENANCY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.USER_DATA;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.RUN_INSTANCES;
 
 /**
  * Created by Mihai Tusa.
@@ -138,7 +138,7 @@ public class RunInstancesAction {
      *                                                  Default: ""
      * @param version                                   Version of the web service to made the call against it.
      *                                                  Example: "2016-04-01"
-     *                                                  Default: ""
+     *                                                  Default: "2016-04-01"
      * @param delimiter                                 Optional - delimiter that will be used.
      *                                                  Default: ","
      * @param availabilityZone                          Optional - availability zone of the instance (as part of Placement).
@@ -450,6 +450,7 @@ public class RunInstancesAction {
                                             @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
                                             @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
+            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)

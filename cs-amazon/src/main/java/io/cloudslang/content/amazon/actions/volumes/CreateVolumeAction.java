@@ -12,33 +12,31 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
+import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KMS_KEY_ID;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VOLUME_TYPE;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.ENCRYPTED;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.IOPS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.SIZE;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.SNAPSHOT_ID;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.CREATE_VOLUME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KMS_KEY_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VOLUME_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.ENCRYPTED;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.IOPS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.SIZE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.SNAPSHOT_ID;
 
 /**
  * Created by Mihai Tusa.
@@ -100,6 +98,7 @@ public class CreateVolumeAction {
      *                         Default: "standard"
      * @param version          Version of the web service to made the call against it.
      *                         Example: "2014-06-15"
+     *                         Example: "2014-06-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -136,6 +135,7 @@ public class CreateVolumeAction {
                                             @Param(value = SIZE) String size,
                                             @Param(value = SNAPSHOT_ID) String snapshotId) {
         try {
+            version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withIdentity(identity)
                     .withCredential(credential)
