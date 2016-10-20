@@ -11,7 +11,7 @@ import io.cloudslang.content.jclouds.entities.inputs.CommonInputs;
 import io.cloudslang.content.jclouds.entities.inputs.CustomInputs;
 import io.cloudslang.content.jclouds.entities.inputs.ElasticIpInputs;
 import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
-import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.jclouds.execute.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;

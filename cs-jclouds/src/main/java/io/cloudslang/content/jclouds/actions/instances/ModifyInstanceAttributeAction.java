@@ -8,7 +8,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.jclouds.entities.constants.Outputs;
 import io.cloudslang.content.jclouds.entities.inputs.*;
-import io.cloudslang.content.jclouds.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.jclouds.execute.QueryApiExecutor;
 import io.cloudslang.content.jclouds.utils.ExceptionProcessor;
 
 import java.util.Map;
@@ -38,6 +38,7 @@ import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceIn
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.KERNEL;
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.RAMDISK;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
@@ -115,6 +116,7 @@ public class ModifyInstanceAttributeAction {
      *                                          shutdown from the instance (using the operating system command for system
      *                                          shutdown).
      *                                          Valid values: "stop", "terminate"
+     *                                          Default: "stop"
      * @param instanceType                      Optional - Changes the instance type to the specified value. If the instance
      *                                          type is not valid, the error returned is InvalidInstanceAttributeValue.
      *                                          For more information, see Instance Types in the Amazon Elastic Compute
@@ -131,10 +133,16 @@ public class ModifyInstanceAttributeAction {
      *                                          c4.2xlarge | c4.4xlarge | c4.8xlarge | cc1.4xlarge | cc2.8xlarge |
      *                                          g2.2xlarge | g2.8xlarge | cg1.4xlarge | d2.xlarge | d2.2xlarge |
      *                                          d2.4xlarge | d2.8xlarge"
+     *                                          Default: "m1.small"
      * @param kernel                            Optional - Changes the instance's kernel to the specified value. We recommend
      *                                          that you use PV-GRUB instead of kernels and RAM disks. For more information,
      *                                          see PV-GRUB: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html
      *                                          Default: ""
+     * @param sourceDestinationCheck            Optional - Specifies whether source/destination checking is enabled. A
+     *                                          value of "true" means that checking is enabled, and "false" means checking
+     *                                          is disabled. This value must be "false" for a NAT instance to perform NAT.
+     *                                          Valid values: "true", "false"
+     *                                          Default: "false"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -171,7 +179,8 @@ public class ModifyInstanceAttributeAction {
                                                              @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
                                                              @Param(value = INSTANCE_TYPE) String instanceType,
                                                              @Param(value = KERNEL) String kernel,
-                                                             @Param(value = RAMDISK) String ramdisk) {
+                                                             @Param(value = RAMDISK) String ramdisk,
+                                                             @Param(value = SOURCE_DESTINATION_CHECK) String sourceDestinationCheck) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
@@ -207,6 +216,7 @@ public class ModifyInstanceAttributeAction {
                     .withInstanceInitiatedShutdownBehavior(instanceInitiatedShutdownBehavior)
                     .withKernel(kernel)
                     .withRamdisk(ramdisk)
+                    .withSourceDestinationCheck(sourceDestinationCheck)
                     .build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, iamInputs, instanceInputs);

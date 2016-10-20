@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.execute.queries;
+package io.cloudslang.content.jclouds.execute;
 
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.jclouds.entities.aws.AuthorizationHeader;

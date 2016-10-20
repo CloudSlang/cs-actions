@@ -1,4 +1,4 @@
-package io.cloudslang.content.jclouds.execute.queries;
+package io.cloudslang.content.jclouds.execute;
 
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -12,6 +12,7 @@ import io.cloudslang.content.jclouds.entities.inputs.InputsWrapper;
 import io.cloudslang.content.jclouds.entities.inputs.InstanceInputs;
 import io.cloudslang.content.jclouds.entities.inputs.NetworkInputs;
 import io.cloudslang.content.jclouds.entities.inputs.VolumeInputs;
+import io.cloudslang.content.jclouds.execute.QueryApiExecutor;
 import io.cloudslang.content.jclouds.services.AmazonSignatureService;
 import io.cloudslang.content.jclouds.services.impl.MockingHelper;
 import org.junit.After;
