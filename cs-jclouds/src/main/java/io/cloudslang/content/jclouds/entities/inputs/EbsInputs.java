@@ -126,7 +126,7 @@ public class EbsInputs {
         }
 
         public Builder withEbsOptimized(String inputValue) {
-            ebsOptimized = Boolean.parseBoolean(inputValue);
+            ebsOptimized = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
     }

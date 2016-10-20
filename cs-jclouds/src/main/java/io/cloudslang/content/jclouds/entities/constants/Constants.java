@@ -111,6 +111,7 @@ public class Constants {
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
         public static final String MODIFY_IMAGE_ATTRIBUTE = "ModifyImageAttribute";
+        public static final String MODIFY_INSTANCE_ATTRIBUTE = "ModifyInstanceAttribute";
         public static final String REBOOT_INSTANCES = "RebootInstances";
         public static final String RELEASE_ADDRESS = "ReleaseAddress";
         public static final String RESET_IMAGE_ATTRIBUTE = "ResetImageAttribute";

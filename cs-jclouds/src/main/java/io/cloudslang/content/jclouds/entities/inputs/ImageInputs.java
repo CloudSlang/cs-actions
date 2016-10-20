@@ -147,7 +147,7 @@ public class ImageInputs {
             return this;
         }
 
-        public Builder withType(String inputValue) throws Exception {
+        public Builder withType(String inputValue) {
             type = ImageType.getValue(inputValue);
             return this;
         }
@@ -162,7 +162,7 @@ public class ImageInputs {
             return this;
         }
 
-        public Builder withState(String inputValue) throws Exception {
+        public Builder withState(String inputValue) {
             state = ImageState.getValue(inputValue);
             return this;
         }

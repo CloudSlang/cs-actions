@@ -10,7 +10,7 @@ public enum InstanceInitiatedShutdownBehavior {
     STOP,
     TERMINATE;
 
-    public static String getValue(String input) throws Exception {
+    public static String getValue(String input) {
         if (isBlank(input)) {
             return STOP.name().toLowerCase();
         }

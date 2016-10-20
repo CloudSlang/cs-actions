@@ -25,6 +25,7 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsPara
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SNAPSHOT_ID;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.STANDARD;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.VOLUME_TYPE;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EBS;
@@ -40,14 +41,18 @@ import static io.cloudslang.content.jclouds.entities.constants.Constants.Values.
  * 9/15/2016.
  */
 public class InstanceUtils {
+    private static final String ATTRIBUTE = "Attribute";
     private static final String CLIENT_TOKEN = "ClientToken";
     private static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "DeviceName";
     private static final String DISABLE_API_TERMINATION = "DisableApiTermination";
     private static final String EBS_OPTIMIZED = "EbsOptimized";
+    private static final String ENA_SUPPORT = "EnaSupport";
+    private static final String GROUP_ID = "GroupId";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
     private static final String INSTANCE_TYPE = "InstanceType";
+    private static final String KERNEL = "Kernel";
     private static final String KERNEL_ID = "KernelId";
     private static final String KEY_NAME = "KeyName";
     private static final String MAX_COUNT = "MaxCount";
@@ -59,10 +64,41 @@ public class InstanceUtils {
     private static final String PLACEMENT_GROUP_NAME = "Placement.GroupName";
     private static final String PLACEMENT_HOST_ID = "Placement.HostId";
     private static final String PLACEMENT_TENANCY = "Placement.Tenancy";
+    private static final String RAMDISK = "Ramdisk";
     private static final String RAMDISK_ID = "RamdiskId";
     private static final String USER_DATA = "UserData";
     private static final String VOLUME_SIZE = "VolumeSize";
     private static final String VIRTUAL_NAME = "VirtualName";
+
+    public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
+
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ATTRIBUTE, wrapper.getInstanceInputs().getAttribute(),
+                isNotBlank(wrapper.getInstanceInputs().getAttribute()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, DISABLE_API_TERMINATION + DOT + VALUE,
+                valueOf(wrapper.getInstanceInputs().isDisableApiTermination()), wrapper.getInstanceInputs().isDisableApiTermination());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, EBS_OPTIMIZED + DOT + VALUE,
+                valueOf(wrapper.getEbsInputs().isEbsOptimized()), wrapper.getEbsInputs().isEbsOptimized());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ENA_SUPPORT + DOT + VALUE,
+                valueOf(wrapper.getInstanceInputs().isEnaSupport()), wrapper.getInstanceInputs().isEnaSupport());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_TYPE + DOT + VALUE,
+                valueOf(wrapper.getCustomInputs().getInstanceType()), isNotBlank(wrapper.getCustomInputs().getInstanceType()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, KERNEL, wrapper.getInstanceInputs().getKernel(),
+                isNotBlank(wrapper.getInstanceInputs().getKernel()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, RAMDISK, wrapper.getInstanceInputs().getRamdisk(),
+                isNotBlank(wrapper.getInstanceInputs().getRamdisk()));
+
+        new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+                GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+    }
 
     public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) throws Exception {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -112,10 +148,6 @@ public class InstanceUtils {
         return queryParamsMap;
     }
 
-    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
-        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
-    }
-
     public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
         return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
@@ -148,9 +180,9 @@ public class InstanceUtils {
 
     private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         IamUtils helper = new IamUtils();
-        helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
+        helper.setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
                 SECURITY_GROUP, EMPTY, wrapper.getCommonInputs().getDelimiter());
-        helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+        helper.setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
     }
 
@@ -159,8 +191,8 @@ public class InstanceUtils {
         helper.setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, NETWORK_INTERFACE, wrapper.getCommonInputs().getDelimiter());
         helper.setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacePrivateIpAddress())) {
-            new IamUtils().setNetworkSecurityGroupsQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
-                    wrapper.getCommonInputs().getDelimiter());
+            new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+                    NETWORK_INTERFACE, DOT + SECURITY_GROUP_ID, wrapper.getCommonInputs().getDelimiter());
         }
     }
 
@@ -209,14 +241,14 @@ public class InstanceUtils {
 
     private void setOptionalQueryParam(Map<String, String> queryParamsMap, String inputString, String toTest,
                                        String delimiter, String firstInputName, String secondInputName, String customKey,
-                                       String[] referenceArray, int index) throws Exception {
+                                       String[] referenceArray, int index) {
         String[] inputsArray = InputsUtil.getStringsArray(inputString, toTest, delimiter);
         boolean setOptionalQueryParamEntryFlag = getOptionalsSetterFlag(referenceArray, inputsArray, firstInputName, secondInputName);
         setOptionalQueryParamEntry(queryParamsMap, inputsArray, customKey, index, setOptionalQueryParamEntryFlag);
     }
 
     private void setOptionalQueryParamEntry(Map<String, String> queryParamsMap, String[] inputArray, String customKey,
-                                            int index, boolean condition) throws Exception {
+                                            int index, boolean condition) {
         if (condition && ENCRYPTED.equalsIgnoreCase(customKey) && valueOf(ONE).equalsIgnoreCase(inputArray[index])) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(EBS, index) + customKey, inputArray[index]);
         } else if (condition && VOLUME_TYPE.equalsIgnoreCase(customKey)) {
