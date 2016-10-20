@@ -124,7 +124,7 @@ public class CreateNetworkInterfaceAction {
                                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
                                                       @Param(value = HEADERS) String headers,
                                                       @Param(value = QUERY_PARAMS) String queryParams,
-                                                      @Param(value = VERSION, required = true) String version,
+                                                      @Param(value = VERSION) String version,
                                                       @Param(value = DELIMITER) String delimiter,
                                                       @Param(value = SUBNET_ID, required = true) String subnetId,
                                                       @Param(value = PRIVATE_IP_ADDRESS) String privateIpAddress,

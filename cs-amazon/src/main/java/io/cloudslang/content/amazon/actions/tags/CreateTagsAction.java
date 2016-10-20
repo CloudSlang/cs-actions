@@ -121,7 +121,7 @@ public class CreateTagsAction {
                                           @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
                                           @Param(value = HEADERS) String headers,
                                           @Param(value = QUERY_PARAMS) String queryParams,
-                                          @Param(value = VERSION, required = true) String version,
+                                          @Param(value = VERSION) String version,
                                           @Param(value = DELIMITER) String delimiter,
                                           @Param(value = RESOURCE_IDS_STRING, required = true) String resourceIdsString,
                                           @Param(value = KEY_TAGS_STRING, required = true) String keyTagsString,

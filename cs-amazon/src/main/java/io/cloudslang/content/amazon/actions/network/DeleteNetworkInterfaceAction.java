@@ -94,7 +94,7 @@ public class DeleteNetworkInterfaceAction {
                                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
                                                       @Param(value = HEADERS) String headers,
                                                       @Param(value = QUERY_PARAMS) String queryParams,
-                                                      @Param(value = VERSION, required = true) String version,
+                                                      @Param(value = VERSION) String version,
                                                       @Param(value = NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");

@@ -113,7 +113,7 @@ public class AttachVolumeAction {
                                             @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
                                             @Param(value = HEADERS) String headers,
                                             @Param(value = QUERY_PARAMS) String queryParams,
-                                            @Param(value = VERSION, required = true) String version,
+                                            @Param(value = VERSION) String version,
 
                                             @Param(value = INSTANCE_ID, required = true) String instanceId,
                                             @Param(value = VOLUME_ID, required = true) String volumeId,

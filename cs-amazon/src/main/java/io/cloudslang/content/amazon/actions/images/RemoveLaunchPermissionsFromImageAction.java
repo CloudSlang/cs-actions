@@ -99,7 +99,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                                        @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
                                        @Param(value = HEADERS) String headers,
                                        @Param(value = QUERY_PARAMS) String queryParams,
-                                       @Param(value = VERSION, encrypted = true) String version,
+                                       @Param(value = VERSION) String version,
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = IMAGE_ID, required = true) String imageId,
                                        @Param(value = USER_IDS_STRING) String userIdsString,
