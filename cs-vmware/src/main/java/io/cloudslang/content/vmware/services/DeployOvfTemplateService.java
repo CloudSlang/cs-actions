@@ -89,7 +89,7 @@ public class DeployOvfTemplateService {
         executor.shutdown();
     }
 
-    private ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> createLeaseSetup(
+    protected ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> createLeaseSetup(
             final ConnectionResources connectionResources, final VmInputs vmInputs, final String templatePath,
             final Map<String, String> ovfNetworkMap, final Map<String, String> ovfPropertyMap) throws Exception {
         final ManagedObjectReference ovfManager = getOvfManager(connectionResources);
@@ -237,7 +237,7 @@ public class DeployOvfTemplateService {
     }
 
 
-    public OvfCreateImportSpecParams getOvfCreateImportSpecParams(final VmInputs vmInputs, final ManagedObjectReference hostSystem,
+    private OvfCreateImportSpecParams getOvfCreateImportSpecParams(final VmInputs vmInputs, final ManagedObjectReference hostSystem,
                                                                   final List ovfNetworkMappings, final List<KeyValue> ovfPropertyMappings) {
         final OvfCreateImportSpecParams params = new OvfCreateImportSpecParams();
         params.setHostSystem(hostSystem);
@@ -252,7 +252,7 @@ public class DeployOvfTemplateService {
         return params;
     }
 
-    public long getDisksTotalNoBytes(final OvfCreateImportSpecResult importSpecResult) {
+    private long getDisksTotalNoBytes(final OvfCreateImportSpecResult importSpecResult) {
         long disksTotalNoBytes = 0;
         for (final OvfFileItem item : importSpecResult.getFileItem()) {
             if (item.getCimType() == DISK_DRIVE_CIM_TYPE) {
