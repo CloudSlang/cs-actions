@@ -33,7 +33,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -41,17 +40,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.vmware.constants.ErrorMessages.AFFINE_HOST_GROUP_DOES_NOT_EXIST;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.CLUSTER_RULE_COULD_NOT_BE_FOUND;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.RULE_ALREADY_EXISTS;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES_NOT_EXIST;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
@@ -66,6 +69,11 @@ public class ClusterComputeResourceServiceTest {
     private static final String GET_CLUSTER_VM_HOST_RULE_INFO = "getClusterVmHostRuleInfo";
     private static final String GET_RULE = "getRule";
     private static final String GET_CLUSTER_RULE_INFO = "getClusterRuleInfo";
+    private static final String ADD_AFFINE_GROUP_TO_RULE = "addAffineGroupToRule";
+    private static final String ADD_ANTI_AFFINE_GROUP_TO_RULE = "addAntiAffineGroupToRule";
+    private static final String EXISTS_VM_GROUP = "existsVmGroup";
+    private static final String SUCCESS_MESSAGE = "Success: The [Cluster1] cluster was successfully reconfigured. The taskId is: task-12345";
+    private static final String FAILURE_MESSAGE = "Failure: The [Cluster1] cluster could not be reconfigured.";
     @Mock
     private HttpInputs httpInputsMock;
 
@@ -150,19 +158,6 @@ public class ClusterComputeResourceServiceTest {
     public void setUp() throws Exception {
         whenNew(ConnectionResources.class).withArguments(any(HttpInputs.class)).thenReturn(connectionResourcesMock);
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        whenNew(ClusterConfigSpecEx.class).withNoArguments().thenReturn(clusterConfigSpecExMock);
-        whenNew(ClusterGroupSpec.class).withNoArguments().thenReturn(clusterGroupSpecMock);
-        whenNew(ClusterRuleSpec.class).withNoArguments().thenReturn(clusterRuleSpecMock);
-        whenNew(ClusterConfigSpecEx.class).withNoArguments().thenReturn(clusterConfigSpecExMock);
-
-        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
-        when(connectionResourcesMock.getServiceInstance()).thenReturn(serviceInstanceMock);
-        when(connectionResourcesMock.getConnection()).thenReturn(connectionMock);
-        when(taskMock.getValue()).thenReturn("task-12345");
-        when(connectionMock.disconnect()).thenReturn(connectionMock);
-        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
-        when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
-                .thenReturn(taskMock);
         when(morObjectHandlerMock.getSpecificMor(any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class), any(String.class)))
                 .thenReturn(clusterMorMock);
 
@@ -171,12 +166,16 @@ public class ClusterComputeResourceServiceTest {
 
     @After
     public void tearDown() throws Exception {
+        connectionResourcesMock = null;
+        morObjectHandlerMock = null;
+        clusterMorMock = null;
+
         clusterComputeResourceService = null;
     }
 
     @Test
     public void createVmGroupSuccess() throws Exception {
-        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
+        commonVmGroupMockInitializations();
         VmInputs vmInputs = getVmInputs();
         List<String> vmList = getList();
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
@@ -190,7 +189,7 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void createVmGroupFailure() throws Exception {
-        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
+        commonVmGroupMockInitializations();
         VmInputs vmInputs = getVmInputs();
         List<String> vmList = getList();
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
@@ -204,22 +203,19 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void createVmGroupThrowsException() throws Exception {
-        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
+        vmGroupMockInitializationOnExceptionThrown();
         VmInputs vmInputs = getVmInputs();
         List<String> vmList = getList();
-        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
         when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
                 .thenThrow(new RuntimeFaultFaultMsg(CLUSTER_CONFIGURATION_FAILED, new RuntimeFault()));
         thrownException.expectMessage(CLUSTER_CONFIGURATION_FAILED);
 
         clusterComputeResourceService.createVmGroup(httpInputsMock, vmInputs, vmList);
-
-        commonVerifications();
     }
 
     @Test
     public void deleteVmGroupSuccess() throws Exception {
-        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
+        commonVmGroupMockInitializations();
         VmInputs vmInputs = getVmInputs();
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
@@ -232,7 +228,7 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void deleteVmGroupFailure() throws Exception {
-        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
+        commonVmGroupMockInitializations();
         VmInputs vmInputs = getVmInputs();
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, false));
@@ -245,20 +241,19 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void deleteVmGroupThrowsException() throws Exception {
-        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
-
+        vmGroupMockInitializationOnExceptionThrown();
         VmInputs vmInputs = getVmInputs();
         when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
                 .thenThrow(new RuntimeFaultFaultMsg(CLUSTER_CONFIGURATION_FAILED, new RuntimeFault()));
         thrownException.expectMessage(CLUSTER_CONFIGURATION_FAILED);
 
         clusterComputeResourceService.deleteVmGroup(httpInputsMock, vmInputs);
-
-        commonVerifications();
     }
+
 
     @Test
     public void listVmGroupsSuccess() throws Exception {
+        commonMockInitializations();
         List<ClusterGroupInfo> clusterGroupInfoList = new ArrayList<>();
         ClusterVmGroup clusterVmGroup1 = new ClusterVmGroup();
         ClusterVmGroup clusterVmGroup2 = new ClusterVmGroup();
@@ -271,7 +266,7 @@ public class ClusterComputeResourceServiceTest {
         clusterGroupInfoList.add(new ClusterHostGroup());
         ClusterConfigInfoEx clusterConfigInfoEx = new ClusterConfigInfoEx();
         clusterConfigInfoEx.getGroup().addAll(clusterGroupInfoList);
-        PowerMockito.doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
         whenNew(ArrayList.class).withNoArguments().thenReturn(vmGroupNameListSpy);
 
@@ -287,18 +282,17 @@ public class ClusterComputeResourceServiceTest {
         List<ClusterGroupInfo> clusterGroupInfoList = new ArrayList<>();
         ClusterConfigInfoEx clusterConfigInfoEx = new ClusterConfigInfoEx();
         clusterConfigInfoEx.getGroup().addAll(clusterGroupInfoList);
-        PowerMockito.doThrow(new RuntimeFaultFaultMsg(String.format(ErrorMessages.ANOTHER_FAILURE_MSG, "Cluster1"), new RuntimeFault())).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
-                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
+        doThrow(new RuntimeFaultFaultMsg(String.format(ErrorMessages.ANOTHER_FAILURE_MSG, "Cluster1"), new RuntimeFault()))
+                .when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                        any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
         thrownException.expectMessage(String.format(ErrorMessages.ANOTHER_FAILURE_MSG, "Cluster1"));
 
         clusterComputeResourceServiceSpy.listVmGroups(httpInputsMock, "Cluster1", "");
-
-        commonVerifications();
     }
 
     @Test
     public void createHostGroupSuccess() throws Exception {
-        whenNew(ClusterHostGroup.class).withNoArguments().thenReturn(clusterHostGroupMock);
+        commonHostGroupMockInitializations();
 
         VmInputs vmInputs = getVmInputs();
         List<String> hostList = getList();
@@ -315,7 +309,7 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void createHostGroupFailure() throws Exception {
-        whenNew(ClusterHostGroup.class).withNoArguments().thenReturn(clusterHostGroupMock);
+        commonHostGroupMockInitializations();
         VmInputs vmInputs = getVmInputs();
         List<String> hostList = getList();
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
@@ -328,8 +322,20 @@ public class ClusterComputeResourceServiceTest {
     }
 
     @Test
+    public void createHostGroupThrowsException() throws Exception {
+        hostGroupMockInitializationOnExceptionThrown();
+        VmInputs vmInputs = getVmInputs();
+        List<String> hostList = getList();
+        when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
+                .thenThrow(new RuntimeFaultFaultMsg(CLUSTER_CONFIGURATION_FAILED, new RuntimeFault()));
+        thrownException.expectMessage(CLUSTER_CONFIGURATION_FAILED);
+
+        clusterComputeResourceService.createHostGroup(httpInputsMock, vmInputs, hostList);
+    }
+
+    @Test
     public void deleteHostGroupSuccess() throws Exception {
-        whenNew(ClusterHostGroup.class).withNoArguments().thenReturn(clusterHostGroupMock);
+        commonHostGroupMockInitializations();
         VmInputs vmInputs = getVmInputs();
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
@@ -342,7 +348,7 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void deleteHostGroupFailure() throws Exception {
-        whenNew(ClusterHostGroup.class).withNoArguments().thenReturn(clusterHostGroupMock);
+        commonHostGroupMockInitializations();
         VmInputs vmInputs = getVmInputs();
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, false));
@@ -355,25 +361,24 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void deleteHostGroupThrowsException() throws Exception {
-        whenNew(ClusterHostGroup.class).withNoArguments().thenReturn(clusterHostGroupMock);
+        hostGroupMockInitializationOnExceptionThrown();
         VmInputs vmInputs = getVmInputs();
         when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
                 .thenThrow(new RuntimeFaultFaultMsg(CLUSTER_CONFIGURATION_FAILED, new RuntimeFault()));
 
         thrownException.expectMessage(CLUSTER_CONFIGURATION_FAILED);
         clusterComputeResourceService.deleteHostGroup(httpInputsMock, vmInputs);
-
-        commonVerifications();
     }
 
     @Test
     public void listHostGroupsSuccess() throws Exception {
+        commonMockInitializations();
         List<ClusterGroupInfo> clusterGroupInfoList = new ArrayList<>();
         clusterGroupInfoList.add(new ClusterVmGroup());
         clusterGroupInfoList.add(new ClusterVmGroup());
         ClusterConfigInfoEx clusterConfigInfoEx = new ClusterConfigInfoEx();
         clusterConfigInfoEx.getGroup().addAll(clusterGroupInfoList);
-        PowerMockito.doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
         whenNew(ArrayList.class).withNoArguments().thenReturn(hostGroupNameListSpy);
 
@@ -385,13 +390,28 @@ public class ClusterComputeResourceServiceTest {
     }
 
     @Test
+    public void listHostGroupsThrowsException() throws Exception {
+        List<ClusterGroupInfo> clusterGroupInfoList = new ArrayList<>();
+        ClusterConfigInfoEx clusterConfigInfoEx = new ClusterConfigInfoEx();
+        clusterConfigInfoEx.getGroup().addAll(clusterGroupInfoList);
+        doThrow(new RuntimeFaultFaultMsg(String.format(ErrorMessages.ANOTHER_FAILURE_MSG, "Cluster1"), new RuntimeFault()))
+                .when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                        any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
+        thrownException.expectMessage(String.format(ErrorMessages.ANOTHER_FAILURE_MSG, "Cluster1"));
+
+        clusterComputeResourceServiceSpy.listHostGroups(httpInputsMock, "Cluster1", "");
+    }
+
+
+    @Test
     public void createAffinityRuleSuccess() throws Exception {
+        commonMockInitializations();
         VmInputs vmInputs = getVmInputs();
-        PowerMockito.doReturn(clusterConfigInfoExMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoExMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
-        PowerMockito.doReturn(false).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
+        doReturn(false).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
                 any(ClusterConfigInfoEx.class), any(String.class));
-        PowerMockito.doReturn(clusterVmHostRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_VM_HOST_RULE_INFO,
+        doReturn(clusterVmHostRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_VM_HOST_RULE_INFO,
                 any(ClusterConfigInfoEx.class), any(VmInputs.class), any(String.class), any(String.class));
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
@@ -404,12 +424,13 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void createAffinityRuleFailure() throws Exception {
+        commonMockInitializations();
         VmInputs vmInputs = getVmInputs();
-        PowerMockito.doReturn(clusterConfigInfoExMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoExMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
-        PowerMockito.doReturn(false).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
+        doReturn(false).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
                 any(ClusterConfigInfoEx.class), any(String.class));
-        PowerMockito.doReturn(clusterVmHostRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_VM_HOST_RULE_INFO,
+        doReturn(clusterVmHostRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_VM_HOST_RULE_INFO,
                 any(ClusterConfigInfoEx.class), any(VmInputs.class), any(String.class), any(String.class));
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, false));
@@ -421,12 +442,12 @@ public class ClusterComputeResourceServiceTest {
     }
 
     @Test
-    public void createAffinityRuleThrowsException() throws Exception {
+    public void createAffinityRuleThrowsRuleAlreadyExistsException() throws Exception {
         VmInputs vmInputs = getVmInputs();
         ClusterConfigInfoEx clusterConfigInfoEx = new ClusterConfigInfoEx();
-        PowerMockito.doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
-        PowerMockito.doThrow(new RuntimeFaultFaultMsg(String.format(RULE_ALREADY_EXISTS, vmInputs.getRuleName()), new RuntimeFault())).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
+        doThrow(new RuntimeFaultFaultMsg(String.format(RULE_ALREADY_EXISTS, vmInputs.getRuleName()), new RuntimeFault())).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
                 any(ClusterConfigInfoEx.class), any(String.class));
         thrownException.expectMessage(String.format(RULE_ALREADY_EXISTS, vmInputs.getRuleName()));
 
@@ -434,12 +455,61 @@ public class ClusterComputeResourceServiceTest {
     }
 
     @Test
-    public void deleteClusterRuleSuccess() throws Exception {
+    public void createAffinityRuleThrowsAffineHostGroupNotFoundException() throws Exception {
         VmInputs vmInputs = getVmInputs();
-        PowerMockito.doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoExMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
-        PowerMockito.doReturn(clusterRuleInfoListMock).when(clusterConfigInfoExSpy, GET_RULE);
-        PowerMockito.doReturn(clusterRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_RULE_INFO,
+        doReturn(false).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
+                any(ClusterConfigInfoEx.class), any(String.class));
+        doThrow(new RuntimeFaultFaultMsg(AFFINE_HOST_GROUP_DOES_NOT_EXIST, new RuntimeFault()))
+                .when(clusterComputeResourceServiceSpy, ADD_AFFINE_GROUP_TO_RULE,
+                        any(ClusterVmHostRuleInfo.class), any(ClusterConfigInfoEx.class), any(String.class));
+        thrownException.expectMessage(AFFINE_HOST_GROUP_DOES_NOT_EXIST);
+
+        clusterComputeResourceServiceSpy.createAffinityRule(httpInputsMock, vmInputs, "affineHostGroupName", "");
+    }
+
+    @Test
+    public void createAffinityRuleThrowsAntiAffineHostGroupNotFoundException() throws Exception {
+        VmInputs vmInputs = getVmInputs();
+        doReturn(clusterConfigInfoExMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
+        doReturn(false).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
+                any(ClusterConfigInfoEx.class), any(String.class));
+        doThrow(new RuntimeFaultFaultMsg(ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST, new RuntimeFault()))
+                .when(clusterComputeResourceServiceSpy, ADD_ANTI_AFFINE_GROUP_TO_RULE,
+                        any(ClusterVmHostRuleInfo.class), any(ClusterConfigInfoEx.class), any(String.class));
+        thrownException.expectMessage(ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST);
+
+        clusterComputeResourceServiceSpy.createAffinityRule(httpInputsMock, vmInputs, "", "antiAffineHostGroup");
+    }
+
+    @Test
+    public void createAffinityRuleVmGroupNotFoundException() throws Exception {
+        VmInputs vmInputs = getVmInputs();
+        doReturn(clusterConfigInfoExMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
+        doReturn(false).when(clusterComputeResourceServiceSpy, RULE_EXISTS,
+                any(ClusterConfigInfoEx.class), any(String.class));
+        whenNew(ClusterVmHostRuleInfo.class).withNoArguments().thenReturn(clusterVmHostRuleInfoMock);
+        doReturn(clusterVmHostRuleInfoMock).when(clusterComputeResourceServiceSpy, ADD_AFFINE_GROUP_TO_RULE,
+                any(ClusterVmHostRuleInfo.class), any(ClusterConfigInfoEx.class), any(String.class));
+        doThrow(new RuntimeFaultFaultMsg(VM_GROUP_DOES_NOT_EXIST, new RuntimeFault()))
+                .when(clusterComputeResourceServiceSpy, EXISTS_VM_GROUP,
+                        any(ClusterConfigInfoEx.class), any(String.class));
+        thrownException.expectMessage(VM_GROUP_DOES_NOT_EXIST);
+
+        clusterComputeResourceServiceSpy.createAffinityRule(httpInputsMock, vmInputs, "affineHostGroupName", "");
+    }
+
+    @Test
+    public void deleteClusterRuleSuccess() throws Exception {
+        commonMockInitializations();
+        VmInputs vmInputs = getVmInputs();
+        doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
+        doReturn(clusterRuleInfoListMock).when(clusterConfigInfoExSpy, GET_RULE);
+        doReturn(clusterRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_RULE_INFO,
                 any(List.class), any(String.class));
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, true));
@@ -452,11 +522,12 @@ public class ClusterComputeResourceServiceTest {
 
     @Test
     public void deleteClusterRuleFailure() throws Exception {
+        commonMockInitializations();
         VmInputs vmInputs = getVmInputs();
-        PowerMockito.doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
-        PowerMockito.doReturn(clusterRuleInfoListMock).when(clusterConfigInfoExSpy, GET_RULE);
-        PowerMockito.doReturn(clusterRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_RULE_INFO,
+        doReturn(clusterRuleInfoListMock).when(clusterConfigInfoExSpy, GET_RULE);
+        doReturn(clusterRuleInfoMock).when(clusterComputeResourceServiceSpy, GET_CLUSTER_RULE_INFO,
                 any(List.class), any(String.class));
         whenNew(ResponseHelper.class).withArguments(any(ConnectionResources.class), any(ManagedObjectReference.class))
                 .thenReturn(getResponseHelper(connectionResourcesMock, taskMock, false));
@@ -470,33 +541,15 @@ public class ClusterComputeResourceServiceTest {
     @Test
     public void deleteClusterRuleThrowsException() throws Exception {
         VmInputs vmInputs = getVmInputs();
-        PowerMockito.doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+        doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
-        PowerMockito.doReturn(clusterRuleInfoListMock).when(clusterConfigInfoExSpy, GET_RULE);
-        PowerMockito.doThrow(new RuntimeFaultFaultMsg(String.format(CLUSTER_RULE_COULD_NOT_BE_FOUND, vmInputs.getRuleName()), new RuntimeFault()))
-                .when(clusterComputeResourceServiceSpy, "getClusterRuleInfo",
+        doReturn(clusterRuleInfoListMock).when(clusterConfigInfoExSpy, GET_RULE);
+        doThrow(new RuntimeFaultFaultMsg(String.format(CLUSTER_RULE_COULD_NOT_BE_FOUND, vmInputs.getRuleName()), new RuntimeFault()))
+                .when(clusterComputeResourceServiceSpy, GET_CLUSTER_RULE_INFO,
                         any(List.class), any(String.class));
 
         thrownException.expectMessage(String.format(CLUSTER_RULE_COULD_NOT_BE_FOUND, vmInputs.getRuleName()));
         clusterComputeResourceServiceSpy.deleteClusterRule(httpInputsMock, vmInputs);
-
-        commonVerifications();
-    }
-
-    @Test
-    public void deleteClusterRuleThrowsExceptionVmGroupDoesNotExist() throws Exception {
-        VmInputs vmInputs = getVmInputs();
-        PowerMockito.doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
-                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
-        PowerMockito.doReturn(clusterRuleInfoListMock).when(clusterConfigInfoExSpy, GET_RULE);
-        PowerMockito.doThrow(new RuntimeFaultFaultMsg(String.format(CLUSTER_RULE_COULD_NOT_BE_FOUND, vmInputs.getRuleName()), new RuntimeFault()))
-                .when(clusterComputeResourceServiceSpy, "getClusterRuleInfo",
-                        any(List.class), any(String.class));
-
-        thrownException.expectMessage(String.format(CLUSTER_RULE_COULD_NOT_BE_FOUND, vmInputs.getRuleName()));
-        clusterComputeResourceServiceSpy.deleteClusterRule(httpInputsMock, vmInputs);
-
-        commonVerifications();
     }
 
     private ResponseHelper getResponseHelper(final ConnectionResources connectionResources,
@@ -513,7 +566,7 @@ public class ClusterComputeResourceServiceTest {
     @NotNull
     private List<String> getList() {
         List<String> list = new ArrayList();
-        list.add("asdf");
+        list.add("asd");
         return list;
     }
 
@@ -524,6 +577,35 @@ public class ClusterComputeResourceServiceTest {
                 .withHostGroupName("DemoHostGroup")
                 .withRuleName("DemoRule")
                 .build();
+    }
+
+    private void commonMockInitializations() throws Exception {
+        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
+        when(connectionResourcesMock.getConnection()).thenReturn(connectionMock);
+        when(taskMock.getValue()).thenReturn("task-12345");
+        when(connectionMock.disconnect()).thenReturn(connectionMock);
+        when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
+                .thenReturn(taskMock);
+    }
+
+    private void commonVmGroupMockInitializations() throws Exception {
+        commonMockInitializations();
+        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
+    }
+
+    private void commonHostGroupMockInitializations() throws Exception {
+        commonMockInitializations();
+        whenNew(ClusterHostGroup.class).withNoArguments().thenReturn(clusterHostGroupMock);
+    }
+
+    private void vmGroupMockInitializationOnExceptionThrown() throws Exception {
+        whenNew(ClusterVmGroup.class).withNoArguments().thenReturn(clusterVmGroupMock);
+        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
+    }
+
+    private void hostGroupMockInitializationOnExceptionThrown() throws Exception {
+        whenNew(ClusterHostGroup.class).withNoArguments().thenReturn(clusterHostGroupMock);
+        when(connectionResourcesMock.getVimPortType()).thenReturn(vimPortMock);
     }
 
     private void commonVerifications() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
@@ -538,12 +620,12 @@ public class ClusterComputeResourceServiceTest {
     private void assertionsSuccess(Map<String, String> resultMap) {
         assertNotNull(resultMap);
         assertEquals(Integer.parseInt(Outputs.RETURN_CODE_SUCCESS), Integer.parseInt(resultMap.get(Outputs.RETURN_CODE)));
-        assertEquals(resultMap.get(Outputs.RETURN_RESULT), "Success: The [Cluster1] cluster was successfully reconfigured. The taskId is: task-12345");
+        assertEquals(resultMap.get(Outputs.RETURN_RESULT), SUCCESS_MESSAGE);
     }
 
     private void assertionsFailure(Map<String, String> resultMap) {
         assertNotNull(resultMap);
-        assertEquals(-1, Integer.parseInt(resultMap.get(Outputs.RETURN_CODE)));
-        assertEquals(resultMap.get(Outputs.RETURN_RESULT), "Failure: The [Cluster1] cluster could not be reconfigured.");
+        assertEquals(Integer.parseInt(Outputs.RETURN_CODE_FAILURE), Integer.parseInt(resultMap.get(Outputs.RETURN_CODE)));
+        assertEquals(resultMap.get(Outputs.RETURN_RESULT), FAILURE_MESSAGE);
     }
 }

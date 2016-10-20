@@ -299,7 +299,7 @@ public class ClusterComputeResourceService {
     }
 
     @NotNull
-    protected ClusterVmHostRuleInfo getClusterVmHostRuleInfo(ClusterConfigInfoEx clusterConfigInfoEx,
+    private ClusterVmHostRuleInfo getClusterVmHostRuleInfo(ClusterConfigInfoEx clusterConfigInfoEx,
                                                            VmInputs vmInputs, String affineHostGroupName, String antiAffineHostGroupName) throws Exception {
         ClusterVmHostRuleInfo clusterVmHostRuleInfo = new ClusterVmHostRuleInfo();
         clusterVmHostRuleInfo.setName(vmInputs.getRuleName());
