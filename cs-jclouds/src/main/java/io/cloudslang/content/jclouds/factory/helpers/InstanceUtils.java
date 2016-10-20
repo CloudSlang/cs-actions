@@ -9,10 +9,24 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.*;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.ENCRYPTED;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.FORCE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.IMAGE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.INSTANCE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.IOPS;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SECURITY_GROUP;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.SNAPSHOT_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.STANDARD;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.VALUE;
+import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.VOLUME_TYPE;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Miscellaneous.DOT;
@@ -33,6 +47,7 @@ public class InstanceUtils {
     private static final String DISABLE_API_TERMINATION = "DisableApiTermination";
     private static final String EBS_OPTIMIZED = "EbsOptimized";
     private static final String ENA_SUPPORT = "EnaSupport";
+    private static final String GROUP_ID = "GroupId";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
@@ -56,6 +71,7 @@ public class InstanceUtils {
     public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, ATTRIBUTE, wrapper.getInstanceInputs().getAttribute(),
                 isNotBlank(wrapper.getInstanceInputs().getAttribute()));
@@ -65,6 +81,9 @@ public class InstanceUtils {
                 valueOf(wrapper.getEbsInputs().isEbsOptimized()), wrapper.getEbsInputs().isEbsOptimized());
         InputsUtil.setOptionalMapEntry(queryParamsMap, ENA_SUPPORT + DOT + VALUE,
                 valueOf(wrapper.getInstanceInputs().isEnaSupport()), wrapper.getInstanceInputs().isEnaSupport());
+
+        new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+                GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
 
         return queryParamsMap;
     }
@@ -153,9 +172,9 @@ public class InstanceUtils {
 
     private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         IamUtils helper = new IamUtils();
-        helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
+        helper.setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
                 SECURITY_GROUP, EMPTY, wrapper.getCommonInputs().getDelimiter());
-        helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+        helper.setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
     }
 
@@ -164,8 +183,8 @@ public class InstanceUtils {
         helper.setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, NETWORK_INTERFACE, wrapper.getCommonInputs().getDelimiter());
         helper.setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacePrivateIpAddress())) {
-            new IamUtils().setNetworkSecurityGroupsQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
-                    wrapper.getCommonInputs().getDelimiter());
+            new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+                    NETWORK_INTERFACE, DOT + SECURITY_GROUP_ID, wrapper.getCommonInputs().getDelimiter());
         }
     }
 
