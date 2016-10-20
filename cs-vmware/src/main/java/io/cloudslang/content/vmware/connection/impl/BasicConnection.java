@@ -1,6 +1,13 @@
 package io.cloudslang.content.vmware.connection.impl;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.InvalidLocaleFaultMsg;
+import com.vmware.vim25.InvalidLoginFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.ServiceContent;
+import com.vmware.vim25.UserSession;
+import com.vmware.vim25.VimPortType;
+import com.vmware.vim25.VimService;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.exceptions.ConnectionException;
 import io.cloudslang.content.vmware.entities.ManagedObjectType;

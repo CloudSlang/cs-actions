@@ -28,7 +28,7 @@ public class TransferVmdkFromInputStream implements ITransferVmdkFrom {
         final byte[] buffer = new byte[SIZE_4K];
         try (InputStream is = inputStream) {
             while (length > bytesCopied) {
-                final int bytesRead = is.read(buffer, 0, (int) Math.min(SIZE_4K, length - bytesCopied));
+                final int bytesRead = is.read(buffer, 0, buffer.length);
                 if (bytesRead == -1) {
                     break;
                 }

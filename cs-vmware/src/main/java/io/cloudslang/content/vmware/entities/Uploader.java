@@ -20,7 +20,9 @@ public class Uploader {
         }
         connection.setRequestProperty("Connection", "Keep-Alive");
         connection.setRequestProperty("Content-Type", "application/x-vnd.mvware-streamVmdk");
-        if (contentLength > 0) connection.setRequestProperty("Content-Length", Long.toString(contentLength));
+        if (contentLength > 0) {
+            connection.setRequestProperty("Content-Length", Long.toString(contentLength));
+        }
         connection.connect();
         return connection;
     }

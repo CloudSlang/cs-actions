@@ -8,8 +8,8 @@ import com.vmware.vim25.VirtualMachineSummary;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
-import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.ManagedObjectType;
+import io.cloudslang.content.vmware.entities.VmInputs;
 
 import java.util.Collection;
 import java.util.HashMap;

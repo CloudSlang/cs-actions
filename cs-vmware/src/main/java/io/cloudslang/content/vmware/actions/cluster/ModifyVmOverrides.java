@@ -12,29 +12,26 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.ClusterComputeResourceService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.HOST;
 import static io.cloudslang.content.vmware.constants.Inputs.HOSTNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
+import static io.cloudslang.content.vmware.constants.Inputs.PORT;
+import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
 import static io.cloudslang.content.vmware.constants.Inputs.RESTART_PRIORITY;
 import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
+import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
 import static io.cloudslang.content.vmware.constants.Inputs.VM_NAME;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.CLUSTER_RESTART_PRIORITY;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.DISABLED;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.HIGH;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.LOW;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.MEDIUM;
-
-import static io.cloudslang.content.vmware.constants.Inputs.HOST;
-import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
-import static io.cloudslang.content.vmware.constants.Inputs.PORT;
-import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
-import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
 
 /**
  * Created by giloan on 9/1/2016.

@@ -1,6 +1,5 @@
 package io.cloudslang.content.vmware.utils;
 
-import com.google.gson.Gson;
 import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
 import com.sun.org.apache.xerces.internal.dom.TextImpl;
 import com.vmware.vim25.DynamicProperty;
@@ -12,7 +11,6 @@ import com.vmware.vim25.ObjectContent;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +89,7 @@ public class OvfUtils {
         Map<String, String> map = new HashMap<>();
         List<String> keys = resolveJSONStringArrayParm(keysJson);
         List<String> values = resolveJSONStringArrayParm(valuesJson);
-        if (keys != null || values != null) {
+        if (keys != null && values != null) {
             if (keys.size() != values.size()) {
                 throw new Exception(ARRAYS_LENGTH_MUST_MATCH);
             } else {
@@ -104,6 +102,6 @@ public class OvfUtils {
     }
 
     public static List<String> resolveJSONStringArrayParm(String jsonString) {
-        return new Gson().fromJson(jsonString, List.class);
+        return JsonConverter.convertFromJson(jsonString, List.class);
     }
 }

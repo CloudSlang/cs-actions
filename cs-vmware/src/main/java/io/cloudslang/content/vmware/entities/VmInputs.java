@@ -48,7 +48,7 @@ public class VmInputs {
     private String ruleName;
     private String clusterName;
 
-    public VmInputs(VmInputsBuilder builder) {
+    private VmInputs(VmInputsBuilder builder) {
         this.dataCenterName = builder.dataCenterName;
         this.hostname = builder.hostname;
         this.virtualMachineName = builder.virtualMachineName;

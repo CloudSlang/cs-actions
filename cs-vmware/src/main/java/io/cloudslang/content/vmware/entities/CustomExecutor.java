@@ -14,11 +14,7 @@ public class CustomExecutor {
 
     public CustomExecutor(boolean parallel) {
         this.parallel = parallel;
-        if (parallel) {
-            this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        } else {
-            this.executor = null;
-        }
+        this.executor = parallel ? (ThreadPoolExecutor) Executors.newCachedThreadPool() : null;
     }
 
     public void execute(final Runnable task) {

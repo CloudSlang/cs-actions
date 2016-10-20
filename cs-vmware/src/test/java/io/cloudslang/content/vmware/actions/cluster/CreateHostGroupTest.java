@@ -1,7 +1,6 @@
 package io.cloudslang.content.vmware.actions.cluster;
 
 import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.ClusterComputeResourceService;

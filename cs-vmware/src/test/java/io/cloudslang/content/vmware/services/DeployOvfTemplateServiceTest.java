@@ -15,6 +15,7 @@ import io.cloudslang.content.vmware.entities.CustomExecutor;
 import io.cloudslang.content.vmware.entities.SyncProgressUpdater;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.utils.VmUtils;
 import io.cloudslang.content.vmware.utils.OvfUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -34,10 +35,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -50,6 +51,10 @@ public class DeployOvfTemplateServiceTest {
     private static final String TEST_CLUSTER = "test_cluster";
     private static final String TEST_RESOURCE_POOL = "test_resourcePool";
     private static final String EMPTY_STRING = "";
+    private long DISK_SIZE = 1024;
+    private ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair;
+    private final static String OVF_TEMPLATE_AS_STRING = "template content";
+
     @Spy
     private DeployOvfTemplateService serviceSpy = new DeployOvfTemplateService(true);
     @Mock
@@ -64,8 +69,6 @@ public class DeployOvfTemplateServiceTest {
     private Map<String, String> ovfPropertyMapMock;
     @Mock
     private ManagedObjectReference httpNfcLeaseMock;
-    @Mock
-    private OvfCreateImportSpecResult importSpecResultMock;
     @Mock
     private HttpNfcLeaseInfo httpNfcLeaseInfoMock;
     @Mock
@@ -100,21 +103,22 @@ public class DeployOvfTemplateServiceTest {
     private OvfCreateImportSpecParams ovfCreateImportSpecParamsMock;
     @Mock
     private ImportSpec importSpecMock;
-
-    private long DISK_SIZE = 1024;
-    private ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair;
-    private String ovfTemplateAsString = "template content";
+    @Mock
+    private ManagedObjectReference clusterMorMock;
+    @Mock
+    private MorObjectHandler morObjectHandlerMock;
+    @Mock
+    private ManagedObjectReference morRootFolderMock;
 
     @Before
     public void setUp() {
-        pair = ImmutablePair.of(httpNfcLeaseMock, importSpecResultMock);
+        pair = ImmutablePair.of(httpNfcLeaseMock, ovfCreateImportSpecResultMock);
     }
 
     @After
     public void tearDown() {
         httpInputsMock = null;
         httpNfcLeaseMock = null;
-        importSpecResultMock = null;
         httpNfcLeaseInfoMock = null;
         deviceUrlsMock = null;
         vmInputsMock = null;
@@ -137,6 +141,9 @@ public class DeployOvfTemplateServiceTest {
         ovfCreateImportSpecResultMock = null;
         ovfCreateImportSpecParamsMock = null;
         importSpecMock = null;
+        clusterMorMock = null;
+        morObjectHandlerMock = null;
+        morRootFolderMock = null;
     }
 
     @Test
@@ -158,32 +165,67 @@ public class DeployOvfTemplateServiceTest {
     }
 
     @Test
-    public void testCreateLeaseSetup() throws Exception {
-        prepareMocksForCreateLeaseSetupTest();
+    public void testCreateLeaseSetupWithClusterName() throws Exception {
+        prepareMocksForCreateLeaseSetupTest(true);
 
         ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> result
                 = serviceSpy.createLeaseSetup(connectionResourcesMock, vmInputsMock, PATH, ovfNetworkMapMock, ovfPropertyMapMock);
 
+        verifyMockInvocationsForCreateLeaseSetupTest(result, true);
+    }
+
+    @Test
+    public void testCreateLeaseSetupWithoutClusterName() throws Exception {
+        prepareMocksForCreateLeaseSetupTest(false);
+
+        ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> result
+                = serviceSpy.createLeaseSetup(connectionResourcesMock, vmInputsMock, PATH, ovfNetworkMapMock, ovfPropertyMapMock);
+
+        verifyMockInvocationsForCreateLeaseSetupTest(result, false);
+    }
+
+    private void verifyMockInvocationsForCreateLeaseSetupTest(ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> result,
+                                                              boolean withClustername) throws Exception {
         Assert.assertEquals(httpNfcLeaseMock, result.getLeft());
         Assert.assertEquals(ovfCreateImportSpecResultMock, result.getRight());
         verifyNew(VmUtils.class).withNoArguments();
-        verify(vmInputsMock).getClusterName();
-        verify(vmUtilsMock).getMorResourcePool(TEST_RESOURCE_POOL, connectionResourcesMock);
+        if (withClustername) {
+            verify(vmInputsMock, times(2)).getClusterName();
+            verify(vmUtilsMock, times(0)).getMorResourcePool(TEST_RESOURCE_POOL, connectionResourcesMock);
+            verifyNew(MorObjectHandler.class).withNoArguments();
+            verify(morObjectHandlerMock).getSpecificMor(connectionResourcesMock, morRootFolderMock, "ClusterComputeResource",
+                    TEST_CLUSTER);
+            verify(vmUtilsMock).getMorResourcePoolFromCluster(connectionResourcesMock, clusterMorMock, TEST_RESOURCE_POOL);
+        } else {
+            verify(vmInputsMock).getClusterName();
+            verify(vmUtilsMock).getMorResourcePool(TEST_RESOURCE_POOL, connectionResourcesMock);
+            verify(vmUtilsMock, times(0)).getMorResourcePoolFromCluster(connectionResourcesMock, clusterMorMock, TEST_RESOURCE_POOL);
+        }
         verify(vmUtilsMock).getMorHost(anyString(), any(ConnectionResources.class), any(ManagedObjectReference.class));
         verify(vmUtilsMock).getMorDataStore(anyString(), any(ConnectionResources.class),
                 any(ManagedObjectReference.class), any(VmInputs.class));
         verify(vmUtilsMock).getMorFolder(anyString(), any(ConnectionResources.class));
         verify(connectionResourcesMock).getVimPortType();
-        verify(vimPortTypeMock).createImportSpec(ovfManagerMock, ovfTemplateAsString, resourcePoolMock, datastoreMock,
+        verify(vimPortTypeMock).createImportSpec(ovfManagerMock, OVF_TEMPLATE_AS_STRING, resourcePoolMock, datastoreMock,
                 ovfCreateImportSpecParamsMock);
     }
 
-    private void prepareMocksForCreateLeaseSetupTest() throws Exception {
+    private void prepareMocksForCreateLeaseSetupTest(boolean withClustername) throws Exception {
         PowerMockito.doReturn(ovfManagerMock).when(serviceSpy, "getOvfManager", any(ConnectionResources.class));
         whenNew(VmUtils.class).withNoArguments().thenReturn(vmUtilsMock);
-        doReturn(EMPTY_STRING).when(vmInputsMock).getClusterName();
         doReturn(TEST_RESOURCE_POOL).when(vmInputsMock).getResourcePool();
-        doReturn(resourcePoolMock).when(vmUtilsMock).getMorResourcePool(TEST_RESOURCE_POOL, connectionResourcesMock);
+        if (withClustername) {
+            doReturn(TEST_CLUSTER).when(vmInputsMock).getClusterName();
+            whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+            doReturn(morRootFolderMock).when(connectionResourcesMock).getMorRootFolder();
+            doReturn(clusterMorMock).when(morObjectHandlerMock).getSpecificMor(connectionResourcesMock, morRootFolderMock,
+                    "ClusterComputeResource", TEST_CLUSTER);
+            doReturn(resourcePoolMock).when(vmUtilsMock).getMorResourcePoolFromCluster(connectionResourcesMock,
+                    clusterMorMock, TEST_RESOURCE_POOL);
+        } else {
+            doReturn(EMPTY_STRING).when(vmInputsMock).getClusterName();
+            doReturn(resourcePoolMock).when(vmUtilsMock).getMorResourcePool(TEST_RESOURCE_POOL, connectionResourcesMock);
+        }
         doReturn(hostMorMock).when(vmUtilsMock).getMorHost(anyString(), any(ConnectionResources.class),
                 any(ManagedObjectReference.class));
         doReturn(datastoreMock).when(vmUtilsMock).getMorDataStore(anyString(), any(ConnectionResources.class),
@@ -193,12 +235,13 @@ public class DeployOvfTemplateServiceTest {
                 ovfNetworkMapMock, connectionResourcesMock);
         PowerMockito.doReturn(ovfPropertyMappingsMock).when(serviceSpy, "getOvfPropertyMappings", ovfPropertyMapMock);
         doReturn(vimPortTypeMock).when(connectionResourcesMock).getVimPortType();
-        PowerMockito.doReturn(ovfTemplateAsString).when(serviceSpy, "getOvfTemplateAsString", PATH);
+        PowerMockito.doReturn(OVF_TEMPLATE_AS_STRING).when(serviceSpy, "getOvfTemplateAsString", PATH);
         PowerMockito.doReturn(ovfCreateImportSpecParamsMock).when(serviceSpy, "getOvfCreateImportSpecParams",
                 vmInputsMock, hostMorMock, ovfNetworkMappingsMock, ovfPropertyMappingsMock);
         doReturn(ovfCreateImportSpecResultMock).when(vimPortTypeMock).createImportSpec(ovfManagerMock,
-                ovfTemplateAsString, resourcePoolMock, datastoreMock, ovfCreateImportSpecParamsMock);
-        PowerMockito.doNothing().when(serviceSpy, "checkImportSpecResultForErrors", importSpecResultMock);
+                OVF_TEMPLATE_AS_STRING, resourcePoolMock, datastoreMock, ovfCreateImportSpecParamsMock);
+
+        PowerMockito.doNothing().when(serviceSpy, "checkImportSpecResultForErrors", ovfCreateImportSpecResultMock);
         PowerMockito.mockStatic(OvfUtils.class);
         PowerMockito.doReturn(httpNfcLeaseMock).when(OvfUtils.class);
         OvfUtils.getHttpNfcLease(any(ConnectionResources.class), any(ImportSpec.class), any(ManagedObjectReference.class),
@@ -235,11 +278,11 @@ public class DeployOvfTemplateServiceTest {
                 .thenReturn(syncProgressUpdaterMock);
         if (parallel) {
             doNothing().when(executorMock).execute(asyncProgressUpdaterMock);
-            PowerMockito.doNothing().when(serviceSpy, "transferVmdkFiles", PATH, importSpecResultMock, deviceUrlsMock,
+            PowerMockito.doNothing().when(serviceSpy, "transferVmdkFiles", PATH, ovfCreateImportSpecResultMock, deviceUrlsMock,
                     asyncProgressUpdaterMock);
         } else {
             doNothing().when(executorMock).execute(syncProgressUpdaterMock);
-            PowerMockito.doNothing().when(serviceSpy, "transferVmdkFiles", PATH, importSpecResultMock, deviceUrlsMock,
+            PowerMockito.doNothing().when(serviceSpy, "transferVmdkFiles", PATH, ovfCreateImportSpecResultMock, deviceUrlsMock,
                     syncProgressUpdaterMock);
         }
         doNothing().when(executorMock).shutdown();

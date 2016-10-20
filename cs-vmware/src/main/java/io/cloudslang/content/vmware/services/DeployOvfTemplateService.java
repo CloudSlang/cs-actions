@@ -2,7 +2,6 @@ package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.HttpNfcLeaseDeviceUrl;
 import com.vmware.vim25.HttpNfcLeaseInfo;
-import com.vmware.vim25.InvalidPropertyFaultMsg;
 import com.vmware.vim25.KeyValue;
 import com.vmware.vim25.LocalizedMethodFault;
 import com.vmware.vim25.ManagedObjectReference;

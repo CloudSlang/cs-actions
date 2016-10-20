@@ -27,7 +27,7 @@ public class AsyncProgressUpdater extends ProgressUpdater {
     public void run() {
         int percentage = 0;
         try {
-            while (bytesSent != totalNoBytes) {
+            while (bytesSent < totalNoBytes) {
                 sleep(100);
                 final int newPercentage = getFloorPercentage();
                 if (newPercentage != percentage) {

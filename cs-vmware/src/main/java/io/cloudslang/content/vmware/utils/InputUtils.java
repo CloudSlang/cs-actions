@@ -1,6 +1,5 @@
 package io.cloudslang.content.vmware.utils;
 
-import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.Operation;
@@ -12,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.net.URL;
 import java.util.Locale;
 
-import static io.cloudslang.content.utils.StringUtilities.*;
+import static io.cloudslang.content.utils.StringUtilities.isBlank;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
 import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
 
