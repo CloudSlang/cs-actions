@@ -33,6 +33,27 @@ import static io.cloudslang.content.vmware.constants.Inputs.VM_GROUP_NAME;
  */
 public class CreateAffinityRule {
 
+    /**
+     * @param host                    VMware host or IP.
+     *                                Example: "vc6.subdomain.example.com"
+     * @param port                    optional - the port to connect through.
+     *                                Default Value: "443"
+     *                                Examples: "443", "80"
+     * @param protocol                optional - the connection protocol.
+     *                                Default Value: "https"
+     *                                Valid Values: "http", "https"
+     * @param username                the VMware username used to connect.
+     * @param password                the password associated with "username" input.
+     * @param trustEveryone           optional - if "true" will allow connections from any host, if "false" the connection will be allowed only using a valid vCenter certificate. Check the: https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_java_development.4.3.html to see how to import a certificate into Java Keystore and https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html to see how to obtain a valid vCenter certificate
+     *                                Default Value: "true"
+     * @param clusterName             the name of the cluster.
+     * @param ruleName                the name of the affinity rule.
+     * @param affineHostGroupName     optional - the name of the affine host group. The affine host group represents the host group on which the virtual machines in the specified VM group must run.
+     * @param antiAffineHostGroupName optional - the name of the anti-affine host group. The anti-affine host group represents the host group on which the virtual machines in the specified VM group must not run.
+     *                                Note: Only one of the affineHostGroupName and antiAffineHostGroupName should be provided. If the affineHostGroupName is provided, there will be created an affinity rule between the VM group and the host Group, otherwise an anti-affinity rule will be created.
+     * @param vmGroupName             the name of the VM group for which the affinity rule will be applied.
+     * @return
+     */
     @Action(name = "Create Affinity Rule",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

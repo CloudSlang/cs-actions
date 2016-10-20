@@ -38,7 +38,7 @@ public class GuestService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler()
-                    .getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    .getMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 CustomizationSpec customizationSpec = isWin ? new GuestConfigSpecs().getWinCustomizationSpec(guestInputs)
                         : new GuestConfigSpecs().getLinuxCustomizationSpec(guestInputs);
@@ -73,7 +73,7 @@ public class GuestService {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
             ManagedObjectReference vmMor = new MorObjectHandler()
-                    .getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+                    .getMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 connectionResources.getVimPortType().mountToolsInstaller(vmMor);
                 return ResponseUtils.getResultsMap(INITIATED_TOOLS_INSTALLER_MOUNT + vmInputs.getVirtualMachineName(),
