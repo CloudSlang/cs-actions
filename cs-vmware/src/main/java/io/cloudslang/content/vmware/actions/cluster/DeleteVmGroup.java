@@ -27,6 +27,24 @@ import static io.cloudslang.content.vmware.constants.Inputs.VM_GROUP_NAME;
  * Created by pinteae on 10/3/2016.
  */
 public class DeleteVmGroup {
+
+    /**
+     * @param host          VMware host or IP.
+     *                      Example: "vc6.subdomain.example.com"
+     * @param port          optional - the port to connect through.
+     *                      Default Value: "443"
+     *                      Examples: "443", "80"
+     * @param protocol      optional - The connection protocol.
+     *                      Default Value: "https"
+     *                      Valid Values: "http", "https"
+     * @param username      The VMware username used to connect.
+     * @param password      The password associated with "username" input.
+     * @param trustEveryone optional - If "true" will allow connections from any host, if "false" the connection will be allowed only using a valid vCenter certificate. Check the: https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_java_development.4.3.html to see how to import a certificate into Java Keystore and https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html to see how to obtain a valid vCenter certificate
+     *                      Default Value: "true"
+     * @param clusterName   The name of the cluster from which the VM group will be deleted.
+     * @param vmGroupName   The name of the VM group that will be deleted.
+     * @return
+     */
     @Action(name = "Delete DRS VM Group",
             outputs = {
                     @Output(Outputs.RETURN_CODE),

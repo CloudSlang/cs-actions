@@ -48,5 +48,5 @@ public class ErrorMessages {
     public static final String SUCCESS_MSG = "Success: The [%s] cluster was successfully reconfigured. The taskId is: %s";
     public static final String FAILURE_MSG = "Failure: The [%s] cluster could not be reconfigured.";
     public static final String ANOTHER_FAILURE_MSG = "Could not retrieve the configurations for: [%s] cluster.";
-    public static final String CLUSTER_RULE_COULD_NOT_BE_FOUND = "Cluster rule with name %s could not be found.";
+    public static final String CLUSTER_RULE_COULD_NOT_BE_FOUND = "Cluster rule with the name %s could not be found.";
 }
