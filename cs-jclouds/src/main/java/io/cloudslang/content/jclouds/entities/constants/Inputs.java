@@ -134,6 +134,7 @@ public class Inputs {
         public static final String INSTANCE_STATE_NAME = "instanceStateName";
         public static final String IP_ADDRESS = "ipAddress";
         public static final String IP_OWNER_ID = "ipOwnerId";
+        public static final String KERNEL = "kernel";
         public static final String KEY_NAME = "keyName";
         public static final String LAUNCH_INDEX = "launchIndex";
         public static final String LAUNCH_TIME = "launchTime";
@@ -143,6 +144,7 @@ public class Inputs {
         public static final String MONITORING_STATE = "monitoringState";
         public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
         public static final String PRIVATE_DNS_NAME = "privateDnsName";
+        public static final String RAMDISK = "ramdisk";
         public static final String REASON = "reason";
         public static final String REQUESTER_ID = "requesterId";
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";

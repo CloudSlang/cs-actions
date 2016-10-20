@@ -39,6 +39,8 @@ public class InstanceInputs {
     private String ipOwnerId;
     private String instanceInitiatedShutdownBehavior;
     private String userData;
+    private String kernel;
+    private String ramdisk;
 
     private int maxCount;
     private int minCount;
@@ -80,6 +82,8 @@ public class InstanceInputs {
         this.ipOwnerId = builder.ipOwnerId;
         this.instanceInitiatedShutdownBehavior = builder.instanceInitiatedShutdownBehavior;
         this.userData = builder.userData;
+        this.kernel = builder.kernel;
+        this.ramdisk = builder.ramdisk;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -210,6 +214,14 @@ public class InstanceInputs {
         return userData;
     }
 
+    public String getKernel() {
+        return kernel;
+    }
+
+    public String getRamdisk() {
+        return ramdisk;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -266,6 +278,8 @@ public class InstanceInputs {
         private String ipOwnerId;
         private String instanceInitiatedShutdownBehavior;
         private String userData;
+        private String kernel;
+        private String ramdisk;
 
         private int minCount;
         private int maxCount;
@@ -426,6 +440,16 @@ public class InstanceInputs {
 
         public Builder withUserData(String inputValue) {
             userData = inputValue;
+            return this;
+        }
+
+        public Builder withKernel(String inputValue) {
+            kernel = inputValue;
+            return this;
+        }
+
+        public Builder withRamdisk(String inputValue) {
+            ramdisk = inputValue;
             return this;
         }
 

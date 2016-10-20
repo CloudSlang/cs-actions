@@ -26,6 +26,7 @@ import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInpu
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.CommonInputs.DELIMITER;
 
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.CustomInputs.INSTANCE_TYPE;
 
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.EbsInputs.EBS_OPTIMIZED;
 
@@ -35,6 +36,8 @@ import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceIn
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.DISABLE_API_TERMINATION;
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.ENA_SUPPORT;
 import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.KERNEL;
+import static io.cloudslang.content.jclouds.entities.constants.Inputs.InstanceInputs.RAMDISK;
 
 import static io.cloudslang.content.jclouds.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.jclouds.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
@@ -112,7 +115,26 @@ public class ModifyInstanceAttributeAction {
      *                                          shutdown from the instance (using the operating system command for system
      *                                          shutdown).
      *                                          Valid values: "stop", "terminate"
-     *                                          Default: "stop"
+     * @param instanceType                      Optional - Changes the instance type to the specified value. If the instance
+     *                                          type is not valid, the error returned is InvalidInstanceAttributeValue.
+     *                                          For more information, see Instance Types in the Amazon Elastic Compute
+     *                                          Cloud User Guide.
+     *                                          Valid values: t1.micro | t2.nano | t2.micro | t2.small | t2.medium |
+     *                                          t2.large | m1.small | m1.medium | m1.large | m1.xlarge | m3.medium |
+     *                                          m3.large | m3.xlarge | m3.2xlarge | m4.large | m4.xlarge | m4.2xlarge |
+     *                                          m4.4xlarge | m4.10xlarge | m2.xlarge | m2.2xlarge | m2.4xlarge |
+     *                                          cr1.8xlarge | r3.large | r3.xlarge | r3.2xlarge | r3.4xlarge |
+     *                                          r3.8xlarge | x1.4xlarge | x1.8xlarge | x1.16xlarge | x1.32xlarge |
+     *                                          i2.xlarge | i2.2xlarge | i2.4xlarge | i2.8xlarge | hi1.4xlarge |
+     *                                          hs1.8xlarge | c1.medium | c1.xlarge | c3.large | c3.xlarge |
+     *                                          c3.2xlarge | c3.4xlarge | c3.8xlarge | c4.large | c4.xlarge |
+     *                                          c4.2xlarge | c4.4xlarge | c4.8xlarge | cc1.4xlarge | cc2.8xlarge |
+     *                                          g2.2xlarge | g2.8xlarge | cg1.4xlarge | d2.xlarge | d2.2xlarge |
+     *                                          d2.4xlarge | d2.8xlarge"
+     * @param kernel                            Optional - Changes the instance's kernel to the specified value. We recommend
+     *                                          that you use PV-GRUB instead of kernels and RAM disks. For more information,
+     *                                          see PV-GRUB: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html
+     *                                          Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -146,7 +168,10 @@ public class ModifyInstanceAttributeAction {
                                                              @Param(value = ENA_SUPPORT) String enaSupport,
                                                              @Param(value = SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
                                                              @Param(value = INSTANCE_ID, required = true) String instanceId,
-                                                             @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior) {
+                                                             @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
+                                                             @Param(value = INSTANCE_TYPE) String instanceType,
+                                                             @Param(value = KERNEL) String kernel,
+                                                             @Param(value = RAMDISK) String ramdisk) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
@@ -167,7 +192,11 @@ public class ModifyInstanceAttributeAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+            CustomInputs customInputs = new CustomInputs.Builder()
+                    .withInstanceId(instanceId)
+                    .withInstanceType(instanceType)
+                    .build();
+
             EbsInputs ebsInputs = new EbsInputs.Builder().withEbsOptimized(ebsOptimized).build();
             IamInputs iamInputs = new IamInputs.Builder().withSecurityGroupIdsString(securityGroupIdsString).build();
 
@@ -176,6 +205,8 @@ public class ModifyInstanceAttributeAction {
                     .withDisableApiTermination(disableApiTermination)
                     .withEnaSupport(enaSupport)
                     .withInstanceInitiatedShutdownBehavior(instanceInitiatedShutdownBehavior)
+                    .withKernel(kernel)
+                    .withRamdisk(ramdisk)
                     .build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, iamInputs, instanceInputs);

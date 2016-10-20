@@ -52,6 +52,7 @@ public class InstanceUtils {
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
     private static final String INSTANCE_TYPE = "InstanceType";
+    private static final String KERNEL = "Kernel";
     private static final String KERNEL_ID = "KernelId";
     private static final String KEY_NAME = "KeyName";
     private static final String MAX_COUNT = "MaxCount";
@@ -63,6 +64,7 @@ public class InstanceUtils {
     private static final String PLACEMENT_GROUP_NAME = "Placement.GroupName";
     private static final String PLACEMENT_HOST_ID = "Placement.HostId";
     private static final String PLACEMENT_TENANCY = "Placement.Tenancy";
+    private static final String RAMDISK = "Ramdisk";
     private static final String RAMDISK_ID = "RamdiskId";
     private static final String USER_DATA = "UserData";
     private static final String VOLUME_SIZE = "VolumeSize";
@@ -81,6 +83,12 @@ public class InstanceUtils {
                 valueOf(wrapper.getEbsInputs().isEbsOptimized()), wrapper.getEbsInputs().isEbsOptimized());
         InputsUtil.setOptionalMapEntry(queryParamsMap, ENA_SUPPORT + DOT + VALUE,
                 valueOf(wrapper.getInstanceInputs().isEnaSupport()), wrapper.getInstanceInputs().isEnaSupport());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_TYPE + DOT + VALUE,
+                valueOf(wrapper.getCustomInputs().getInstanceType()), isNotBlank(wrapper.getCustomInputs().getInstanceType()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, KERNEL, wrapper.getInstanceInputs().getKernel(),
+                isNotBlank(wrapper.getInstanceInputs().getKernel()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, RAMDISK, wrapper.getInstanceInputs().getRamdisk(),
+                isNotBlank(wrapper.getInstanceInputs().getRamdisk()));
 
         new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
