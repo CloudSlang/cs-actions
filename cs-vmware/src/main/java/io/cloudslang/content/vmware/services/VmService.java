@@ -99,7 +99,7 @@ public class VmService {
     public Map<String, String> deleteVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
-            ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+            ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources,
                     ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().destroyTask(vmMor);
@@ -129,7 +129,7 @@ public class VmService {
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
-            ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+            ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources,
                     ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().powerOnVMTask(vmMor, null);
@@ -159,7 +159,7 @@ public class VmService {
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
-            ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+            ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources,
                     ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 ManagedObjectReference task = connectionResources.getVimPortType().powerOffVMTask(vmMor);
@@ -219,7 +219,7 @@ public class VmService {
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
-            ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+            ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources,
                     ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
                     new String[]{ManagedObjectType.SUMMARY.getValue()});
@@ -261,7 +261,7 @@ public class VmService {
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
-            ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+            ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources,
                     ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
             if (vmMor != null) {
                 VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
@@ -300,7 +300,7 @@ public class VmService {
     public Map<String, String> cloneVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
-            ManagedObjectReference vmMor = new MorObjectHandler().getVmMor(connectionResources,
+            ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources,
                     ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
             if (vmMor != null) {

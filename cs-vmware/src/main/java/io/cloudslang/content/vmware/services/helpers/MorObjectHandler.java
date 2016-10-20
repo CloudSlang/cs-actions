@@ -13,7 +13,7 @@ import java.util.Map;
  * 3/22/2016.
  */
 public class MorObjectHandler {
-    public ManagedObjectReference getVmMor(ConnectionResources connectionResources, String filter, String parameter) throws Exception {
+    public ManagedObjectReference getMor(ConnectionResources connectionResources, String filter, String parameter) throws Exception {
         ManagedObjectReference reference = connectionResources.getMorRootFolder();
         return getSpecificMor(connectionResources, reference, filter, parameter);
     }
