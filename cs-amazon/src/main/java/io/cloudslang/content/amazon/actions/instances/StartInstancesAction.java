@@ -98,7 +98,7 @@ public class StartInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> startInstances(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
                                               @Param(value = IDENTITY, required = true) String identity,
                                               @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                               @Param(value = PROXY_HOST) String proxyHost,

@@ -95,7 +95,7 @@ public class ComputeSignatureV4 {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> computeSignature(@Param(value = ENDPOINT) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                                 @Param(value = IDENTITY, required = true) String identity,
                                                 @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                                 @Param(value = HEADERS) String headers,

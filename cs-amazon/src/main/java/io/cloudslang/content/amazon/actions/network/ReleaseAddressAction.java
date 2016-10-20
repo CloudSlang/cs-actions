@@ -92,7 +92,7 @@ public class ReleaseAddressAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> releaseAddress(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
                                               @Param(value = IDENTITY, required = true) String identity,
                                               @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                               @Param(value = PROXY_HOST) String proxyHost,

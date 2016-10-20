@@ -87,7 +87,7 @@ public class DeleteVolume {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> deleteVolume(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
                                             @Param(value = IDENTITY) String identity,
                                             @Param(value = CREDENTIAL, encrypted = true) String credential,
                                             @Param(value = PROXY_HOST) String proxyHost,
