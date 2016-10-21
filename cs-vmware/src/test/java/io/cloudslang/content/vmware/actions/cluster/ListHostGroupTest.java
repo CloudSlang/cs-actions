@@ -1,5 +1,6 @@
 package io.cloudslang.content.vmware.actions.cluster;
 
+import com.vmware.vim25.ClusterHostGroup;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.ClusterComputeResourceService;
@@ -17,6 +18,7 @@ import static io.cloudslang.content.vmware.constants.ErrorMessages.NOT_ZERO_OR_P
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,11 +52,11 @@ public class ListHostGroupTest {
         String expectedReturnResult = new String();
 
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
-        when(clusterComputeResourceServiceMock.listHostGroups(any(HttpInputs.class), any(String.class), any(String.class))).thenReturn(expectedReturnResult);
+        when(clusterComputeResourceServiceMock.listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class))).thenReturn(expectedReturnResult);
 
         Map<String, String> actualResultMap = listHostGroups.listHostGroups("", "", "", "", "", "", "", "");
 
-        verify(clusterComputeResourceServiceMock, times(1)).listHostGroups(any(HttpInputs.class), any(String.class), any(String.class));
+        verify(clusterComputeResourceServiceMock, times(1)).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class));
 
         assertNotNull(actualResultMap);
         assertEquals(expectedReturnResult, actualResultMap.get(OutputNames.RETURN_RESULT));
@@ -64,7 +66,7 @@ public class ListHostGroupTest {
     public void testListGroupVmsProtocolException() throws Exception {
         Map<String, String> resultMap = listHostGroups.listHostGroups("", "", "myProtocol", "", "", "", "", "");
 
-        verify(clusterComputeResourceServiceMock, never()).listHostGroups(any(HttpInputs.class), any(String.class), any(String.class));
+        verify(clusterComputeResourceServiceMock, never()).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class));
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get(OutputNames.RETURN_CODE)));
@@ -75,7 +77,7 @@ public class ListHostGroupTest {
     public void testListGroupVmsPortException() throws Exception {
         Map<String, String> resultMap = listHostGroups.listHostGroups("", "myPort", "", "", "", "", "", "");
 
-        verify(clusterComputeResourceServiceMock, never()).listHostGroups(any(HttpInputs.class), any(String.class), any(String.class));
+        verify(clusterComputeResourceServiceMock, never()).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class));
 
         assertNotNull(resultMap);
         assertEquals(-1, Integer.parseInt(resultMap.get(OutputNames.RETURN_CODE)));

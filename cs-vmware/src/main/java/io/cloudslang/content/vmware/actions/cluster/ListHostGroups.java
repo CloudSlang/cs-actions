@@ -6,6 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.vmware.vim25.ClusterHostGroup;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -79,7 +80,7 @@ public class ListHostGroups {
 
             return OutputUtilities.getSuccessResultsMap(
                     new ClusterComputeResourceService()
-                            .listHostGroups(httpInputs, clusterName, InputUtils.getDefaultDelimiter(delimiter, COMMA_DELIMITER)));
+                            .listGroups(httpInputs, clusterName, InputUtils.getDefaultDelimiter(delimiter, COMMA_DELIMITER), ClusterHostGroup.class));
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
         }

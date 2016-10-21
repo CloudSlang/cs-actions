@@ -14,6 +14,7 @@ import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +48,8 @@ public class VmUtils {
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference resourcePool;
         if (StringUtils.isNotBlank(resourcePoolName)) {
-            ManagedObjectReference reference = connectionResources.getMorRootFolder();
-            resourcePool = new MorObjectHandler().getSpecificMor(connectionResources, reference,
-                    ManagedObjectType.RESOURCE_POOL.getValue(), resourcePoolName);
-            if (resourcePool == null) {
-                throw new RuntimeException(ErrorMessages.RESOURCE_POOL_NOT_FOUND);
-            }
+            resourcePool = getManagedObjectReference(resourcePoolName, connectionResources,
+                    ManagedObjectType.RESOURCE_POOL.getValue(), ErrorMessages.RESOURCE_POOL_NOT_FOUND);
         } else {
             resourcePool = connectionResources.getResourcePoolMor();
             if (resourcePool == null) {
@@ -62,6 +59,18 @@ public class VmUtils {
             }
         }
         return resourcePool;
+    }
+
+    @NotNull
+    private ManagedObjectReference getManagedObjectReference(String resourceName, ConnectionResources connectionResources,
+                                                             String filter, String errorMessage) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference reference = connectionResources.getMorRootFolder();
+        ManagedObjectReference managedObjectReference = new MorObjectHandler().getSpecificMor(connectionResources, reference,
+                filter, resourceName);
+        if (managedObjectReference == null) {
+            throw new RuntimeException(errorMessage);
+        }
+        return managedObjectReference;
     }
 
     public ManagedObjectReference getMorFolder(String folderName, ConnectionResources connectionResources)
@@ -195,12 +204,8 @@ public class VmUtils {
                                              ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference host = null;
         if (StringUtils.isNotBlank(hostname)) {
-            ManagedObjectReference reference = connectionResources.getMorRootFolder();
-            host = new MorObjectHandler().getSpecificMor(connectionResources, reference,
-                    ManagedObjectType.HOST_SYSTEM.getValue(), hostname);
-            if (host == null) {
-                throw new RuntimeException(ErrorMessages.HOST_NOT_FOUND);
-            }
+            host = getManagedObjectReference(hostname, connectionResources,
+                    ManagedObjectType.HOST_SYSTEM.getValue(), ErrorMessages.HOST_NOT_FOUND);
         } else if (StringUtils.isBlank(hostname) && vmMor != null) {
             ObjectContent[] objectContents = GetObjectProperties.getObjectProperties(connectionResources, vmMor,
                     new String[]{ManagedObjectType.SUMMARY.getValue()});

@@ -1,5 +1,7 @@
 package io.cloudslang.content.vmware.entities;
 
+import io.cloudslang.content.vmware.utils.OvfUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,10 +25,7 @@ public class TransferVmdkFromFile implements ITransferVmdkFrom {
         int read;
         try (final InputStream is = fis) {
             while (0 <= (read = is.read(buffer))) {
-                outputStream.write(buffer, 0, read);
-                outputStream.flush();
-                bytesCopied += read;
-                progressUpdater.updateBytesSent(read);
+                bytesCopied = OvfUtils.writeToStream(outputStream, progressUpdater, bytesCopied, buffer, read);
             }
         }
         return bytesCopied;

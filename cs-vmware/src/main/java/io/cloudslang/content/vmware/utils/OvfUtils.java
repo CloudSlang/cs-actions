@@ -9,11 +9,13 @@ import com.vmware.vim25.LocalizedMethodFault;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.ObjectContent;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
+import io.cloudslang.content.vmware.entities.ProgressUpdater;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -44,7 +46,7 @@ public class OvfUtils {
     public static HttpNfcLeaseInfo getHttpNfcLeaseInfo(final ConnectionResources connectionResources, final ManagedObjectReference httpNfcLease) throws Exception {
         final ObjectContent objectContent = GetObjectProperties.getObjectProperty(connectionResources, httpNfcLease, "info");
         final List<DynamicProperty> dynamicProperties = objectContent.getPropSet();
-        if (dynamicProperties.size() != 0 && dynamicProperties.get(0).getVal() instanceof HttpNfcLeaseInfo) {
+        if (firstElementIsOfClass(dynamicProperties, HttpNfcLeaseInfo.class)) {
             return (HttpNfcLeaseInfo) dynamicProperties.get(0).getVal();
         }
         throw new RuntimeException(LEASE_COULD_NOT_BE_OBTAINED);
@@ -62,10 +64,14 @@ public class OvfUtils {
     public static String getHttpNfcLeaseErrorState(final ConnectionResources connectionResources, final ManagedObjectReference httpNfcLease) throws Exception {
         final ObjectContent objectContent = GetObjectProperties.getObjectProperty(connectionResources, httpNfcLease, "error");
         final List<DynamicProperty> dynamicProperties = objectContent.getPropSet();
-        if (dynamicProperties.size() != 0 && dynamicProperties.get(0).getVal() instanceof LocalizedMethodFault) {
+        if (firstElementIsOfClass(dynamicProperties, LocalizedMethodFault.class)) {
             return ((LocalizedMethodFault) dynamicProperties.get(0).getVal()).getLocalizedMessage();
         }
         throw new Exception(LEASE_ERROR_STATE_COULD_NOT_BE_OBTAINED);
+    }
+
+    private static boolean firstElementIsOfClass(List<DynamicProperty> dynamicProperties, Class clazz) {
+        return dynamicProperties.size() != 0 && dynamicProperties.get(0).getVal().getClass().isAssignableFrom(clazz);
     }
 
     public static String writeToString(final InputStream inputStream, final long length) throws IOException {
@@ -103,5 +109,13 @@ public class OvfUtils {
 
     public static List<String> resolveJSONStringArrayParm(String jsonString) {
         return JsonConverter.convertFromJson(jsonString, List.class);
+    }
+
+    public static long writeToStream(OutputStream outputStream, ProgressUpdater progressUpdater, long bytesCopied, byte[] buffer, int read) throws Exception {
+        outputStream.write(buffer, 0, read);
+        outputStream.flush();
+        bytesCopied += read;
+        progressUpdater.updateBytesSent(read);
+        return bytesCopied;
     }
 }

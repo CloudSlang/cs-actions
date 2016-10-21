@@ -1,13 +1,12 @@
 package io.cloudslang.content.vmware.entities;
 
+import io.cloudslang.content.vmware.utils.OvfUtils;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import static io.cloudslang.content.vmware.constants.Constants.SIZE_4K;
 
-/**
- * Created by giloan on 10/5/2016.
- */
 public class TransferVmdkFromInputStream implements ITransferVmdkFrom {
 
     private static final String INPUT_STREAM_MAY_NOT_BE_NULL = "Source input stream may not be null";
@@ -32,10 +31,7 @@ public class TransferVmdkFromInputStream implements ITransferVmdkFrom {
                 if (bytesRead == -1) {
                     break;
                 }
-                outputStream.write(buffer, 0, bytesRead);
-                outputStream.flush();
-                bytesCopied += bytesRead;
-                progressUpdater.updateBytesSent(bytesRead);
+                bytesCopied = OvfUtils.writeToStream(outputStream, progressUpdater, bytesCopied, buffer, bytesRead);
             }
         }
         return bytesCopied;

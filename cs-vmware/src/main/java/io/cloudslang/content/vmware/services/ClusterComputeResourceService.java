@@ -14,6 +14,7 @@ import com.vmware.vim25.ClusterRuleSpec;
 import com.vmware.vim25.ClusterVmGroup;
 import com.vmware.vim25.ClusterVmHostRuleInfo;
 import com.vmware.vim25.DynamicProperty;
+import com.vmware.vim25.InvalidCollectorVersionFaultMsg;
 import com.vmware.vim25.InvalidPropertyFaultMsg;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.ObjectContent;
@@ -86,16 +87,28 @@ public class ClusterComputeResourceService {
         clusterVmGroup.setName(vmInputs.getVmGroupName());
         clusterVmGroup.getVm().addAll(getVmManagedObjectReferences(vmNameList, connectionResources));
 
+        return createGroup(vmInputs, connectionResources, clusterVmGroup);
+    }
+
+    private Map<String, String> createGroup(VmInputs vmInputs, ConnectionResources connectionResources, ClusterGroupInfo clusterGroupInfo) throws Exception {
         ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
         ClusterGroupSpec clusterGroupSpec = new ClusterGroupSpec();
-        clusterGroupSpec.setInfo(clusterVmGroup);
+        clusterGroupSpec.setInfo(clusterGroupInfo);
         clusterGroupSpec.setOperation(ArrayUpdateOperation.ADD);
 
+        return reconfigureClusterGroup(vmInputs, connectionResources, clusterMor, clusterGroupSpec);
+    }
+
+    private Map<String, String> reconfigureClusterGroup(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference clusterMor, ClusterGroupSpec clusterGroupSpec) throws RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg {
         ClusterConfigSpecEx clusterConfigSpecEx = new ClusterConfigSpecEx();
         clusterConfigSpecEx.getGroupSpec().add(clusterGroupSpec);
 
+        return reconfigureCluster(vmInputs, connectionResources, clusterMor, clusterConfigSpecEx);
+    }
+
+    private Map<String, String> reconfigureCluster(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference clusterMor, ClusterConfigSpecEx clusterConfigSpecEx) throws RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg {
         ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
@@ -120,20 +133,10 @@ public class ClusterComputeResourceService {
         clusterGroupSpec.setOperation(ArrayUpdateOperation.REMOVE);
         clusterGroupSpec.setRemoveKey(vmInputs.getVmGroupName());
 
-        ClusterConfigSpecEx clusterConfigSpecEx = new ClusterConfigSpecEx();
-        clusterConfigSpecEx.getGroupSpec().add(clusterGroupSpec);
-
-        ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
-
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
-                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
-                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
-        connectionResources.getConnection().disconnect();
-        return resultMap;
+        return reconfigureClusterGroup(vmInputs, connectionResources, clusterMor, clusterGroupSpec);
     }
 
-    public String listVmGroups(HttpInputs httpInputs, String clusterName, String delimiter) throws Exception {
+    public String listGroups(HttpInputs httpInputs, String clusterName, String delimiter, Class clazz) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
 
         ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
@@ -141,13 +144,13 @@ public class ClusterComputeResourceService {
 
         ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, clusterName);
 
-        List<String> vmGroupNameList = new ArrayList<>();
+        List<String> groupNameList = new ArrayList<>();
         for (ClusterGroupInfo clusterGroupInfo : clusterConfigInfoEx.getGroup()) {
-            if (clusterGroupInfo instanceof ClusterVmGroup) {
-                vmGroupNameList.add(clusterGroupInfo.getName());
+            if (clusterGroupInfo.getClass().isAssignableFrom(clazz)) {
+                groupNameList.add(clusterGroupInfo.getName());
             }
         }
-        String result = StringUtilities.join(vmGroupNameList, delimiter);
+        String result = StringUtilities.join(groupNameList, delimiter);
         connectionResources.getConnection().disconnect();
         return result;
     }
@@ -159,24 +162,7 @@ public class ClusterComputeResourceService {
         clusterHostGroup.setName(vmInputs.getHostGroupName());
         clusterHostGroup.getHost().addAll(getHostManagedObjectReferences(hostNameList, connectionResources));
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
-
-        ClusterGroupSpec clusterGroupSpec = new ClusterGroupSpec();
-        clusterGroupSpec.setInfo(clusterHostGroup);
-        clusterGroupSpec.setOperation(ArrayUpdateOperation.ADD);
-
-        ClusterConfigSpecEx clusterConfigSpecEx = new ClusterConfigSpecEx();
-        clusterConfigSpecEx.getGroupSpec().add(clusterGroupSpec);
-
-        ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
-
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
-                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
-                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
-        connectionResources.getConnection().disconnect();
-        return resultMap;
+        return createGroup(vmInputs, connectionResources, clusterHostGroup);
     }
 
     public Map<String, String> deleteHostGroup(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -193,36 +179,7 @@ public class ClusterComputeResourceService {
         clusterGroupSpec.setOperation(ArrayUpdateOperation.REMOVE);
         clusterGroupSpec.setRemoveKey(vmInputs.getHostGroupName());
 
-        ClusterConfigSpecEx clusterConfigSpecEx = new ClusterConfigSpecEx();
-        clusterConfigSpecEx.getGroupSpec().add(clusterGroupSpec);
-
-        ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
-
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
-                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
-                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
-        connectionResources.getConnection().disconnect();
-        return resultMap;
-    }
-
-    public String listHostGroups(HttpInputs httpInputs, String clusterName, String delimiter) throws Exception {
-        ConnectionResources connectionResources = new ConnectionResources(httpInputs);
-
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), clusterName);
-
-        ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, clusterName);
-
-        List<String> hostGroupNameList = new ArrayList<>();
-        for (ClusterGroupInfo clusterGroupInfo : clusterConfigInfoEx.getGroup()) {
-            if (clusterGroupInfo instanceof ClusterHostGroup) {
-                hostGroupNameList.add(clusterGroupInfo.getName());
-            }
-        }
-        String result = StringUtilities.join(hostGroupNameList, delimiter);
-        connectionResources.getConnection().disconnect();
-        return result;
+        return reconfigureClusterGroup(vmInputs, connectionResources, clusterMor, clusterGroupSpec);
     }
 
     public Map<String, String> createAffinityRule(HttpInputs httpInputs, VmInputs vmInputs,
@@ -241,18 +198,15 @@ public class ClusterComputeResourceService {
             clusterRuleSpec.setInfo(clusterVmHostRuleInfo);
             clusterRuleSpec.setOperation(ArrayUpdateOperation.ADD);
 
-            ClusterConfigSpecEx clusterConfigSpecEx = new ClusterConfigSpecEx();
-            clusterConfigSpecEx.getRulesSpec().add(clusterRuleSpec);
-
-            ManagedObjectReference task = connectionResources.getVimPortType().
-                    reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
-
-            Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
-                    .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
-                            String.format(FAILURE_MSG, vmInputs.getClusterName()));
-            connectionResources.getConnection().disconnect();
-            return resultMap;
+            return reconfigureClusterRule(vmInputs, connectionResources, clusterMor, clusterRuleSpec);
         }
+    }
+
+    private Map<String, String> reconfigureClusterRule(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference clusterMor, ClusterRuleSpec clusterRuleSpec) throws RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg {
+        ClusterConfigSpecEx clusterConfigSpecEx = new ClusterConfigSpecEx();
+        clusterConfigSpecEx.getRulesSpec().add(clusterRuleSpec);
+
+        return reconfigureCluster(vmInputs, connectionResources, clusterMor, clusterConfigSpecEx);
     }
 
     public Map<String, String> deleteClusterRule(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -269,17 +223,7 @@ public class ClusterComputeResourceService {
         clusterRuleSpec.setOperation(ArrayUpdateOperation.REMOVE);
         clusterRuleSpec.setRemoveKey(clusterRuleInfo.getKey());
 
-        ClusterConfigSpecEx clusterConfigSpecEx = new ClusterConfigSpecEx();
-        clusterConfigSpecEx.getRulesSpec().add(clusterRuleSpec);
-
-        ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
-
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
-                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
-                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
-        connectionResources.getConnection().disconnect();
-        return resultMap;
+        return reconfigureClusterRule(vmInputs, connectionResources, clusterMor, clusterRuleSpec);
     }
 
     @NotNull

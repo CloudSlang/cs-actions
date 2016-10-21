@@ -269,7 +269,7 @@ public class ClusterComputeResourceServiceTest {
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
         whenNew(ArrayList.class).withNoArguments().thenReturn(vmGroupNameListSpy);
 
-        String result = clusterComputeResourceServiceSpy.listVmGroups(httpInputsMock, "Cluster1", ",");
+        String result = clusterComputeResourceServiceSpy.listGroups(httpInputsMock, "Cluster1", ",", ClusterVmGroup.class);
 
         verify(vmGroupNameListSpy, times(2)).add(any(String.class));
         assertNotNull(result);
@@ -286,7 +286,7 @@ public class ClusterComputeResourceServiceTest {
                         any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
         thrownException.expectMessage(String.format(ErrorMessages.ANOTHER_FAILURE_MSG, "Cluster1"));
 
-        clusterComputeResourceServiceSpy.listVmGroups(httpInputsMock, "Cluster1", "");
+        clusterComputeResourceServiceSpy.listGroups(httpInputsMock, "Cluster1", "", ClusterVmGroup.class);
     }
 
     @Test
@@ -381,7 +381,7 @@ public class ClusterComputeResourceServiceTest {
                 any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
         whenNew(ArrayList.class).withNoArguments().thenReturn(hostGroupNameListSpy);
 
-        String result = clusterComputeResourceServiceSpy.listHostGroups(httpInputsMock, "Cluster1", ",");
+        String result = clusterComputeResourceServiceSpy.listGroups(httpInputsMock, "Cluster1", ",", ClusterHostGroup.class);
 
         verify(hostGroupNameListSpy, never()).add(any(String.class));
         assertNotNull(result);
@@ -398,7 +398,7 @@ public class ClusterComputeResourceServiceTest {
                         any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
         thrownException.expectMessage(String.format(ErrorMessages.ANOTHER_FAILURE_MSG, "Cluster1"));
 
-        clusterComputeResourceServiceSpy.listHostGroups(httpInputsMock, "Cluster1", "");
+        clusterComputeResourceServiceSpy.listGroups(httpInputsMock, "Cluster1", "", ClusterHostGroup.class);
     }
 
     @Test

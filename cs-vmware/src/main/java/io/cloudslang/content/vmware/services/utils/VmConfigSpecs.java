@@ -10,6 +10,7 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,9 +93,7 @@ public class VmConfigSpecs {
                     Operation.ADD.toString(), vmInputs);
 
         } else {
-            List<VirtualDevice> deviceList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
-                    .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
-                    .getVirtualDevice();
+            List<VirtualDevice> deviceList = getVirtualDeviceList(connectionResources, vmMor);
 
             return new VmUtils().getPopulatedDiskSpec(Constants.EMPTY, deviceList, VirtualDeviceConfigSpecOperation.REMOVE,
                     VirtualDeviceConfigSpecFileOperation.DESTROY, DEFAULT_DISK_CONTROLLER_KEY, DEFAULT_DISK_UNIT_NUMBER,
@@ -104,8 +103,7 @@ public class VmConfigSpecs {
 
     VirtualDeviceConfigSpec getCDDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                                   VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
-                .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE)).getVirtualDevice();
+        List<VirtualDevice> virtualDevicesList = getVirtualDeviceList(connectionResources, vmMor);
 
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
             Map<Integer, VirtualDevice> deviceMap = getVirtualDeviceMap(virtualDevicesList);
@@ -115,11 +113,7 @@ public class VmConfigSpecs {
                     VirtualIDEController virtualScsiController = (VirtualIDEController) virtualDevice;
                     List<Integer> deviceList = virtualScsiController.getDevice();
                     int[] slots = new int[MAXIMUM_ATAPI_SLOTS];
-                    for (Integer deviceKey : deviceList) {
-                        if (deviceMap.get(deviceKey).getUnitNumber() != null) {
-                            slots[deviceMap.get(deviceKey).getUnitNumber()] = OCCUPIED;
-                        }
-                    }
+                    markOccupiedSlots(deviceMap, deviceList, slots);
 
                     int unitNumber = 0;
                     boolean isAtapiCtrlAvailable = false;
@@ -146,15 +140,21 @@ public class VmConfigSpecs {
         }
     }
 
+    private void markOccupiedSlots(Map<Integer, VirtualDevice> deviceMap, List<Integer> deviceList, int[] slots) {
+        for (Integer deviceKey : deviceList) {
+            if (deviceMap.get(deviceKey).getUnitNumber() != null) {
+                slots[deviceMap.get(deviceKey).getUnitNumber()] = OCCUPIED;
+            }
+        }
+    }
+
     VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
                                                    VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
             return new VmUtils().getNicSpecs(vmInputs.getUpdateValue(), null, VirtualDeviceConfigSpecOperation.ADD,
                     GENERATED, SERVER_ASSIGNED, Operation.ADD.toString(), vmInputs);
         } else {
-            List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
-                    .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
-                    .getVirtualDevice();
+            List<VirtualDevice> virtualDevicesList = getVirtualDeviceList(connectionResources, vmMor);
 
             return new VmUtils().getNicSpecs(Constants.EMPTY, virtualDevicesList, VirtualDeviceConfigSpecOperation.REMOVE,
                     Constants.EMPTY, null, Operation.REMOVE.toString(), vmInputs);
@@ -246,9 +246,14 @@ public class VmConfigSpecs {
         scsiCtrl.setKey(diskCtrlKey);
         scsiCtrl.setSharedBus(VirtualSCSISharing.NO_SHARING);
 
+        return getVirtualDeviceConfigSpec(scsiCtrl);
+    }
+
+    @NotNull
+    private VirtualDeviceConfigSpec getVirtualDeviceConfigSpec(VirtualDevice virtualDevice) {
         VirtualDeviceConfigSpec scsiCtrlSpec = new VirtualDeviceConfigSpec();
         scsiCtrlSpec.setOperation(VirtualDeviceConfigSpecOperation.ADD);
-        scsiCtrlSpec.setDevice(scsiCtrl);
+        scsiCtrlSpec.setDevice(virtualDevice);
 
         return scsiCtrlSpec;
     }
@@ -273,11 +278,7 @@ public class VmConfigSpecs {
         floppyDisk.setBacking(flpBacking);
         floppyDisk.setKey(DEFAULT_FLOPPY_DEVICE_KEY);
 
-        VirtualDeviceConfigSpec flpSpecs = new VirtualDeviceConfigSpec();
-        flpSpecs.setOperation(VirtualDeviceConfigSpecOperation.ADD);
-        flpSpecs.setDevice(floppyDisk);
-
-        return flpSpecs;
+        return getVirtualDeviceConfigSpec(floppyDisk);
     }
 
     private List<VirtualDevice> getDefaultDevicesList(ConnectionResources connectionResources)
@@ -346,9 +347,7 @@ public class VmConfigSpecs {
 
     private List<Integer> getControllerKey(ConnectionResources connectionResources, ManagedObjectReference vmMor)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        List<VirtualDevice> virtualDevicesList = ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
-                .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
-                .getVirtualDevice();
+        List<VirtualDevice> virtualDevicesList = getVirtualDeviceList(connectionResources, vmMor);
         Map<Integer, VirtualDevice> deviceMap = getVirtualDeviceMap(virtualDevicesList);
 
         for (VirtualDevice virtualDevice : virtualDevicesList) {
@@ -357,11 +356,7 @@ public class VmConfigSpecs {
                 int[] slots = new int[MAXIMUM_SCSI_SLOTS];
                 slots[RESERVED_SCSI_SLOT] = OCCUPIED;
                 List<Integer> deviceKeyList = scsiController.getDevice();
-                for (Integer deviceKey : deviceKeyList) {
-                    if (deviceMap.get(deviceKey).getUnitNumber() != null) {
-                        slots[deviceMap.get(deviceKey).getUnitNumber()] = OCCUPIED;
-                    }
-                }
+                markOccupiedSlots(deviceMap, deviceKeyList, slots);
                 for (int counter = 0; counter < slots.length; counter++) {
                     if (slots[counter] != OCCUPIED) {
                         List<Integer> controllerKeys = new ArrayList<>();
@@ -373,6 +368,12 @@ public class VmConfigSpecs {
             }
         }
         throw new RuntimeException(ErrorMessages.SCSI_CONTROLLER_CAPACITY_MAXED_OUT);
+    }
+
+    private List<VirtualDevice> getVirtualDeviceList(ConnectionResources connectionResources, ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        return ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
+                .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
+                .getVirtualDevice();
     }
 
     private Map<Integer, VirtualDevice> getVirtualDeviceMap(List<VirtualDevice> virtualDevicesList) {

@@ -24,7 +24,7 @@ public abstract class ProgressUpdater implements Runnable {
         this.bytesSent = 0;
     }
 
-    abstract void updateBytesSent(final long bytesSent) throws Exception;
+    public abstract void updateBytesSent(final long bytesSent) throws Exception;
 
     protected final synchronized void updateLeaseProgress(final int percentage) throws RuntimeFaultFaultMsg, TimedoutFaultMsg {
         connectionResources.getVimPortType().httpNfcLeaseProgress(httpNfcLease, percentage);
