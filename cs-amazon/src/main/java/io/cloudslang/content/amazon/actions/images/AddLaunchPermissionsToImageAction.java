@@ -47,10 +47,10 @@ public class AddLaunchPermissionsToImageAction {
      * Note:
      * AWS Marketplace product codes cannot be modified. Images with an AWS Marketplace product code cannot be made public.
      *
-     * @param endpoint         Endpoint to which request will be sent.
+     * @param endpoint         Optional - Endpoint to which request will be sent.
      *                         Example: "https://ec2.amazonaws.com"
-     * @param identity         Optional - Username of your account or the Access Key ID.
-     * @param credential       Optional - Password of the user or the Secret Access Key that correspond to the identity
+     * @param identity         Username of your account or the Access Key ID.
+     * @param credential       Password of the user or the Secret Access Key that correspond to the identity
      *                         input.
      * @param proxyHost        Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        Optional - Proxy server port.
@@ -65,7 +65,7 @@ public class AddLaunchPermissionsToImageAction {
      *                         will occur. The separator between name-value pairs is "&" symbol. The query name will be
      *                         separated from query value by "=".
      *                         Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     * @param version          Version of the web service to made the call against it.
+     * @param version          Optional - Version of the web service to made the call against it.
      *                         Example: "2016-04-01"
      *                         Default: "2016-04-01"
      * @param imageId          ID of the specified image to add launch permission for.
@@ -89,7 +89,7 @@ public class AddLaunchPermissionsToImageAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

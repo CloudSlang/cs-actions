@@ -6,22 +6,11 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.Arrays.asList;
-import static java.util.regex.Pattern.quote;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.split;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
@@ -38,17 +27,25 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.TAG;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.split;
 
 /**
  * Created by Mihai Tusa.
@@ -126,6 +123,13 @@ public final class InputsUtil {
             return null;
         }
         return split(input, delimiter);
+    }
+
+    public static List<String> getStringsList(String input, String delimiter) {
+        if (isBlank(input)) {
+            return null;
+        }
+        return new ArrayList<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
     }
 
     public static Set<String> getStringsSet(String input, String delimiter) {

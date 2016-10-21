@@ -6,11 +6,8 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import static java.lang.String.valueOf;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ATTRIBUTE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
@@ -25,12 +22,11 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.OWNER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.USER_GROUP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.USER_ID;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMessages.BOTH_PERMISSION_INPUTS_EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
+import static java.lang.String.valueOf;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by Tirla Alin.
@@ -100,8 +96,8 @@ public class ImageUtils {
 
     public Map<String, String> getModifyImageAttributeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        Set<String> userIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getUserIdsString(), wrapper.getCommonInputs().getDelimiter());
-        Set<String> userGroupIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getUserGroupsString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> userIds = InputsUtil.getStringsList(wrapper.getImageInputs().getUserIdsString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> userGroupIds = InputsUtil.getStringsList(wrapper.getImageInputs().getUserGroupsString(), wrapper.getCommonInputs().getDelimiter());
 
         if (userIds == null && userGroupIds == null) {
             throw new RuntimeException(BOTH_PERMISSION_INPUTS_EMPTY);
@@ -119,8 +115,8 @@ public class ImageUtils {
     }
 
     public Map<String, String> getDescribeImagesQueryParamsMap(InputsWrapper wrapper) {
-        Set<String> imageIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getImageIdsString(), wrapper.getCommonInputs().getDelimiter());
-        Set<String> ownerIds = InputsUtil.getStringsSet(wrapper.getImageInputs().getOwnersString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> imageIds = InputsUtil.getStringsList(wrapper.getImageInputs().getImageIdsString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> ownerIds = InputsUtil.getStringsList(wrapper.getImageInputs().getOwnersString(), wrapper.getCommonInputs().getDelimiter());
 
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
@@ -169,6 +165,9 @@ public class ImageUtils {
     }
 
     private void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
+        if (set == null) {
+            return;
+        }
         int step;
         Iterator<String> iterator = set.iterator();
         for (step = ONE; iterator.hasNext(); step++) {

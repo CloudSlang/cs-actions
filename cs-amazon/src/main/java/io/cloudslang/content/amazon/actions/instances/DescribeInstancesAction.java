@@ -6,7 +6,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.amazon.entities.constants.Inputs;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
@@ -16,6 +15,97 @@ import io.cloudslang.content.amazon.execute.instances.DescribeInstancesExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DEBUG_MODE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROVIDER;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.ALLOCATION_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.ARCHITECTURE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.ASSOCIATION_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.BLOCK_MAPPING_DEVICE_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.DELETE_ON_TERMINATION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.GROUP_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.HOST_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.HYPERVISOR;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.IMAGE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KERNEL_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.OWNER_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.PLATFORM;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.PRODUCT_CODE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.PRODUCT_CODE_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.RAMDISK_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.REGION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.RESERVATION_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.ROOT_DEVICE_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.ROOT_DEVICE_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.STATE_REASON_CODE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.STATE_REASON_MESSAGE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.SUBNET_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VIRTUALIZATION_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VOLUME_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VPC_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PUBLIC_IP;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.AFFINITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.ATTACH_TIME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.CLIENT_TOKEN;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.DNS_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.GROUP_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.IAM_ARN;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_GROUP_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_GROUP_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_LIFECYCLE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_STATE_CODE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_STATE_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.IP_ADDRESS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.IP_OWNER_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.KEY_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LAUNCH_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LAUNCH_TIME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MONITORING_STATE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.PLACEMENT_GROUP_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.PRIVATE_DNS_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.REASON;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.REQUESTER_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.SPOT_INSTANCE_REQUEST_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.TENANCY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ADDRESSES_PRIMARY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ATTACHMENT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ATTACHMENT_STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ATTACH_TIME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_AVAILABILITY_ZONE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_GROUP_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_GROUP_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_INSTANCE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_INSTANCE_OWNER_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_IP_OWNER_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_MAC_ADDRESS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_OWNER_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_PRIVATE_DNS_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_PRIVATE_IP_ADDRESS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_PUBLIC_IP;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_REQUESTER_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_REQUESTER_MANAGED;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_SOURCE_DESTINATION_CHECK;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_SUBNET_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_VPC_ID;
 
 /**
  * Created by Mihai Tusa.
@@ -31,12 +121,12 @@ public class DescribeInstancesAction {
      *
      * @param provider                               Cloud provider on which you have the instances.
      *                                               Valid values: "amazon" or "openstack".
-     * @param endpoint                               Endpoint to which request will be sent.
+     * @param endpoint                               Optional - Endpoint to which request will be sent.
      *                                               Example: "https://ec2.amazonaws.com" for Amazon AWS or
      *                                               "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity                               Optional - username of your account or the Access Key ID. For OpenStack
+     * @param identity                               Username of your account or the Access Key ID. For OpenStack
      *                                               provider the required format is 'alias:username'.
-     * @param credential                             Optional - password of the user or the Secret Access Key that corresponds
+     * @param credential                             Password of the user or the Secret Access Key that corresponds
      *                                               to the identity input.
      * @param proxyHost                              Optional - proxy server used to access the web site. If empty no proxy
      *                                               will be used.
@@ -191,100 +281,100 @@ public class DescribeInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(value = Inputs.CommonInputs.DELIMITER) String delimiter,
-                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
+    public Map<String, String> execute(@Param(value = PROVIDER, required = true) String provider,
+                                       @Param(value = ENDPOINT) String endpoint,
+                                       @Param(value = IDENTITY, required = true) String identity,
+                                       @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = DELIMITER) String delimiter,
+                                       @Param(value = DEBUG_MODE) String debugMode,
 
-                                       @Param(value = Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.CustomInputs.VOLUME_ID) String volumeId,
-                                       @Param(value = Inputs.CustomInputs.GROUP_ID) String groupId,
-                                       @Param(value = Inputs.CustomInputs.HOST_ID) String hostId,
-                                       @Param(value = Inputs.CustomInputs.IMAGE_ID) String imageId,
-                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID) String instanceId,
-                                       @Param(value = Inputs.CustomInputs.KERNEL_ID) String kernelId,
-                                       @Param(value = Inputs.CustomInputs.OWNER_ID) String ownerId,
-                                       @Param(value = Inputs.CustomInputs.RAMDISK_ID) String ramdiskId,
-                                       @Param(value = Inputs.CustomInputs.RESERVATION_ID) String reservationId,
-                                       @Param(value = Inputs.CustomInputs.SUBNET_ID) String subnetId,
-                                       @Param(value = Inputs.CustomInputs.VPC_ID) String vpcId,
-                                       @Param(value = Inputs.CustomInputs.ALLOCATION_ID) String allocationId,
-                                       @Param(value = Inputs.CustomInputs.ASSOCIATION_ID) String associationId,
-                                       @Param(value = Inputs.CustomInputs.ARCHITECTURE) String architecture,
-                                       @Param(value = Inputs.CustomInputs.BLOCK_DEVICE_MAPPING_STATUS) String blockDeviceMappingStatus,
-                                       @Param(value = Inputs.CustomInputs.DELETE_ON_TERMINATION) String deleteOnTermination,
-                                       @Param(value = Inputs.CustomInputs.BLOCK_MAPPING_DEVICE_NAME) String blockMappingDeviceName,
-                                       @Param(value = Inputs.CustomInputs.HYPERVISOR) String hypervisor,
-                                       @Param(value = Inputs.CustomInputs.PLATFORM) String platform,
-                                       @Param(value = Inputs.CustomInputs.PRODUCT_CODE) String productCode,
-                                       @Param(value = Inputs.CustomInputs.PRODUCT_CODE_TYPE) String productCodeType,
-                                       @Param(value = Inputs.CustomInputs.ROOT_DEVICE_NAME) String rootDeviceName,
-                                       @Param(value = Inputs.CustomInputs.ROOT_DEVICE_TYPE) String rootDeviceType,
-                                       @Param(value = Inputs.CustomInputs.STATE_REASON_CODE) String stateReasonCode,
-                                       @Param(value = Inputs.CustomInputs.STATE_REASON_MESSAGE) String stateReasonMessage,
-                                       @Param(value = Inputs.CustomInputs.KEY_TAGS_STRING) String keyTagsString,
-                                       @Param(value = Inputs.CustomInputs.VALUE_TAGS_STRING) String valueTagsString,
-                                       @Param(value = Inputs.CustomInputs.VIRTUALIZATION_TYPE) String virtualizationType,
-                                       @Param(value = Inputs.CustomInputs.AVAILABILITY_ZONE) String availabilityZone,
-                                       @Param(value = Inputs.CustomInputs.INSTANCE_TYPE) String instanceType,
+                                       @Param(value = REGION) String region,
+                                       @Param(value = VOLUME_ID) String volumeId,
+                                       @Param(value = GROUP_ID) String groupId,
+                                       @Param(value = HOST_ID) String hostId,
+                                       @Param(value = IMAGE_ID) String imageId,
+                                       @Param(value = INSTANCE_ID) String instanceId,
+                                       @Param(value = KERNEL_ID) String kernelId,
+                                       @Param(value = OWNER_ID) String ownerId,
+                                       @Param(value = RAMDISK_ID) String ramdiskId,
+                                       @Param(value = RESERVATION_ID) String reservationId,
+                                       @Param(value = SUBNET_ID) String subnetId,
+                                       @Param(value = VPC_ID) String vpcId,
+                                       @Param(value = ALLOCATION_ID) String allocationId,
+                                       @Param(value = ASSOCIATION_ID) String associationId,
+                                       @Param(value = ARCHITECTURE) String architecture,
+                                       @Param(value = BLOCK_DEVICE_MAPPING_STATUS) String blockDeviceMappingStatus,
+                                       @Param(value = DELETE_ON_TERMINATION) String deleteOnTermination,
+                                       @Param(value = BLOCK_MAPPING_DEVICE_NAME) String blockMappingDeviceName,
+                                       @Param(value = HYPERVISOR) String hypervisor,
+                                       @Param(value = PLATFORM) String platform,
+                                       @Param(value = PRODUCT_CODE) String productCode,
+                                       @Param(value = PRODUCT_CODE_TYPE) String productCodeType,
+                                       @Param(value = ROOT_DEVICE_NAME) String rootDeviceName,
+                                       @Param(value = ROOT_DEVICE_TYPE) String rootDeviceType,
+                                       @Param(value = STATE_REASON_CODE) String stateReasonCode,
+                                       @Param(value = STATE_REASON_MESSAGE) String stateReasonMessage,
+                                       @Param(value = KEY_TAGS_STRING) String keyTagsString,
+                                       @Param(value = VALUE_TAGS_STRING) String valueTagsString,
+                                       @Param(value = VIRTUALIZATION_TYPE) String virtualizationType,
+                                       @Param(value = AVAILABILITY_ZONE) String availabilityZone,
+                                       @Param(value = INSTANCE_TYPE) String instanceType,
 
-                                       @Param(value = Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS) String privateIpAddress,
-                                       @Param(value = Inputs.ElasticIpInputs.PUBLIC_IP) String publicIp,
+                                       @Param(value = PRIVATE_IP_ADDRESS) String privateIpAddress,
+                                       @Param(value = PUBLIC_IP) String publicIp,
 
-                                       @Param(value = Inputs.InstanceInputs.ATTACH_TIME) String attachTime,
-                                       @Param(value = Inputs.InstanceInputs.CLIENT_TOKEN) String clientToken,
-                                       @Param(value = Inputs.InstanceInputs.DNS_NAME) String dnsName,
-                                       @Param(value = Inputs.InstanceInputs.GROUP_NAME) String groupName,
-                                       @Param(value = Inputs.InstanceInputs.IAM_ARN) String iamArn,
-                                       @Param(value = Inputs.InstanceInputs.INSTANCE_LIFECYCLE) String instanceLifecycle,
-                                       @Param(value = Inputs.InstanceInputs.INSTANCE_STATE_CODE) String instanceStateCode,
-                                       @Param(value = Inputs.InstanceInputs.INSTANCE_STATE_NAME) String instanceStateName,
-                                       @Param(value = Inputs.InstanceInputs.INSTANCE_GROUP_ID) String instanceGroupId,
-                                       @Param(value = Inputs.InstanceInputs.INSTANCE_GROUP_NAME) String instanceGroupName,
-                                       @Param(value = Inputs.InstanceInputs.IP_ADDRESS) String ipAddress,
-                                       @Param(value = Inputs.InstanceInputs.KEY_NAME) String keyName,
-                                       @Param(value = Inputs.InstanceInputs.LAUNCH_INDEX) String launchIndex,
-                                       @Param(value = Inputs.InstanceInputs.LAUNCH_TIME) String launchTime,
-                                       @Param(value = Inputs.InstanceInputs.MONITORING_STATE) String monitoringState,
-                                       @Param(value = Inputs.InstanceInputs.AFFINITY) String affinity,
-                                       @Param(value = Inputs.InstanceInputs.PLACEMENT_GROUP_NAME) String placementGroupName,
-                                       @Param(value = Inputs.InstanceInputs.PRIVATE_DNS_NAME) String privateDnsName,
-                                       @Param(value = Inputs.InstanceInputs.REASON) String reason,
-                                       @Param(value = Inputs.InstanceInputs.REQUESTER_ID) String requesterId,
-                                       @Param(value = Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
-                                       @Param(value = Inputs.InstanceInputs.SPOT_INSTANCE_REQUEST_ID) String spotInstanceRequestId,
-                                       @Param(value = Inputs.InstanceInputs.TENANCY) String tenancy,
-                                       @Param(value = Inputs.InstanceInputs.IP_OWNER_ID) String ipOwnerId,
+                                       @Param(value = ATTACH_TIME) String attachTime,
+                                       @Param(value = CLIENT_TOKEN) String clientToken,
+                                       @Param(value = DNS_NAME) String dnsName,
+                                       @Param(value = GROUP_NAME) String groupName,
+                                       @Param(value = IAM_ARN) String iamArn,
+                                       @Param(value = INSTANCE_LIFECYCLE) String instanceLifecycle,
+                                       @Param(value = INSTANCE_STATE_CODE) String instanceStateCode,
+                                       @Param(value = INSTANCE_STATE_NAME) String instanceStateName,
+                                       @Param(value = INSTANCE_GROUP_ID) String instanceGroupId,
+                                       @Param(value = INSTANCE_GROUP_NAME) String instanceGroupName,
+                                       @Param(value = IP_ADDRESS) String ipAddress,
+                                       @Param(value = KEY_NAME) String keyName,
+                                       @Param(value = LAUNCH_INDEX) String launchIndex,
+                                       @Param(value = LAUNCH_TIME) String launchTime,
+                                       @Param(value = MONITORING_STATE) String monitoringState,
+                                       @Param(value = AFFINITY) String affinity,
+                                       @Param(value = PLACEMENT_GROUP_NAME) String placementGroupName,
+                                       @Param(value = PRIVATE_DNS_NAME) String privateDnsName,
+                                       @Param(value = REASON) String reason,
+                                       @Param(value = REQUESTER_ID) String requesterId,
+                                       @Param(value = SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
+                                       @Param(value = SPOT_INSTANCE_REQUEST_ID) String spotInstanceRequestId,
+                                       @Param(value = TENANCY) String tenancy,
+                                       @Param(value = IP_OWNER_ID) String ipOwnerId,
 
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_SUBNET_ID) String networkInterfaceSubnetId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_VPC_ID) String networkInterfaceVpcId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ID) String networkInterfaceId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_OWNER_ID) String networkInterfaceOwnerId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_AVAILABILITY_ZONE) String networkInterfaceAvailabilityZone,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_REQUESTER_ID) String networkInterfaceRequesterId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_REQUESTER_MANAGED) String networkInterfaceRequesterManaged,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_STATUS) String networkInterfaceStatus,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_MAC_ADDRESS) String networkInterfaceMacAddress,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_PRIVATE_DNS_NAME) String networkInterfacePrivateDnsName,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_SOURCE_DESTINATION_CHECK) String networkInterfaceSourceDestinationCheck,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_GROUP_ID) String networkInterfaceGroupId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_GROUP_NAME) String networkInterfaceGroupName,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ATTACHMENT_ID) String networkInterfaceAttachmentId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_INSTANCE_ID) String networkInterfaceInstanceId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_INSTANCE_OWNER_ID) String networkInterfaceInstanceOwnerId,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_PRIVATE_IP_ADDRESS) String networkInterfacePrivateIpAddress,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX) String networkInterfaceDeviceIndex,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ATTACHMENT_STATUS) String networkInterfaceAttachmentStatus,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ATTACH_TIME) String networkInterfaceAttachTime,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION) String networkInterfaceDeleteOnTermination,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_ADDRESSES_PRIMARY) String networkInterfaceAddressesPrimary,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_PUBLIC_IP) String networkInterfacePublicIp,
-                                       @Param(value = Inputs.NetworkInputs.NETWORK_INTERFACE_IP_OWNER_ID) String networkInterfaceIpOwnerId)
+                                       @Param(value = NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
+                                       @Param(value = NETWORK_INTERFACE_SUBNET_ID) String networkInterfaceSubnetId,
+                                       @Param(value = NETWORK_INTERFACE_VPC_ID) String networkInterfaceVpcId,
+                                       @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
+                                       @Param(value = NETWORK_INTERFACE_OWNER_ID) String networkInterfaceOwnerId,
+                                       @Param(value = NETWORK_INTERFACE_AVAILABILITY_ZONE) String networkInterfaceAvailabilityZone,
+                                       @Param(value = NETWORK_INTERFACE_REQUESTER_ID) String networkInterfaceRequesterId,
+                                       @Param(value = NETWORK_INTERFACE_REQUESTER_MANAGED) String networkInterfaceRequesterManaged,
+                                       @Param(value = NETWORK_INTERFACE_STATUS) String networkInterfaceStatus,
+                                       @Param(value = NETWORK_INTERFACE_MAC_ADDRESS) String networkInterfaceMacAddress,
+                                       @Param(value = NETWORK_INTERFACE_PRIVATE_DNS_NAME) String networkInterfacePrivateDnsName,
+                                       @Param(value = NETWORK_INTERFACE_SOURCE_DESTINATION_CHECK) String networkInterfaceSourceDestinationCheck,
+                                       @Param(value = NETWORK_INTERFACE_GROUP_ID) String networkInterfaceGroupId,
+                                       @Param(value = NETWORK_INTERFACE_GROUP_NAME) String networkInterfaceGroupName,
+                                       @Param(value = NETWORK_INTERFACE_ATTACHMENT_ID) String networkInterfaceAttachmentId,
+                                       @Param(value = NETWORK_INTERFACE_INSTANCE_ID) String networkInterfaceInstanceId,
+                                       @Param(value = NETWORK_INTERFACE_INSTANCE_OWNER_ID) String networkInterfaceInstanceOwnerId,
+                                       @Param(value = NETWORK_INTERFACE_PRIVATE_IP_ADDRESS) String networkInterfacePrivateIpAddress,
+                                       @Param(value = NETWORK_INTERFACE_DEVICE_INDEX) String networkInterfaceDeviceIndex,
+                                       @Param(value = NETWORK_INTERFACE_ATTACHMENT_STATUS) String networkInterfaceAttachmentStatus,
+                                       @Param(value = NETWORK_INTERFACE_ATTACH_TIME) String networkInterfaceAttachTime,
+                                       @Param(value = NETWORK_INTERFACE_DELETE_ON_TERMINATION) String networkInterfaceDeleteOnTermination,
+                                       @Param(value = NETWORK_INTERFACE_ADDRESSES_PRIMARY) String networkInterfaceAddressesPrimary,
+                                       @Param(value = NETWORK_INTERFACE_PUBLIC_IP) String networkInterfacePublicIp,
+                                       @Param(value = NETWORK_INTERFACE_IP_OWNER_ID) String networkInterfaceIpOwnerId)
             throws Exception {
 
         CommonInputs inputs = new CommonInputs.Builder()

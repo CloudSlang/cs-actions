@@ -46,7 +46,7 @@ public class DetachNetworkInterfaceAction {
      * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
      * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
      *
-     * @param endpoint      Endpoint to which request will be sent.
+     * @param endpoint      Optional - Endpoint to which request will be sent.
      *                      Default: "https://ec2.amazonaws.com"
      * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "AKIAIOSFODNN7EXAMPLE"
@@ -77,7 +77,7 @@ public class DetachNetworkInterfaceAction {
      * @param forceDetach   Optional - specifies whether to force a detachment or not.
      *                      Valid values: "true", "false".
      *                      Default: "false"
-     * @param version       Version of the web service to made the call against it.
+     * @param version       Optional - Version of the web service to made the call against it.
      *                      Example: "2014-06-15"
      *                      Default: "2014-06-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
@@ -95,7 +95,7 @@ public class DetachNetworkInterfaceAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

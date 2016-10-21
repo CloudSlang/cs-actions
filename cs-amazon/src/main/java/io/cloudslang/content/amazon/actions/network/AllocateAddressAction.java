@@ -41,7 +41,7 @@ public class AllocateAddressAction {
      * Note: An Elastic IP address is for use either in the EC2-Classic platform or in a VPC.
      * For more information, see Elastic IP Addresses in the Amazon Elastic Compute Cloud User Guide.
      *
-     * @param endpoint      Endpoint to which request will be sent.
+     * @param endpoint      Optional - Endpoint to which request will be sent.
      *                      Default: "https://ec2.amazonaws.com"
      * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "AKIAIOSFODNN7EXAMPLE"
@@ -53,7 +53,7 @@ public class AllocateAddressAction {
      * @param proxyUsername Optional - proxy server user name.
      *                      Default: ""
      * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
-     * @param version       Version of the web service to made the call against it.
+     * @param version       Optional - Version of the web service to made the call against it.
      *                      Example: "2014-06-15"
      *                      Default: "2014-06-15"
      * @param headers       Optional - string containing the headers to use for the request separated by new line
@@ -86,7 +86,7 @@ public class AllocateAddressAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,
