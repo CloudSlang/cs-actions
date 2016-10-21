@@ -40,4 +40,13 @@ public class ErrorMessages {
 
     public static final String DOMAIN_AND_WORKGROUP_BOTH_PRESENT = "The domain and workgroup are mutually exclusive. " +
             "If the workgroup value is supplied, then the domain name and authentication fields must be empty.";
+    public static final String PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP = "One of the affineHostGroupName and antiAffineHostGroupName inputs must not be empty, and the other one must be empty.";
+    public static final String RULE_ALREADY_EXISTS = "Rule with name %s already exists.";
+    public static final String AFFINE_HOST_GROUP_DOES_NOT_EXIST = "The affineHostGroup provided does not exist.";
+    public static final String ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST = "The antiAffineHostGroup provided does not exist.";
+    public static final String VM_GROUP_DOES_NOT_EXIST = "The vmGroup provided does not exist.";
+    public static final String SUCCESS_MSG = "Success: The [%s] cluster was successfully reconfigured. The taskId is: %s";
+    public static final String FAILURE_MSG = "Failure: The [%s] cluster could not be reconfigured.";
+    public static final String ANOTHER_FAILURE_MSG = "Could not retrieve the configurations for: [%s] cluster.";
+    public static final String CLUSTER_RULE_COULD_NOT_BE_FOUND = "Cluster rule with the name %s could not be found.";
 }

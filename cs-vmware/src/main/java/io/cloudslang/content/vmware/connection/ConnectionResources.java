@@ -7,8 +7,8 @@ import com.vmware.vim25.VimPortType;
 import io.cloudslang.content.vmware.connection.helpers.MoRefHandler;
 import io.cloudslang.content.vmware.connection.impl.BasicConnection;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.VmParameter;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -101,17 +101,20 @@ public class ConnectionResources {
     }
 
     public ConnectionResources(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        this.connection = getVCenterConnection(httpInputs);
-        this.moRefHandler = new MoRefHandler(connection);
-        this.morRootFolder = basicConnection.getServiceContent().getRootFolder();
-        this.serviceInstance = basicConnection.getServiceInstanceReference();
+        this(httpInputs);
 
         setDataCenterMor(vmInputs);
         setHostMor(vmInputs);
         setComputeResourceMor();
         setResourcePoolMor();
         setVmFolderMor();
+    }
 
+    public ConnectionResources(HttpInputs httpInputs) throws Exception {
+        this.connection = getVCenterConnection(httpInputs);
+        this.moRefHandler = new MoRefHandler(connection);
+        this.morRootFolder = basicConnection.getServiceContent().getRootFolder();
+        this.serviceInstance = basicConnection.getServiceInstanceReference();
         this.vimPortType = connection.getVimPort();
     }
 
@@ -119,7 +122,7 @@ public class ConnectionResources {
         ManagedObjectReference vmFolderMor = null;
         if (dataCenterMor != null) {
             vmFolderMor = (ManagedObjectReference) moRefHandler.entityProps(dataCenterMor,
-                    new String[]{VmParameter.VM_FOLDER.getValue()}).get(VmParameter.VM_FOLDER.getValue());
+                    new String[]{ManagedObjectType.VM_FOLDER.getValue()}).get(ManagedObjectType.VM_FOLDER.getValue());
         }
         this.setVmFolderMor(vmFolderMor);
     }
@@ -160,7 +163,7 @@ public class ConnectionResources {
     private ManagedObjectReference getDataCenterMor(String dataCenterName, ManagedObjectReference mor, MoRefHandler moRefHandler)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
-        ManagedObjectReference dataCenterMor = moRefHandler.inContainerByType(mor, VmParameter.DATA_CENTER.getValue())
+        ManagedObjectReference dataCenterMor = moRefHandler.inContainerByType(mor, ManagedObjectType.DATA_CENTER.getValue())
                 .get(dataCenterName);
         if (dataCenterMor == null) {
             throw new RuntimeException("Datacenter [" + dataCenterName + "] not found.");
@@ -172,7 +175,7 @@ public class ConnectionResources {
     private ManagedObjectReference getHostMor(String hostname, MoRefHandler moRefHandler, ManagedObjectReference dataCenterMor)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
-        ManagedObjectReference hostMor = moRefHandler.inContainerByType(dataCenterMor, VmParameter.HOST_SYSTEM.getValue())
+        ManagedObjectReference hostMor = moRefHandler.inContainerByType(dataCenterMor, ManagedObjectType.HOST_SYSTEM.getValue())
                 .get(hostname);
         if (hostMor == null) {
             throw new RuntimeException("Host [" + hostname + "] not found.");
@@ -185,7 +188,7 @@ public class ConnectionResources {
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
         ManagedObjectReference computeResourceMor = (ManagedObjectReference) moRefHandler
-                .entityProps(hostMor, new String[]{VmParameter.PARENT.getValue()}).get(VmParameter.PARENT.getValue());
+                .entityProps(hostMor, new String[]{ManagedObjectType.PARENT.getValue()}).get(ManagedObjectType.PARENT.getValue());
 
         if (computeResourceMor == null) {
             throw new RuntimeException(ErrorMessages.COMPUTE_RESOURCE_NOT_FOUND_ON_HOST);

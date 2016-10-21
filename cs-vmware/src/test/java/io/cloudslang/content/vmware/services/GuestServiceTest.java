@@ -1,6 +1,11 @@
 package io.cloudslang.content.vmware.services;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.CustomizationSpec;
+import com.vmware.vim25.InvalidCollectorVersionFaultMsg;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.VimPortType;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.entities.GuestInputs;
@@ -26,7 +31,11 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -93,7 +102,7 @@ public class GuestServiceTest {
     @Test
     public void customizeWinVMSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -108,7 +117,7 @@ public class GuestServiceTest {
         Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, true);
 
         verifyConnection();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(guestConfigSpecsMock, times(1)).getWinCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -122,7 +131,7 @@ public class GuestServiceTest {
     @Test
     public void customizeWinVMFailure() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -137,7 +146,7 @@ public class GuestServiceTest {
         Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, true);
 
         verifyConnection();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(guestConfigSpecsMock, times(1)).getWinCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -151,7 +160,7 @@ public class GuestServiceTest {
     @Test
     public void customizeWinVMNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -167,7 +176,7 @@ public class GuestServiceTest {
 
         verify(connectionResourcesMock, times(1)).getConnection();
         verify(connectionMock, times(1)).disconnect();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(connectionResourcesMock, never()).getVimPortType();
         verify(guestConfigSpecsMock, never()).getWinCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, never()).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -182,7 +191,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -196,7 +205,7 @@ public class GuestServiceTest {
         Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
 
         verifyConnection();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(guestConfigSpecsMock, times(1)).getLinuxCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -210,7 +219,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMFailure() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -224,7 +233,7 @@ public class GuestServiceTest {
         Map<String, String> results = guestService.customizeVM(httpInputsMock, vmInputs, guestInputs, false);
 
         verifyConnection();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(guestConfigSpecsMock, times(1)).getLinuxCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
         verify(vimPortMock, times(1)).customizeVMTask(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -238,7 +247,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -253,7 +262,7 @@ public class GuestServiceTest {
 
         verify(connectionResourcesMock, times(1)).getConnection();
         verify(connectionMock, times(1)).disconnect();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(connectionResourcesMock, never()).getVimPortType();
         verify(guestConfigSpecsMock, never()).getLinuxCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, never()).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -268,7 +277,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
         doNothing().when(vimPortMock).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -283,7 +292,7 @@ public class GuestServiceTest {
 
         verify(connectionResourcesMock, times(1)).getConnection();
         verify(connectionMock, times(1)).disconnect();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(connectionResourcesMock, times(2)).getVimPortType();
         verify(guestConfigSpecsMock, times(1)).getLinuxCustomizationSpec(any(GuestInputs.class));
         verify(vimPortMock, times(1)).checkCustomizationSpec(any(ManagedObjectReference.class), any(CustomizationSpec.class));
@@ -298,7 +307,7 @@ public class GuestServiceTest {
     @Test
     public void mountToolsSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         PowerMockito.doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
@@ -307,7 +316,7 @@ public class GuestServiceTest {
 
         verify(connectionResourcesMock, times(1)).getConnection();
         verify(connectionResourcesMock, times(1)).getVimPortType();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, times(1)).mountToolsInstaller(any(ManagedObjectReference.class));
         verify(connectionMock, times(1)).disconnect();
 
@@ -319,7 +328,7 @@ public class GuestServiceTest {
     @Test
     public void mountToolsNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
         PowerMockito.doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
@@ -327,7 +336,7 @@ public class GuestServiceTest {
         Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
 
         verify(connectionResourcesMock, times(1)).getConnection();
-        verify(morObjectHandlerMock, times(1)).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, times(1)).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).mountToolsInstaller(any(ManagedObjectReference.class));
         verify(connectionMock, times(1)).disconnect();
 
@@ -339,7 +348,7 @@ public class GuestServiceTest {
     @Test
     public void mountToolsException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(null);
-        when(morObjectHandlerMock.getVmMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
@@ -347,7 +356,7 @@ public class GuestServiceTest {
         Map<String, String> results = guestService.mountTools(httpInputsMock, vmInputs);
 
         verify(connectionResourcesMock, times(1)).getConnection();
-        verify(morObjectHandlerMock, never()).getVmMor(any(ConnectionResources.class), anyString(), anyString());
+        verify(morObjectHandlerMock, never()).getMor(any(ConnectionResources.class), anyString(), anyString());
         verify(vimPortMock, never()).mountToolsInstaller(any(ManagedObjectReference.class));
         verify(connectionMock, times(1)).disconnect();
 

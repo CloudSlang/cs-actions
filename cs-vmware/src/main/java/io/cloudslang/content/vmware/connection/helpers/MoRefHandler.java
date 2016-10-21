@@ -1,12 +1,21 @@
 package io.cloudslang.content.vmware.connection.helpers;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.DynamicProperty;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.ObjectContent;
+import com.vmware.vim25.PropertyFilterSpec;
+import com.vmware.vim25.RetrieveOptions;
+import com.vmware.vim25.RetrieveResult;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.ServiceContent;
+import com.vmware.vim25.VimPortType;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.helpers.build.ObjectSpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.PropertyFilterSpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.PropertySpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.TraversalSpecBuilder;
-import io.cloudslang.content.vmware.entities.VmParameter;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -93,7 +102,7 @@ public class MoRefHandler {
                                                final String morefType,
                                                final RetrieveOptions retrieveOptions
     ) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        return this.containerViewByType(container, morefType, retrieveOptions, VmParameter.NAME.getValue());
+        return this.containerViewByType(container, morefType, retrieveOptions, ManagedObjectType.NAME.getValue());
     }
 
     /**
@@ -128,10 +137,10 @@ public class MoRefHandler {
                 new PropertyFilterSpecBuilder().propSet(new PropertySpecBuilder().all(false)
                         .type(morefType).pathSet(morefProperties)).objectSet(new ObjectSpecBuilder()
                         .obj(containerView).skip(true).selectSet(new TraversalSpecBuilder()
-                                .name(VmParameter.VIEW.getValue())
-                                .path(VmParameter.VIEW.getValue())
+                                .name(ManagedObjectType.VIEW.getValue())
+                                .path(ManagedObjectType.VIEW.getValue())
                                 .skip(false)
-                                .type(VmParameter.CONTAINER_VIEW.getValue())))};
+                                .type(ManagedObjectType.CONTAINER_VIEW.getValue())))};
     }
 
     private RetrieveResult containerViewByType(final RetrieveOptions retrieveOptions,

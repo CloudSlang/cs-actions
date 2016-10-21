@@ -8,8 +8,8 @@ import com.vmware.vim25.VirtualMachineSummary;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
+import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.VmInputs;
-import io.cloudslang.content.vmware.entities.VmParameter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,23 +52,23 @@ public class ResponseUtils {
     public static void addDataToVmDetailsMap(Map<String, String> inputMap,
                                              VirtualMachineSummary virtualMachineSummary,
                                              VirtualMachineConfigSummary virtualMachineConfigSummary) {
-        inputMap.put(VmParameter.VM_ID.getValue(), virtualMachineSummary.getVm().getValue());
-        inputMap.put(VmParameter.VM_FULL_NAME.getValue(), virtualMachineConfigSummary.getGuestFullName());
-        inputMap.put(VmParameter.VM_UUID.getValue(), virtualMachineConfigSummary.getUuid());
+        inputMap.put(ManagedObjectType.VM_ID.getValue(), virtualMachineSummary.getVm().getValue());
+        inputMap.put(ManagedObjectType.VM_FULL_NAME.getValue(), virtualMachineConfigSummary.getGuestFullName());
+        inputMap.put(ManagedObjectType.VM_UUID.getValue(), virtualMachineConfigSummary.getUuid());
         inputMap.put(Inputs.VM_CPU_COUNT, virtualMachineConfigSummary.getNumCpu().toString());
         inputMap.put(Inputs.VM_MEMORY_SIZE, virtualMachineConfigSummary.getMemorySizeMB().toString());
-        inputMap.put(VmParameter.VM_ETH_COUNT.getValue(), virtualMachineConfigSummary.getNumEthernetCards().toString());
-        inputMap.put(VmParameter.VM_DISK_COUNT.getValue(), virtualMachineConfigSummary.getNumVirtualDisks().toString());
+        inputMap.put(ManagedObjectType.VM_ETH_COUNT.getValue(), virtualMachineConfigSummary.getNumEthernetCards().toString());
+        inputMap.put(ManagedObjectType.VM_DISK_COUNT.getValue(), virtualMachineConfigSummary.getNumVirtualDisks().toString());
         inputMap.put(Inputs.DATA_STORE, virtualMachineConfigSummary.getVmPathName()
                 .substring(1, virtualMachineConfigSummary.getVmPathName().indexOf(Constants.RIGHT_SQUARE_BRACKET)));
-        inputMap.put(VmParameter.VM_PATH_NAME.getValue(), virtualMachineConfigSummary.getVmPathName());
-        inputMap.put(VmParameter.VM_IS_TEMPLATE.getValue(), Boolean.toString(virtualMachineConfigSummary.isTemplate()));
+        inputMap.put(ManagedObjectType.VM_PATH_NAME.getValue(), virtualMachineConfigSummary.getVmPathName());
+        inputMap.put(ManagedObjectType.VM_IS_TEMPLATE.getValue(), Boolean.toString(virtualMachineConfigSummary.isTemplate()));
 
         if (virtualMachineSummary.getGuest() != null) {
             if (virtualMachineSummary.getGuest().getIpAddress() != null) {
-                inputMap.put(VmParameter.VM_IP_ADDRESS.getValue(), virtualMachineSummary.getGuest().getIpAddress());
+                inputMap.put(ManagedObjectType.VM_IP_ADDRESS.getValue(), virtualMachineSummary.getGuest().getIpAddress());
             } else {
-                inputMap.put(VmParameter.VM_IP_ADDRESS.getValue(), Constants.EMPTY);
+                inputMap.put(ManagedObjectType.VM_IP_ADDRESS.getValue(), Constants.EMPTY);
             }
         }
     }
