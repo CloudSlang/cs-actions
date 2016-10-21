@@ -71,7 +71,7 @@ public class ClusterComputeResourceServiceTest {
     private static final String GET_CLUSTER_RULE_INFO = "getClusterRuleInfo";
     private static final String ADD_AFFINE_GROUP_TO_RULE = "addAffineGroupToRule";
     private static final String ADD_ANTI_AFFINE_GROUP_TO_RULE = "addAntiAffineGroupToRule";
-    private static final String EXISTS_VM_GROUP = "existsVmGroup";
+    private static final String EXISTS_GROUP = "existsGroup";
     private static final String SUCCESS_MESSAGE = "Success: The [Cluster1] cluster was successfully reconfigured. The taskId is: task-12345";
     private static final String FAILURE_MESSAGE = "Failure: The [Cluster1] cluster could not be reconfigured.";
     @Mock
@@ -250,7 +250,6 @@ public class ClusterComputeResourceServiceTest {
         clusterComputeResourceService.deleteVmGroup(httpInputsMock, vmInputs);
     }
 
-
     @Test
     public void listVmGroupsSuccess() throws Exception {
         commonMockInitializations();
@@ -402,7 +401,6 @@ public class ClusterComputeResourceServiceTest {
         clusterComputeResourceServiceSpy.listHostGroups(httpInputsMock, "Cluster1", "");
     }
 
-
     @Test
     public void createAffinityRuleSuccess() throws Exception {
         commonMockInitializations();
@@ -495,8 +493,8 @@ public class ClusterComputeResourceServiceTest {
         doReturn(clusterVmHostRuleInfoMock).when(clusterComputeResourceServiceSpy, ADD_AFFINE_GROUP_TO_RULE,
                 any(ClusterVmHostRuleInfo.class), any(ClusterConfigInfoEx.class), any(String.class));
         doThrow(new RuntimeFaultFaultMsg(VM_GROUP_DOES_NOT_EXIST, new RuntimeFault()))
-                .when(clusterComputeResourceServiceSpy, EXISTS_VM_GROUP,
-                        any(ClusterConfigInfoEx.class), any(String.class));
+                .when(clusterComputeResourceServiceSpy, EXISTS_GROUP,
+                        any(ClusterConfigInfoEx.class), any(String.class), any(Class.class));
         thrownException.expectMessage(VM_GROUP_DOES_NOT_EXIST);
 
         clusterComputeResourceServiceSpy.createAffinityRule(httpInputsMock, vmInputs, "affineHostGroupName", "");
