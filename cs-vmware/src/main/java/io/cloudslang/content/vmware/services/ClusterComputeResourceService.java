@@ -72,7 +72,9 @@ public class ClusterComputeResourceService {
         ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task).getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()), String.format(FAILURE_MSG, vmInputs.getClusterName()));
+        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
     }
@@ -97,7 +99,9 @@ public class ClusterComputeResourceService {
         ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task).getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()), String.format(FAILURE_MSG, vmInputs.getClusterName()));
+        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
     }
@@ -122,7 +126,9 @@ public class ClusterComputeResourceService {
         ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task).getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()), String.format(FAILURE_MSG, vmInputs.getClusterName()));
+        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
     }
@@ -166,7 +172,9 @@ public class ClusterComputeResourceService {
         ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task).getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()), String.format(FAILURE_MSG, vmInputs.getClusterName()));
+        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
     }
@@ -191,7 +199,9 @@ public class ClusterComputeResourceService {
         ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task).getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()), String.format(FAILURE_MSG, vmInputs.getClusterName()));
+        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
     }
@@ -237,8 +247,9 @@ public class ClusterComputeResourceService {
             ManagedObjectReference task = connectionResources.getVimPortType().
                     reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-            Map<String, String> resultMap = new ResponseHelper(connectionResources, task).getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
-                    String.format(FAILURE_MSG, vmInputs.getClusterName()));
+            Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+                    .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                            String.format(FAILURE_MSG, vmInputs.getClusterName()));
             connectionResources.getConnection().disconnect();
             return resultMap;
         }
@@ -264,7 +275,9 @@ public class ClusterComputeResourceService {
         ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task).getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()), String.format(FAILURE_MSG, vmInputs.getClusterName()));
+        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
     }
@@ -299,7 +312,7 @@ public class ClusterComputeResourceService {
     }
 
     @NotNull
-    protected ClusterVmHostRuleInfo getClusterVmHostRuleInfo(ClusterConfigInfoEx clusterConfigInfoEx,
+    private ClusterVmHostRuleInfo getClusterVmHostRuleInfo(ClusterConfigInfoEx clusterConfigInfoEx,
                                                            VmInputs vmInputs, String affineHostGroupName, String antiAffineHostGroupName) throws Exception {
         ClusterVmHostRuleInfo clusterVmHostRuleInfo = new ClusterVmHostRuleInfo();
         clusterVmHostRuleInfo.setName(vmInputs.getRuleName());
@@ -308,7 +321,7 @@ public class ClusterComputeResourceService {
         } else {
             clusterVmHostRuleInfo = addAntiAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, antiAffineHostGroupName);
         }
-        if (existsVmGroup(clusterConfigInfoEx, vmInputs.getVmGroupName())) {
+        if (existsGroup(clusterConfigInfoEx, vmInputs.getVmGroupName(), ClusterVmGroup.class)) {
             clusterVmHostRuleInfo.setVmGroupName(vmInputs.getVmGroupName());
             clusterVmHostRuleInfo.setMandatory(true);
             clusterVmHostRuleInfo.setEnabled(true);
@@ -319,7 +332,7 @@ public class ClusterComputeResourceService {
     }
 
     private ClusterVmHostRuleInfo addAntiAffineGroupToRule(ClusterVmHostRuleInfo clusterVmHostRuleInfo, ClusterConfigInfoEx clusterConfigInfoEx, String antiAffineHostGroupName) throws Exception {
-        if (existsHostGroup(clusterConfigInfoEx, antiAffineHostGroupName)) {
+        if (existsGroup(clusterConfigInfoEx, antiAffineHostGroupName, ClusterHostGroup.class)) {
             clusterVmHostRuleInfo.setAntiAffineHostGroupName(antiAffineHostGroupName);
         } else {
             throw new Exception(ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST);
@@ -328,7 +341,7 @@ public class ClusterComputeResourceService {
     }
 
     private ClusterVmHostRuleInfo addAffineGroupToRule(ClusterVmHostRuleInfo clusterVmHostRuleInfo, ClusterConfigInfoEx clusterConfigInfoEx, String affineHostGroupName) throws Exception {
-        if (existsHostGroup(clusterConfigInfoEx, affineHostGroupName)) {
+        if (existsGroup(clusterConfigInfoEx, affineHostGroupName, ClusterHostGroup.class)) {
             clusterVmHostRuleInfo.setAffineHostGroupName(affineHostGroupName);
         } else {
             throw new Exception(AFFINE_HOST_GROUP_DOES_NOT_EXIST);
@@ -345,20 +358,9 @@ public class ClusterComputeResourceService {
         return false;
     }
 
-    private boolean existsVmGroup(ClusterConfigInfoEx clusterConfigInfoEx, String vmGroupName) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+    private boolean existsGroup(ClusterConfigInfoEx clusterConfigInfoEx, String hostGroupName, Class classOfGroup) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         for (ClusterGroupInfo clusterGroupInfo : clusterConfigInfoEx.getGroup()) {
-            if (clusterGroupInfo instanceof ClusterVmGroup) {
-                if (clusterGroupInfo.getName().equals(vmGroupName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean existsHostGroup(ClusterConfigInfoEx clusterConfigInfoEx, String hostGroupName) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        for (ClusterGroupInfo clusterGroupInfo : clusterConfigInfoEx.getGroup()) {
-            if (clusterGroupInfo instanceof ClusterHostGroup) {
+            if (clusterGroupInfo.getClass().isAssignableFrom(classOfGroup)) {
                 if (clusterGroupInfo.getName().equals(hostGroupName)) {
                     return true;
                 }
