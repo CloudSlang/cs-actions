@@ -212,7 +212,7 @@ http://www.apache.org/licenses/LICENSE-2.0
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>2.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -251,7 +251,7 @@ http://www.apache.org/licenses/LICENSE-2.0
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>3.18.0-GA</version>
+            <version>3.18.1-GA</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
