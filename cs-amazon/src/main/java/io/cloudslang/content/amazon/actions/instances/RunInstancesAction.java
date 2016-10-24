@@ -107,7 +107,7 @@ public class RunInstancesAction {
      * For more information about troubleshooting, see What To Do If An Instance Immediately Terminates, and
      * Troubleshooting Connecting to Your Instance in the Amazon Elastic Compute Cloud User Guide.
      *
-     * @param endpoint                                  Endpoint to which request will be sent.
+     * @param endpoint                                  Optional - Endpoint to which request will be sent.
      *                                                  Default: "https://ec2.amazonaws.com"
      * @param identity                                  ID of the secret access key associated with your Amazon AWS or IAM
      *                                                  account.
@@ -136,7 +136,7 @@ public class RunInstancesAction {
      *                                                  query value by "=".
      *                                                  Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                                                  Default: ""
-     * @param version                                   Version of the web service to made the call against it.
+     * @param version                                   Optional - Version of the web service to made the call against it.
      *                                                  Example: "2016-04-01"
      *                                                  Default: "2016-04-01"
      * @param delimiter                                 Optional - delimiter that will be used.
@@ -399,7 +399,7 @@ public class RunInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

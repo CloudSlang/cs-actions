@@ -22,7 +22,6 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApi
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
@@ -41,7 +40,7 @@ public class DeleteVolume {
      * Note: The volume may remain in the deleting state for several minutes. For more information, see Deleting an Amazon
      * EBS Volume in the Amazon Elastic Compute Cloud User Guide: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-deleting-volume.html
      *
-     * @param endpoint      Endpoint to which request will be sent.
+     * @param endpoint      Optional - Endpoint to which request will be sent.
      *                      Default: "https://ec2.amazonaws.com"
      * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "AKIAIOSFODNN7EXAMPLE"
@@ -67,7 +66,7 @@ public class DeleteVolume {
      *                      query value by "=".
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                      Default: ""
-     * @param version       Version of the web service to made the call against it.
+     * @param version       Optional - Version of the web service to made the call against it.
      *                      Example: "2016-04-01"
      *                      Default: "2016-04-01"
      * @param volumeId      ID of the EBS volume to be deleted.
@@ -87,9 +86,9 @@ public class DeleteVolume {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
-                                       @Param(value = IDENTITY) String identity,
-                                       @Param(value = CREDENTIAL, encrypted = true) String credential,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
+                                       @Param(value = ENDPOINT, required = true) String identity,
+                                       @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,
                                        @Param(value = PROXY_PORT) String proxyPort,
                                        @Param(value = PROXY_USERNAME) String proxyUsername,

@@ -6,7 +6,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.amazon.entities.constants.Inputs;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
@@ -15,6 +14,19 @@ import io.cloudslang.content.amazon.execute.instances.UpdateInstanceTypeExecutor
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DEBUG_MODE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROVIDER;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.REGION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.OPERATION_TIMEOUT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.POOLING_INTERVAL;
 
 /**
  * Created by Mihai Tusa.
@@ -25,11 +37,11 @@ public class UpdateInstanceTypeAction {
      * Updates (changes) instance (identified by "instanceId") type with the new one specified by "serverType".
      *
      * @param provider         Cloud provider on which you have the instance - Valid values: "amazon" or "openstack".
-     * @param endpoint         Endpoint to which request will be sent. Example: "https://ec2.amazonaws.com" for Amazon AWS
+     * @param endpoint         Optional - Endpoint to which request will be sent. Example: "https://ec2.amazonaws.com" for Amazon AWS
      *                         or "http://hostOrIp:5000/v2.0" for OpenStack.
-     * @param identity         Optional - username of your account or the Access Key ID. For OpenStack provider the required
+     * @param identity         Username of your account or the Access Key ID. For OpenStack provider the required
      *                         format is 'alias:username'.
-     * @param credential       Optional - password of the user or the Secret Access Key that correspond to the identity
+     * @param credential       Password of the user or the Secret Access Key that correspond to the identity
      *                         input.
      * @param proxyHost        Optional - proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort        Optional - proxy server port.
@@ -59,20 +71,20 @@ public class UpdateInstanceTypeAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = Inputs.CommonInputs.PROVIDER, required = true) String provider,
-                                       @Param(value = Inputs.CommonInputs.ENDPOINT, required = true) String endpoint,
-                                       @Param(value = Inputs.CommonInputs.IDENTITY) String identity,
-                                       @Param(value = Inputs.CommonInputs.CREDENTIAL, encrypted = true) String credential,
-                                       @Param(value = Inputs.CommonInputs.PROXY_HOST) String proxyHost,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PORT) String proxyPort,
-                                       @Param(value = Inputs.CommonInputs.DEBUG_MODE) String debugMode,
+    public Map<String, String> execute(@Param(value = PROVIDER, required = true) String provider,
+                                       @Param(value = ENDPOINT) String endpoint,
+                                       @Param(value = IDENTITY) String identity,
+                                       @Param(value = CREDENTIAL, encrypted = true) String credential,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = DEBUG_MODE) String debugMode,
 
-                                       @Param(value = Inputs.CustomInputs.REGION) String region,
-                                       @Param(value = Inputs.CustomInputs.INSTANCE_ID, required = true) String instanceId,
-                                       @Param(value = Inputs.CustomInputs.INSTANCE_TYPE) String instanceType,
+                                       @Param(value = REGION) String region,
+                                       @Param(value = INSTANCE_ID, required = true) String instanceId,
+                                       @Param(value = INSTANCE_TYPE) String instanceType,
 
-                                       @Param(value = Inputs.InstanceInputs.OPERATION_TIMEOUT) String operationTimeout,
-                                       @Param(value = Inputs.InstanceInputs.POOLING_INTERVAL) String poolingInterval)
+                                       @Param(value = OPERATION_TIMEOUT) String operationTimeout,
+                                       @Param(value = POOLING_INTERVAL) String poolingInterval)
             throws Exception {
 
         CommonInputs inputs = new CommonInputs.Builder()

@@ -5,6 +5,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.List;
+
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -52,6 +56,16 @@ public class InputsUtilTest {
         int testGetMaxInstancesCount = InputsUtil.getValidInstancesCount("");
 
         assertEquals(1, testGetMaxInstancesCount);
+    }
+
+    @Test
+    public void getStringsList() {
+        assertNull(InputsUtil.getStringsList("", ","));
+        Object underTestList = InputsUtil.getStringsList("2,3", ",");
+        assertNotNull(underTestList);
+        assertTrue(underTestList instanceof List);
+        assertTrue(((List) underTestList).contains("2"));
+        assertEquals(2, ((List) underTestList).size());
     }
 
     @Test

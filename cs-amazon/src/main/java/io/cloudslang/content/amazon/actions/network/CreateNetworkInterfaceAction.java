@@ -50,7 +50,7 @@ public class CreateNetworkInterfaceAction {
      * Note: For more information about network interfaces, see Elastic Network Interfaces in the Amazon Elastic Compute
      * Cloud User Guide.
      *
-     * @param endpoint                       Endpoint to which request will be sent.
+     * @param endpoint                       Optional - Endpoint to which request will be sent.
      *                                       Default: "https://ec2.amazonaws.com"
      * @param identity                       ID of the secret access key associated with your Amazon AWS or IAM account.
      *                                       Example: "AKIAIOSFODNN7EXAMPLE"
@@ -72,7 +72,7 @@ public class CreateNetworkInterfaceAction {
      *                                       encoded then a double encoded will occur. The separator between name-value
      *                                       pairs is "&" symbol. The query name will be separated from query value by "=".
      *                                       Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     * @param version                        Version of the web service to made the call against it.
+     * @param version                        Optional - Version of the web service to made the call against it.
      *                                       Example: "2016-04-01"
      *                                       Default: "2016-04-01"
      * @param delimiter                      Optional - Delimiter that will be used.
@@ -115,7 +115,7 @@ public class CreateNetworkInterfaceAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

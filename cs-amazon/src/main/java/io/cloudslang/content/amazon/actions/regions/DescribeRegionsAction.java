@@ -43,7 +43,7 @@ public class DescribeRegionsAction {
      * Note: For a list of the regions supported by Amazon EC2, see Regions and Endpoints:
      * http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
      *
-     * @param endpoint           Endpoint to which request will be sent.
+     * @param endpoint           Optional - Endpoint to which request will be sent.
      *                           Default: "https://ec2.amazonaws.com"
      * @param identity           ID of the secret access key associated with your Amazon AWS or IAM account.
      *                           Example: "AKIAIOSFODNN7EXAMPLE"
@@ -69,7 +69,7 @@ public class DescribeRegionsAction {
      *                           separated from query value by "=".
      *                           Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                           Default: ""
-     * @param version            Version of the web service to made the call against it.
+     * @param version            Optional - Version of the web service to made the call against it.
      *                           Example: "2016-04-01"
      *                           Default: "2016-04-01"
      * @param delimiter          Optional - delimiter that will be used
@@ -98,7 +98,7 @@ public class DescribeRegionsAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

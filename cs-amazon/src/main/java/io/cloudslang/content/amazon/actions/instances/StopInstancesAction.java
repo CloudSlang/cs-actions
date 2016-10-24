@@ -58,7 +58,7 @@ public class StopInstancesAction {
      * For more information, see Troubleshooting Stopping Your Instance in the Amazon Elastic Compute Cloud User
      * Guide.
      *
-     * @param endpoint      Endpoint to which request will be sent.
+     * @param endpoint      Optional - Endpoint to which request will be sent.
      *                      Default: "https://ec2.amazonaws.com"
      * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "AKIAIOSFODNN7EXAMPLE"
@@ -84,7 +84,7 @@ public class StopInstancesAction {
      *                      query value by "=".
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                      Default: ""
-     * @param version       Version of the web service to made the call against it.
+     * @param version       Optional - Version of the web service to made the call against it.
      *                      Example: "2016-04-01"
      *                      Default: "2016-04-01"
      * @param delimiter     Optional - delimiter that will be used.
@@ -111,7 +111,7 @@ public class StopInstancesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,
@@ -121,7 +121,7 @@ public class StopInstancesAction {
                                        @Param(value = HEADERS) String headers,
                                        @Param(value = QUERY_PARAMS) String queryParams,
                                        @Param(value = VERSION) String version,
-                                       @Param(value = DELIMITER, required = true) String delimiter,
+                                       @Param(value = DELIMITER) String delimiter,
                                        @Param(value = INSTANCE_ID, required = true) String instanceId,
                                        @Param(value = FORCE_STOP, required = true) String forceStop) {
         try {

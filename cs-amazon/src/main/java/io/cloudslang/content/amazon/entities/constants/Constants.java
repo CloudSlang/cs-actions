@@ -21,6 +21,7 @@ public class Constants {
         public static final String DOT = ".";
         public static final String EMPTY = "";
         public static final String ENCODING = "UTF-8";
+        public static final String ENDPOINT = "https://ec2.amazonaws.com";
         public static final String EQUAL = "=";
         public static final String LINE_SEPARATOR = "\n";
         public static final String NETWORK = "network";

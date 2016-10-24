@@ -57,7 +57,7 @@ public class AssociateAddressAction {
      * an error, and you may be charged for each time the Elastic IP address is remapped to the same instance. For more
      * information, see the Elastic IP Addresses section of Amazon EC2 Pricing.
      *
-     * @param endpoint           Endpoint to which request will be sent.
+     * @param endpoint           Optional - Endpoint to which request will be sent.
      *                           Default: "https://ec2.amazonaws.com"
      * @param identity           ID of the secret access key associated with your Amazon AWS or IAM account.
      *                           Example: "AKIAIOSFODNN7EXAMPLE"
@@ -68,7 +68,7 @@ public class AssociateAddressAction {
      *                           <proxyPort> inputs or leave them both empty.
      * @param proxyUsername      Optional - proxy server user name.
      * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
-     * @param version            Version of the web service to made the call against it.
+     * @param version            Optional - Version of the web service to made the call against it.
      *                           Example: "2016-04-01"
      *                           Default: "2016-04-01"
      * @param headers            Optional - string containing the headers to use for the request separated by new line
@@ -120,7 +120,7 @@ public class AssociateAddressAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

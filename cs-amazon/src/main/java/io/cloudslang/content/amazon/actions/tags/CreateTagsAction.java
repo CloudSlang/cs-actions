@@ -48,7 +48,7 @@ public class CreateTagsAction {
      * Supported Resource-Level Permissions: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-supported-iam-actions-resources.html
      * for Amazon EC2 API Actions in the Amazon Elastic Compute Cloud User Guide.
      *
-     * @param endpoint          Endpoint to which request will be sent.
+     * @param endpoint          Optional - Endpoint to which request will be sent.
      *                          Default: "https://ec2.amazonaws.com"
      * @param identity          ID of the secret access key associated with your Amazon AWS or IAM account.
      *                          Example: "AKIAIOSFODNN7EXAMPLE"
@@ -74,7 +74,7 @@ public class CreateTagsAction {
      *                          separated from query value by "=".
      *                          Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                          Default: ""
-     * @param version           Version of the web service to made the call against it.
+     * @param version           Optional - Version of the web service to made the call against it.
      *                          Example: "2016-09-15"
      *                          Default: "2016-04-01"
      * @param delimiter         Optional - delimiter that will be used
@@ -112,7 +112,7 @@ public class CreateTagsAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

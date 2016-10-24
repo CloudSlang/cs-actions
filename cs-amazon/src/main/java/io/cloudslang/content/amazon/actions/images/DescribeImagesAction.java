@@ -24,7 +24,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
@@ -75,9 +74,9 @@ public class DescribeImagesAction {
      * Note:
      * De-registered images are included in the returned results for an unspecified interval after de-registration.
      *
-     * @param endpoint                     Endpoint to which request will be sent - Example: "https://ec2.amazonaws.com"
-     * @param identity                     Optional - Username of your account or the Access Key ID.
-     * @param credential                   Optional - Password of the user or the Secret Access Key that correspond to
+     * @param endpoint                     Optional - Endpoint to which request will be sent.- Example: "https://ec2.amazonaws.com"
+     * @param identity                     Username of your account or the Access Key ID.
+     * @param credential                   Password of the user or the Secret Access Key that correspond to
      *                                     the identity input.
      * @param proxyHost                    Optional - Proxy server used to access the web site. If empty no proxy will be
      *                                     used.
@@ -94,7 +93,7 @@ public class DescribeImagesAction {
      *                                     then a double encoded will occur. The separator between name-value pairs is
      *                                     "&" symbol. The query name will be separated from query value by "=".
      *                                     Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     * @param version                      Version of the web service to made the call against it.
+     * @param version                      Optional - Version of the web service to made the call against it.
      *                                     Example: "2016-04-01"
      *                                     Default: "2016-04-01"
      * @param delimiter                    Optional - Delimiter that will be used - Default: ","
@@ -161,9 +160,9 @@ public class DescribeImagesAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
-                                       @Param(value = IDENTITY) String identity,
-                                       @Param(value = CREDENTIAL, encrypted = true) String credential,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
+                                       @Param(value = ENDPOINT, required = true) String identity,
+                                       @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,
                                        @Param(value = PROXY_PORT) String proxyPort,
                                        @Param(value = PROXY_USERNAME) String proxyUsername,

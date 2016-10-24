@@ -54,7 +54,7 @@ public class CreateVolumeAction {
      * Amazon EBS Encryption in the Amazon Elastic Compute Cloud User Guide. For more information, see Creating or
      * Restoring an Amazon EBS Volume in the Amazon Elastic Compute Cloud User Guide.
      *
-     * @param endpoint         Endpoint to which request will be sent.
+     * @param endpoint         Optional - Endpoint to which request will be sent.
      *                         Default: "https://ec2.amazonaws.com"
      * @param identity         ID of the secret access key associated with your Amazon AWS or IAM account.
      *                         Example: "AKIAIOSFODNN7EXAMPLE"
@@ -96,7 +96,7 @@ public class CreateVolumeAction {
      *                         Purpose SSD volumes), "io1" (for Provisioned IOPS SSD volumes), "st1" (for Throughput
      *                         Optimized HDD), "sc1" (for Cold HDD) and "standard" (for Magnetic volumes).
      *                         Default: "standard"
-     * @param version          Version of the web service to made the call against it.
+     * @param version          Optional - Version of the web service to made the call against it.
      *                         Example: "2014-06-15"
      *                         Example: "2014-06-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
@@ -115,7 +115,7 @@ public class CreateVolumeAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+    public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
                                        @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,

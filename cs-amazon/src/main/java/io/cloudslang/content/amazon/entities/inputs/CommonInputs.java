@@ -7,11 +7,10 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.ENDPOINT;
 
 /**
  * Created by persdana on 5/27/2015.
@@ -162,10 +161,8 @@ public class CommonInputs {
         }
 
         public Builder withEndpoint(String inputValue) throws MalformedURLException {
-            if (isBlank(inputValue)) {
-                throw new RuntimeException("The required " + inputValue + " input is not specified!");
-            }
-            endpoint = new URL(inputValue.toLowerCase()).toString();
+            String stringEndpoint = InputsUtil.getDefaultStringInput(inputValue, ENDPOINT);
+            endpoint = new URL(stringEndpoint.toLowerCase()).toString();
             return this;
         }
 
