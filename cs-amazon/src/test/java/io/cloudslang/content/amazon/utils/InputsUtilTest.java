@@ -65,6 +65,7 @@ public class InputsUtilTest {
         assertNotNull(underTestList);
         assertTrue(underTestList instanceof List);
         assertTrue(((List) underTestList).contains("2"));
+        assertEquals(2, ((List) underTestList).size());
     }
 
     @Test
