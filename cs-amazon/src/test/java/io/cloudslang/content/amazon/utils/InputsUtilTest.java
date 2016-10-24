@@ -61,7 +61,6 @@ public class InputsUtilTest {
     @Test
     public void getStringsList() {
         assertNull(InputsUtil.getStringsList("", ","));
-        assertEquals(2, InputsUtil.getStringsList("2,3", ",").size());
         Object underTestList = InputsUtil.getStringsList("2,3", ",");
         assertNotNull(underTestList);
         assertTrue(underTestList instanceof List);
