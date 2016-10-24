@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
@@ -59,10 +60,12 @@ public class InputsUtilTest {
 
     @Test
     public void getStringsList() {
-        assertNull(InputsUtil.getStringsList("",","));
-        assertEquals(2, InputsUtil.getStringsList("2,3",",").size());
-        assertTrue(InputsUtil.getStringsList("2,3",",").contains("2"));
-        assertTrue(InputsUtil.getStringsList("2,3",",") instanceof List);
+        assertNull(InputsUtil.getStringsList("", ","));
+        assertEquals(2, InputsUtil.getStringsList("2,3", ",").size());
+        Object underTestList = InputsUtil.getStringsList("2,3", ",");
+        assertNotNull(underTestList);
+        assertTrue(underTestList instanceof List);
+        assertTrue(((List) underTestList).contains("2"));
     }
 
     @Test
