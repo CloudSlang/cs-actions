@@ -165,14 +165,13 @@ public class ImageUtils {
     }
 
     private void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
-        if (set == null) {
-            return;
-        }
-        int step;
-        Iterator<String> iterator = set.iterator();
-        for (step = ONE; iterator.hasNext(); step++) {
-            String curValue = iterator.next();
-            queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
+        if (set != null) {
+            int step;
+            Iterator<String> iterator = set.iterator();
+            for (step = ONE; iterator.hasNext(); step++) {
+                String curValue = iterator.next();
+                queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
+            }
         }
     }
 
