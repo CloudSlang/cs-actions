@@ -237,44 +237,6 @@ public class AmazonComputeServiceImplTest {
         verifyNoMoreInteractions(amazonComputeServiceImplSpy);
     }
 
-    /**
-     * Test updateServer method. Positive scenario.
-     */
-    @Test
-    public void testUpdateInstanceTypeRunning() throws Exception {
-        addCommonMocksForInstanceApi();
-        whenNew(AmazonComputeServiceHelper.class).withNoArguments().thenReturn(helperMock);
-        doReturn(InstanceState.RUNNING).when(helperMock).getInstanceState(any(InstanceApi.class), anyString(), anyString());
-        doNothing().when(helperMock)
-                .stopAndWaitToStopInstance(any(InstanceApi.class), eq(InstanceState.RUNNING), anyString(), anyString(),
-                        anyLong(), anyLong());
-        doNothing().when(instanceApiMock).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-
-        Set<InstanceStateChange> instanceStateChangeSet = getInstanceStateChanges();
-
-        doReturn(instanceStateChangeSet).when(instanceApiMock).startInstancesInRegion(anyString(), anyString());
-
-        amazonComputeServiceImplSpy.updateInstanceType("us-east-1", "", "", 20000, 20000, true);
-
-        verifyMocksInteractionInstanceApi();
-        verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-    }
-
-    @Test
-    public void testUpdateInstanceType() throws Exception {
-        addCommonMocksForInstanceApi();
-        whenNew(AmazonComputeServiceHelper.class).withNoArguments().thenReturn(helperMock);
-        doReturn(InstanceState.STOPPED).when(helperMock).getInstanceState(any(InstanceApi.class), anyString(), anyString());
-        doNothing().when(instanceApiMock).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-
-        String result = amazonComputeServiceImplSpy.updateInstanceType("us-east-1", "", "", 20000, 20000, true);
-
-        verifyMocksInteractionInstanceApi();
-        verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-
-        assertEquals("Instance successfully updated.", result);
-    }
-
     @Test
     public void testDescribeInstancesInRegion() throws Exception {
         addCommonMocksForInstanceApi();

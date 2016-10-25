@@ -5,6 +5,7 @@ import io.cloudslang.content.amazon.entities.constants.Inputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SNAPSHOT_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.STANDARD;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VOLUME_TYPE;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
@@ -40,14 +42,18 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Values.O
  * 9/15/2016.
  */
 public class InstanceUtils {
+    private static final String ATTRIBUTE = "Attribute";
     private static final String CLIENT_TOKEN = "ClientToken";
     private static final String BLOCK_DEVICE_MAPPING_DEVICE_NAME = "DeviceName";
     private static final String DISABLE_API_TERMINATION = "DisableApiTermination";
     private static final String EBS_OPTIMIZED = "EbsOptimized";
+    private static final String ENA_SUPPORT = "EnaSupport";
+    private static final String GROUP_ID = "GroupId";
     private static final String IAM_INSTANCE_PROFILE_ARN = "IamInstanceProfile.Arn";
     private static final String IAM_INSTANCE_PROFILE_NAME = "IamInstanceProfile.Name";
     private static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "InstanceInitiatedShutdownBehavior";
     private static final String INSTANCE_TYPE = "InstanceType";
+    private static final String KERNEL = "Kernel";
     private static final String KERNEL_ID = "KernelId";
     private static final String KEY_NAME = "KeyName";
     private static final String MAX_COUNT = "MaxCount";
@@ -59,10 +65,51 @@ public class InstanceUtils {
     private static final String PLACEMENT_GROUP_NAME = "Placement.GroupName";
     private static final String PLACEMENT_HOST_ID = "Placement.HostId";
     private static final String PLACEMENT_TENANCY = "Placement.Tenancy";
+    private static final String RAMDISK = "Ramdisk";
     private static final String RAMDISK_ID = "RamdiskId";
+    private static final String SOURCE_DEST_CHECK = " SourceDestCheck";
+    private static final String SRIOV_NET_SUPPORT = " sriovNetSupport";
     private static final String USER_DATA = "UserData";
     private static final String VOLUME_SIZE = "VolumeSize";
     private static final String VIRTUAL_NAME = "VirtualName";
+
+    public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
+
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ATTRIBUTE, wrapper.getInstanceInputs().getAttribute(),
+                isNotBlank(wrapper.getInstanceInputs().getAttribute()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, DISABLE_API_TERMINATION + DOT + VALUE,
+                valueOf(wrapper.getInstanceInputs().isDisableApiTermination()), wrapper.getInstanceInputs().isDisableApiTermination());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, EBS_OPTIMIZED + DOT + VALUE,
+                valueOf(wrapper.getEbsInputs().isEbsOptimized()), wrapper.getEbsInputs().isEbsOptimized());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ENA_SUPPORT + DOT + VALUE,
+                valueOf(wrapper.getInstanceInputs().isEnaSupport()), wrapper.getInstanceInputs().isEnaSupport());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR + DOT + VALUE,
+                wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior(), isNotBlank(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_TYPE + DOT + VALUE, wrapper.getCustomInputs().getInstanceType(),
+                isNotBlank(wrapper.getCustomInputs().getInstanceType()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, KERNEL + DOT + VALUE, wrapper.getInstanceInputs().getKernel(),
+                isNotBlank(wrapper.getInstanceInputs().getKernel()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, RAMDISK + DOT + VALUE, wrapper.getInstanceInputs().getRamdisk(),
+                isNotBlank(wrapper.getInstanceInputs().getRamdisk()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, SOURCE_DEST_CHECK + DOT + VALUE, wrapper.getInstanceInputs().getSourceDestinationCheck(),
+                isNotBlank(wrapper.getInstanceInputs().getSourceDestinationCheck()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, SRIOV_NET_SUPPORT + DOT + VALUE, wrapper.getInstanceInputs().getSriovNetSupport(),
+                isNotBlank(wrapper.getInstanceInputs().getSriovNetSupport()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, USER_DATA + DOT + VALUE, wrapper.getInstanceInputs().getUserData(),
+                isNotBlank(wrapper.getInstanceInputs().getUserData()));
+
+        new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+                GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
+        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
+    }
 
     public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) throws Exception {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -112,10 +159,6 @@ public class InstanceUtils {
         return queryParamsMap;
     }
 
-    public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
-        return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
-    }
-
     public Map<String, String> getStartInstancesQueryParamsMap(InputsWrapper wrapper) {
         return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
@@ -148,9 +191,9 @@ public class InstanceUtils {
 
     private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         IamUtils helper = new IamUtils();
-        helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
+        helper.setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupNamesString(),
                 SECURITY_GROUP, EMPTY, wrapper.getCommonInputs().getDelimiter());
-        helper.setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+        helper.setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
     }
 
@@ -159,8 +202,8 @@ public class InstanceUtils {
         helper.setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, NETWORK_INTERFACE, wrapper.getCommonInputs().getDelimiter());
         helper.setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacePrivateIpAddress())) {
-            new IamUtils().setNetworkSecurityGroupsQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
-                    wrapper.getCommonInputs().getDelimiter());
+            new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+                    NETWORK_INTERFACE, DOT + SECURITY_GROUP_ID, wrapper.getCommonInputs().getDelimiter());
         }
     }
 
@@ -249,13 +292,5 @@ public class InstanceUtils {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
-    }
-
-    public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
-
-
-        return queryParamsMap;
     }
 }

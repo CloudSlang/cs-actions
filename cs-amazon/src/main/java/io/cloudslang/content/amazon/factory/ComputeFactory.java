@@ -34,7 +34,6 @@ public class ComputeFactory {
                 break;
             default:
                 computeService = new ComputeServiceImpl(
-                        commonInputs.getProvider(),
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),
                         commonInputs.getCredential(),
