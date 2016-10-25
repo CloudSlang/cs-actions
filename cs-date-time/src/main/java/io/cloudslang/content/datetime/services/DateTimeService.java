@@ -52,9 +52,11 @@ public class DateTimeService {
         } else {
             formatter = DateTimeFormat.longDateTime();
         }
+
         if (isNotBlank(timezone)) {
             formatter = formatter.withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone(timezone)));
         }
+
         if (isNotBlank(localeLang)) {
             formatter = formatter.withLocale(DateTimeUtils.getLocaleByCountry(localeLang, localeCountry));
         }
