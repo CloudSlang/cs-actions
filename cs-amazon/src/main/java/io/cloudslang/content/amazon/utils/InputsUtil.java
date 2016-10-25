@@ -2,6 +2,7 @@ package io.cloudslang.content.amazon.utils;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import org.apache.commons.validator.routines.InetAddressValidator;
+import org.jetbrains.annotations.Contract;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -281,7 +282,7 @@ public final class InputsUtil {
     }
 
     public static String getValidIPv4Address(String input) {
-        if (isNotBlank(input) && !isValidIPv4Address(input)) {
+        if (isNotBlank(input) && !new InetAddressValidator().isValidInet4Address(input)) {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid IPv4 address.");
         }
         return input;
@@ -381,10 +382,6 @@ public final class InputsUtil {
                 currentArray[index], currentArray.length > START_INDEX);
     }
 
-    private static boolean isValidIPv4Address(String input) {
-        return new InetAddressValidator().isValidInet4Address(input);
-    }
-
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {
         if (!isInt(input)) {
             throw new RuntimeException(noIntError);
@@ -406,14 +403,15 @@ public final class InputsUtil {
         return true;
     }
 
+    private static boolean isTrueOrFalse(String input) {
+        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
+    }
+
+    @Contract(pure = true)
     private static String getValidationException(String input, boolean invalid) {
         if (invalid) {
             return "The provided value: " + input + " input must be integer.";
         }
         return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
-    }
-
-    private static boolean isTrueOrFalse(String input) {
-        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
     }
 }
