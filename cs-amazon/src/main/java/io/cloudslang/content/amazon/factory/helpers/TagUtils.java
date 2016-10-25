@@ -31,10 +31,8 @@ public class TagUtils {
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
 
-        String[] resourceIdsArray = InputsUtil.getStringsArray(wrapper.getCustomInputs().getResourceIdsString(),
-                EMPTY, wrapper.getCommonInputs().getDelimiter());
-        InputsUtil.validateArrayAgainstDuplicateElements(resourceIdsArray, wrapper.getCustomInputs().getResourceIdsString(),
-                wrapper.getCommonInputs().getDelimiter(), RESOURCE_IDS_STRING);
+        String[] resourceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getResourceIdsString(),
+                RESOURCE_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
 
         if (resourceIdsArray != null && resourceIdsArray.length > START_INDEX) {
             for (int index = START_INDEX; index < resourceIdsArray.length; index++) {

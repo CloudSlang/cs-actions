@@ -48,7 +48,7 @@ public class QueryApiExecutor {
     }
 
     private void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
-        String queryParamsString = InputsUtil.getParamsString(queryParamsMap, EQUAL, AMPERSAND);
+        String queryParamsString = InputsUtil.getHeadersOrParamsString(queryParamsMap, EQUAL, AMPERSAND, true);
         inputs.getHttpClientInputs().setQueryParams(queryParamsString);
     }
 }
