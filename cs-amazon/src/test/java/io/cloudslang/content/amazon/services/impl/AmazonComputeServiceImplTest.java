@@ -354,7 +354,7 @@ public class AmazonComputeServiceImplTest {
                 .build();
     }
 
-    private CommonInputs getCommonInputs() throws Exception {
+    private CommonInputs getCommonInputs() {
         return new CommonInputs.Builder().withDebugMode("TrUe").withDelimiter(",").build();
     }
 }

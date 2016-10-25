@@ -1,4 +1,4 @@
-package io.cloudslang.content.amazon.execute.queries;
+package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
