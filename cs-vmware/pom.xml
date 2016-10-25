@@ -62,11 +62,11 @@
         </dependency>
 
         <dependency>
-        <groupId>com.vmware</groupId>
-        <artifactId>vim25</artifactId>
-        <version>1.0</version>
-        <scope>system</scope>
-        <systemPath>${vmware_path}vim25-1.0.jar</systemPath>
+            <groupId>com.vmware</groupId>
+            <artifactId>vim25</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${vmware_path}vim25-1.0.jar</systemPath>
         </dependency>
 
         <dependency>
