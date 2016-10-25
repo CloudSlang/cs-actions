@@ -24,15 +24,10 @@ import java.util.Set;
 public class AmazonComputeServiceImpl extends JCloudsService implements ComputeService {
     EC2Api ec2Api = null;
 
-    protected String region;
+    String region;
 
     public AmazonComputeServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
-    }
-
-    protected void init(boolean isDebugMode) {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
-        ec2Api = new FiltersHelper().getEC2Api(contextBuilder);
     }
 
     @Override
@@ -57,6 +52,11 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
         populateNodesSet(instancesInRegion, nodesSet);
 
         return nodesSet;
+    }
+
+    void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
+        ec2Api = new FiltersHelper().getEC2Api(contextBuilder);
     }
 
     void lazyInit(String region, boolean isDebugMode) {

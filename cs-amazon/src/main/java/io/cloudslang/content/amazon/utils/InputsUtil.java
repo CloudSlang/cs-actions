@@ -46,6 +46,7 @@ import static java.util.regex.Pattern.quote;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
+import static java.lang.String.valueOf;
 
 /**
  * Created by Mihai Tusa.
@@ -132,13 +133,6 @@ public final class InputsUtil {
         return new ArrayList<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
     }
 
-    public static Set<String> getStringsSet(String input, String delimiter) {
-        if (isBlank(input)) {
-            return null;
-        }
-        return new HashSet<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
-    }
-
     public static String getDefaultStringInput(String input, String defaultValue) {
         return isBlank(input) ? defaultValue : input;
     }
@@ -199,7 +193,7 @@ public final class InputsUtil {
             setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DEVICE_INDEX, DEVICE_INDEX, wrapper.getCommonInputs().getDelimiter(), index);
         } else {
-            queryParamsMap.put(NETWORK_INTERFACE + DOT + String.valueOf(index + ONE) + DOT + DEVICE_INDEX, String.valueOf(index));
+            queryParamsMap.put(NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + DEVICE_INDEX, valueOf(index));
         }
 
     }
@@ -222,21 +216,6 @@ public final class InputsUtil {
         return (enforcedBoolean) ? isTrueOrFalse(input) == Boolean.parseBoolean(input) : Boolean.parseBoolean(input);
     }
 
-    public static long getValidLong(String input, long defaultValue) {
-        if (isBlank(input)) {
-            return defaultValue;
-        }
-        try {
-            long longInput = Long.parseLong(input);
-            if (longInput < START_INDEX) {
-                throw new RuntimeException("Incorrect provided value: " + input + ". Valid values are positive longs.");
-            }
-            return longInput;
-        } catch (NumberFormatException nfe) {
-            throw new RuntimeException("The provided value: " + input + " input must be long.");
-        }
-    }
-
     public static int getValidInstancesCount(String input) {
         return isBlank(input) ? MINIMUM_INSTANCES_NUMBER :
                 getValidInt(input, MINIMUM_INSTANCES_NUMBER, MAXIMUM_INSTANCES_NUMBER, getValidationException(input, true),
@@ -244,8 +223,7 @@ public final class InputsUtil {
     }
 
     public static String getRelevantBooleanString(String input) {
-        if (isNotBlank(input)
-                && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
+        if (isNotBlank(input) && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
             return input.toLowerCase();
         }
         return NOT_RELEVANT;
@@ -261,7 +239,7 @@ public final class InputsUtil {
                 throw new RuntimeException("Incorrect provided value: " + input + ". Valid values are positive floats " +
                         "between 0.5f and 16000.0f.");
             }
-            return String.valueOf(floatInput);
+            return valueOf(floatInput);
         } catch (NumberFormatException nfe) {
             throw new RuntimeException("The provided value: " + input + " input must be float.");
         }
@@ -290,26 +268,26 @@ public final class InputsUtil {
 
     public static String getQueryParamsSpecificString(String specificArea, int index) {
         if (NETWORK.equalsIgnoreCase(specificArea)) {
-            return PRIVATE_IP_ADDRESSES + DOT + String.valueOf(index + ONE) + DOT;
+            return PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
-            return BLOCK_DEVICE_MAPPING + DOT + String.valueOf(index + ONE) + DOT;
+            return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT;
         } else if (EBS.equalsIgnoreCase(specificArea)) {
-            return BLOCK_DEVICE_MAPPING + DOT + String.valueOf(index + ONE) + DOT + EBS + DOT;
+            return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT + EBS + DOT;
         } else if (NAME.equalsIgnoreCase(specificArea)) {
-            return FILTER + DOT + String.valueOf(index + ONE) + DOT + NAME;
+            return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
-            return NETWORK_INTERFACE + DOT + String.valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
-                    String.valueOf(index + ONE) + DOT;
+            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
+                    valueOf(index + ONE) + DOT;
         } else if (RESOURCE_ID.equalsIgnoreCase(specificArea)) {
-            return RESOURCE_ID + DOT + String.valueOf(index + ONE);
+            return RESOURCE_ID + DOT + valueOf(index + ONE);
         } else if (KEY.equalsIgnoreCase(specificArea)) {
-            return TAG + DOT + String.valueOf(index + ONE) + DOT + KEY;
+            return TAG + DOT + valueOf(index + ONE) + DOT + KEY;
         } else if (VALUE.equalsIgnoreCase(specificArea)) {
-            return TAG + DOT + String.valueOf(index + ONE) + DOT + VALUE;
+            return TAG + DOT + valueOf(index + ONE) + DOT + VALUE;
         } else if (VALUES.equalsIgnoreCase(specificArea)) {
-            return FILTER + DOT + String.valueOf(index + ONE) + DOT + VALUE;
+            return FILTER + DOT + valueOf(index + ONE) + DOT + VALUE;
         } else if (REGION_NAME.equalsIgnoreCase(specificArea)) {
-            return REGION_NAME + DOT + String.valueOf(index + ONE);
+            return REGION_NAME + DOT + valueOf(index + ONE);
         } else {
             return EMPTY;
         }
@@ -328,43 +306,64 @@ public final class InputsUtil {
         }
         switch (ebsType) {
             case STANDARD:
-                return (isBlank(input)) ? String.valueOf(ONE) :
-                        String.valueOf(getValidInt(input, ONE, MAXIMUM_STANDARD_EBS_SIZE,
+                return (isBlank(input)) ? valueOf(ONE) :
+                        valueOf(getValidInt(input, ONE, MAXIMUM_STANDARD_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case IO1:
-                return isBlank(input) ? String.valueOf(MINIMUM_IO1_EBS_SIZE) :
-                        String.valueOf(getValidInt(input, MINIMUM_IO1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                return isBlank(input) ? valueOf(MINIMUM_IO1_EBS_SIZE) :
+                        valueOf(getValidInt(input, MINIMUM_IO1_EBS_SIZE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case GP2:
-                return isBlank(input) ? String.valueOf(ONE) :
-                        String.valueOf(getValidInt(input, ONE, MAXIMUM_EBS_SIZE,
+                return isBlank(input) ? valueOf(ONE) :
+                        valueOf(getValidInt(input, ONE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case SC1:
-                return isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
-                        String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                return isBlank(input) ? valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                        valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             case ST1:
-                return isBlank(input) ? String.valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
-                        String.valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
+                return isBlank(input) ? valueOf(MINIMUM_SC1_AND_ST1_EBS_SIZE) :
+                        valueOf(getValidInt(input, MINIMUM_SC1_AND_ST1_EBS_SIZE, MAXIMUM_EBS_SIZE,
                                 getValidationException(input, true), getValidationException(input, false)));
             default:
-                return String.valueOf(getValidInt(input, ONE, MAXIMUM_STANDARD_EBS_SIZE,
+                return valueOf(getValidInt(input, ONE, MAXIMUM_STANDARD_EBS_SIZE,
                         getValidationException(input, true), getValidationException(input, false)));
         }
     }
 
     public static String getValidPositiveIntegerAsStringValue(String input, int minimumValue) {
-        return isBlank(input) ? EMPTY :
-                String.valueOf(getValidInt(input, minimumValue, Integer.MAX_VALUE,
-                        getValidationException(input, true), getValidationException(input, false)));
+        return isBlank(input) ? EMPTY : valueOf(getValidInt(input, minimumValue, Integer.MAX_VALUE,
+                getValidationException(input, true), getValidationException(input, false)));
 
+    }
+
+    static long getValidLong(String input, long defaultValue) {
+        if (isBlank(input)) {
+            return defaultValue;
+        }
+        try {
+            long longInput = Long.parseLong(input);
+            if (longInput < START_INDEX) {
+                throw new RuntimeException("Incorrect provided value: " + input + ". Valid values are positive longs.");
+            }
+            return longInput;
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException("The provided value: " + input + " input must be long.");
+        }
+    }
+
+    private static Set<String> getStringsSet(String input, String delimiter) {
+        if (isBlank(input)) {
+            return null;
+        }
+        return new HashSet<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
     }
 
     private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray, String inputString,
                                                    String referenceInputName, String currentInputName, String suffix, String delimiter,
                                                    int index) {
         String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
-        setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + String.valueOf(index + ONE) + DOT + suffix,
+        setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 currentArray[index], currentArray.length > START_INDEX);
     }
 
@@ -372,8 +371,8 @@ public final class InputsUtil {
                                                      String inputString, String referenceInputName, String currentInputName,
                                                      String suffix, String delimiter, int index, boolean enforcedBoolean) {
         String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
-        setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + String.valueOf(index + ONE) + DOT + suffix,
-                String.valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)), currentArray.length > START_INDEX);
+        setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
+                valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)), currentArray.length > START_INDEX);
     }
 
     private static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,

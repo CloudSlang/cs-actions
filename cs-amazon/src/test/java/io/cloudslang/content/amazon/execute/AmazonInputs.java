@@ -6,7 +6,7 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 /**
  * Created by persdana on 7/13/2015.
  */
-public class AmazonInputs {
+class AmazonInputs {
     private static final String PROVIDER = "amazon";
     private static final String IDENTITY = "AKIAIQHVQ4UM7SOXXXXXX";
     private static final String CREDENTIAL = "AKIAIQHVQ4UM7SOXXXXXX";

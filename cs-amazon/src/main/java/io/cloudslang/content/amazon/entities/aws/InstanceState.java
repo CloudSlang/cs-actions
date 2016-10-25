@@ -21,7 +21,7 @@ public enum InstanceState {
         this.key = key;
     }
 
-    public Integer getKey() {
+    private Integer getKey() {
         return key;
     }
 

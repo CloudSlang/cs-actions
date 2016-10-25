@@ -4,8 +4,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 
-import java.util.Set;
-
 /**
  * Created by Mihai Tusa.
  * 2/23/2016.
