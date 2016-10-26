@@ -200,9 +200,9 @@ public class RunInstancesAction {
      *                                                  Default: ""
      * @param deleteOnTerminationsString                Optional - String that contains one or more values that indicates
      *                                                  whether a specific EBS volume will be deleted on instance termination.
-     *                                                  Example: For a third EBS device (from existing 5 devices), that should
-     *                                                  not be terminated when the attached instance will be, the string will
-     *                                                  value of "true" will be considered for all EBS specified devices.
+     *                                                  Example: For a second EBS device (from existing 4 devices), that
+     *                                                  should be deleted, the string will be: "false,true,false,false".
+     *                                                  Valid values: "true", "false"
      *                                                  Default: ""
      * @param ebsOptimized                              Optional - Indicates whether the instance is optimized for EBS I/O.
      *                                                  This optimization provides dedicated throughput to Amazon EBS and an

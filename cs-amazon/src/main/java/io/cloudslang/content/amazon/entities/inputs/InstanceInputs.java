@@ -15,6 +15,7 @@ public class InstanceInputs {
 
     private String affinity;
     private String attribute;
+    private String attributeValue;
     private String clientToken;
     private String dnsName;
     private String groupName;
@@ -59,6 +60,7 @@ public class InstanceInputs {
 
         this.affinity = builder.affinity;
         this.attribute = builder.attribute;
+        this.attributeValue = builder.attributeValue;
         this.clientToken = builder.clientToken;
         this.dnsName = builder.dnsName;
         this.groupName = builder.groupName;
@@ -112,6 +114,10 @@ public class InstanceInputs {
 
     public String getAttribute() {
         return attribute;
+    }
+
+    public String getAttributeValue() {
+        return attributeValue;
     }
 
     public String getClientToken() {
@@ -260,6 +266,7 @@ public class InstanceInputs {
 
         private String affinity;
         private String attribute;
+        private String attributeValue;
         private String clientToken;
         private String dnsName;
         private String groupName;
@@ -319,6 +326,11 @@ public class InstanceInputs {
 
         public Builder withAttribute(String inputValue) {
             attribute = Attribute.getAttribute(inputValue);
+            return this;
+        }
+
+        public Builder withAttributeValue(String inputValue) {
+            attributeValue = inputValue;
             return this;
         }
 
@@ -387,7 +399,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withMonitoringState(String inputValue) throws Exception {
+        public Builder withMonitoringState(String inputValue) {
             monitoringState = MonitoringState.getValue(inputValue);
             return this;
         }
@@ -427,7 +439,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withTenancy(String inputValue) throws Exception {
+        public Builder withTenancy(String inputValue) {
             tenancy = Tenancy.getValue(inputValue);
             return this;
         }
@@ -442,7 +454,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withInstanceInitiatedShutdownBehavior(String inputValue) throws Exception {
+        public Builder withInstanceInitiatedShutdownBehavior(String inputValue) {
             instanceInitiatedShutdownBehavior = InstanceInitiatedShutdownBehavior.getValue(inputValue);
             return this;
         }

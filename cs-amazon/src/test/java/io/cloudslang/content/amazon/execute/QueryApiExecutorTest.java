@@ -25,7 +25,6 @@ import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 

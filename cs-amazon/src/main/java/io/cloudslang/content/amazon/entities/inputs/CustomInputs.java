@@ -461,7 +461,7 @@ public class CustomInputs {
             return this;
         }
 
-        public Builder withVolumeType(String inputValue) throws Exception {
+        public Builder withVolumeType(String inputValue) {
             volumeType = VolumeType.getValue(inputValue);
             return this;
         }
@@ -486,7 +486,7 @@ public class CustomInputs {
             return this;
         }
 
-        public Builder withProductCodeType(String inputValue) throws Exception {
+        public Builder withProductCodeType(String inputValue) {
             productCodeType = ProductCodeType.getValue(inputValue);
             return this;
         }
@@ -521,7 +521,7 @@ public class CustomInputs {
             return this;
         }
 
-        public Builder withVirtualizationType(String inputValue) throws Exception {
+        public Builder withVirtualizationType(String inputValue) {
             virtualizationType = VirtualizationType.getValue(inputValue);
             return this;
         }
