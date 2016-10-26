@@ -85,8 +85,10 @@ public class Inputs {
         public static final String BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING = "blockDeviceMappingVirtualNamesString";
         public static final String DELETE_ON_TERMINATIONS_STRING = "deleteOnTerminationsString";
         public static final String ENCRYPTED_STRING = "encryptedString";
+        public static final String NO_DEVICES_STRING = "noDevicesString";
         public static final String IOPS_STRING = "iopsString";
         public static final String SNAPSHOT_IDS_STRING = "snapshotIdsString";
+        public static final String VOLUME_IDS_STRING = "volumeIdsString";
         public static final String VOLUME_SIZES_STRING = "volumeSizesString";
         public static final String VOLUME_TYPES_STRING = "volumeTypesString";
     }
@@ -119,6 +121,7 @@ public class Inputs {
         public static final String AFFINITY = "affinity";
         public static final String ATTACH_TIME = "attachTime";
         public static final String ATTRIBUTE = "attribute";
+        public static final String ATTRIBUTE_VALUE = "attributeValue";
         public static final String CLIENT_TOKEN = "clientToken";
         public static final String DISABLE_API_TERMINATION = "disableApiTermination";
         public static final String DNS_NAME = "dnsName";

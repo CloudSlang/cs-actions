@@ -337,7 +337,7 @@ public class AmazonComputeServiceImplTest {
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
     }
 
-    private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) throws Exception {
+    private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) {
         CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(REGION)
                 .withKeyTagsString(tagKeys)
