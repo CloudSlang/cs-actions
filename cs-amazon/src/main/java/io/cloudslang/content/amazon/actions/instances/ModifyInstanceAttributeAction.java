@@ -57,7 +57,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApi
  * Created by TusaM
  * 10/24/2016.
  */
-public class ModifyInstanceAttribute {
+public class ModifyInstanceAttributeAction {
     /**
      * Modifies the specified attribute of the specified instance.
      * Note: You can specify only one attribute at a time. To modify some attributes, the instance must be stopped.
@@ -220,36 +220,36 @@ public class ModifyInstanceAttribute {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> modifyInstanceAttributeAction(@Param(value = ENDPOINT, required = true) String endpoint,
-                                                             @Param(value = IDENTITY, required = true) String identity,
-                                                             @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
-                                                             @Param(value = PROXY_HOST) String proxyHost,
-                                                             @Param(value = PROXY_PORT) String proxyPort,
-                                                             @Param(value = PROXY_USERNAME) String proxyUsername,
-                                                             @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
-                                                             @Param(value = HEADERS) String headers,
-                                                             @Param(value = QUERY_PARAMS) String queryParams,
-                                                             @Param(value = VERSION, required = true) String version,
-                                                             @Param(value = DELIMITER) String delimiter,
-                                                             @Param(value = ATTRIBUTE) String attribute,
-                                                             @Param(value = ATTRIBUTE_VALUE) String attributeValue,
-                                                             @Param(value = BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING) String blockDeviceMappingDeviceNamesString,
-                                                             @Param(value = BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING) String blockDeviceMappingVirtualNamesString,
-                                                             @Param(value = DELETE_ON_TERMINATIONS_STRING) String deleteOnTerminationsString,
-                                                             @Param(value = VOLUME_IDS_STRING) String volumeIdsString,
-                                                             @Param(value = NO_DEVICES_STRING) String noDevicesString,
-                                                             @Param(value = DISABLE_API_TERMINATION) String disableApiTermination,
-                                                             @Param(value = EBS_OPTIMIZED) String ebsOptimized,
-                                                             @Param(value = ENA_SUPPORT) String enaSupport,
-                                                             @Param(value = SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
-                                                             @Param(value = INSTANCE_ID, required = true) String instanceId,
-                                                             @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
-                                                             @Param(value = INSTANCE_TYPE) String instanceType,
-                                                             @Param(value = KERNEL) String kernel,
-                                                             @Param(value = RAMDISK) String ramdisk,
-                                                             @Param(value = SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
-                                                             @Param(value = SRIOV_NET_SUPPORT) String sriovNetSupport,
-                                                             @Param(value = USER_DATA) String userData) {
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+                                       @Param(value = IDENTITY, required = true) String identity,
+                                       @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = HEADERS) String headers,
+                                       @Param(value = QUERY_PARAMS) String queryParams,
+                                       @Param(value = VERSION, required = true) String version,
+                                       @Param(value = DELIMITER) String delimiter,
+                                       @Param(value = ATTRIBUTE) String attribute,
+                                       @Param(value = ATTRIBUTE_VALUE) String attributeValue,
+                                       @Param(value = BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING) String blockDeviceMappingDeviceNamesString,
+                                       @Param(value = BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING) String blockDeviceMappingVirtualNamesString,
+                                       @Param(value = DELETE_ON_TERMINATIONS_STRING) String deleteOnTerminationsString,
+                                       @Param(value = VOLUME_IDS_STRING) String volumeIdsString,
+                                       @Param(value = NO_DEVICES_STRING) String noDevicesString,
+                                       @Param(value = DISABLE_API_TERMINATION) String disableApiTermination,
+                                       @Param(value = EBS_OPTIMIZED) String ebsOptimized,
+                                       @Param(value = ENA_SUPPORT) String enaSupport,
+                                       @Param(value = SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
+                                       @Param(value = INSTANCE_ID, required = true) String instanceId,
+                                       @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
+                                       @Param(value = INSTANCE_TYPE) String instanceType,
+                                       @Param(value = KERNEL) String kernel,
+                                       @Param(value = RAMDISK) String ramdisk,
+                                       @Param(value = SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
+                                       @Param(value = SRIOV_NET_SUPPORT) String sriovNetSupport,
+                                       @Param(value = USER_DATA) String userData) {
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)

@@ -1,5 +1,8 @@
 package io.cloudslang.content.amazon.entities.aws;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
+
 /**
  * Created by TusaM
  * 10/24/2016.
@@ -31,9 +34,13 @@ public enum Attribute {
     }
 
     public static String getAttribute(String input) {
-        for (InstanceType type : InstanceType.values()) {
-            if (type.getValue().equalsIgnoreCase(input)) {
-                return type.getValue();
+        if (isBlank(input)) {
+            return NOT_RELEVANT;
+        }
+
+        for (Attribute attribute : Attribute.values()) {
+            if (attribute.getValue().equalsIgnoreCase(input)) {
+                return attribute.getValue();
             }
         }
 

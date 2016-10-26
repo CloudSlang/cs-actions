@@ -1,5 +1,7 @@
 package io.cloudslang.content.amazon.factory.helpers;
 
+import io.cloudslang.content.amazon.entities.aws.InstanceInitiatedShutdownBehavior;
+import io.cloudslang.content.amazon.entities.aws.InstanceType;
 import io.cloudslang.content.amazon.entities.aws.VolumeType;
 import io.cloudslang.content.amazon.entities.constants.Inputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
@@ -75,13 +77,13 @@ public class InstanceUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
+        setAttribute(queryParamsMap, wrapper.getInstanceInputs().getAttribute());
         new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
         setModifyInstanceAttributeEbsSpecs(queryParamsMap, wrapper);
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, ATTRIBUTE, wrapper.getInstanceInputs().getAttribute(),
-                isNotBlank(wrapper.getInstanceInputs().getAttribute()));
-        setOptionalAttributeValue(queryParamsMap, wrapper.getInstanceInputs().getAttributeValue());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, VALUE, wrapper.getInstanceInputs().getAttributeValue(),
+                isNotBlank(wrapper.getInstanceInputs().getAttributeValue()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, DISABLE_API_TERMINATION + DOT + VALUE,
                 valueOf(wrapper.getInstanceInputs().isDisableApiTermination()), wrapper.getInstanceInputs().isDisableApiTermination());
         InputsUtil.setOptionalMapEntry(queryParamsMap, EBS_OPTIMIZED + DOT + VALUE,
@@ -89,15 +91,18 @@ public class InstanceUtils {
         InputsUtil.setOptionalMapEntry(queryParamsMap, ENA_SUPPORT + DOT + VALUE,
                 valueOf(wrapper.getInstanceInputs().isEnaSupport()), wrapper.getInstanceInputs().isEnaSupport());
         InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR + DOT + VALUE,
-                wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior(), isNotBlank(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()));
+                wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior(),
+                (isNotBlank(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()))
+                        && !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_TYPE + DOT + VALUE, wrapper.getCustomInputs().getInstanceType(),
-                isNotBlank(wrapper.getCustomInputs().getInstanceType()));
+                (isNotBlank(wrapper.getCustomInputs().getInstanceType())
+                        && !NOT_RELEVANT.equalsIgnoreCase(wrapper.getCustomInputs().getInstanceType())));
         InputsUtil.setOptionalMapEntry(queryParamsMap, KERNEL + DOT + VALUE, wrapper.getInstanceInputs().getKernel(),
                 isNotBlank(wrapper.getInstanceInputs().getKernel()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, RAMDISK + DOT + VALUE, wrapper.getInstanceInputs().getRamdisk(),
                 isNotBlank(wrapper.getInstanceInputs().getRamdisk()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, SOURCE_DEST_CHECK + DOT + VALUE, wrapper.getInstanceInputs().getSourceDestinationCheck(),
-                isNotBlank(wrapper.getInstanceInputs().getSourceDestinationCheck()));
+                (isNotBlank(wrapper.getInstanceInputs().getSourceDestinationCheck()) && !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getSourceDestinationCheck())));
         InputsUtil.setOptionalMapEntry(queryParamsMap, SRIOV_NET_SUPPORT + DOT + VALUE, wrapper.getInstanceInputs().getSriovNetSupport(),
                 isNotBlank(wrapper.getInstanceInputs().getSriovNetSupport()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, USER_DATA + DOT + VALUE, wrapper.getInstanceInputs().getUserData(),
@@ -162,11 +167,18 @@ public class InstanceUtils {
         queryParamsMap.put(DISABLE_API_TERMINATION, valueOf(wrapper.getInstanceInputs().isDisableApiTermination()));
         queryParamsMap.put(EBS_OPTIMIZED, valueOf(wrapper.getEbsInputs().isEbsOptimized()));
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
-        queryParamsMap.put(INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR, wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior());
-        queryParamsMap.put(INSTANCE_TYPE, wrapper.getCustomInputs().getInstanceType());
         queryParamsMap.put(MAX_COUNT, valueOf(wrapper.getInstanceInputs().getMaxCount()));
         queryParamsMap.put(MIN_COUNT, valueOf(wrapper.getInstanceInputs().getMinCount()));
         queryParamsMap.put(MONITORING_ENABLED, valueOf(wrapper.getInstanceInputs().isMonitoring()));
+
+        String instanceType = NOT_RELEVANT.equalsIgnoreCase(wrapper.getCustomInputs().getInstanceType()) ?
+                InstanceType.M1_SMALL.name().toLowerCase() : InstanceType.getInstanceType(wrapper.getCustomInputs().getInstanceType());
+        queryParamsMap.put(INSTANCE_TYPE, instanceType);
+
+        String iisbvalue = NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()) ?
+                InstanceInitiatedShutdownBehavior.STOP.name().toLowerCase() :
+                InstanceInitiatedShutdownBehavior.getValue(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior());
+        queryParamsMap.put(INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR, iisbvalue);
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, CLIENT_TOKEN, wrapper.getInstanceInputs().getClientToken(),
                 isNotBlank(wrapper.getInstanceInputs().getClientToken()));
@@ -338,19 +350,16 @@ public class InstanceUtils {
         return Boolean.FALSE;
     }
 
-    private void setOptionalAttributeValue(Map<String, String> queryParamsMap, String attributeValue) {
-        List<String> validAttributesForValueList = Arrays.asList(Inputs.InstanceInputs.KERNEL, Inputs.InstanceInputs.RAMDISK,
-                Inputs.InstanceInputs.USER_DATA, Inputs.InstanceInputs.DISABLE_API_TERMINATION, Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR);
+    private void setAttribute(Map<String, String> queryParamsMap, String attribute) {
+        List<String> validAttributesList = Arrays.asList(Inputs.InstanceInputs.KERNEL, Inputs.InstanceInputs.RAMDISK,
+                Inputs.InstanceInputs.USER_DATA, Inputs.InstanceInputs.DISABLE_API_TERMINATION,
+                Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR);
 
-        validateAttributeValueUsage(queryParamsMap, validAttributesForValueList, attributeValue);
-        InputsUtil.setOptionalMapEntry(queryParamsMap, VALUE, attributeValue, isNotBlank(attributeValue));
-    }
-
-    private void validateAttributeValueUsage(Map<String, String> queryParamsMap, List<String> validAttributesForValueList, String attributeValue) {
-        if (queryParamsMap.containsKey(ATTRIBUTE) && isNotBlank(attributeValue) && !validAttributesForValueList.contains(attributeValue)) {
-            throw new RuntimeException("The: [" + attributeValue + "] value cannot be supplied unless the attribute input " +
-                    "value is set to one of the following values: \"kernel\", \"ramdisk\", \"userData\", \"disableApiTermination\", " +
-                    "\"instanceInitiatedShutdownBehavior\"");
+        if (isNotBlank(attribute) && !NOT_RELEVANT.equalsIgnoreCase(attribute) && !validAttributesList.contains(attribute)) {
+            throw new RuntimeException("Unsupported attribute: [" + attribute + "]. " +
+                    "Valid values: | kernel | ramdisk | userData | disableApiTermination | instanceInitiatedShutdownBehavior |");
         }
+
+        InputsUtil.setOptionalMapEntry(queryParamsMap, ATTRIBUTE, attribute, !NOT_RELEVANT.equalsIgnoreCase(attribute));
     }
 }
