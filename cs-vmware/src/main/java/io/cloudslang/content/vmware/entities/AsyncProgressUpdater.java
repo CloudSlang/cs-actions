@@ -2,17 +2,10 @@ package io.cloudslang.content.vmware.entities;
 
 import com.vmware.vim25.ManagedObjectReference;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static java.lang.Thread.sleep;
 
-/**
- * Created by giloan on 10/5/2016.
- */
 public class AsyncProgressUpdater extends ProgressUpdater {
-
-    final private Logger logger = LoggerFactory.getLogger(AsyncProgressUpdater.class);
 
     public AsyncProgressUpdater(long totalNoBytes, ManagedObjectReference httpNfcLease, ConnectionResources connectionResources) {
         super(totalNoBytes, httpNfcLease, connectionResources);
@@ -37,7 +30,7 @@ public class AsyncProgressUpdater extends ProgressUpdater {
             }
             updateProgressCompleted();
         } catch (Exception e) {
-            //TODO: log maybe
+            //TODO: log when a logging system is adopted for content
         }
     }
 }
