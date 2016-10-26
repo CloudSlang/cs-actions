@@ -3,6 +3,8 @@ package io.cloudslang.content.amazon.entities.inputs;
 import io.cloudslang.content.amazon.entities.aws.*;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
+import static java.lang.String.valueOf;
+
 /**
  * Created by Mihai Tusa.
  * 6/1/2016.
@@ -346,7 +348,7 @@ public class InstanceInputs {
         }
 
         public Builder withInstanceStateCode(String inputValue) {
-            instanceStateCode = String.valueOf(InputsUtil.getValidInstanceStateCode(inputValue));
+            instanceStateCode = valueOf(InstanceState.getKey(inputValue));
             return this;
         }
 

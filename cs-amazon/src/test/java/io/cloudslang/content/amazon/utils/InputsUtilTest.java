@@ -1,5 +1,6 @@
 package io.cloudslang.content.amazon.utils;
 
+import io.cloudslang.content.amazon.entities.aws.InstanceState;
 import io.cloudslang.content.amazon.services.impl.MockingHelper;
 import org.junit.Rule;
 import org.junit.Test;
@@ -107,14 +108,14 @@ public class InputsUtilTest {
 
     @Test
     public void getValidInstanceStateInvalid() {
-        int testedValue = InputsUtil.getValidInstanceStateCode("");
+        int testedValue = InstanceState.getKey("");
 
         assertEquals(-1, testedValue);
     }
 
     @Test
     public void getValidInstanceState() {
-        int testedValue = InputsUtil.getValidInstanceStateCode("running");
+        int testedValue = InstanceState.getKey("running");
 
         assertEquals(16, testedValue);
     }

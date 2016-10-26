@@ -1,4 +1,4 @@
-package io.cloudslang.content.amazon.execute.queries;
+package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -363,8 +363,7 @@ public class QueryApiExecutorTest {
         verifyNoMoreInteractions(csHttpClientMock);
     }
 
-    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString)
-            throws MalformedURLException {
+    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString) {
         return new CommonInputs.Builder()
                 .withAction(action)
                 .withHeaders(headersString)
@@ -422,7 +421,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) throws Exception {
+    private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) {
         if (withNetworkInterfaceId) {
             return new NetworkInputs.Builder()
                     .withDeviceIndex("25")

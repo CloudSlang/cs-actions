@@ -64,6 +64,7 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
         init(isDebugMode);
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private InstanceApi getEC2InstanceApi(String region, boolean isDebugMode, boolean isForRegion) {
         lazyInit(region, isDebugMode);
         return isForRegion ? ec2Api.getInstanceApiForRegion(region).get() : ec2Api.getInstanceApi().get();

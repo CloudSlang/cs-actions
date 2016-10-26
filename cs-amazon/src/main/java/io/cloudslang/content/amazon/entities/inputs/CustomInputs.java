@@ -476,12 +476,12 @@ public class CustomInputs {
             return this;
         }
 
-        public Builder withPlatform(String inputValue) throws Exception {
+        public Builder withPlatform(String inputValue) {
             platform = Platform.getValue(inputValue);
             return this;
         }
 
-        public Builder withProductCode(String inputValue) throws Exception {
+        public Builder withProductCode(String inputValue) {
             productCode = inputValue;
             return this;
         }
@@ -491,32 +491,32 @@ public class CustomInputs {
             return this;
         }
 
-        public Builder withRootDeviceName(String inputValue) throws Exception {
+        public Builder withRootDeviceName(String inputValue) {
             rootDeviceName = inputValue;
             return this;
         }
 
-        public Builder withRootDeviceType(String inputValue) throws Exception {
+        public Builder withRootDeviceType(String inputValue) {
             rootDeviceType = RootDeviceType.getValue(inputValue);
             return this;
         }
 
-        public Builder withStateReasonCode(String inputValue) throws Exception {
+        public Builder withStateReasonCode(String inputValue) {
             stateReasonCode = inputValue;
             return this;
         }
 
-        public Builder withStateReasonMessage(String inputValue) throws Exception {
+        public Builder withStateReasonMessage(String inputValue) {
             stateReasonMessage = inputValue;
             return this;
         }
 
-        public Builder withKeyTagsString(String inputValue) throws Exception {
+        public Builder withKeyTagsString(String inputValue) {
             keyTagsString = inputValue;
             return this;
         }
 
-        public Builder withValueTagsString(String inputValue) throws Exception {
+        public Builder withValueTagsString(String inputValue) {
             valueTagsString = inputValue;
             return this;
         }

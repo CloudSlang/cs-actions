@@ -1,8 +1,8 @@
 package io.cloudslang.content.amazon.utils;
 
-import io.cloudslang.content.amazon.entities.aws.InstanceState;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import org.apache.commons.validator.routines.InetAddressValidator;
+import org.jetbrains.annotations.Contract;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,6 +41,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
+
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.quote;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -108,15 +109,18 @@ public final class InputsUtil {
         return endpoint;
     }
 
-    public static String getParamsString(Map<String, String> paramsMap, String separator, String suffix) {
+    public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
+        for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
             sb.append(entry.getKey());
             sb.append(separator);
             sb.append(entry.getValue());
             sb.append(suffix);
         }
-        return sb.deleteCharAt(sb.length() - ONE).toString();
+        if (deleteLastChar) {
+            return sb.deleteCharAt(sb.length() - ONE).toString();
+        }
+        return sb.toString();
     }
 
     public static String[] getStringsArray(String input, String condition, String delimiter) {
@@ -137,26 +141,11 @@ public final class InputsUtil {
         return isBlank(input) ? defaultValue : input;
     }
 
-    public static int getValidInstanceStateCode(String input) {
-        return InstanceState.getKey(input);
-    }
-
     public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {
         String[] currentArray = InputsUtil.getStringsArray(inputString, EMPTY, delimiter);
         InputsUtil.validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
 
         return currentArray;
-    }
-
-    public static void validateArrayAgainstDuplicateElements(String[] toBeValidated, String inputString, String delimiter,
-                                                             String inputName) {
-        if (toBeValidated != null && isNotBlank(inputString)) {
-            Set<String> stringSet = getStringsSet(inputString, delimiter);
-            if (stringSet != null && toBeValidated.length != stringSet.size()) {
-                throw new RuntimeException("The value provided for: " + inputName + " input contain duplicate elements. " +
-                        "Please provide unique elements!");
-            }
-        }
     }
 
     public static void validateAgainstDifferentArraysLength(String[] firstArray, String[] secondArray,
@@ -276,8 +265,7 @@ public final class InputsUtil {
         } else if (NAME.equalsIgnoreCase(specificArea)) {
             return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
-            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
-                    valueOf(index + ONE) + DOT;
+            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (RESOURCE_ID.equalsIgnoreCase(specificArea)) {
             return RESOURCE_ID + DOT + valueOf(index + ONE);
         } else if (KEY.equalsIgnoreCase(specificArea)) {
@@ -294,13 +282,13 @@ public final class InputsUtil {
     }
 
     public static String getValidIPv4Address(String input) {
-        if (isNotBlank(input) && !isValidIPv4Address(input)) {
+        if (isNotBlank(input) && !new InetAddressValidator().isValidInet4Address(input)) {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid IPv4 address.");
         }
         return input;
     }
 
-    public static String getValidEbsSize(String input, String ebsType) throws Exception {
+    public static String getValidEbsSize(String input, String ebsType) {
         if (NOT_RELEVANT.equalsIgnoreCase(input)) {
             return NOT_RELEVANT;
         }
@@ -352,19 +340,15 @@ public final class InputsUtil {
         }
     }
 
-    private static Set<String> getStringsSet(String input, String delimiter) {
-        if (isBlank(input)) {
-            return null;
+    private static void validateArrayAgainstDuplicateElements(String[] toBeValidated, String inputString, String delimiter,
+                                                              String inputName) {
+        if (toBeValidated != null && isNotBlank(inputString)) {
+            Set<String> stringSet = getStringsSet(inputString, delimiter);
+            if (stringSet != null && toBeValidated.length != stringSet.size()) {
+                throw new RuntimeException("The value provided for: " + inputName + " input contain duplicate elements. " +
+                        "Please provide unique elements!");
+            }
         }
-        return new HashSet<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
-    }
-
-    private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray, String inputString,
-                                                   String referenceInputName, String currentInputName, String suffix, String delimiter,
-                                                   int index) {
-        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
-        setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
-                currentArray[index], currentArray.length > START_INDEX);
     }
 
     private static void setSpecificBooleanQueryParam(Map<String, String> queryParamsMap, String[] referenceArray,
@@ -383,8 +367,19 @@ public final class InputsUtil {
         return toValidateArray;
     }
 
-    private static boolean isValidIPv4Address(String input) {
-        return new InetAddressValidator().isValidInet4Address(input);
+    private static Set<String> getStringsSet(String input, String delimiter) {
+        if (isBlank(input)) {
+            return null;
+        }
+        return new HashSet<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
+    }
+
+    private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray, String inputString,
+                                                   String referenceInputName, String currentInputName, String suffix, String delimiter,
+                                                   int index) {
+        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
+        setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
+                currentArray[index], currentArray.length > START_INDEX);
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {
@@ -408,14 +403,15 @@ public final class InputsUtil {
         return true;
     }
 
+    private static boolean isTrueOrFalse(String input) {
+        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
+    }
+
+    @Contract(pure = true)
     private static String getValidationException(String input, boolean invalid) {
         if (invalid) {
             return "The provided value: " + input + " input must be integer.";
         }
         return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
-    }
-
-    private static boolean isTrueOrFalse(String input) {
-        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
     }
 }
