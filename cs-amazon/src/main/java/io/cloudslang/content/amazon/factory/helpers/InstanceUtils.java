@@ -7,7 +7,11 @@ import io.cloudslang.content.amazon.entities.constants.Inputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Arrays;
 
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -132,28 +136,7 @@ public class InstanceUtils {
         InputsUtil.validateAgainstDifferentArraysLength(deviceNamesArray, virtualNamesArray,
                 Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING, Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING);
 
-        boolean setNoDevice = noDevicesArray != null && noDevicesArray.length > START_INDEX;
-        boolean setDeleteOnTermination = deleteOnTerminationsArray != null && deleteOnTerminationsArray.length > START_INDEX;
-
-        if (deviceNamesArray != null && deviceNamesArray.length > START_INDEX) {
-            for (int index = START_INDEX; index < deviceNamesArray.length; index++) {
-                InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
-                        BLOCK_DEVICE_MAPPING_DEVICE_NAME, deviceNamesArray[index], isNotBlank(deviceNamesArray[index]));
-                InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
-                        VIRTUAL_NAME, virtualNamesArray[index], (virtualNamesArray.length > START_INDEX && isNotBlank(virtualNamesArray[index])));
-                InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(EBS, index) + VOLUME_ID,
-                        volumeIdsArray[index], isNotBlank(volumeIdsArray[index]));
-
-                if (setNoDevice) {
-                    InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
-                            NO_DEVICE, noDevicesArray[index], NO_DEVICE.equalsIgnoreCase(noDevicesArray[index]));
-                }
-                if (setDeleteOnTermination) {
-                    InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(EBS, index) + DELETE_ON_TERMINATION,
-                            deleteOnTerminationsArray[index], InputsUtil.getEnforcedBooleanCondition(deleteOnTerminationsArray[index], true));
-                }
-            }
-        }
+        setEbsOptionalQueryParams(queryParamsMap, deviceNamesArray, deleteOnTerminationsArray, volumeIdsArray, noDevicesArray, virtualNamesArray);
     }
 
     public Map<String, String> getRebootInstancesQueryParamsMap(InputsWrapper wrapper) {
@@ -348,6 +331,32 @@ public class InstanceUtils {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
+    }
+
+    private void setEbsOptionalQueryParams(Map<String, String> queryParamsMap, String[] deviceNamesArray, String[] deleteOnTerminationsArray,
+                                           String[] volumeIdsArray, String[] noDevicesArray, String[] virtualNamesArray) {
+        boolean setNoDevice = noDevicesArray != null && noDevicesArray.length > START_INDEX;
+        boolean setDeleteOnTermination = deleteOnTerminationsArray != null && deleteOnTerminationsArray.length > START_INDEX;
+
+        if (deviceNamesArray != null && deviceNamesArray.length > START_INDEX) {
+            for (int index = START_INDEX; index < deviceNamesArray.length; index++) {
+                InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
+                        BLOCK_DEVICE_MAPPING_DEVICE_NAME, deviceNamesArray[index], isNotBlank(deviceNamesArray[index]));
+                InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
+                        VIRTUAL_NAME, virtualNamesArray[index], (virtualNamesArray.length > START_INDEX && isNotBlank(virtualNamesArray[index])));
+                InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(EBS, index) + VOLUME_ID,
+                        volumeIdsArray[index], isNotBlank(volumeIdsArray[index]));
+
+                if (setNoDevice) {
+                    InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
+                            NO_DEVICE, noDevicesArray[index], NO_DEVICE.equalsIgnoreCase(noDevicesArray[index]));
+                }
+                if (setDeleteOnTermination) {
+                    InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(EBS, index) + DELETE_ON_TERMINATION,
+                            deleteOnTerminationsArray[index], InputsUtil.getEnforcedBooleanCondition(deleteOnTerminationsArray[index], true));
+                }
+            }
+        }
     }
 
     private void setAttribute(Map<String, String> queryParamsMap, String attribute) {
