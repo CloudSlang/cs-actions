@@ -23,7 +23,7 @@ public enum NetworkInterfaceStatus {
         }
 
         for (NetworkInterfaceStatus member : NetworkInterfaceStatus.values()) {
-            if (member.value.equals(input.toLowerCase())) {
+            if (member.value.equalsIgnoreCase(input)) {
                 return member.value;
             }
         }
