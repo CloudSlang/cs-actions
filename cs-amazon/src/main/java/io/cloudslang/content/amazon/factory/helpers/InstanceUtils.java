@@ -8,7 +8,6 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -72,7 +71,7 @@ public class InstanceUtils {
     private static final String RAMDISK = "Ramdisk";
     private static final String RAMDISK_ID = "RamdiskId";
     private static final String SOURCE_DEST_CHECK = " SourceDestCheck";
-    private static final String SRIOV_NET_SUPPORT = " sriovNetSupport";
+    private static final String SRIOV_NET_SUPPORT = " SriovNetSupport";
     private static final String USER_DATA = "UserData";
     private static final String VOLUME_SIZE = "VolumeSize";
     private static final String VIRTUAL_NAME = "VirtualName";
@@ -144,7 +143,7 @@ public class InstanceUtils {
     }
 
     public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) throws Exception {
-        Map<String, String> queryParamsMap = new LinkedHashMap<>();
+        Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         queryParamsMap.put(DISABLE_API_TERMINATION, valueOf(wrapper.getInstanceInputs().isDisableApiTermination()));
@@ -343,7 +342,8 @@ public class InstanceUtils {
                 InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
                         BLOCK_DEVICE_MAPPING_DEVICE_NAME, deviceNamesArray[index], isNotBlank(deviceNamesArray[index]));
                 InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
-                        VIRTUAL_NAME, virtualNamesArray[index], (virtualNamesArray.length > START_INDEX && isNotBlank(virtualNamesArray[index])));
+                        VIRTUAL_NAME, virtualNamesArray[index], (virtualNamesArray.length > START_INDEX
+                        && isNotBlank(virtualNamesArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(virtualNamesArray[index])));
                 InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(EBS, index) + VOLUME_ID,
                         volumeIdsArray[index], isNotBlank(volumeIdsArray[index]));
 
@@ -353,7 +353,7 @@ public class InstanceUtils {
                 }
                 if (setDeleteOnTermination) {
                     InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(EBS, index) + DELETE_ON_TERMINATION,
-                            deleteOnTerminationsArray[index], InputsUtil.getEnforcedBooleanCondition(deleteOnTerminationsArray[index], true));
+                            deleteOnTerminationsArray[index], Boolean.FALSE == InputsUtil.getEnforcedBooleanCondition(deleteOnTerminationsArray[index], true));
                 }
             }
         }
