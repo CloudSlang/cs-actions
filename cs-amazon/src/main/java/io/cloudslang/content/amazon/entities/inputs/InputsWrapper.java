@@ -34,7 +34,6 @@ public class InputsWrapper {
     private InputsWrapper(Builder builder) {
         this.httpClientInputs = builder.httpClientInputs;
         this.commonInputs = builder.commonInputs;
-        this.customInputs = builder.customInputs;
 
         this.apiService = builder.apiService;
         this.requestUri = builder.requestUri;
@@ -157,7 +156,6 @@ public class InputsWrapper {
     public static class Builder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
-        private CustomInputs customInputs;
 
         private String apiService;
         private String requestUri;
@@ -179,11 +177,6 @@ public class InputsWrapper {
 
         public Builder withCommonInputs(CommonInputs inputs) {
             commonInputs = inputs;
-            return this;
-        }
-
-        public Builder withCustomInputs(CustomInputs inputs) {
-            customInputs = inputs;
             return this;
         }
 

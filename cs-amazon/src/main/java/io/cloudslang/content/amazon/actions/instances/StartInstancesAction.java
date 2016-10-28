@@ -33,7 +33,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
 
 /**
- * Created by persdana on 5/25/2015.
+ * Created by persdana
+ * 5/25/2015.
  */
 public class StartInstancesAction {
     /**

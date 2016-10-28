@@ -5,7 +5,7 @@ import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
-import io.cloudslang.content.amazon.services.impl.MockingHelper;
+import io.cloudslang.content.amazon.utils.MockingHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

@@ -1,6 +1,10 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.entities.aws.*;
+import io.cloudslang.content.amazon.entities.aws.Attribute;
+import io.cloudslang.content.amazon.entities.aws.InstanceInitiatedShutdownBehavior;
+import io.cloudslang.content.amazon.entities.aws.InstanceState;
+import io.cloudslang.content.amazon.entities.aws.MonitoringState;
+import io.cloudslang.content.amazon.entities.aws.Tenancy;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import static java.lang.String.valueOf;
@@ -10,9 +14,6 @@ import static java.lang.String.valueOf;
  * 6/1/2016.
  */
 public class InstanceInputs {
-    private CustomInputs customInputs;
-    private NetworkInputs networkInputs;
-
     private String affinity;
     private String attribute;
     private String attributeValue;
@@ -55,9 +56,6 @@ public class InstanceInputs {
     private boolean monitoring;
 
     private InstanceInputs(Builder builder) {
-        this.customInputs = builder.customInputs;
-        this.networkInputs = builder.networkInputs;
-
         this.affinity = builder.affinity;
         this.attribute = builder.attribute;
         this.attributeValue = builder.attributeValue;
@@ -98,14 +96,6 @@ public class InstanceInputs {
         this.enaSupport = builder.enaSupport;
         this.monitoring = builder.monitoring;
         this.forceStop = builder.forceStop;
-    }
-
-    public CustomInputs getCustomInputs() {
-        return customInputs;
-    }
-
-    public NetworkInputs getNetworkInputs() {
-        return networkInputs;
     }
 
     public String getAffinity() {
@@ -261,9 +251,6 @@ public class InstanceInputs {
     }
 
     public static class Builder {
-        private CustomInputs customInputs;
-        private NetworkInputs networkInputs;
-
         private String affinity;
         private String attribute;
         private String attributeValue;
@@ -307,16 +294,6 @@ public class InstanceInputs {
 
         public InstanceInputs build() {
             return new InstanceInputs(this);
-        }
-
-        public Builder withCustomInputs(CustomInputs inputs) {
-            customInputs = inputs;
-            return this;
-        }
-
-        public Builder withNetworkInputs(NetworkInputs inputs) {
-            networkInputs = inputs;
-            return this;
         }
 
         public Builder withAffinity(String inputValue) {

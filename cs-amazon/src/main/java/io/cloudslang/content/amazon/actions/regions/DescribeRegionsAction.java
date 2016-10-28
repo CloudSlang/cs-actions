@@ -35,7 +35,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_FILTERS_STRING;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by persdana
+ * 6/23/2015.
  */
 public class DescribeRegionsAction {
     /**

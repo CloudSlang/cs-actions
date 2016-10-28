@@ -1,7 +1,6 @@
 package io.cloudslang.content.amazon.utils;
 
 import io.cloudslang.content.amazon.entities.aws.InstanceState;
-import io.cloudslang.content.amazon.services.impl.MockingHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

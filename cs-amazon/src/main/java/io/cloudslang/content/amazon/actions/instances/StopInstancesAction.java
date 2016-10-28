@@ -35,7 +35,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FORCE_STOP;
 
 /**
- * Created by persdana on 6/18/2015.
+ * Created by persdana
+ * 6/18/2015.
  */
 public class StopInstancesAction {
     /**

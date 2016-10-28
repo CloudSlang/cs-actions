@@ -69,6 +69,9 @@ public class ParamsMapBuilder {
                 case DESCRIBE_IMAGE_ATTRIBUTE:
                     queryParamsMap = new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
                     break;
+                case DESCRIBE_INSTANCES:
+                    queryParamsMap = new InstanceUtils().getDescribeInstancesQueryParamsMap(wrapper);
+                    break;
                 case DESCRIBE_REGIONS:
                     queryParamsMap = new RegionUtils().getDescribeRegionsQueryParamsMap(wrapper);
                     break;

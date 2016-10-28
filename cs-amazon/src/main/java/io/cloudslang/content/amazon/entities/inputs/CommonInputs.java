@@ -1,7 +1,6 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.HttpClientMethod;
-import io.cloudslang.content.amazon.entities.aws.Providers;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.net.MalformedURLException;
@@ -13,10 +12,10 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.ENDPOINT;
 
 /**
- * Created by persdana on 5/27/2015.
+ * Created by persdana
+ * 5/27/2015.
  */
 public class CommonInputs {
-    private String provider;
     private String endpoint;
     private String identity;
     private String credential;
@@ -34,10 +33,7 @@ public class CommonInputs {
     private String requestPayload;
     private String httpClientMethod;
 
-    private boolean debugMode;
-
     private CommonInputs(Builder builder) {
-        this.provider = builder.provider;
         this.endpoint = builder.endpoint;
         this.identity = builder.identity;
         this.credential = builder.credential;
@@ -54,12 +50,6 @@ public class CommonInputs {
         this.action = builder.action;
         this.requestPayload = builder.requestPayload;
         this.httpClientMethod = builder.httpClientMethod;
-
-        this.debugMode = builder.debugMode;
-    }
-
-    public String getProvider() {
-        return provider;
     }
 
     public String getEndpoint() {
@@ -126,12 +116,7 @@ public class CommonInputs {
         return httpClientMethod;
     }
 
-    public boolean isDebugMode() {
-        return debugMode;
-    }
-
     public static class Builder {
-        private String provider;
         private String endpoint;
         private String identity;
         private String credential;
@@ -149,15 +134,8 @@ public class CommonInputs {
         private String requestPayload;
         private String httpClientMethod;
 
-        private boolean debugMode;
-
         public CommonInputs build() {
             return new CommonInputs(this);
-        }
-
-        public Builder withProvider(String inputValue) {
-            provider = Providers.getValue(inputValue);
-            return this;
         }
 
         public Builder withEndpoint(String inputValue) throws MalformedURLException {
@@ -238,11 +216,6 @@ public class CommonInputs {
 
         public Builder withHttpClientMethod(String inputValue) {
             httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HttpClientMethod.GET.toString());
-            return this;
-        }
-
-        public Builder withDebugMode(String inputValue) {
-            debugMode = Boolean.parseBoolean(inputValue);
             return this;
         }
     }
