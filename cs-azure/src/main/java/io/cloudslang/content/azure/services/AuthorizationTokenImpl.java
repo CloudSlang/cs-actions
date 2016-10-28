@@ -51,7 +51,7 @@ public class AuthorizationTokenImpl {
     }
 
     @NotNull
-    private static Proxy getProxy(@NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUser, @NotNull final String proxyPassword) {
+    public static Proxy getProxy(@NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUser, @NotNull final String proxyPassword) {
         if (StringUtilities.isBlank(proxyHost)) {
             return Proxy.NO_PROXY;
         }

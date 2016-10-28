@@ -34,43 +34,43 @@ public class StorageAuthorizationTokenImpl {
     private static String clientRequestId = "";
     private static String service = "";
 
-    public static void signRequestSK(final String method, final String date, final String account, final String key,
-                                     final String canonicalResource, final String apiVersion) throws Exception {
-//        final String date = DateTimeService.getCurrentDateTime("", "", "GMT", "EEE, dd MMM yyyy HH:mm:ss");
-//        final String date = "Sun, 11 Oct 2009 21:49:13 GMT";
-        final StringBuilder stringBuilder =
-                new StringBuilder(method).append(NEW_LINE) /*HTTP Verb*/
-                        .append(NEW_LINE) /*Content-Encoding*/
-                        .append(NEW_LINE) /*Content-Language*/
-                        .append(NEW_LINE) /*Content-Length (include value when zero)*/
-                        .append(NEW_LINE) /*Content-MD5*/
-                        .append(NEW_LINE) /*Content-Type*/
-                        .append(NEW_LINE) /*Date*/
-                        .append(NEW_LINE) /*If-Modified-Since */
-                        .append(NEW_LINE) /*If-Match*/
-                        .append(NEW_LINE) /*If-None-Match*/
-                        .append(NEW_LINE) /*If-Unmodified-Since*/
-                        .append(NEW_LINE) /*Range*/
-                        .append("x-ms-date:").append(date).append(NEW_LINE)
-                        .append("x-ms-version:").append(apiVersion).append(NEW_LINE)
-                        .append('/').append(account).append(canonicalResource.replaceAll("=", ":").replace("?", NEW_LINE).replaceAll("&", NEW_LINE));
-        System.out.println(stringBuilder.toString());
-
-//        Mac mac = HmacUtils.getHmacSha256(Base64.decode(key));
-        final Mac mac = Mac.getInstance("HmacSHA256");
-        mac.init(new SecretKeySpec(Base64.decode(key), "HmacSHA256"));
-        final String authKey = Base64.encode(mac.doFinal(stringBuilder.toString().getBytes("UTF-8")));
-        String auth = "SharedKey " + account + ":" + authKey;
-
-//        request.setRequestProperty("x-ms-date", date);
-//        request.setRequestProperty("x-ms-version", apiVersion);
-//        request.setRequestProperty("Authorization", auth);
-//        request.setRequestProperty("x-ms-client-request-id", clientRequestId);
-//        request.setDoOutput(true);
-//        request.setFixedLengthStreamingMode(0);
-//        request.setRequestMethod(method);
-//        System.out.println(auth);
-    }
+//    public static void signRequestSK(final String method, final String date, final String account, final String key,
+//                                     final String canonicalResource, final String apiVersion) throws Exception {
+////        final String date = DateTimeService.getCurrentDateTime("", "", "GMT", "EEE, dd MMM yyyy HH:mm:ss");
+////        final String date = "Sun, 11 Oct 2009 21:49:13 GMT";
+//        final StringBuilder stringBuilder =
+//                new StringBuilder(method).append(NEW_LINE) /*HTTP Verb*/
+//                        .append(NEW_LINE) /*Content-Encoding*/
+//                        .append(NEW_LINE) /*Content-Language*/
+//                        .append(NEW_LINE) /*Content-Length (include value when zero)*/
+//                        .append(NEW_LINE) /*Content-MD5*/
+//                        .append(NEW_LINE) /*Content-Type*/
+//                        .append(NEW_LINE) /*Date*/
+//                        .append(NEW_LINE) /*If-Modified-Since */
+//                        .append(NEW_LINE) /*If-Match*/
+//                        .append(NEW_LINE) /*If-None-Match*/
+//                        .append(NEW_LINE) /*If-Unmodified-Since*/
+//                        .append(NEW_LINE) /*Range*/
+//                        .append("x-ms-date:").append(date).append(NEW_LINE)
+//                        .append("x-ms-version:").append(apiVersion).append(NEW_LINE)
+//                        .append('/').append(account).append(canonicalResource.replaceAll("=", ":").replace("?", NEW_LINE).replaceAll("&", NEW_LINE));
+//        System.out.println(stringBuilder.toString());
+//
+////        Mac mac = HmacUtils.getHmacSha256(Base64.decode(key));
+//        final Mac mac = Mac.getInstance("HmacSHA256");
+//        mac.init(new SecretKeySpec(Base64.decode(key), "HmacSHA256"));
+//        final String authKey = Base64.encode(mac.doFinal(stringBuilder.toString().getBytes("UTF-8")));
+//        String auth = "SharedKey " + account + ":" + authKey;
+//
+////        request.setRequestProperty("x-ms-date", date);
+////        request.setRequestProperty("x-ms-version", apiVersion);
+////        request.setRequestProperty("Authorization", auth);
+////        request.setRequestProperty("x-ms-client-request-id", clientRequestId);
+////        request.setDoOutput(true);
+////        request.setFixedLengthStreamingMode(0);
+////        request.setRequestMethod(method);
+////        System.out.println(auth);
+//    }
 
     public static void signRequestSKDELETE(HttpURLConnection request, String account, String key) throws Exception {
         StringBuilder sb = new StringBuilder();
@@ -312,7 +312,7 @@ public class StorageAuthorizationTokenImpl {
     }
 
     public static void main(String[] args) throws Exception {
-        StorageAuthorizationTokenImpl.signRequestSK("GET", "Wed, 26 Oct 2016 13:53:00 UTC", "hpeoodisks717", "yWDhbEI9NwBgfcI7J5bw/TivIzDSLiVIsTbDvzPyo5JLVTxmCvCVp/DSxbPgqdWAvtdTjKAZhnAu2/uVA1ykPg==", " /vhds\ncomp:list\nrestype:container\ntimeout:20", "2015-04-05");
+        StorageAuthorizationTokenImpl.createContainer("hpeoodisks717", "yWDhbEI9NwBgfcI7J5bw/TivIzDSLiVIsTbDvzPyo5JLVTxmCvCVp/DSxbPgqdWAvtdTjKAZhnAu2/uVA1ykPg==", "ghita");
 //        StorageAuthorizationTokenImpl blobService = new StorageAuthorizationTokenImpl();
 //        if (args.length != 4) {
 //            System.err.println("Invalid input parameters.");
@@ -337,48 +337,45 @@ public class StorageAuthorizationTokenImpl {
 
     }
 
-    private void createContainer(String[] args) {
-        if (args.length != 4) {
-            System.err.println("Insufficient input parameters to create container.");
-            System.err.println("Usage: java -jar azure-storage-service.jar \"-createContainer\" \"storageAccountName\" \"accountKey\" \"containerNameToCreate\"");
-            System.err.println("Usage: java -jar azure-storage-service.jar \"-createContainer\" \"myAccount\" \"accountKey\" \"mycontainername\"");
-            System.exit(-1);
-        }
+    private static void createContainer(String accountName, String key, String containerName) {
+//        if (args.length != 4) {
+//            System.err.println("Insufficient input parameters to create container.");
+//            System.err.println("Usage: java -jar azure-storage-service.jar \"-createContainer\" \"storageAccountName\" \"accountKey\" \"containerNameToCreate\"");
+//            System.err.println("Usage: java -jar azure-storage-service.jar \"-createContainer\" \"myAccount\" \"accountKey\" \"mycontainername\"");
+//            System.exit(-1);
+//        }
 
-        String accountName = args[1];
-        String key = args[2];
-        String containerName = args[3].toLowerCase();
-        String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=" + accountName + ";" + "AccountKey=" + key;
+//        String accountName = args[1];
+//        String key = args[2];
+//        String containerName = args[3].toLowerCase();
+        final String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=" + accountName + ";" + "AccountKey=" + key;
 
         try {
-            CloudStorageAccount e = CloudStorageAccount.parse(storageConnectionString);
-            CloudBlobClient blobClient = e.createCloudBlobClient();
-            CloudBlobContainer container = blobClient.getContainerReference(containerName);
-            boolean created = container.createIfNotExists();
-            if (created) {
+            final CloudStorageAccount cloudStorageAccount = CloudStorageAccount.parse(storageConnectionString);
+            final CloudBlobClient blobClient = cloudStorageAccount.createCloudBlobClient();
+            final CloudBlobContainer container = blobClient.getContainerReference(containerName);
+
+
+            if (container.createIfNotExists()) {
                 System.out.println("Created: " + containerName);
             }
-        } catch (InvalidKeyException var10) {
-            var10.printStackTrace();
-        } catch (URISyntaxException var11) {
-            var11.printStackTrace();
-        } catch (StorageException var12) {
-            var12.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
 
-    private void deleteContainer(String[] args) {
-        if (args.length != 4) {
-            System.err.println("Insufficient input parameters to delete container.");
-            System.err.println("Usage: java -jar azure-storage-service.jar \"-deleteContainer\" \"storageAccountName\" \"accountKey\" \"containerNameToDelete\"");
-            System.err.println("Usage: java -jar azure-storage-service.jar \"-deleteContainer\" \"myAccount\" \"accountKey\" \"mycontainername\"");
-            System.exit(-1);
-        }
+    private void deleteContainer(String accountName, String key, String containerName) {
+//        if (args.length != 4) {
+//            System.err.println("Insufficient input parameters to delete container.");
+//            System.err.println("Usage: java -jar azure-storage-service.jar \"-deleteContainer\" \"storageAccountName\" \"accountKey\" \"containerNameToDelete\"");
+//            System.err.println("Usage: java -jar azure-storage-service.jar \"-deleteContainer\" \"myAccount\" \"accountKey\" \"mycontainername\"");
+//            System.exit(-1);
+//        }
 
-        String accountName = args[1];
-        String key = args[2];
-        String containerName = args[3].toLowerCase();
+//        String accountName = args[1];
+//        String key = args[2];
+//        String containerName = args[3].toLowerCase();
         String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=" + accountName + ";" + "AccountKey=" + key;
 
         try {
