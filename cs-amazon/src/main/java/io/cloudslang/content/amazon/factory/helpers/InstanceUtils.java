@@ -70,8 +70,8 @@ public class InstanceUtils {
     private static final String PLACEMENT_TENANCY = "Placement.Tenancy";
     private static final String RAMDISK = "Ramdisk";
     private static final String RAMDISK_ID = "RamdiskId";
-    private static final String SOURCE_DEST_CHECK = " SourceDestCheck";
-    private static final String SRIOV_NET_SUPPORT = " SriovNetSupport";
+    private static final String SOURCE_DEST_CHECK = "SourceDestCheck";
+    private static final String SRIOV_NET_SUPPORT = "SriovNetSupport";
     private static final String USER_DATA = "UserData";
     private static final String VOLUME_SIZE = "VolumeSize";
     private static final String VIRTUAL_NAME = "VirtualName";
