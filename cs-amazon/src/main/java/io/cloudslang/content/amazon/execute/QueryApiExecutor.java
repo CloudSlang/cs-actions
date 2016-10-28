@@ -1,4 +1,4 @@
-package io.cloudslang.content.amazon.execute.queries;
+package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
@@ -48,7 +48,7 @@ public class QueryApiExecutor {
     }
 
     private void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
-        String queryParamsString = InputsUtil.getParamsString(queryParamsMap, EQUAL, AMPERSAND);
+        String queryParamsString = InputsUtil.getHeadersOrParamsString(queryParamsMap, EQUAL, AMPERSAND, true);
         inputs.getHttpClientInputs().setQueryParams(queryParamsString);
     }
 }

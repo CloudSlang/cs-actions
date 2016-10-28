@@ -26,16 +26,15 @@ public class RegionUtils {
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
 
-        String[] regionsArray = InputsUtil.getStringsArray(wrapper.getCustomInputs().getRegionsString(), EMPTY,
-                wrapper.getCommonInputs().getDelimiter());
-        InputsUtil.validateArrayAgainstDuplicateElements(regionsArray, wrapper.getCustomInputs().getRegionsString(),
-                wrapper.getCommonInputs().getDelimiter(), REGIONS_STRING);
+        String[] regionsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getRegionsString(),
+                REGIONS_STRING, wrapper.getCommonInputs().getDelimiter());
 
         if (regionsArray != null && regionsArray.length > START_INDEX) {
             for (int index = START_INDEX; index < regionsArray.length; index++) {
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(REGION_NAME, index), regionsArray[index]);
             }
         }
+
         setFilters(queryParamsMap, wrapper.getCustomInputs().getKeyFiltersString(), wrapper.getCustomInputs().getValueFiltersString(),
                 wrapper.getCommonInputs().getDelimiter());
 

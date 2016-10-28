@@ -13,7 +13,7 @@ import io.cloudslang.content.amazon.services.impl.OpenstackComputeServiceImpl;
 public class ComputeFactory {
     private static final String AMAZON = "amazon";
 
-    public static ComputeService getComputeService(CommonInputs commonInputs) throws Exception {
+    public static ComputeService getComputeService(CommonInputs commonInputs) {
         ComputeService computeService;
         switch (commonInputs.getProvider().toLowerCase()) {
             case AMAZON:
@@ -34,7 +34,6 @@ public class ComputeFactory {
                 break;
             default:
                 computeService = new ComputeServiceImpl(
-                        commonInputs.getProvider(),
                         commonInputs.getEndpoint(),
                         commonInputs.getIdentity(),
                         commonInputs.getCredential(),

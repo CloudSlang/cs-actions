@@ -1,23 +1,21 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.entities.aws.InstanceInitiatedShutdownBehavior;
-import io.cloudslang.content.amazon.entities.aws.InstanceState;
-import io.cloudslang.content.amazon.entities.aws.MonitoringState;
-import io.cloudslang.content.amazon.entities.aws.Tenancy;
+import io.cloudslang.content.amazon.entities.aws.*;
 import io.cloudslang.content.amazon.utils.InputsUtil;
+
+import static java.lang.String.valueOf;
 
 /**
  * Created by Mihai Tusa.
  * 6/1/2016.
  */
 public class InstanceInputs {
-    private static final long DEFAULT_CHECK_STATE_TIMEOUT = 20000;
-    private static final long DEFAULT_POLING_INTERVAL = 20000;
-
     private CustomInputs customInputs;
     private NetworkInputs networkInputs;
 
     private String affinity;
+    private String attribute;
+    private String attributeValue;
     private String clientToken;
     private String dnsName;
     private String groupName;
@@ -44,21 +42,25 @@ public class InstanceInputs {
     private String ipOwnerId;
     private String instanceInitiatedShutdownBehavior;
     private String userData;
+    private String kernel;
+    private String ramdisk;
+    private String sriovNetSupport;
 
-    private int minCount;
     private int maxCount;
-    private long checkStateTimeout;
-    private long polingInterval;
+    private int minCount;
 
     private boolean disableApiTermination;
-    private boolean monitoring;
+    private boolean enaSupport;
     private boolean forceStop;
+    private boolean monitoring;
 
     private InstanceInputs(Builder builder) {
         this.customInputs = builder.customInputs;
         this.networkInputs = builder.networkInputs;
 
         this.affinity = builder.affinity;
+        this.attribute = builder.attribute;
+        this.attributeValue = builder.attributeValue;
         this.clientToken = builder.clientToken;
         this.dnsName = builder.dnsName;
         this.groupName = builder.groupName;
@@ -85,13 +87,15 @@ public class InstanceInputs {
         this.ipOwnerId = builder.ipOwnerId;
         this.instanceInitiatedShutdownBehavior = builder.instanceInitiatedShutdownBehavior;
         this.userData = builder.userData;
+        this.kernel = builder.kernel;
+        this.ramdisk = builder.ramdisk;
+        this.sriovNetSupport = builder.sriovNetSupport;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
-        this.checkStateTimeout = builder.checkStateTimeout;
-        this.polingInterval = builder.polingInterval;
 
         this.disableApiTermination = builder.disableApiTermination;
+        this.enaSupport = builder.enaSupport;
         this.monitoring = builder.monitoring;
         this.forceStop = builder.forceStop;
     }
@@ -106,6 +110,14 @@ public class InstanceInputs {
 
     public String getAffinity() {
         return affinity;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public String getAttributeValue() {
+        return attributeValue;
     }
 
     public String getClientToken() {
@@ -212,6 +224,18 @@ public class InstanceInputs {
         return userData;
     }
 
+    public String getKernel() {
+        return kernel;
+    }
+
+    public String getRamdisk() {
+        return ramdisk;
+    }
+
+    public String getSriovNetSupport() {
+        return sriovNetSupport;
+    }
+
     public int getMinCount() {
         return minCount;
     }
@@ -220,16 +244,12 @@ public class InstanceInputs {
         return maxCount;
     }
 
-    public long getCheckStateTimeout() {
-        return checkStateTimeout;
-    }
-
-    public long getPolingInterval() {
-        return polingInterval;
-    }
-
     public boolean isDisableApiTermination() {
         return disableApiTermination;
+    }
+
+    public boolean isEnaSupport() {
+        return enaSupport;
     }
 
     public boolean isMonitoring() {
@@ -245,6 +265,8 @@ public class InstanceInputs {
         private NetworkInputs networkInputs;
 
         private String affinity;
+        private String attribute;
+        private String attributeValue;
         private String clientToken;
         private String dnsName;
         private String groupName;
@@ -271,13 +293,15 @@ public class InstanceInputs {
         private String ipOwnerId;
         private String instanceInitiatedShutdownBehavior;
         private String userData;
+        private String kernel;
+        private String ramdisk;
+        private String sriovNetSupport;
 
         private int minCount;
         private int maxCount;
-        private long checkStateTimeout;
-        private long polingInterval;
 
         private boolean disableApiTermination;
+        private boolean enaSupport;
         private boolean monitoring;
         private boolean forceStop;
 
@@ -297,6 +321,16 @@ public class InstanceInputs {
 
         public Builder withAffinity(String inputValue) {
             affinity = inputValue;
+            return this;
+        }
+
+        public Builder withAttribute(String inputValue) {
+            attribute = Attribute.getAttribute(inputValue);
+            return this;
+        }
+
+        public Builder withAttributeValue(String inputValue) {
+            attributeValue = inputValue;
             return this;
         }
 
@@ -326,7 +360,7 @@ public class InstanceInputs {
         }
 
         public Builder withInstanceStateCode(String inputValue) {
-            instanceStateCode = String.valueOf(InputsUtil.getValidInstanceStateCode(inputValue));
+            instanceStateCode = valueOf(InstanceState.getKey(inputValue));
             return this;
         }
 
@@ -365,7 +399,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withMonitoringState(String inputValue) throws Exception {
+        public Builder withMonitoringState(String inputValue) {
             monitoringState = MonitoringState.getValue(inputValue);
             return this;
         }
@@ -405,7 +439,7 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withTenancy(String inputValue) throws Exception {
+        public Builder withTenancy(String inputValue) {
             tenancy = Tenancy.getValue(inputValue);
             return this;
         }
@@ -420,13 +454,28 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withInstanceInitiatedShutdownBehavior(String inputValue) throws Exception {
+        public Builder withInstanceInitiatedShutdownBehavior(String inputValue) {
             instanceInitiatedShutdownBehavior = InstanceInitiatedShutdownBehavior.getValue(inputValue);
             return this;
         }
 
         public Builder withUserData(String inputValue) {
             userData = inputValue;
+            return this;
+        }
+
+        public Builder withKernel(String inputValue) {
+            kernel = inputValue;
+            return this;
+        }
+
+        public Builder withRamdisk(String inputValue) {
+            ramdisk = inputValue;
+            return this;
+        }
+
+        public Builder withSriovNetSupport(String inputValue) {
+            sriovNetSupport = inputValue;
             return this;
         }
 
@@ -440,18 +489,13 @@ public class InstanceInputs {
             return this;
         }
 
-        public Builder withCheckStateTimeout(String inputValue) {
-            checkStateTimeout = InputsUtil.getValidLong(inputValue, DEFAULT_CHECK_STATE_TIMEOUT);
-            return this;
-        }
-
-        public Builder withPolingInterval(String inputValue) {
-            polingInterval = InputsUtil.getValidLong(inputValue, DEFAULT_POLING_INTERVAL);
-            return this;
-        }
-
         public Builder withDisableApiTermination(String inputValue) {
-            disableApiTermination = Boolean.parseBoolean(inputValue);
+            disableApiTermination = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            return this;
+        }
+
+        public Builder withEnaSupport(String inputValue) {
+            enaSupport = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
