@@ -7,6 +7,9 @@ public class Outputs {
     public static final String RETURN_CODE = "returnCode";
     public static final String EXCEPTION = "exception";
     public static final String RETURN_RESULT = "returnResult";
+    public static final String INSTANCE_ID = "instanceId";
+    public static final String SUBNET_ID = "subnetId";
+    public static final String ATTACHMENT_ID = "attachmentId";
 
     public static final String SUCCESS = "success";
     public static final String FAILURE = "failure";

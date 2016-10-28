@@ -137,7 +137,8 @@ public class TerminateInstancesAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs);
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

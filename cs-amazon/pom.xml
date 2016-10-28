@@ -304,6 +304,11 @@
             <artifactId>rackspace-cloudservers-us</artifactId>
             <version>${jclouds.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-xml</artifactId>
+            <version>0.0.9</version>
+        </dependency>
     </dependencies>
 
 </project>

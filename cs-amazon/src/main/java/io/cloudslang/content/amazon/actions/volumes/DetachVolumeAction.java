@@ -143,7 +143,8 @@ public class DetachVolumeAction {
             CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).withInstanceId(instanceId).build();
             VolumeInputs volumeInputs = new VolumeInputs.Builder().withDeviceName(deviceName).withForce(force).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
