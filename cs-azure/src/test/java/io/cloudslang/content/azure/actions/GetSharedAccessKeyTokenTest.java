@@ -1,5 +1,6 @@
 package io.cloudslang.content.azure.actions;
 
+import io.cloudslang.content.azure.actions.utils.GetSharedAccessKeyToken;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

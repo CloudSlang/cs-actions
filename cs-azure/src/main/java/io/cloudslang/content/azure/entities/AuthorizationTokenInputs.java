@@ -20,7 +20,8 @@ public class AuthorizationTokenInputs {
     private final String proxyPassword;
 
     @java.beans.ConstructorProperties({"username", "password", "clientId", "authority", "resource", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword"})
-    private AuthorizationTokenInputs(final String username, final String password, final String clientId, final String authority, final String resource, final String proxyHost, final int proxyPort, final String proxyUsername, final String proxyPassword) {
+    private AuthorizationTokenInputs(final String username, final String password, final String clientId, final String authority,
+                                     final String resource, final String proxyHost, final int proxyPort, final String proxyUsername, final String proxyPassword) {
         this.username = username;
         this.password = password;
         this.clientId = clientId;

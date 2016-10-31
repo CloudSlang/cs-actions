@@ -12,10 +12,11 @@ public final class Constants {
 
     public static final String SHARED_ACCESS_SIGNATURE = "SharedAccessSignature uid=%s&ex=%s&sn=%s";
 
-
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port";
 
     public static final String PROXY_HTTP_USER = "http.proxyUser";
     public static final String PROXY_HTTP_PASSWORD = "http.proxyPassword";
+
+    public static final String STORAGE_AUTH_ENDPOINT = "DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s";
 }
