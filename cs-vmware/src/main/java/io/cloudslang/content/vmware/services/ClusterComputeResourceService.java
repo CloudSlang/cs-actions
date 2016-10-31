@@ -404,7 +404,7 @@ public class ClusterComputeResourceService {
         throw new RuntimeException(String.format(ANOTHER_FAILURE_MSG, clusterName));
     }
 
-    private ManagedObjectReference getVmMor(ConnectionResources connectionResources, String value, String virtualMachineName) throws Exception {
+    private ManagedObjectReference getVmMor(final ConnectionResources connectionResources, final String value, final String virtualMachineName) throws Exception {
         final ManagedObjectReference mor = new MorObjectHandler().getMor(connectionResources, value, virtualMachineName);
         if (mor != null) {
             return mor;
