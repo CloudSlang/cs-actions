@@ -82,8 +82,8 @@ public class CreateNetworkInterfaceAction {
      *                                       pairs is "&" symbol. The query name will be separated from query value by "=".
      *                                       Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      * @param version                        Optional - Version of the web service to made the call against it.
-     *                                       Example: "2016-04-01"
-     *                                       Default: "2016-04-01"
+     *                                       Example: "2014-06-15"
+     *                                       Default: "2014-06-15"
      * @param delimiter                      Optional - Delimiter that will be used.
      *                                       Default: ","
      * @param subnetId                       ID of the subnet to associate with the network interface.
@@ -143,7 +143,7 @@ public class CreateNetworkInterfaceAction {
                                        @Param(value = NETWORK_INTERFACE_DESCRIPTION, required = true) String networkInterfaceDescription,
                                        @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
