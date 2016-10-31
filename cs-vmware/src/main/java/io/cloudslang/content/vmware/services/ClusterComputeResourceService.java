@@ -60,18 +60,18 @@ public class ClusterComputeResourceService {
      * @return
      * @throws Exception
      */
-    public Map<String, String> updateOrAddVmOverride(HttpInputs httpInputs, VmInputs vmInputs, String restartPriority) throws Exception {
-        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+    public Map<String, String> updateOrAddVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs, final String restartPriority) throws Exception {
+        final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        ManagedObjectReference vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+        final ManagedObjectReference vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+        final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
-        ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
+        final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+        final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
 
-        ManagedObjectReference task = connectionResources.getVimPortType().
+        final ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
         Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
@@ -405,7 +405,7 @@ public class ClusterComputeResourceService {
     }
 
     private ManagedObjectReference getVmMor(ConnectionResources connectionResources, String value, String virtualMachineName) throws Exception {
-        ManagedObjectReference mor = new MorObjectHandler().getMor(connectionResources, value, virtualMachineName);
+        final ManagedObjectReference mor = new MorObjectHandler().getMor(connectionResources, value, virtualMachineName);
         if (mor != null) {
             return mor;
         }
