@@ -4,6 +4,8 @@ package io.cloudslang.content.azure.utils;
  * Created by victor on 07.10.2016.
  */
 public final class Constants {
+    public static final String FORWARD_SLASH = "/";
+    public static final String COMMA = ",";
     public static final String NEW_LINE = "\n";
     public static final String DEFAULT_CLIENT_ID = "9ba1a5c7-f17a-4de9-a1f1-6178c8d51223";
     public static final String DEFAULT_AUTHORITY = "https://login.windows.net/common";

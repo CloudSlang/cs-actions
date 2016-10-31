@@ -7,57 +7,67 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
 import io.cloudslang.content.utils.StringUtilities;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.azure.utils.Constants.STORAGE_AUTH_ENDPOINT;
+import static io.cloudslang.content.azure.utils.Constants.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getProxy;
 
 /**
  * Created by victor on 25.10.2016.
  */
-public class StorageServiceImpl {
-    public static String createContainer(final String accountName, final String key, final String containerName, final String proxyHost,
-                                         final int proxyPort, final String proxyUsername, final String proxyPassword) throws Exception {
+public final class StorageServiceImpl {
+    @NotNull
+    public static String createContainer(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
+                                         @NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUsername,
+                                         @NotNull final String proxyPassword) throws Exception {
         final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
         final CloudBlobContainer container = blobClient.getContainerReference(containerName);
         container.create();
         return containerName;
     }
 
-    public static String listContainers(final String accountName, final String key, final String proxyHost, final int proxyPort,
-                                        final String proxyUsername, final String proxyPassword) throws Exception {
+    @NotNull
+    public static String listContainers(@NotNull final String accountName, @NotNull final String key, @NotNull final String proxyHost,
+                                        final int proxyPort, @NotNull final String proxyUsername, @NotNull final String proxyPassword) throws Exception {
         final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
         final List<String> containerList = new ArrayList<>();
-        for (CloudBlobContainer blobItem : blobClient.listContainers()) {
+        for (final CloudBlobContainer blobItem : blobClient.listContainers()) {
             containerList.add(blobItem.getName());
         }
-        return StringUtilities.join(containerList, ',');
+        return StringUtilities.join(containerList, COMMA);
     }
 
-    public static String deleteContainer(final String accountName, final String key, final String containerName, final String proxyHost,
-                                         final int proxyPort, final String proxyUsername, final String proxyPassword) throws Exception {
+    @NotNull
+    public static String deleteContainer(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
+                                         @NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUsername,
+                                         @NotNull final String proxyPassword) throws Exception {
         final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
         final CloudBlobContainer container = blobClient.getContainerReference(containerName);
         container.delete();
         return containerName;
     }
 
-    public static String listBlobs(final String accountName, final String key, final String containerName, final String proxyHost,
-                                   final int proxyPort, final String proxyUsername, final String proxyPassword) throws Exception {
+    @NotNull
+    public static String listBlobs(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
+                                   @NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUsername,
+                                   @NotNull final String proxyPassword) throws Exception {
         final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
         final CloudBlobContainer container = blobClient.getContainerReference(containerName);
         final List<String> blobList = new ArrayList<>();
         for (final ListBlobItem blobItem : container.listBlobs()) {
             final String path = blobItem.getUri().getPath();
-            blobList.add(path.substring(path.lastIndexOf('/') + 1));
+            blobList.add(path.substring(path.lastIndexOf(FORWARD_SLASH) + 1));
         }
-        return StringUtilities.join(blobList, ',');
+        return StringUtilities.join(blobList, COMMA);
     }
 
-    public static String deleteBlob(final String accountName, final String key, final String containerName, final String blobName,
-                                    final String proxyHost, final int proxyPort, final String proxyUsername, final String proxyPassword) throws Exception {
+    @NotNull
+    public static String deleteBlob(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
+                                    @NotNull final String blobName, @NotNull final String proxyHost, final int proxyPort,
+                                    @NotNull final String proxyUsername, @NotNull final String proxyPassword) throws Exception {
         final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
         final CloudBlobContainer container = blobClient.getContainerReference(containerName);
         final CloudBlockBlob blob = container.getBlockBlobReference(blobName);
@@ -65,8 +75,9 @@ public class StorageServiceImpl {
         return blobName;
     }
 
-    private static CloudBlobClient getCloudBlobClient(final String accountName, final String key, final String proxyHost,
-                                                      final int proxyPort, final String proxyUsername, final String proxyPassword) throws Exception {
+    @NotNull
+    public static CloudBlobClient getCloudBlobClient(@NotNull final String accountName, @NotNull final String key, @NotNull final String proxyHost,
+                                                      final int proxyPort, @NotNull final String proxyUsername, @NotNull final String proxyPassword) throws Exception {
         final String storageConnectionString = String.format(STORAGE_AUTH_ENDPOINT, accountName, key);
         OperationContext.setDefaultProxy(getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword));
         return CloudStorageAccount.parse(storageConnectionString)
