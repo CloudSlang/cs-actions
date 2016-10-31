@@ -423,44 +423,13 @@ public class InstanceUtils {
                 "network-interface.availability-zone", "network-interface.requester-id", "network-interface.requester-managed",
                 "network-interface.status", "network-interface.mac-address", "network-interface.private-dns-name",
                 "network-interface.source-dest-check", "network-interface.group-id", "network-interface.group-name",
-//        network - interface.attachment.attachment - id - The ID of the interface attachment.
-//
-//        network - interface.attachment.instance - id - The ID of the instance to which the network interface is attached.
-//
-//        network - interface.attachment.instance - owner - id - The owner ID of the instance to which the network
-//        interface is attached.
-//
-//        network - interface.addresses. private -ip - address - The private IP address associated with the network
-//        interface.
-//
-//        network - interface.attachment.device - index - The device index to which the network interface is attached.
-//
-//        network - interface.attachment.status - The status of the attachment
-//        (attaching | attached | detaching | detached).
-//
-//                network - interface.attachment.attach - time - The time that the network
-//        interface was attached to an instance.
-//
-//        network - interface.attachment.delete - on - termination - Specifies whether the attachment is deleted when
-//        an instance is terminated.
-//
-//        network - interface.addresses.primary - Specifies whether the IP address of the network interface is the primary
-//        private IP address.
-//
-//        network - interface.addresses.association. public -ip - The ID of the association of an Elastic IP address with
-//        a network interface.
-//
-//        network - interface.addresses.association.ip - owner - id - The owner ID of the private IP address
-//        associated with the network interface.
-//
-//        association. public -ip - The address of the Elastic IP address bound to the network interface.
-//
-//        association.ip - owner - id - The owner of the Elastic IP address associated with the network interface.
-//
-//        association.allocation - id - The allocation ID returned when you allocated the Elastic IP address for
-//        your network interface.
-
-        "association.association-id");
+                "network-interface.attachment.attachment-id", "network-interface.attachment.instance-id",
+                "network-interface.attachment.instance-owner-id", "network-interface.addresses.private-ip-address",
+                "network-interface.attachment.device-index", "network-interface.attachment.status",
+                "network-interface.attachment.attach-time", "network-interface.attachment.delete-on-termination",
+                "network-interface.addresses.primary", "network-interface.addresses.association.public-ip",
+                "network-interface.addresses.association.ip-owner-id", "association.public-ip", "association.ip-owner-id",
+                "association.allocation-id", "association.association-id");
 
         if (!validFiltersList.contains(inputValue)) {
             throw new RuntimeException("Unsupported filter: [" + inputValue + "].");
