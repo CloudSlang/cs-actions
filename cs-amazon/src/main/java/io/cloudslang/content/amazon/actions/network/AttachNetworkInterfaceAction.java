@@ -35,7 +35,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.ATTACHMENT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.ATTACHMENT_ID_RESULT;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -101,7 +101,7 @@ public class AttachNetworkInterfaceAction {
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
-                    @Output(ATTACHMENT_ID),
+                    @Output(ATTACHMENT_ID_RESULT),
                     @Output(EXCEPTION)
             },
             responses = {
@@ -151,7 +151,7 @@ public class AttachNetworkInterfaceAction {
                     .build();
 
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
-            OutputsUtil.extractResponseAsResult(queryMapResult, ATTACHMENT_ID, ATTACHMENT_ID_X_PATH_QUERY);
+            OutputsUtil.extractResponseAsResult(queryMapResult, ATTACHMENT_ID_RESULT, ATTACHMENT_ID_X_PATH_QUERY);
             return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);

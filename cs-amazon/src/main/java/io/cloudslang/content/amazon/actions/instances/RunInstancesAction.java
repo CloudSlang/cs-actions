@@ -74,7 +74,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.INSTANCE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.INSTANCE_ID_RESULT;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.extractResponseAsResult;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
@@ -400,7 +400,7 @@ public class RunInstancesAction {
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
-                    @Output(INSTANCE_ID),
+                    @Output(INSTANCE_ID_RESULT),
                     @Output(EXCEPTION)
             },
             responses = {
@@ -541,7 +541,7 @@ public class RunInstancesAction {
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, elasticIpInputs, iamInputs,
                     instanceInputs, networkInputs);
             if((ReturnCodes.SUCCESS).equals(queryMapResult.get(RETURN_CODE))) {
-                extractResponseAsResult(queryMapResult, INSTANCE_ID, INSTANCE_ID_X_PATH_QUERY);
+                extractResponseAsResult(queryMapResult, INSTANCE_ID_RESULT, INSTANCE_ID_X_PATH_QUERY);
             }
             return queryMapResult;
         } catch (Exception e) {
