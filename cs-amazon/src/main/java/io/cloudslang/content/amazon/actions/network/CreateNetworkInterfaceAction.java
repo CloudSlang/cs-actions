@@ -38,7 +38,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpIn
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.SUBNET_ID_RESULT;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.NETWORK_INTERFACE_ID_RESULT;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.extractResponseAsResult;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
@@ -52,7 +52,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
  */
 public class CreateNetworkInterfaceAction {
 
-    private static final String SUBNET_ID_X_PATH_QUERY = "/CreateNetworkInterfaceResponse/networkInterface/subnetId";
+    private static final String NETWORK_INTERFACE_ID_X_PATH_QUERY = "/CreateNetworkInterfaceResponse/networkInterface/networkInterfaceId";
 
     /**
      * Creates a network interface in the specified subnet.
@@ -116,7 +116,7 @@ public class CreateNetworkInterfaceAction {
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
-                    @Output(SUBNET_ID_RESULT),
+                    @Output(NETWORK_INTERFACE_ID_RESULT),
                     @Output(EXCEPTION)
             },
             responses = {
@@ -136,7 +136,7 @@ public class CreateNetworkInterfaceAction {
                                        @Param(value = QUERY_PARAMS) String queryParams,
                                        @Param(value = VERSION) String version,
                                        @Param(value = DELIMITER) String delimiter,
-                                       @Param(value = SUBNET_ID_RESULT, required = true) String subnetId,
+                                       @Param(value = NETWORK_INTERFACE_ID_RESULT, required = true) String subnetId,
                                        @Param(value = PRIVATE_IP_ADDRESS) String privateIpAddress,
                                        @Param(value = PRIVATE_IP_ADDRESSES_STRING) String privateIpAddressesString,
                                        @Param(value = SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
@@ -178,7 +178,7 @@ public class CreateNetworkInterfaceAction {
                     .build();
 
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, iamInputs, networkInputs);
-            extractResponseAsResult(queryMapResult, SUBNET_ID_RESULT, SUBNET_ID_X_PATH_QUERY);
+            extractResponseAsResult(queryMapResult, NETWORK_INTERFACE_ID_RESULT, NETWORK_INTERFACE_ID_X_PATH_QUERY);
             return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);

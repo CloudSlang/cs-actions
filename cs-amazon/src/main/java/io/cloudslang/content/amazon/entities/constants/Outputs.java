@@ -8,7 +8,7 @@ public class Outputs {
     public static final String EXCEPTION = "exception";
     public static final String RETURN_RESULT = "returnResult";
     public static final String INSTANCE_ID_RESULT = "instanceIdResult";
-    public static final String SUBNET_ID_RESULT = "subnetIdResult";
+    public static final String NETWORK_INTERFACE_ID_RESULT = "networkInterfaceIdResult";
     public static final String ATTACHMENT_ID_RESULT = "attachmentIdResult";
 
     public static final String SUCCESS = "success";
