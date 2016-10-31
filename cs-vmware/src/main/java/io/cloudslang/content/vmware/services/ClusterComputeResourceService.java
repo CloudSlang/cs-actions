@@ -48,6 +48,8 @@ import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES
  */
 public class ClusterComputeResourceService {
 
+    private static final String VM_NOT_FOUND = "Virtual machine was not found!";
+
     /**
      * Das method looks into das Cluster’s list of VM overrides to update das VM’s restartPriority value.
      * If a VM override is found, das value will be updated, otherwise a new “override” will be created and added to das list.
@@ -61,8 +63,7 @@ public class ClusterComputeResourceService {
     public Map<String, String> updateOrAddVmOverride(HttpInputs httpInputs, VmInputs vmInputs, String restartPriority) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(),
-                vmInputs.getVirtualMachineName());
+        ManagedObjectReference vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
         ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
@@ -401,5 +402,13 @@ public class ClusterComputeResourceService {
             }
         }
         throw new RuntimeException(String.format(ANOTHER_FAILURE_MSG, clusterName));
+    }
+
+    private ManagedObjectReference getVmMor(ConnectionResources connectionResources, String value, String virtualMachineName) throws Exception {
+        ManagedObjectReference mor = new MorObjectHandler().getMor(connectionResources, value, virtualMachineName);
+        if (mor != null) {
+            return mor;
+        }
+        throw new RuntimeException(VM_NOT_FOUND);
     }
 }
