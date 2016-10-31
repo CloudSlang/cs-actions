@@ -60,23 +60,26 @@ public class OutputsUtil {
             } else {
                 queryMapResult.put(RETURN_CODE, FAILURE);
             }
+        } else {
+            queryMapResult = new HashMap<>();
+            queryMapResult.put(EXCEPTION, "Null response!");
+            queryMapResult.put(RETURN_CODE, FAILURE);
+            queryMapResult.put(RETURN_RESULT, "The query returned null response!");
         }
     }
 
     public static void extractResponseAsResult(Map<String, String> queryMapResult, String outputName, String xPathQuery) {
-        if (queryMapResult != null) {
-            XpathQuery xpathQueryAction = new XpathQuery();
-            String xmlString = queryMapResult.get(RETURN_RESULT);
-            //We make this workaround because the xml has an xmlns property in the tag and our operation can not parse the xml
-            //this should be removed when the xml operation will be enhanced
-            xmlString = xmlString.replace(XMLNS, WORKAROUND);
-            Map<String, String> result = xpathQueryAction.execute(xmlString, XML_DOCUMENT_SOURCE, xPathQuery, VALUE, DELIMITER, valueOf(true));
-            if (result.containsKey(RETURN_CODE) && SUCCESS.equals(result.get(RETURN_CODE))) {
-                queryMapResult.put(outputName, result.get(SELECTED_VALUE));
-            } else {
-                queryMapResult.put(RETURN_CODE, FAILURE);
-                queryMapResult.put(EXCEPTION, result.get(ERROR_MESSAGE));
-            }
+        XpathQuery xpathQueryAction = new XpathQuery();
+        String xmlString = queryMapResult.get(RETURN_RESULT);
+        //We make this workaround because the xml has an xmlns property in the tag and our operation can not parse the xml
+        //this should be removed when the xml operation will be enhanced
+        xmlString = xmlString.replace(XMLNS, WORKAROUND);
+        Map<String, String> result = xpathQueryAction.execute(xmlString, XML_DOCUMENT_SOURCE, xPathQuery, VALUE, DELIMITER, valueOf(true));
+        if (result.containsKey(RETURN_CODE) && SUCCESS.equals(result.get(RETURN_CODE))) {
+            queryMapResult.put(outputName, result.get(SELECTED_VALUE));
+        } else {
+            queryMapResult.put(RETURN_CODE, FAILURE);
+            queryMapResult.put(EXCEPTION, result.get(ERROR_MESSAGE));
         }
     }
 }
