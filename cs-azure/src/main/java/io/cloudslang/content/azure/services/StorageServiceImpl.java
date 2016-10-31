@@ -2,31 +2,15 @@ package io.cloudslang.content.azure.services;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.OperationContext;
-import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
-import com.microsoft.azure.storage.core.Base64;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.commons.codec.digest.HmacUtils;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-import static io.cloudslang.content.azure.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.azure.utils.Constants.STORAGE_AUTH_ENDPOINT;
 import static io.cloudslang.content.azure.utils.HttpUtils.getProxy;
 
