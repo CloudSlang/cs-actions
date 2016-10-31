@@ -5,10 +5,6 @@ package io.cloudslang.content.amazon.entities.constants;
  * 5/4/2016.
  */
 public class Constants {
-    public static class Providers {
-        public static final String OPENSTACK = "openstack";
-    }
-
     public static class Apis {
         public static final String AMAZON_EC2_API = "ec2";
     }
@@ -26,13 +22,13 @@ public class Constants {
         public static final String LINE_SEPARATOR = "\n";
         public static final String NETWORK = "network";
         public static final String NOT_RELEVANT = "Not relevant";
+        public static final String PIPE_DELIMITER = "|";
         public static final String SCOPE_SEPARATOR = "/";
     }
 
     public static class ErrorMessages {
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
-        public static final String NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
     }
 
     public static class Values {

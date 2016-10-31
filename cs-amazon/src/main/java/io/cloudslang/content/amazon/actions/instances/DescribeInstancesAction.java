@@ -32,6 +32,9 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_RESULTS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_NAMES_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_VALUES_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.NEXT_TOKEN;
 
 /**
  * Created by Mihai Tusa.
@@ -112,8 +115,11 @@ public class DescribeInstancesAction {
                                        @Param(value = QUERY_PARAMS) String queryParams,
                                        @Param(value = VERSION, required = true) String version,
                                        @Param(value = DELIMITER) String delimiter,
+                                       @Param(value = FILTER_NAMES_STRING) String filterNamesString,
+                                       @Param(value = FILTER_VALUES_STRING) String filterValuesString,
                                        @Param(value = INSTANCE_IDS_STRING) String instanceIdsString,
-                                       @Param(value = MAX_RESULTS) String maxResults) {
+                                       @Param(value = MAX_RESULTS) String maxResults,
+                                       @Param(value = NEXT_TOKEN) String nextToken) {
 
         try {
             CommonInputs commonInputs = new CommonInputs.Builder()
@@ -136,8 +142,11 @@ public class DescribeInstancesAction {
                     .build();
 
             InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                    .withFilterNamesString(filterNamesString)
+                    .withFilterValuesString(filterValuesString)
                     .withInstanceIdsString(instanceIdsString)
                     .withMaxResults(maxResults)
+                    .withNextToken(nextToken)
                     .build();
 
             return new QueryApiExecutor().execute(commonInputs, instanceInputs);

@@ -24,8 +24,11 @@ public class InstanceInputs {
     private String kernel;
     private String ramdisk;
     private String sriovNetSupport;
+    private String filterNamesString;
+    private String filterValuesString;
     private String instanceIdsString;
     private String maxResults;
+    private String nextToken;
 
     private int maxCount;
     private int minCount;
@@ -49,9 +52,9 @@ public class InstanceInputs {
         this.ramdisk = builder.ramdisk;
         this.sriovNetSupport = builder.sriovNetSupport;
         this.instanceIdsString = builder.instanceIdsString;
-        ;
         this.maxResults = builder.maxResults;
-        ;
+        this.filterNamesString = builder.filterNamesString;
+        this.filterValuesString = builder.filterValuesString;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -110,16 +113,28 @@ public class InstanceInputs {
         return sriovNetSupport;
     }
 
+    public String getFilterNamesString() {
+        return filterNamesString;
+    }
+
+    public String getFilterValuesString() {
+        return filterValuesString;
+    }
+
     public String getInstanceIdsString() {
         return instanceIdsString;
     }
 
-    public int getMaxCount() {
-        return maxCount;
-    }
-
     public String getMaxResults() {
         return maxResults;
+    }
+
+    public String getNextToken() {
+        return nextToken;
+    }
+
+    public int getMaxCount() {
+        return maxCount;
     }
 
     public int getMinCount() {
@@ -155,8 +170,11 @@ public class InstanceInputs {
         private String kernel;
         private String ramdisk;
         private String sriovNetSupport;
+        private String filterNamesString;
+        private String filterValuesString;
         private String instanceIdsString;
         private String maxResults;
+        private String nextToken;
 
         private int maxCount;
         private int minCount;
@@ -230,18 +248,33 @@ public class InstanceInputs {
             return this;
         }
 
+        public Builder withFilterNamesString(String inputValue) {
+            filterNamesString = inputValue;
+            return this;
+        }
+
+        public Builder withFilterValuesString(String inputValue) {
+            filterValuesString = inputValue;
+            return this;
+        }
+
         public Builder withInstanceIdsString(String inputValue) {
             instanceIdsString = inputValue;
             return this;
         }
 
-        public Builder withMaxCount(String inputValue) {
-            maxCount = InputsUtil.getValidInstancesCount(inputValue);
+        public Builder withMaxResults(String inputValue) {
+            maxResults = InputsUtil.getMaxResultsCount(inputValue);
             return this;
         }
 
-        public Builder withMaxResults(String inputValue) {
-            maxResults = InputsUtil.getMaxResultsCount(inputValue);
+        public Builder withNextToken(String inputValue) {
+            nextToken = inputValue;
+            return this;
+        }
+
+        public Builder withMaxCount(String inputValue) {
+            maxCount = InputsUtil.getValidInstancesCount(inputValue);
             return this;
         }
 

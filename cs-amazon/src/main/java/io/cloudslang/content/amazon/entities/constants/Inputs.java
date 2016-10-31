@@ -117,6 +117,8 @@ public class Inputs {
         public static final String CLIENT_TOKEN = "clientToken";
         public static final String DISABLE_API_TERMINATION = "disableApiTermination";
         public static final String ENA_SUPPORT = "enaSupport";
+        public static final String FILTER_NAMES_STRING = "filterNamesString";
+        public static final String FILTER_VALUES_STRING = "filterValuesString";
         public static final String FORCE_STOP = "forceStop";
         public static final String INSTANCE_IDS_STRING = "instanceIdsString";
         public static final String INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR = "instanceInitiatedShutdownBehavior";
@@ -125,6 +127,7 @@ public class Inputs {
         public static final String MAX_RESULTS = "maxResults";
         public static final String MIN_COUNT = "minCount";
         public static final String MONITORING = "monitoring";
+        public static final String NEXT_TOKEN = "nextToken";
         public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
         public static final String RAMDISK = "ramdisk";
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";

@@ -1,16 +1,11 @@
 package io.cloudslang.content.amazon.factory.helpers;
 
-import io.cloudslang.content.amazon.entities.aws.InstanceInitiatedShutdownBehavior;
-import io.cloudslang.content.amazon.entities.aws.InstanceType;
-import io.cloudslang.content.amazon.entities.aws.VolumeType;
+import io.cloudslang.content.amazon.entities.aws.*;
 import io.cloudslang.content.amazon.entities.constants.Inputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Arrays;
+import java.util.*;
 
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -20,9 +15,11 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ENCRYPTED;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FORCE;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FILTER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.IMAGE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.INSTANCE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.IOPS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
@@ -39,6 +36,9 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
+
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_NAMES_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_VALUES_STRING;
 
 /**
  * Created by Mihai Tusa.
@@ -63,6 +63,7 @@ public class InstanceUtils {
     private static final String MAX_RESULTS = "MaxResults";
     private static final String MIN_COUNT = "MinCount";
     private static final String MONITORING_ENABLED = "Monitoring.Enabled";
+    private static final String NEXT_TOKEN = "NextToken";
     private static final String NO_DEVICE = "NoDevice";
     private static final String PLACEMENT_AFFINITY = "Placement.Affinity";
     private static final String PLACEMENT_AVAILABILITY_ZONE = "Placement.AvailabilityZone";
@@ -78,15 +79,16 @@ public class InstanceUtils {
     private static final String VIRTUAL_NAME = "VirtualName";
 
     public Map<String, String> getDescribeInstancesQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = new HashMap<>();
+        Map<String, String> queryParamsMap = new LinkedHashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         setInstanceIdsQueryParams(wrapper, queryParamsMap);
-
         InputsUtil.setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getInstanceInputs().getMaxResults(),
                 !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getMaxResults()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getInstanceInputs().getNextToken(),
+                isNotBlank(wrapper.getInstanceInputs().getNextToken()));
+        setDescribeInstancesQueryParamsFilter(queryParamsMap, wrapper);
 
         return queryParamsMap;
-
     }
 
     public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
@@ -97,7 +99,6 @@ public class InstanceUtils {
         new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
         setModifyInstanceAttributeEbsSpecs(queryParamsMap, wrapper);
-
         InputsUtil.setOptionalMapEntry(queryParamsMap, VALUE, wrapper.getInstanceInputs().getAttributeValue(),
                 isNotBlank(wrapper.getInstanceInputs().getAttributeValue()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, DISABLE_API_TERMINATION + DOT + VALUE,
@@ -135,7 +136,6 @@ public class InstanceUtils {
     public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) throws Exception {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
-
         queryParamsMap.put(DISABLE_API_TERMINATION, valueOf(wrapper.getInstanceInputs().isDisableApiTermination()));
         queryParamsMap.put(EBS_OPTIMIZED, valueOf(wrapper.getEbsInputs().isEbsOptimized()));
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
@@ -146,7 +146,6 @@ public class InstanceUtils {
         String instanceType = NOT_RELEVANT.equalsIgnoreCase(wrapper.getCustomInputs().getInstanceType()) ?
                 InstanceType.M1_SMALL.name().toLowerCase() : InstanceType.getInstanceType(wrapper.getCustomInputs().getInstanceType());
         queryParamsMap.put(INSTANCE_TYPE, instanceType);
-
         String iisbvalue = NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()) ?
                 InstanceInitiatedShutdownBehavior.STOP.name().toLowerCase() :
                 InstanceInitiatedShutdownBehavior.getValue(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior());
@@ -176,7 +175,6 @@ public class InstanceUtils {
                 isNotBlank(wrapper.getCustomInputs().getRamdiskId()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, USER_DATA, wrapper.getInstanceInputs().getUserData(),
                 isNotBlank(wrapper.getInstanceInputs().getUserData()));
-
         setBlockDeviceMappingQueryParams(queryParamsMap, wrapper);
         setNetworkInterfaceQueryParams(queryParamsMap, wrapper);
 
@@ -203,9 +201,29 @@ public class InstanceUtils {
         return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
 
+    private void setDescribeInstancesQueryParamsFilter(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
+        String[] filterNamesArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getInstanceInputs().getFilterNamesString(),
+                FILTER_NAMES_STRING, wrapper.getCommonInputs().getDelimiter());
+        String[] filterValuesArray = InputsUtil.getStringsArray(wrapper.getInstanceInputs().getFilterValuesString(), EMPTY,
+                wrapper.getCommonInputs().getDelimiter());
+        InputsUtil.validateAgainstDifferentArraysLength(filterNamesArray, filterValuesArray, FILTER_NAMES_STRING, FILTER_VALUES_STRING);
+        if (filterNamesArray != null && filterNamesArray.length > START_INDEX
+                && filterValuesArray != null && filterValuesArray.length > START_INDEX) {
+            for (int index = START_INDEX; index < filterNamesArray.length; index++) {
+                queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + NAME, filterNamesArray[index]);
+                String[] valuesArray = InputsUtil.getStringsArray(filterValuesArray[index], EMPTY, wrapper.getCommonInputs().getDelimiter());
+                if (valuesArray != null && valuesArray.length > START_INDEX) {
+                    for (int counter = START_INDEX; counter < filterNamesArray.length; index++) {
+                        queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE, getValidQueryParamValue(valuesArray[counter].toLowerCase()));
+                    }
+                }
+
+            }
+        }
+    }
+
     private void setModifyInstanceAttributeEbsSpecs(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         String delimiter = wrapper.getCommonInputs().getDelimiter();
-
         String[] deviceNamesArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getEbsInputs().getBlockDeviceMappingDeviceNamesString(),
                 Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING, delimiter);
         String[] deleteOnTerminationsArray = InputsUtil.getStringsArray(wrapper.getEbsInputs().getDeleteOnTerminationsString(), EMPTY, delimiter);
@@ -223,7 +241,6 @@ public class InstanceUtils {
                 Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING, Inputs.EbsInputs.NO_DEVICES_STRING);
         InputsUtil.validateAgainstDifferentArraysLength(deviceNamesArray, virtualNamesArray,
                 Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING, Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING);
-
         setEbsOptionalQueryParams(queryParamsMap, deviceNamesArray, deleteOnTerminationsArray, volumeIdsArray, noDevicesArray, virtualNamesArray);
     }
 
@@ -284,7 +301,6 @@ public class InstanceUtils {
                             BLOCK_DEVICE_MAPPING_DEVICE_NAME, deviceNamesArray[index]);
                     InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
                             VIRTUAL_NAME, virtualNamesArray[index], !NOT_RELEVANT.equalsIgnoreCase(virtualNamesArray[index]));
-
                     setOptionalQueryParam(queryParamsMap, wrapper.getEbsInputs().getDeleteOnTerminationsString(), EMPTY,
                             wrapper.getCommonInputs().getDelimiter(), Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING,
                             Inputs.EbsInputs.DELETE_ON_TERMINATIONS_STRING, DELETE_ON_TERMINATION, deviceNamesArray, index);
@@ -390,5 +406,73 @@ public class InstanceUtils {
         }
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, ATTRIBUTE, attribute, !NOT_RELEVANT.equalsIgnoreCase(attribute));
+    }
+
+    private String getValidQueryParamValue(String inputValue) {
+        List<String> validFiltersList = Arrays.asList("affinity", "architecture", "availability-zone", "block-device-mapping.attach-time",
+                "block-device-mapping.delete-on-termination", "block-device-mapping.device-name", "block-device-mapping.status",
+                "block-device-mapping.volume-id", "client-token", "dns-name", "group-id", "group-name", "host-id", "hypervisor",
+                "iam-instance-profile.arn", "image-id", "instance-id", "instance-lifecycle", "instance-state-code",
+                "instance-state-name", "instance-type", "instance.group-id", "instance.group-name", "ip-address", "kernel-id",
+                "key-name", "launch-index", "launch-time", "monitoring-state", "owner-id", "placement-group-name", "platform",
+                "private-dns-name", "private-ip-address", "product-code", "product-code.type", "ramdisk-id", "reason",
+                "requester-id", "reservation-id", "root-device-name", "root-device-type", "source-dest-check", "spot-instance-request-id",
+                "state-reason-code", "state-reason-message", "subnet-id", "tag", "tag-key", "tag-value", "tenancy",
+                "virtualization-type", "vpc-id", "network-interface.description", "network-interface.subnet-id",
+                "network-interface.vpc-id", "network-interface.network-interface-id", "network-interface.owner-id",
+                "network-interface.availability-zone", "network-interface.requester-id", "network-interface.requester-managed",
+                "network-interface.status", "network-interface.mac-address", "network-interface.private-dns-name",
+                "network-interface.source-dest-check", "network-interface.group-id", "network-interface.group-name",
+//        network - interface.attachment.attachment - id - The ID of the interface attachment.
+//
+//        network - interface.attachment.instance - id - The ID of the instance to which the network interface is attached.
+//
+//        network - interface.attachment.instance - owner - id - The owner ID of the instance to which the network
+//        interface is attached.
+//
+//        network - interface.addresses. private -ip - address - The private IP address associated with the network
+//        interface.
+//
+//        network - interface.attachment.device - index - The device index to which the network interface is attached.
+//
+//        network - interface.attachment.status - The status of the attachment
+//        (attaching | attached | detaching | detached).
+//
+//                network - interface.attachment.attach - time - The time that the network
+//        interface was attached to an instance.
+//
+//        network - interface.attachment.delete - on - termination - Specifies whether the attachment is deleted when
+//        an instance is terminated.
+//
+//        network - interface.addresses.primary - Specifies whether the IP address of the network interface is the primary
+//        private IP address.
+//
+//        network - interface.addresses.association. public -ip - The ID of the association of an Elastic IP address with
+//        a network interface.
+//
+//        network - interface.addresses.association.ip - owner - id - The owner ID of the private IP address
+//        associated with the network interface.
+//
+//        association. public -ip - The address of the Elastic IP address bound to the network interface.
+//
+//        association.ip - owner - id - The owner of the Elastic IP address associated with the network interface.
+//
+//        association.allocation - id - The allocation ID returned when you allocated the Elastic IP address for
+//        your network interface.
+
+        "association.association-id");
+
+        if (!validFiltersList.contains(inputValue)) {
+            throw new RuntimeException("Unsupported filter: [" + inputValue + "].");
+        }
+
+        switch (inputValue) {
+            case "affinity":
+                return Affinity.getValue(inputValue);
+            case "architecture":
+                return Architecture.getValue(inputValue);
+            default:
+                return inputValue;
+        }
     }
 }

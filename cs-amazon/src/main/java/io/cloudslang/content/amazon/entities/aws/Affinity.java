@@ -4,7 +4,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * Created by TusaM on 10/31/2016.
+ * Created by TusaM
+ * 10/31/2016.
  */
 public enum Affinity {
     DEFAULT,
