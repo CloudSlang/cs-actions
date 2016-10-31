@@ -268,7 +268,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStartInstances() throws Exception {
-        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getStartInstancesInputs());
+        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StartInstances")));
@@ -277,7 +277,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStopInstances() throws Exception {
-        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getInstanceCustomInputs(), getStopInstancesInstanceInputs());
+        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StopInstances")));
@@ -286,7 +286,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testRebootInstances() throws Exception {
-        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getInstanceCustomInputs());
+        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RebootInstances")));
@@ -313,7 +313,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testTerminateInstances() throws Exception {
-        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getInstanceCustomInputs());
+        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("TerminateInstances")));
@@ -741,6 +741,10 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
+    private InstanceInputs getRebootStartStopTerminateInstancesInputs() {
+        return new InstanceInputs.Builder().withForceStop("true").withInstanceIdsString("i-12345678").build();
+    }
+
     private ImageInputs getDescribeImagesInputs() throws Exception {
         CustomInputs customInputs = new CustomInputs.Builder()
                 .withIdentityId("my-id")
@@ -778,17 +782,5 @@ public class QueryApiExecutorTest {
                 .withImageName("img-name")
                 .withState("available")
                 .build();
-    }
-
-    private InstanceInputs getStopInstancesInstanceInputs() {
-        return new InstanceInputs.Builder().withForceStop("true").build();
-    }
-
-    private CustomInputs getInstanceCustomInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
-    }
-
-    private CustomInputs getStartInstancesInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
     }
 }

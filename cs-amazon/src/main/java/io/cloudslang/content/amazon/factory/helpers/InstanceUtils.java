@@ -60,6 +60,7 @@ public class InstanceUtils {
     private static final String KERNEL_ID = "KernelId";
     private static final String KEY_NAME = "KeyName";
     private static final String MAX_COUNT = "MaxCount";
+    private static final String MAX_RESULTS = "MaxResults";
     private static final String MIN_COUNT = "MinCount";
     private static final String MONITORING_ENABLED = "Monitoring.Enabled";
     private static final String NO_DEVICE = "NoDevice";
@@ -79,8 +80,13 @@ public class InstanceUtils {
     public Map<String, String> getDescribeInstancesQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setInstanceIdsQueryParams(wrapper, queryParamsMap);
+
+        InputsUtil.setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getInstanceInputs().getMaxResults(),
+                !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getMaxResults()));
 
         return queryParamsMap;
+
     }
 
     public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
@@ -112,7 +118,8 @@ public class InstanceUtils {
         InputsUtil.setOptionalMapEntry(queryParamsMap, RAMDISK + DOT + VALUE, wrapper.getInstanceInputs().getRamdisk(),
                 isNotBlank(wrapper.getInstanceInputs().getRamdisk()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, SOURCE_DEST_CHECK + DOT + VALUE, wrapper.getInstanceInputs().getSourceDestinationCheck(),
-                (isNotBlank(wrapper.getInstanceInputs().getSourceDestinationCheck()) && !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getSourceDestinationCheck())));
+                (isNotBlank(wrapper.getInstanceInputs().getSourceDestinationCheck()) &&
+                        !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getSourceDestinationCheck())));
         InputsUtil.setOptionalMapEntry(queryParamsMap, SRIOV_NET_SUPPORT + DOT + VALUE, wrapper.getInstanceInputs().getSriovNetSupport(),
                 isNotBlank(wrapper.getInstanceInputs().getSriovNetSupport()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, USER_DATA + DOT + VALUE, wrapper.getInstanceInputs().getUserData(),
@@ -223,15 +230,21 @@ public class InstanceUtils {
     private Map<String, String> getRebootStartStopTerminateCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setInstanceIdsQueryParams(wrapper, queryParamsMap);
 
-        String[] instanceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getInstanceId(),
-                Inputs.CustomInputs.INSTANCE_ID, wrapper.getCommonInputs().getDelimiter());
+        return queryParamsMap;
+    }
+
+    private void setInstanceIdsQueryParams(InputsWrapper wrapper, Map<String, String> queryParamsMap) {
+        String[] instanceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getInstanceInputs().getInstanceIdsString(),
+                Inputs.InstanceInputs.INSTANCE_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
         if (instanceIdsArray != null && instanceIdsArray.length > START_INDEX) {
             for (int index = START_INDEX; index < instanceIdsArray.length; index++) {
-                queryParamsMap.put(INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index]);
+                InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index],
+                        isNotBlank(instanceIdsArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(instanceIdsArray[index])
+                                && !EMPTY.equals(instanceIdsArray[index]));
             }
         }
-        return queryParamsMap;
     }
 
     private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
