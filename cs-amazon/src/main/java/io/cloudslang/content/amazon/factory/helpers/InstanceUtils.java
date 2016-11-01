@@ -338,7 +338,8 @@ public class InstanceUtils {
             for (int counter = START_INDEX; counter < filterNamesArray.length; counter++) {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(valuesArray[counter]))
                         || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(valuesArray[counter]))) {
-                    queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE,
+                    String suffix = filterNamesArray.length > ONE ? DOT + valueOf(counter + ONE) : EMPTY;
+                    queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + suffix,
                             getFilterValue(valuesArray[counter].toLowerCase()));
                 }
             }
