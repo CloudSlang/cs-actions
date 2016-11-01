@@ -323,17 +323,20 @@ public class InstanceUtils {
             for (int index = START_INDEX; index < filterNamesArray.length; index++) {
                 String filterName = InstanceFilter.getFilter(filterNamesArray[index]);
                 queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + NAME, filterName);
-                String[] valuesArray = InputsUtil.getStringsArray(filterValuesArray[index], EMPTY, PIPE_DELIMITER);
-                if (valuesArray != null && valuesArray.length > START_INDEX) {
-                    for (int counter = START_INDEX; counter < filterNamesArray.length; index++) {
-                        if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(valuesArray[counter]))
-                                || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(valuesArray[counter]))) {
-                            queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE,
-                                    getFilterValue(valuesArray[counter].toLowerCase()));
-                        }
-                    }
-                }
+                setFilterValues(queryParamsMap, filterNamesArray, filterValuesArray[index], index);
+            }
+        }
+    }
 
+    private void setFilterValues(Map<String, String> queryParamsMap, String[] filterNamesArray, String filterValues, int index) {
+        String[] valuesArray = InputsUtil.getStringsArray(filterValues, EMPTY, PIPE_DELIMITER);
+        if (valuesArray != null && valuesArray.length > START_INDEX) {
+            for (int counter = START_INDEX; counter < filterNamesArray.length; counter++) {
+                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(valuesArray[counter]))
+                        || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(valuesArray[counter]))) {
+                    queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE,
+                            getFilterValue(valuesArray[counter].toLowerCase()));
+                }
             }
         }
     }
