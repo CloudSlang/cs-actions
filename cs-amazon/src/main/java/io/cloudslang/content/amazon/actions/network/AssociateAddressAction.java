@@ -69,8 +69,8 @@ public class AssociateAddressAction {
      * @param proxyUsername      Optional - proxy server user name.
      * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
      * @param version            Optional - Version of the web service to made the call against it.
-     *                           Example: "2016-04-01"
-     *                           Default: "2016-04-01"
+     *                           Example: "2014-06-15"
+     *                           Default: "2014-06-15"
      * @param headers            Optional - string containing the headers to use for the request separated by new line
      *                           (CRLF). The header name-value pair will be separated by ":".
      *                           Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -137,7 +137,7 @@ public class AssociateAddressAction {
                                        @Param(value = PUBLIC_IP) String publicIp,
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
@@ -166,7 +166,8 @@ public class AssociateAddressAction {
 
             NetworkInputs networkInputs = new NetworkInputs.Builder().withNetworkInterfaceId(networkInterfaceId).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, networkInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, networkInputs);
+            return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

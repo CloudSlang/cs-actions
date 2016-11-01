@@ -136,7 +136,8 @@ public class AddLaunchPermissionsToImageAction {
                     .withUserGroupsString(userGroupsString)
                     .build();
 
-            return new QueryApiExecutor().execute(inputs, imageInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(inputs, imageInputs);
+            return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

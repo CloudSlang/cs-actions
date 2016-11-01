@@ -120,7 +120,8 @@ public class DeleteVolume {
 
             CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs);
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

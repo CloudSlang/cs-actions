@@ -70,8 +70,8 @@ public class ReleaseAddressAction {
      *                      query value by "=".
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      * @param version       Optional - Version of the web service to made the call against it.
-     *                      Example: "2016-04-01"
-     *                      Default: "2016-04-01"
+     *                      Example: "2014-06-15"
+     *                      Default: "2014-06-15"
      * @param allocationId  Optional - [EC2-VPC] Allocation ID. This is required for EC2-VPC.
      *                      Example: "eipalloc-abcdef12"
      *                      Default: ""
@@ -105,7 +105,7 @@ public class ReleaseAddressAction {
                                        @Param(value = ALLOCATION_ID) String allocationId,
                                        @Param(value = PUBLIC_IP) String publicIp) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
@@ -127,7 +127,8 @@ public class ReleaseAddressAction {
             CustomInputs customInputs = new CustomInputs.Builder().withAllocationId(allocationId).build();
             ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder().withPublicIp(publicIp).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
+            return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

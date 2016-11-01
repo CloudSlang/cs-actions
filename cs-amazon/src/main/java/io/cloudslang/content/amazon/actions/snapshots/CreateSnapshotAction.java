@@ -13,6 +13,7 @@ import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import io.cloudslang.content.amazon.utils.OutputsUtil;
 
 import java.util.Map;
 
@@ -136,7 +137,8 @@ public class CreateSnapshotAction {
             CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
             VolumeInputs volumeInputs = new VolumeInputs.Builder().withDescription(snapshotDescription).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
