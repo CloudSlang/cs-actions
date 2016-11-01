@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.azure.utils.AuthorizationInputNames.AUTHORITY;
+import static io.cloudslang.content.azure.utils.AuthorizationInputNames.LOGIN_AUTHORITY;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.CLIENT_ID;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PASSWORD;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HOST;
@@ -49,19 +49,19 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class GetAuthorizationToken {
 
     /**
-     * @param username      Azure username
-     * @param password      Azure password
-     * @param clientId      Service Client ID
-     *                      Default: '9ba1a5c7-f17a-4de9-a1f1-6178c8d51223'
-     * @param authority     The authority URL
-     *                      Default: 'https://login.windows.net/common'
-     * @param resource      The resource URL
-     *                      Default: 'https://management.azure.com'
-     * @param proxyHost     Proxy server used to access the web site
-     * @param proxyPort     Proxy server port
-     *                      Default: '8080'
-     * @param proxyUsername User name used when connecting to the proxy
-     * @param proxyPassword The proxy server password associated with the <proxyUsername> input value
+     * @param username       Azure username
+     * @param password       Azure password
+     * @param clientId       Service Client ID
+     *                       Default: '9ba1a5c7-f17a-4de9-a1f1-6178c8d51223'
+     * @param loginAuthority The authority URL
+     *                       Default: 'https://login.windows.net/common'
+     * @param resource       The resource URL
+     *                       Default: 'https://management.azure.com'
+     * @param proxyHost      Proxy server used to access the web site
+     * @param proxyPort      Proxy server port
+     *                       Default: '8080'
+     * @param proxyUsername  User name used when connecting to the proxy
+     * @param proxyPassword  The proxy server password associated with the <proxyUsername> input value
      * @return The authorization Bearer token for Azure
      */
     @Action(name = "Get the authorization token for Azure",
@@ -77,14 +77,14 @@ public class GetAuthorizationToken {
     public Map<String, String> execute(@Param(value = USERNAME, required = true) String username,
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = CLIENT_ID) String clientId,
-                                       @Param(value = AUTHORITY) String authority,
+                                       @Param(value = LOGIN_AUTHORITY) String loginAuthority,
                                        @Param(value = RESOURCE) String resource,
                                        @Param(value = PROXY_HOST) String proxyHost,
                                        @Param(value = PROXY_PORT) String proxyPort,
                                        @Param(value = PROXY_USERNAME) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword) {
         clientId = defaultIfEmpty(clientId, DEFAULT_CLIENT_ID);
-        authority = defaultIfEmpty(authority, DEFAULT_AUTHORITY);
+        loginAuthority = defaultIfEmpty(loginAuthority, DEFAULT_AUTHORITY);
         resource = defaultIfEmpty(resource, DEFAULT_RESOURCE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -100,7 +100,7 @@ public class GetAuthorizationToken {
                     .username(username)
                     .password(password)
                     .clientId(clientId)
-                    .authority(authority)
+                    .authority(loginAuthority)
                     .resource(resource)
                     .proxyHost(proxyHost)
                     .proxyPort(NumberUtilities.toInteger(proxyPort))
