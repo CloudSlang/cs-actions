@@ -60,14 +60,14 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.S
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.AFFINITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.CLIENT_TOKEN;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.DISABLE_API_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_DISABLE_API_TERMINATION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_COUNT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MIN_COUNT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MONITORING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.PLACEMENT_GROUP_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.TENANCY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.USER_DATA;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_USER_DATA;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
@@ -435,14 +435,14 @@ public class RunInstancesAction {
                                        @Param(value = SECURITY_GROUP_NAMES_STRING) String securityGroupNamesString,
                                        @Param(value = AFFINITY) String affinity,
                                        @Param(value = CLIENT_TOKEN) String clientToken,
-                                       @Param(value = DISABLE_API_TERMINATION) String disableApiTermination,
-                                       @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
+                                       @Param(value = LOWER_CASE_DISABLE_API_TERMINATION) String disableApiTermination,
+                                       @Param(value = LOWER_CASE_INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
                                        @Param(value = MAX_COUNT) String maxCount,
                                        @Param(value = MIN_COUNT) String minCount,
                                        @Param(value = MONITORING) String monitoring,
                                        @Param(value = PLACEMENT_GROUP_NAME) String placementGroupName,
                                        @Param(value = TENANCY) String tenancy,
-                                       @Param(value = USER_DATA) String userData,
+                                       @Param(value = LOWER_CASE_USER_DATA) String userData,
                                        @Param(value = NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS) String networkInterfaceAssociatePublicIpAddress,
                                        @Param(value = NETWORK_INTERFACE_DELETE_ON_TERMINATION) String networkInterfaceDeleteOnTerminationString,
                                        @Param(value = NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
