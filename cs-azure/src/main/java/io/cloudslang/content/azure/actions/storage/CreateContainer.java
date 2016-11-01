@@ -61,7 +61,7 @@ public class CreateContainer {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
             })
     public Map<String, String> execute(@Param(value = ACCOUNT_NAME, required = true) String accountName,
-                                       @Param(value = KEY, required = true) String key,
+                                       @Param(value = KEY, required = true, encrypted = true) String key,
                                        @Param(value = CONTAINER_NAME, required = true) String containerName,
                                        @Param(value = PROXY_HOST) String proxyHost,
                                        @Param(value = PROXY_PORT) String proxyPort,
