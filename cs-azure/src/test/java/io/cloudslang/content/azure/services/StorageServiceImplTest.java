@@ -1,11 +1,19 @@
 package io.cloudslang.content.azure.services;
 
+import com.microsoft.azure.storage.StorageUri;
+import com.microsoft.azure.storage.blob.CloudBlobClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.net.URI;
+
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -26,11 +34,7 @@ public class StorageServiceImplTest {
 
     @Test
     public void createContainer() throws Exception {
-//        mockStatic(StorageServiceImpl.class);
-//        StorageServiceImpl.createContainer("", "", "", "", 8080, "", "");
-//        verifyStatic();
-//        StorageServiceImpl.getCloudBlobClient("", "", "", 8080, "", "");
-
+        // can't test it because mockito v1 can't mock final classes
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -40,7 +44,7 @@ public class StorageServiceImplTest {
 
     @Test
     public void listContainers() throws Exception {
-
+        // can't test it because mockito v1 can't mock final classes
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -50,7 +54,7 @@ public class StorageServiceImplTest {
 
     @Test
     public void deleteContainer() throws Exception {
-
+        // can't test it because mockito v1 can't mock final classes
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -60,7 +64,7 @@ public class StorageServiceImplTest {
 
     @Test
     public void listBlobs() throws Exception {
-
+        // can't test it because mockito v1 can't mock final classes
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -70,7 +74,7 @@ public class StorageServiceImplTest {
 
     @Test
     public void deleteBlob() throws Exception {
-
+        // can't test it because mockito v1 can't mock final classes
     }
 
 }
