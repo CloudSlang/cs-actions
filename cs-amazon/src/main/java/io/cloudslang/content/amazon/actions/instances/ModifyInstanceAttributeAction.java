@@ -302,8 +302,7 @@ public class ModifyInstanceAttributeAction {
                     .withUserData(userData)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, iamInputs, instanceInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, iamInputs, instanceInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

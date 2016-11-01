@@ -130,8 +130,7 @@ public class CreateImageAction {
                     .withImageNoReboot(noReboot)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

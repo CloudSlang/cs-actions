@@ -110,8 +110,7 @@ public class DeregisterImageAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withImageId(imageId).build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

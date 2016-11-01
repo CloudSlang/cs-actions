@@ -129,8 +129,7 @@ public class DisassociateAddressAction {
             CustomInputs customInputs = new CustomInputs.Builder().withAssociationId(associationId).build();
             ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder().withPublicIp(publicIp).build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

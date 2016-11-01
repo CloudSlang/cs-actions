@@ -140,8 +140,7 @@ public class DescribeRegionsAction {
                     .withRegionsString(regionsString)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

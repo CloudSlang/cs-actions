@@ -118,8 +118,7 @@ public class DeleteNetworkInterfaceAction {
 
             NetworkInputs networkInputs = new NetworkInputs.Builder().withNetworkInterfaceId(networkInterfaceId).build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, networkInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, networkInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

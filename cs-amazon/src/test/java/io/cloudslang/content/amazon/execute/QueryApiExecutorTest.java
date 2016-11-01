@@ -408,7 +408,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private CustomInputs getCustomInputs() throws Exception {
+    private CustomInputs getCustomInputs() {
         return new CustomInputs.Builder()
                 .withAllocationId("eipalloc-abcdef12")
                 .withAssociationId("eipassoc-abcdef12")
@@ -745,7 +745,7 @@ public class QueryApiExecutorTest {
         return new InstanceInputs.Builder().withForceStop("true").withInstanceIdsString("i-12345678").build();
     }
 
-    private ImageInputs getDescribeImagesInputs() throws Exception {
+    private ImageInputs getDescribeImagesInputs() {
         CustomInputs customInputs = new CustomInputs.Builder()
                 .withIdentityId("my-id")
                 .withArchitecture("i386")

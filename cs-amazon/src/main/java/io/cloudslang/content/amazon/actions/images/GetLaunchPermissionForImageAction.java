@@ -110,8 +110,7 @@ public class GetLaunchPermissionForImageAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withAttribute(LAUNCH_PERMISSION).withImageId(imageId).build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(inputs, customInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(inputs, customInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }
