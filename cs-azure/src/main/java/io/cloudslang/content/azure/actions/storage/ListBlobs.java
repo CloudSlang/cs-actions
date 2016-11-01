@@ -22,7 +22,7 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_US
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyStorageInputs;
-import static io.cloudslang.content.azure.utils.StorageInputNames.ACCOUNT_NAME;
+import static io.cloudslang.content.azure.utils.StorageInputNames.STORAGE_ACCOUNT;
 import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.KEY;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
@@ -40,14 +40,14 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class ListBlobs {
     /**
-     * @param accountName   Azure account name
-     * @param key           Azure account key
-     * @param containerName The container's name from which you want to list the blobs
-     * @param proxyHost     Proxy server used to access the web site
-     * @param proxyPort     Proxy server port
-     *                      Default: '8080'
-     * @param proxyUsername User name used when connecting to the proxy
-     * @param proxyPassword The proxy server password associated with the <proxyUsername> input value
+     * @param storageAccount Azure storage account name
+     * @param key            Azure account key
+     * @param containerName  The container's name from which you want to list the blobs
+     * @param proxyHost      Proxy server used to access the web site
+     * @param proxyPort      Proxy server port
+     *                       Default: '8080'
+     * @param proxyUsername  User name used when connecting to the proxy
+     * @param proxyPassword  The proxy server password associated with the <proxyUsername> input value
      * @return All the blobs in the container
      */
     @Action(name = "Get the authorization token for Azure",
@@ -60,7 +60,7 @@ public class ListBlobs {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
             })
-    public Map<String, String> execute(@Param(value = ACCOUNT_NAME, required = true) String accountName,
+    public Map<String, String> execute(@Param(value = STORAGE_ACCOUNT, required = true) String storageAccount,
                                        @Param(value = KEY, required = true, encrypted = true) String key,
                                        @Param(value = CONTAINER_NAME, required = true) String containerName,
                                        @Param(value = PROXY_HOST) String proxyHost,
@@ -71,7 +71,7 @@ public class ListBlobs {
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
-        final List<String> exceptionMessages = verifyStorageInputs(accountName, key, containerName, proxyPort);
+        final List<String> exceptionMessages = verifyStorageInputs(storageAccount, key, containerName, proxyPort);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -79,7 +79,7 @@ public class ListBlobs {
         final int proxyPortInt = NumberUtilities.toInteger(proxyPort);
 
         try {
-            return getSuccessResultsMap(StorageServiceImpl.listBlobs(accountName, key, containerName, proxyHost, proxyPortInt, proxyUsername, proxyPassword));
+            return getSuccessResultsMap(StorageServiceImpl.listBlobs(storageAccount, key, containerName, proxyHost, proxyPortInt, proxyUsername, proxyPassword));
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
