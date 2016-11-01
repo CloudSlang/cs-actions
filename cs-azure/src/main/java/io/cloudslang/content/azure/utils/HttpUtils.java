@@ -28,10 +28,7 @@ public class HttpUtils {
                     return new PasswordAuthentication(proxyUser, proxyPassword.toCharArray());
                 }
             });
-            System.setProperty(PROXY_HTTP_USER, proxyUser);
-            System.setProperty(PROXY_HTTP_PASSWORD, proxyPassword);
         }
-
         return new Proxy(HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
     }
 }
