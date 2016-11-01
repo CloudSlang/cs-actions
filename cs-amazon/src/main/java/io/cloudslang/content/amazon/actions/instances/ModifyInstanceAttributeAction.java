@@ -14,6 +14,7 @@ import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
+import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
@@ -94,6 +95,7 @@ public class ModifyInstanceAttributeAction {
      *                                             Default: ""
      * @param version                              Version of the web service to made the call against it.
      *                                             Example: "2016-09-15"
+     *                                             Default: "2016-09-15"
      * @param delimiter                            Optional - Delimiter that will be used.
      *                                             Default: ","
      * @param attribute                            Optional - name of the attribute.
@@ -228,7 +230,7 @@ public class ModifyInstanceAttributeAction {
                                        @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
                                        @Param(value = HEADERS) String headers,
                                        @Param(value = QUERY_PARAMS) String queryParams,
-                                       @Param(value = VERSION, required = true) String version,
+                                       @Param(value = VERSION) String version,
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = ATTRIBUTE) String attribute,
                                        @Param(value = ATTRIBUTE_VALUE) String attributeValue,
@@ -250,6 +252,8 @@ public class ModifyInstanceAttributeAction {
                                        @Param(value = SRIOV_NET_SUPPORT) String sriovNetSupport,
                                        @Param(value = USER_DATA) String userData) {
         try {
+            version = InputsUtil.getDefaultStringInput(version, "2016-09-15");
+
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)

@@ -151,7 +151,7 @@ public class AttachNetworkInterfaceAction {
                     .build();
 
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
-            OutputsUtil.extractResponseAsResult(queryMapResult, ATTACHMENT_ID_RESULT, ATTACHMENT_ID_X_PATH_QUERY);
+            OutputsUtil.putResponseIn(queryMapResult, ATTACHMENT_ID_RESULT, ATTACHMENT_ID_X_PATH_QUERY);
             return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);

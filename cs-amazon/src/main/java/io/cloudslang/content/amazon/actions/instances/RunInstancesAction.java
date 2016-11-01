@@ -75,7 +75,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.INSTANCE_ID_RESULT;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.extractResponseAsResult;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -541,7 +541,7 @@ public class RunInstancesAction {
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, elasticIpInputs, iamInputs,
                     instanceInputs, networkInputs);
             if((ReturnCodes.SUCCESS).equals(queryMapResult.get(RETURN_CODE))) {
-                extractResponseAsResult(queryMapResult, INSTANCE_ID_RESULT, INSTANCE_ID_X_PATH_QUERY);
+                putResponseIn(queryMapResult, INSTANCE_ID_RESULT, INSTANCE_ID_X_PATH_QUERY);
             }
             return queryMapResult;
         } catch (Exception e) {

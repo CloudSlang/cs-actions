@@ -39,7 +39,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.S
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.NETWORK_INTERFACE_ID_RESULT;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.extractResponseAsResult;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -178,7 +178,7 @@ public class CreateNetworkInterfaceAction {
                     .build();
 
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, iamInputs, networkInputs);
-            extractResponseAsResult(queryMapResult, NETWORK_INTERFACE_ID_RESULT, NETWORK_INTERFACE_ID_X_PATH_QUERY);
+            putResponseIn(queryMapResult, NETWORK_INTERFACE_ID_RESULT, NETWORK_INTERFACE_ID_X_PATH_QUERY);
             return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
