@@ -1,4 +1,4 @@
-package io.cloudslang.content.azure.actions;
+package io.cloudslang.content.azure.actions.utils;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;

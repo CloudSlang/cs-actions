@@ -16,12 +16,36 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PO
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.EXCEPTION_INVALID_PROXY;
 import static io.cloudslang.content.azure.utils.Constants.EXCEPTION_NULL_EMPTY;
+import static io.cloudslang.content.azure.utils.StorageInputNames.BLOB_NAME;
+import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 
 /**
  * Created by victor on 28.09.2016.
  */
 public final class InputsValidation {
+    @NotNull
+    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String proxyPort) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptionMessages, accountName, IDENTIFIER);
+        addVerifyNotNullOrEmpty(exceptionMessages, key, PRIMARY_OR_SECONDARY_KEY);
+        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String containerName, @Nullable final String proxyPort) {
+        final List<String> exceptionMessages = verifyStorageInputs(accountName, key, proxyPort);
+        addVerifyNotNullOrEmpty(exceptionMessages, containerName, CONTAINER_NAME);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String containerName, @Nullable final String proxyPort, @Nullable final String blobName) {
+        final List<String> exceptionMessages = verifyStorageInputs(accountName, key, containerName, proxyPort);
+        addVerifyNotNullOrEmpty(exceptionMessages, blobName, BLOB_NAME);
+        return exceptionMessages;
+    }
 
     @NotNull
     public static List<String> verifySharedAccessInputs(@Nullable final String identifier, @Nullable final String primaryOrSecondaryKey, @Nullable final String expiry) {
@@ -38,6 +62,13 @@ public final class InputsValidation {
         addVerifyNotNullOrEmpty(exceptionMessages, username, USERNAME);
         addVerifyNotNullOrEmpty(exceptionMessages, password, PASSWORD);
         addVerifyNotNullOrEmpty(exceptionMessages, clientId, CLIENT_ID);
+        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyProxyPortInput(@Nullable final String proxyPort) {
+        final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         return exceptionMessages;
     }
