@@ -36,14 +36,6 @@ public class OutputsUtil {
     private OutputsUtil() {
     }
 
-    public static Map<String, String> getResultsMap(String returnResult) {
-        Map<String, String> results = new HashMap<>();
-        results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
-        results.put(Outputs.RETURN_RESULT, returnResult);
-
-        return results;
-    }
-
     public static Map<String, String> populateSignatureResultsMap(AuthorizationHeader authorizationHeader) {
         Map<String, String> signatureReturnResultMap = getResultsMap(authorizationHeader.getSignature());
 
@@ -86,5 +78,13 @@ public class OutputsUtil {
             queryMapResult.put(RETURN_RESULT, "Empty response.");
             queryMapResult.put(RETURN_CODE, FAILURE);
         }
+    }
+
+    private static Map<String, String> getResultsMap(String returnResult) {
+        Map<String, String> results = new HashMap<>();
+        results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
+        results.put(Outputs.RETURN_RESULT, returnResult);
+
+        return results;
     }
 }

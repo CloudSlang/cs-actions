@@ -111,9 +111,6 @@ public class AmazonSignatureService {
 
     @NotNull
     private Map<String, String> getInitializedMap(Map<String, String> inputMap) {
-        if (inputMap == null || inputMap.isEmpty()) {
-            inputMap = new HashMap<>();
-        }
-        return inputMap;
+        return (inputMap == null || inputMap.isEmpty()) ? new HashMap<String, String>() : inputMap;
     }
 }

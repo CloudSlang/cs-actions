@@ -5,8 +5,6 @@ import io.cloudslang.content.amazon.entities.aws.InstanceInitiatedShutdownBehavi
 import io.cloudslang.content.amazon.entities.aws.Tenancy;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
-import static java.lang.String.valueOf;
-
 /**
  * Created by Mihai Tusa.
  * 6/1/2016.
@@ -55,6 +53,7 @@ public class InstanceInputs {
         this.maxResults = builder.maxResults;
         this.filterNamesString = builder.filterNamesString;
         this.filterValuesString = builder.filterValuesString;
+        this.nextToken = builder.nextToken;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
