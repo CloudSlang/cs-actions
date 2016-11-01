@@ -178,7 +178,9 @@ public class CreateNetworkInterfaceAction {
                     .build();
 
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, iamInputs, networkInputs);
-            putResponseIn(queryMapResult, NETWORK_INTERFACE_ID_RESULT, NETWORK_INTERFACE_ID_X_PATH_QUERY);
+            if ((ReturnCodes.SUCCESS).equals(queryMapResult.get(RETURN_CODE))) {
+                putResponseIn(queryMapResult, NETWORK_INTERFACE_ID_RESULT, NETWORK_INTERFACE_ID_X_PATH_QUERY);
+            }
             return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
