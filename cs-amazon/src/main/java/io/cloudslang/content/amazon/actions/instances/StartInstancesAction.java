@@ -133,7 +133,8 @@ public class StartInstancesAction {
 
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs);
+            return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

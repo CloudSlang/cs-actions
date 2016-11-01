@@ -148,7 +148,8 @@ public class StopInstancesAction {
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
             InstanceInputs instanceInputs = new InstanceInputs.Builder().withForceStop(forceStop).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, instanceInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, instanceInputs);
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

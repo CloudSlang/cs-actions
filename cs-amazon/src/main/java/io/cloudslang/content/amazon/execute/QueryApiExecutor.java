@@ -1,6 +1,5 @@
 package io.cloudslang.content.amazon.execute;
 
-import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
@@ -8,18 +7,19 @@ import io.cloudslang.content.amazon.factory.InputsWrapperBuilder;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import io.cloudslang.content.httpclient.CSHttpClient;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -38,7 +38,9 @@ public class QueryApiExecutor {
         setQueryApiParams(inputs, queryParamsMap);
         setQueryApiHeaders(inputs, headersMap, queryParamsMap);
 
-        return new CSHttpClient().execute(inputs.getHttpClientInputs());
+        Map<String, String> queryMapResult = new CSHttpClient().execute(inputs.getHttpClientInputs());
+        putResponseIn(queryMapResult);
+        return queryMapResult;
     }
 
     void setQueryApiHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)

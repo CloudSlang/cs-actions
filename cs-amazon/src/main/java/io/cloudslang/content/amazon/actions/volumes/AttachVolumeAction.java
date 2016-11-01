@@ -142,7 +142,8 @@ public class AttachVolumeAction {
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).withVolumeId(volumeId).build();
             VolumeInputs volumeInputs = new VolumeInputs.Builder().withDeviceName(deviceName).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

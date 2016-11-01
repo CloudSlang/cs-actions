@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNET_ID;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -186,6 +187,8 @@ public class InstanceUtils {
                 isNotBlank(wrapper.getCustomInputs().getRamdiskId()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, USER_DATA, wrapper.getInstanceInputs().getUserData(),
                 isNotBlank(wrapper.getInstanceInputs().getUserData()));
+        InputsUtil.setOptionalMapEntry(queryParamsMap, SUBNET_ID, wrapper.getCustomInputs().getSubnetId(),
+                isNotBlank(wrapper.getCustomInputs().getSubnetId()));
 
         setBlockDeviceMappingQueryParams(queryParamsMap, wrapper);
         setNetworkInterfaceQueryParams(queryParamsMap, wrapper);
