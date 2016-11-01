@@ -20,7 +20,7 @@ public class JCloudsService {
     private String proxyHost;
     private String proxyPort;
 
-    public JCloudsService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    protected JCloudsService(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         this.endpoint = endpoint;
         this.identity = identity;
         this.credential = credential;

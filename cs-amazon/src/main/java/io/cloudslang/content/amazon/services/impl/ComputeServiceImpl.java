@@ -5,8 +5,6 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.services.ComputeService;
 import io.cloudslang.content.amazon.services.JCloudsService;
-import org.jclouds.ContextBuilder;
-import org.jclouds.compute.ComputeServiceContext;
 
 import java.util.Set;
 
@@ -14,45 +12,8 @@ import java.util.Set;
  * Created by persdana on 6/5/2015.
  */
 public class ComputeServiceImpl extends JCloudsService implements ComputeService {
-    private static final String NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented. Use 'amazon\' or 'openstack' " +
-            "providers in the provider input";
-    private static final String SLASH = "/";
-
-    org.jclouds.compute.ComputeService computeService = null;
-
-    private String provider;
-    protected String region;
-
-    public ComputeServiceImpl(String provider, String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
+    public ComputeServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
-        this.provider = provider;
-    }
-
-    protected void init(boolean isDebugMode) {
-        ContextBuilder contextBuilder = super.init(region, provider, isDebugMode);
-        ComputeServiceContext context = contextBuilder.buildView(ComputeServiceContext.class);
-        computeService = context.getComputeService();
-    }
-
-    void lazyInit(boolean isDebugMode) {
-        if (computeService == null) {
-            this.init(isDebugMode);
-        }
-    }
-
-    void lazyInit(String region, boolean isDebugMode) {
-        if (this.region == null || !this.region.equals(region)) {
-            this.region = region;
-            this.init(isDebugMode);
-        } else if (computeService == null) {
-            this.init(isDebugMode);
-        }
-    }
-
-    @Override
-    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
-                                     long polingInterval, boolean isDebugMode) throws Exception {
-        throw new Exception(NOT_IMPLEMENTED_ERROR_MESSAGE);
     }
 
     @Override

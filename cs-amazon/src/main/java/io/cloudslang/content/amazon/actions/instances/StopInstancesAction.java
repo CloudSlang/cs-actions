@@ -10,7 +10,7 @@ import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
-import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
@@ -148,7 +148,8 @@ public class StopInstancesAction {
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
             InstanceInputs instanceInputs = new InstanceInputs.Builder().withForceStop(forceStop).build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, instanceInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, instanceInputs);
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

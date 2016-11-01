@@ -330,7 +330,7 @@ public class NetworkInputs {
             return this;
         }
 
-        public Builder withNetworkInterfaceAttachmentStatus(String inputValue) throws Exception {
+        public Builder withNetworkInterfaceAttachmentStatus(String inputValue) {
             networkInterfaceAttachmentStatus = NetworkInterfaceAttachmentStatus.getValue(inputValue);
             return this;
         }

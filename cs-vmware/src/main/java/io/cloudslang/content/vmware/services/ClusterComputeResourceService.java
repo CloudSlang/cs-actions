@@ -48,6 +48,8 @@ import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES
  */
 public class ClusterComputeResourceService {
 
+    private static final String VM_NOT_FOUND = "Virtual machine was not found!";
+
     /**
      * Das method looks into das Cluster’s list of VM overrides to update das VM’s restartPriority value.
      * If a VM override is found, das value will be updated, otherwise a new “override” will be created and added to das list.
@@ -58,19 +60,18 @@ public class ClusterComputeResourceService {
      * @return
      * @throws Exception
      */
-    public Map<String, String> updateOrAddVmOverride(HttpInputs httpInputs, VmInputs vmInputs, String restartPriority) throws Exception {
-        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+    public Map<String, String> updateOrAddVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs, final String restartPriority) throws Exception {
+        final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        ManagedObjectReference vmMor = new MorObjectHandler().getMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(),
-                vmInputs.getVirtualMachineName());
+        final ManagedObjectReference vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+        final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
-        ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
+        final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+        final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
 
-        ManagedObjectReference task = connectionResources.getVimPortType().
+        final ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
         Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
@@ -401,5 +402,13 @@ public class ClusterComputeResourceService {
             }
         }
         throw new RuntimeException(String.format(ANOTHER_FAILURE_MSG, clusterName));
+    }
+
+    private ManagedObjectReference getVmMor(final ConnectionResources connectionResources, final String value, final String virtualMachineName) throws Exception {
+        final ManagedObjectReference mor = new MorObjectHandler().getMor(connectionResources, value, virtualMachineName);
+        if (mor != null) {
+            return mor;
+        }
+        throw new RuntimeException(VM_NOT_FOUND);
     }
 }

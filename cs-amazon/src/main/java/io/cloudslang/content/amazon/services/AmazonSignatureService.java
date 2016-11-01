@@ -5,6 +5,7 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.services.helpers.AwsSignatureHelper;
 import io.cloudslang.content.amazon.services.helpers.AwsSignatureV4;
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
@@ -58,7 +59,7 @@ public class AmazonSignatureService {
                 wrapper.getSecurityToken(), amazonDate);
         String signedHeadersString = signatureUtils.getSignedHeadersString(requestHeaders);
 
-        queryParamsMap = getQueryParamsMap(queryParamsMap, wrapper);
+        queryParamsMap = getPopulatedQueryParamsMap(queryParamsMap, wrapper);
 
         String canonicalRequest = awsSignatureV4.getCanonicalRequest(wrapper.getHttpVerb(), wrapper.getRequestUri(),
                 signatureUtils.canonicalizedQueryString(queryParamsMap), signatureUtils.canonicalizedHeadersString(requestHeaders),
@@ -71,29 +72,32 @@ public class AmazonSignatureService {
         String authorizationHeader = AWS4_SIGNING_ALGORITHM + " Credential=" + amzCredential + ", SignedHeaders=" + signedHeadersString + ", Signature=" + signature;
         requestHeaders.put(AUTHORIZATION, authorizationHeader);
 
-        return new AuthorizationHeader(getSignedRequestHeadersString(requestHeaders), signature);
+        return new AuthorizationHeader(InputsUtil.getHeadersOrParamsString(requestHeaders, COLON, LINE_SEPARATOR, false), signature);
     }
 
-    private Map<String, String> getQueryParamsMap(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        if (queryParamsMap == null || queryParamsMap.isEmpty()) {
-            queryParamsMap = new HashMap<>();
-        }
-
-        queryParamsMap = isBlank(wrapper.getQueryParams()) ? queryParamsMap :
-                InputsUtil.getHeadersOrQueryParamsMap(queryParamsMap, wrapper.getQueryParams(), AMPERSAND, EQUAL, false);
-
-        return queryParamsMap;
+    private Map<String, String> getPopulatedQueryParamsMap(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
+        return isBlank(wrapper.getQueryParams()) ? getInitializedMap(queryParamsMap) :
+                InputsUtil.getHeadersOrQueryParamsMap(getInitializedMap(queryParamsMap), wrapper.getQueryParams(), AMPERSAND, EQUAL, false);
     }
 
-    private String getSignedRequestHeadersString(Map<String, String> requestHeaders) {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
-            sb.append(entry.getKey());
-            sb.append(COLON);
-            sb.append(entry.getValue());
-            sb.append(LINE_SEPARATOR);
+    private Map<String, String> getRequestHeadersMap(Map<String, String> headersMap, String headers, String requestEndpoint,
+                                                     String securityToken, String amazonDate) {
+        headersMap = isBlank(headers) ? getInitializedMap(headersMap) :
+                InputsUtil.getHeadersOrQueryParamsMap(getInitializedMap(headersMap), headers, HEADER_DELIMITER, COLON, true);
+
+        if (!(headersMap.containsKey(HOST.toLowerCase()) || headersMap.containsKey(HOST))) {
+            requestEndpoint = requestEndpoint.contains(PROTOCOL_AND_HOST_SEPARATOR) ?
+                    requestEndpoint.substring(requestEndpoint.indexOf(PROTOCOL_AND_HOST_SEPARATOR) + 3) :
+                    requestEndpoint;
+
+            headersMap.put(HOST.toLowerCase(), requestEndpoint); // At least the host header must be signed.
         }
-        return sb.toString();
+
+        InputsUtil.setOptionalMapEntry(headersMap, X_AMZ_DATE, amazonDate,
+                !(headersMap.containsKey(X_AMZ_DATE.toLowerCase()) || headersMap.containsKey(X_AMZ_DATE)));
+        InputsUtil.setOptionalMapEntry(headersMap, X_AMZ_SECURITY_TOKEN, securityToken, isNotBlank(securityToken));
+
+        return headersMap;
     }
 
     private String getRequestEndpoint(String requestEndpoint) throws MalformedURLException {
@@ -105,32 +109,11 @@ public class AmazonSignatureService {
         return requestEndpoint;
     }
 
-    private Map<String, String> getRequestHeadersMap(Map<String, String> headersMap, String headers, String requestEndpoint,
-                                                     String securityToken, String amazonDate) {
-        if (headersMap == null || headersMap.isEmpty()) {
-            headersMap = new HashMap<>();
+    @NotNull
+    private Map<String, String> getInitializedMap(Map<String, String> inputMap) {
+        if (inputMap == null || inputMap.isEmpty()) {
+            inputMap = new HashMap<>();
         }
-
-        if (isNotBlank(headers)) {
-            headersMap = InputsUtil.getHeadersOrQueryParamsMap(headersMap, headers, HEADER_DELIMITER, COLON, true);
-        }
-
-        if (!(headersMap.containsKey(HOST.toLowerCase()) || headersMap.containsKey(HOST))) {
-            if (requestEndpoint.contains(PROTOCOL_AND_HOST_SEPARATOR)) {
-                requestEndpoint = requestEndpoint.substring(requestEndpoint.indexOf(PROTOCOL_AND_HOST_SEPARATOR) + 3);
-            }
-            headersMap.put(HOST.toLowerCase(), requestEndpoint); // At least the host header must be signed.
-        }
-
-        if (!(headersMap.containsKey(X_AMZ_DATE.toLowerCase()) || headersMap.containsKey(X_AMZ_DATE))) {
-            headersMap.put(X_AMZ_DATE, amazonDate);
-        }
-
-
-        if (isNotBlank(securityToken)) {
-            headersMap.put(X_AMZ_SECURITY_TOKEN, securityToken);
-        }
-
-        return headersMap;
+        return inputMap;
     }
 }

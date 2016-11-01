@@ -10,7 +10,4 @@ import java.util.Set;
  */
 public interface ComputeService {
     Set<String> describeInstancesInRegion(CommonInputs commonInputs, InstanceInputs instanceInputs) throws Exception;
-
-    String updateInstanceType(String region, String instanceId, String instanceType, long checkStateTimeout,
-                              long polingInterval, boolean isDebugMode) throws Exception;
 }

@@ -1,7 +1,6 @@
 package io.cloudslang.content.amazon.services.impl;
 
 import com.google.common.collect.Multimap;
-import io.cloudslang.content.amazon.entities.aws.InstanceType;
 import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
@@ -12,8 +11,6 @@ import io.cloudslang.content.amazon.services.helpers.FiltersHelper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 import org.jclouds.ContextBuilder;
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.ec2.domain.InstanceState;
-import org.jclouds.ec2.domain.InstanceStateChange;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.features.InstanceApi;
@@ -25,19 +22,12 @@ import java.util.Set;
  * Created by persdana on 5/27/2015.
  */
 public class AmazonComputeServiceImpl extends JCloudsService implements ComputeService {
-    private static final String INSTANCE_SUCCESSFULLY_UPDATED = "Instance successfully updated.";
-
     EC2Api ec2Api = null;
 
-    protected String region;
+    String region;
 
     public AmazonComputeServiceImpl(String endpoint, String identity, String credential, String proxyHost, String proxyPort) {
         super(endpoint, identity, credential, proxyHost, proxyPort);
-    }
-
-    protected void init(boolean isDebugMode) {
-        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
-        ec2Api = new FiltersHelper().getEC2Api(contextBuilder);
     }
 
     @Override
@@ -64,27 +54,9 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
         return nodesSet;
     }
 
-    @Override
-    public String updateInstanceType(String region, String serverId, String instanceType, long checkStateTimeout,
-                                     long polingInterval, boolean isDebugMode) throws Exception {
-        InstanceApi instanceApi = getEC2InstanceApi(region, isDebugMode, false);
-
-        AmazonComputeServiceHelper helper = new AmazonComputeServiceHelper();
-        InstanceState previousState = helper.getInstanceState(instanceApi, region, serverId);
-        helper.stopAndWaitToStopInstance(instanceApi, previousState, region, serverId, checkStateTimeout, polingInterval);
-
-        if (Constants.Miscellaneous.NOT_RELEVANT.equalsIgnoreCase(instanceType)) {
-            instanceType = InstanceType.T2_MICRO.getValue();
-        }
-
-        instanceApi.setInstanceTypeForInstanceInRegion(region, serverId, instanceType);
-
-        if (InstanceState.RUNNING.equals(previousState)) {
-            Set<? extends InstanceStateChange> instanceChanged = instanceApi.startInstancesInRegion(region, serverId);
-            return instanceChanged.toString();
-        }
-
-        return INSTANCE_SUCCESSFULLY_UPDATED;
+    void init(boolean isDebugMode) {
+        ContextBuilder contextBuilder = super.init(region, Constants.Apis.AMAZON_EC2_API, isDebugMode);
+        ec2Api = new FiltersHelper().getEC2Api(contextBuilder);
     }
 
     void lazyInit(String region, boolean isDebugMode) {
@@ -92,6 +64,7 @@ public class AmazonComputeServiceImpl extends JCloudsService implements ComputeS
         init(isDebugMode);
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private InstanceApi getEC2InstanceApi(String region, boolean isDebugMode, boolean isForRegion) {
         lazyInit(region, isDebugMode);
         return isForRegion ? ec2Api.getInstanceApiForRegion(region).get() : ec2Api.getInstanceApi().get();

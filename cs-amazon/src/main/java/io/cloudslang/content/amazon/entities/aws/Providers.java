@@ -7,7 +7,7 @@ public enum Providers {
     OPENSTACK,
     AMAZON;
 
-    public static String getValue(String input) throws Exception {
+    public static String getValue(String input) {
         for (Providers member : Providers.values()) {
             if (member.name().equalsIgnoreCase(input)) {
                 return member.name().toLowerCase();

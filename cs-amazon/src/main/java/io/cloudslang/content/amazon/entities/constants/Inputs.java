@@ -85,8 +85,10 @@ public class Inputs {
         public static final String BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING = "blockDeviceMappingVirtualNamesString";
         public static final String DELETE_ON_TERMINATIONS_STRING = "deleteOnTerminationsString";
         public static final String ENCRYPTED_STRING = "encryptedString";
+        public static final String NO_DEVICES_STRING = "noDevicesString";
         public static final String IOPS_STRING = "iopsString";
         public static final String SNAPSHOT_IDS_STRING = "snapshotIdsString";
+        public static final String VOLUME_IDS_STRING = "volumeIdsString";
         public static final String VOLUME_SIZES_STRING = "volumeSizesString";
         public static final String VOLUME_TYPES_STRING = "volumeTypesString";
     }
@@ -118,9 +120,12 @@ public class Inputs {
     public static class InstanceInputs {
         public static final String AFFINITY = "affinity";
         public static final String ATTACH_TIME = "attachTime";
+        public static final String ATTRIBUTE = "attribute";
+        public static final String ATTRIBUTE_VALUE = "attributeValue";
         public static final String CLIENT_TOKEN = "clientToken";
-        public static final String DISABLE_API_TERMINATION = "DisableApiTermination";
+        public static final String DISABLE_API_TERMINATION = "disableApiTermination";
         public static final String DNS_NAME = "dnsName";
+        public static final String ENA_SUPPORT = "enaSupport";
         public static final String FORCE_STOP = "forceStop";
         public static final String GROUP_NAME = "groupName";
         public static final String IAM_ARN = "iamArn";
@@ -132,6 +137,7 @@ public class Inputs {
         public static final String INSTANCE_STATE_NAME = "instanceStateName";
         public static final String IP_ADDRESS = "ipAddress";
         public static final String IP_OWNER_ID = "ipOwnerId";
+        public static final String KERNEL = "kernel";
         public static final String KEY_NAME = "keyName";
         public static final String LAUNCH_INDEX = "launchIndex";
         public static final String LAUNCH_TIME = "launchTime";
@@ -139,14 +145,14 @@ public class Inputs {
         public static final String MIN_COUNT = "minCount";
         public static final String MONITORING = "monitoring";
         public static final String MONITORING_STATE = "monitoringState";
-        public static final String OPERATION_TIMEOUT = "operationTimeout";
-        public static final String POOLING_INTERVAL = "poolingInterval";
         public static final String PLACEMENT_GROUP_NAME = "placementGroupName";
         public static final String PRIVATE_DNS_NAME = "privateDnsName";
+        public static final String RAMDISK = "ramdisk";
         public static final String REASON = "reason";
         public static final String REQUESTER_ID = "requesterId";
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";
         public static final String SPOT_INSTANCE_REQUEST_ID = "spotInstanceRequestId";
+        public static final String SRIOV_NET_SUPPORT = "sriovNetSupport";
         public static final String TENANCY = "tenancy";
         public static final String USER_DATA = "userData";
     }
@@ -191,5 +197,4 @@ public class Inputs {
         public static final String SIZE = "size";
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
         public static final String SNAPSHOT_ID = "snapshotId";
-    }
-}
+    }}

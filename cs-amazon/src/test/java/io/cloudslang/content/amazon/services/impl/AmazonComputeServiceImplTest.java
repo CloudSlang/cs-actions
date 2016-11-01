@@ -29,16 +29,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Created by persdana on 6/19/2015.
@@ -81,12 +77,15 @@ public class AmazonComputeServiceImplTest {
     @Mock
     private InstanceApi instanceApiMock;
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Mock
     private Optional<? extends InstanceApi> optionalInstanceApi;
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Mock
     private Optional<? extends AMIApi> optionalAmiApiMock;
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Mock
     private Optional<ServerAdminApi> optionalServerAdminApiMock;
 
@@ -171,6 +170,7 @@ public class AmazonComputeServiceImplTest {
      *
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     @Test
     public void testInitWithNoProxyAndWithRegionSet() throws Exception {
         toTest = new AmazonComputeServiceImpl(ENDPOINT, IDENTITY, PASSWORD, null, null);
@@ -237,44 +237,6 @@ public class AmazonComputeServiceImplTest {
         verifyNoMoreInteractions(amazonComputeServiceImplSpy);
     }
 
-    /**
-     * Test updateServer method. Positive scenario.
-     */
-    @Test
-    public void testUpdateInstanceTypeRunning() throws Exception {
-        addCommonMocksForInstanceApi();
-        whenNew(AmazonComputeServiceHelper.class).withNoArguments().thenReturn(helperMock);
-        doReturn(InstanceState.RUNNING).when(helperMock).getInstanceState(any(InstanceApi.class), anyString(), anyString());
-        doNothing().when(helperMock)
-                .stopAndWaitToStopInstance(any(InstanceApi.class), eq(InstanceState.RUNNING), anyString(), anyString(),
-                        anyLong(), anyLong());
-        doNothing().when(instanceApiMock).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-
-        Set<InstanceStateChange> instanceStateChangeSet = getInstanceStateChanges();
-
-        doReturn(instanceStateChangeSet).when(instanceApiMock).startInstancesInRegion(anyString(), anyString());
-
-        amazonComputeServiceImplSpy.updateInstanceType("us-east-1", "", "", 20000, 20000, true);
-
-        verifyMocksInteractionInstanceApi();
-        verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-    }
-
-    @Test
-    public void testUpdateInstanceType() throws Exception {
-        addCommonMocksForInstanceApi();
-        whenNew(AmazonComputeServiceHelper.class).withNoArguments().thenReturn(helperMock);
-        doReturn(InstanceState.STOPPED).when(helperMock).getInstanceState(any(InstanceApi.class), anyString(), anyString());
-        doNothing().when(instanceApiMock).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-
-        String result = amazonComputeServiceImplSpy.updateInstanceType("us-east-1", "", "", 20000, 20000, true);
-
-        verifyMocksInteractionInstanceApi();
-        verify(instanceApiMock, times(1)).setInstanceTypeForInstanceInRegion(anyString(), anyString(), anyString());
-
-        assertEquals("Instance successfully updated.", result);
-    }
-
     @Test
     public void testDescribeInstancesInRegion() throws Exception {
         addCommonMocksForInstanceApi();
@@ -285,6 +247,7 @@ public class AmazonComputeServiceImplTest {
         verify(instanceApiMock, times(1)).describeInstancesInRegion(eq(REGION));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testDescribeInstancesInRegionWithFiltersNoTags() throws Exception {
         addCommonMocksForInstanceApi();
@@ -295,6 +258,7 @@ public class AmazonComputeServiceImplTest {
         verify(instanceApiMock, times(1)).describeInstancesInRegionWithFilter(eq(REGION), any(ArrayListMultimap.class));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testDescribeInstancesInRegionWithFiltersWithTags() throws Exception {
         addCommonMocksForInstanceApi();
@@ -305,6 +269,7 @@ public class AmazonComputeServiceImplTest {
         verify(instanceApiMock, times(1)).describeInstancesInRegionWithFilter(eq(REGION), any(ArrayListMultimap.class));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testDescribeInstancesInRegionWithFiltersInvalidTags() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect supplied values for: [keyTagsString] " +
@@ -322,6 +287,7 @@ public class AmazonComputeServiceImplTest {
      *
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     private void addCommonMocksForInitMethod() throws Exception {
         PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         PowerMockito.mockStatic(ContextBuilder.class);
@@ -338,6 +304,7 @@ public class AmazonComputeServiceImplTest {
      *
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     private void commonVerifiersForInitMethod() throws Exception {
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         verify(contextBuilderMock).endpoint(ENDPOINT);
@@ -348,21 +315,18 @@ public class AmazonComputeServiceImplTest {
         verifyNoMoreInteractions(contextBuilderMock);
     }
 
-    private void verifyMocksInteractionInstanceApi() {
-        verifyCommonMocksInteraction();
-        verify(ec2ApiMock, times(1)).getInstanceApi();
-    }
-
     private void verifyMocksInteractionInstanceApiForRegion() {
         verifyCommonMocksInteraction();
         verify(ec2ApiMock, times(1)).getInstanceApiForRegion(REGION);
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private void verifyCommonMocksInteraction() {
         verify(amazonComputeServiceImplSpy, times(1)).lazyInit(REGION, true);
         verify(optionalInstanceApi, times(1)).get();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private void addCommonMocksForInstanceApi() {
         amazonComputeServiceImplSpy.ec2Api = ec2ApiMock;
 
@@ -373,16 +337,7 @@ public class AmazonComputeServiceImplTest {
         doReturn(instanceApiMock).when(optionalInstanceApi).get();
     }
 
-    private Set<InstanceStateChange> getInstanceStateChanges() {
-        Set<InstanceStateChange> instanceStateChangeSet = new LinkedHashSet<>();
-        InstanceStateChange instanceStateChange = new InstanceStateChange(REGION, SERVER_ID, InstanceState.STOPPED,
-                InstanceState.RUNNING);
-        instanceStateChangeSet.add(instanceStateChange);
-
-        return instanceStateChangeSet;
-    }
-
-    private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) throws Exception {
+    private InstanceInputs getInstanceInputs(String tagKeys, String tagValues, String... filter) {
         CustomInputs customInputs = new CustomInputs.Builder()
                 .withRegion(REGION)
                 .withKeyTagsString(tagKeys)
@@ -399,7 +354,7 @@ public class AmazonComputeServiceImplTest {
                 .build();
     }
 
-    private CommonInputs getCommonInputs() throws Exception {
+    private CommonInputs getCommonInputs() {
         return new CommonInputs.Builder().withDebugMode("TrUe").withDelimiter(",").build();
     }
 }
