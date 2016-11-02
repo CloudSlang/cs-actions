@@ -1,83 +1,20 @@
 package io.cloudslang.content.amazon.factory.helpers;
 
-import io.cloudslang.content.amazon.entities.aws.Affinity;
-import io.cloudslang.content.amazon.entities.aws.Architecture;
-import io.cloudslang.content.amazon.entities.aws.BlockDeviceMappingStatus;
-import io.cloudslang.content.amazon.entities.aws.BlockRootDeviceType;
-import io.cloudslang.content.amazon.entities.aws.Hypervisor;
-import io.cloudslang.content.amazon.entities.aws.InstanceLifecycle;
-import io.cloudslang.content.amazon.entities.aws.InstanceFilter;
-import io.cloudslang.content.amazon.entities.aws.InstanceInitiatedShutdownBehavior;
-import io.cloudslang.content.amazon.entities.aws.InstanceState;
-import io.cloudslang.content.amazon.entities.aws.InstanceType;
-import io.cloudslang.content.amazon.entities.aws.MonitoringState;
-import io.cloudslang.content.amazon.entities.aws.NetworkInterfaceAttachmentStatus;
-import io.cloudslang.content.amazon.entities.aws.NetworkInterfaceStatus;
-import io.cloudslang.content.amazon.entities.aws.ProductCodeType;
-import io.cloudslang.content.amazon.entities.aws.Tenancy;
-import io.cloudslang.content.amazon.entities.aws.VolumeType;
-import io.cloudslang.content.amazon.entities.aws.VirtualizationType;
-
+import io.cloudslang.content.amazon.entities.aws.*;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNET_ID;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.*;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ENCRYPTED;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FORCE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FILTER;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.IMAGE_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.INSTANCE_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.IOPS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SNAPSHOT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.STANDARD;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VOLUME_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VOLUME_TYPE;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.PIPE_DELIMITER;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.DELETE_ON_TERMINATIONS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.ENCRYPTED_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.IOPS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.NO_DEVICES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.SNAPSHOT_IDS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_IDS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_SIZES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_TYPES_STRING;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_NAMES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_VALUES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_IDS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_DISABLE_API_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_KERNEL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_RAMDISK;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_USER_DATA;
 
 /**
  * Created by Mihai Tusa.
@@ -335,11 +272,10 @@ public class InstanceUtils {
     private void setFilterValues(Map<String, String> queryParamsMap, String[] filterNamesArray, String filterValues, int index) {
         String[] valuesArray = InputsUtil.getStringsArray(filterValues, EMPTY, PIPE_DELIMITER);
         if (valuesArray != null && valuesArray.length > START_INDEX) {
-            for (int counter = START_INDEX; counter < filterNamesArray.length; counter++) {
+            for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(valuesArray[counter]))
                         || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(valuesArray[counter]))) {
-                    String suffix = filterNamesArray.length > ONE ? DOT + valueOf(counter + ONE) : EMPTY;
-                    queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + suffix,
+                    queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + DOT + valueOf(counter + ONE),
                             getFilterValue(valuesArray[counter].toLowerCase()));
                 }
             }
