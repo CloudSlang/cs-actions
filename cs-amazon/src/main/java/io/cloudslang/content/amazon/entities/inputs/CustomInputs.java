@@ -1,7 +1,6 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.Architecture;
-import io.cloudslang.content.amazon.entities.aws.BlockDeviceMappingStatus;
 import io.cloudslang.content.amazon.entities.aws.Domain;
 import io.cloudslang.content.amazon.entities.aws.Hypervisor;
 import io.cloudslang.content.amazon.entities.aws.InstanceType;
@@ -12,82 +11,68 @@ import io.cloudslang.content.amazon.entities.aws.VirtualizationType;
 import io.cloudslang.content.amazon.entities.aws.VolumeType;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEFAULT_AMAZON_REGION;
-
 /**
  * Created by Mihai Tusa.
  * 2/18/2016.
  */
 public class CustomInputs {
-    private String operationType;
-    private String attribute;
-    private String region;
-    private String instanceId;
-    private String imageId;
-    private String identityId;
-    private String volumeId;
-    private String groupId;
-    private String hostId;
-    private String kernelId;
-    private String ownerId;
-    private String ramdiskId;
-    private String reservationId;
-    private String subnetId;
-    private String vpcId;
-    private String allocationId;
-    private String associationId;
-    private String architecture;
-    private String deleteOnTermination;
-    private String blockMappingDeviceName;
-    private String blockDeviceMappingSnapshotId;
-    private String attachTime;
-    private String blockDeviceMappingStatus;
-    private String volumeSize;
-    private String volumeType;
-    private String hypervisor;
-    private String ownerAlias;
-    private String platform;
-    private String productCode;
-    private String productCodeType;
-    private String rootDeviceName;
-    private String rootDeviceType;
-    private String stateReasonCode;
-    private String stateReasonMessage;
-    private String keyTagsString;
-    private String valueTagsString;
-    private String virtualizationType;
-    private String availabilityZone;
-    private String instanceType;
-    private String resourceIdsString;
-    private String kmsKeyId;
-    private String attachmentId;
-    private String domain;
-    private String regionsString;
-    private String keyFiltersString;
-    private String valueFiltersString;
+    private final String operationType;
+    private final String attribute;
+    private final String instanceId;
+    private final String imageId;
+    private final String identityId;
+    private final String volumeId;
+    private final String hostId;
+    private final String kernelId;
+    private final String ownerId;
+    private final String ramdiskId;
+    private final String subnetId;
+    private final String allocationId;
+    private final String associationId;
+    private final String architecture;
+    private final String deleteOnTermination;
+    private final String blockMappingDeviceName;
+    private final String blockDeviceMappingSnapshotId;
+    private final String volumeSize;
+    private final String volumeType;
+    private final String hypervisor;
+    private final String ownerAlias;
+    private final String platform;
+    private final String productCode;
+    private final String productCodeType;
+    private final String rootDeviceName;
+    private final String rootDeviceType;
+    private final String stateReasonCode;
+    private final String stateReasonMessage;
+    private final String keyTagsString;
+    private final String valueTagsString;
+    private final String virtualizationType;
+    private final String availabilityZone;
+    private final String instanceType;
+    private final String resourceIdsString;
+    private final String kmsKeyId;
+    private final String attachmentId;
+    private final String domain;
+    private final String regionsString;
+    private final String keyFiltersString;
+    private final String valueFiltersString;
 
     private CustomInputs(Builder builder) {
-        this.region = builder.region;
         this.instanceId = builder.instanceId;
         this.imageId = builder.imageId;
         this.identityId = builder.identityId;
         this.volumeId = builder.volumeId;
-        this.groupId = builder.groupId;
         this.hostId = builder.hostId;
         this.kernelId = builder.kernelId;
         this.ownerId = builder.ownerId;
         this.ramdiskId = builder.ramdiskId;
-        this.reservationId = builder.reservationId;
         this.subnetId = builder.subnetId;
-        this.vpcId = builder.vpcId;
         this.allocationId = builder.allocationId;
         this.associationId = builder.associationId;
         this.architecture = builder.architecture;
         this.blockMappingDeviceName = builder.blockMappingDeviceName;
         this.deleteOnTermination = builder.deleteOnTermination;
         this.blockDeviceMappingSnapshotId = builder.blockDeviceMappingSnapshotId;
-        this.attachTime = builder.attachTime;
-        this.blockDeviceMappingStatus = builder.blockDeviceMappingStatus;
         this.volumeSize = builder.volumeSize;
         this.volumeType = builder.volumeType;
         this.hypervisor = builder.hypervisor;
@@ -115,10 +100,6 @@ public class CustomInputs {
         this.valueFiltersString = builder.valueFiltersString;
     }
 
-    public String getRegion() {
-        return region;
-    }
-
     public String getInstanceId() {
         return instanceId;
     }
@@ -133,10 +114,6 @@ public class CustomInputs {
 
     public String getVolumeId() {
         return volumeId;
-    }
-
-    public String getGroupId() {
-        return groupId;
     }
 
     public String getHostId() {
@@ -155,16 +132,8 @@ public class CustomInputs {
         return ramdiskId;
     }
 
-    public String getReservationId() {
-        return reservationId;
-    }
-
     public String getSubnetId() {
         return subnetId;
-    }
-
-    public String getVpcId() {
-        return vpcId;
     }
 
     public String getAllocationId() {
@@ -189,14 +158,6 @@ public class CustomInputs {
 
     public String getBlockDeviceMappingSnapshotId() {
         return blockDeviceMappingSnapshotId;
-    }
-
-    public String getAttachTime() {
-        return attachTime;
-    }
-
-    public String getBlockDeviceMappingStatus() {
-        return blockDeviceMappingStatus;
     }
 
     public String getVolumeSize() {
@@ -300,27 +261,21 @@ public class CustomInputs {
     }
 
     public static class Builder {
-        private String region;
         private String instanceId;
         private String imageId;
         private String identityId;
         private String volumeId;
-        private String groupId;
         private String hostId;
         private String kernelId;
         private String ownerId;
         private String ramdiskId;
-        private String reservationId;
         private String subnetId;
-        private String vpcId;
         private String allocationId;
         private String associationId;
         private String architecture;
         private String blockMappingDeviceName;
         private String deleteOnTermination;
         private String blockDeviceMappingSnapshotId;
-        private String attachTime;
-        private String blockDeviceMappingStatus;
         private String volumeSize;
         private String volumeType;
         private String hypervisor;
@@ -351,11 +306,6 @@ public class CustomInputs {
             return new CustomInputs(this);
         }
 
-        public Builder withRegion(String inputValue) {
-            region = InputsUtil.getDefaultStringInput(inputValue, DEFAULT_AMAZON_REGION);
-            return this;
-        }
-
         public Builder withInstanceId(String inputValue) {
             instanceId = inputValue;
             return this;
@@ -373,11 +323,6 @@ public class CustomInputs {
 
         public Builder withVolumeId(String inputValue) {
             volumeId = inputValue;
-            return this;
-        }
-
-        public Builder withGroupId(String inputValue) {
-            groupId = inputValue;
             return this;
         }
 
@@ -401,18 +346,8 @@ public class CustomInputs {
             return this;
         }
 
-        public Builder withReservationId(String inputValue) {
-            reservationId = inputValue;
-            return this;
-        }
-
         public Builder withSubnetId(String inputValue) {
             subnetId = inputValue;
-            return this;
-        }
-
-        public Builder withVpcId(String inputValue) {
-            vpcId = inputValue;
             return this;
         }
 
@@ -443,16 +378,6 @@ public class CustomInputs {
 
         public Builder withBlockDeviceMappingSnapshotId(String inputValue) {
             blockDeviceMappingSnapshotId = inputValue;
-            return this;
-        }
-
-        public Builder withAttachTime(String inputValue) {
-            attachTime = inputValue;
-            return this;
-        }
-
-        public Builder withBlockDeviceMappingStatus(String inputValue) {
-            blockDeviceMappingStatus = BlockDeviceMappingStatus.getValue(inputValue);
             return this;
         }
 

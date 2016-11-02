@@ -1,12 +1,12 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.entities.aws.HttpClientMethod;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.ENDPOINT;
@@ -16,22 +16,22 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 5/27/2015.
  */
 public class CommonInputs {
-    private String endpoint;
-    private String identity;
-    private String credential;
-    private String proxyHost;
-    private String proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
-    private String delimiter;
-    private String version;
-    private String headers;
-    private String queryParams;
-    private String apiService;
-    private String requestUri;
-    private String action;
-    private String requestPayload;
-    private String httpClientMethod;
+    private final String endpoint;
+    private final String identity;
+    private final String credential;
+    private final String proxyHost;
+    private final String proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
+    private final String delimiter;
+    private final String version;
+    private final String headers;
+    private final String queryParams;
+    private final String apiService;
+    private final String requestUri;
+    private final String action;
+    private final String requestPayload;
+    private final String httpClientMethod;
 
     private CommonInputs(Builder builder) {
         this.endpoint = builder.endpoint;
@@ -215,7 +215,7 @@ public class CommonInputs {
         }
 
         public Builder withHttpClientMethod(String inputValue) {
-            httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HttpClientMethod.GET.toString());
+            httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HTTP_CLIENT_METHOD_GET);
             return this;
         }
     }

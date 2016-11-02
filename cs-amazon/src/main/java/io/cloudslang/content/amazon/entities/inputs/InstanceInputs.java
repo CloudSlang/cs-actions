@@ -10,31 +10,31 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
  * 6/1/2016.
  */
 public class InstanceInputs {
-    private String affinity;
-    private String attribute;
-    private String attributeValue;
-    private String clientToken;
-    private String placementGroupName;
-    private String sourceDestinationCheck;
-    private String tenancy;
-    private String instanceInitiatedShutdownBehavior;
-    private String userData;
-    private String kernel;
-    private String ramdisk;
-    private String sriovNetSupport;
-    private String filterNamesString;
-    private String filterValuesString;
-    private String instanceIdsString;
-    private String maxResults;
-    private String nextToken;
+    private final String affinity;
+    private final String attribute;
+    private final String attributeValue;
+    private final String clientToken;
+    private final String placementGroupName;
+    private final String sourceDestinationCheck;
+    private final String tenancy;
+    private final String instanceInitiatedShutdownBehavior;
+    private final String userData;
+    private final String kernel;
+    private final String ramdisk;
+    private final String sriovNetSupport;
+    private final String filterNamesString;
+    private final String filterValuesString;
+    private final String instanceIdsString;
+    private final String maxResults;
+    private final String nextToken;
 
-    private int maxCount;
-    private int minCount;
+    private final int maxCount;
+    private final int minCount;
 
-    private boolean disableApiTermination;
-    private boolean enaSupport;
-    private boolean forceStop;
-    private boolean monitoring;
+    private final boolean disableApiTermination;
+    private final boolean enaSupport;
+    private final boolean forceStop;
+    private final boolean monitoring;
 
     private InstanceInputs(Builder builder) {
         this.affinity = builder.affinity;

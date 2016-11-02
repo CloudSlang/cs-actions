@@ -188,7 +188,7 @@ public class InstanceUtils {
         return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
 
-    public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) throws Exception {
+    public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(DISABLE_API_TERMINATION, valueOf(wrapper.getInstanceInputs().isDisableApiTermination()));

@@ -11,7 +11,7 @@ public enum BlockRootDeviceType {
     EBS("ebs"),
     INSTANCE_STORE("instance-store");
 
-    private String value;
+    private final String value;
 
     BlockRootDeviceType(String value) {
         this.value = value;

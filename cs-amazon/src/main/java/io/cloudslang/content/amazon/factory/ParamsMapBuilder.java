@@ -23,7 +23,7 @@ public class ParamsMapBuilder {
     private ParamsMapBuilder() {
     }
 
-    public static Map<String, String> getParamsMap(InputsWrapper wrapper) throws Exception {
+    public static Map<String, String> getParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap;
         if (isBlank(wrapper.getCommonInputs().getQueryParams())) {
             switch (wrapper.getCommonInputs().getAction()) {

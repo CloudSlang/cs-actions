@@ -11,8 +11,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 8/10/2016.
  */
 public class InputsWrapper {
-    private HttpClientInputs httpClientInputs;
-    private CommonInputs commonInputs;
+    private final HttpClientInputs httpClientInputs;
+    private final CommonInputs commonInputs;
     private CustomInputs customInputs;
     private EbsInputs ebsInputs;
     private ElasticIpInputs elasticIpInputs;
@@ -22,14 +22,14 @@ public class InputsWrapper {
     private NetworkInputs networkInputs;
     private VolumeInputs volumeInputs;
 
-    private String apiService;
-    private String requestUri;
-    private String requestPayload;
-    private String date;
-    private String securityToken;
-    private String httpVerb;
-    private String headers;
-    private String queryParams;
+    private final String apiService;
+    private final String requestUri;
+    private final String requestPayload;
+    private final String date;
+    private final String securityToken;
+    private final String httpVerb;
+    private final String headers;
+    private final String queryParams;
 
     private InputsWrapper(Builder builder) {
         this.httpClientInputs = builder.httpClientInputs;
@@ -51,10 +51,6 @@ public class InputsWrapper {
 
     public CommonInputs getCommonInputs() {
         return commonInputs;
-    }
-
-    public void setCommonInputs(CommonInputs commonInputs) {
-        this.commonInputs = commonInputs;
     }
 
     public CustomInputs getCustomInputs() {

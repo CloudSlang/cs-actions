@@ -11,7 +11,7 @@ public enum NetworkInterfaceStatus {
     AVAILABLE("available"),
     IN_USE("in-use");
 
-    private String value;
+    private final String value;
 
     NetworkInterfaceStatus(String value) {
         this.value = value;

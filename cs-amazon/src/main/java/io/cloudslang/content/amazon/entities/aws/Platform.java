@@ -11,7 +11,7 @@ public enum Platform {
     OTHERS(""),
     WINDOWS("windows");
 
-    private String value;
+    private final String value;
 
     Platform(String value) {
         this.value = value;
