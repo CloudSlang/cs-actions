@@ -327,12 +327,12 @@ public class InstanceUtils {
             for (int index = START_INDEX; index < filterNamesArray.length; index++) {
                 String filterName = InstanceFilter.getFilter(filterNamesArray[index]);
                 queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + NAME, filterName);
-                setFilterValues(queryParamsMap, filterNamesArray, filterValuesArray[index], index);
+                setFilterValues(queryParamsMap, filterValuesArray[index], index);
             }
         }
     }
 
-    private void setFilterValues(Map<String, String> queryParamsMap, String[] filterNamesArray, String filterValues, int index) {
+    private void setFilterValues(Map<String, String> queryParamsMap, String filterValues, int index) {
         String[] valuesArray = InputsUtil.getStringsArray(filterValues, EMPTY, PIPE_DELIMITER);
         if (valuesArray != null && valuesArray.length > START_INDEX) {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
@@ -397,7 +397,7 @@ public class InstanceUtils {
         }
     }
 
-    private void setBlockDeviceMappingQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) throws Exception {
+    private void setBlockDeviceMappingQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
         String[] deviceNamesArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getEbsInputs().getBlockDeviceMappingDeviceNamesString(),
                 BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING, wrapper.getCommonInputs().getDelimiter());
         String[] virtualNamesArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getEbsInputs().getBlockDeviceMappingVirtualNamesString(),
