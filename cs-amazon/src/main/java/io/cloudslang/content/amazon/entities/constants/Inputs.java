@@ -5,6 +5,10 @@ package io.cloudslang.content.amazon.entities.constants;
  * 2/17/2016.
  */
 public class Inputs {
+    private Inputs(){
+
+    }
+
     public static class CommonInputs {
         public static final String CREDENTIAL = "credential";
         public static final String DELIMITER = "delimiter";
