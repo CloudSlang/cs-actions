@@ -20,6 +20,7 @@ import io.cloudslang.content.amazon.entities.aws.VirtualizationType;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -338,11 +339,16 @@ public class InstanceUtils {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
                         || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
-                    queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + DOT + valueOf(counter + ONE),
+                    queryParamsMap.put(getFilterKey(index, counter),
                             getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                 }
             }
         }
+    }
+
+    @NotNull
+    private String getFilterKey(int index, int counter) {
+        return FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + DOT + valueOf(counter + ONE);
     }
 
     private void setModifyInstanceAttributeEbsSpecs(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
