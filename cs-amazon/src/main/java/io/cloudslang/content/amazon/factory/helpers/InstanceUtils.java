@@ -279,40 +279,40 @@ public class InstanceUtils {
         return Boolean.FALSE;
     }
 
-    private String getFilterValue(String input) {
-        switch (input) {
+    private String getFilterValue(String filterName, String filterValue) {
+        switch (filterName) {
             case AFFINITY_FILTER:
-                return Affinity.getValue(input);
+                return Affinity.getValue(filterValue);
             case ARCHITECTURE_FILTER:
-                return Architecture.getValue(input);
+                return Architecture.getValue(filterValue);
             case BLOCK_DEVICE_MAPPING_STATUS_FILTER:
-                return BlockDeviceMappingStatus.getValue(input);
+                return BlockDeviceMappingStatus.getValue(filterValue);
             case HYPERVISOR_FILTER:
-                return Hypervisor.getValue(input);
+                return Hypervisor.getValue(filterValue);
             case INSTANCE_LIFECYCLE_FILTER:
-                return InstanceLifecycle.getValue(input);
+                return InstanceLifecycle.getValue(filterValue);
             case INSTANCE_STATE_CODE_FILTER:
-                return valueOf(InstanceState.getKey(input));
+                return valueOf(InstanceState.getKey(filterValue));
             case INSTANCE_STATE_NAME_FILTER:
-                return InstanceState.getValue(input);
+                return InstanceState.getValue(filterValue);
             case INSTANCE_TYPE_FILTER:
-                return InstanceType.getInstanceType(input);
+                return InstanceType.getInstanceType(filterValue);
             case MONITORING_STATE_FILTER:
-                return MonitoringState.getValue(input);
+                return MonitoringState.getValue(filterValue);
             case PRODUCT_CODE_TYPE_FILTER:
-                return ProductCodeType.getValue(input);
+                return ProductCodeType.getValue(filterValue);
             case ROOT_DEVIOCE_TYPE_FILTER:
-                return BlockRootDeviceType.getValue(input);
+                return BlockRootDeviceType.getValue(filterValue);
             case TENANCY_FILTER:
-                return Tenancy.getValue(input);
+                return Tenancy.getValue(filterValue);
             case VIRTUALIZATION_TYPE_FILTER:
-                return VirtualizationType.getValue(input);
+                return VirtualizationType.getValue(filterValue);
             case NETWORK_INTERFACE_STATUS_FILTER:
-                return NetworkInterfaceStatus.getValue(input);
+                return NetworkInterfaceStatus.getValue(filterValue);
             case NETWORK_INTERFACE_ATTACHMENT_STATUS_FILTER:
-                return NetworkInterfaceAttachmentStatus.getValue(input);
+                return NetworkInterfaceAttachmentStatus.getValue(filterValue);
             default:
-                return input;
+                return filterValue;
         }
     }
 
@@ -325,21 +325,21 @@ public class InstanceUtils {
         if (filterNamesArray != null && filterNamesArray.length > START_INDEX
                 && filterValuesArray != null && filterValuesArray.length > START_INDEX) {
             for (int index = START_INDEX; index < filterNamesArray.length; index++) {
-                String filterName = InstanceFilter.getFilter(filterNamesArray[index]);
+                String filterName = InstanceFilter.getInstanceFilter(filterNamesArray[index]);
                 queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + NAME, filterName);
-                setFilterValues(queryParamsMap, filterValuesArray[index], index);
+                setFilterValues(queryParamsMap, filterName, filterValuesArray[index], index);
             }
         }
     }
 
-    private void setFilterValues(Map<String, String> queryParamsMap, String filterValues, int index) {
+    private void setFilterValues(Map<String, String> queryParamsMap, String filterName, String filterValues, int index) {
         String[] valuesArray = InputsUtil.getStringsArray(filterValues, EMPTY, PIPE_DELIMITER);
         if (valuesArray != null && valuesArray.length > START_INDEX) {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
-                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(valuesArray[counter]))
-                        || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(valuesArray[counter]))) {
+                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
+                        || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
                     queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + DOT + valueOf(counter + ONE),
-                            getFilterValue(valuesArray[counter].toLowerCase()));
+                            getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                 }
             }
         }

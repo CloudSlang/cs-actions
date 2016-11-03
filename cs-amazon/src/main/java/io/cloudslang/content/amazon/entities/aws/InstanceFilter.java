@@ -99,7 +99,7 @@ public enum InstanceFilter {
         return value;
     }
 
-    public static String getFilter(String input) {
+    public static String getInstanceFilter(String input) {
         if (isBlank(input)) {
             return NOT_RELEVANT;
         }
