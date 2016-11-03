@@ -65,7 +65,7 @@ public class OutputsUtil {
         String xmlString = queryMapResult.get(RETURN_RESULT);
         //We make this workaround because the xml has an xmlns property in the tag and our operation can not parse the xml
         //this should be removed when the xml operation will be enhanced
-        if (isEmpty(xmlString)) {
+        if (!isEmpty(xmlString)) {
             xmlString = xmlString.replace(XMLNS, WORKAROUND);
             Map<String, String> result = xpathQueryAction.execute(xmlString, XML_DOCUMENT_SOURCE, xPathQuery, VALUE, DELIMITER, valueOf(true));
             if (result.containsKey(RETURN_CODE) && SUCCESS.equals(result.get(RETURN_CODE))) {

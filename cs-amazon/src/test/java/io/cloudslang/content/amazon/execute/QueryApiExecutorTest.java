@@ -1,11 +1,20 @@
 package io.cloudslang.content.amazon.execute;
 
-import io.cloudslang.content.amazon.entities.inputs.*;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
+import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
+import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
+import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
+import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.amazon.entities.inputs.IamInputs;
+import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
+import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
+import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
+import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.MockingHelper;
+import io.cloudslang.content.httpclient.CSHttpClient;
+import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -206,6 +215,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeImages")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeInstances() throws Exception {
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), getDescribeInstancesInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeInstances")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -635,6 +653,21 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.25.Value", "true");
                 queryParamsMap.put("Filter.10.Value", "amazon");
                 break;
+            case "DescribeInstances":
+                queryParamsMap.put("NextToken", "token");
+                queryParamsMap.put("MaxResults", "10");
+                queryParamsMap.put("InstanceId.1", "instance1");
+                queryParamsMap.put("InstanceId.2", "instance2");
+                queryParamsMap.put("InstanceId.3", "instance3");
+                queryParamsMap.put("Filter.1.Name", "architecture");
+                queryParamsMap.put("Filter.1.Value.1", "i386");
+                queryParamsMap.put("Filter.1.Value.2", "x86_64");
+                queryParamsMap.put("Filter.2.Name", "affinity");
+                queryParamsMap.put("Filter.2.Value.1", "default");
+                queryParamsMap.put("Filter.2.Value.2", "host");
+                queryParamsMap.put("Filter.3.Name", "owner-id");
+                queryParamsMap.put("Filter.3.Value.1", "o-id");
+                break;
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");
                 queryParamsMap.put("RegionName.2", "eu-central-1");
@@ -779,5 +812,16 @@ public class QueryApiExecutorTest {
                 .withImageName("img-name")
                 .withState("available")
                 .build();
+    }
+
+    private InstanceInputs getDescribeInstancesInputs() {
+        return new InstanceInputs.Builder()
+                .withFilterNamesString("architecture,affinity,owner-id")
+                .withFilterValuesString("i386||x86_64,|default|host,||o-id")
+                .withInstanceIdsString("instance1,instance2,instance3")
+                .withMaxResults("10")
+                .withNextToken("token")
+                .build();
+
     }
 }
