@@ -42,6 +42,7 @@ import static io.cloudslang.content.vmware.constants.ErrorMessages.FAILURE_MSG;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.RULE_ALREADY_EXISTS;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.SUCCESS_MSG;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES_NOT_EXIST;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_NOT_FOUND;
 
 /**
  * Created by das giloan on 8/30/2016.
@@ -65,7 +66,7 @@ public class ClusterComputeResourceService {
         if (StringUtilities.isNotEmpty(vmInputs.getVirtualMachineName())) {
             vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
         } else {
-            vmMor = getVmMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineId());
+            vmMor = new MorObjectHandler().getMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
         }
 
         ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
@@ -409,14 +410,6 @@ public class ClusterComputeResourceService {
 
     private ManagedObjectReference getVmMor(final ConnectionResources connectionResources, final String value, final String virtualMachineName) throws Exception {
         final ManagedObjectReference mor = new MorObjectHandler().getMor(connectionResources, value, virtualMachineName);
-        if (mor != null) {
-            return mor;
-        }
-        throw new RuntimeException(VM_NOT_FOUND);
-    }
-
-    private ManagedObjectReference getVmMorById(final ConnectionResources connectionResources, final String value, final String virtualMachineName) throws Exception {
-        final ManagedObjectReference mor = new MorObjectHandler().getMorById(connectionResources, value, virtualMachineName);
         if (mor != null) {
             return mor;
         }

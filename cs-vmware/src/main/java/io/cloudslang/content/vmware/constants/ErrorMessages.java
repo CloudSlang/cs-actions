@@ -51,4 +51,5 @@ public class ErrorMessages {
     public static final String ANOTHER_FAILURE_MSG = "Could not retrieve the configurations for: [%s] cluster.";
     public static final String CLUSTER_RULE_COULD_NOT_BE_FOUND = "Cluster rule with the name %s could not be found.";
     public static final String REFERENCE_TYPE_WITH_ID_NOT_FOUND = "Reference of type %s with id: %s could not be found.";
+    public static final String VM_NOT_FOUND = "Virtual machine could not be found!";
 }
