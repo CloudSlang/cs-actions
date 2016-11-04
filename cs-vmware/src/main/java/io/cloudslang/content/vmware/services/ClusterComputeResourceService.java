@@ -83,9 +83,8 @@ public class ClusterComputeResourceService {
     private ManagedObjectReference getVirtualMachineReference(final VmInputs vmInputs, final ConnectionResources connectionResources) throws Exception {
         if (StringUtilities.isNotEmpty(vmInputs.getVirtualMachineName())) {
             return getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
-        } else {
-            return new MorObjectHandler().getMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
         }
+        return new MorObjectHandler().getMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
     }
 
     public Map<String, String> createVmGroup(HttpInputs httpInputs, VmInputs vmInputs, List<String> vmNameList) throws Exception {
