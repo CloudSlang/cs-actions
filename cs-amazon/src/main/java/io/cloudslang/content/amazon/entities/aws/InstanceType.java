@@ -1,6 +1,7 @@
 package io.cloudslang.content.amazon.entities.aws;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 
 /**
  * Created by Mihai Tusa.
@@ -91,13 +92,13 @@ public enum InstanceType {
         this.value = value;
     }
 
-    public String getValue() {
+    private String getValue() {
         return value;
     }
 
     public static String getInstanceType(String input) {
         if (isBlank(input)) {
-            return M1_SMALL.getValue();
+            return NOT_RELEVANT;
         }
         for (InstanceType type : InstanceType.values()) {
             if (type.getValue().equals(input.toLowerCase())) {

@@ -1,10 +1,9 @@
-package io.cloudslang.content.amazon.execute.queries;
+package io.cloudslang.content.amazon.execute;
 
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
+import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
 import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
 import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
@@ -13,7 +12,9 @@ import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
-import io.cloudslang.content.amazon.services.impl.MockingHelper;
+import io.cloudslang.content.amazon.utils.MockingHelper;
+import io.cloudslang.content.httpclient.CSHttpClient;
+import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,7 +26,6 @@ import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,21 +49,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
-
-    private QueryApiExecutor toTest;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+    private QueryApiExecutor toTest;
     @Mock
     private CSHttpClient csHttpClientMock;
-
     @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
-
     @Mock
     private AuthorizationHeader authorizationHeaderMock;
-
     @Spy
     private QueryApiExecutor queryApiExecutorSpy = new QueryApiExecutor();
 
@@ -202,7 +198,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDeregisterImage() throws Exception {
-        toTest.execute(getCommonInputs("DeregisterImage", HEADERS, ""), getImageInputs());
+        toTest.execute(getCommonInputs("DeregisterImage", HEADERS, ""), getImageCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeregisterImage")));
@@ -210,12 +206,58 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testDescribeImagesOnImage() throws Exception {
+    public void testDescribeImages() throws Exception {
         toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeImages")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeInstances() throws Exception {
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), getDescribeInstancesInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeInstances")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeInstanceWithFailureAffinity() throws Exception {
+        expectedException.expectMessage("Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
+        expectedException.expect(RuntimeException.class);
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("affinity")
+                .withFilterValuesString("WRONG_VALUE")
+                .build();
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+
+    }
+
+    @Test
+    public void testDescribeInstanceWithFailureArchitecture() throws Exception {
+        expectedException.expectMessage("Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
+        expectedException.expect(RuntimeException.class);
+
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("architecture")
+                .withFilterValuesString("i386|WRONG_VALUE|x86_64")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+    }
+
+    @Test
+    public void testDescribeInstancesWithSuccessAvailabilityZone() throws Exception {
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("availability-zone")
+                .withFilterValuesString("new_value")
+                .withMaxResults("5")
+                .build();
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeInstancesSuccess")));
     }
 
     @Test
@@ -256,6 +298,16 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testModifyInstanceAttribute() throws Exception {
+        toTest.execute(getCommonInputs("ModifyInstanceAttribute", HEADERS, ""), getCustomInputs(),
+                getModifyInstanceAttributeEbsinputs(), getModifyInstanceAttributeIamInputs(), getModifyInstanceAttributeInstanceInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("ModifyInstanceAttribute")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testReleaseAddress() throws Exception {
         toTest.execute(getCommonInputs("ReleaseAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(false));
@@ -267,7 +319,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStartInstances() throws Exception {
-        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getStartInstancesInputs());
+        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StartInstances")));
@@ -276,7 +328,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStopInstances() throws Exception {
-        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getInstanceCustomInputs(), getStopInstancesInstanceInputs());
+        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StopInstances")));
@@ -285,7 +337,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testRebootInstances() throws Exception {
-        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getInstanceCustomInputs());
+        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RebootInstances")));
@@ -301,13 +353,6 @@ public class QueryApiExecutorTest {
         runCommonVerifiersForQueryApi();
     }
 
-    private CustomInputs getResetLaunchPermissionOnImageInputs() {
-        return new CustomInputs.Builder()
-                .withAttribute("launchPermission")
-                .withImageId("ami-abcd1234")
-                .build();
-    }
-
     @Test
     public void testGetLaunchPermissionForImage() throws Exception {
         toTest.execute(getCommonInputs("DescribeImageAttribute", HEADERS, ""), getLaunchPermissionForImageInputs());
@@ -319,18 +364,11 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testTerminateInstances() throws Exception {
-        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getInstanceCustomInputs());
+        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("TerminateInstances")));
         runCommonVerifiersForQueryApi();
-    }
-
-    private CustomInputs getLaunchPermissionForImageInputs() {
-        return new CustomInputs.Builder()
-                .withAttribute("launchPermission")
-                .withImageId("ami-abcd1234")
-                .build();
     }
 
     @Test
@@ -363,8 +401,49 @@ public class QueryApiExecutorTest {
         verifyNoMoreInteractions(csHttpClientMock);
     }
 
-    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString)
-            throws MalformedURLException {
+    private EbsInputs getModifyInstanceAttributeEbsinputs() {
+        return new EbsInputs.Builder()
+                .withEbsOptimized("true")
+                .withBlockDeviceMappingDeviceNamesString("/dev/sdh1,xvdh2,/dev/sdh3,xvdh4")
+                .withBlockDeviceMappingVirtualNamesString("Permanent,ephemeral0,Not relevant,ephemeral1")
+                .withDeleteOnTerminationsString("false,true,true,true")
+                .withVolumeIdsString("vol-12345678,vol-abcdef12,vol-456789ab,vol-89abcdef")
+                .build();
+    }
+
+    private IamInputs getModifyInstanceAttributeIamInputs() {
+        return new IamInputs.Builder().withSecurityGroupIdsString("sg-012345678,sg-12345678a,sg-23456789ab,sg-78abcdef").build();
+    }
+
+    private InstanceInputs getModifyInstanceAttributeInstanceInputs() {
+        return new InstanceInputs.Builder()
+                .withAttribute("userData")
+                .withAttributeValue("c3Vwb3NlIHRvIGJlIGJhc2U2NCBlbmNvZGVk")
+                .withDisableApiTermination("TruE")
+                .withEnaSupport("tRUe")
+                .withInstanceInitiatedShutdownBehavior("terminate")
+                .withKernel("aki-8f9dcae6")
+                .withRamdisk("testing purposes")
+                .withSourceDestinationCheck("tRuE")
+                .withSriovNetSupport("simple")
+                .build();
+    }
+
+    private CustomInputs getLaunchPermissionForImageInputs() {
+        return new CustomInputs.Builder()
+                .withAttribute("launchPermission")
+                .withImageId("ami-abcd1234")
+                .build();
+    }
+
+    private CustomInputs getResetLaunchPermissionOnImageInputs() {
+        return new CustomInputs.Builder()
+                .withAttribute("launchPermission")
+                .withImageId("ami-abcd1234")
+                .build();
+    }
+
+    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString) {
         return new CommonInputs.Builder()
                 .withAction(action)
                 .withHeaders(headersString)
@@ -374,13 +453,13 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private CustomInputs getImageInputs() {
+    private CustomInputs getImageCustomInputs() {
         return new CustomInputs.Builder()
                 .withImageId("ami-abcd1234")
                 .build();
     }
 
-    private CustomInputs getCustomInputs() throws Exception {
+    private CustomInputs getCustomInputs() {
         return new CustomInputs.Builder()
                 .withAllocationId("eipalloc-abcdef12")
                 .withAssociationId("eipassoc-abcdef12")
@@ -388,6 +467,7 @@ public class QueryApiExecutorTest {
                 .withAvailabilityZone("us-east-1d")
                 .withDomain("")
                 .withInstanceId("i-abcdef12")
+                .withInstanceType("m4.large")
                 .withVolumeType("")
                 .withSubnetId("subnet-abcdef12")
                 .withResourceIdsString("i-abcdef12,i-12345678")
@@ -422,13 +502,12 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) throws Exception {
+    private NetworkInputs getNetworkInputs(boolean withNetworkInterfaceId) {
         if (withNetworkInterfaceId) {
             return new NetworkInputs.Builder()
                     .withDeviceIndex("25")
                     .withNetworkInterfaceDescription("anything in here")
                     .withNetworkInterfaceId("eni-12345678")
-                    .withNetworkInterfaceSubnetId("subnet-abcdef12")
                     .withSecondaryPrivateIpAddressCount("3")
                     .build();
         }
@@ -436,8 +515,6 @@ public class QueryApiExecutorTest {
                 .withDeviceIndex("25")
                 .withNetworkInterfaceDescription("anything in here")
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
-                .withNetworkInterfacePublicIp("52.0.0.2")
-                .withNetworkInterfaceSubnetId("subnet-abcdef12")
                 .withSecondaryPrivateIpAddressCount("3")
                 .build();
     }
@@ -609,6 +686,27 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.25.Value", "true");
                 queryParamsMap.put("Filter.10.Value", "amazon");
                 break;
+            case "DescribeInstances":
+                queryParamsMap.put("NextToken", "token");
+                queryParamsMap.put("MaxResults", "10");
+                queryParamsMap.put("InstanceId.1", "instance1");
+                queryParamsMap.put("InstanceId.2", "instance2");
+                queryParamsMap.put("InstanceId.3", "instance3");
+                queryParamsMap.put("Filter.1.Name", "architecture");
+                queryParamsMap.put("Filter.1.Value.1", "i386");
+                queryParamsMap.put("Filter.1.Value.2", "x86_64");
+                queryParamsMap.put("Filter.2.Name", "affinity");
+                queryParamsMap.put("Filter.2.Value.1", "default");
+                queryParamsMap.put("Filter.2.Value.2", "host");
+                queryParamsMap.put("Filter.3.Name", "owner-id");
+                queryParamsMap.put("Filter.3.Value.1", "o-id");
+                break;
+            case "DescribeInstancesSuccess":
+                queryParamsMap.put("Action", "DescribeInstances");
+                queryParamsMap.put("MaxResults", "5");
+                queryParamsMap.put("Filter.1.Name", "availability-zone");
+                queryParamsMap.put("Filter.1.Value.1", "new_value");
+                break;
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");
                 queryParamsMap.put("RegionName.2", "eu-central-1");
@@ -621,6 +719,36 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("UserId.2", "2");
                 queryParamsMap.put("UserGroup.1", "g1");
                 queryParamsMap.put("UserGroup.2", "g2");
+                break;
+            case "ModifyInstanceAttribute":
+                queryParamsMap.put("InstanceId", "i-abcdef12");
+                queryParamsMap.put("Attribute", "userData");
+                queryParamsMap.put("GroupId.1", "sg-012345678");
+                queryParamsMap.put("GroupId.2", "sg-12345678a");
+                queryParamsMap.put("GroupId.3", "sg-23456789ab");
+                queryParamsMap.put("GroupId.4", "sg-78abcdef");
+                queryParamsMap.put("BlockDeviceMapping.1.DeviceName", "/dev/sdh1");
+                queryParamsMap.put("BlockDeviceMapping.2.DeviceName", "xvdh2");
+                queryParamsMap.put("BlockDeviceMapping.3.DeviceName", "/dev/sdh3");
+                queryParamsMap.put("BlockDeviceMapping.4.DeviceName", "xvdh4");
+                queryParamsMap.put("BlockDeviceMapping.1.Ebs.DeleteOnTermination", "false");
+                queryParamsMap.put("BlockDeviceMapping.1.Ebs.VolumeId", "vol-12345678");
+                queryParamsMap.put("BlockDeviceMapping.2.Ebs.VolumeId", "vol-abcdef12");
+                queryParamsMap.put("BlockDeviceMapping.3.Ebs.VolumeId", "vol-456789ab");
+                queryParamsMap.put("BlockDeviceMapping.4.Ebs.VolumeId", "vol-89abcdef");
+                queryParamsMap.put("BlockDeviceMapping.1.VirtualName", "Permanent");
+                queryParamsMap.put("BlockDeviceMapping.2.VirtualName", "ephemeral0");
+                queryParamsMap.put("BlockDeviceMapping.4.VirtualName", "ephemeral1");
+                queryParamsMap.put("Value", "c3Vwb3NlIHRvIGJlIGJhc2U2NCBlbmNvZGVk");
+                queryParamsMap.put("DisableApiTermination.Value", "true");
+                queryParamsMap.put("EbsOptimized.Value", "true");
+                queryParamsMap.put("EnaSupport.Value", "true");
+                queryParamsMap.put("InstanceInitiatedShutdownBehavior.Value", "terminate");
+                queryParamsMap.put("InstanceType.Value", "m4.large");
+                queryParamsMap.put("Kernel.Value", "aki-8f9dcae6");
+                queryParamsMap.put("Ramdisk.Value", "testing purposes");
+                queryParamsMap.put("SourceDestCheck.Value", "true");
+                queryParamsMap.put("SriovNetSupport.Value", "simple");
                 break;
             case "RebootInstances":
                 queryParamsMap.put("InstanceId.1", "i-12345678");
@@ -682,7 +810,11 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private ImageInputs getDescribeImagesInputs() throws Exception {
+    private InstanceInputs getRebootStartStopTerminateInstancesInputs() {
+        return new InstanceInputs.Builder().withForceStop("true").withInstanceIdsString("i-12345678").build();
+    }
+
+    private ImageInputs getDescribeImagesInputs() {
         CustomInputs customInputs = new CustomInputs.Builder()
                 .withIdentityId("my-id")
                 .withArchitecture("i386")
@@ -721,15 +853,13 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private InstanceInputs getStopInstancesInstanceInputs() {
-        return new InstanceInputs.Builder().withForceStop("true").build();
-    }
-
-    private CustomInputs getInstanceCustomInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
-    }
-
-    private CustomInputs getStartInstancesInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
+    private InstanceInputs getDescribeInstancesInputs() {
+        return new InstanceInputs.Builder()
+                .withFilterNamesString("architecture,affinity,owner-id")
+                .withFilterValuesString("i386||x86_64,|default|host,||o-id")
+                .withInstanceIdsString("instance1,instance2,instance3")
+                .withMaxResults("10")
+                .withNextToken("token")
+                .build();
     }
 }

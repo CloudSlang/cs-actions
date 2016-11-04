@@ -10,14 +10,14 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 6/22/2016.
  */
 public class VolumeInputs {
-    private String snapshotId;
-    private String size;
-    private String iops;
-    private String deviceName;
-    private String description;
+    private final String snapshotId;
+    private final String size;
+    private final String iops;
+    private final String deviceName;
+    private final String description;
 
-    private boolean encrypted;
-    private boolean force;
+    private final boolean encrypted;
+    private final boolean force;
 
     private VolumeInputs(Builder builder) {
         this.snapshotId = builder.snapshotId;

@@ -12,20 +12,20 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 5/10/2016.
  */
 public class ImageInputs {
-    private CustomInputs customInputs;
+    private final CustomInputs customInputs;
 
-    private String imageName;
-    private String imageIdsString;
-    private String ownersString;
-    private String userIdsString;
-    private String userGroupsString;
-    private String description;
-    private String type;
-    private String isPublic;
-    private String manifestLocation;
-    private String state;
+    private final String imageName;
+    private final String imageIdsString;
+    private final String ownersString;
+    private final String userIdsString;
+    private final String userGroupsString;
+    private final String description;
+    private final String type;
+    private final String isPublic;
+    private final String manifestLocation;
+    private final String state;
 
-    private boolean imageNoReboot;
+    private final boolean imageNoReboot;
 
     private ImageInputs(Builder builder) {
         this.customInputs = builder.customInputs;
@@ -147,7 +147,7 @@ public class ImageInputs {
             return this;
         }
 
-        public Builder withType(String inputValue) throws Exception {
+        public Builder withType(String inputValue) {
             type = ImageType.getValue(inputValue);
             return this;
         }
@@ -162,7 +162,7 @@ public class ImageInputs {
             return this;
         }
 
-        public Builder withState(String inputValue) throws Exception {
+        public Builder withState(String inputValue) {
             state = ImageState.getValue(inputValue);
             return this;
         }

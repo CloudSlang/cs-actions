@@ -11,7 +11,7 @@ public enum NetworkInterfaceStatus {
     AVAILABLE("available"),
     IN_USE("in-use");
 
-    private String value;
+    private final String value;
 
     NetworkInterfaceStatus(String value) {
         this.value = value;
@@ -23,7 +23,7 @@ public enum NetworkInterfaceStatus {
         }
 
         for (NetworkInterfaceStatus member : NetworkInterfaceStatus.values()) {
-            if (member.value.equals(input.toLowerCase())) {
+            if (member.value.equalsIgnoreCase(input)) {
                 return member.value;
             }
         }

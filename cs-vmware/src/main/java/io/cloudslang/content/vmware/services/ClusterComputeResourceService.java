@@ -48,8 +48,6 @@ import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES
  */
 public class ClusterComputeResourceService {
 
-    private static final String VM_NOT_FOUND = "Virtual machine was not found!";
-
     /**
      * Das method looks into das Cluster’s list of VM overrides to update das VM’s restartPriority value.
      * If a VM override is found, das value will be updated, otherwise a new “override” will be created and added to das list.
@@ -70,13 +68,13 @@ public class ClusterComputeResourceService {
             vmMor = getVmMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineId());
         }
 
-        final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
-        final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
+        ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+        ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
 
-        final ManagedObjectReference task = connectionResources.getVimPortType().
+        ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
         Map<String, String> resultMap = new ResponseHelper(connectionResources, task)

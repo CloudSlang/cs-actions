@@ -16,24 +16,7 @@ public class InputsWrapperBuilder {
 
     @SafeVarargs
     public static <T> InputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
-        HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs);
-
-        return buildWrapper(httpClientInputs, commonInputs, builders);
-    }
-
-    private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-
-        httpClientInputs.setUrl(commonInputs.getEndpoint());
-        httpClientInputs.setProxyHost(commonInputs.getProxyHost());
-        httpClientInputs.setProxyPort(commonInputs.getProxyPort());
-        httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
-        httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
-        httpClientInputs.setMethod(commonInputs.getHttpClientMethod());
-        httpClientInputs.setAuthType(AUTHORIZATION_TYPE_ANONYMOUS);
-        httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
-
-        return httpClientInputs;
+        return buildWrapper(getHttpClientInputs(commonInputs), commonInputs, builders);
     }
 
     @SafeVarargs
@@ -72,5 +55,20 @@ public class InputsWrapperBuilder {
         }
 
         return wrapper;
+    }
+
+    private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
+        HttpClientInputs httpClientInputs = new HttpClientInputs();
+
+        httpClientInputs.setUrl(commonInputs.getEndpoint());
+        httpClientInputs.setProxyHost(commonInputs.getProxyHost());
+        httpClientInputs.setProxyPort(commonInputs.getProxyPort());
+        httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
+        httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
+        httpClientInputs.setMethod(commonInputs.getHttpClientMethod());
+        httpClientInputs.setAuthType(AUTHORIZATION_TYPE_ANONYMOUS);
+        httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
+
+        return httpClientInputs;
     }
 }

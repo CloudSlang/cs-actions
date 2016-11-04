@@ -1,7 +1,8 @@
 package io.cloudslang.content.amazon.entities.aws;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import org.jetbrains.annotations.Contract;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 /**
  * Created by Mihai Tusa.
  * 6/3/2016.
@@ -21,7 +22,7 @@ public enum InstanceState {
         this.key = key;
     }
 
-    public Integer getKey() {
+    private Integer getKey() {
         return key;
     }
 
@@ -45,6 +46,7 @@ public enum InstanceState {
         throw new RuntimeException(getErrorMessage(input, isKey));
     }
 
+    @Contract(pure = true)
     private static String getErrorMessage(String input, boolean isKey) {
         return isKey ? "Invalid instanceStateCode value: [" + input + "]. Valid values: pending, running, shutting-down, " +
                 "terminated, stopping, stopped." : "Invalid instanceStateName value: [" + input + "]. Valid values: " +

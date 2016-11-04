@@ -9,7 +9,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
-import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
@@ -35,7 +35,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_FILTERS_STRING;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by persdana
+ * 6/23/2015.
  */
 public class DescribeRegionsAction {
     /**

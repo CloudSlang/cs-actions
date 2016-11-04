@@ -86,7 +86,7 @@ public class NetworkUtils {
 
         setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, NETWORK, wrapper.getCommonInputs().getDelimiter());
         setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
-        new IamUtils().setSecurityGroupQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
+        new IamUtils().setSecurityGroupsRelatedQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
 
         return queryParamsMap;
@@ -123,9 +123,10 @@ public class NetworkUtils {
 
     void setPrivateIpAddressesQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper, String specificArea, String delimiter) {
         if (isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddressesString())) {
-            String[] privateIpAddressesArray = InputsUtil.getStringsArray(wrapper.getElasticIpInputs().getPrivateIpAddressesString(), EMPTY, delimiter);
-            InputsUtil.validateArrayAgainstDuplicateElements(privateIpAddressesArray, wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
-                    wrapper.getCommonInputs().getDelimiter(), PRIVATE_IP_ADDRESSES_STRING);
+            String[] privateIpAddressesArray = InputsUtil
+                    .getArrayWithoutDuplicateEntries(wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
+                            PRIVATE_IP_ADDRESSES_STRING, delimiter);
+
             if (privateIpAddressesArray != null && privateIpAddressesArray.length > START_INDEX) {
                 for (int index = START_INDEX; index < privateIpAddressesArray.length; index++) {
                     privateIpAddressesArray[index] = InputsUtil.getValidIPv4Address(privateIpAddressesArray[index]);

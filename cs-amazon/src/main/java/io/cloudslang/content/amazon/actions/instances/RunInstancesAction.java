@@ -6,7 +6,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
@@ -14,16 +13,20 @@ import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
 import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
-import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.RUN_INSTANCES;
+
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
@@ -35,6 +38,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
+
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.HOST_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.IMAGE_ID;
@@ -42,6 +46,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KERNEL_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.RAMDISK_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.SUBNET_ID;
+
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.DELETE_ON_TERMINATIONS_STRING;
@@ -51,23 +56,27 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.I
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.SNAPSHOT_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_SIZES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_TYPES_STRING;
+
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
+
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.IAM_INSTANCE_PROFILE_ARN;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.IAM_INSTANCE_PROFILE_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.KEY_PAIR_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_NAMES_STRING;
+
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.AFFINITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.CLIENT_TOKEN;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.DISABLE_API_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_DISABLE_API_TERMINATION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_COUNT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MIN_COUNT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MONITORING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.PLACEMENT_GROUP_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.TENANCY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.USER_DATA;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_USER_DATA;
+
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
@@ -75,11 +84,22 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
 
+import static io.cloudslang.content.amazon.entities.constants.Outputs.INSTANCE_ID_RESULT;
+
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+
 /**
  * Created by Mihai Tusa.
  * 2/18/2016.
  */
 public class RunInstancesAction {
+    private static final String INSTANCE_ID_X_PATH_QUERY = "/RunInstancesResponse/instancesSet/item/instanceId";
+
     /**
      * Launches the specified number of instances using an AMI (Amazon Image) for which you have permissions.
      * Notes: When you launch an instance, it enters the pending state. After the instance is ready for you, it enters
@@ -200,9 +220,9 @@ public class RunInstancesAction {
      *                                                  Default: ""
      * @param deleteOnTerminationsString                Optional - String that contains one or more values that indicates
      *                                                  whether a specific EBS volume will be deleted on instance termination.
-     *                                                  Example: For a third EBS device (from existing 5 devices), that should
-     *                                                  not be terminated when the attached instance will be, the string will
-     *                                                  value of "true" will be considered for all EBS specified devices.
+     *                                                  Example: For a second EBS device (from existing 4 devices), that
+     *                                                  should be deleted, the string will be: "false,true,false,false".
+     *                                                  Valid values: "true", "false"
      *                                                  Default: ""
      * @param ebsOptimized                              Optional - Indicates whether the instance is optimized for EBS I/O.
      *                                                  This optimization provides dedicated throughput to Amazon EBS and an
@@ -388,14 +408,15 @@ public class RunInstancesAction {
      */
     @Action(name = "Run Instances",
             outputs = {
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(INSTANCE_ID_RESULT),
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.SUCCESS_RETURN_CODE,
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
@@ -435,14 +456,14 @@ public class RunInstancesAction {
                                        @Param(value = SECURITY_GROUP_NAMES_STRING) String securityGroupNamesString,
                                        @Param(value = AFFINITY) String affinity,
                                        @Param(value = CLIENT_TOKEN) String clientToken,
-                                       @Param(value = DISABLE_API_TERMINATION) String disableApiTermination,
-                                       @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
+                                       @Param(value = LOWER_CASE_DISABLE_API_TERMINATION) String disableApiTermination,
+                                       @Param(value = LOWER_CASE_INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
                                        @Param(value = MAX_COUNT) String maxCount,
                                        @Param(value = MIN_COUNT) String minCount,
                                        @Param(value = MONITORING) String monitoring,
                                        @Param(value = PLACEMENT_GROUP_NAME) String placementGroupName,
                                        @Param(value = TENANCY) String tenancy,
-                                       @Param(value = USER_DATA) String userData,
+                                       @Param(value = LOWER_CASE_USER_DATA) String userData,
                                        @Param(value = NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS) String networkInterfaceAssociatePublicIpAddress,
                                        @Param(value = NETWORK_INTERFACE_DELETE_ON_TERMINATION) String networkInterfaceDeleteOnTerminationString,
                                        @Param(value = NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
@@ -527,8 +548,14 @@ public class RunInstancesAction {
                     .withSecondaryPrivateIpAddressCount(secondaryPrivateIpAddressCount)
                     .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, elasticIpInputs, iamInputs,
-                    instanceInputs, networkInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor()
+                    .execute(commonInputs, customInputs, ebsInputs, elasticIpInputs, iamInputs, instanceInputs, networkInputs);
+
+            if ((ReturnCodes.SUCCESS).equals(queryMapResult.get(RETURN_CODE))) {
+                putResponseIn(queryMapResult, INSTANCE_ID_RESULT, INSTANCE_ID_X_PATH_QUERY);
+            }
+
+            return queryMapResult;
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

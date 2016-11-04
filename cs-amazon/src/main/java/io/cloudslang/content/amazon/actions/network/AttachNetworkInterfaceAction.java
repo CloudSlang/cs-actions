@@ -10,9 +10,11 @@ import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
-import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import io.cloudslang.content.amazon.utils.OutputsUtil;
+import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
 
@@ -33,12 +35,21 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.ATTACHMENT_ID_RESULT;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
 /**
  * Created by Mihai Tusa.
  * 8/11/2016.
  */
 public class AttachNetworkInterfaceAction {
+
+    private static final String ATTACHMENT_ID_X_PATH_QUERY = "/AttachNetworkInterfaceResponse/attachmentId";
+
     /**
      * Attaches a network interface to an instance.
      * Note: The set of: <instanceId>, <networkInterfaceId>, <deviceIndex> are mutually exclusive with <queryParams> input.
@@ -88,14 +99,15 @@ public class AttachNetworkInterfaceAction {
      */
     @Action(name = "Attach Network Interface",
             outputs = {
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(ATTACHMENT_ID_RESULT),
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.SUCCESS_RETURN_CODE,
+                    @Response(text = SUCCESS, field = Outputs.RETURN_CODE, value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
+                    @Response(text = FAILURE, field = Outputs.RETURN_CODE, value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
@@ -138,7 +150,11 @@ public class AttachNetworkInterfaceAction {
                     .withDeviceIndex(deviceIndex)
                     .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
+            if ((ReturnCodes.SUCCESS).equals(queryMapResult.get(RETURN_CODE))) {
+                OutputsUtil.putResponseIn(queryMapResult, ATTACHMENT_ID_RESULT, ATTACHMENT_ID_X_PATH_QUERY);
+            }
+            return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

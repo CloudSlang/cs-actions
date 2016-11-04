@@ -8,10 +8,10 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * 6/6/2016.
  */
 public enum Platform {
-    OTHERS(""),
+    OTHERS("others"),
     WINDOWS("windows");
 
-    private String value;
+    private final String value;
 
     Platform(String value) {
         this.value = value;
@@ -23,11 +23,13 @@ public enum Platform {
         }
 
         for (Platform member : Platform.values()) {
-            if (member.value.equals(input.toLowerCase())) {
+            if(OTHERS.value.equals(input.toLowerCase())) {
+                return "";
+            } else if (member.value.equals(input.toLowerCase())) {
                 return member.value;
             }
         }
 
-        throw new RuntimeException("Invalid platform value: [" + input + "]. Valid values: \"\" (empty string), windows.");
+        throw new RuntimeException("Invalid platform value: [" + input + "]. Valid values: \"\" others, windows.");
     }
 }

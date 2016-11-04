@@ -8,9 +8,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
-import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
-import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
@@ -31,11 +30,12 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.INSTANCE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FORCE_STOP;
 
 /**
- * Created by persdana on 6/18/2015.
+ * Created by persdana
+ * 6/18/2015.
  */
 public class StopInstancesAction {
     /**
@@ -58,43 +58,43 @@ public class StopInstancesAction {
      * For more information, see Troubleshooting Stopping Your Instance in the Amazon Elastic Compute Cloud User
      * Guide.
      *
-     * @param endpoint      Optional - Endpoint to which request will be sent.
-     *                      Default: "https://ec2.amazonaws.com"
-     * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
-     *                      Example: "AKIAIOSFODNN7EXAMPLE"
-     * @param credential    Secret access key associated with your Amazon AWS or IAM account.
-     *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-     * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
-     *                      Default: ""
-     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and <proxyPort>
-     *                      inputs or leave them both empty.
-     *                      Default: ""
-     * @param proxyUsername Optional - proxy server user name.
-     *                      Default: ""
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
-     *                      Default: ""
-     * @param headers       Optional - string containing the headers to use for the request separated by new line (CRLF).
-     *                      The header name-value pair will be separated by ":".
-     *                      Format: Conforming with HTTP standard for headers (RFC 2616)
-     *                      Examples: "Accept:text/plain"
-     *                      Default: ""
-     * @param queryParams   Optional - string containing query parameters that will be appended to the URL. The names and
-     *                      the values must not be URL encoded because if they are encoded then a double encoded will occur.
-     *                      The separator between name-value pairs is "&" symbol. The query name will be separated from
-     *                      query value by "=".
-     *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     *                      Default: ""
-     * @param version       Optional - Version of the web service to made the call against it.
-     *                      Example: "2016-04-01"
-     *                      Default: "2016-04-01"
-     * @param delimiter     Optional - delimiter that will be used.
-     *                      Default: ","
-     * @param instanceId    String that contains one or more values that represents instance IDs.
-     *                      Example: "i-12345678,i-abcdef12,i-12ab34cd"
-     * @param forceStop     Optional - Forces the instances to stop. The instances do not have an opportunity to flush
-     *                      file system caches or file system metadata. If you use this option, you must perform file
-     *                      system check and repair procedures. This option is not recommended for Windows instances.
-     *                      Default: ""
+     * @param endpoint          Optional - Endpoint to which request will be sent.
+     *                          Default: "https://ec2.amazonaws.com"
+     * @param identity          ID of the secret access key associated with your Amazon AWS or IAM account.
+     *                          Example: "AKIAIOSFODNN7EXAMPLE"
+     * @param credential        Secret access key associated with your Amazon AWS or IAM account.
+     *                          Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+     * @param proxyHost         Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
+     *                          Default: ""
+     * @param proxyPort         Optional - proxy server port. You must either specify values for both <proxyHost> and
+     *                          <proxyPort> inputs or leave them both empty.
+     *                          Default: ""
+     * @param proxyUsername     Optional - proxy server user name.
+     *                          Default: ""
+     * @param proxyPassword     Optional - proxy server password associated with the <proxyUsername> input value.
+     *                          Default: ""
+     * @param headers           Optional - string containing the headers to use for the request separated by new line (CRLF).
+     *                          The header name-value pair will be separated by ":".
+     *                          Format: Conforming with HTTP standard for headers (RFC 2616)
+     *                          Examples: "Accept:text/plain"
+     *                          Default: ""
+     * @param queryParams       Optional - string containing query parameters that will be appended to the URL. The names
+     *                          and the values must not be URL encoded because if they are encoded then a double encoded
+     *                          will occur. The separator between name-value pairs is "&" symbol. The query name will be
+     *                          separated from query value by "=".
+     *                          Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
+     *                          Default: ""
+     * @param version           Optional - Version of the web service to made the call against it.
+     *                          Example: "2016-04-01"
+     *                          Default: "2016-04-01"
+     * @param delimiter         Optional - delimiter that will be used.
+     *                          Default: ","
+     * @param instanceIdsString String that contains one or more values that represents instance IDs.
+     *                          Example: "i-12345678,i-abcdef12,i-12ab34cd"
+     * @param forceStop         Optional - Forces the instances to stop. The instances do not have an opportunity to flush
+     *                          file system caches or file system metadata. If you use this option, you must perform file
+     *                          system check and repair procedures. This option is not recommended for Windows instances.
+     *                          Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request.
      */
@@ -122,7 +122,7 @@ public class StopInstancesAction {
                                        @Param(value = QUERY_PARAMS) String queryParams,
                                        @Param(value = VERSION) String version,
                                        @Param(value = DELIMITER) String delimiter,
-                                       @Param(value = INSTANCE_ID, required = true) String instanceId,
+                                       @Param(value = INSTANCE_IDS_STRING, required = true) String instanceIdsString,
                                        @Param(value = FORCE_STOP, required = true) String forceStop) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
@@ -145,10 +145,12 @@ public class StopInstancesAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
-            InstanceInputs instanceInputs = new InstanceInputs.Builder().withForceStop(forceStop).build();
+            InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                    .withInstanceIdsString(instanceIdsString)
+                    .withForceStop(forceStop)
+                    .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, instanceInputs);
+            return new QueryApiExecutor().execute(commonInputs, instanceInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

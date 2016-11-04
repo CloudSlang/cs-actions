@@ -23,7 +23,7 @@ public class ParamsMapBuilder {
     private ParamsMapBuilder() {
     }
 
-    public static Map<String, String> getParamsMap(InputsWrapper wrapper) throws Exception {
+    public static Map<String, String> getParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap;
         if (isBlank(wrapper.getCommonInputs().getQueryParams())) {
             switch (wrapper.getCommonInputs().getAction()) {
@@ -68,6 +68,9 @@ public class ParamsMapBuilder {
                     break;
                 case DESCRIBE_IMAGE_ATTRIBUTE:
                     queryParamsMap = new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
+                    break;
+                case DESCRIBE_INSTANCES:
+                    queryParamsMap = new InstanceUtils().getDescribeInstancesQueryParamsMap(wrapper);
                     break;
                 case DESCRIBE_REGIONS:
                     queryParamsMap = new RegionUtils().getDescribeRegionsQueryParamsMap(wrapper);

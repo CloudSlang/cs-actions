@@ -2,6 +2,7 @@ package io.cloudslang.content.amazon.entities.aws;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 /**
  * Created by Mihai Tusa.
  * 9/15/2016.
@@ -10,12 +11,12 @@ public enum InstanceInitiatedShutdownBehavior {
     STOP,
     TERMINATE;
 
-    public static String getValue(String input) throws Exception {
+    public static String getValue(String input) {
         if (isBlank(input)) {
-            return STOP.name().toLowerCase();
+            return NOT_RELEVANT;
         }
 
-        for (ImageType member : ImageType.values()) {
+        for (InstanceInitiatedShutdownBehavior member : InstanceInitiatedShutdownBehavior.values()) {
             if (member.name().equalsIgnoreCase(input)) {
                 return member.name().toLowerCase();
             }

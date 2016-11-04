@@ -9,7 +9,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
-import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
@@ -56,8 +56,8 @@ public class DeleteNetworkInterfaceAction {
      * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
      *                           Default: ""
      * @param version            Optional - Version of the web service to made the call against it.
-     *                           Example: "2016-04-01"
-     *                           Default: "2016-04-01"
+     *                           Example: "2014-06-15"
+     *                           Default: "2014-06-15"
      * @param headers            Optional - string containing the headers to use for the request separated by new line
      *                           (CRLF). The header name-value pair will be separated by ":"
      *                           Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -97,7 +97,7 @@ public class DeleteNetworkInterfaceAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)

@@ -10,7 +10,7 @@ import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
-import io.cloudslang.content.amazon.execute.queries.QueryApiExecutor;
+import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
@@ -115,7 +115,7 @@ public class DescribeImagesAction {
      * @param ownerAlias                   Optional - AWS account alias. Example: "amazon"
      * @param ownerId                      Optional - AWS account ID of the instance owner.
      * @param platform                     Optional - platform used. Use "windows" if you have Windows instances; otherwise,
-     *                                     leave blank. Valid values: "", "windows".
+     *                                     use "others". Valid values: "", "windows".
      * @param productCode                  Optional - product code associated with the AMI used to launch the instance.
      * @param productCodeType              Optional - type of product code. Valid values: "devpay", "marketplace".
      * @param ramdiskId                    Optional - RAM disk ID.

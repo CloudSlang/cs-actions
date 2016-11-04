@@ -1,6 +1,6 @@
 package io.cloudslang.content.amazon.utils;
 
-import io.cloudslang.content.amazon.services.impl.MockingHelper;
+import io.cloudslang.content.amazon.entities.aws.InstanceState;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -63,7 +63,6 @@ public class InputsUtilTest {
         assertNull(InputsUtil.getStringsList("", ","));
         Object underTestList = InputsUtil.getStringsList("2,3", ",");
         assertNotNull(underTestList);
-        assertTrue(underTestList instanceof List);
         assertTrue(((List) underTestList).contains("2"));
         assertEquals(2, ((List) underTestList).size());
     }
@@ -108,14 +107,14 @@ public class InputsUtilTest {
 
     @Test
     public void getValidInstanceStateInvalid() {
-        int testedValue = InputsUtil.getValidInstanceStateCode("");
+        int testedValue = InstanceState.getKey("");
 
         assertEquals(-1, testedValue);
     }
 
     @Test
     public void getValidInstanceState() {
-        int testedValue = InputsUtil.getValidInstanceStateCode("running");
+        int testedValue = InstanceState.getKey("running");
 
         assertEquals(16, testedValue);
     }
