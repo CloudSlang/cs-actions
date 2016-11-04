@@ -29,7 +29,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.eq;
@@ -52,16 +51,15 @@ public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
     @Rule
     public ExpectedException exception = ExpectedException.none();
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     private QueryApiExecutor toTest;
     @Mock
     private CSHttpClient csHttpClientMock;
-
     @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
-
     @Mock
     private AuthorizationHeader authorizationHeaderMock;
-
     @Spy
     private QueryApiExecutor queryApiExecutorSpy = new QueryApiExecutor();
 
@@ -226,25 +224,32 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testDescribeInstancesWithFailure() throws Exception {
-        try {
-            InstanceInputs instanceInputs = new InstanceInputs.Builder()
-                    .withFilterNamesString("architecture")
-                    .withFilterValuesString("i386|WRONG_VALUE|x86_64")
-                    .build();
-            toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
-        } catch (RuntimeException e) {
-            assertEquals("Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.", e.getMessage());
-        }
-        try {
-            InstanceInputs instanceInputs = new InstanceInputs.Builder()
-                    .withFilterNamesString("affinity")
-                    .withFilterValuesString("WRONG_VALUE")
-                    .build();
-            toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
-        } catch (RuntimeException e) {
-            assertEquals("Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.", e.getMessage());
-        }
+    public void testDescribeInstanceWithFailureAffinity() throws Exception {
+        expectedException.expectMessage("Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
+        expectedException.expect(RuntimeException.class);
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("affinity")
+                .withFilterValuesString("WRONG_VALUE")
+                .build();
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+
+    }
+
+    @Test
+    public void testDescribeInstanceWithFailureArchitecture() throws Exception {
+        expectedException.expectMessage("Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
+        expectedException.expect(RuntimeException.class);
+
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("architecture")
+                .withFilterValuesString("i386|WRONG_VALUE|x86_64")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+    }
+
+    @Test
+    public void testDescribeInstancesWithSuccessAvailabilityZone() throws Exception {
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("availability-zone")
                 .withFilterValuesString("new_value")
@@ -252,7 +257,7 @@ public class QueryApiExecutorTest {
                 .build();
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
-                eq(getQueryParamsMap("DescribeInstancesFailure")));
+                eq(getQueryParamsMap("DescribeInstancesSuccess")));
     }
 
     @Test
@@ -696,7 +701,7 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.3.Name", "owner-id");
                 queryParamsMap.put("Filter.3.Value.1", "o-id");
                 break;
-            case "DescribeInstancesFailure":
+            case "DescribeInstancesSuccess":
                 queryParamsMap.put("Action", "DescribeInstances");
                 queryParamsMap.put("MaxResults", "5");
                 queryParamsMap.put("Filter.1.Name", "availability-zone");
