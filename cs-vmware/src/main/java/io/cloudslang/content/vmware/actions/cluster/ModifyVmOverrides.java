@@ -11,12 +11,14 @@ import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.ClusterComputeResourceService;
+import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_VM_NAME_OR_ID;
 import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
 import static io.cloudslang.content.vmware.constants.Inputs.HOST;
 import static io.cloudslang.content.vmware.constants.Inputs.HOSTNAME;
@@ -26,6 +28,7 @@ import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
 import static io.cloudslang.content.vmware.constants.Inputs.RESTART_PRIORITY;
 import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
 import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.VM_ID;
 import static io.cloudslang.content.vmware.constants.Inputs.VM_NAME;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.CLUSTER_RESTART_PRIORITY;
 import static io.cloudslang.content.vmware.constants.VmRestartPriorities.DISABLED;
@@ -60,13 +63,12 @@ public class ModifyVmOverrides {
                                        @Param(value = PASSWORD, encrypted = true) String password,
                                        @Param(value = TRUST_EVERYONE) String trustEveryone,
                                        @Param(value = HOSTNAME, required = true) String hostname,
-                                       @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                       @Param(value = VM_NAME) String virtualMachineName,
+                                       @Param(value = VM_ID) String virtualMachineId,
                                        @Param(value = CLUSTER_NAME, required = true) String clusterName,
                                        @Param(value = RESTART_PRIORITY, required = true) String restartPriority) {
-
-        Map<String, String> resultMap;
         try {
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
@@ -75,10 +77,13 @@ public class ModifyVmOverrides {
                     .withTrustEveryone(trustEveryone)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            InputUtils.checkMutuallyExclusiveInputs(virtualMachineName, virtualMachineId, PROVIDE_VM_NAME_OR_ID);
+
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withClusterName(clusterName)
                     .withHostname(hostname)
                     .withVirtualMachineName(virtualMachineName)
+                    .withVirtualMachineId(virtualMachineId)
                     .build();
 
             return new ClusterComputeResourceService().updateOrAddVmOverride(httpInputs, vmInputs,
@@ -88,9 +93,9 @@ public class ModifyVmOverrides {
         }
     }
 
-    private String validateRestartPriority(String restartPriority) {
-        List<String> restartPriorities = Arrays.asList(CLUSTER_RESTART_PRIORITY, DISABLED, HIGH, MEDIUM, LOW);
-        for (String str : restartPriorities) {
+    private String validateRestartPriority(final String restartPriority) {
+        final List<String> restartPriorities = Arrays.asList(CLUSTER_RESTART_PRIORITY, DISABLED, HIGH, MEDIUM, LOW);
+        for (final String str : restartPriorities) {
             if (str.equalsIgnoreCase(restartPriority)) {
                 return restartPriority;
             }

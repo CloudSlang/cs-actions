@@ -63,7 +63,12 @@ public class ClusterComputeResourceService {
     public Map<String, String> updateOrAddVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs, final String restartPriority) throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        final ManagedObjectReference vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+        final ManagedObjectReference vmMor;
+        if (StringUtilities.isNotEmpty(vmInputs.getVirtualMachineName())) {
+            vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+        } else {
+            vmMor = getVmMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineId());
+        }
 
         final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
@@ -406,6 +411,14 @@ public class ClusterComputeResourceService {
 
     private ManagedObjectReference getVmMor(final ConnectionResources connectionResources, final String value, final String virtualMachineName) throws Exception {
         final ManagedObjectReference mor = new MorObjectHandler().getMor(connectionResources, value, virtualMachineName);
+        if (mor != null) {
+            return mor;
+        }
+        throw new RuntimeException(VM_NOT_FOUND);
+    }
+
+    private ManagedObjectReference getVmMorById(final ConnectionResources connectionResources, final String value, final String virtualMachineName) throws Exception {
+        final ManagedObjectReference mor = new MorObjectHandler().getMorById(connectionResources, value, virtualMachineName);
         if (mor != null) {
             return mor;
         }

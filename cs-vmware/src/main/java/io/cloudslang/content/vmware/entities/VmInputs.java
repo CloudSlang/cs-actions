@@ -16,8 +16,8 @@ public class VmInputs {
     private static final long DEFAULT_VM_MEMORY_SIZE_MB = 1024;
     private String dataCenterName;
     private String hostname;
-
     private String virtualMachineName;
+    private String virtualMachineId;
     private String description;
     private String dataStore;
     private String guestOsId;
@@ -82,6 +82,7 @@ public class VmInputs {
         this.hostGroupName = builder.hostGroupName;
         this.ruleName = builder.ruleName;
         this.clusterName = builder.clusterName;
+        this.virtualMachineId = builder.virtualMachineId;
     }
 
     public String getDataCenterName() {
@@ -94,6 +95,10 @@ public class VmInputs {
 
     public String getVirtualMachineName() {
         return virtualMachineName;
+    }
+
+    public String getVirtualMachineId() {
+        return virtualMachineId;
     }
 
     public String getDescription() {
@@ -237,6 +242,7 @@ public class VmInputs {
         private String vmGroupName;
         private String hostGroupName;
         private String ruleName;
+        private String virtualMachineId;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -393,6 +399,11 @@ public class VmInputs {
 
         public VmInputsBuilder withRuleName(String ruleName) {
             this.ruleName = ruleName;
+            return this;
+        }
+
+        public VmInputsBuilder withVirtualMachineId(String virtualMachineId) {
+            this.virtualMachineId = virtualMachineId;
             return this;
         }
     }
