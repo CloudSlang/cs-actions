@@ -62,27 +62,30 @@ public class ClusterComputeResourceService {
     public Map<String, String> updateOrAddVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs, final String restartPriority) throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        final ManagedObjectReference vmMor;
-        if (StringUtilities.isNotEmpty(vmInputs.getVirtualMachineName())) {
-            vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
-        } else {
-            vmMor = new MorObjectHandler().getMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
-        }
+        final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+        final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
-        ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
+        final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+        final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
 
-        ManagedObjectReference task = connectionResources.getVimPortType().
+        final ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+        final Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
                         String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
+    }
+
+    private ManagedObjectReference getVirtualMachineReference(final VmInputs vmInputs, final ConnectionResources connectionResources) throws Exception {
+        if (StringUtilities.isNotEmpty(vmInputs.getVirtualMachineName())) {
+            return getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+        } else {
+            return new MorObjectHandler().getMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+        }
     }
 
     public Map<String, String> createVmGroup(HttpInputs httpInputs, VmInputs vmInputs, List<String> vmNameList) throws Exception {

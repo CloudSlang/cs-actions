@@ -81,7 +81,7 @@ public class CreateAffinityRule {
 
         try {
             InputUtils.checkMutuallyExclusiveInputs(affineHostGroupName, antiAffineHostGroupName, PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP);
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
@@ -90,7 +90,7 @@ public class CreateAffinityRule {
                     .withTrustEveryone(trustEveryone)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withClusterName(clusterName)
                     .withVmGroupName(vmGroupName)
                     .withRuleName(ruleName)
