@@ -18,6 +18,12 @@ public class MorObjectHandler {
         return getSpecificMor(connectionResources, reference, filter, parameter);
     }
 
+    public ManagedObjectReference getMorById(final ConnectionResources connectionResources, final String filter, final String id) throws Exception {
+        final ManagedObjectReference reference = connectionResources.getMorRootFolder();
+        final RetrieveOptions retrieveOptions = new RetrieveOptions();
+        return connectionResources.getMoRefHandler().findManagedObjectReferenceByTypeAndId(reference, filter, retrieveOptions, id);
+    }
+
     public Map<String, ManagedObjectReference> getSpecificObjectsMap(ConnectionResources connectionResources, String objectType)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         return connectionResources.getMoRefHandler().inContainerByType(connectionResources.getMorRootFolder(), objectType);

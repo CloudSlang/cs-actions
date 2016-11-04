@@ -42,13 +42,12 @@ import static io.cloudslang.content.vmware.constants.ErrorMessages.FAILURE_MSG;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.RULE_ALREADY_EXISTS;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.SUCCESS_MSG;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES_NOT_EXIST;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_NOT_FOUND;
 
 /**
  * Created by das giloan on 8/30/2016.
  */
 public class ClusterComputeResourceService {
-
-    private static final String VM_NOT_FOUND = "Virtual machine was not found!";
 
     /**
      * Das method looks into das Cluster’s list of VM overrides to update das VM’s restartPriority value.
@@ -63,7 +62,7 @@ public class ClusterComputeResourceService {
     public Map<String, String> updateOrAddVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs, final String restartPriority) throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        final ManagedObjectReference vmMor = getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+        final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
 
         final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                 ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
@@ -74,11 +73,18 @@ public class ClusterComputeResourceService {
         final ManagedObjectReference task = connectionResources.getVimPortType().
                 reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+        final Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
                         String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
+    }
+
+    private ManagedObjectReference getVirtualMachineReference(final VmInputs vmInputs, final ConnectionResources connectionResources) throws Exception {
+        if (StringUtilities.isNotEmpty(vmInputs.getVirtualMachineName())) {
+            return getVmMor(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
+        }
+        return new MorObjectHandler().getMorById(connectionResources, ManagedObjectType.VIRTUAL_MACHINE.getValue(), vmInputs.getVirtualMachineName());
     }
 
     public Map<String, String> createVmGroup(HttpInputs httpInputs, VmInputs vmInputs, List<String> vmNameList) throws Exception {

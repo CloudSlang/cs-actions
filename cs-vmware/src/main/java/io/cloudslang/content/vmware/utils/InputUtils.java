@@ -125,9 +125,9 @@ public class InputUtils {
         return locale;
     }
 
-    public static void checkHostGroups(String affineHostGroupName, String antiAffineHostGroupName) {
-        if (isBlank(affineHostGroupName) == isBlank(antiAffineHostGroupName)) {
-            throw new IllegalArgumentException(PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP);
+    public static void checkMutuallyExclusiveInputs(final String input1, final String input2, final String exceptionMessage) {
+        if (!(isBlank(input1) ^ isBlank(input2))) {
+            throw new IllegalArgumentException(exceptionMessage);
         }
     }
 }

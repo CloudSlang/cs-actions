@@ -7,7 +7,6 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.ClusterComputeResourceService;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +20,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -42,6 +46,7 @@ public class ModifyVmOverridesTest {
     private static final String INVALID_RESTART_PRIORITY_MSG = "The 'restartPriority' input value is not valid! Valid values are ";
     private static final String VALIDATE_RESTART_PRIORITY_METHOD = "validateRestartPriority";
     private static final String WRONG_RESTART_PRIORITY = "wrong_restart_priority";
+    private static final String PROVIDE_VM_NAME_OR_ID = "A value must be provided for either virtualMachineName or virtualMachineId input.";
 
     private ModifyVmOverrides action;
 
@@ -68,11 +73,11 @@ public class ModifyVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doReturn(map).when(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
 
-        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "", CLUSTER_RESTART_PRIORITY);
+        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "vmName", "", "", CLUSTER_RESTART_PRIORITY);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
-        Assert.assertEquals(map, result);
+        assertEquals(map, result);
     }
 
     @Test
@@ -80,25 +85,37 @@ public class ModifyVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doThrow(new Exception(OPERATION_FAILED)).when(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
 
-        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "", CLUSTER_RESTART_PRIORITY);
+        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "vm-123", "", CLUSTER_RESTART_PRIORITY); // TODO
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
-        Assert.assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));
-        Assert.assertTrue(StringUtilities.contains(result.get(Outputs.EXCEPTION), OPERATION_FAILED));
+        assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));
+        assertTrue(StringUtilities.contains(result.get(Outputs.EXCEPTION), OPERATION_FAILED));
     }
 
     @Test
     public void testValidateRestartPriority() throws Exception {
         Method method = ModifyVmOverrides.class.getDeclaredMethod(VALIDATE_RESTART_PRIORITY_METHOD, String.class);
         method.setAccessible(true);
-        Assert.assertEquals(CLUSTER_RESTART_PRIORITY, method.invoke(action, CLUSTER_RESTART_PRIORITY));
-        Assert.assertEquals(DISABLED, method.invoke(action, DISABLED));
-        Assert.assertEquals(HIGH, method.invoke(action, HIGH));
-        Assert.assertEquals(MEDIUM, method.invoke(action, MEDIUM));
-        Assert.assertEquals(LOW, method.invoke(action, LOW));
+        assertEquals(CLUSTER_RESTART_PRIORITY, method.invoke(action, CLUSTER_RESTART_PRIORITY));
+        assertEquals(DISABLED, method.invoke(action, DISABLED));
+        assertEquals(HIGH, method.invoke(action, HIGH));
+        assertEquals(MEDIUM, method.invoke(action, MEDIUM));
+        assertEquals(LOW, method.invoke(action, LOW));
 
         thrownException.expectMessage(INVALID_RESTART_PRIORITY_MSG);
         method.invoke(action, WRONG_RESTART_PRIORITY);
+    }
+
+    @Test
+    public void testValidateMutualExclusiveInputs() throws Exception {
+        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "", CLUSTER_RESTART_PRIORITY));
+        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "vmName", "vm-123", "", CLUSTER_RESTART_PRIORITY));
+    }
+
+    private void verifyFailureResultMap(Map<String, String> result) {
+        assertEquals(PROVIDE_VM_NAME_OR_ID, result.get(RETURN_RESULT));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertTrue(StringUtilities.contains(result.get(EXCEPTION), PROVIDE_VM_NAME_OR_ID));
     }
 }
