@@ -327,7 +327,7 @@ public class InstanceUtils {
                 && filterValuesArray != null && filterValuesArray.length > START_INDEX) {
             for (int index = START_INDEX; index < filterNamesArray.length; index++) {
                 String filterName = InstanceFilter.getInstanceFilter(filterNamesArray[index]);
-                queryParamsMap.put(FILTER + DOT + valueOf(index + ONE) + DOT + NAME, filterName);
+                queryParamsMap.put(getFilterNameKey(index), filterName);
                 setFilterValues(queryParamsMap, filterName, filterValuesArray[index], index);
             }
         }
@@ -339,7 +339,7 @@ public class InstanceUtils {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
                         || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
-                    queryParamsMap.put(getFilterKey(index, counter),
+                    queryParamsMap.put(getFilterValueKey(index, counter),
                             getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                 }
             }
@@ -347,7 +347,12 @@ public class InstanceUtils {
     }
 
     @NotNull
-    private String getFilterKey(int index, int counter) {
+    private String getFilterNameKey(int index) {
+        return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
+    }
+
+    @NotNull
+    private String getFilterValueKey(int index, int counter) {
         return FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + DOT + valueOf(counter + ONE);
     }
 

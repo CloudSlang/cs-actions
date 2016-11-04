@@ -29,6 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.eq;
@@ -49,12 +50,9 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
-
-    private QueryApiExecutor toTest;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
+    private QueryApiExecutor toTest;
     @Mock
     private CSHttpClient csHttpClientMock;
 
@@ -225,6 +223,36 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeInstances")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeInstancesWithFailure() throws Exception {
+        try {
+            InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                    .withFilterNamesString("architecture")
+                    .withFilterValuesString("i386|WRONG_VALUE|x86_64")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        } catch (RuntimeException e) {
+            assertEquals("Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.", e.getMessage());
+        }
+        try {
+            InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                    .withFilterNamesString("affinity")
+                    .withFilterValuesString("WRONG_VALUE")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        } catch (RuntimeException e) {
+            assertEquals("Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.", e.getMessage());
+        }
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("availability-zone")
+                .withFilterValuesString("new_value")
+                .withMaxResults("5")
+                .build();
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeInstancesFailure")));
     }
 
     @Test
@@ -668,6 +696,12 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.3.Name", "owner-id");
                 queryParamsMap.put("Filter.3.Value.1", "o-id");
                 break;
+            case "DescribeInstancesFailure":
+                queryParamsMap.put("Action", "DescribeInstances");
+                queryParamsMap.put("MaxResults", "5");
+                queryParamsMap.put("Filter.1.Name", "availability-zone");
+                queryParamsMap.put("Filter.1.Value.1", "new_value");
+                break;
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");
                 queryParamsMap.put("RegionName.2", "eu-central-1");
@@ -822,6 +856,5 @@ public class QueryApiExecutorTest {
                 .withMaxResults("10")
                 .withNextToken("token")
                 .build();
-
     }
 }
