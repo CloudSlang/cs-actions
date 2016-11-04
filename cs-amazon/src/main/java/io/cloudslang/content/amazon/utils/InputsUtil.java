@@ -71,6 +71,8 @@ public final class InputsUtil {
     private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
+    private static final int MINIMUM_MAX_RESULTS = 5;
+    private static final int MAXIMUM_MAX_RESULTS = 1000;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
     private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
@@ -209,6 +211,12 @@ public final class InputsUtil {
         return isBlank(input) ? MINIMUM_INSTANCES_NUMBER :
                 getValidInt(input, MINIMUM_INSTANCES_NUMBER, MAXIMUM_INSTANCES_NUMBER, getValidationException(input, true),
                         getValidationException(input, false));
+    }
+
+    public static String getMaxResultsCount(String input) {
+        return isBlank(input) ? NOT_RELEVANT :
+                valueOf(getValidInt(input, MINIMUM_MAX_RESULTS, MAXIMUM_MAX_RESULTS, getValidationException(input, true),
+                        getValidationException(input, false)));
     }
 
     public static String getRelevantBooleanString(String input) {

@@ -124,8 +124,7 @@ public class DeleteSnapshotAction {
 
             VolumeInputs volumeInputs = new VolumeInputs.Builder().withSnapshotId(snapshotId).build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, volumeInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, volumeInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

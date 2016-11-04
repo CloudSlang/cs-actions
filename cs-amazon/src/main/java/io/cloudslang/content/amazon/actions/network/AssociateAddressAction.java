@@ -166,8 +166,7 @@ public class AssociateAddressAction {
 
             NetworkInputs networkInputs = new NetworkInputs.Builder().withNetworkInterfaceId(networkInterfaceId).build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, networkInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, networkInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

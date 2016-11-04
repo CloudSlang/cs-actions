@@ -136,8 +136,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                     .withUserGroupsString(userGroupsString)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(inputs, imageInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(inputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

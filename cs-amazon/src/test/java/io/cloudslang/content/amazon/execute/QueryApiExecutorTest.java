@@ -1,11 +1,20 @@
 package io.cloudslang.content.amazon.execute;
 
-import io.cloudslang.content.amazon.entities.inputs.*;
+import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
+import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
+import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
+import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
+import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.amazon.entities.inputs.IamInputs;
+import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
+import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
+import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
+import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
+import io.cloudslang.content.amazon.services.AmazonSignatureService;
+import io.cloudslang.content.amazon.utils.MockingHelper;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.amazon.services.AmazonSignatureService;
-import io.cloudslang.content.amazon.services.impl.MockingHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,21 +49,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
-
-    private QueryApiExecutor toTest;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+    private QueryApiExecutor toTest;
     @Mock
     private CSHttpClient csHttpClientMock;
-
     @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
-
     @Mock
     private AuthorizationHeader authorizationHeaderMock;
-
     @Spy
     private QueryApiExecutor queryApiExecutorSpy = new QueryApiExecutor();
 
@@ -210,6 +215,52 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeInstances() throws Exception {
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), getDescribeInstancesInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeInstances")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeInstanceWithFailureAffinity() throws Exception {
+        expectedException.expectMessage("Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
+        expectedException.expect(RuntimeException.class);
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("affinity")
+                .withFilterValuesString("WRONG_VALUE")
+                .build();
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+
+    }
+
+    @Test
+    public void testDescribeInstanceWithFailureArchitecture() throws Exception {
+        expectedException.expectMessage("Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
+        expectedException.expect(RuntimeException.class);
+
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("architecture")
+                .withFilterValuesString("i386|WRONG_VALUE|x86_64")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+    }
+
+    @Test
+    public void testDescribeInstancesWithSuccessAvailabilityZone() throws Exception {
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("availability-zone")
+                .withFilterValuesString("new_value")
+                .withMaxResults("5")
+                .build();
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeInstancesSuccess")));
+    }
+
+    @Test
     public void testDescribeRegions() throws Exception {
         toTest.execute(getCommonInputs("DescribeRegions", HEADERS, ""), getCustomInputs());
 
@@ -268,7 +319,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStartInstances() throws Exception {
-        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getStartInstancesInputs());
+        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StartInstances")));
@@ -277,7 +328,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStopInstances() throws Exception {
-        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getInstanceCustomInputs(), getStopInstancesInstanceInputs());
+        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StopInstances")));
@@ -286,7 +337,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testRebootInstances() throws Exception {
-        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getInstanceCustomInputs());
+        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RebootInstances")));
@@ -313,7 +364,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testTerminateInstances() throws Exception {
-        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getInstanceCustomInputs());
+        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("TerminateInstances")));
@@ -408,7 +459,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private CustomInputs getCustomInputs() throws Exception {
+    private CustomInputs getCustomInputs() {
         return new CustomInputs.Builder()
                 .withAllocationId("eipalloc-abcdef12")
                 .withAssociationId("eipassoc-abcdef12")
@@ -457,7 +508,6 @@ public class QueryApiExecutorTest {
                     .withDeviceIndex("25")
                     .withNetworkInterfaceDescription("anything in here")
                     .withNetworkInterfaceId("eni-12345678")
-                    .withNetworkInterfaceSubnetId("subnet-abcdef12")
                     .withSecondaryPrivateIpAddressCount("3")
                     .build();
         }
@@ -465,8 +515,6 @@ public class QueryApiExecutorTest {
                 .withDeviceIndex("25")
                 .withNetworkInterfaceDescription("anything in here")
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
-                .withNetworkInterfacePublicIp("52.0.0.2")
-                .withNetworkInterfaceSubnetId("subnet-abcdef12")
                 .withSecondaryPrivateIpAddressCount("3")
                 .build();
     }
@@ -638,6 +686,27 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.25.Value", "true");
                 queryParamsMap.put("Filter.10.Value", "amazon");
                 break;
+            case "DescribeInstances":
+                queryParamsMap.put("NextToken", "token");
+                queryParamsMap.put("MaxResults", "10");
+                queryParamsMap.put("InstanceId.1", "instance1");
+                queryParamsMap.put("InstanceId.2", "instance2");
+                queryParamsMap.put("InstanceId.3", "instance3");
+                queryParamsMap.put("Filter.1.Name", "architecture");
+                queryParamsMap.put("Filter.1.Value.1", "i386");
+                queryParamsMap.put("Filter.1.Value.2", "x86_64");
+                queryParamsMap.put("Filter.2.Name", "affinity");
+                queryParamsMap.put("Filter.2.Value.1", "default");
+                queryParamsMap.put("Filter.2.Value.2", "host");
+                queryParamsMap.put("Filter.3.Name", "owner-id");
+                queryParamsMap.put("Filter.3.Value.1", "o-id");
+                break;
+            case "DescribeInstancesSuccess":
+                queryParamsMap.put("Action", "DescribeInstances");
+                queryParamsMap.put("MaxResults", "5");
+                queryParamsMap.put("Filter.1.Name", "availability-zone");
+                queryParamsMap.put("Filter.1.Value.1", "new_value");
+                break;
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");
                 queryParamsMap.put("RegionName.2", "eu-central-1");
@@ -741,7 +810,11 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private ImageInputs getDescribeImagesInputs() throws Exception {
+    private InstanceInputs getRebootStartStopTerminateInstancesInputs() {
+        return new InstanceInputs.Builder().withForceStop("true").withInstanceIdsString("i-12345678").build();
+    }
+
+    private ImageInputs getDescribeImagesInputs() {
         CustomInputs customInputs = new CustomInputs.Builder()
                 .withIdentityId("my-id")
                 .withArchitecture("i386")
@@ -780,15 +853,13 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private InstanceInputs getStopInstancesInstanceInputs() {
-        return new InstanceInputs.Builder().withForceStop("true").build();
-    }
-
-    private CustomInputs getInstanceCustomInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
-    }
-
-    private CustomInputs getStartInstancesInputs() {
-        return new CustomInputs.Builder().withInstanceId("i-12345678").build();
+    private InstanceInputs getDescribeInstancesInputs() {
+        return new InstanceInputs.Builder()
+                .withFilterNamesString("architecture,affinity,owner-id")
+                .withFilterValuesString("i386||x86_64,|default|host,||o-id")
+                .withInstanceIdsString("instance1,instance2,instance3")
+                .withMaxResults("10")
+                .withNextToken("token")
+                .build();
     }
 }

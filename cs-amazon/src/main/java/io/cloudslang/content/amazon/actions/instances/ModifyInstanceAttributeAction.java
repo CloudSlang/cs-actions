@@ -44,14 +44,14 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.V
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.ATTRIBUTE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.ATTRIBUTE_VALUE;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.DISABLE_API_TERMINATION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_DISABLE_API_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.ENA_SUPPORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.KERNEL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.RAMDISK;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_KERNEL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_RAMDISK;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.SOURCE_DESTINATION_CHECK;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.SRIOV_NET_SUPPORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.USER_DATA;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_USER_DATA;
 
 /**
  * Created by TusaM
@@ -239,18 +239,18 @@ public class ModifyInstanceAttributeAction {
                                        @Param(value = DELETE_ON_TERMINATIONS_STRING) String deleteOnTerminationsString,
                                        @Param(value = VOLUME_IDS_STRING) String volumeIdsString,
                                        @Param(value = NO_DEVICES_STRING) String noDevicesString,
-                                       @Param(value = DISABLE_API_TERMINATION) String disableApiTermination,
+                                       @Param(value = LOWER_CASE_DISABLE_API_TERMINATION) String disableApiTermination,
                                        @Param(value = EBS_OPTIMIZED) String ebsOptimized,
                                        @Param(value = ENA_SUPPORT) String enaSupport,
                                        @Param(value = SECURITY_GROUP_IDS_STRING) String securityGroupIdsString,
                                        @Param(value = INSTANCE_ID, required = true) String instanceId,
-                                       @Param(value = INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
+                                       @Param(value = LOWER_CASE_INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR) String instanceInitiatedShutdownBehavior,
                                        @Param(value = INSTANCE_TYPE) String instanceType,
-                                       @Param(value = KERNEL) String kernel,
-                                       @Param(value = RAMDISK) String ramdisk,
+                                       @Param(value = LOWER_CASE_KERNEL) String kernel,
+                                       @Param(value = LOWER_CASE_RAMDISK) String ramdisk,
                                        @Param(value = SOURCE_DESTINATION_CHECK) String sourceDestinationCheck,
                                        @Param(value = SRIOV_NET_SUPPORT) String sriovNetSupport,
-                                       @Param(value = USER_DATA) String userData) {
+                                       @Param(value = LOWER_CASE_USER_DATA) String userData) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-09-15");
 
@@ -302,8 +302,7 @@ public class ModifyInstanceAttributeAction {
                     .withUserData(userData)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, iamInputs, instanceInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, ebsInputs, iamInputs, instanceInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

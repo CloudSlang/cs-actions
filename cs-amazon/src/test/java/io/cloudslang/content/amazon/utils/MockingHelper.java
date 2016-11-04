@@ -1,4 +1,4 @@
-package io.cloudslang.content.amazon.services.impl;
+package io.cloudslang.content.amazon.utils;
 
 import org.junit.rules.ExpectedException;
 

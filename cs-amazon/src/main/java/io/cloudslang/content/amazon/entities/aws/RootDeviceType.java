@@ -11,7 +11,7 @@ public enum RootDeviceType {
     AVAILABLE("available"),
     IN_USE("in-use");
 
-    private String value;
+    private final String value;
 
     RootDeviceType(String value) {
         this.value = value;

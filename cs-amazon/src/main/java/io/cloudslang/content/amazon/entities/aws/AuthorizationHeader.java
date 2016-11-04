@@ -5,8 +5,8 @@ package io.cloudslang.content.amazon.entities.aws;
  * 8/8/2016.
  */
 public class AuthorizationHeader {
-    private String signedHeaders;
-    private String signature;
+    private final String signedHeaders;
+    private final String signature;
 
     public AuthorizationHeader(String signedHeaders, String signature) {
         this.signedHeaders = signedHeaders;

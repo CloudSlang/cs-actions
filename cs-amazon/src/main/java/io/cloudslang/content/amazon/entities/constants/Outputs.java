@@ -1,7 +1,8 @@
 package io.cloudslang.content.amazon.entities.constants;
 
 /**
- * Created by persdana on 6/18/2015.
+ * Created by persdana
+ * 6/18/2015.
  */
 public class Outputs {
     public static final String RETURN_CODE = "returnCode";

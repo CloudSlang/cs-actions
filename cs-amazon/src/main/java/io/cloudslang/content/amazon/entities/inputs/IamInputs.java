@@ -5,11 +5,11 @@ package io.cloudslang.content.amazon.entities.inputs;
  * 9/15/2016.
  */
 public class IamInputs {
-    private String iamInstanceProfileArn;
-    private String iamInstanceProfileName;
-    private String keyPairName;
-    private String securityGroupIdsString;
-    private String securityGroupNamesString;
+    private final String iamInstanceProfileArn;
+    private final String iamInstanceProfileName;
+    private final String keyPairName;
+    private final String securityGroupIdsString;
+    private final String securityGroupNamesString;
 
     private IamInputs(Builder builder) {
         this.iamInstanceProfileArn = builder.iamInstanceProfileArn;

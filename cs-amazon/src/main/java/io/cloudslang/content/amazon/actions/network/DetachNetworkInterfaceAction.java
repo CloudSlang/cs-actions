@@ -130,8 +130,7 @@ public class DetachNetworkInterfaceAction {
             CustomInputs customInputs = new CustomInputs.Builder().withAttachmentId(attachmentId).build();
             NetworkInputs networkInputs = new NetworkInputs.Builder().withForceDetach(forceDetach).build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

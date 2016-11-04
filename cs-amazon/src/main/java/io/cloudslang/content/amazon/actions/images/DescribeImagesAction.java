@@ -115,7 +115,7 @@ public class DescribeImagesAction {
      * @param ownerAlias                   Optional - AWS account alias. Example: "amazon"
      * @param ownerId                      Optional - AWS account ID of the instance owner.
      * @param platform                     Optional - platform used. Use "windows" if you have Windows instances; otherwise,
-     *                                     leave blank. Valid values: "", "windows".
+     *                                     use "others". Valid values: "", "windows".
      * @param productCode                  Optional - product code associated with the AMI used to launch the instance.
      * @param productCodeType              Optional - type of product code. Valid values: "devpay", "marketplace".
      * @param ramdiskId                    Optional - RAM disk ID.
@@ -260,8 +260,7 @@ public class DescribeImagesAction {
                     .withState(state)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

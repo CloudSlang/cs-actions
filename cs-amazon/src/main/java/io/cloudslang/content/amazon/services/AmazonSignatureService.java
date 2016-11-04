@@ -39,7 +39,7 @@ public class AmazonSignatureService {
     private static final String X_AMZ_SECURITY_TOKEN = "X-Amz-Security-Token";
     private static final String AMAZON_HOSTNAME = "amazonaws.com";
 
-    private AwsSignatureV4 awsSignatureV4 = new AwsSignatureV4();
+    private final AwsSignatureV4 awsSignatureV4 = new AwsSignatureV4();
 
     public AuthorizationHeader signRequestHeaders(InputsWrapper wrapper, Map<String, String> headersMap,
                                                   Map<String, String> queryParamsMap) throws SignatureException, MalformedURLException {
@@ -111,9 +111,6 @@ public class AmazonSignatureService {
 
     @NotNull
     private Map<String, String> getInitializedMap(Map<String, String> inputMap) {
-        if (inputMap == null || inputMap.isEmpty()) {
-            inputMap = new HashMap<>();
-        }
-        return inputMap;
+        return (inputMap == null || inputMap.isEmpty()) ? new HashMap<String, String>() : inputMap;
     }
 }

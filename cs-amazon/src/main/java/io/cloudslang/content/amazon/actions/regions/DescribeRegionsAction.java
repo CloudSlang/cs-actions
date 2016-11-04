@@ -35,7 +35,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_FILTERS_STRING;
 
 /**
- * Created by persdana on 6/23/2015.
+ * Created by persdana
+ * 6/23/2015.
  */
 public class DescribeRegionsAction {
     /**
@@ -139,8 +140,7 @@ public class DescribeRegionsAction {
                     .withRegionsString(regionsString)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

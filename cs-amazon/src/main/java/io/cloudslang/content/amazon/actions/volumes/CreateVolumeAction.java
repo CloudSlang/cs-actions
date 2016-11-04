@@ -167,8 +167,7 @@ public class CreateVolumeAction {
                     .withSnapshotId(snapshotId)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
