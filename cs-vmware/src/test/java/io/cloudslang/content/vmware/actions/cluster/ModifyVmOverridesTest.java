@@ -23,6 +23,7 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_VM_NAME_OR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -46,7 +47,6 @@ public class ModifyVmOverridesTest {
     private static final String INVALID_RESTART_PRIORITY_MSG = "The 'restartPriority' input value is not valid! Valid values are ";
     private static final String VALIDATE_RESTART_PRIORITY_METHOD = "validateRestartPriority";
     private static final String WRONG_RESTART_PRIORITY = "wrong_restart_priority";
-    private static final String PROVIDE_VM_NAME_OR_ID = "Virtual Machine identification inputs are mutually exclusive! Provide only one.";
 
     private ModifyVmOverrides action;
 
