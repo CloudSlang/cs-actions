@@ -4,6 +4,8 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.constants.BooleanValues;
+import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.services.ConvertXmlToJsonService;
 import io.cloudslang.content.xml.utils.ValidateUtils;
@@ -12,7 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static io.cloudslang.content.xml.utils.Constants.*;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_PREFIXES;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_URIS;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by ursan on 8/2/2016.
@@ -51,8 +59,8 @@ public class ConvertXmlToJson {
 
     @Action(name = "Convert XML to Json",
             outputs = {
-                    @Output(Outputs.NAMESPACES_PREFIXES),
-                    @Output(Outputs.NAMESPACES_URIS),
+                    @Output(NAMESPACES_PREFIXES),
+                    @Output(NAMESPACES_URIS),
                     @Output(Outputs.RETURN_RESULT),
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.EXCEPTION)
@@ -69,14 +77,13 @@ public class ConvertXmlToJson {
             @Param(value = Inputs.PRETTY_PRINT) String prettyPrint,
             @Param(value = Inputs.PARSING_FEATURES) String parsingFeatures) {
 
-        Map<String, String> result = new HashMap<>();
         try {
-            includeRootElement = StringUtils.defaultIfEmpty(includeRootElement, BooleanNames.TRUE);
-            includeAttributes = StringUtils.defaultIfEmpty(includeAttributes, BooleanNames.TRUE);
-            prettyPrint = StringUtils.defaultIfEmpty(prettyPrint, BooleanNames.TRUE);
+            includeRootElement = defaultIfEmpty(includeRootElement, TRUE);
+            includeAttributes = defaultIfEmpty(includeAttributes, TRUE);
+            prettyPrint = defaultIfEmpty(prettyPrint, TRUE);
             ValidateUtils.validateInputs(includeRootElement, includeAttributes, prettyPrint);
 
-            ConvertXmlToJsonInputs inputs = new ConvertXmlToJsonInputs.ConvertXmlToJsonInputsBuilder()
+            final ConvertXmlToJsonInputs inputs = new ConvertXmlToJsonInputs.ConvertXmlToJsonInputsBuilder()
                     .withXml(xml)
                     .withTextElementsName(textElementsName)
                     .withIncludeRootElement(Boolean.parseBoolean(includeRootElement))
@@ -85,21 +92,15 @@ public class ConvertXmlToJson {
                     .withParsingFeatures(parsingFeatures)
                     .build();
 
-            ConvertXmlToJsonService converter = new ConvertXmlToJsonService();
-            String json = converter.convertToJsonString(inputs);
+            final ConvertXmlToJsonService converter = new ConvertXmlToJsonService();
+            final String json = converter.convertToJsonString(inputs);
 
-            result.put(Outputs.NAMESPACES_PREFIXES, converter.getNamespacesPrefixes());
-            result.put(Outputs.NAMESPACES_URIS, converter.getNamespacesUris());
-            result.put(Outputs.RETURN_RESULT, json);
-            result.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
-
+            final Map<String, String> result = getSuccessResultsMap(json);
+            result.put(NAMESPACES_PREFIXES, converter.getNamespacesPrefixes());
+            result.put(NAMESPACES_URIS, converter.getNamespacesUris());
+            return result;
         } catch (Exception e) {
-            result.put(Outputs.NAMESPACES_PREFIXES, EMPTY_STRING);
-            result.put(Outputs.NAMESPACES_URIS, EMPTY_STRING);
-            result.put(Outputs.RETURN_RESULT, e.getMessage());
-            result.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
+            return getFailureResultsMap(e);
         }
-        return result;
     }
-
 }
