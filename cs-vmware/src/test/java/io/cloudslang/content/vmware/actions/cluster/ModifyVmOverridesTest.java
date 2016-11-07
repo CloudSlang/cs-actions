@@ -46,7 +46,7 @@ public class ModifyVmOverridesTest {
     private static final String INVALID_RESTART_PRIORITY_MSG = "The 'restartPriority' input value is not valid! Valid values are ";
     private static final String VALIDATE_RESTART_PRIORITY_METHOD = "validateRestartPriority";
     private static final String WRONG_RESTART_PRIORITY = "wrong_restart_priority";
-    private static final String PROVIDE_VM_NAME_OR_ID = "A value must be provided for either virtualMachineName or virtualMachineId input.";
+    private static final String PROVIDE_VM_NAME_OR_ID = "Virtual Machine identification inputs are mutually exclusive! Provide only one.";
 
     private ModifyVmOverrides action;
 
