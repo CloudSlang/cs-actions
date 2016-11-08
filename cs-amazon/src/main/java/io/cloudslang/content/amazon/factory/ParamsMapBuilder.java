@@ -33,7 +33,7 @@ public class ParamsMapBuilder {
                 case EC2_API:
                     return Ec2QueryParamsMapBuilder.getEc2QueryParamsMap(wrapper);
                 case LOAD_BALANCING_API:
-                    return null;
+                    return new HashMap<>();
                 default:
                     throw new RuntimeException(UNSUPPORTED_AWS_API);
             }

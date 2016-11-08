@@ -30,7 +30,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
@@ -47,8 +46,6 @@ public class QueryApiExecutorTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     private CSHttpClient csHttpClientMock;
@@ -238,20 +235,17 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeInstanceWithFailureAffinity() throws Exception {
-        expectedException.expectMessage("Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
-        expectedException.expect(RuntimeException.class);
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("affinity")
                 .withFilterValuesString("WRONG_VALUE")
                 .build();
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
-
     }
 
     @Test
     public void testDescribeInstanceWithFailureArchitecture() throws Exception {
-        expectedException.expectMessage("Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
-        expectedException.expect(RuntimeException.class);
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
 
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("architecture")
