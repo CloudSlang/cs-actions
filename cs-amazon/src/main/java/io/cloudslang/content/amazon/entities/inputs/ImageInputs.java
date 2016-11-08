@@ -12,8 +12,6 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 5/10/2016.
  */
 public class ImageInputs {
-    private final CustomInputs customInputs;
-
     private final String imageName;
     private final String imageIdsString;
     private final String ownersString;
@@ -28,7 +26,6 @@ public class ImageInputs {
     private final boolean imageNoReboot;
 
     private ImageInputs(Builder builder) {
-        this.customInputs = builder.customInputs;
 
         this.imageName = builder.imageName;
         this.imageIdsString = builder.imageIdsString;
@@ -42,10 +39,6 @@ public class ImageInputs {
         this.state = builder.state;
 
         this.imageNoReboot = builder.imageNoReboot;
-    }
-
-    public CustomInputs getCustomInputs() {
-        return customInputs;
     }
 
     public String getImageName() {
@@ -93,8 +86,6 @@ public class ImageInputs {
     }
 
     public static class Builder {
-        private CustomInputs customInputs;
-
         private String imageName;
         private String imageIdsString;
         private String ownersString;
@@ -110,11 +101,6 @@ public class ImageInputs {
 
         public ImageInputs build() {
             return new ImageInputs(this);
-        }
-
-        public Builder withCustomInputs(CustomInputs inputs) {
-            customInputs = inputs;
-            return this;
         }
 
         public Builder withImageName(String inputValue) {

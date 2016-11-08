@@ -77,7 +77,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testAddLaunchPermissionsToImage() throws Exception {
-        toTest.execute(getCommonInputs("ModifyImageAttribute", HEADERS, ""), getAddLaunchPermissionsToImageInputs());
+        toTest.execute(getCommonInputs("ModifyImageAttribute", HEADERS, ""), getAddLaunchPermissionsToImageInputs(), getAddLaunchPermissionsToImageCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ModifyImageAttribute")));
@@ -134,7 +134,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateImage() throws Exception {
-        toTest.execute(getCommonInputs("CreateImage", HEADERS, ""), getCreateImageInputs());
+        toTest.execute(getCommonInputs("CreateImage", HEADERS, ""), getCreateImageInputs(), getCreateImageCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateImage")));
@@ -207,7 +207,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeImages() throws Exception {
-        toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs());
+        toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs(), getDescribeImagesCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeImages")));
@@ -785,25 +785,28 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private ImageInputs getAddLaunchPermissionsToImageInputs() {
-        CustomInputs customInputs = new CustomInputs.Builder()
+    private CustomInputs getAddLaunchPermissionsToImageCustomInputs() {
+        return new CustomInputs.Builder()
                 .withAttribute("launchPermission")
                 .withOperationType("add")
                 .withImageId("ami-abcd1234")
                 .build();
+    }
+    private ImageInputs getAddLaunchPermissionsToImageInputs() {
         return new ImageInputs.Builder()
-                .withCustomInputs(customInputs)
                 .withUserIdsString("1,2")
                 .withUserGroupsString("g1,g2")
                 .build();
     }
 
-    private ImageInputs getCreateImageInputs() {
-        CustomInputs customInputs = new CustomInputs.Builder()
+    private CustomInputs getCreateImageCustomInputs() {
+        return new CustomInputs.Builder()
                 .withInstanceId("i-b0e2ad1b")
                 .build();
+    }
+
+    private ImageInputs getCreateImageInputs() {
         return new ImageInputs.Builder()
-                .withCustomInputs(customInputs)
                 .withImageName("img-name")
                 .withDescription("Some description")
                 .withImageNoReboot("true")
@@ -814,8 +817,8 @@ public class QueryApiExecutorTest {
         return new InstanceInputs.Builder().withForceStop("true").withInstanceIdsString("i-12345678").build();
     }
 
-    private ImageInputs getDescribeImagesInputs() {
-        CustomInputs customInputs = new CustomInputs.Builder()
+    private CustomInputs getDescribeImagesCustomInputs() {
+        return new CustomInputs.Builder()
                 .withIdentityId("my-id")
                 .withArchitecture("i386")
                 .withDeleteOnTermination("true")
@@ -840,8 +843,9 @@ public class QueryApiExecutorTest {
                 .withValueTagsString("my-value-tags")
                 .withVirtualizationType("paravirtual")
                 .build();
+    }
+    private ImageInputs getDescribeImagesInputs() {
         return new ImageInputs.Builder()
-                .withCustomInputs(customInputs)
                 .withDescription("some-desc")
                 .withImageIdsString("i_id1,i_id2")
                 .withOwnersString("o_id1,o_id2")

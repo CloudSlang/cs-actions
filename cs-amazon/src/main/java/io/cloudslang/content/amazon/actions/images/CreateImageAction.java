@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Defaults.API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.CREATE_IMAGE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -103,8 +104,8 @@ public class CreateImageAction {
                                        @Param(value = NAME, required = true) String name,
                                        @Param(value = NO_REBOOT) String noReboot) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            version = InputsUtil.getDefaultStringInput(version, API_VERSION);
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -122,10 +123,9 @@ public class CreateImageAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            ImageInputs imageInputs = new ImageInputs.Builder()
-                    .withCustomInputs(customInputs)
+            final ImageInputs imageInputs = new ImageInputs.Builder()
                     .withImageName(name)
                     .withDescription(description)
                     .withImageNoReboot(noReboot)

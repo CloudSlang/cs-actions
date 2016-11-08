@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Defaults.API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.DEREGISTER_IMAGE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -89,8 +90,8 @@ public class DeregisterImageAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = IMAGE_ID, required = true) String imageId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            version = InputsUtil.getDefaultStringInput(version, API_VERSION);
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -108,7 +109,7 @@ public class DeregisterImageAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withImageId(imageId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withImageId(imageId).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception exception) {
