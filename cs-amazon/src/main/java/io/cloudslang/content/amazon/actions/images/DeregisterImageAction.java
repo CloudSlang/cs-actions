@@ -90,7 +90,7 @@ public class DeregisterImageAction {
                                        @Param(value = IMAGE_ID, required = true) String imageId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -108,7 +108,7 @@ public class DeregisterImageAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withImageId(imageId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withImageId(imageId).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception exception) {

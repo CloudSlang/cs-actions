@@ -74,7 +74,7 @@ public class ImageUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
-        queryParamsMap.put(INSTANCE_ID, wrapper.getImageInputs().getCustomInputs().getInstanceId());
+        queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
         queryParamsMap.put(NAME, wrapper.getImageInputs().getImageName());
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getImageInputs().getDescription(),
@@ -105,9 +105,9 @@ public class ImageUtils {
 
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
-        queryParamsMap.put(ATTRIBUTE, wrapper.getImageInputs().getCustomInputs().getAttribute());
-        queryParamsMap.put(OPERATION_TYPE, wrapper.getImageInputs().getCustomInputs().getOperationType());
-        queryParamsMap.put(IMAGE_ID, wrapper.getImageInputs().getCustomInputs().getImageId());
+        queryParamsMap.put(ATTRIBUTE, wrapper.getCustomInputs().getAttribute());
+        queryParamsMap.put(OPERATION_TYPE, wrapper.getCustomInputs().getOperationType());
+        queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
         putCollectionInQueryMap(queryParamsMap, USER_ID, userIds);
         putCollectionInQueryMap(queryParamsMap, USER_GROUP, userGroupIds);
 
@@ -122,33 +122,33 @@ public class ImageUtils {
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
                 wrapper.getCommonInputs().getVersion());
         InputsUtil.setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + DOT + ONE,
-                valueOf(wrapper.getImageInputs().getCustomInputs().getIdentityId()),
-                isNotBlank(valueOf(wrapper.getImageInputs().getCustomInputs().getIdentityId())));
+                valueOf(wrapper.getCustomInputs().getIdentityId()),
+                isNotBlank(valueOf(wrapper.getCustomInputs().getIdentityId())));
 
         int currentIndex = ONE;
 
-        currentIndex = appendOptionalFilters(queryParamsMap, ARCHITECTURE, currentIndex, wrapper.getImageInputs().getCustomInputs().getArchitecture());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION, currentIndex, wrapper.getImageInputs().getCustomInputs().getDeleteOnTermination());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DEVICE_NAME, currentIndex, wrapper.getImageInputs().getCustomInputs().getBlockMappingDeviceName());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_SNAPSHOT_ID, currentIndex, wrapper.getImageInputs().getCustomInputs().getBlockDeviceMappingSnapshotId());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_VOLUME_SIZE, currentIndex, wrapper.getImageInputs().getCustomInputs().getVolumeSize());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_VOLUME_TYPE, currentIndex, wrapper.getImageInputs().getCustomInputs().getVolumeType());
-        currentIndex = appendOptionalFilters(queryParamsMap, HYPERVISOR, currentIndex, wrapper.getImageInputs().getCustomInputs().getHypervisor());
-        currentIndex = appendOptionalFilters(queryParamsMap, IMAGE_ID_FILTER, currentIndex, wrapper.getImageInputs().getCustomInputs().getImageId());
-        currentIndex = appendOptionalFilters(queryParamsMap, KERNEL_ID, currentIndex, wrapper.getImageInputs().getCustomInputs().getKernelId());
-        currentIndex = appendOptionalFilters(queryParamsMap, OWNER_ALIAS, currentIndex, wrapper.getImageInputs().getCustomInputs().getOwnerAlias());
-        currentIndex = appendOptionalFilters(queryParamsMap, OWNER_ID, currentIndex, wrapper.getImageInputs().getCustomInputs().getOwnerId());
-        currentIndex = appendOptionalFilters(queryParamsMap, PLATFORM, currentIndex, wrapper.getImageInputs().getCustomInputs().getPlatform());
-        currentIndex = appendOptionalFilters(queryParamsMap, PRODUCT_CODE, currentIndex, wrapper.getImageInputs().getCustomInputs().getProductCode());
-        currentIndex = appendOptionalFilters(queryParamsMap, PRODUCT_CODE_TYPE, currentIndex, wrapper.getImageInputs().getCustomInputs().getProductCodeType());
-        currentIndex = appendOptionalFilters(queryParamsMap, RAMDISK_ID, currentIndex, wrapper.getImageInputs().getCustomInputs().getRamdiskId());
-        currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_NAME, currentIndex, wrapper.getImageInputs().getCustomInputs().getRootDeviceName());
-        currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_TYPE, currentIndex, wrapper.getImageInputs().getCustomInputs().getRootDeviceType());
-        currentIndex = appendOptionalFilters(queryParamsMap, STATE_REASON_CODE, currentIndex, wrapper.getImageInputs().getCustomInputs().getStateReasonCode());
-        currentIndex = appendOptionalFilters(queryParamsMap, STATE_REASON_MESSAGE, currentIndex, wrapper.getImageInputs().getCustomInputs().getStateReasonMessage());
-        currentIndex = appendOptionalFilters(queryParamsMap, TAG_KEY, currentIndex, wrapper.getImageInputs().getCustomInputs().getKeyTagsString());
-        currentIndex = appendOptionalFilters(queryParamsMap, TAG_VALUE, currentIndex, wrapper.getImageInputs().getCustomInputs().getValueTagsString());
-        currentIndex = appendOptionalFilters(queryParamsMap, VIRTUALIZATION_TYPE, currentIndex, wrapper.getImageInputs().getCustomInputs().getVirtualizationType());
+        currentIndex = appendOptionalFilters(queryParamsMap, ARCHITECTURE, currentIndex, wrapper.getCustomInputs().getArchitecture());
+        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION, currentIndex, wrapper.getCustomInputs().getDeleteOnTermination());
+        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DEVICE_NAME, currentIndex, wrapper.getCustomInputs().getBlockMappingDeviceName());
+        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_SNAPSHOT_ID, currentIndex, wrapper.getCustomInputs().getBlockDeviceMappingSnapshotId());
+        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_VOLUME_SIZE, currentIndex, wrapper.getCustomInputs().getVolumeSize());
+        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_VOLUME_TYPE, currentIndex, wrapper.getCustomInputs().getVolumeType());
+        currentIndex = appendOptionalFilters(queryParamsMap, HYPERVISOR, currentIndex, wrapper.getCustomInputs().getHypervisor());
+        currentIndex = appendOptionalFilters(queryParamsMap, IMAGE_ID_FILTER, currentIndex, wrapper.getCustomInputs().getImageId());
+        currentIndex = appendOptionalFilters(queryParamsMap, KERNEL_ID, currentIndex, wrapper.getCustomInputs().getKernelId());
+        currentIndex = appendOptionalFilters(queryParamsMap, OWNER_ALIAS, currentIndex, wrapper.getCustomInputs().getOwnerAlias());
+        currentIndex = appendOptionalFilters(queryParamsMap, OWNER_ID, currentIndex, wrapper.getCustomInputs().getOwnerId());
+        currentIndex = appendOptionalFilters(queryParamsMap, PLATFORM, currentIndex, wrapper.getCustomInputs().getPlatform());
+        currentIndex = appendOptionalFilters(queryParamsMap, PRODUCT_CODE, currentIndex, wrapper.getCustomInputs().getProductCode());
+        currentIndex = appendOptionalFilters(queryParamsMap, PRODUCT_CODE_TYPE, currentIndex, wrapper.getCustomInputs().getProductCodeType());
+        currentIndex = appendOptionalFilters(queryParamsMap, RAMDISK_ID, currentIndex, wrapper.getCustomInputs().getRamdiskId());
+        currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_NAME, currentIndex, wrapper.getCustomInputs().getRootDeviceName());
+        currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_TYPE, currentIndex, wrapper.getCustomInputs().getRootDeviceType());
+        currentIndex = appendOptionalFilters(queryParamsMap, STATE_REASON_CODE, currentIndex, wrapper.getCustomInputs().getStateReasonCode());
+        currentIndex = appendOptionalFilters(queryParamsMap, STATE_REASON_MESSAGE, currentIndex, wrapper.getCustomInputs().getStateReasonMessage());
+        currentIndex = appendOptionalFilters(queryParamsMap, TAG_KEY, currentIndex, wrapper.getCustomInputs().getKeyTagsString());
+        currentIndex = appendOptionalFilters(queryParamsMap, TAG_VALUE, currentIndex, wrapper.getCustomInputs().getValueTagsString());
+        currentIndex = appendOptionalFilters(queryParamsMap, VIRTUALIZATION_TYPE, currentIndex, wrapper.getCustomInputs().getVirtualizationType());
         currentIndex = appendOptionalFilters(queryParamsMap, DESCRIPTION_FILTER, currentIndex, wrapper.getImageInputs().getDescription());
 
         putCollectionInQueryMap(queryParamsMap, IMAGE_ID, imageIds);

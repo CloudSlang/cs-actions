@@ -104,7 +104,7 @@ public class CreateImageAction {
                                        @Param(value = NO_REBOOT) String noReboot) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -122,9 +122,9 @@ public class CreateImageAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            ImageInputs imageInputs = new ImageInputs.Builder()
+            final ImageInputs imageInputs = new ImageInputs.Builder()
                     .withImageName(name)
                     .withDescription(description)
                     .withImageNoReboot(noReboot)

@@ -204,7 +204,7 @@ public class DescribeImagesAction {
                                        @Param(value = STATE) String state) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -223,7 +223,7 @@ public class DescribeImagesAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withIdentityId(identityId)
                     .withArchitecture(architecture)
                     .withDeleteOnTermination(deleteOnTermination)
@@ -249,7 +249,7 @@ public class DescribeImagesAction {
                     .withVirtualizationType(virtualizationType)
                     .build();
 
-            ImageInputs imageInputs = new ImageInputs.Builder()
+            final ImageInputs imageInputs = new ImageInputs.Builder()
                     .withDescription(description)
                     .withImageIdsString(idsString)
                     .withOwnersString(ownersString)

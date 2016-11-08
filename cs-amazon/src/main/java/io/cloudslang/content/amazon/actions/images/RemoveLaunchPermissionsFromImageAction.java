@@ -105,7 +105,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                                        @Param(value = USER_GROUPS_STRING) String userGroupsString) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs inputs = new CommonInputs.Builder()
+            final CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -124,19 +124,18 @@ public class RemoveLaunchPermissionsFromImageAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withAttribute(LAUNCH_PERMISSION)
                     .withOperationType(REMOVE_OPERATION_TYPE)
                     .withImageId(imageId)
                     .build();
 
-            ImageInputs imageInputs = new ImageInputs.Builder()
-                    .withCustomInputs(customInputs)
+            final ImageInputs imageInputs = new ImageInputs.Builder()
                     .withUserIdsString(userIdsString)
                     .withUserGroupsString(userGroupsString)
                     .build();
 
-            return new QueryApiExecutor().execute(inputs, imageInputs);
+            return new QueryApiExecutor().execute(inputs, customInputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

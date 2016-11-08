@@ -92,7 +92,7 @@ public class ResetLaunchPermissionsOnImageAction {
                                        @Param(value = IMAGE_ID, required = true) String imageId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs inputs = new CommonInputs.Builder()
+            final CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -110,7 +110,7 @@ public class ResetLaunchPermissionsOnImageAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withAttribute(LAUNCH_PERMISSION).withImageId(imageId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withAttribute(LAUNCH_PERMISSION).withImageId(imageId).build();
 
             return new QueryApiExecutor().execute(inputs, customInputs);
         } catch (Exception exception) {
