@@ -11,6 +11,7 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
+import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.MockingHelper;
 import io.cloudslang.content.httpclient.CSHttpClient;
@@ -30,13 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.anyMapOf;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -46,22 +41,31 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  * 9/7/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
+@PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-    private QueryApiExecutor toTest;
+
     @Mock
     private CSHttpClient csHttpClientMock;
+
     @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
+
     @Mock
     private AuthorizationHeader authorizationHeaderMock;
+
+    @Mock
+    private ParamsMapBuilder paramsMapBuilderMock;
+
     @Spy
     private QueryApiExecutor queryApiExecutorSpy = new QueryApiExecutor();
+
+    private QueryApiExecutor toTest;
 
     @Before
     public void init() throws Exception {
@@ -448,6 +452,7 @@ public class QueryApiExecutorTest {
                 .withAction(action)
                 .withHeaders(headersString)
                 .withQueryParams(queryParamsString)
+                .withApiService("ec2")
                 .withVersion("2016-04-01")
                 .withDelimiter(",")
                 .build();

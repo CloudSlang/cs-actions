@@ -67,6 +67,7 @@ public class Inputs {
         public static final String KEY_FILTERS_STRING = "keyFiltersString";
         public static final String VALUE_FILTERS_STRING = "valueFiltersString";
         public static final String REGIONS_STRING = "regionsString";
+        public static final String ZONE_NAMES_STRING = "zoneNamesString";
     }
 
     public static class ElasticIpInputs {

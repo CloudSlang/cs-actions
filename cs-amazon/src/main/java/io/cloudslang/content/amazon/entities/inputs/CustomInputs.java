@@ -56,6 +56,7 @@ public class CustomInputs {
     private final String regionsString;
     private final String keyFiltersString;
     private final String valueFiltersString;
+    private final String availabilityZonesString;
 
     private CustomInputs(Builder builder) {
         this.instanceId = builder.instanceId;
@@ -98,6 +99,7 @@ public class CustomInputs {
         this.regionsString = builder.regionsString;
         this.keyFiltersString = builder.keyFiltersString;
         this.valueFiltersString = builder.valueFiltersString;
+        this.availabilityZonesString = builder.availabilityZonesString;
     }
 
     public String getInstanceId() {
@@ -260,6 +262,10 @@ public class CustomInputs {
         return valueFiltersString;
     }
 
+    public String getAvailabilityZonesString() {
+        return availabilityZonesString;
+    }
+
     public static class Builder {
         private String instanceId;
         private String imageId;
@@ -301,6 +307,7 @@ public class CustomInputs {
         private String regionsString;
         private String keyFiltersString;
         private String valueFiltersString;
+        private String availabilityZonesString;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -503,6 +510,11 @@ public class CustomInputs {
 
         public Builder withValueFiltersString(String inputValue) {
             valueFiltersString = inputValue;
+            return this;
+        }
+
+        public Builder withAvailabilityZonesString(String inputValue) {
+            availabilityZonesString = inputValue;
             return this;
         }
     }
