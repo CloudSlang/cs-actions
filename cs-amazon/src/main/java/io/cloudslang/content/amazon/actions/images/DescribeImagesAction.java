@@ -250,6 +250,7 @@ public class DescribeImagesAction {
                     .build();
 
             ImageInputs imageInputs = new ImageInputs.Builder()
+                    .withCustomInputs(customInputs)
                     .withDescription(description)
                     .withImageIdsString(idsString)
                     .withOwnersString(ownersString)

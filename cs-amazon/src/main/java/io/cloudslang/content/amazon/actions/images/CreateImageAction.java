@@ -125,6 +125,7 @@ public class CreateImageAction {
             CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
             ImageInputs imageInputs = new ImageInputs.Builder()
+                    .withCustomInputs(customInputs)
                     .withImageName(name)
                     .withDescription(description)
                     .withImageNoReboot(noReboot)
