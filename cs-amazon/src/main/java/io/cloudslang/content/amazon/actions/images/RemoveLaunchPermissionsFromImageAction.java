@@ -20,7 +20,6 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMA
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LAUNCH_PERMISSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REMOVE_OPERATION_TYPE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Defaults.API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -105,7 +104,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                                        @Param(value = USER_IDS_STRING) String userIdsString,
                                        @Param(value = USER_GROUPS_STRING) String userGroupsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, API_VERSION);
+            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             final CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)

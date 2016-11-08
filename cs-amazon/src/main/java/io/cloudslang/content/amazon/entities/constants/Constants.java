@@ -118,8 +118,4 @@ public class Constants {
         public static final String STOP_INSTANCES = "StopInstances";
         public static final String TERMINATE_INSTANCES = "TerminateInstances";
     }
-
-    public static class Defaults {
-        public static final String API_VERSION = "2016-04-01";
-    }
 }
