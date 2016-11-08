@@ -210,6 +210,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeAvailabilityZones() throws Exception {
+        toTest.execute(getCommonInputs("DescribeAvailabilityZones", HEADERS, ""), getCustomInputsForDescribeAvailabilityZones());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeAvailabilityZones")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDescribeImages() throws Exception {
         toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs());
 
@@ -482,6 +491,14 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
+    private CustomInputs getCustomInputsForDescribeAvailabilityZones() {
+        return new CustomInputs.Builder()
+                .withAvailabilityZonesString("us-east-1d,eu-central-1a")
+                .withKeyFiltersString("state")
+                .withValueFiltersString("available")
+                .build();
+    }
+
     private VolumeInputs getVolumeInputs() {
         return new VolumeInputs.Builder()
                 .withSnapshotId("snap-id")
@@ -623,6 +640,12 @@ public class QueryApiExecutorTest {
             case "DisassociateAddress":
                 queryParamsMap.put("AssociationId", "eipassoc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
+                break;
+            case "DescribeAvailabilityZones":
+                queryParamsMap.put("Filter.1.Name", "state");
+                queryParamsMap.put("Filter.1.Value", "available");
+                queryParamsMap.put("ZoneName.1", "us-east-1d");
+                queryParamsMap.put("ZoneName.2", "eu-central-1a");
                 break;
             case "DescribeImageAttribute":
                 queryParamsMap.put("ImageId", "ami-abcd1234");

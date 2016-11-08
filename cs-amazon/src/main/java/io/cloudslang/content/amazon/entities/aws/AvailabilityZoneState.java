@@ -14,10 +14,6 @@ public enum AvailabilityZoneState {
     UNAVAILABLE;
 
     public static String getValue(String input) throws RuntimeException {
-        if (isBlank(input)) {
-            return NOT_RELEVANT;
-        }
-
         for (AvailabilityZoneState member : AvailabilityZoneState.values()) {
             if (member.name().equalsIgnoreCase(input)) {
                 return member.name().toLowerCase();

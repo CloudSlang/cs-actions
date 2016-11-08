@@ -1,5 +1,6 @@
 package io.cloudslang.content.amazon.factory.helpers;
 
+import io.cloudslang.content.amazon.entities.aws.AvailabilityZoneState;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
@@ -23,6 +24,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
  * 10/14/2016.
  */
 public class RegionUtils {
+    private static final String STATE = "state";
+
     public Map<String, String> getDescribeAvailabilityZonesQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
@@ -69,10 +72,11 @@ public class RegionUtils {
 
         if (keyFiltersStringArray != null && keyFiltersStringArray.length > START_INDEX
                 && valueFiltersStringArray != null && valueFiltersStringArray.length > START_INDEX) {
-
             for (int index = START_INDEX; index < keyFiltersStringArray.length; index++) {
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(NAME, index), keyFiltersStringArray[index]);
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUES, index), valueFiltersStringArray[index]);
+                String paramValue = STATE.equals(keyFiltersStringArray[index]) ?
+                        AvailabilityZoneState.getValue(valueFiltersStringArray[index]) : valueFiltersStringArray[index];
+                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUES, index), paramValue);
             }
         }
     }
