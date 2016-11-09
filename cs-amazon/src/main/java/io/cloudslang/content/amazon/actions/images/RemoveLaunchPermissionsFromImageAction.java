@@ -16,12 +16,12 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LAUNCH_PERMISSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REMOVE_OPERATION_TYPE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.MODIFY_IMAGE_ATTRIBUTE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
@@ -105,7 +105,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                                        @Param(value = USER_GROUPS_STRING) String userGroupsString) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs inputs = new CommonInputs.Builder()
+            final CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -118,26 +118,24 @@ public class RemoveLaunchPermissionsFromImageAction {
                     .withVersion(version)
                     .withDelimiter(delimiter)
                     .withAction(MODIFY_IMAGE_ATTRIBUTE)
-                    .withApiService(AMAZON_EC2_API)
+                    .withApiService(EC2_API)
                     .withRequestUri(EMPTY)
                     .withRequestPayload(EMPTY)
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withAttribute(LAUNCH_PERMISSION)
                     .withOperationType(REMOVE_OPERATION_TYPE)
                     .withImageId(imageId)
                     .build();
 
-            ImageInputs imageInputs = new ImageInputs.Builder()
-                    .withCustomInputs(customInputs)
+            final ImageInputs imageInputs = new ImageInputs.Builder()
                     .withUserIdsString(userIdsString)
                     .withUserGroupsString(userGroupsString)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(inputs, imageInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(inputs, customInputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

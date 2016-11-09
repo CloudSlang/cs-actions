@@ -5,12 +5,9 @@ package io.cloudslang.content.amazon.entities.constants;
  * 5/4/2016.
  */
 public class Constants {
-    public static class Providers {
-        public static final String OPENSTACK = "openstack";
-    }
-
     public static class Apis {
-        public static final String AMAZON_EC2_API = "ec2";
+        public static final String EC2_API = "ec2";
+        public static final String LOAD_BALANCING_API = "elasticloadbalancing";
     }
 
     public static class Miscellaneous {
@@ -26,13 +23,13 @@ public class Constants {
         public static final String LINE_SEPARATOR = "\n";
         public static final String NETWORK = "network";
         public static final String NOT_RELEVANT = "Not relevant";
+        public static final String PIPE_DELIMITER = "|";
         public static final String SCOPE_SEPARATOR = "/";
     }
 
     public static class ErrorMessages {
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
-        public static final String NOT_IMPLEMENTED_OPENSTACK_ERROR_MESSAGE = "Not implemented. Use 'amazon' in provider input.";
     }
 
     public static class Values {
@@ -89,9 +86,10 @@ public class Constants {
         public static final String VALUES = "Values";
         public static final String VOLUME_ID = "VolumeId";
         public static final String VOLUME_TYPE = "VolumeType";
+        public static final String ZONE_NAME = "ZoneName";
     }
 
-    public static class QueryApiActions {
+    public static class Ec2QueryApiActions {
         public static final String ALLOCATE_ADDRESS = "AllocateAddress";
         public static final String ASSOCIATE_ADDRESS = "AssociateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
@@ -105,8 +103,10 @@ public class Constants {
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
         public static final String DELETE_VOLUME = "DeleteVolume";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
+        public static final String DESCRIBE_AVAILABILITY_ZONES = "DescribeAvailabilityZones";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
+        public static final String DESCRIBE_INSTANCES = "DescribeInstances";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";

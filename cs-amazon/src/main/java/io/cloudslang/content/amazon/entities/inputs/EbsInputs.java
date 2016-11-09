@@ -9,18 +9,18 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 9/15/2016.
  */
 public class EbsInputs {
-    private String blockDeviceMappingDeviceNamesString;
-    private String blockDeviceMappingVirtualNamesString;
-    private String deleteOnTerminationsString;
-    private String encryptedString;
-    private String iopsString;
-    private String noDevicesString;
-    private String snapshotIdsString;
-    private String volumeIdsString;
-    private String volumeSizesString;
-    private String volumeTypesString;
+    private final String blockDeviceMappingDeviceNamesString;
+    private final String blockDeviceMappingVirtualNamesString;
+    private final String deleteOnTerminationsString;
+    private final String encryptedString;
+    private final String iopsString;
+    private final String noDevicesString;
+    private final String snapshotIdsString;
+    private final String volumeIdsString;
+    private final String volumeSizesString;
+    private final String volumeTypesString;
 
-    private boolean ebsOptimized;
+    private final boolean ebsOptimized;
 
     private EbsInputs(Builder builder) {
         this.blockDeviceMappingDeviceNamesString = builder.blockDeviceMappingDeviceNamesString;

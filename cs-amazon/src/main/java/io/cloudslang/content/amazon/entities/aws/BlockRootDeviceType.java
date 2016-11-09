@@ -4,16 +4,16 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * Created by Mihai Tusa.
- * 6/8/2016.
+ * Created by TusaM
+ * 11/1/2016.
  */
-public enum NetworkInterfaceStatus {
-    AVAILABLE("available"),
-    IN_USE("in-use");
+public enum BlockRootDeviceType {
+    EBS("ebs"),
+    INSTANCE_STORE("instance-store");
 
     private final String value;
 
-    NetworkInterfaceStatus(String value) {
+    BlockRootDeviceType(String value) {
         this.value = value;
     }
 
@@ -22,13 +22,11 @@ public enum NetworkInterfaceStatus {
             return NOT_RELEVANT;
         }
 
-        for (NetworkInterfaceStatus member : NetworkInterfaceStatus.values()) {
-            if (member.value.equalsIgnoreCase(input)) {
+        for (BlockRootDeviceType member : BlockRootDeviceType.values()) {
+            if (member.value.equals(input.toLowerCase())) {
                 return member.value;
             }
         }
-
-        throw new RuntimeException("Unrecognized network interface status value: [" + input + "]. " +
-                "Valid values are: available, in-use.");
+        throw new RuntimeException("Unrecognized block root device type value: [" + input + "]. Valid values are: ebs, instance-store.");
     }
 }

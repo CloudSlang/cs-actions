@@ -19,6 +19,7 @@ public class Inputs {
     public static final String HOST_GROUP_NAME = "hostGroupName";
     public static final String HOST_LIST = "hostList";
     public static final String VM_NAME = "virtualMachineName";
+    public static final String VM_ID = "virtualMachineId";
     public static final String VM_GROUP_NAME = "vmGroupName";
     public static final String VM_LIST = "vmList";
     public static final String VM_DESCRIPTION = "description";

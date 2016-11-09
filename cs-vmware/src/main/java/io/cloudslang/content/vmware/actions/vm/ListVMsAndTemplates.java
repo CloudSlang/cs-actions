@@ -12,8 +12,9 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 
 /**
  * Created by Mihai Tusa.
@@ -60,11 +61,8 @@ public class ListVMsAndTemplates {
                                                    @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
 
                                                    @Param(Inputs.DELIMITER) String delimiter) {
-
-        Map<String, String> resultMap = new HashMap<>();
-
         try {
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
@@ -73,16 +71,12 @@ public class ListVMsAndTemplates {
                     .withTrustEveryone(trustEveryone)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder().build();
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder().build();
 
-            resultMap = new VmService().listVMsAndTemplates(httpInputs, vmInputs, delimiter);
+            return new VmService().listVMsAndTemplates(httpInputs, vmInputs, delimiter);
 
         } catch (Exception ex) {
-            resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            resultMap.put(Outputs.RETURN_RESULT, ex.getMessage());
-            resultMap.put(Outputs.EXCEPTION, ex.toString());
+            return getFailureResultsMap(ex);
         }
-
-        return resultMap;
     }
 }

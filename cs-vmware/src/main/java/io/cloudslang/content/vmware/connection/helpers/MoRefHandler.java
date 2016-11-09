@@ -10,6 +10,7 @@ import com.vmware.vim25.RetrieveResult;
 import com.vmware.vim25.RuntimeFaultFaultMsg;
 import com.vmware.vim25.ServiceContent;
 import com.vmware.vim25.VimPortType;
+import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.helpers.build.ObjectSpecBuilder;
 import io.cloudslang.content.vmware.connection.helpers.build.PropertyFilterSpecBuilder;
@@ -22,9 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.vmware.constants.ErrorMessages.REFERENCE_TYPE_WITH_ID_NOT_FOUND;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class MoRefHandler {
-    private VimPortType vimPort;
-    private ServiceContent serviceContent;
+    private final VimPortType vimPort;
+    private final ServiceContent serviceContent;
 
     public MoRefHandler(Connection connection) {
         this.serviceContent = connection.getServiceContent();
@@ -50,6 +54,17 @@ public class MoRefHandler {
         RetrieveResult results = containerViewByType(folder, morefType, retrieveOptions);
 
         return toMap(results);
+    }
+
+    public ManagedObjectReference findManagedObjectReferenceByTypeAndId(final ManagedObjectReference folder,
+                                                                        final String morefType,
+                                                                        final RetrieveOptions retrieveOptions, final String id) throws Exception {
+        final PropertyFilterSpec[] propertyFilterSpecs = propertyFilterSpecs(folder, morefType);
+        final ManagedObjectReference searchedReference = findComponentReference(propertyFilterSpecs, retrieveOptions, id);
+        if (searchedReference != null) {
+            return searchedReference;
+        }
+        throw new RuntimeException(String.format(REFERENCE_TYPE_WITH_ID_NOT_FOUND, morefType, id));
     }
 
     /**
@@ -182,5 +197,34 @@ public class MoRefHandler {
         }
 
         return token;
+    }
+
+    private ManagedObjectReference findComponentReference(final PropertyFilterSpec[] propertyFilterSpecs,
+                                                          final RetrieveOptions retrieveOptions, final String id) throws Exception {
+        String token = null;
+        ManagedObjectReference searched;
+        do {
+            final RetrieveResult retrieveResult = retrievePropertiesEx(Arrays.asList(propertyFilterSpecs), retrieveOptions, token);
+            token = retrieveResult.getToken();
+            searched = getFromRetrieveResult(retrieveResult, id);
+        } while (searched == null && StringUtilities.isNotEmpty(token));
+        return searched;
+    }
+
+    private RetrieveResult retrievePropertiesEx(final List<PropertyFilterSpec> propertyFilterSpecs, final RetrieveOptions retrieveOptions,
+                                                final String token) throws Exception {
+        if (isEmpty(token)) {
+            return vimPort.retrievePropertiesEx(serviceContent.getPropertyCollector(), propertyFilterSpecs, retrieveOptions);
+        }
+        return vimPort.continueRetrievePropertiesEx(serviceContent.getPropertyCollector(), token);
+    }
+
+    private ManagedObjectReference getFromRetrieveResult(final RetrieveResult retrieveResult, final String id) {
+        for (final ObjectContent oc : retrieveResult.getObjects()) {
+            if (StringUtilities.equals(id, oc.getObj().getValue())) {
+                return oc.getObj();
+            }
+        }
+        return null;
     }
 }

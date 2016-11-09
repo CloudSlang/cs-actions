@@ -15,10 +15,10 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.CREATE_TAGS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.CREATE_TAGS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
@@ -141,7 +141,7 @@ public class CreateTagsAction {
                     .withVersion(version)
                     .withDelimiter(delimiter)
                     .withAction(CREATE_TAGS)
-                    .withApiService(AMAZON_EC2_API)
+                    .withApiService(EC2_API)
                     .withRequestUri(EMPTY)
                     .withRequestPayload(EMPTY)
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
@@ -153,8 +153,7 @@ public class CreateTagsAction {
                     .withResourceIdsString(resourceIdsString)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }

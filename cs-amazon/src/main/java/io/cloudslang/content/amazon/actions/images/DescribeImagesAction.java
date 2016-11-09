@@ -16,10 +16,10 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.DESCRIBE_IMAGES;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_IMAGES;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
@@ -115,7 +115,7 @@ public class DescribeImagesAction {
      * @param ownerAlias                   Optional - AWS account alias. Example: "amazon"
      * @param ownerId                      Optional - AWS account ID of the instance owner.
      * @param platform                     Optional - platform used. Use "windows" if you have Windows instances; otherwise,
-     *                                     leave blank. Valid values: "", "windows".
+     *                                     use "others". Valid values: "", "windows".
      * @param productCode                  Optional - product code associated with the AMI used to launch the instance.
      * @param productCodeType              Optional - type of product code. Valid values: "devpay", "marketplace".
      * @param ramdiskId                    Optional - RAM disk ID.
@@ -204,7 +204,7 @@ public class DescribeImagesAction {
                                        @Param(value = STATE) String state) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -217,13 +217,13 @@ public class DescribeImagesAction {
                     .withVersion(version)
                     .withDelimiter(delimiter)
                     .withAction(DESCRIBE_IMAGES)
-                    .withApiService(AMAZON_EC2_API)
+                    .withApiService(EC2_API)
                     .withRequestUri(EMPTY)
                     .withRequestPayload(EMPTY)
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withIdentityId(identityId)
                     .withArchitecture(architecture)
                     .withDeleteOnTermination(deleteOnTermination)
@@ -249,7 +249,7 @@ public class DescribeImagesAction {
                     .withVirtualizationType(virtualizationType)
                     .build();
 
-            ImageInputs imageInputs = new ImageInputs.Builder()
+            final ImageInputs imageInputs = new ImageInputs.Builder()
                     .withDescription(description)
                     .withImageIdsString(idsString)
                     .withOwnersString(ownersString)
@@ -260,8 +260,7 @@ public class DescribeImagesAction {
                     .withState(state)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

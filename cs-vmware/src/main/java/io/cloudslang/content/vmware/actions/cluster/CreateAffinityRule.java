@@ -15,6 +15,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
 import static io.cloudslang.content.vmware.constants.Inputs.AFFINE_HOST_GROUP_NAME;
 import static io.cloudslang.content.vmware.constants.Inputs.ANTI_AFFINE_HOST_GROUP_NAME;
 import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
@@ -79,8 +80,8 @@ public class CreateAffinityRule {
                                                   @Param(value = VM_GROUP_NAME, required = true) String vmGroupName) {
 
         try {
-            InputUtils.checkHostGroups(affineHostGroupName, antiAffineHostGroupName);
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            InputUtils.checkMutuallyExclusiveInputs(affineHostGroupName, antiAffineHostGroupName, PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP);
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
@@ -89,7 +90,7 @@ public class CreateAffinityRule {
                     .withTrustEveryone(trustEveryone)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withClusterName(clusterName)
                     .withVmGroupName(vmGroupName)
                     .withRuleName(ruleName)

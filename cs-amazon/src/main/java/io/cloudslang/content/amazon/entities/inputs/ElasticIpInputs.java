@@ -9,11 +9,11 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 9/14/2016.
  */
 public class ElasticIpInputs {
-    private String publicIp;
-    private String privateIpAddress;
-    private String privateIpAddressesString;
+    private final String publicIp;
+    private final String privateIpAddress;
+    private final String privateIpAddressesString;
 
-    private boolean allowReassociation;
+    private final boolean allowReassociation;
 
     private ElasticIpInputs(Builder builder) {
         this.publicIp = builder.publicIp;

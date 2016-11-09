@@ -21,7 +21,7 @@ import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.SELECTED_VALUE;
 import static io.cloudslang.content.xml.utils.Constants.QueryTypes.VALUE;
 import static java.lang.String.valueOf;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.http.HttpStatus.SC_OK;
 
 /**
@@ -36,14 +36,6 @@ public class OutputsUtil {
     private OutputsUtil() {
     }
 
-    public static Map<String, String> getResultsMap(String returnResult) {
-        Map<String, String> results = new HashMap<>();
-        results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
-        results.put(Outputs.RETURN_RESULT, returnResult);
-
-        return results;
-    }
-
     public static Map<String, String> populateSignatureResultsMap(AuthorizationHeader authorizationHeader) {
         Map<String, String> signatureReturnResultMap = getResultsMap(authorizationHeader.getSignature());
 
@@ -55,7 +47,7 @@ public class OutputsUtil {
 
     public static void putResponseIn(Map<String, String> queryMapResult) {
         if (queryMapResult != null) {
-            if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isEmpty(queryMapResult.get(RETURN_RESULT))) {
+            if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isBlank(queryMapResult.get(RETURN_RESULT))) {
                 queryMapResult.put(RETURN_CODE, SUCCESS);
             } else {
                 queryMapResult.put(RETURN_CODE, FAILURE);
@@ -73,7 +65,7 @@ public class OutputsUtil {
         String xmlString = queryMapResult.get(RETURN_RESULT);
         //We make this workaround because the xml has an xmlns property in the tag and our operation can not parse the xml
         //this should be removed when the xml operation will be enhanced
-        if (isEmpty(xmlString)) {
+        if (!isBlank(xmlString)) {
             xmlString = xmlString.replace(XMLNS, WORKAROUND);
             Map<String, String> result = xpathQueryAction.execute(xmlString, XML_DOCUMENT_SOURCE, xPathQuery, VALUE, DELIMITER, valueOf(true));
             if (result.containsKey(RETURN_CODE) && SUCCESS.equals(result.get(RETURN_CODE))) {
@@ -86,5 +78,13 @@ public class OutputsUtil {
             queryMapResult.put(RETURN_RESULT, "Empty response.");
             queryMapResult.put(RETURN_CODE, FAILURE);
         }
+    }
+
+    private static Map<String, String> getResultsMap(String returnResult) {
+        Map<String, String> results = new HashMap<>();
+        results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
+        results.put(Outputs.RETURN_RESULT, returnResult);
+
+        return results;
     }
 }

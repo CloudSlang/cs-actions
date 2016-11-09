@@ -16,10 +16,10 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.CREATE_IMAGE;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.CREATE_IMAGE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
@@ -104,7 +104,7 @@ public class CreateImageAction {
                                        @Param(value = NO_REBOOT) String noReboot) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -116,22 +116,21 @@ public class CreateImageAction {
                     .withQueryParams(queryParams)
                     .withVersion(version)
                     .withAction(CREATE_IMAGE)
-                    .withApiService(AMAZON_EC2_API)
+                    .withApiService(EC2_API)
                     .withRequestUri(EMPTY)
                     .withRequestPayload(EMPTY)
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            ImageInputs imageInputs = new ImageInputs.Builder()
+            final ImageInputs imageInputs = new ImageInputs.Builder()
                     .withImageName(name)
                     .withDescription(description)
                     .withImageNoReboot(noReboot)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
-            return queryMapResult;
+            return new QueryApiExecutor().execute(commonInputs, customInputs, imageInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }

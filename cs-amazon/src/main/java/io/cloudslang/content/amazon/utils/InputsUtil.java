@@ -27,6 +27,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.TAG;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ZONE_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
@@ -71,6 +72,8 @@ public final class InputsUtil {
     private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
+    private static final int MINIMUM_MAX_RESULTS = 5;
+    private static final int MAXIMUM_MAX_RESULTS = 1000;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
     private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
@@ -211,6 +214,12 @@ public final class InputsUtil {
                         getValidationException(input, false));
     }
 
+    public static String getMaxResultsCount(String input) {
+        return isBlank(input) ? NOT_RELEVANT :
+                valueOf(getValidInt(input, MINIMUM_MAX_RESULTS, MAXIMUM_MAX_RESULTS, getValidationException(input, true),
+                        getValidationException(input, false)));
+    }
+
     public static String getRelevantBooleanString(String input) {
         if (isNotBlank(input) && (Boolean.TRUE.toString().equalsIgnoreCase(input) || Boolean.FALSE.toString().equalsIgnoreCase(input))) {
             return input.toLowerCase();
@@ -276,6 +285,8 @@ public final class InputsUtil {
             return FILTER + DOT + valueOf(index + ONE) + DOT + VALUE;
         } else if (REGION_NAME.equalsIgnoreCase(specificArea)) {
             return REGION_NAME + DOT + valueOf(index + ONE);
+        } else if (ZONE_NAME.equalsIgnoreCase(specificArea)) {
+            return ZONE_NAME + DOT + valueOf(index + ONE);
         } else {
             return EMPTY;
         }

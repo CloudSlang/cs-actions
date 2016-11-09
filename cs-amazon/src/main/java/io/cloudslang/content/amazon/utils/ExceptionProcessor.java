@@ -10,7 +10,8 @@ import java.util.Map;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 
 /**
- * Created by persdana on 7/13/2015.
+ * Created by persdana
+ * 7/13/2015.
  */
 public final class ExceptionProcessor {
     public static Map<String, String> getExceptionResult(Exception exception) {
