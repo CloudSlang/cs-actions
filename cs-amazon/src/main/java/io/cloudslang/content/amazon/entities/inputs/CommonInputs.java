@@ -5,7 +5,7 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -195,7 +195,7 @@ public class CommonInputs {
         }
 
         public Builder withApiService(String inputValue) {
-            apiService = InputsUtil.getDefaultStringInput(inputValue, AMAZON_EC2_API);
+            apiService = InputsUtil.getDefaultStringInput(inputValue, EC2_API);
             return this;
         }
 

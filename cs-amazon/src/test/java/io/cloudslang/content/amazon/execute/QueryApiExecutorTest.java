@@ -11,6 +11,7 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
+import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.MockingHelper;
 import io.cloudslang.content.httpclient.CSHttpClient;
@@ -29,14 +30,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.anyMapOf;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -46,22 +40,29 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  * 9/7/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class})
+@PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-    private QueryApiExecutor toTest;
+
     @Mock
     private CSHttpClient csHttpClientMock;
+
     @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
+
     @Mock
     private AuthorizationHeader authorizationHeaderMock;
+
+    @Mock
+    private ParamsMapBuilder paramsMapBuilderMock;
+
     @Spy
     private QueryApiExecutor queryApiExecutorSpy = new QueryApiExecutor();
+
+    private QueryApiExecutor toTest;
 
     @Before
     public void init() throws Exception {
@@ -206,6 +207,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeAvailabilityZones() throws Exception {
+        toTest.execute(getCommonInputs("DescribeAvailabilityZones", HEADERS, ""), getCustomInputsForDescribeAvailabilityZones());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeAvailabilityZones")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDescribeImages() throws Exception {
         toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs(), getDescribeImagesCustomInputs());
 
@@ -225,20 +235,17 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeInstanceWithFailureAffinity() throws Exception {
-        expectedException.expectMessage("Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
-        expectedException.expect(RuntimeException.class);
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("affinity")
                 .withFilterValuesString("WRONG_VALUE")
                 .build();
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
-
     }
 
     @Test
     public void testDescribeInstanceWithFailureArchitecture() throws Exception {
-        expectedException.expectMessage("Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
-        expectedException.expect(RuntimeException.class);
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
 
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("architecture")
@@ -448,6 +455,7 @@ public class QueryApiExecutorTest {
                 .withAction(action)
                 .withHeaders(headersString)
                 .withQueryParams(queryParamsString)
+                .withApiService("ec2")
                 .withVersion("2016-04-01")
                 .withDelimiter(",")
                 .build();
@@ -474,6 +482,14 @@ public class QueryApiExecutorTest {
                 .withKeyTagsString("Name,webserver,stack,scope")
                 .withValueTagsString("Tagged from API call,Not relevant,Testing,For testing purposes")
                 .withRegionsString("us-east-1,eu-central-1")
+                .build();
+    }
+
+    private CustomInputs getCustomInputsForDescribeAvailabilityZones() {
+        return new CustomInputs.Builder()
+                .withAvailabilityZonesString("us-east-1d,eu-central-1a")
+                .withKeyFiltersString("state")
+                .withValueFiltersString("available")
                 .build();
     }
 
@@ -618,6 +634,12 @@ public class QueryApiExecutorTest {
             case "DisassociateAddress":
                 queryParamsMap.put("AssociationId", "eipassoc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
+                break;
+            case "DescribeAvailabilityZones":
+                queryParamsMap.put("Filter.1.Name", "state");
+                queryParamsMap.put("Filter.1.Value", "available");
+                queryParamsMap.put("ZoneName.1", "us-east-1d");
+                queryParamsMap.put("ZoneName.2", "eu-central-1a");
                 break;
             case "DescribeImageAttribute":
                 queryParamsMap.put("ImageId", "ami-abcd1234");

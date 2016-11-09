@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
@@ -50,7 +50,7 @@ public class AmazonSignatureService {
         String requestEndpoint = getRequestEndpoint(wrapper.getCommonInputs().getEndpoint());
         String region = signatureUtils.getAmazonRegion(requestEndpoint);
 
-        String apiService = InputsUtil.getDefaultStringInput(wrapper.getApiService(), AMAZON_EC2_API);
+        String apiService = InputsUtil.getDefaultStringInput(wrapper.getApiService(), EC2_API);
 
         String credentialScope = signatureUtils.getAmazonCredentialScope(dateStamp, region, apiService);
         String amzCredential = wrapper.getCommonInputs().getIdentity() + SCOPE_SEPARATOR + credentialScope;
@@ -101,7 +101,7 @@ public class AmazonSignatureService {
     }
 
     private String getRequestEndpoint(String requestEndpoint) throws MalformedURLException {
-        requestEndpoint = InputsUtil.getDefaultStringInput(requestEndpoint, AMAZON_EC2_API + DOT + AMAZON_HOSTNAME);
+        requestEndpoint = InputsUtil.getDefaultStringInput(requestEndpoint, EC2_API + DOT + AMAZON_HOSTNAME);
         if (!requestEndpoint.contains(AMAZON_HOSTNAME)) {
             requestEndpoint = InputsUtil.getEndpointFromUrl(requestEndpoint);
         }

@@ -16,12 +16,12 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.AMAZON_EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LAUNCH_PERMISSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REMOVE_OPERATION_TYPE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.QueryApiActions.MODIFY_IMAGE_ATTRIBUTE;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.MODIFY_IMAGE_ATTRIBUTE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
@@ -118,7 +118,7 @@ public class RemoveLaunchPermissionsFromImageAction {
                     .withVersion(version)
                     .withDelimiter(delimiter)
                     .withAction(MODIFY_IMAGE_ATTRIBUTE)
-                    .withApiService(AMAZON_EC2_API)
+                    .withApiService(EC2_API)
                     .withRequestUri(EMPTY)
                     .withRequestPayload(EMPTY)
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)

@@ -27,6 +27,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.TAG;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ZONE_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
@@ -284,6 +285,8 @@ public final class InputsUtil {
             return FILTER + DOT + valueOf(index + ONE) + DOT + VALUE;
         } else if (REGION_NAME.equalsIgnoreCase(specificArea)) {
             return REGION_NAME + DOT + valueOf(index + ONE);
+        } else if (ZONE_NAME.equalsIgnoreCase(specificArea)) {
+            return ZONE_NAME + DOT + valueOf(index + ONE);
         } else {
             return EMPTY;
         }

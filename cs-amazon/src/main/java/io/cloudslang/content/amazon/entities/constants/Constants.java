@@ -6,7 +6,8 @@ package io.cloudslang.content.amazon.entities.constants;
  */
 public class Constants {
     public static class Apis {
-        public static final String AMAZON_EC2_API = "ec2";
+        public static final String EC2_API = "ec2";
+        public static final String LOAD_BALANCING_API = "elasticloadbalancing";
     }
 
     public static class Miscellaneous {
@@ -85,9 +86,10 @@ public class Constants {
         public static final String VALUES = "Values";
         public static final String VOLUME_ID = "VolumeId";
         public static final String VOLUME_TYPE = "VolumeType";
+        public static final String ZONE_NAME = "ZoneName";
     }
 
-    public static class QueryApiActions {
+    public static class Ec2QueryApiActions {
         public static final String ALLOCATE_ADDRESS = "AllocateAddress";
         public static final String ASSOCIATE_ADDRESS = "AssociateAddress";
         public static final String ATTACH_NETWORK_INTERFACE = "AttachNetworkInterface";
@@ -101,6 +103,7 @@ public class Constants {
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
         public static final String DELETE_VOLUME = "DeleteVolume";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
+        public static final String DESCRIBE_AVAILABILITY_ZONES = "DescribeAvailabilityZones";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
         public static final String DESCRIBE_INSTANCES = "DescribeInstances";
