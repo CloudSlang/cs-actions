@@ -112,7 +112,6 @@ public class Inputs {
         public static final String TYPE = "type";
         public static final String USER_GROUPS_STRING = "userGroupsString";
         public static final String USER_IDS_STRING = "userIdsString";
-
     }
 
     public static class InstanceInputs {
@@ -139,6 +138,11 @@ public class Inputs {
         public static final String SOURCE_DESTINATION_CHECK = "sourceDestinationCheck";
         public static final String SRIOV_NET_SUPPORT = "sriovNetSupport";
         public static final String TENANCY = "tenancy";
+    }
+
+    public static class LoadBalancingInputs {
+        public static final String LISTENER_INSTANCE_PORTS_STRING = "listenerInstancePortsString";
+        public static final String LISTENER_INSTANCE_PROTOCOLS_STRING = "listenerInstanceProtocolsString";
     }
 
     public static class NetworkInputs {

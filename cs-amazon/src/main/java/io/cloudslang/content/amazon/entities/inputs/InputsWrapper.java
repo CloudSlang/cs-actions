@@ -19,6 +19,7 @@ public class InputsWrapper {
     private IamInputs iamInputs;
     private ImageInputs imageInputs;
     private InstanceInputs instanceInputs;
+    private LoadBalancerInputs loadBalancerInputs;
     private NetworkInputs networkInputs;
     private VolumeInputs volumeInputs;
 
@@ -99,6 +100,14 @@ public class InputsWrapper {
 
     public void setInstanceInputs(InstanceInputs instanceInputs) {
         this.instanceInputs = instanceInputs;
+    }
+
+    public LoadBalancerInputs getLoadBalancerInputs() {
+        return loadBalancerInputs;
+    }
+
+    public void setLoadBalancerInputs(LoadBalancerInputs loadBalancerInputs) {
+        this.loadBalancerInputs = loadBalancerInputs;
     }
 
     public NetworkInputs getNetworkInputs() {
