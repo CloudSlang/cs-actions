@@ -12,7 +12,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMes
  * Created by TusaM
  * 11/10/2016.
  */
-public class LoadBalancingQueryParamsMapBuilder {
+class LoadBalancingQueryParamsMapBuilder {
     private LoadBalancingQueryParamsMapBuilder() {
         // prevent instantiation
     }

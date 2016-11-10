@@ -5,8 +5,8 @@ package io.cloudslang.content.amazon.entities.constants;
  * 2/17/2016.
  */
 public class Inputs {
-    private Inputs(){
-
+    private Inputs() {
+        // prevent instantiation
     }
 
     public static class CommonInputs {
@@ -140,9 +140,9 @@ public class Inputs {
         public static final String TENANCY = "tenancy";
     }
 
-    public static class LoadBalancingInputs {
-        public static final String LISTENER_INSTANCE_PORTS_STRING = "listenerInstancePortsString";
-        public static final String LISTENER_INSTANCE_PROTOCOLS_STRING = "listenerInstanceProtocolsString";
+    public static class LoadBalancerInputs {
+        public static final String LOAD_BALANCER_NAME = "loadBalancerName";
+        public static final String SCHEME = "schema";
     }
 
     public static class NetworkInputs {
