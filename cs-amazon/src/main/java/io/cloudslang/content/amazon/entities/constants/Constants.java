@@ -30,6 +30,7 @@ public class Constants {
     public static class ErrorMessages {
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
+        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
     }
 
     public static class Values {
@@ -120,5 +121,9 @@ public class Constants {
         public static final String START_INSTANCES = "StartInstances";
         public static final String STOP_INSTANCES = "StopInstances";
         public static final String TERMINATE_INSTANCES = "TerminateInstances";
+    }
+
+    public static class LoadBalancingQueryApiActions {
+        public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
     }
 }

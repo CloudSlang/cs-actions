@@ -1,7 +1,7 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.amazon.entities.aws.AmazonApiServiceType;
+import io.cloudslang.content.amazon.entities.aws.AmazonApi;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
@@ -177,7 +177,7 @@ public class InputsWrapper {
         }
 
         public Builder withApiService(String inputValue) {
-            apiService = AmazonApiServiceType.getValue(inputValue);
+            apiService = AmazonApi.getApiValue(inputValue);
             return this;
         }
 

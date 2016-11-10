@@ -23,6 +23,7 @@ public class ParamsMapBuilder {
     private static final String UNSUPPORTED_AWS_API = "Unsupported Amazon AWS API.";
 
     private ParamsMapBuilder() {
+        // prevent instantiation
     }
 
     @Nullable
@@ -33,7 +34,7 @@ public class ParamsMapBuilder {
                 case EC2_API:
                     return Ec2QueryParamsMapBuilder.getEc2QueryParamsMap(wrapper);
                 case LOAD_BALANCING_API:
-                    return new HashMap<>();
+                    return LoadBalancingQueryParamsMapBuilder.getLoadBalancingQueryParamsMap(wrapper);
                 default:
                     throw new RuntimeException(UNSUPPORTED_AWS_API);
             }

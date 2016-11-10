@@ -47,17 +47,17 @@ public class OutputsUtil {
 
     public static void putResponseIn(Map<String, String> queryMapResult) {
         if (queryMapResult != null) {
-            if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isBlank(queryMapResult.get(RETURN_RESULT))) {
-                queryMapResult.put(RETURN_CODE, SUCCESS);
-            } else {
-                queryMapResult.put(RETURN_CODE, FAILURE);
-            }
+            setReturnCode(queryMapResult);
         } else {
-            queryMapResult = new HashMap<>();
-            queryMapResult.put(EXCEPTION, "Null response!");
-            queryMapResult.put(RETURN_CODE, FAILURE);
-            queryMapResult.put(RETURN_RESULT, "The query returned null response!");
+            setNullResponseResults();
         }
+    }
+
+    private static void setNullResponseResults() {
+        Map<String, String> queryMapResult = new HashMap<>();
+        queryMapResult.put(RETURN_RESULT, "The query returned null response!");
+        queryMapResult.put(RETURN_CODE, FAILURE);
+        queryMapResult.put(EXCEPTION, "Null response!");
     }
 
     public static void putResponseIn(Map<String, String> queryMapResult, String outputName, String xPathQuery) {
@@ -86,5 +86,14 @@ public class OutputsUtil {
         results.put(Outputs.RETURN_RESULT, returnResult);
 
         return results;
+    }
+
+    private static void setReturnCode(Map<String, String> queryMapResult) {
+        if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE)))
+                && queryMapResult.containsKey(RETURN_RESULT) && !isBlank(queryMapResult.get(RETURN_RESULT))) {
+            queryMapResult.put(RETURN_CODE, SUCCESS);
+        } else {
+            queryMapResult.put(RETURN_CODE, FAILURE);
+        }
     }
 }

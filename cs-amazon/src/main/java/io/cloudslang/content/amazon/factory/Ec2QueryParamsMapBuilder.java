@@ -6,14 +6,13 @@ import io.cloudslang.content.amazon.factory.helpers.*;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMessages.UNSUPPORTED_QUERY_API;
 
 /**
  * Created by TusaM
  * 11/7/2016.
  */
 class Ec2QueryParamsMapBuilder {
-    private static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
-
     private Ec2QueryParamsMapBuilder() {
     }
 

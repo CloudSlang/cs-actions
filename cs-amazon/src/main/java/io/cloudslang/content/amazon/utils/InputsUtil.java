@@ -3,6 +3,8 @@ package io.cloudslang.content.amazon.utils;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -82,6 +84,7 @@ public final class InputsUtil {
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
 
     private InputsUtil() {
+        // prevent instantiation
     }
 
     public static Map<String, String> getHeadersOrQueryParamsMap(Map<String, String> inputMap, String stringToSplit,
@@ -112,6 +115,7 @@ public final class InputsUtil {
         return endpoint;
     }
 
+    @NotNull
     public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
@@ -126,6 +130,7 @@ public final class InputsUtil {
         return sb.toString();
     }
 
+    @Nullable
     public static String[] getStringsArray(String input, String condition, String delimiter) {
         if (condition.equals(input)) {
             return null;
@@ -133,6 +138,7 @@ public final class InputsUtil {
         return split(input, delimiter);
     }
 
+    @Nullable
     public static List<String> getStringsList(String input, String delimiter) {
         if (isBlank(input)) {
             return null;
@@ -378,6 +384,7 @@ public final class InputsUtil {
         return toValidateArray;
     }
 
+    @Nullable
     private static Set<String> getStringsSet(String input, String delimiter) {
         if (isBlank(input)) {
             return null;
@@ -420,9 +427,7 @@ public final class InputsUtil {
 
     @Contract(pure = true)
     private static String getValidationException(String input, boolean invalid) {
-        if (invalid) {
-            return "The provided value: " + input + " input must be integer.";
-        }
-        return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
+        return invalid ? "The provided value: " + input + " input must be integer." :
+                "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
     }
 }
