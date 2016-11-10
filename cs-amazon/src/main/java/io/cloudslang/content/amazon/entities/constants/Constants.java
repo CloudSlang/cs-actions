@@ -43,6 +43,7 @@ public class Constants {
         public static final String ALLOCATION_ID = "AllocationId";
         public static final String ATTRIBUTE = "Attribute";
         public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
+        public static final String AVAILABILITY_ZONES = "AvailabilityZones";
         public static final String AWS_REQUEST_VERSION = "aws4_request";
         public static final String BLOCK_DEVICE_MAPPING = "BlockDeviceMapping";
         public static final String DEFAULT_AMAZON_REGION = "us-east-1";
@@ -62,6 +63,8 @@ public class Constants {
         public static final String INSTANCE_ID = "InstanceId";
         public static final String KEY = "Key";
         public static final String LAUNCH_PERMISSION = "launchPermission";
+        public static final String LISTENERS = "Listeners";
+        public static final String MEMBER = "member";
         public static final String NAME = "Name";
         public static final String NO_REBOOT = "NoReboot";
         public static final String NETWORK_INTERFACE = "NetworkInterface";

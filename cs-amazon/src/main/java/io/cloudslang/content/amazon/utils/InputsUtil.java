@@ -14,12 +14,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FILTER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LISTENERS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.MEMBER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REGION_NAME;
@@ -271,12 +274,16 @@ public final class InputsUtil {
     }
 
     public static String getQueryParamsSpecificString(String specificArea, int index) {
-        if (NETWORK.equalsIgnoreCase(specificArea)) {
+        if (AVAILABILITY_ZONES.equalsIgnoreCase(specificArea)) {
+            return AVAILABILITY_ZONES + DOT + MEMBER + DOT + valueOf(index + ONE);
+        } else if (NETWORK.equalsIgnoreCase(specificArea)) {
             return PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
             return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT;
         } else if (EBS.equalsIgnoreCase(specificArea)) {
             return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT + EBS + DOT;
+        } else if (LISTENERS.equalsIgnoreCase(specificArea)) {
+            return LISTENERS + DOT + MEMBER + DOT + valueOf(index + ONE) + DOT;
         } else if (NAME.equalsIgnoreCase(specificArea)) {
             return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
