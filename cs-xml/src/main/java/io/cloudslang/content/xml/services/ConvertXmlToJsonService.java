@@ -16,54 +16,55 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static io.cloudslang.content.xml.utils.Constants.*;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * Created by ursan on 8/2/2016.
  */
 public class ConvertXmlToJsonService {
-    private StringBuilder namespacesPrefixes;
-    private StringBuilder namespacesUris;
+    private final StringBuilder namespacesPrefixes;
+    private final StringBuilder namespacesUris;
 
     public ConvertXmlToJsonService() {
         namespacesPrefixes = new StringBuilder();
         namespacesUris = new StringBuilder();
     }
 
-    public String convertToJsonString(ConvertXmlToJsonInputs inputs) throws JDOMException, IOException, SAXException {
+    public String convertToJsonString(final ConvertXmlToJsonInputs inputs) throws JDOMException, IOException, SAXException {
         if (StringUtils.isBlank(inputs.getXml())) {
             return EMPTY_STRING;
         }
-        InputSource inputSource = new InputSource(new StringReader(inputs.getXml()));
-        SAXBuilder builder = new SAXBuilder();
+        final InputSource inputSource = new InputSource(new StringReader(inputs.getXml()));
+        final SAXBuilder builder = new SAXBuilder();
         XmlUtils.setFeatures(builder, inputs.getParsingFeatures());
-        Document document = builder.build(inputSource);
-        Element root = document.getRootElement();
-        List<Element> xmlElements = Collections.singletonList(root);
+        final Document document = builder.build(inputSource);
+        final Element root = document.getRootElement();
+        final List<Element> xmlElements = Collections.singletonList(root);
         JsonObject jsonObject = convertXmlElementsToJsonObject(xmlElements, inputs.getIncludeAttributes(), inputs.getTextElementsName());
         jsonObject = getJsonObjectWithRootElement(root, jsonObject, inputs.getIncludeRootElement());
 
         return inputs.getPrettyPrint() ? prettyPrint(jsonObject) : jsonObject.toString();
     }
 
-    private JsonObject getJsonObjectWithRootElement(Element rootElement, JsonObject jsonObject, Boolean addRootElement) {
+    private JsonObject getJsonObjectWithRootElement(final Element rootElement, final JsonObject jsonObject, final boolean addRootElement) {
         if (addRootElement) {
-            JsonObject rootJson = new JsonObject();
+            final JsonObject rootJson = new JsonObject();
             rootJson.add(rootElement.getName(), jsonObject);
             return rootJson;
         }
         return jsonObject;
     }
 
-    private String prettyPrint(JsonObject rootJson) {
-        Gson gson = new GsonBuilder().setPrettyPrinting()
+    private String prettyPrint(final JsonObject rootJson) {
+        final Gson gson = new GsonBuilder().setPrettyPrinting()
                 .disableHtmlEscaping()
                 .create();
         return gson.toJson(rootJson);
     }
 
-    private JsonObject addJsonObjectsAndPrimitives(JsonObject jsonObject, List<Element> elements, Boolean includeAttributes, String textPropName) {
-        for (Element element : elements) {
-            JsonElement jsonElement = isPrimitiveElement(element) ?
+    private JsonObject addJsonObjectsAndPrimitives(final JsonObject jsonObject, final List<Element> elements, final boolean includeAttributes, final String textPropName) {
+        for (final Element element : elements) {
+            final JsonElement jsonElement = isPrimitiveElement(element) ?
                     new JsonPrimitive(element.getValue()) : convertXmlElementsToJsonObject(Collections.singletonList(element), includeAttributes, textPropName);
             jsonObject.add(getElementFullName(element), jsonElement);
         }
@@ -71,23 +72,23 @@ public class ConvertXmlToJsonService {
     }
 
 
-    private JsonObject convertXmlElementsToJsonObject(List<Element> xmlElements, Boolean includeAttributes, String textPropName) {
+    private JsonObject convertXmlElementsToJsonObject(List<Element> xmlElements, final boolean includeAttributes, final String textPropName) {
         JsonObject result = new JsonObject();
-        for (Element xmlElement : xmlElements) {
+        for (final Element xmlElement : xmlElements) {
             result = addXmlElementToJsonObject(result, xmlElement, includeAttributes, textPropName);
         }
         return result;
     }
 
-    private JsonArray convertXmlElementsToJsonArray(List<Element> xmlElements, Boolean includeAttributes, String textPropName) {
-        JsonArray result = new JsonArray();
-        for (Element xmlElement : xmlElements) {
+    private JsonArray convertXmlElementsToJsonArray(final List<Element> xmlElements, final boolean includeAttributes, final String textPropName) {
+        final JsonArray result = new JsonArray();
+        for (final Element xmlElement : xmlElements) {
             result.add(addXmlElementToJsonObject(new JsonObject(), xmlElement, includeAttributes, textPropName));
         }
         return result;
     }
 
-    private JsonObject addXmlElementToJsonObject(JsonObject jsonObject, Element xmlElement, Boolean includeAttributes, String textPropName) {
+    private JsonObject addXmlElementToJsonObject(JsonObject jsonObject, final Element xmlElement, final Boolean includeAttributes, final String textPropName) {
         addNamespaces(xmlElement.getAdditionalNamespaces());
         if (includeAttributes) {
             jsonObject = addAttributesToJsonObject(jsonObject, xmlElement.getAttributes());
@@ -100,9 +101,9 @@ public class ConvertXmlToJsonService {
         return jsonObject;
     }
 
-    private JsonObject searchAndAddArrayElementsToJsonObject(JsonObject jsonObject, List<Element> elements, Boolean includeAttributes, String textPropName) {
-        List<String> arrayElementsNames = getListOfArrayElementNames(elements);
-        for (String arrayName : arrayElementsNames) {
+    private JsonObject searchAndAddArrayElementsToJsonObject(final JsonObject jsonObject, final List<Element> elements, final boolean includeAttributes, final String textPropName) {
+        final List<String> arrayElementsNames = getListOfArrayElementNames(elements);
+        for (final String arrayName : arrayElementsNames) {
             List<Element> arrayElements = getElementsByName(arrayName, elements);
             jsonObject.add(arrayName, convertXmlElementsToJsonArray(arrayElements, includeAttributes, textPropName));
         }
@@ -110,22 +111,22 @@ public class ConvertXmlToJsonService {
     }
 
     private List<Element> eliminateArrayElements(List<Element> elements) {
-        List<String> arrayElementsNames = getListOfArrayElementNames(elements);
-        for (String arrayName : arrayElementsNames) {
+        final List<String> arrayElementsNames = getListOfArrayElementNames(elements);
+        for (final String arrayName : arrayElementsNames) {
             elements = eliminateElementsWithName(arrayName, elements);
         }
         return elements;
     }
 
-    private JsonObject addTextProp(JsonObject jsonObject, String text, String textPropName) {
-        if (!StringUtils.isEmpty(text) && text.matches(".*[a-zA-Z0-9].*")) {
+    private JsonObject addTextProp(final JsonObject jsonObject, final String text, final String textPropName) {
+        if (isNotEmpty(text) && text.matches(".*[a-zA-Z0-9].*")) {
             jsonObject.addProperty(textPropName, text);
         }
         return jsonObject;
     }
 
-    private void addNamespaces(List<Namespace> namespaces) {
-        for (Namespace namespace : namespaces) {
+    private void addNamespaces(final List<Namespace> namespaces) {
+        for (final Namespace namespace : namespaces) {
             if (namespacesUris.length() > 0) {
                 namespacesPrefixes.append(Defaults.DELIMITER);
                 namespacesUris.append(Defaults.DELIMITER);
@@ -135,8 +136,8 @@ public class ConvertXmlToJsonService {
         }
     }
 
-    private JsonObject addAttributesToJsonObject(JsonObject jsonObject, List<Attribute> attributes) {
-        for (Attribute attribute : attributes) {
+    private JsonObject addAttributesToJsonObject(final JsonObject jsonObject, final List<Attribute> attributes) {
+        for (final Attribute attribute : attributes) {
             jsonObject.addProperty(JSON_ATTRIBUTE_PREFIX + attribute.getName(), attribute.getValue());
         }
         return jsonObject;
@@ -175,8 +176,8 @@ public class ConvertXmlToJsonService {
     }
 
     private List<Element> getElementsByName(String arrayName, List<Element> elementsToSearch) {
-        List<Element> elements = new LinkedList<>();
-        for (Element element : elementsToSearch) {
+        final List<Element> elements = new LinkedList<>();
+        for (final Element element : elementsToSearch) {
             if (getElementFullName(element).equals(arrayName)) {
                 elements.add(element);
             }
@@ -184,9 +185,9 @@ public class ConvertXmlToJsonService {
         return elements;
     }
 
-    private List<Element> eliminateElementsWithName(String arrayName, List<Element> elements) {
-        List<Element> newElements = new LinkedList<>();
-        for (Element element : elements) {
+    private List<Element> eliminateElementsWithName(final String arrayName, final List<Element> elements) {
+        final List<Element> newElements = new LinkedList<>();
+        for (final Element element : elements) {
             if (!getElementFullName(element).equals(arrayName)) {
                 newElements.add(element);
             }
