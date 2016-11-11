@@ -16,7 +16,12 @@ public class Inputs {
     // VM specific inputs
     public static final String DATA_CENTER_NAME = "dataCenterName";
     public static final String HOSTNAME = "hostname";
+    public static final String HOST_GROUP_NAME = "hostGroupName";
+    public static final String HOST_LIST = "hostList";
     public static final String VM_NAME = "virtualMachineName";
+    public static final String VM_ID = "virtualMachineId";
+    public static final String VM_GROUP_NAME = "vmGroupName";
+    public static final String VM_LIST = "vmList";
     public static final String VM_DESCRIPTION = "description";
     public static final String DATA_STORE = "dataStore";
     public static final String VM_CPU_COUNT = "numCPUs";
@@ -39,6 +44,10 @@ public class Inputs {
     public static final String CLONE_RESOURCE_POOL = "cloneResourcePool";
     public static final String CLONE_HOST = "cloneHost";
     public static final String CLONE_DATA_STORE = "cloneDataStore";
+    public static final String RULE_NAME = "ruleName";
+    public static final String AFFINE_HOST_GROUP_NAME = "affineHostGroupName";
+    public static final String ANTI_AFFINE_HOST_GROUP_NAME = "antiAffineHostGroupName";
+    public static final String ENABLE_RULE = "enableRule";
 
     // Guest specific inputs
     public static final String REBOOT_OPTION = "rebootOption";
@@ -65,6 +74,30 @@ public class Inputs {
     public static final String TIME_ZONE = "timeZone";
     public static final String UTC_CLOCK = "hwClockUTC";
 
+    //Cluster specific inputs
+    public static final String CLUSTER_NAME = "clusterName";
+    public static final String RESTART_PRIORITY = "restartPriority";
+
     // Miscellaneous
     public static final String DELIMITER = "delimiter";
+    public static final String USER = "user";
+
+    //template upload inputs
+    public static final String CLOSE_SESSION = "closeSession";
+    public static final String PATH = "path";
+    public static final String NAME = "name";
+    public static final String DATACENTER = "datacenter";
+    public static final String VM_FOLDER = "vmFolder";
+    public static final String DISK_PROVISIONING = "diskProvisioning";
+    public static final String HS_IDENTIFIER_TYPE = "hsIdentifierType";
+    public static final String HOST_SYSTEM = "hostSystem";
+    public static final String OVF_NETWORK_JS = "ovfNetworkJS";
+    public static final String NET_PORT_GROUP_JS = "netPortGroupJS";
+    public static final String OVF_PROP_KEY_JS = "ovfPropKeyJS";
+    public static final String OVF_PROP_VALUE_JS = "ovfPropValueJS";
+    public static final String IP_PROTOCOL = "ipProtocol";
+    public static final String IP_ALLOC_SCHEME = "ipAllocScheme";
+    public static final String LOCALE_LANG = "localeLang";
+    public static final String LOCALE_COUNTRY = "localeCountry";
+    public static final String PARALLEL = "parallel";
 }

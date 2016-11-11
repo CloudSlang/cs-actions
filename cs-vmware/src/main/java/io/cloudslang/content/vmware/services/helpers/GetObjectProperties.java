@@ -1,7 +1,18 @@
 package io.cloudslang.content.vmware.services.helpers;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.ObjectContent;
+import com.vmware.vim25.ObjectSpec;
+import com.vmware.vim25.PropertyFilterSpec;
+import com.vmware.vim25.PropertySpec;
+import com.vmware.vim25.RetrieveOptions;
+import com.vmware.vim25.RetrieveResult;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.ServiceContent;
+import com.vmware.vim25.VimPortType;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,12 +34,13 @@ public class GetObjectProperties {
      * @param properties names of properties of object to retrieve
      * @return retrieved object contents
      */
+    @NotNull
     public static ObjectContent[] getObjectProperties(ConnectionResources connectionResources,
                                                       ManagedObjectReference mor,
                                                       String[] properties)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         if (mor == null) {
-            return null;
+            return new ObjectContent[0];
         }
 
         PropertyFilterSpec spec = new PropertyFilterSpec();
@@ -51,6 +63,18 @@ public class GetObjectProperties {
         List<ObjectContent> objectContentList = retrievePropertiesAllObjects(connectionResources, propertyFilterSpecs);
 
         return objectContentList.toArray(new ObjectContent[objectContentList.size()]);
+    }
+
+    @NotNull
+    public static ObjectContent getObjectProperty(final ConnectionResources connectionResources,
+                                                  final ManagedObjectReference mor,
+                                                  final String property) throws Exception {
+        final ObjectContent[] objectContents = getObjectProperties(connectionResources, mor, new String[]{property});
+        if (objectContents.length != 0 && objectContents[0] != null) {
+            return objectContents[0]; //not the best solution, but life is too short. It's not because of management! Nooooo
+        } else {
+            throw new Exception();
+        }
     }
 
     /**

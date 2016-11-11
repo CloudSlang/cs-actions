@@ -45,7 +45,7 @@ public class ValidateService {
             } else {
                 xsdDocument = customInputs.getXsdDocument();
             }
-            XmlUtils.parseXML(xmlDocument, commonInputs.getSecureProcessing());
+            XmlUtils.parseXmlStringSecurely(xmlDocument, commonInputs.getSecureProcessing());
             result.put(Constants.Outputs.RETURN_RESULT, Constants.SuccessMessages.PARSING_SUCCESS);
 
             if (StringUtils.isNotBlank(xsdDocument)) {

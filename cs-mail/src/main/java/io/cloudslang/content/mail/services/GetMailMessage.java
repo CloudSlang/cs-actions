@@ -139,6 +139,7 @@ public class GetMailMessage {
                 if (subject == null) {
                     subject = "";
                 }
+                result.put(SUBJECT, MimeUtility.decodeText(subject));
                 result.put(RETURN_RESULT, MimeUtility.decodeText(subject));
             } else {
                 try {

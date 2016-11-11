@@ -20,7 +20,7 @@ This repository includes CloudSlang flows and operations needed to work with VMw
 
 ###### How to add the vim25.jar and build VMware Java actions?
 
-1. Clone the repository at (https://github.com/CloudSlang/score-actions).
+1. Clone the repository at (https://github.com/CloudSlang/cs-actions).
 2. Add the VMware proprietary dependency, the `vim25.jar`, using (https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html) as a guide or just copy the jar file into you local Maven repository.
 	Note: We assume that your local Maven repository default path will be: `${env.USERPROFILE}\.m2\repository\` for Windows OSes or: `${env.HOME}/.m2/repository/` for Linux based OSes. In those cases the dependecy management from the POM file for the VMware vim25.jar will look like this:  `<vmware_path>${env.USERPROFILE}\.m2\repository\com\vmware\vim25\1.0\</vmware_path>` for Windows OSes and `<vmware_path>${env.HOME}/.m2/repository/com/vmware/vim25/1.0/</vmware_path>` for Linux based OSes.
 	Default paths can be customized using the `vmware_path` system property.

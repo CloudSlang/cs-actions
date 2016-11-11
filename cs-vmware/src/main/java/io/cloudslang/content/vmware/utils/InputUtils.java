@@ -9,6 +9,11 @@ import io.cloudslang.content.vmware.entities.http.Protocol;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
+import java.util.Locale;
+
+import static io.cloudslang.content.utils.StringUtilities.isBlank;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
+import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
 
 /**
  * Created by Mihai Tusa.
@@ -87,7 +92,7 @@ public class InputUtils {
         return true;
     }
 
-    static byte getByteInput(String input, byte defaultValue) {
+    public static byte getByteInput(String input, byte defaultValue) {
         byte byteInput;
         try {
             byteInput = StringUtils.isBlank(input) ? defaultValue : Byte.parseByte(input);
@@ -98,12 +103,31 @@ public class InputUtils {
         return byteInput;
     }
 
-    static String getDefaultDelimiter(String input, String defaultValue) {
+    public static String getDefaultDelimiter(String input, String defaultValue) {
         return StringUtils.isBlank(input) ? defaultValue : input;
     }
 
     private static boolean isValidUpdateOperation(VmInputs vmInputs) {
         return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())
                 || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
+    }
+
+    public static Locale getLocale(String localeLang, String localeCountry) throws Exception {
+        Locale locale;
+        if (StringUtils.isEmpty(localeLang) && StringUtils.isEmpty(localeCountry)) {
+            locale = Locale.getDefault();
+        } else {
+            locale = new Locale(localeLang, localeCountry);
+            if (!isAvailableLocale(locale)) {
+                throw new Exception("Locale not found!");
+            }
+        }
+        return locale;
+    }
+
+    public static void checkMutuallyExclusiveInputs(final String input1, final String input2, final String exceptionMessage) {
+        if (!(isBlank(input1) ^ isBlank(input2))) {
+            throw new IllegalArgumentException(exceptionMessage);
+        }
     }
 }

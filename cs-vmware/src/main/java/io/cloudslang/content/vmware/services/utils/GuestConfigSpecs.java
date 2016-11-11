@@ -1,6 +1,22 @@
 package io.cloudslang.content.vmware.services.utils;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.CustomizationAdapterMapping;
+import com.vmware.vim25.CustomizationDhcpIpGenerator;
+import com.vmware.vim25.CustomizationFixedIp;
+import com.vmware.vim25.CustomizationFixedName;
+import com.vmware.vim25.CustomizationGlobalIPSettings;
+import com.vmware.vim25.CustomizationGuiUnattended;
+import com.vmware.vim25.CustomizationIPSettings;
+import com.vmware.vim25.CustomizationIdentification;
+import com.vmware.vim25.CustomizationLicenseDataMode;
+import com.vmware.vim25.CustomizationLicenseFilePrintData;
+import com.vmware.vim25.CustomizationLinuxPrep;
+import com.vmware.vim25.CustomizationPassword;
+import com.vmware.vim25.CustomizationSpec;
+import com.vmware.vim25.CustomizationSysprep;
+import com.vmware.vim25.CustomizationSysprepRebootOption;
+import com.vmware.vim25.CustomizationUserData;
+import com.vmware.vim25.CustomizationWinOptions;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.GuestInputs;
 import org.apache.commons.lang3.StringUtils;

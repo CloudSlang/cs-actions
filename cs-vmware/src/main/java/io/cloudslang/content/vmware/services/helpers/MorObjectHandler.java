@@ -13,9 +13,15 @@ import java.util.Map;
  * 3/22/2016.
  */
 public class MorObjectHandler {
-    public ManagedObjectReference getVmMor(ConnectionResources connectionResources, String filter, String parameter) throws Exception {
+    public ManagedObjectReference getMor(ConnectionResources connectionResources, String filter, String parameter) throws Exception {
         ManagedObjectReference reference = connectionResources.getMorRootFolder();
         return getSpecificMor(connectionResources, reference, filter, parameter);
+    }
+
+    public ManagedObjectReference getMorById(final ConnectionResources connectionResources, final String filter, final String id) throws Exception {
+        final ManagedObjectReference reference = connectionResources.getMorRootFolder();
+        final RetrieveOptions retrieveOptions = new RetrieveOptions();
+        return connectionResources.getMoRefHandler().findManagedObjectReferenceByTypeAndId(reference, filter, retrieveOptions, id);
     }
 
     public Map<String, ManagedObjectReference> getSpecificObjectsMap(ConnectionResources connectionResources, String objectType)

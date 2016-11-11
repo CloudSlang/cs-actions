@@ -84,7 +84,7 @@ public class XmlUtils {
         return new SimpleNamespaceContext(namespaces);
     }
 
-    public static Document parseXML(String xmlDocument, boolean secure) throws Exception {
+    public static Document parseXmlStringSecurely(String xmlDocument, boolean secure) throws Exception {
         DocumentBuilder builder = getDocumentBuilder(secure);
 
         return builder.parse(new InputSource(new StringReader(xmlDocument)));
@@ -127,6 +127,14 @@ public class XmlUtils {
         return builder.parse(is);
     }
 
+    public static void parseXmlString(String xml, String features) throws Exception {
+        parseXmlInputStream(getStream(xml, Constants.EMPTY_STRING), features);
+    }
+
+    public static void parseXmlFile(String xmlFile, String features) throws Exception {
+        parseXmlInputStream(getStream(Constants.EMPTY_STRING, xmlFile), features);
+    }
+
     /**
      * Transforms a String or File provided by path to a Document object.
      *
@@ -137,20 +145,23 @@ public class XmlUtils {
      * @throws Exception in case something goes wrong
      */
     public static Document createDocument(String xml, String filePath, String features) throws Exception {
-        Document xmlDocument;
         try {
-            InputStream inputXML = getStream(xml, filePath);
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            XmlUtils.setFeatures(builderFactory, features);
-
-            builderFactory.setNamespaceAware(true);
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            xmlDocument = builder.parse(inputXML);
+            return parseXmlInputStream(getStream(xml, filePath), features);
         } catch (MalformedURLException e) {
             throw new Exception((new StringBuilder("Unable to open remote file requested, file path[")).append(filePath).append("], error[").append(e.getMessage()).append("]").toString(), e);
         } catch (IOException e) {
             throw new Exception((new StringBuilder("Unable to open file requested, filename[")).append(filePath).append("], error[").append(e.getMessage()).append("]").toString(), e);
         }
+    }
+
+    public static Document parseXmlInputStream(InputStream inputStream, String features) throws Exception {
+        Document xmlDocument;
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        XmlUtils.setFeatures(builderFactory, features);
+
+        builderFactory.setNamespaceAware(true);
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        xmlDocument = builder.parse(inputStream);
         return xmlDocument;
     }
 
@@ -208,7 +219,7 @@ public class XmlUtils {
      * @return the InputStream representation of a file or string
      * @throws IOException Exception in case something goes wrong
      */
-    private static InputStream getStream(String xml, String filePath) throws IOException {
+    public static InputStream getStream(String xml, String filePath) throws IOException {
         InputStream inputXML;
         if (StringUtils.isEmpty(filePath)) {
             inputXML = new ByteArrayInputStream(xml.getBytes());
@@ -266,7 +277,7 @@ public class XmlUtils {
         if (Constants.XML_PATH.equalsIgnoreCase(commonInputs.getXmlDocumentSource())) {
             doc = XmlUtils.createDocumentFromFile(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
         } else {
-            doc = XmlUtils.parseXML(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
+            doc = XmlUtils.parseXmlStringSecurely(commonInputs.getXmlDocument(), commonInputs.getSecureProcessing());
         }
         return doc;
     }

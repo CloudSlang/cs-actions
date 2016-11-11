@@ -1,6 +1,22 @@
 package io.cloudslang.content.vmware.connection.helpers;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.HttpNfcLeaseState;
+import com.vmware.vim25.InvalidCollectorVersionFaultMsg;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.ObjectSpec;
+import com.vmware.vim25.ObjectUpdate;
+import com.vmware.vim25.ObjectUpdateKind;
+import com.vmware.vim25.PropertyChange;
+import com.vmware.vim25.PropertyChangeOp;
+import com.vmware.vim25.PropertyFilterSpec;
+import com.vmware.vim25.PropertyFilterUpdate;
+import com.vmware.vim25.PropertySpec;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.ServiceContent;
+import com.vmware.vim25.UpdateSet;
+import com.vmware.vim25.VimPortType;
+import com.vmware.vim25.WaitOptions;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Constants;
 import org.w3c.dom.Element;
