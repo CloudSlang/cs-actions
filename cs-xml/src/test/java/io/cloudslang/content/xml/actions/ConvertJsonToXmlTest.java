@@ -8,8 +8,9 @@ import org.junit.Test;
 import java.util.Map;
 
 import static io.cloudslang.content.xml.utils.Constants.NEW_LINE;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 /**
