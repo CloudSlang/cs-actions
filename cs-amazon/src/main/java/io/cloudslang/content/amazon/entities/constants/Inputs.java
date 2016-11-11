@@ -154,6 +154,7 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
         public static final String NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS = "networkInterfaceAssociatePublicIpAddress";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
+        public static final String SUBNET_IDS_STRING = "subnetIdsString";
     }
 
     public static class VolumeInputs {

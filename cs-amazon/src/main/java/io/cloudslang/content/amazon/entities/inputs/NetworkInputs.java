@@ -19,6 +19,7 @@ public class NetworkInputs {
     private final String secondaryPrivateIpAddressCount;
     private final String networkInterfacesAssociatePublicIpAddressesString;
     private final String networkInterfaceDeleteOnTermination;
+    private final String subnetIdsString;
 
     private final boolean forceDetach;
 
@@ -31,6 +32,7 @@ public class NetworkInputs {
         this.deviceIndex = builder.deviceIndex;
         this.secondaryPrivateIpAddressCount = builder.secondaryPrivateIpAddressCount;
         this.networkInterfacesAssociatePublicIpAddressesString = builder.networkInterfacesAssociatePublicIpAddressesString;
+        this.subnetIdsString = builder.subnetIdsString;
 
         this.forceDetach = builder.forceDetach;
     }
@@ -67,6 +69,10 @@ public class NetworkInputs {
         return networkInterfaceDeleteOnTermination;
     }
 
+    public String getSubnetIdsString() {
+        return subnetIdsString;
+    }
+
     public boolean isForceDetach() {
         return forceDetach;
     }
@@ -80,6 +86,7 @@ public class NetworkInputs {
         private String secondaryPrivateIpAddressCount;
         private String networkInterfacePrivateIpAddress;
         private String networkInterfaceDeleteOnTermination;
+        private String subnetIdsString;
 
         private boolean forceDetach;
 
@@ -126,6 +133,11 @@ public class NetworkInputs {
 
         public Builder withNetworkInterfacesAssociatePublicIpAddressesString(String inputValue) {
             networkInterfacesAssociatePublicIpAddressesString = inputValue;
+            return this;
+        }
+
+        public Builder withSubnetIdsString(String inputValue) {
+            subnetIdsString = inputValue;
             return this;
         }
 

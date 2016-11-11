@@ -16,9 +16,9 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Values.O
  * Created by Mihai Tusa.
  * 9/23/2016.
  */
-class IamUtils {
-    void setSecurityGroupsRelatedQueryParams(Map<String, String> queryParamsMap, String inputString, String prefix,
-                                             String suffix, String delimiter) {
+class CommonUtils {
+    void setPrefixedAndSuffixedCommonQueryParams(Map<String, String> queryParamsMap, String inputString, String prefix,
+                              String suffix, String delimiter) {
         if (isNotBlank(inputString)) {
             String[] securityGroupsRelatedArray = InputsUtil.getStringsArray(inputString, EMPTY, delimiter);
             if (securityGroupsRelatedArray != null && securityGroupsRelatedArray.length > START_INDEX) {

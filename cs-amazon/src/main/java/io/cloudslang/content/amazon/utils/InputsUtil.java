@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
@@ -349,6 +350,27 @@ public final class InputsUtil {
 
     }
 
+    public static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,
+                                               String delimiter, String firstInputName, String secondInputName) {
+        String[] toValidateArray = getStringsArray(inputString, condition, delimiter);
+        validateAgainstDifferentArraysLength(referenceArray, toValidateArray, firstInputName, secondInputName);
+
+        return toValidateArray;
+    }
+
+    public static void validateKeyOrValueString(String input, boolean isKey) {
+        if (isKey && (isBlank(input) || input.length() > 128)) {
+            throw new IllegalArgumentException(getValidationException(input, false));
+        } else if (!isKey && (input.length() > 256)) {
+            throw new IllegalArgumentException(getValidationException(input, false));
+        } else {
+            Pattern pattern = Pattern.compile("^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$");
+            if (!pattern.matcher(input).matches()) {
+                throw new IllegalArgumentException(getValidationException(input, false));
+            }
+        }
+    }
+
     static long getValidLong(String input, long defaultValue) {
         if (isBlank(input)) {
             return defaultValue;
@@ -381,14 +403,6 @@ public final class InputsUtil {
         String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)), currentArray.length > START_INDEX);
-    }
-
-    private static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,
-                                                String delimiter, String firstInputName, String secondInputName) {
-        String[] toValidateArray = getStringsArray(inputString, condition, delimiter);
-        validateAgainstDifferentArraysLength(referenceArray, toValidateArray, firstInputName, secondInputName);
-
-        return toValidateArray;
     }
 
     @Nullable
