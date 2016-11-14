@@ -4,9 +4,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.SetValueService;
@@ -43,7 +41,7 @@ public class SetValue {
      * @param attributeName     optional - name of attribute to set the value of if setting an attribute value
      * @param value             value to set for element or attribute
      * @param secureProcessing  optional - whether to use secure processing
-     * @return  map of results containing success or failure text, a result message, and the modified XML
+     * @return map of results containing success or failure text, a result message, and the modified XML
      */
     @Action(name = "Set Value",
             outputs = {

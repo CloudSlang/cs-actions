@@ -7,20 +7,22 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
  * Created by victor on 10.08.2016.
  */
 public class ConvertJsonToXmlInputs {
-    private String json;
-    private Boolean prettyPrint;
-    private Boolean showXmlDeclaration;
-    private String rootTagName;
-    private String defaultJsonArrayItemName;
-    private Map<String, String> namespaces;
-    private Map<String, String> arraysItemNames;
+    private final String json;
+    private final boolean prettyPrint;
+    private final boolean showXmlDeclaration;
+    private final String rootTagName;
+    private final String defaultJsonArrayItemName;
+    private final Map<String, String> namespaces;
+    private final Map<String, String> arraysItemNames;
 
-    public ConvertJsonToXmlInputs(ConvertJsonToXmlInputsBuilder builder) {
+    public ConvertJsonToXmlInputs(final ConvertJsonToXmlInputsBuilder builder) {
         this.json = builder.json;
         this.prettyPrint = builder.prettyPrint;
         this.showXmlDeclaration = builder.showXmlDeclaration;
@@ -34,11 +36,11 @@ public class ConvertJsonToXmlInputs {
         return json;
     }
 
-    public Boolean getPrettyPrint() {
+    public boolean getPrettyPrint() {
         return prettyPrint;
     }
 
-    public Boolean getShowXmlDeclaration() {
+    public boolean getShowXmlDeclaration() {
         return showXmlDeclaration;
     }
 
@@ -60,8 +62,8 @@ public class ConvertJsonToXmlInputs {
 
     public static class ConvertJsonToXmlInputsBuilder {
         private String json;
-        private Boolean prettyPrint;
-        private Boolean showXmlDeclaration;
+        private boolean prettyPrint;
+        private boolean showXmlDeclaration;
         private String rootTagName;
         private String defaultJsonArrayItemName;
         private Map<String, String> namespaces;
@@ -71,43 +73,43 @@ public class ConvertJsonToXmlInputs {
             return new ConvertJsonToXmlInputs(this);
         }
 
-        public ConvertJsonToXmlInputsBuilder withJson(String json) {
+        public ConvertJsonToXmlInputsBuilder withJson(final String json) {
             this.json = json;
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withPrettyPrint(Boolean prettyPrint) {
+        public ConvertJsonToXmlInputsBuilder withPrettyPrint(final boolean prettyPrint) {
             this.prettyPrint = prettyPrint;
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withShowXmlDeclaration(Boolean showXmlDeclaration) {
+        public ConvertJsonToXmlInputsBuilder withShowXmlDeclaration(final boolean showXmlDeclaration) {
             this.showXmlDeclaration = showXmlDeclaration;
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withRootTagName(String rootTagName) {
-            this.rootTagName = StringUtils.defaultIfEmpty(rootTagName, EMPTY);
+        public ConvertJsonToXmlInputsBuilder withRootTagName(final String rootTagName) {
+            this.rootTagName = defaultIfEmpty(rootTagName, EMPTY);
             return this;
         }
 
-        public ConvertJsonToXmlInputsBuilder withDefaultJsonArrayItemName(String defaultJsonArrayItemName) {
-            this.defaultJsonArrayItemName = StringUtils.defaultIfEmpty(defaultJsonArrayItemName, Defaults.JSON_ARRAY_ITEM_NAME);
+        public ConvertJsonToXmlInputsBuilder withDefaultJsonArrayItemName(final String defaultJsonArrayItemName) {
+            this.defaultJsonArrayItemName = defaultIfEmpty(defaultJsonArrayItemName, Defaults.JSON_ARRAY_ITEM_NAME);
             return this;
         }
 
         public ConvertJsonToXmlInputsBuilder withNamespaces(String namespacesUris, String namespacesPrefixes, String delimiter) {
-            namespacesUris = StringUtils.defaultString(namespacesUris, EMPTY);
-            namespacesPrefixes = StringUtils.defaultIfEmpty(namespacesPrefixes, EMPTY);
-            delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
+            namespacesUris = defaultString(namespacesUris, EMPTY);
+            namespacesPrefixes = defaultIfEmpty(namespacesPrefixes, EMPTY);
+            delimiter = defaultIfEmpty(delimiter, Defaults.DELIMITER);
             this.namespaces = InputUtils.generateMap(namespacesUris, namespacesPrefixes, delimiter);
             return this;
         }
 
         public ConvertJsonToXmlInputsBuilder withJsonArraysNames(String jsonArraysNames, String jsonArraysItemNames, String delimiter) {
-            jsonArraysNames = StringUtils.defaultString(jsonArraysNames, EMPTY);
-            jsonArraysItemNames = StringUtils.defaultIfEmpty(jsonArraysItemNames, EMPTY);
-            delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
+            jsonArraysNames = defaultString(jsonArraysNames, EMPTY);
+            jsonArraysItemNames = defaultIfEmpty(jsonArraysItemNames, EMPTY);
+            delimiter = defaultIfEmpty(delimiter, Defaults.DELIMITER);
             this.arraysItemNames = InputUtils.generateMap(jsonArraysNames, jsonArraysItemNames, delimiter);
             return this;
         }

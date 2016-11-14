@@ -1,7 +1,6 @@
 package io.cloudslang.content.xml.utils;
 
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.Map;
 
@@ -19,7 +18,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * Created by markowis on 03/03/2016.
  */
 public class ResultUtils {
-    private ResultUtils() {}
+    private ResultUtils() {
+    }
 
     public static void populateFailureResult(Map<String, String> result, String errorMessage) {
         populateResult(result, ResponseNames.FAILURE, Constants.EMPTY_STRING, EMPTY, RESULT_XML, FAILURE, errorMessage);

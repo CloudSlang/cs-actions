@@ -4,20 +4,19 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.AddAttributeService;
+import io.cloudslang.content.xml.utils.Constants;
 
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
-import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.ATTRIBUTE_NAME;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.SECURE_PROCESSING;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.VALUE;
@@ -33,14 +32,14 @@ public class AddAttribute {
     /**
      * Adds an attribute to an XML element or replaces the value if the attribute already exists.
      *
-     * @param xmlDocument           XML string in which to add attribute
+     * @param xmlDocument       XML string in which to add attribute
      * @param xmlDocumentSource The source type of the xml document.
      *                          Valid values: xmlString, xmlPath
      *                          Default value: xmlString
-     * @param xPathElementQuery     XPATH query that results in an element or element list, not an attribute
-     * @param attributeName         name of attribute to add or replace
-     * @param value                 value of attribute to add or replace with
-     * @param secureProcessing      optional - whether to use secure processing
+     * @param xPathElementQuery XPATH query that results in an element or element list, not an attribute
+     * @param attributeName     name of attribute to add or replace
+     * @param value             value of attribute to add or replace with
+     * @param secureProcessing  optional - whether to use secure processing
      * @return map of results containing success or failure text, a result message, and the modified XML
      */
     @Action(name = "Add Attribute",

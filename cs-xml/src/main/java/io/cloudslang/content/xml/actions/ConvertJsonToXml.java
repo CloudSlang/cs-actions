@@ -4,16 +4,12 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
 import io.cloudslang.content.xml.services.ConvertJsonToXmlService;
 import io.cloudslang.content.xml.utils.ValidateUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
@@ -23,7 +19,6 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static io.cloudslang.content.xml.utils.Constants.*;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.DEFAULT_JSON_ARRAY_ITEM_NAME;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.DELIMITER;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.JSON;

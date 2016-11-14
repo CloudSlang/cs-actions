@@ -4,9 +4,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.ValidateService;
@@ -47,14 +45,14 @@ public class Validate {
      * Service to validate an XML document. Input must be given for either "xmlDocument" or for "xmlLocation".
      * The "'xsdLocation" input is optional, but if specified then the XML document will be validated against the XSD schema.
      *
-     * @param xmlDocument       XML string to test
-     * @param xmlDocumentSource The source type of the xml document.
-     *                          Valid values: xmlString, xmlPath, xmlUrl
-     *                          Default value: xmlString
-     * @param xsdDocument       optional - XSD to test given XML against
-     * @param xsdDocumentSource The source type of the xsd document.
-     *                          Valid values: xsdString, xsdPath
-     *                          Default value: xsdString
+     * @param xmlDocument          XML string to test
+     * @param xmlDocumentSource    The source type of the xml document.
+     *                             Valid values: xmlString, xmlPath, xmlUrl
+     *                             Default value: xmlString
+     * @param xsdDocument          optional - XSD to test given XML against
+     * @param xsdDocumentSource    The source type of the xsd document.
+     *                             Valid values: xsdString, xsdPath
+     *                             Default value: xsdString
      * @param username             The username used to connect to the remote machine.
      * @param password             The password used to connect to the remote machine.
      * @param proxyHost            The proxy server used to access the remote host.
@@ -87,20 +85,19 @@ public class Validate {
      *                             Format of the keystore is Java KeyStore (JKS).
      * @param keystorePassword     The password associated with the KeyStore file. If trustAllRoots is false and keystore is empty, keystorePassword default will be supplied.
      *                             Default value is 'changeit'.
-     * @param secureProcessing  optional - whether to use secure processing
-     *
+     * @param secureProcessing     optional - whether to use secure processing
      * @return map of results containing success or failure text and a result message
      */
 
     @Action(name = "Validate",
             outputs = {
-                @Output(RETURN_CODE),
-                @Output(RESULT_TEXT),
-                @Output(RETURN_RESULT),
-                @Output(ERROR_MESSAGE)},
+                    @Output(RETURN_CODE),
+                    @Output(RESULT_TEXT),
+                    @Output(RETURN_RESULT),
+                    @Output(ERROR_MESSAGE)},
             responses = {
-                @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = COMPARE_EQUAL),
-                @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = COMPARE_EQUAL, isDefault = true, isOnFail = true)})
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = COMPARE_EQUAL),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = XML_DOCUMENT, required = true) String xmlDocument,
             @Param(value = XML_DOCUMENT_SOURCE) String xmlDocumentSource,

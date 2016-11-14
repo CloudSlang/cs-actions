@@ -1,13 +1,11 @@
 package io.cloudslang.content.xml.services;
 
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.utils.StringUtilities;
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -88,6 +86,6 @@ public class XpathQueryService {
             sb.append(delimiter);
         }
         sb.append(XmlUtils.nodeToString(nodeList.item(nodeList.getLength() - 1)));
-            return sb.toString();
+        return sb.toString();
     }
 }

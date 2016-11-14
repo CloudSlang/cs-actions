@@ -5,19 +5,13 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.utils.OutputUtilities;
-import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.xml.entities.ActionType;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import io.cloudslang.content.xml.factory.OperationFactory;
 import io.cloudslang.content.xml.services.OperationService;
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ValidateUtils;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
@@ -35,7 +29,6 @@ import static io.cloudslang.content.xml.utils.Constants.Inputs.VALUE;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.XML;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.XPATH1;
 import static io.cloudslang.content.xml.utils.Constants.Inputs.XPATH2;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Class used for creating @Action operation to edit xml documents.

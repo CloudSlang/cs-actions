@@ -1,13 +1,12 @@
 package io.cloudslang.content.xml.utils;
 
 import io.cloudslang.content.utils.BooleanUtilities;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.xml.utils.Constants.*;
+import static io.cloudslang.content.xml.utils.Constants.DIFFERENT_LIST_SIZE;
 
 /**
  * Created by moldovas on 6/24/2016.

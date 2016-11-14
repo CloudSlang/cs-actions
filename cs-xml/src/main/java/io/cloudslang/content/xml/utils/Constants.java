@@ -123,7 +123,7 @@ public class Constants {
         public static final String INSERT_BEFORE_FAILURE = "Insert failed: ";
         public static final String REMOVE_FAILURE = "Removal failed: ";
         public static final String SET_VALUE_FAILURE = "Setting value failed: ";
-        public static final String VALIDATION_FAILURE =  "Validation failed: ";
+        public static final String VALIDATION_FAILURE = "Validation failed: ";
     }
 
     public static final class SuccessMessages {

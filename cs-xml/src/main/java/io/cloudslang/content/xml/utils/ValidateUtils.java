@@ -1,7 +1,5 @@
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
-import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,7 +25,6 @@ public class ValidateUtils {
 
     /**
      * Validates the operation inputs.
-     *
      *
      * @param inputs@throws Exception for invalid inputs
      */

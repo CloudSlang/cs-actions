@@ -64,6 +64,7 @@ public class ApplyXslTransformationService {
 
     /**
      * Reads the xml content from a file, URL or string.
+     *
      * @param xmlDocument xml document as String, path or URL
      * @return the resulting xml after validation
      * @throws Exception in case something went wrong

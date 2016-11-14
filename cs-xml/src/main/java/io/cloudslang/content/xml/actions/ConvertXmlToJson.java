@@ -4,16 +4,11 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.services.ConvertXmlToJsonService;
 import io.cloudslang.content.xml.utils.ValidateUtils;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
@@ -43,19 +38,19 @@ public class ConvertXmlToJson {
     /**
      * Converts a XML document to a JSON array or a JSON object.
      *
-     * @param xml - The XML document (in the form of a String)
-     * @param textElementsName - specify custom property name for text elements. This will be used for elements that have attributes and text content.
+     * @param xml                - The XML document (in the form of a String)
+     * @param textElementsName   - specify custom property name for text elements. This will be used for elements that have attributes and text content.
      *                           Default value: '_text'
      * @param includeRootElement - The flag for including the xml root in the resulted JSON.
-     *                      Default value: true
-     *                      Valid values: true, false
-     * @param includeAttributes - The flag for including XML attributes in the resulted JSON
-     *                            Default value: true
-     *                            Valid values: true, false
-     * @param prettyPrint - The flag for formatting the resulted XML. The newline character is '\n'
-     *                      Default value: true
-     *                      Valid values: true, false
-     * @param  parsingFeatures - The list of XML parsing features separated by new line (CRLF). The feature name - value must be separated by empty space. Setting specific features this field could be used to avoid XML security issues like "XML Entity Expansion injection" and "XML External Entity injection". To avoid aforementioned security issues we strongly recommend to set this input to the following values:
+     *                           Default value: true
+     *                           Valid values: true, false
+     * @param includeAttributes  - The flag for including XML attributes in the resulted JSON
+     *                           Default value: true
+     *                           Valid values: true, false
+     * @param prettyPrint        - The flag for formatting the resulted XML. The newline character is '\n'
+     *                           Default value: true
+     *                           Valid values: true, false
+     * @param parsingFeatures    - The list of XML parsing features separated by new line (CRLF). The feature name - value must be separated by empty space. Setting specific features this field could be used to avoid XML security issues like "XML Entity Expansion injection" and "XML External Entity injection". To avoid aforementioned security issues we strongly recommend to set this input to the following values:
      *                           http://apache.org/xml/features/disallow-doctype-decl true
      *                           http://xml.org/sax/features/external-general-entities false
      *                           http://xml.org/sax/features/external-parameter-entities false
@@ -64,9 +59,9 @@ public class ConvertXmlToJson {
      *                           When the "http://xml.org/sax/features/external-parameter-entities" feature is set to "false" the parser will not include external parameter entities or the external DTD subset.
      *                           If any of the validations fails, the operation will fail with an error message describing the problem.
      *                           Default value:
-     *                              http://apache.org/xml/features/disallow-doctype-decl true
-     *                              http://xml.org/sax/features/external-general-entities false
-     *                              http://xml.org/sax/features/external-parameter-entities false
+     *                           http://apache.org/xml/features/disallow-doctype-decl true
+     *                           http://xml.org/sax/features/external-general-entities false
+     *                           http://xml.org/sax/features/external-parameter-entities false
      * @return The converted XML document as a JSON array or object
      */
 
