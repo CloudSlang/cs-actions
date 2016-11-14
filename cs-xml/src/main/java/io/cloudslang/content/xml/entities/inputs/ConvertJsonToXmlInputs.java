@@ -1,13 +1,12 @@
 package io.cloudslang.content.xml.entities.inputs;
 
-import io.cloudslang.content.xml.utils.Constants.BooleanNames;
 import io.cloudslang.content.xml.utils.Constants.Defaults;
 import io.cloudslang.content.xml.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
-import static io.cloudslang.content.xml.utils.Constants.EMPTY_STRING;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by victor on 10.08.2016.
@@ -88,7 +87,7 @@ public class ConvertJsonToXmlInputs {
         }
 
         public ConvertJsonToXmlInputsBuilder withRootTagName(String rootTagName) {
-            this.rootTagName = StringUtils.defaultIfEmpty(rootTagName, EMPTY_STRING);
+            this.rootTagName = StringUtils.defaultIfEmpty(rootTagName, EMPTY);
             return this;
         }
 
@@ -98,16 +97,16 @@ public class ConvertJsonToXmlInputs {
         }
 
         public ConvertJsonToXmlInputsBuilder withNamespaces(String namespacesUris, String namespacesPrefixes, String delimiter) {
-            namespacesUris = StringUtils.defaultString(namespacesUris, EMPTY_STRING);
-            namespacesPrefixes = StringUtils.defaultIfEmpty(namespacesPrefixes, EMPTY_STRING);
+            namespacesUris = StringUtils.defaultString(namespacesUris, EMPTY);
+            namespacesPrefixes = StringUtils.defaultIfEmpty(namespacesPrefixes, EMPTY);
             delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
             this.namespaces = InputUtils.generateMap(namespacesUris, namespacesPrefixes, delimiter);
             return this;
         }
 
         public ConvertJsonToXmlInputsBuilder withJsonArraysNames(String jsonArraysNames, String jsonArraysItemNames, String delimiter) {
-            jsonArraysNames = StringUtils.defaultString(jsonArraysNames, EMPTY_STRING);
-            jsonArraysItemNames = StringUtils.defaultIfEmpty(jsonArraysItemNames, EMPTY_STRING);
+            jsonArraysNames = StringUtils.defaultString(jsonArraysNames, EMPTY);
+            jsonArraysItemNames = StringUtils.defaultIfEmpty(jsonArraysItemNames, EMPTY);
             delimiter = StringUtils.defaultIfEmpty(delimiter, Defaults.DELIMITER);
             this.arraysItemNames = InputUtils.generateMap(jsonArraysNames, jsonArraysItemNames, delimiter);
             return this;

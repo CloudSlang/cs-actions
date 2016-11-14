@@ -5,6 +5,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.BooleanValues;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.services.ConvertXmlToJsonService;
@@ -15,11 +17,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static io.cloudslang.content.xml.utils.Constants.*;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.INCLUDE_ATTRIBUTES;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.INCLUDE_ROOT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.PARSING_FEATURES;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.PRETTY_PRINT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.TEXT_ELEMENTS_NAME;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XML;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_PREFIXES;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_URIS;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -61,21 +74,21 @@ public class ConvertXmlToJson {
             outputs = {
                     @Output(NAMESPACES_PREFIXES),
                     @Output(NAMESPACES_URIS),
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(RETURN_RESULT),
+                    @Output(RETURN_CODE),
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = Outputs.RETURN_CODE, value = ReturnCodes.SUCCESS),
-                    @Response(text = ResponseNames.FAILURE, field = Outputs.RETURN_CODE, value = ReturnCodes.FAILURE)
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE)
             })
     public Map<String, String> execute(
-            @Param(value = Inputs.XML, required = true) String xml,
-            @Param(value = Inputs.TEXT_ELEMENTS_NAME) String textElementsName,
-            @Param(value = Inputs.INCLUDE_ROOT) String includeRootElement,
-            @Param(value = Inputs.INCLUDE_ATTRIBUTES) String includeAttributes,
-            @Param(value = Inputs.PRETTY_PRINT) String prettyPrint,
-            @Param(value = Inputs.PARSING_FEATURES) String parsingFeatures) {
+            @Param(value = XML, required = true) String xml,
+            @Param(value = TEXT_ELEMENTS_NAME) String textElementsName,
+            @Param(value = INCLUDE_ROOT) String includeRootElement,
+            @Param(value = INCLUDE_ATTRIBUTES) String includeAttributes,
+            @Param(value = PRETTY_PRINT) String prettyPrint,
+            @Param(value = PARSING_FEATURES) String parsingFeatures) {
 
         try {
             includeRootElement = defaultIfEmpty(includeRootElement, TRUE);
@@ -100,7 +113,10 @@ public class ConvertXmlToJson {
             result.put(NAMESPACES_URIS, converter.getNamespacesUris());
             return result;
         } catch (Exception e) {
-            return getFailureResultsMap(e);
+            final Map<String, String> result = getFailureResultsMap(e);
+            result.put(NAMESPACES_PREFIXES, EMPTY);
+            result.put(NAMESPACES_URIS, EMPTY);
+            return result;
         }
     }
 }

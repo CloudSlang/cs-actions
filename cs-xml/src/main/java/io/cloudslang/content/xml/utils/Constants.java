@@ -105,11 +105,6 @@ public class Constants {
         public static final String EMPTY_STRING = "";
     }
 
-    public static final class ResponseNames {
-        public static final String SUCCESS = "success";
-        public static final String FAILURE = "failure";
-    }
-
     public static final class QueryTypes {
         public static final String NODE = "node";
         public static final String NODE_LIST = "nodelist";
@@ -151,15 +146,4 @@ public class Constants {
         public static final String JSON_ARRAY_ITEM_NAME = "item";
 
     }
-
-    public static final class ReturnCodes {
-        public static final String SUCCESS = "0";
-        public static final String FAILURE = "-1";
-    }
-
-    public static final class BooleanNames {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-    }
-
 }

@@ -1,14 +1,22 @@
 package io.cloudslang.content.xml.actions;
 
-import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static org.junit.Assert.assertEquals;
-
+import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.xml.utils.Constants.Outputs;
+import io.cloudslang.content.utils.BooleanUtilities;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_PREFIXES;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_URIS;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by ursan on 8/4/2016.
@@ -127,75 +135,75 @@ public class ConvertXmlToJsonTest {
 
     @Test
     public void testConvertXmlToJsonWithDefaultValues() {
-        Map<String, String> result = convertXmlToJson.execute(XML, "", "", "", "", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
 
-        assertEquals(SUCCESS, result.get(Outputs.RETURN_CODE));
-        assertEquals(JSON, result.get(Outputs.RETURN_RESULT));
-        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(Outputs.NAMESPACES_URIS));
-        assertEquals("f,ui", result.get(Outputs.NAMESPACES_PREFIXES));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(JSON, result.get(RETURN_RESULT));
+        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(NAMESPACES_URIS));
+        assertEquals("f,ui", result.get(NAMESPACES_PREFIXES));
     }
 
     @SuppressWarnings("Duplicates")
     @Test
     public void testConvertXmlToJsonWithDefaultValuesSpecified() {
-        Map<String, String> result = convertXmlToJson.execute(XML, "_text", "true", "true", "true", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, "_text", TRUE, TRUE, TRUE, EMPTY);
 
-        assertEquals(SUCCESS, result.get(Outputs.RETURN_CODE));
-        assertEquals(JSON, result.get(Outputs.RETURN_RESULT));
-        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(Outputs.NAMESPACES_URIS));
-        assertEquals("f,ui", result.get(Outputs.NAMESPACES_PREFIXES));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(JSON, result.get(RETURN_RESULT));
+        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(NAMESPACES_URIS));
+        assertEquals("f,ui", result.get(NAMESPACES_PREFIXES));
     }
 
 
     @Test
     public void testConvertXmlToJsonWithInvalidBooleanValues() {
-        Map<String, String> result = convertXmlToJson.execute(XML, "_text", "abc", "abc", "abc", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, "_text", "abc", "abc", "abc", EMPTY);
 
-        assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));
-        assertEquals("abc is not a valid value for Boolean", result.get(Outputs.RETURN_RESULT));
-        assertEquals("", result.get(Outputs.NAMESPACES_URIS));
-        assertEquals("", result.get(Outputs.NAMESPACES_PREFIXES));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertEquals("abc is not a valid value for Boolean", result.get(RETURN_RESULT));
+        assertEquals(EMPTY, result.get(NAMESPACES_URIS));
+        assertEquals(EMPTY, result.get(NAMESPACES_PREFIXES));
     }
 
     @Test
     public void testConvertXmlToJsonWithNooRootNoPrettyPrintNoAttributes() {
-        Map<String, String> result = convertXmlToJson.execute(XML, "+text", "false", "false", "false", "");
+        Map<String, String> result = convertXmlToJson.execute(XML, "+text", FALSE, FALSE, FALSE, EMPTY);
 
-        assertEquals(SUCCESS, result.get(Outputs.RETURN_CODE));
-        assertEquals(JSON_NO_PRETTY_NO_ROOT_NO_ATTRIBUTES, result.get(Outputs.RETURN_RESULT));
-        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(Outputs.NAMESPACES_URIS));
-        assertEquals("f,ui", result.get(Outputs.NAMESPACES_PREFIXES));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(JSON_NO_PRETTY_NO_ROOT_NO_ATTRIBUTES, result.get(RETURN_RESULT));
+        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(NAMESPACES_URIS));
+        assertEquals("f,ui", result.get(NAMESPACES_PREFIXES));
     }
 
     @Test
     public void testConvertXmlToJsonWithInvalidXml() {
-        Map<String, String> result = convertXmlToJson.execute(XML + "abc", "+text", "false", "false", "false", "");
+        Map<String, String> result = convertXmlToJson.execute(XML + "abc", "+text", FALSE, FALSE, FALSE, EMPTY);
 
-        assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));
-        assertEquals("Error on line 12: Content is not allowed in trailing section.", result.get(Outputs.RETURN_RESULT));
-        assertEquals("", result.get(Outputs.NAMESPACES_URIS));
-        assertEquals("", result.get(Outputs.NAMESPACES_PREFIXES));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertEquals("Error on line 12: Content is not allowed in trailing section.", result.get(RETURN_RESULT));
+        assertEquals(EMPTY, result.get(NAMESPACES_URIS));
+        assertEquals(EMPTY, result.get(NAMESPACES_PREFIXES));
     }
 
     @SuppressWarnings("Duplicates")
     @Test
     public void testConvertXmlToJsonWithTextElements() {
-        Map<String, String> result = convertXmlToJson.execute(XML_WITH_TEXT, "_text", "true", "true", "true", "");
+        Map<String, String> result = convertXmlToJson.execute(XML_WITH_TEXT, "_text", TRUE, TRUE, TRUE, EMPTY);
 
-        assertEquals(SUCCESS, result.get(Outputs.RETURN_CODE));
-        assertEquals(JSON_WITH_TEXT, result.get(Outputs.RETURN_RESULT));
-        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(Outputs.NAMESPACES_URIS));
-        assertEquals("f,ui", result.get(Outputs.NAMESPACES_PREFIXES));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(JSON_WITH_TEXT, result.get(RETURN_RESULT));
+        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(NAMESPACES_URIS));
+        assertEquals("f,ui", result.get(NAMESPACES_PREFIXES));
     }
 
-//    @Test
-//    public void testConvertXmlToJsonSimpleTag() {
-//        Map<String, String> result = convertXmlToJson.execute("<ip>1.2.3.4</ip>", "_text", "true", "true", "true", "");
-//
-//        assertEquals(SUCCESS, result.get(Outputs.RETURN_CODE));
-//        assertEquals(JSON_WITH_TEXT, result.get(Outputs.RETURN_RESULT));
-//        assertEquals("http://java.sun.com/jsf/core,urn:x-hp:2012:software:eve:uibinding", result.get(Outputs.NAMESPACES_URIS));
-//        assertEquals("f,ui", result.get(Outputs.NAMESPACES_PREFIXES));
-//    }
+    @Test
+    public void testConvertXmlToJsonSimpleTag() {
+        final Map<String, String> result = convertXmlToJson.execute("<ip>1.2.3.4</ip>", EMPTY, TRUE, FALSE, FALSE, EMPTY);
+
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals("{\"ip\":\"1.2.3.4\"}", result.get(RETURN_RESULT));
+        assertEquals(EMPTY, result.get(NAMESPACES_URIS));
+        assertEquals(EMPTY, result.get(NAMESPACES_PREFIXES));
+    }
 
 }

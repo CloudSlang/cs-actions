@@ -1,5 +1,6 @@
 package io.cloudslang.content.xml.actions;
 
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -10,6 +11,15 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.ELEMENT_NOT_FOUND;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.GENERAL_ERROR;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.RESULT_TEXT;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -40,11 +50,11 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        Map<String, String> result = addAttribute.execute(xml, EMPTY_STRING, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, EMPTY_STRING, xPathQuery, attributeName, value, FALSE);
 
-        assertEquals(Constants.ResponseNames.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.SuccessMessages.ADD_ATTRIBUTE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(ResponseNames.SUCCESS, result.get(RESULT_TEXT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(Constants.SuccessMessages.ADD_ATTRIBUTE_SUCCESS, result.get(RETURN_RESULT));
     }
 
     @Test
@@ -53,12 +63,11 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        Map<String, String> result = addAttribute.execute(xml, EMPTY_STRING, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, EMPTY_STRING, xPathQuery, attributeName, value, FALSE);
 
-        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
-                result.get(Constants.Outputs.ERROR_MESSAGE));
+        assertEquals(ResponseNames.FAILURE, result.get(RESULT_TEXT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(GENERAL_ERROR + ELEMENT_NOT_FOUND, result.get(ERROR_MESSAGE));
     }
 
     @Test
@@ -67,11 +76,11 @@ public class AddAttributeTest {
         String attributeName = "newAttr";
         String value = "New Value";
 
-        Map<String, String> result = addAttribute.execute(xml, EMPTY_STRING, xPathQuery, attributeName, value, "false");
+        Map<String, String> result = addAttribute.execute(xml, EMPTY_STRING, xPathQuery, attributeName, value, FALSE);
 
-        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.ErrorMessages.GENERAL_ERROR + Constants.ErrorMessages.ADD_ATTRIBUTE_FAILURE +
-                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.ERROR_MESSAGE));
+        assertEquals(ResponseNames.FAILURE, result.get(RESULT_TEXT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(GENERAL_ERROR + Constants.ErrorMessages.ADD_ATTRIBUTE_FAILURE +
+                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(ERROR_MESSAGE));
     }
 }

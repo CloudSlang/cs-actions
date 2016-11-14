@@ -5,12 +5,27 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.SetValueService;
 
 import java.util.Map;
+
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.ATTRIBUTE_NAME;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.SECURE_PROCESSING;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.VALUE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XML_DOCUMENT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XML_DOCUMENT_SOURCE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XPATH_ELEMENT_QUERY;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.RESULT_XML;
 
 /**
  * Created by markowis on 23/02/2016.
@@ -32,29 +47,29 @@ public class SetValue {
      */
     @Action(name = "Set Value",
             outputs = {
-                    @Output(Constants.Outputs.RETURN_CODE),
-                    @Output(Constants.Outputs.RETURN_RESULT),
-                    @Output(Constants.Outputs.RESULT_XML),
-                    @Output(Constants.Outputs.ERROR_MESSAGE)},
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(RESULT_XML),
+                    @Output(ERROR_MESSAGE)},
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = COMPARE_EQUAL),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
-            @Param(value = Constants.Inputs.XML_DOCUMENT, required = true) String xmlDocument,
-            @Param(value = Constants.Inputs.XML_DOCUMENT_SOURCE, required = true) String xmlDocumentSource,
-            @Param(value = Constants.Inputs.XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
-            @Param(Constants.Inputs.ATTRIBUTE_NAME) String attributeName,
-            @Param(value = Constants.Inputs.VALUE, required = true) String value,
-            @Param(Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
+            @Param(value = XML_DOCUMENT, required = true) String xmlDocument,
+            @Param(value = XML_DOCUMENT_SOURCE, required = true) String xmlDocumentSource,
+            @Param(value = XPATH_ELEMENT_QUERY, required = true) String xPathQuery,
+            @Param(value = ATTRIBUTE_NAME) String attributeName,
+            @Param(value = VALUE, required = true) String value,
+            @Param(value = SECURE_PROCESSING) String secureProcessing) {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        final CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
                 .withXmlDocumentSource(xmlDocumentSource)
                 .withXpathQuery(xPathQuery)
                 .withSecureProcessing(secureProcessing)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        final CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withAttributeName(attributeName)
                 .withValue(value)
                 .build();

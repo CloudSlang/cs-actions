@@ -37,6 +37,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 /**
  * Created by markowis on 23/02/2016.
  */
@@ -49,7 +51,7 @@ public class XmlUtils {
     public static String nodeToString(Node node) throws TransformerException {
 
         if (node == null) {
-            return Constants.EMPTY_STRING;
+            return EMPTY;
         } else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             return node.toString();
         } else {
@@ -128,11 +130,11 @@ public class XmlUtils {
     }
 
     public static void parseXmlString(String xml, String features) throws Exception {
-        parseXmlInputStream(getStream(xml, Constants.EMPTY_STRING), features);
+        parseXmlInputStream(getStream(xml, EMPTY), features);
     }
 
     public static void parseXmlFile(String xmlFile, String features) throws Exception {
-        parseXmlInputStream(getStream(Constants.EMPTY_STRING, xmlFile), features);
+        parseXmlInputStream(getStream(EMPTY, xmlFile), features);
     }
 
     /**

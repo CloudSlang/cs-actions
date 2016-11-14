@@ -1,5 +1,7 @@
 package io.cloudslang.content.xml.utils;
 
+import io.cloudslang.content.utils.BooleanUtilities;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -32,12 +34,8 @@ public class InputUtils {
         throw new RuntimeException(xsdDocumentSource + Constants.INVALID_XSD_DOCUMENT_SOURCE);
     }
 
-    private static boolean isBoolean(String value) {
-        return BooleanNames.TRUE.equalsIgnoreCase(value) || BooleanNames.FALSE.equalsIgnoreCase(value);
-    }
-
     public static void validateBoolean(String includeRootStr) throws Exception {
-        if (!InputUtils.isBoolean(includeRootStr)) {
+        if (!BooleanUtilities.isValid(includeRootStr)) {
             throw new Exception(includeRootStr + " is not a valid value for Boolean");
         }
     }

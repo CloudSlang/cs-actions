@@ -1,8 +1,13 @@
 package io.cloudslang.content.xml.actions;
 
+import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.xml.entities.ActionType;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import io.cloudslang.content.xml.factory.OperationFactory;
@@ -13,6 +18,24 @@ import io.cloudslang.content.xml.utils.ValidateUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.ACTION;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.FEATURES;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.FILE_PATH;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.TYPE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.TYPE_NAME;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.VALUE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XML;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XPATH1;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XPATH2;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Class used for creating @Action operation to edit xml documents.
@@ -59,27 +82,27 @@ public class EditXml {
      *                        http://xml.org/sax/features/external-parameter-entities false
      * @return map of results containing success or failure text, a result message, and the value selected
      */
-    @com.hp.oo.sdk.content.annotations.Action(name = "Edit XML",
+    @Action(name = "Edit XML",
             outputs = {
-                    @Output(Constants.Outputs.RETURN_RESULT),
-                    @Output(Constants.Outputs.RETURN_CODE),
-                    @Output(Constants.Outputs.EXCEPTION)},
+                    @Output(RETURN_RESULT),
+                    @Output(RETURN_CODE),
+                    @Output(EXCEPTION)},
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.ReturnCodes.SUCCESS, value = "0"),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.ReturnCodes.FAILURE, value = "-1")})
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE)})
     public Map<String, String> xPathReplaceNode(
-            @Param(value = Constants.Inputs.XML) String xml,
-            @Param(value = Constants.Inputs.FILE_PATH) String filePath,
-            @Param(value = Constants.Inputs.ACTION, required = true) String action,
-            @Param(value = Constants.Inputs.XPATH1, required = true) String xpath1,
-            @Param(value = Constants.Inputs.XPATH2) String xpath2,
-            @Param(value = Constants.Inputs.VALUE) String value,
-            @Param(value = Constants.Inputs.TYPE) String type,
-            @Param(value = Constants.Inputs.TYPE_NAME) String name,
-            @Param(value = Constants.Inputs.FEATURES) String parsingFeatures) {
-        Map<String, String> result = new HashMap<>();
+            @Param(value = XML) String xml,
+            @Param(value = FILE_PATH) String filePath,
+            @Param(value = ACTION, required = true) String action,
+            @Param(value = XPATH1, required = true) String xpath1,
+            @Param(value = XPATH2) String xpath2,
+            @Param(value = VALUE) String value,
+            @Param(value = TYPE) String type,
+            @Param(value = TYPE_NAME) String name,
+            @Param(value = FEATURES) String parsingFeatures) {
+
         try {
-            EditXmlInputs inputs = new EditXmlInputs.EditXmlInputsBuilder()
+            final EditXmlInputs inputs = new EditXmlInputs.EditXmlInputsBuilder()
                     .withXml(xml)
                     .withFilePath(filePath)
                     .withAction(action)
@@ -91,22 +114,15 @@ public class EditXml {
                     .withParsingFeatures(parsingFeatures)
                     .build();
             ValidateUtils.validateInputs(inputs);
-            ActionType myAction = ActionType.valueOf(action.toLowerCase());
+            final ActionType myAction = ActionType.valueOf(action.toLowerCase());
+            final OperationService operationService = OperationFactory.getOperation(myAction);
 
-            OperationService operationService = OperationFactory.getOperation(myAction);
-
-            result.put(Constants.Outputs.RETURN_RESULT, operationService.execute(inputs));
-            result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.SUCCESS));
+            return getSuccessResultsMap(operationService.execute(inputs));
         } catch (IllegalArgumentException e) {
-            result.put(Constants.Outputs.RETURN_RESULT, Constants.EMPTY_STRING);
-            result.put(Constants.Outputs.EXCEPTION, "Invalid action " + e.getMessage());
-            result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
+            return getFailureResultsMap("Invalid action " + e.getMessage());
         } catch (Exception e) {
-            result.put(Constants.Outputs.RETURN_RESULT, Constants.EMPTY_STRING);
-            result.put(Constants.Outputs.EXCEPTION, e.getMessage());
-            result.put(Constants.Outputs.RETURN_CODE, String.valueOf(Constants.ReturnCodes.FAILURE));
+            return getFailureResultsMap(e.getMessage());
         }
-        return result;
     }
 }
 
