@@ -1,16 +1,7 @@
 package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
-import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
-import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
-import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
-import io.cloudslang.content.amazon.entities.inputs.IamInputs;
-import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
-import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
-import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
-import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
+import io.cloudslang.content.amazon.entities.inputs.*;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.MockingHelper;
@@ -120,6 +111,16 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachVolume")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testCreateLoadBalancer() throws Exception {
+        toTest.execute(getCommonInputsForLoadBalancers("CreateLoadBalancer", HEADERS, ""), getCustomInputs(), getIamInputs(),
+                getLoadBalancerInputs(), getNetworkInputsForLoadBalancers());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateLoadBalancer")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -461,6 +462,23 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
+    private CommonInputs getCommonInputsForLoadBalancers(String action, String headersString, String queryParamsString) {
+        return new CommonInputs.Builder()
+                .withAction(action)
+                .withHeaders(headersString)
+                .withQueryParams(queryParamsString)
+                .withApiService("elasticloadbalancing")
+                .withVersion("2016-04-01")
+                .withDelimiter(",")
+                .build();
+    }
+
+    private NetworkInputs getNetworkInputsForLoadBalancers(){
+        return new NetworkInputs.Builder()
+                .withSubnetIdsString("subnet-abcdef12,subnet-12345678")
+                .build();
+    }
+
     private CustomInputs getImageCustomInputs() {
         return new CustomInputs.Builder()
                 .withImageId("ami-abcd1234")
@@ -543,6 +561,10 @@ public class QueryApiExecutorTest {
         return headersMap;
     }
 
+    private LoadBalancerInputs getLoadBalancerInputs() {
+        return new LoadBalancerInputs.Builder().withLoadBalancerName("testLB").withScheme("internal").build();
+    }
+
     private Map<String, String> getQueryParamsMap(String action) {
         Map<String, String> queryParamsMap = new HashMap<>();
         queryParamsMap.put("Action", action);
@@ -568,6 +590,22 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("VolumeId", "v-12345678");
                 queryParamsMap.put("InstanceId", "i-12345678");
                 queryParamsMap.put("Device", "device-name");
+                break;
+            case "CreateLoadBalancer":
+                queryParamsMap.put("Name","testLB");
+                queryParamsMap.put("Scheme","internal");
+                queryParamsMap.put("SecurityGroups.member.1", "sg-12345678");
+                queryParamsMap.put("SecurityGroups.member.2", "sg-abcdef12");
+                queryParamsMap.put("Subnets.member.1", "subnet-abcdef12");
+                queryParamsMap.put("Subnets.member.2", "subnet-12345678");
+                queryParamsMap.put("Tags.member.1.Key", "Name");
+                queryParamsMap.put("Tags.member.1.Value", "Tagged from API call");
+                queryParamsMap.put("Tags.member.2.Key", "webserver");
+                queryParamsMap.put("Tags.member.2.Value", "Not relevant");
+                queryParamsMap.put("Tags.member.3.Key", "stack");
+                queryParamsMap.put("Tags.member.3.Value", "Testing");
+                queryParamsMap.put("Tags.member.4.Key", "scope");
+                queryParamsMap.put("Tags.member.4.Value", "For testing purposes");
                 break;
             case "CreateNetworkInterface":
                 queryParamsMap.put("SubnetId", "subnet-abcdef12");
