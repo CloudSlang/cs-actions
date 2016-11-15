@@ -9,8 +9,6 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.PIPE_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 
@@ -78,20 +76,8 @@ public class LoadBalancingUtils {
             for (int index = START_INDEX; index < keyTagsArray.length; index++) {
                 InputsUtil.validateKeyOrValueString(keyTagsArray[index], true);
                 queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + KEY, keyTagsArray[index]);
-                setTagValues(queryParamsMap, valueTagsArray[index], index);
-            }
-        }
-    }
-
-    private void setTagValues(Map<String, String> queryParamsMap, String inputValues, int index) {
-        String[] values = InputsUtil.getStringsArray(inputValues, EMPTY, PIPE_DELIMITER);
-        if (values != null && values.length > 0) {
-            for (int counter = START_INDEX; counter < values.length; counter++) {
-                if (!NOT_RELEVANT.equalsIgnoreCase(values[counter])) {
-                    InputsUtil.validateKeyOrValueString(values[counter], false);
-                    String suffix = values.length > ONE ? DOT + String.valueOf(counter + ONE) : EMPTY;
-                    queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + VALUE + suffix, values[counter]);
-                }
+                InputsUtil.validateKeyOrValueString(valueTagsArray[index], false);
+                queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + VALUE, valueTagsArray[index]);
             }
         }
     }
