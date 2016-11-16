@@ -2,7 +2,13 @@ package io.cloudslang.content.xml.factory;
 
 import io.cloudslang.content.xml.entities.ActionType;
 import io.cloudslang.content.xml.services.OperationService;
-import io.cloudslang.content.xml.services.impl.*;
+import io.cloudslang.content.xml.services.impl.AppendOperationServiceImpl;
+import io.cloudslang.content.xml.services.impl.DeleteOperationServiceImpl;
+import io.cloudslang.content.xml.services.impl.InsertOperationServiceImpl;
+import io.cloudslang.content.xml.services.impl.MoveOperationServiceImpl;
+import io.cloudslang.content.xml.services.impl.RenameOperationServiceImpl;
+import io.cloudslang.content.xml.services.impl.SubnodeOperationServiceImpl;
+import io.cloudslang.content.xml.services.impl.UpdateOperationServiceImpl;
 
 /**
  * Created by moldovas on 7/8/2016.

@@ -1,5 +1,6 @@
 package io.cloudslang.content.xml.actions;
 
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -10,6 +11,19 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.ELEMENT_NOT_FOUND;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.NEED_ELEMENT_TYPE;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.PARSING_ERROR;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.SET_VALUE_FAILURE;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.RESULT_TEXT;
+import static io.cloudslang.content.xml.utils.Constants.SuccessMessages.SET_VALUE_SUCCESS;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -38,11 +52,11 @@ public class SetValueTest {
         String xPathQuery = "//subelement";
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, "", xPathQuery, null, value, "false");
+        Map<String, String> result = setValue.execute(xml, EMPTY, xPathQuery, null, value, FALSE);
 
-        assertEquals(Constants.ResponseNames.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(ResponseNames.SUCCESS, result.get(RESULT_TEXT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SET_VALUE_SUCCESS, result.get(RETURN_RESULT));
     }
 
     @Test
@@ -51,11 +65,11 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, EMPTY, xPathQuery, name, value, FALSE);
 
-        assertEquals(Constants.ResponseNames.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.SuccessMessages.SET_VALUE_SUCCESS, result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(ResponseNames.SUCCESS, result.get(RESULT_TEXT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SET_VALUE_SUCCESS, result.get(RETURN_RESULT));
     }
 
     @Test
@@ -64,12 +78,11 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, EMPTY, xPathQuery, name, value, FALSE);
 
-        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
-                result.get(Constants.Outputs.ERROR_MESSAGE));
+        assertEquals(ResponseNames.FAILURE, result.get(RESULT_TEXT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(PARSING_ERROR + ELEMENT_NOT_FOUND, result.get(ERROR_MESSAGE));
     }
 
     @Test
@@ -78,12 +91,10 @@ public class SetValueTest {
         String name = "atName";
         String value = "test value";
 
-        Map<String, String> result = setValue.execute(xml, "", xPathQuery, name, value, "false");
+        Map<String, String> result = setValue.execute(xml, EMPTY, xPathQuery, name, value, FALSE);
 
-        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.ErrorMessages.PARSING_ERROR +
-                Constants.ErrorMessages.SET_VALUE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE,
-                result.get(Constants.Outputs.ERROR_MESSAGE));
+        assertEquals(ResponseNames.FAILURE, result.get(RESULT_TEXT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(PARSING_ERROR + SET_VALUE_FAILURE + NEED_ELEMENT_TYPE, result.get(ERROR_MESSAGE));
     }
 }

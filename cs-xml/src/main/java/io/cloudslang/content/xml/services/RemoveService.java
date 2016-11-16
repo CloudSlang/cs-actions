@@ -1,8 +1,8 @@
 package io.cloudslang.content.xml.services;
 
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,18 +41,17 @@ public class RemoveService {
         return result;
     }
 
-    private static void removeFromNodeList(NodeList nodeList, String attributeName) throws Exception{
+    private static void removeFromNodeList(NodeList nodeList, String attributeName) throws Exception {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
 
-            if(node.getNodeType() != Node.ELEMENT_NODE){
+            if (node.getNodeType() != Node.ELEMENT_NODE) {
                 throw new Exception(Constants.ErrorMessages.REMOVE_FAILURE + Constants.ErrorMessages.NEED_ELEMENT_TYPE);
             }
 
             if (StringUtils.isBlank(attributeName)) {
                 node.getParentNode().removeChild(node);
-            }
-            else{
+            } else {
                 node.getAttributes().removeNamedItem(attributeName);
             }
         }

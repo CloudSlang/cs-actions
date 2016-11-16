@@ -17,6 +17,8 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XML_DOCUMENT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XSL_TEMPLATE;
 
 /**
  * Created by moldovas on 9/7/2016.
@@ -56,14 +58,14 @@ public class ApplyXslTransformation {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
                     @Output(EXCEPTION)
-                      },
+            },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
                     @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)
-                        })
+            })
     public Map<String, String> applyXslTransformation(
-            @Param(value = Constants.Inputs.XML_DOCUMENT) String xmlDocument,
-            @Param(value = Constants.Inputs.XSL_TEMPLATE, required = true) String xslTemplate,
+            @Param(value = XML_DOCUMENT) String xmlDocument,
+            @Param(value = XSL_TEMPLATE, required = true) String xslTemplate,
             @Param(value = Constants.Inputs.OUTPUT_FILE) String outputFile,
             @Param(value = Constants.Inputs.FEATURES) String parsingFeatures) {
 
