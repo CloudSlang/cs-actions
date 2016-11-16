@@ -22,6 +22,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2Query
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
@@ -91,7 +92,7 @@ public class DeleteSnapshotAction {
             }
     )
     public Map<String, String> execute(@Param(value = ENDPOINT) String endpoint,
-                                       @Param(value = ENDPOINT, required = true) String identity,
+                                       @Param(value = IDENTITY, required = true) String identity,
                                        @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
                                        @Param(value = PROXY_HOST) String proxyHost,
                                        @Param(value = PROXY_PORT) String proxyPort,
