@@ -101,7 +101,8 @@ public class DeleteVolume {
                                        @Param(value = VOLUME_ID, required = true) String volumeId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -119,7 +120,7 @@ public class DeleteVolume {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception e) {

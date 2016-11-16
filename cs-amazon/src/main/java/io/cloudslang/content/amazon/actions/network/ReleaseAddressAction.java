@@ -106,7 +106,8 @@ public class ReleaseAddressAction {
                                        @Param(value = PUBLIC_IP) String publicIp) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -124,8 +125,8 @@ public class ReleaseAddressAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withAllocationId(allocationId).build();
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder().withPublicIp(publicIp).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withAllocationId(allocationId).build();
+            final ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder().withPublicIp(publicIp).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs);
         } catch (Exception exception) {

@@ -2,7 +2,6 @@ package io.cloudslang.content.amazon.factory;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,6 @@ public class ParamsMapBuilder {
         // prevent instantiation
     }
 
-    @Nullable
     public static Map<String, String> getParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap;
         if (isBlank(wrapper.getCommonInputs().getQueryParams())) {

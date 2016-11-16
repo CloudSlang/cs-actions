@@ -123,7 +123,8 @@ public class DetachVolumeAction {
                                        @Param(value = FORCE) String force) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -141,8 +142,8 @@ public class DetachVolumeAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).withInstanceId(instanceId).build();
-            VolumeInputs volumeInputs = new VolumeInputs.Builder().withDeviceName(deviceName).withForce(force).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).withInstanceId(instanceId).build();
+            final VolumeInputs volumeInputs = new VolumeInputs.Builder().withDeviceName(deviceName).withForce(force).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
         } catch (Exception e) {

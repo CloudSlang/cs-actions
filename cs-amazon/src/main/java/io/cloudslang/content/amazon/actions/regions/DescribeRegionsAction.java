@@ -115,7 +115,8 @@ public class DescribeRegionsAction {
                                        @Param(value = REGIONS_STRING, required = true) String regionsString) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -134,7 +135,7 @@ public class DescribeRegionsAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withKeyFiltersString(keyFiltersString)
                     .withValueFiltersString(valueFiltersString)
                     .withRegionsString(regionsString)

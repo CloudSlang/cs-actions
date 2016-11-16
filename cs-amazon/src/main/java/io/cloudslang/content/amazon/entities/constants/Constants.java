@@ -78,11 +78,13 @@ public class Constants {
         public static final String REMOVE_OPERATION_TYPE = "remove";
         public static final String RESOURCE_ID = "ResourceId";
         public static final String SECURITY_GROUP = "SecurityGroup";
+        public static final String SECURITY_GROUPS = "SecurityGroups";
         public static final String SECURITY_GROUP_ID = "SecurityGroupId";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String SNAPSHOT_ID = "SnapshotId";
         public static final String STANDARD = "standard";
         public static final String SUBNET_ID = "SubnetId";
+        public static final String SUBNETS = "Subnets";
         public static final String TAG = "Tag";
         public static final String USER_GROUP = "UserGroup";
         public static final String USER_ID = "UserId";

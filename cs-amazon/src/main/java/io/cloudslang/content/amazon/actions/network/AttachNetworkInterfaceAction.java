@@ -47,7 +47,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
  * 8/11/2016.
  */
 public class AttachNetworkInterfaceAction {
-
     private static final String ATTACHMENT_ID_X_PATH_QUERY = "/AttachNetworkInterfaceResponse/attachmentId";
 
     /**
@@ -125,7 +124,8 @@ public class AttachNetworkInterfaceAction {
                                        @Param(value = DEVICE_INDEX) String deviceIndex) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -143,17 +143,19 @@ public class AttachNetworkInterfaceAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).build();
 
-            NetworkInputs networkInputs = new NetworkInputs.Builder()
+            final NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceId(networkInterfaceId)
                     .withDeviceIndex(deviceIndex)
                     .build();
 
             Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
+
             if ((ReturnCodes.SUCCESS).equals(queryMapResult.get(RETURN_CODE))) {
                 OutputsUtil.putResponseIn(queryMapResult, ATTACHMENT_ID_RESULT, ATTACHMENT_ID_X_PATH_QUERY);
             }
+
             return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);

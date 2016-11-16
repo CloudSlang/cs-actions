@@ -114,7 +114,8 @@ public class StartInstancesAction {
                                        @Param(value = INSTANCE_IDS_STRING, required = true) String instanceIdsString) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -133,7 +134,7 @@ public class StartInstancesAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            InstanceInputs instanceInputs = new InstanceInputs.Builder().withInstanceIdsString(instanceIdsString).build();
+            final InstanceInputs instanceInputs = new InstanceInputs.Builder().withInstanceIdsString(instanceIdsString).build();
 
             return new QueryApiExecutor().execute(commonInputs, instanceInputs);
         } catch (Exception exception) {

@@ -136,7 +136,8 @@ public class CreateVolumeAction {
                                        @Param(value = SNAPSHOT_ID) String snapshotId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withEndpoint(endpoint)
@@ -154,13 +155,13 @@ public class CreateVolumeAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withAvailabilityZone(availabilityZone)
                     .withKmsKeyId(kmsKeyId)
                     .withVolumeType(volumeType)
                     .build();
 
-            VolumeInputs volumeInputs = new VolumeInputs.Builder()
+            final VolumeInputs volumeInputs = new VolumeInputs.Builder()
                     .withEncrypted(encrypted)
                     .withIops(iops)
                     .withSize(size)
