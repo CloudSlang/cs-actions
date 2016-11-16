@@ -2,9 +2,6 @@ package io.cloudslang.content.amazon.utils;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import org.apache.commons.validator.routines.InetAddressValidator;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,12 +46,13 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 
-import static java.util.Arrays.asList;
-import static java.util.regex.Pattern.quote;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
 
 /**
  * Created by Mihai Tusa.
@@ -119,7 +117,6 @@ public final class InputsUtil {
         return endpoint;
     }
 
-    @NotNull
     public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
@@ -134,7 +131,6 @@ public final class InputsUtil {
         return sb.toString();
     }
 
-    @Nullable
     public static String[] getStringsArray(String input, String condition, String delimiter) {
         if (condition.equals(input)) {
             return null;
@@ -142,7 +138,6 @@ public final class InputsUtil {
         return split(input, delimiter);
     }
 
-    @Nullable
     public static List<String> getStringsList(String input, String delimiter) {
         if (isBlank(input)) {
             return null;
@@ -163,8 +158,7 @@ public final class InputsUtil {
 
     public static void validateAgainstDifferentArraysLength(String[] firstArray, String[] secondArray,
                                                             String firstInputName, String secondInputName) {
-        if (firstArray != null && firstArray.length > START_INDEX && secondArray != null
-                && secondArray.length > START_INDEX && firstArray.length != secondArray.length) {
+        if (isNotEmpty(firstArray) && isNotEmpty(secondArray) && firstArray.length != secondArray.length) {
             throw new RuntimeException("The values provided: [" + firstInputName + "] and [" + secondInputName + "] " +
                     "cannot have different length!");
         }
@@ -350,14 +344,6 @@ public final class InputsUtil {
 
     }
 
-    public static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,
-                                               String delimiter, String firstInputName, String secondInputName) {
-        String[] toValidateArray = getStringsArray(inputString, condition, delimiter);
-        validateAgainstDifferentArraysLength(referenceArray, toValidateArray, firstInputName, secondInputName);
-
-        return toValidateArray;
-    }
-
     public static void validateKeyOrValueString(String input, boolean isKey) {
         if (isKey && (isBlank(input) || input.length() > 128)) {
             throw new IllegalArgumentException(getValidationException(input, false));
@@ -386,6 +372,14 @@ public final class InputsUtil {
         }
     }
 
+    private static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,
+                                                String delimiter, String firstInputName, String secondInputName) {
+        String[] toValidateArray = getStringsArray(inputString, condition, delimiter);
+        validateAgainstDifferentArraysLength(referenceArray, toValidateArray, firstInputName, secondInputName);
+
+        return toValidateArray;
+    }
+
     private static void validateArrayAgainstDuplicateElements(String[] toBeValidated, String inputString, String delimiter,
                                                               String inputName) {
         if (toBeValidated != null && isNotBlank(inputString)) {
@@ -405,7 +399,6 @@ public final class InputsUtil {
                 valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)), currentArray.length > START_INDEX);
     }
 
-    @Nullable
     private static Set<String> getStringsSet(String input, String delimiter) {
         if (isBlank(input)) {
             return null;
@@ -446,7 +439,6 @@ public final class InputsUtil {
         return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
     }
 
-    @Contract(pure = true)
     private static String getValidationException(String input, boolean invalid) {
         return invalid ? "The provided value: " + input + " input must be integer." :
                 "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";

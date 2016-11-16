@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -127,7 +128,7 @@ public class NetworkUtils {
                     .getArrayWithoutDuplicateEntries(wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
                             PRIVATE_IP_ADDRESSES_STRING, delimiter);
 
-            if (privateIpAddressesArray != null && privateIpAddressesArray.length > START_INDEX) {
+            if (isNotEmpty(privateIpAddressesArray)) {
                 for (int index = START_INDEX; index < privateIpAddressesArray.length; index++) {
                     privateIpAddressesArray[index] = InputsUtil.getValidIPv4Address(privateIpAddressesArray[index]);
                     if (index == START_INDEX

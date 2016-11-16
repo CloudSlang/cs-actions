@@ -5,7 +5,6 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.services.helpers.AwsSignatureHelper;
 import io.cloudslang.content.amazon.services.helpers.AwsSignatureV4;
 import io.cloudslang.content.amazon.utils.InputsUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
@@ -109,7 +108,6 @@ public class AmazonSignatureService {
         return requestEndpoint;
     }
 
-    @NotNull
     private Map<String, String> getInitializedMap(Map<String, String> inputMap) {
         return (inputMap == null || inputMap.isEmpty()) ? new HashMap<String, String>() : inputMap;
     }

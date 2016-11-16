@@ -2,11 +2,11 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ALLOCATION_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PUBLIC_IP;
 
@@ -32,9 +32,9 @@ public class ElasticIpUtils {
                 wrapper.getCommonInputs().getVersion());
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, ALLOCATION_ID, wrapper.getCustomInputs().getAllocationId(),
-                StringUtils.isNotBlank(wrapper.getCustomInputs().getAllocationId()));
+                isNotBlank(wrapper.getCustomInputs().getAllocationId()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, PUBLIC_IP, wrapper.getElasticIpInputs().getPublicIp(),
-                StringUtils.isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
+                isNotBlank(wrapper.getElasticIpInputs().getPublicIp()));
 
         return queryParamsMap;
     }
