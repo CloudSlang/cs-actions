@@ -143,6 +143,7 @@ public class CommonInputs {
             this.secureProcessing = Boolean.parseBoolean(inputValue);
             return this;
         }
+
         public CommonInputsBuilder withPassword(String password) {
             this.password = password;
             return this;

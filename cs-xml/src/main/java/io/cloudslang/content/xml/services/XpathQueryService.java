@@ -1,11 +1,11 @@
 package io.cloudslang.content.xml.services;
 
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.ResultUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -18,13 +18,19 @@ import javax.xml.xpath.XPathExpression;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.xml.utils.Constants.NO_MATCH_FOUND;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.SELECTED_VALUE;
+import static io.cloudslang.content.xml.utils.Constants.SuccessMessages.SELECT_SUCCESS;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * Created by markowis on 03/03/2016.
  */
 public class XpathQueryService {
     public Map<String, String> execute(CommonInputs commonInputs, CustomInputs customInputs) {
         Map<String, String> result = new HashMap<>();
-
 
         try {
             Document doc = XmlUtils.getDocument(commonInputs);
@@ -34,16 +40,14 @@ public class XpathQueryService {
 
             String selection = xPathQuery(doc, expr, customInputs.getQueryType(), customInputs.getDelimiter());
 
-            if (StringUtils.isBlank(selection)) {
-                ResultUtils.populateValueResult(result, Constants.ResponseNames.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
-                        Constants.NO_MATCH_FOUND, Constants.ReturnCodes.SUCCESS);
+            if (isBlank(selection)) {
+                ResultUtils.populateValueResult(result, ResponseNames.SUCCESS, SELECT_SUCCESS, NO_MATCH_FOUND, SUCCESS);
             } else {
-                ResultUtils.populateValueResult(result, Constants.ResponseNames.SUCCESS, Constants.SuccessMessages.SELECT_SUCCESS,
-                        selection, Constants.ReturnCodes.SUCCESS);
+                ResultUtils.populateValueResult(result, ResponseNames.SUCCESS, SELECT_SUCCESS, selection, SUCCESS);
             }
         } catch (Exception e) {
             ResultUtils.populateFailureResult(result, ExceptionUtils.getStackTrace(e));
-            result.put(Constants.Outputs.SELECTED_VALUE, Constants.EMPTY_STRING);
+            result.put(SELECTED_VALUE, EMPTY);
         }
         return result;
     }
@@ -82,6 +86,6 @@ public class XpathQueryService {
             sb.append(delimiter);
         }
         sb.append(XmlUtils.nodeToString(nodeList.item(nodeList.getLength() - 1)));
-            return sb.toString();
+        return sb.toString();
     }
 }

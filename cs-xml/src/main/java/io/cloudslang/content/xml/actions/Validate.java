@@ -4,13 +4,37 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.ValidateService;
 
 import java.util.Map;
+
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.KEYSTORE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.PASSWORD;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.PROXY_HOST;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.PROXY_PASSWORD;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.PROXY_PORT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.PROXY_USERNAME;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.SECURE_PROCESSING;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.TRUST_PASSWORD;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.USERNAME;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XML_DOCUMENT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XML_DOCUMENT_SOURCE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XSD_DOCUMENT;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.XSD_DOCUMENT_SOURCE;
+import static io.cloudslang.content.xml.utils.Constants.Inputs.X_509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.RESULT_TEXT;
 
 
 /**
@@ -21,14 +45,14 @@ public class Validate {
      * Service to validate an XML document. Input must be given for either "xmlDocument" or for "xmlLocation".
      * The "'xsdLocation" input is optional, but if specified then the XML document will be validated against the XSD schema.
      *
-     * @param xmlDocument       XML string to test
-     * @param xmlDocumentSource The source type of the xml document.
-     *                          Valid values: xmlString, xmlPath, xmlUrl
-     *                          Default value: xmlString
-     * @param xsdDocument       optional - XSD to test given XML against
-     * @param xsdDocumentSource The source type of the xsd document.
-     *                          Valid values: xsdString, xsdPath
-     *                          Default value: xsdString
+     * @param xmlDocument          XML string to test
+     * @param xmlDocumentSource    The source type of the xml document.
+     *                             Valid values: xmlString, xmlPath, xmlUrl
+     *                             Default value: xmlString
+     * @param xsdDocument          optional - XSD to test given XML against
+     * @param xsdDocumentSource    The source type of the xsd document.
+     *                             Valid values: xsdString, xsdPath
+     *                             Default value: xsdString
      * @param username             The username used to connect to the remote machine.
      * @param password             The password used to connect to the remote machine.
      * @param proxyHost            The proxy server used to access the remote host.
@@ -61,41 +85,39 @@ public class Validate {
      *                             Format of the keystore is Java KeyStore (JKS).
      * @param keystorePassword     The password associated with the KeyStore file. If trustAllRoots is false and keystore is empty, keystorePassword default will be supplied.
      *                             Default value is 'changeit'.
-     * @param secureProcessing  optional - whether to use secure processing
-     *
+     * @param secureProcessing     optional - whether to use secure processing
      * @return map of results containing success or failure text and a result message
      */
 
-
     @Action(name = "Validate",
             outputs = {
-                @Output(Constants.Outputs.RETURN_CODE),
-                @Output(Constants.Outputs.RESULT_TEXT),
-                @Output(Constants.Outputs.RETURN_RESULT),
-                @Output(Constants.Outputs.ERROR_MESSAGE)},
+                    @Output(RETURN_CODE),
+                    @Output(RESULT_TEXT),
+                    @Output(RETURN_RESULT),
+                    @Output(ERROR_MESSAGE)},
             responses = {
-                @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
-                @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = COMPARE_EQUAL),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
-            @Param(value = Constants.Inputs.XML_DOCUMENT, required = true) String xmlDocument,
-            @Param(Constants.Inputs.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
-            @Param(Constants.Inputs.XSD_DOCUMENT) String xsdDocument,
-            @Param(Constants.Inputs.XSD_DOCUMENT_SOURCE) String xsdDocumentSource,
-            @Param(Constants.Inputs.USERNAME) String username,
-            @Param(value = Constants.Inputs.PASSWORD, encrypted = true) String password,
-            @Param(Constants.Inputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(Constants.Inputs.KEYSTORE) String keystore,
-            @Param(value = Constants.Inputs.KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
-            @Param(Constants.Inputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = Constants.Inputs.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(Constants.Inputs.X_509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
-            @Param(Constants.Inputs.PROXY_HOST) String proxyHost,
-            @Param(Constants.Inputs.PROXY_PORT) String proxyPort,
-            @Param(Constants.Inputs.PROXY_USERNAME) String proxyUsername,
-            @Param(value = Constants.Inputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-            @Param(Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
+            @Param(value = XML_DOCUMENT, required = true) String xmlDocument,
+            @Param(value = XML_DOCUMENT_SOURCE) String xmlDocumentSource,
+            @Param(value = XSD_DOCUMENT) String xsdDocument,
+            @Param(value = XSD_DOCUMENT_SOURCE) String xsdDocumentSource,
+            @Param(value = USERNAME) String username,
+            @Param(value = PASSWORD, encrypted = true) String password,
+            @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(value = KEYSTORE) String keystore,
+            @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
+            @Param(value = TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = X_509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
+            @Param(value = PROXY_HOST) String proxyHost,
+            @Param(value = PROXY_PORT) String proxyPort,
+            @Param(value = PROXY_USERNAME) String proxyUsername,
+            @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+            @Param(value = SECURE_PROCESSING) String secureProcessing) {
 
-        CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
+        final CommonInputs inputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
                 .withXmlDocumentSource(xmlDocumentSource)
                 .withUsername(username)
@@ -113,7 +135,7 @@ public class Validate {
                 .withSecureProcessing(secureProcessing)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        final CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withXsdDocument(xsdDocument)
                 .withXsdDocumentSource(xsdDocumentSource)
                 .build();

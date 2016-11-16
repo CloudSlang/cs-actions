@@ -1,5 +1,6 @@
 package io.cloudslang.content.xml.actions;
 
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -10,6 +11,19 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.APPEND_CHILD_FAILURE;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.ELEMENT_NOT_FOUND;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.NEED_ELEMENT_TYPE;
+import static io.cloudslang.content.xml.utils.Constants.ErrorMessages.PARSING_ERROR;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.RESULT_TEXT;
+import static io.cloudslang.content.xml.utils.Constants.SuccessMessages.APPEND_CHILD_SUCCESS;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -38,12 +52,11 @@ public class AppendChildTest {
         String xPathQuery = "//element1";
         String xmlChild = "<sub1 attr=\"ibute\">Sub1</sub1>";
 
-        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, EMPTY, xPathQuery, xmlChild, FALSE);
 
-        assertEquals(Constants.ResponseNames.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
-                result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(ResponseNames.SUCCESS, result.get(RESULT_TEXT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(APPEND_CHILD_SUCCESS, result.get(RETURN_RESULT));
     }
 
     @Test
@@ -51,12 +64,12 @@ public class AppendChildTest {
         String xPathQuery = "//subelement";
         String xmlChild = "<subsub attr=\"ibute\">Deeply nested</subsub>";
 
-        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, EMPTY, xPathQuery, xmlChild, FALSE);
 
-        assertEquals(Constants.ResponseNames.SUCCESS, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.SuccessMessages.APPEND_CHILD_SUCCESS,
-                result.get(Constants.Outputs.RETURN_RESULT));
+        assertEquals(ResponseNames.SUCCESS, result.get(RESULT_TEXT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(APPEND_CHILD_SUCCESS,
+                result.get(RETURN_RESULT));
     }
 
     @Test
@@ -64,12 +77,11 @@ public class AppendChildTest {
         String xPathQuery = "/subelement";
         String xmlChild = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, EMPTY, xPathQuery, xmlChild, FALSE);
 
-        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.ELEMENT_NOT_FOUND,
-                result.get(Constants.Outputs.ERROR_MESSAGE));
+        assertEquals(ResponseNames.FAILURE, result.get(RESULT_TEXT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(PARSING_ERROR + ELEMENT_NOT_FOUND, result.get(ERROR_MESSAGE));
     }
 
     @Test
@@ -77,13 +89,13 @@ public class AppendChildTest {
         String xPathQuery = "//subelement";
         String xmlChild = "<open>Text</close>";
 
-        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, EMPTY, xPathQuery, xmlChild, FALSE);
 
-        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.ErrorMessages.PARSING_ERROR +
+        assertEquals(ResponseNames.FAILURE, result.get(RESULT_TEXT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(PARSING_ERROR +
                 "The element type \"open\" must be terminated by the matching end-tag \"</open>\".",
-                result.get(Constants.Outputs.ERROR_MESSAGE));
+                result.get(ERROR_MESSAGE));
     }
 
     @Test
@@ -91,11 +103,10 @@ public class AppendChildTest {
         String xPathQuery = "//element1/@attr";
         String xmlChild = "<toAdd>Text</toAdd>";
 
-        Map<String, String> result = appendChild.execute(xml, "", xPathQuery, xmlChild, "false");
+        Map<String, String> result = appendChild.execute(xml, EMPTY, xPathQuery, xmlChild, FALSE);
 
-        assertEquals(Constants.ResponseNames.FAILURE, result.get(Constants.Outputs.RESULT_TEXT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(Constants.ErrorMessages.PARSING_ERROR + Constants.ErrorMessages.APPEND_CHILD_FAILURE +
-                Constants.ErrorMessages.NEED_ELEMENT_TYPE, result.get(Constants.Outputs.ERROR_MESSAGE));
+        assertEquals(ResponseNames.FAILURE, result.get(RESULT_TEXT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(PARSING_ERROR + APPEND_CHILD_FAILURE + NEED_ELEMENT_TYPE, result.get(ERROR_MESSAGE));
     }
 }
