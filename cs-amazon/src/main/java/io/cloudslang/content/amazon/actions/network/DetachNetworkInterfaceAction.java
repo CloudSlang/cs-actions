@@ -109,7 +109,8 @@ public class DetachNetworkInterfaceAction {
                                        @Param(value = FORCE_DETACH) String forceDetach) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -127,8 +128,8 @@ public class DetachNetworkInterfaceAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withAttachmentId(attachmentId).build();
-            NetworkInputs networkInputs = new NetworkInputs.Builder().withForceDetach(forceDetach).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withAttachmentId(attachmentId).build();
+            final NetworkInputs networkInputs = new NetworkInputs.Builder().withForceDetach(forceDetach).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, networkInputs);
         } catch (Exception exception) {

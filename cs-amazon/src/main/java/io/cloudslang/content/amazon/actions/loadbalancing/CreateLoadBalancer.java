@@ -153,7 +153,8 @@ public class CreateLoadBalancer {
                                        @Param(value = VALUE_TAGS_STRING) String valueTagsString) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2015-12-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -172,19 +173,19 @@ public class CreateLoadBalancer {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withKeyTagsString(keyTagsString)
                     .withValueTagsString(valueTagsString)
                     .build();
 
-            IamInputs iamInputs = new IamInputs.Builder().withSecurityGroupIdsString(securityGroupIdsString).build();
+            final IamInputs iamInputs = new IamInputs.Builder().withSecurityGroupIdsString(securityGroupIdsString).build();
 
-            LoadBalancerInputs loadBalancerInputs = new LoadBalancerInputs.Builder()
+            final LoadBalancerInputs loadBalancerInputs = new LoadBalancerInputs.Builder()
                     .withLoadBalancerName(loadBalancerName)
                     .withScheme(scheme)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.Builder().withSubnetIdsString(subnetIdsString).build();
+            final NetworkInputs networkInputs = new NetworkInputs.Builder().withSubnetIdsString(subnetIdsString).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, iamInputs, loadBalancerInputs, networkInputs);
         } catch (Exception exception) {

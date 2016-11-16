@@ -130,7 +130,7 @@ public class DescribeAvailabilityZonesAction {
         try {
             version = getDefaultStringInput(version, "2016-09-15");
 
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -149,7 +149,7 @@ public class DescribeAvailabilityZonesAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withAvailabilityZonesString(zoneNamesString)
                     .withKeyFiltersString(keyFiltersString)
                     .withValueFiltersString(valueFiltersString)

@@ -144,7 +144,8 @@ public class CreateNetworkInterfaceAction {
                                        @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -163,24 +164,27 @@ public class CreateNetworkInterfaceAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withSubnetId(subnetId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withSubnetId(subnetId).build();
 
-            ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder()
+            final ElasticIpInputs elasticIpInputs = new ElasticIpInputs.Builder()
                     .withPrivateIpAddress(privateIpAddress)
                     .withPrivateIpAddressesString(privateIpAddressesString)
                     .build();
 
-            IamInputs iamInputs = new IamInputs.Builder().withSecurityGroupIdsString(securityGroupIdsString).build();
+            final IamInputs iamInputs = new IamInputs.Builder().withSecurityGroupIdsString(securityGroupIdsString).build();
 
-            NetworkInputs networkInputs = new NetworkInputs.Builder()
+            final NetworkInputs networkInputs = new NetworkInputs.Builder()
                     .withNetworkInterfaceDescription(networkInterfaceDescription)
                     .withSecondaryPrivateIpAddressCount(secondaryPrivateIpAddressCount)
                     .build();
 
-            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs, iamInputs, networkInputs);
+            Map<String, String> queryMapResult = new QueryApiExecutor().execute(commonInputs, customInputs, elasticIpInputs,
+                    iamInputs, networkInputs);
+
             if ((ReturnCodes.SUCCESS).equals(queryMapResult.get(RETURN_CODE))) {
                 putResponseIn(queryMapResult, NETWORK_INTERFACE_ID_RESULT, NETWORK_INTERFACE_ID_X_PATH_QUERY);
             }
+
             return queryMapResult;
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);

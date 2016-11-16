@@ -116,7 +116,8 @@ public class CreateSnapshotAction {
                                        @Param(value = SNAPSHOT_DESCRIPTION) String snapshotDescription) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -134,8 +135,8 @@ public class CreateSnapshotAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
-            VolumeInputs volumeInputs = new VolumeInputs.Builder().withDescription(snapshotDescription).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withVolumeId(volumeId).build();
+            final VolumeInputs volumeInputs = new VolumeInputs.Builder().withDescription(snapshotDescription).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
         } catch (Exception e) {

@@ -128,7 +128,8 @@ public class CreateTagsAction {
                                        @Param(value = VALUE_TAGS_STRING, required = true) String valueTagsString) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -147,7 +148,7 @@ public class CreateTagsAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder()
+            final CustomInputs customInputs = new CustomInputs.Builder()
                     .withKeyTagsString(keyTagsString)
                     .withValueTagsString(valueTagsString)
                     .withResourceIdsString(resourceIdsString)
