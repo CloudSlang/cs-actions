@@ -14,6 +14,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMes
  */
 class Ec2QueryParamsMapBuilder {
     private Ec2QueryParamsMapBuilder() {
+        // prevent instantiation
     }
 
     static Map<String, String> getEc2QueryParamsMap(InputsWrapper wrapper) {
