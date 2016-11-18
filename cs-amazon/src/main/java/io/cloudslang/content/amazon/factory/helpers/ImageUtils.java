@@ -119,10 +119,8 @@ public class ImageUtils {
         List<String> ownerIds = InputsUtil.getStringsList(wrapper.getImageInputs().getOwnersString(), wrapper.getCommonInputs().getDelimiter());
 
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
-        InputsUtil.setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + DOT + ONE,
-                valueOf(wrapper.getCustomInputs().getIdentityId()),
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + DOT + ONE, valueOf(wrapper.getCustomInputs().getIdentityId()),
                 isNotBlank(valueOf(wrapper.getCustomInputs().getIdentityId())));
 
         int currentIndex = ONE;
@@ -188,8 +186,7 @@ public class ImageUtils {
 
     public Map<String, String> getResetImageAttributeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTRIBUTE, wrapper.getCustomInputs().getAttribute());
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
 

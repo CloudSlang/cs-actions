@@ -44,6 +44,8 @@ public class InputsWrapperBuilder {
                     wrapper.setImageInputs((ImageInputs) builder);
                 } else if (builder instanceof InstanceInputs) {
                     wrapper.setInstanceInputs((InstanceInputs) builder);
+                } else if (builder instanceof LoadBalancerInputs) {
+                    wrapper.setLoadBalancerInputs((LoadBalancerInputs) builder);
                 } else if (builder instanceof NetworkInputs) {
                     wrapper.setNetworkInputs((NetworkInputs) builder);
                 } else if (builder instanceof VolumeInputs) {

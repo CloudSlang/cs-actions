@@ -2,7 +2,6 @@ package io.cloudslang.content.amazon.utils;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import org.apache.commons.validator.routines.InetAddressValidator;
-import org.jetbrains.annotations.Contract;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,13 +10,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FILTER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LISTENERS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.MEMBER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REGION_NAME;
@@ -43,12 +46,13 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 
-import static java.util.Arrays.asList;
-import static java.util.regex.Pattern.quote;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
 
 /**
  * Created by Mihai Tusa.
@@ -82,6 +86,7 @@ public final class InputsUtil {
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
 
     private InputsUtil() {
+        // prevent instantiation
     }
 
     public static Map<String, String> getHeadersOrQueryParamsMap(Map<String, String> inputMap, String stringToSplit,
@@ -153,8 +158,7 @@ public final class InputsUtil {
 
     public static void validateAgainstDifferentArraysLength(String[] firstArray, String[] secondArray,
                                                             String firstInputName, String secondInputName) {
-        if (firstArray != null && firstArray.length > START_INDEX && secondArray != null
-                && secondArray.length > START_INDEX && firstArray.length != secondArray.length) {
+        if (isNotEmpty(firstArray) && isNotEmpty(secondArray) && firstArray.length != secondArray.length) {
             throw new RuntimeException("The values provided: [" + firstInputName + "] and [" + secondInputName + "] " +
                     "cannot have different length!");
         }
@@ -265,12 +269,16 @@ public final class InputsUtil {
     }
 
     public static String getQueryParamsSpecificString(String specificArea, int index) {
-        if (NETWORK.equalsIgnoreCase(specificArea)) {
+        if (AVAILABILITY_ZONES.equalsIgnoreCase(specificArea)) {
+            return AVAILABILITY_ZONES + DOT + MEMBER + DOT + valueOf(index + ONE);
+        } else if (NETWORK.equalsIgnoreCase(specificArea)) {
             return PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
             return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT;
         } else if (EBS.equalsIgnoreCase(specificArea)) {
             return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT + EBS + DOT;
+        } else if (LISTENERS.equalsIgnoreCase(specificArea)) {
+            return LISTENERS + DOT + MEMBER + DOT + valueOf(index + ONE) + DOT;
         } else if (NAME.equalsIgnoreCase(specificArea)) {
             return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
@@ -336,6 +344,19 @@ public final class InputsUtil {
 
     }
 
+    public static void validateKeyOrValueString(String input, boolean isKey) {
+        if (isKey && (isBlank(input) || input.length() > 128)) {
+            throw new IllegalArgumentException(getValidationException(input, false));
+        } else if (!isKey && (input.length() > 256)) {
+            throw new IllegalArgumentException(getValidationException(input, false));
+        } else {
+            Pattern pattern = Pattern.compile("^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$");
+            if (!pattern.matcher(input).matches()) {
+                throw new IllegalArgumentException(getValidationException(input, false));
+            }
+        }
+    }
+
     static long getValidLong(String input, long defaultValue) {
         if (isBlank(input)) {
             return defaultValue;
@@ -349,6 +370,14 @@ public final class InputsUtil {
         } catch (NumberFormatException nfe) {
             throw new RuntimeException("The provided value: " + input + " input must be long.");
         }
+    }
+
+    private static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,
+                                                String delimiter, String firstInputName, String secondInputName) {
+        String[] toValidateArray = getStringsArray(inputString, condition, delimiter);
+        validateAgainstDifferentArraysLength(referenceArray, toValidateArray, firstInputName, secondInputName);
+
+        return toValidateArray;
     }
 
     private static void validateArrayAgainstDuplicateElements(String[] toBeValidated, String inputString, String delimiter,
@@ -368,14 +397,6 @@ public final class InputsUtil {
         String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)), currentArray.length > START_INDEX);
-    }
-
-    private static String[] getValidStringArray(String[] referenceArray, String inputString, String condition,
-                                                String delimiter, String firstInputName, String secondInputName) {
-        String[] toValidateArray = getStringsArray(inputString, condition, delimiter);
-        validateAgainstDifferentArraysLength(referenceArray, toValidateArray, firstInputName, secondInputName);
-
-        return toValidateArray;
     }
 
     private static Set<String> getStringsSet(String input, String delimiter) {
@@ -418,11 +439,8 @@ public final class InputsUtil {
         return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
     }
 
-    @Contract(pure = true)
     private static String getValidationException(String input, boolean invalid) {
-        if (invalid) {
-            return "The provided value: " + input + " input must be integer.";
-        }
-        return "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
+        return invalid ? "The provided value: " + input + " input must be integer." :
+                "Incorrect provided value: " + input + " input. The value doesn't meet conditions for general purpose usage.";
     }
 }

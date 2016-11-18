@@ -9,9 +9,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
@@ -21,7 +19,7 @@ import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.SELECTED_VALUE;
 import static io.cloudslang.content.xml.utils.Constants.QueryTypes.VALUE;
 import static java.lang.String.valueOf;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.http.HttpStatus.SC_OK;
 
 /**
@@ -47,7 +45,7 @@ public class OutputsUtil {
 
     public static void putResponseIn(Map<String, String> queryMapResult) {
         if (queryMapResult != null) {
-            if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isBlank(queryMapResult.get(RETURN_RESULT))) {
+            if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isEmpty(queryMapResult.get(RETURN_RESULT))) {
                 queryMapResult.put(RETURN_CODE, SUCCESS);
             } else {
                 queryMapResult.put(RETURN_CODE, FAILURE);
@@ -65,7 +63,7 @@ public class OutputsUtil {
         String xmlString = queryMapResult.get(RETURN_RESULT);
         //We make this workaround because the xml has an xmlns property in the tag and our operation can not parse the xml
         //this should be removed when the xml operation will be enhanced
-        if (!isBlank(xmlString)) {
+        if (isEmpty(xmlString)) {
             xmlString = xmlString.replace(XMLNS, WORKAROUND);
             Map<String, String> result = xpathQueryAction.execute(xmlString, XML_DOCUMENT_SOURCE, xPathQuery, VALUE, DELIMITER, valueOf(true));
             if (result.containsKey(RETURN_CODE) && SUCCESS.equals(result.get(RETURN_CODE))) {

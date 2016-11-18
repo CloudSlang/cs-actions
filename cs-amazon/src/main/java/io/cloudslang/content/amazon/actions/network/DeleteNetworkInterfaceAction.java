@@ -98,7 +98,8 @@ public class DeleteNetworkInterfaceAction {
                                        @Param(value = NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -116,7 +117,7 @@ public class DeleteNetworkInterfaceAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            NetworkInputs networkInputs = new NetworkInputs.Builder().withNetworkInterfaceId(networkInterfaceId).build();
+            final NetworkInputs networkInputs = new NetworkInputs.Builder().withNetworkInterfaceId(networkInterfaceId).build();
 
             return new QueryApiExecutor().execute(commonInputs, networkInputs);
         } catch (Exception exception) {

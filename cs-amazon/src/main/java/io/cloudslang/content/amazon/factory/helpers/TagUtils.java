@@ -6,6 +6,8 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.RESOURCE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
@@ -34,7 +36,7 @@ public class TagUtils {
         String[] resourceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getResourceIdsString(),
                 RESOURCE_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
 
-        if (resourceIdsArray != null && resourceIdsArray.length > START_INDEX) {
+        if (isNotEmpty(resourceIdsArray)) {
             for (int index = START_INDEX; index < resourceIdsArray.length; index++) {
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(RESOURCE_ID, index), resourceIdsArray[index]);
             }
@@ -50,8 +52,7 @@ public class TagUtils {
         String[] valueTagsStringArray = InputsUtil.getStringsArray(valueTagsString, EMPTY, delimiter);
         InputsUtil.validateAgainstDifferentArraysLength(keyTagsStringArray, valueTagsStringArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
 
-        if (keyTagsStringArray != null && keyTagsStringArray.length > START_INDEX
-                && valueTagsStringArray != null && valueTagsStringArray.length > START_INDEX) {
+        if (isNotEmpty(keyTagsStringArray) && isNotEmpty(valueTagsStringArray)) {
 
             if (keyTagsStringArray.length > MAXIMUM_TAGS_ALLOWED) {
                 throw new RuntimeException(MORE_THAN_50_TAGS_ERROR_MESSAGE);

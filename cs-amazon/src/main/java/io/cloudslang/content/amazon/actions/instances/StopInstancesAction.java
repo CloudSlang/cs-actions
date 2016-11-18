@@ -126,7 +126,8 @@ public class StopInstancesAction {
                                        @Param(value = FORCE_STOP, required = true) String forceStop) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -145,7 +146,7 @@ public class StopInstancesAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            InstanceInputs instanceInputs = new InstanceInputs.Builder()
+            final InstanceInputs instanceInputs = new InstanceInputs.Builder()
                     .withInstanceIdsString(instanceIdsString)
                     .withForceStop(forceStop)
                     .build();

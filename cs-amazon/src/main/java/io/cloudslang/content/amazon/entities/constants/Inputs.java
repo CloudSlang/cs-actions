@@ -5,8 +5,8 @@ package io.cloudslang.content.amazon.entities.constants;
  * 2/17/2016.
  */
 public class Inputs {
-    private Inputs(){
-
+    private Inputs() {
+        // prevent instantiation
     }
 
     public static class CommonInputs {
@@ -112,7 +112,6 @@ public class Inputs {
         public static final String TYPE = "type";
         public static final String USER_GROUPS_STRING = "userGroupsString";
         public static final String USER_IDS_STRING = "userIdsString";
-
     }
 
     public static class InstanceInputs {
@@ -141,6 +140,11 @@ public class Inputs {
         public static final String TENANCY = "tenancy";
     }
 
+    public static class LoadBalancerInputs {
+        public static final String LOAD_BALANCER_NAME = "loadBalancerName";
+        public static final String SCHEME = "schema";
+    }
+
     public static class NetworkInputs {
         public static final String DEVICE_INDEX = "deviceIndex";
         public static final String FORCE_DETACH = "forceDetach";
@@ -150,6 +154,7 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_ID = "networkInterfaceId";
         public static final String NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS = "networkInterfaceAssociatePublicIpAddress";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
+        public static final String SUBNET_IDS_STRING = "subnetIdsString";
     }
 
     public static class VolumeInputs {

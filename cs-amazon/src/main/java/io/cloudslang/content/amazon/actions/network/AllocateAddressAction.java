@@ -99,7 +99,8 @@ public class AllocateAddressAction {
                                        @Param(value = DOMAIN) String domain) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -117,7 +118,7 @@ public class AllocateAddressAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withDomain(domain).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withDomain(domain).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs);
         } catch (Exception exception) {

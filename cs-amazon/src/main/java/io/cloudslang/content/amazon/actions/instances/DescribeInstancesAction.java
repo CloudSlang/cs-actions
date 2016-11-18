@@ -143,7 +143,7 @@ public class DescribeInstancesAction {
         try {
             version = getDefaultStringInput(version, "2016-09-15");
 
-            CommonInputs commonInputs = new CommonInputs.Builder()
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -162,7 +162,7 @@ public class DescribeInstancesAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            InstanceInputs instanceInputs = new InstanceInputs.Builder()
+            final InstanceInputs instanceInputs = new InstanceInputs.Builder()
                     .withFilterNamesString(filterNamesString)
                     .withFilterValuesString(filterValuesString)
                     .withInstanceIdsString(instanceIdsString)
