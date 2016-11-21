@@ -19,6 +19,7 @@ import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.SELECTED_VALUE;
 import static io.cloudslang.content.xml.utils.Constants.QueryTypes.VALUE;
 import static java.lang.String.valueOf;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.http.HttpStatus.SC_OK;
 
@@ -43,18 +44,20 @@ public class OutputsUtil {
         return signatureReturnResultMap;
     }
 
-    public static void putResponseIn(Map<String, String> queryMapResult) {
+    public static Map<String, String> getValidResponse(Map<String, String> queryMapResult) {
         if (queryMapResult != null) {
             if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isEmpty(queryMapResult.get(RETURN_RESULT))) {
                 queryMapResult.put(RETURN_CODE, SUCCESS);
             } else {
                 queryMapResult.put(RETURN_CODE, FAILURE);
             }
+            return queryMapResult;
         } else {
-            queryMapResult = new HashMap<>();
-            queryMapResult.put(EXCEPTION, "Null response!");
-            queryMapResult.put(RETURN_CODE, FAILURE);
-            queryMapResult.put(RETURN_RESULT, "The query returned null response!");
+            Map<String, String> resultMap = new HashMap<>();
+            resultMap.put(EXCEPTION, "Null response!");
+            resultMap.put(RETURN_CODE, FAILURE);
+            resultMap.put(RETURN_RESULT, "The query returned null response!");
+            return resultMap;
         }
     }
 
@@ -63,7 +66,7 @@ public class OutputsUtil {
         String xmlString = queryMapResult.get(RETURN_RESULT);
         //We make this workaround because the xml has an xmlns property in the tag and our operation can not parse the xml
         //this should be removed when the xml operation will be enhanced
-        if (isEmpty(xmlString)) {
+        if (!isBlank(xmlString)) {
             xmlString = xmlString.replace(XMLNS, WORKAROUND);
             Map<String, String> result = xpathQueryAction.execute(xmlString, XML_DOCUMENT_SOURCE, xPathQuery, VALUE, DELIMITER, valueOf(true));
             if (result.containsKey(RETURN_CODE) && SUCCESS.equals(result.get(RETURN_CODE))) {

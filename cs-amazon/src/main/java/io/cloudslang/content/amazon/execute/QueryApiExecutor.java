@@ -18,7 +18,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.getValidResponse;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -39,7 +39,7 @@ public class QueryApiExecutor {
         setQueryApiHeaders(inputs, headersMap, queryParamsMap);
 
         Map<String, String> queryMapResult = new CSHttpClient().execute(inputs.getHttpClientInputs());
-        putResponseIn(queryMapResult);
+        queryMapResult = getValidResponse(queryMapResult);
         return queryMapResult;
     }
 
