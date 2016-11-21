@@ -8,16 +8,15 @@
 
 ### Table of contents:
 * [Overview](#Overview)
-* [Common Integrations](#Common Integrations)
-* [Open Source Project](#Open Source Project)
+* [Common Integrations](#CommonIntegrations)
+* [Open Source Project](#OpenSourceProject)
 
 <a name="Overview"/>
 ### Overview
 
 ###### This repository contains the sources (java actions) to be used by operations located inside the cloud-slang-content repository
 
-Overall Permissions: **All**
-
+<a name="CommonIntegrations"/>
 ### Common Integrations
 
     cs-amazon - Integration with Amazon AWS
@@ -34,13 +33,16 @@ Overall Permissions: **All**
     cs-vmware - Integration with VMWare vCenter Server
     cs-xml - XML parsing and manipulation actions
 
+<a name="OpenSourceProject"/>
 ### Open Source Project
 
 [CloudSlang Project website](http://cloudslang.io/#/)
 
 [CloudSlang Content source code](https://github.com/CloudSlang/cloud-slang-content)
 
-[CloudSlang Documentation](http://cloudslang-docs.readthedocs.io/en/v1.0/)
+[CloudSlang Documentation](http://cloudslang-docs.readthedocs.io/en/latest/)
 
 
 ## Get Involved!!!
+
+[Cloudslang Contribution Guide](https://github.com/CloudSlang/cs-actions/blob/master/CONTRIBUTING.md)
