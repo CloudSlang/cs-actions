@@ -38,6 +38,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
@@ -47,6 +48,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.indexOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -304,6 +306,15 @@ public final class InputsUtil {
         if (isNotBlank(input) && !new InetAddressValidator().isValidInet4Address(input)) {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid IPv4 address.");
         }
+        return input;
+    }
+
+    public static String getValidCidrNotation(String input){
+        if (!input.contains(SCOPE_SEPARATOR)) {
+            getValidationException(input, false);
+        }
+        getValidIPv4Address(input.substring(START_INDEX, indexOf(input, SCOPE_SEPARATOR)));
+
         return input;
     }
 

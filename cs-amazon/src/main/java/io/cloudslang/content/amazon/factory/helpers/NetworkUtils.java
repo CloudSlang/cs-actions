@@ -14,6 +14,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ALLOCATION_ID;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.CIDR_BLOCK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FORCE;
@@ -25,6 +26,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PUBLIC_IP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNET_ID;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VPC_ID;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
@@ -40,6 +42,7 @@ public class NetworkUtils {
     private static final String ALLOW_REASSOCIATION = "AllowReassociation";
     private static final String ASSOCIATION_ID = "AssociationId";
     private static final String ATTACHMENT_ID = "AttachmentId";
+    private static final String AVAILABILITY_ZONE = "AvailabilityZone";
     private static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "SecondaryPrivateIpAddressCount";
 
     public Map<String, String> getAssociateAddressQueryParamsMap(InputsWrapper wrapper) {
@@ -89,6 +92,17 @@ public class NetworkUtils {
         setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
         new CommonUtils().setPrefixedAndSuffixedCommonQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getCreateSubnetQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new LinkedHashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(CIDR_BLOCK, wrapper.getNetworkInputs().getCidrBlock());
+        queryParamsMap.put(VPC_ID, wrapper.getCustomInputs().getVpcId());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, AVAILABILITY_ZONE, wrapper.getCustomInputs().getAvailabilityZone(),
+                isNotBlank(wrapper.getCustomInputs().getAvailabilityZone()));
 
         return queryParamsMap;
     }

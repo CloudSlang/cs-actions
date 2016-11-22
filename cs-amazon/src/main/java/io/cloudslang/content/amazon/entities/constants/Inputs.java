@@ -42,6 +42,7 @@ public class Inputs {
         public static final String IMAGE_ID = "imageId";
         public static final String INSTANCE_ID = "instanceId";
         public static final String INSTANCE_TYPE = "instanceType";
+        public static final String KEY_FILTERS_STRING = "keyFiltersString";
         public static final String KERNEL_ID = "kernelId";
         public static final String KEY_TAGS_STRING = "keyTagsString";
         public static final String KMS_KEY_ID = "kmsKeyId";
@@ -52,6 +53,7 @@ public class Inputs {
         public static final String PRODUCT_CODE = "productCode";
         public static final String PRODUCT_CODE_TYPE = "productCodeType";
         public static final String RAMDISK_ID = "ramdiskId";
+        public static final String REGIONS_STRING = "regionsString";
         public static final String RESOURCE_IDS_STRING = "resourceIdsString";
         public static final String ROOT_DEVICE_NAME = "rootDeviceName";
         public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
@@ -59,14 +61,13 @@ public class Inputs {
         public static final String STATE_REASON_MESSAGE = "stateReasonMessage";
         public static final String SUBNET_ID = "subnetId";
         public static final String URI = "uri";
+        public static final String VALUE_FILTERS_STRING = "valueFiltersString";
         public static final String VALUE_TAGS_STRING = "valueTagsString";
         public static final String VIRTUALIZATION_TYPE = "virtualizationType";
         public static final String VOLUME_ID = "volumeId";
         public static final String VOLUME_SIZE = "volumeSize";
         public static final String VOLUME_TYPE = "volumeType";
-        public static final String KEY_FILTERS_STRING = "keyFiltersString";
-        public static final String VALUE_FILTERS_STRING = "valueFiltersString";
-        public static final String REGIONS_STRING = "regionsString";
+        public static final String VPC_ID = "vpcId";
         public static final String ZONE_NAMES_STRING = "zoneNamesString";
     }
 
@@ -146,6 +147,7 @@ public class Inputs {
     }
 
     public static class NetworkInputs {
+        public static final String CIDR_BLOCK = "cidrBlock";
         public static final String DEVICE_INDEX = "deviceIndex";
         public static final String FORCE_DETACH = "forceDetach";
         public static final String NETWORK_INTERFACE_DELETE_ON_TERMINATION = "networkInterfaceDeleteOnTermination";

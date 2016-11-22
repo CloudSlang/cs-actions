@@ -11,6 +11,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Values.S
 public class NetworkInputs {
     private static final int MINIMUM_PRIVATE_SECONDARY_IP_ADDRESSES_COUNT = 2;
 
+    private final String cidrBlock;
     private final String deviceIndex;
     private final String networkInterfaceDescription;
     private final String networkInterfaceDeviceIndex;
@@ -24,6 +25,7 @@ public class NetworkInputs {
     private final boolean forceDetach;
 
     private NetworkInputs(Builder builder) {
+        this.cidrBlock = builder.cidrBlock;
         this.networkInterfaceDescription = builder.networkInterfaceDescription;
         this.networkInterfacePrivateIpAddress = builder.networkInterfacePrivateIpAddress;
         this.networkInterfaceDeviceIndex = builder.networkInterfaceDeviceIndex;
@@ -35,6 +37,10 @@ public class NetworkInputs {
         this.subnetIdsString = builder.subnetIdsString;
 
         this.forceDetach = builder.forceDetach;
+    }
+
+    public String getCidrBlock() {
+        return cidrBlock;
     }
 
     public String getNetworkInterfaceDescription() {
@@ -78,6 +84,7 @@ public class NetworkInputs {
     }
 
     public static class Builder {
+        private String cidrBlock;
         private String deviceIndex;
         private String networkInterfacesAssociatePublicIpAddressesString;
         private String networkInterfaceDescription;
@@ -92,6 +99,11 @@ public class NetworkInputs {
 
         public NetworkInputs build() {
             return new NetworkInputs(this);
+        }
+
+        public Builder withCidrBlock(String inputValue) {
+            cidrBlock = InputsUtil.getValidCidrNotation(inputValue);
+            return this;
         }
 
         public Builder withNetworkInterfaceDescription(String inputValue) {
