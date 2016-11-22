@@ -56,11 +56,6 @@
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-commons</artifactId>
-            <version>0.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
             <version>0.1.67</version>
         </dependency>
