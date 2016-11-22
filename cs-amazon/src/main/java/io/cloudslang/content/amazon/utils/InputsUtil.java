@@ -311,7 +311,7 @@ public final class InputsUtil {
 
     public static String getValidCidrNotation(String input){
         if (!input.contains(SCOPE_SEPARATOR)) {
-            getValidationException(input, false);
+            throw new RuntimeException("The provided value for: " + input + " input must be a valid CIDR notation.");
         }
         getValidIPv4Address(input.substring(START_INDEX, indexOf(input, SCOPE_SEPARATOR)));
 
