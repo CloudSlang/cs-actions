@@ -31,10 +31,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VPC_ID;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.CIDR_BLOCK;
 
 /**
@@ -65,8 +63,10 @@ public class CreateSubnetAction {
      * @param credential       Secret access key associated with your Amazon AWS or IAM account.
      *                         Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost        Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
-     * @param proxyPort        Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                         <proxyPort> inputs or leave them both empty.
+     *                         Default: ""
+     * @param proxyPort        Optional - proxy server port. You must either specify values for both <proxyHost> and <proxyPort>
+     *                         inputs or leave them both empty.
+     *                         Default: ""
      * @param proxyUsername    Optional - proxy server user name.
      *                         Default: ""
      * @param proxyPassword    Optional - proxy server password associated with the <proxyUsername> input value.
