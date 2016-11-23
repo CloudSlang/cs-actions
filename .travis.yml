@@ -9,3 +9,5 @@ install:
 script:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
   - mvn test -B ${MVN_EXCLUDE_MODULES}
+after_success:
+  - mvn cobertura:cobertura coveralls:report
