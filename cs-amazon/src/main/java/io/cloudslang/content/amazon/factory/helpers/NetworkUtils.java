@@ -97,7 +97,7 @@ public class NetworkUtils {
     }
 
     public Map<String, String> getCreateSubnetQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = new LinkedHashMap<>();
+        Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(CIDR_BLOCK, wrapper.getNetworkInputs().getCidrBlock());
         queryParamsMap.put(VPC_ID, wrapper.getCustomInputs().getVpcId());
