@@ -1,8 +1,8 @@
 package io.cloudslang.content.xml.services.impl;
 
-import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.entities.inputs.EditXmlInputs;
 import io.cloudslang.content.xml.services.OperationService;
+import io.cloudslang.content.xml.utils.Constants;
 import io.cloudslang.content.xml.utils.DocumentUtils;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -1,7 +1,7 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.amazon.entities.aws.AmazonApiServiceType;
+import io.cloudslang.content.amazon.entities.aws.AmazonApi;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
@@ -19,6 +19,7 @@ public class InputsWrapper {
     private IamInputs iamInputs;
     private ImageInputs imageInputs;
     private InstanceInputs instanceInputs;
+    private LoadBalancerInputs loadBalancerInputs;
     private NetworkInputs networkInputs;
     private VolumeInputs volumeInputs;
 
@@ -101,6 +102,14 @@ public class InputsWrapper {
         this.instanceInputs = instanceInputs;
     }
 
+    public LoadBalancerInputs getLoadBalancerInputs() {
+        return loadBalancerInputs;
+    }
+
+    public void setLoadBalancerInputs(LoadBalancerInputs loadBalancerInputs) {
+        this.loadBalancerInputs = loadBalancerInputs;
+    }
+
     public NetworkInputs getNetworkInputs() {
         return networkInputs;
     }
@@ -177,7 +186,7 @@ public class InputsWrapper {
         }
 
         public Builder withApiService(String inputValue) {
-            apiService = AmazonApiServiceType.getValue(inputValue);
+            apiService = AmazonApi.getApiValue(inputValue);
             return this;
         }
 

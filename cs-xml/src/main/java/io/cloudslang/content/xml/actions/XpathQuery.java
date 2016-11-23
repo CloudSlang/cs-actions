@@ -4,13 +4,21 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import io.cloudslang.content.xml.utils.Constants;
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
 import io.cloudslang.content.xml.services.XpathQueryService;
+import io.cloudslang.content.xml.utils.Constants;
 
 import java.util.Map;
+
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
+import static io.cloudslang.content.xml.utils.Constants.Outputs.SELECTED_VALUE;
 
 /**
  * Created by markowis on 22/02/2016.
@@ -31,13 +39,13 @@ public class XpathQuery {
      */
     @Action(name = "XpathQuery",
             outputs = {
-                    @Output(Constants.Outputs.RETURN_CODE),
-                    @Output(Constants.Outputs.RETURN_RESULT),
-                    @Output(Constants.Outputs.SELECTED_VALUE),
-                    @Output(Constants.Outputs.ERROR_MESSAGE)},
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(SELECTED_VALUE),
+                    @Output(ERROR_MESSAGE)},
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.Outputs.RETURN_CODE, value = Constants.ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = COMPARE_EQUAL),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = COMPARE_EQUAL, isDefault = true, isOnFail = true)})
     public Map<String, String> execute(
             @Param(value = Constants.Inputs.XML_DOCUMENT, required = true) String xmlDocument,
             @Param(Constants.Inputs.XML_DOCUMENT_SOURCE) String xmlDocumentSource,
@@ -46,14 +54,14 @@ public class XpathQuery {
             @Param(Constants.Inputs.DELIMITER) String delimiter,
             @Param(Constants.Inputs.SECURE_PROCESSING) String secureProcessing) {
 
-        CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+        final CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
                 .withXmlDocumentSource(xmlDocumentSource)
                 .withXpathQuery(xPathQuery)
                 .withSecureProcessing(secureProcessing)
                 .build();
 
-        CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+        final CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
                 .withQueryType(queryType)
                 .withDelimiter(delimiter)
                 .build();

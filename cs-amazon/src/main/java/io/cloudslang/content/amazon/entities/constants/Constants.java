@@ -30,6 +30,7 @@ public class Constants {
     public static class ErrorMessages {
         public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
                 " cannot be both empty in order to add/remove permission launch on specified image.";
+        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
     }
 
     public static class Values {
@@ -42,6 +43,7 @@ public class Constants {
         public static final String ALLOCATION_ID = "AllocationId";
         public static final String ATTRIBUTE = "Attribute";
         public static final String AUTHORIZATION_HEADER_RESULT = "authorizationHeader";
+        public static final String AVAILABILITY_ZONES = "AvailabilityZones";
         public static final String AWS_REQUEST_VERSION = "aws4_request";
         public static final String BLOCK_DEVICE_MAPPING = "BlockDeviceMapping";
         public static final String DEFAULT_AMAZON_REGION = "us-east-1";
@@ -61,6 +63,8 @@ public class Constants {
         public static final String INSTANCE_ID = "InstanceId";
         public static final String KEY = "Key";
         public static final String LAUNCH_PERMISSION = "launchPermission";
+        public static final String LISTENERS = "Listeners";
+        public static final String MEMBER = "member";
         public static final String NAME = "Name";
         public static final String NO_REBOOT = "NoReboot";
         public static final String NETWORK_INTERFACE = "NetworkInterface";
@@ -74,11 +78,13 @@ public class Constants {
         public static final String REMOVE_OPERATION_TYPE = "remove";
         public static final String RESOURCE_ID = "ResourceId";
         public static final String SECURITY_GROUP = "SecurityGroup";
+        public static final String SECURITY_GROUPS = "SecurityGroups";
         public static final String SECURITY_GROUP_ID = "SecurityGroupId";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String SNAPSHOT_ID = "SnapshotId";
         public static final String STANDARD = "standard";
         public static final String SUBNET_ID = "SubnetId";
+        public static final String SUBNETS = "Subnets";
         public static final String TAG = "Tag";
         public static final String USER_GROUP = "UserGroup";
         public static final String USER_ID = "UserId";
@@ -120,5 +126,9 @@ public class Constants {
         public static final String START_INSTANCES = "StartInstances";
         public static final String STOP_INSTANCES = "StopInstances";
         public static final String TERMINATE_INSTANCES = "TerminateInstances";
+    }
+
+    public static class LoadBalancingQueryApiActions {
+        public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
     }
 }

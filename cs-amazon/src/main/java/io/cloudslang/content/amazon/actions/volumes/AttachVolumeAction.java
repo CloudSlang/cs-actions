@@ -121,7 +121,8 @@ public class AttachVolumeAction {
                                        @Param(value = DEVICE_NAME, required = true) String deviceName) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -139,8 +140,8 @@ public class AttachVolumeAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).withVolumeId(volumeId).build();
-            VolumeInputs volumeInputs = new VolumeInputs.Builder().withDeviceName(deviceName).build();
+            final CustomInputs customInputs = new CustomInputs.Builder().withInstanceId(instanceId).withVolumeId(volumeId).build();
+            final VolumeInputs volumeInputs = new VolumeInputs.Builder().withDeviceName(deviceName).build();
 
             return new QueryApiExecutor().execute(commonInputs, customInputs, volumeInputs);
         } catch (Exception e) {

@@ -1,11 +1,12 @@
 package io.cloudslang.content.xml.utils;
 
+import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.xml.utils.Constants.*;
+import static io.cloudslang.content.xml.utils.Constants.DIFFERENT_LIST_SIZE;
 
 /**
  * Created by moldovas on 6/24/2016.
@@ -32,12 +33,8 @@ public class InputUtils {
         throw new RuntimeException(xsdDocumentSource + Constants.INVALID_XSD_DOCUMENT_SOURCE);
     }
 
-    private static boolean isBoolean(String value) {
-        return BooleanNames.TRUE.equalsIgnoreCase(value) || BooleanNames.FALSE.equalsIgnoreCase(value);
-    }
-
     public static void validateBoolean(String includeRootStr) throws Exception {
-        if (!InputUtils.isBoolean(includeRootStr)) {
+        if (!BooleanUtilities.isValid(includeRootStr)) {
             throw new Exception(includeRootStr + " is not a valid value for Boolean");
         }
     }

@@ -105,7 +105,8 @@ public class DeleteSnapshotAction {
                                        @Param(value = SNAPSHOT_ID, required = true) String snapshotId) {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
-            CommonInputs commonInputs = new CommonInputs.Builder()
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
                     .withIdentity(identity)
                     .withCredential(credential)
@@ -123,7 +124,7 @@ public class DeleteSnapshotAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            VolumeInputs volumeInputs = new VolumeInputs.Builder().withSnapshotId(snapshotId).build();
+            final VolumeInputs volumeInputs = new VolumeInputs.Builder().withSnapshotId(snapshotId).build();
 
             return new QueryApiExecutor().execute(commonInputs, volumeInputs);
         } catch (Exception e) {

@@ -190,11 +190,6 @@
             <version>0.1.68</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.7</version>
-        </dependency>
-        <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
             <version>1.5.1</version>

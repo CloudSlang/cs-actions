@@ -10,6 +10,10 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
@@ -71,9 +75,9 @@ public class ApplyXslTransformationTest {
                 ""
         );
         assertNotNull(result);
-        assertNotNull(result.get(Constants.Outputs.RETURN_RESULT));
-        assertEquals(result.get(Constants.Outputs.RETURN_CODE), Constants.ReturnCodes.SUCCESS);
-        assertEquals(result.get(Constants.Outputs.RETURN_RESULT), "<HTML>\n" +
+        assertNotNull(result.get(RETURN_RESULT));
+        assertEquals(result.get(RETURN_CODE), SUCCESS);
+        assertEquals(result.get(RETURN_RESULT), "<HTML>\n" +
                 "<HEAD>\n" +
                 "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
                 "<TITLE>Map</TITLE>\n" +
@@ -95,8 +99,8 @@ public class ApplyXslTransformationTest {
                 ""
         );
         assertNotNull(result);
-        assertNotNull(result.get(Constants.Outputs.RETURN_RESULT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
+        assertNotNull(result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
 
     }
 
@@ -113,8 +117,8 @@ public class ApplyXslTransformationTest {
                 ""
         );
         assertNotNull(result);
-        assertNotNull(result.get(Constants.Outputs.RETURN_RESULT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
+        assertNotNull(result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
     }
 
     @Test
@@ -148,8 +152,8 @@ public class ApplyXslTransformationTest {
                 ""
         );
         assertNotNull(result);
-        assertNotNull(result.get(Constants.Outputs.RETURN_RESULT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
+        assertNotNull(result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
     }
 
     @Test
@@ -161,9 +165,9 @@ public class ApplyXslTransformationTest {
                 ""
         );
         assertNotNull(result);
-        assertNotNull(result.get(Constants.Outputs.RETURN_RESULT));
-        assertEquals(Constants.ReturnCodes.SUCCESS, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(result.get(Constants.Outputs.RETURN_RESULT), "<HTML>\n" +
+        assertNotNull(result.get(RETURN_RESULT));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
+        assertEquals(result.get(RETURN_RESULT), "<HTML>\n" +
                 "<HEAD>\n" +
                 "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
                 "<TITLE>Map</TITLE>\n" +
@@ -195,8 +199,8 @@ public class ApplyXslTransformationTest {
                 ""
         );
         assertNotNull(result);
-        assertNotNull(result.get(Constants.Outputs.RETURN_RESULT));
-        assertEquals(Constants.ReturnCodes.FAILURE, result.get(Constants.Outputs.RETURN_CODE));
-        assertEquals(result.get(Constants.Outputs.RETURN_RESULT), "XML document structures must start and end within the same entity.");
+        assertNotNull(result.get(RETURN_RESULT));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertEquals(result.get(RETURN_RESULT), "XML document structures must start and end within the same entity.");
     }
 }

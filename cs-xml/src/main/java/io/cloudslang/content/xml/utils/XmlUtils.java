@@ -1,7 +1,7 @@
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.CSHttpClient;
+import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
@@ -30,12 +30,24 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.*;
-import java.io.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by markowis on 23/02/2016.
@@ -49,7 +61,7 @@ public class XmlUtils {
     public static String nodeToString(Node node) throws TransformerException {
 
         if (node == null) {
-            return Constants.EMPTY_STRING;
+            return EMPTY;
         } else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             return node.toString();
         } else {
@@ -60,7 +72,7 @@ public class XmlUtils {
     /**
      * Returns the Namespaces context from an xml.
      *
-     * @param xmlString      xml as string
+     * @param xmlString   xml as string
      * @param xmlFilePath path to xml file
      * @return the Namespaces context from an xml.
      * @throws IOException        file reading exception
@@ -112,7 +124,7 @@ public class XmlUtils {
     /**
      * This method creates an XML document from a given path which respects the encoding specified in the xml header. Otherwise it defaults to UTF-8.
      *
-     * @param path xml given path
+     * @param path   xml given path
      * @param secure secure
      * @return created xml document form the given path
      * @throws IOException
@@ -128,11 +140,11 @@ public class XmlUtils {
     }
 
     public static void parseXmlString(String xml, String features) throws Exception {
-        parseXmlInputStream(getStream(xml, Constants.EMPTY_STRING), features);
+        parseXmlInputStream(getStream(xml, EMPTY), features);
     }
 
     public static void parseXmlFile(String xmlFile, String features) throws Exception {
-        parseXmlInputStream(getStream(Constants.EMPTY_STRING, xmlFile), features);
+        parseXmlInputStream(getStream(EMPTY, xmlFile), features);
     }
 
     /**
@@ -182,7 +194,7 @@ public class XmlUtils {
     /**
      * Transforms a string representation of an XML Node to an Node
      *
-     * @param value the node as String
+     * @param value    the node as String
      * @param features parsing features to set on the document builder
      * @return the Node object
      * @throws Exception in case the String can't be represented as a Node
@@ -192,7 +204,7 @@ public class XmlUtils {
         if (StringUtils.isEmpty(encoding)) {
             encoding = "UTF-8";
         }
-        try (InputStream inputStream = new ByteArrayInputStream(value.getBytes(encoding))){
+        try (InputStream inputStream = new ByteArrayInputStream(value.getBytes(encoding))) {
             // check if input value is a Node
             Document docNew = DocumentUtils.createDocumentBuilder(features).parse(inputStream);
             node = docNew.getDocumentElement();
@@ -294,40 +306,40 @@ public class XmlUtils {
     }
 
     public static String createXmlDocumentFromUrl(CommonInputs commonInputs) throws ParserConfigurationException, SAXException, IOException {
-            CSHttpClient scoreHttpClient = new CSHttpClient();
-            HttpClientInputs httpClientInputs = new HttpClientInputs();
-            httpClientInputs.setMethod(HttpGet.METHOD_NAME);
-            httpClientInputs.setUrl(commonInputs.getXmlDocument());
+        CSHttpClient scoreHttpClient = new CSHttpClient();
+        HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setMethod(HttpGet.METHOD_NAME);
+        httpClientInputs.setUrl(commonInputs.getXmlDocument());
 
-            if (commonInputs.getUsername().isEmpty()) {
-                httpClientInputs.setAuthType(AuthTypes.ANONYMOUS);
-            } else {
-                httpClientInputs.setAuthType(AuthTypes.BASIC);
-                httpClientInputs.setUsername(commonInputs.getUsername());
-                httpClientInputs.setPassword(commonInputs.getPassword());
-            }
-            httpClientInputs.setRequestCharacterSet(StandardCharsets.UTF_8.toString());
-            httpClientInputs.setResponseCharacterSet(StandardCharsets.UTF_8.toString());
-            httpClientInputs.setTrustAllRoots(commonInputs.getTrustAllRoots());
-            httpClientInputs.setKeystore(commonInputs.getKeystore());
-            httpClientInputs.setKeystorePassword(commonInputs.getKeystorePassword());
-            httpClientInputs.setTrustKeystore(commonInputs.getTrustKeystore());
-            httpClientInputs.setTrustPassword(commonInputs.getTrustPassword());
-            httpClientInputs.setX509HostnameVerifier(commonInputs.getX509Hostnameverifier());
-            httpClientInputs.setProxyHost(commonInputs.getProxyHost());
-            httpClientInputs.setProxyPort(commonInputs.getProxyPort());
-            httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
-            httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
+        if (commonInputs.getUsername().isEmpty()) {
+            httpClientInputs.setAuthType(AuthTypes.ANONYMOUS);
+        } else {
+            httpClientInputs.setAuthType(AuthTypes.BASIC);
+            httpClientInputs.setUsername(commonInputs.getUsername());
+            httpClientInputs.setPassword(commonInputs.getPassword());
+        }
+        httpClientInputs.setRequestCharacterSet(StandardCharsets.UTF_8.toString());
+        httpClientInputs.setResponseCharacterSet(StandardCharsets.UTF_8.toString());
+        httpClientInputs.setTrustAllRoots(commonInputs.getTrustAllRoots());
+        httpClientInputs.setKeystore(commonInputs.getKeystore());
+        httpClientInputs.setKeystorePassword(commonInputs.getKeystorePassword());
+        httpClientInputs.setTrustKeystore(commonInputs.getTrustKeystore());
+        httpClientInputs.setTrustPassword(commonInputs.getTrustPassword());
+        httpClientInputs.setX509HostnameVerifier(commonInputs.getX509Hostnameverifier());
+        httpClientInputs.setProxyHost(commonInputs.getProxyHost());
+        httpClientInputs.setProxyPort(commonInputs.getProxyPort());
+        httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
+        httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
 
-            Map<String, String> requestResponse = scoreHttpClient.execute(httpClientInputs);
-            if (!OK_STATUS_CODE.equals(requestResponse.get(CSHttpClient.STATUS_CODE))) {
-                throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(CSHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
-            }
-            return requestResponse.get(Constants.Outputs.RETURN_RESULT);
+        Map<String, String> requestResponse = scoreHttpClient.execute(httpClientInputs);
+        if (!OK_STATUS_CODE.equals(requestResponse.get(CSHttpClient.STATUS_CODE))) {
+            throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(CSHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
+        }
+        return requestResponse.get(Constants.Outputs.RETURN_RESULT);
     }
 
     public static void setFeatures(DocumentBuilderFactory reader, String features) throws ParserConfigurationException {
-        if(StringUtils.isNotBlank(features)) {
+        if (StringUtils.isNotBlank(features)) {
             Map featuresMap = parseFeatures(features);
 
             for (Object o : featuresMap.keySet()) {
@@ -339,7 +351,7 @@ public class XmlUtils {
     }
 
     public static void setFeatures(SAXBuilder reader, String features) throws SAXException {
-        if(!StringUtils.isEmpty(features)) {
+        if (!StringUtils.isEmpty(features)) {
             Map<String, Boolean> featuresMap = parseFeatures(features);
             for (String key : featuresMap.keySet()) {
                 reader.setFeature(key, featuresMap.get(key));
@@ -352,10 +364,10 @@ public class XmlUtils {
         String[] featuresList = features.split("\\n");
         int len$ = featuresList.length;
 
-        for(int i$ = 0; i$ < len$; ++i$) {
+        for (int i$ = 0; i$ < len$; ++i$) {
             String element = featuresList[i$];
             String[] keyValue = element.split("\\s");
-            if(keyValue.length != 2) {
+            if (keyValue.length != 2) {
                 throw new IllegalArgumentException("Wrong format for \'features\' input field!");
             }
 

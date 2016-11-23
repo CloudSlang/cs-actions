@@ -10,7 +10,7 @@
     -->
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-xml</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.11-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Actions for xml processing</description>
@@ -53,11 +53,6 @@
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-commons</artifactId>
-            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>

@@ -9,9 +9,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
@@ -22,6 +20,7 @@ import static io.cloudslang.content.xml.utils.Constants.Outputs.SELECTED_VALUE;
 import static io.cloudslang.content.xml.utils.Constants.QueryTypes.VALUE;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.http.HttpStatus.SC_OK;
 
 /**
@@ -45,18 +44,20 @@ public class OutputsUtil {
         return signatureReturnResultMap;
     }
 
-    public static void putResponseIn(Map<String, String> queryMapResult) {
+    public static Map<String, String> getValidResponse(Map<String, String> queryMapResult) {
         if (queryMapResult != null) {
-            if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isBlank(queryMapResult.get(RETURN_RESULT))) {
+            if (queryMapResult.containsKey(STATUS_CODE) && (valueOf(SC_OK).equals(queryMapResult.get(STATUS_CODE))) && queryMapResult.containsKey(RETURN_RESULT) && !isEmpty(queryMapResult.get(RETURN_RESULT))) {
                 queryMapResult.put(RETURN_CODE, SUCCESS);
             } else {
                 queryMapResult.put(RETURN_CODE, FAILURE);
             }
+            return queryMapResult;
         } else {
-            queryMapResult = new HashMap<>();
-            queryMapResult.put(EXCEPTION, "Null response!");
-            queryMapResult.put(RETURN_CODE, FAILURE);
-            queryMapResult.put(RETURN_RESULT, "The query returned null response!");
+            Map<String, String> resultMap = new HashMap<>();
+            resultMap.put(EXCEPTION, "Null response!");
+            resultMap.put(RETURN_CODE, FAILURE);
+            resultMap.put(RETURN_RESULT, "The query returned null response!");
+            return resultMap;
         }
     }
 

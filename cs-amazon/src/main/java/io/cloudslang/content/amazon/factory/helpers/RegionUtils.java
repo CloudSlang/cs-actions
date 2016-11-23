@@ -7,6 +7,8 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REGION_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
@@ -57,7 +59,7 @@ public class RegionUtils {
     }
 
     private void setSpecificQueryParamsMap(Map<String, String> queryParamsMap, String[] inputArray, String specificString) {
-        if (inputArray != null && inputArray.length > START_INDEX) {
+        if (isNotEmpty(inputArray)) {
             for (int index = START_INDEX; index < inputArray.length; index++) {
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificString, index), inputArray[index]);
             }
@@ -70,8 +72,7 @@ public class RegionUtils {
         InputsUtil.validateAgainstDifferentArraysLength(keyFiltersStringArray, valueFiltersStringArray, KEY_FILTERS_STRING,
                 VALUE_FILTERS_STRING);
 
-        if (keyFiltersStringArray != null && keyFiltersStringArray.length > START_INDEX
-                && valueFiltersStringArray != null && valueFiltersStringArray.length > START_INDEX) {
+        if (isNotEmpty(keyFiltersStringArray) && isNotEmpty(valueFiltersStringArray)) {
             for (int index = START_INDEX; index < keyFiltersStringArray.length; index++) {
                 queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(NAME, index), keyFiltersStringArray[index]);
                 String paramValue = STATE.equals(keyFiltersStringArray[index]) ?
