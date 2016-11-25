@@ -40,6 +40,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
  * 11/22/2016.
  */
 public class CreateSubnetAction {
+    private static final String LATEST_CREATE_SUBNET_API_VERSION = "2016-09-15";
+
     /**
      * Creates a subnet in an existing VPC.
      * Note: When you create each subnet, you provide the VPC ID and the CIDR block you want for the subnet. After you
@@ -119,7 +121,7 @@ public class CreateSubnetAction {
                                        @Param(value = VPC_ID, required = true) String vpcId,
                                        @Param(value = CIDR_BLOCK, required = true) String cidrBlock) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-09-15");
+            version = InputsUtil.getDefaultStringInput(version, LATEST_CREATE_SUBNET_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
