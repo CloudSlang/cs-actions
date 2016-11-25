@@ -43,6 +43,8 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
  * 11/23/2016.
  */
 public class DeleteSubnetAction {
+    private static final String LATEST_DELETE_SUBNET_API_VERSION = "2016-09-15";
+
     /**
      * Deletes the specified subnet.
      * You must terminate all running instances in the subnet before you can delete the subnet.
@@ -103,7 +105,7 @@ public class DeleteSubnetAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = SUBNET_ID, required = true) String subnetId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-09-15");
+            version = InputsUtil.getDefaultStringInput(version, LATEST_DELETE_SUBNET_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint)
