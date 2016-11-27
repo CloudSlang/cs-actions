@@ -292,7 +292,8 @@ public class RunInstancesAction {
      * @param privateIpAddressesString                  Optional - String that contains one or more private IP addresses
      *                                                  to assign to the network interface. Only one private IP address
      *                                                  can be designated as primary. Use this if you want to launch instances
-     *                                                  with many NICs attached.
+     *                                                  with many NICs attached. Separate the NICs privateIps with |
+     *                                                  Example: "10.0.0.1,20.0.0.1|30.0.0.1"
      *                                                  Default: ""
      * @param iamInstanceProfileArn                     Optional - Amazon Resource Name (IAM_INSTANCE_PROFILE_ARN) of the
      *                                                  instance profile.
@@ -308,7 +309,8 @@ public class RunInstancesAction {
      *                                                  Default: ""
      * @param securityGroupIdsString                    Optional - IDs of the security groups for the network interface.
      *                                                  Applies only if creating a network interface when launching an
-     *                                                  instance.
+     *                                                  instance. Separate the groupIds for each NIC with "|"
+     *                                                  Example: "sg-01234567,sg-7654321|sg-abcdef01"
      *                                                  Default: ""
      * @param securityGroupNamesString                  Optional - String that contains one or more IDs of the security
      *                                                  groups for the network interface. Applies only if creating a network
@@ -393,8 +395,7 @@ public class RunInstancesAction {
      * @param networkInterfaceDeviceIndex               Optional - String that contains one or more values that are indexes
      *                                                  of the device on the instance for the network interface attachment.
      *                                                  If you are specifying a network interface in a RunInstances request,
-     *                                                  you should provide the device index. If not provided then we supply
-     *                                                  the automatic index starting from 0.
+     *                                                  you should provide the device index.
      *                                                  Default: ""
      * @param networkInterfaceId                        Optional - String that contains one or more values that are IDs
      *                                                  of the network interfaces.
