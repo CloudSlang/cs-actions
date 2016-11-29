@@ -25,7 +25,6 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PUBLIC_IP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNET_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VPC_ID;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -44,6 +43,7 @@ public class NetworkUtils {
     private static final String ATTACHMENT_ID = "AttachmentId";
     private static final String AVAILABILITY_ZONE = "AvailabilityZone";
     private static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "SecondaryPrivateIpAddressCount";
+    private static final String SUBNET_ID = "SubnetId";
 
     public Map<String, String> getAssociateAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
@@ -111,6 +111,14 @@ public class NetworkUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getDeleteSubnetQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(SUBNET_ID, wrapper.getCustomInputs().getSubnetId());
 
         return queryParamsMap;
     }

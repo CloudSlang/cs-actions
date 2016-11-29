@@ -199,6 +199,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDeleteSubnet() throws Exception {
+        toTest.execute(getCommonInputs("DeleteSubnet", HEADERS, ""), getCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteSubnet")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDeleteVolume() throws Exception {
         toTest.execute(getCommonInputs("DeleteVolume", HEADERS, ""), getVolumeCustomInputs());
 
@@ -670,6 +679,9 @@ public class QueryApiExecutorTest {
                 break;
             case "DeleteSnapshot":
                 queryParamsMap.put("SnapshotId", "snap-id");
+                break;
+            case "DeleteSubnet":
+                queryParamsMap.put("SubnetId", "subnet-abcdef12");
                 break;
             case "DeleteVolume":
                 queryParamsMap.put("VolumeId", "v-12345678");

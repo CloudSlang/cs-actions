@@ -110,6 +110,7 @@ public class Constants {
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
+        public static final String DELETE_SUBNET = "DeleteSubnet";
         public static final String DELETE_VOLUME = "DeleteVolume";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_AVAILABILITY_ZONES = "DescribeAvailabilityZones";
