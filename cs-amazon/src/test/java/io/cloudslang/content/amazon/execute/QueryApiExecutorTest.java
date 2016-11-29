@@ -389,7 +389,9 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testRunInstances() throws Exception {
-        toTest.execute(getCommonInputs("RunInstances", HEADERS, ""), getRunInstancesCustomInputs(), getRunInstancesEbsInputs(), getRunInstancesElasticIpInputs(), getRunInstancesIamInputs(), getRunInstancesInstanceInputs(), getRunInstancesNetworkInputs());
+        toTest.execute(getCommonInputs("RunInstances", HEADERS, ""), getRunInstancesCustomInputs(),
+                getRunInstancesEbsInputs(), getRunInstancesElasticIpInputs(), getRunInstancesIamInputs(),
+                getRunInstancesInstanceInputs(), getRunInstancesNetworkInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RunInstances")));
