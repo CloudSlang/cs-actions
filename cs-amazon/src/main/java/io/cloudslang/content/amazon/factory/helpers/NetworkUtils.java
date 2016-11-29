@@ -9,11 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ALLOCATION_ID;
-<<<<<<< HEAD
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
-=======
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.CIDR_BLOCK;
->>>>>>> master
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FORCE;
@@ -24,13 +21,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PUBLIC_IP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
-<<<<<<< HEAD
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNET_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
-=======
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VPC_ID;
-
->>>>>>> master
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.PIPE_DELIMITER;
