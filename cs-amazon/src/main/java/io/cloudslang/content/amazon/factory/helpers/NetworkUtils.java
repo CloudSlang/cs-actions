@@ -9,7 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ALLOCATION_ID;
+<<<<<<< HEAD
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
+=======
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.CIDR_BLOCK;
+>>>>>>> master
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FORCE;
@@ -20,8 +24,13 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PUBLIC_IP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
+<<<<<<< HEAD
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNET_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
+=======
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VPC_ID;
+
+>>>>>>> master
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.PIPE_DELIMITER;
@@ -43,7 +52,9 @@ public class NetworkUtils {
     private static final String ALLOW_REASSOCIATION = "AllowReassociation";
     private static final String ASSOCIATION_ID = "AssociationId";
     private static final String ATTACHMENT_ID = "AttachmentId";
+    private static final String AVAILABILITY_ZONE = "AvailabilityZone";
     private static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "SecondaryPrivateIpAddressCount";
+    private static final String SUBNET_ID = "SubnetId";
 
     public Map<String, String> getAssociateAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
@@ -96,10 +107,29 @@ public class NetworkUtils {
         return queryParamsMap;
     }
 
+    public Map<String, String> getCreateSubnetQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(CIDR_BLOCK, wrapper.getNetworkInputs().getCidrBlock());
+        queryParamsMap.put(VPC_ID, wrapper.getCustomInputs().getVpcId());
+        InputsUtil.setOptionalMapEntry(queryParamsMap, AVAILABILITY_ZONE, wrapper.getCustomInputs().getAvailabilityZone(),
+                isNotBlank(wrapper.getCustomInputs().getAvailabilityZone()));
+
+        return queryParamsMap;
+    }
+
     public Map<String, String> getDeleteNetworkInterfaceQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(NETWORK_INTERFACE_ID, wrapper.getNetworkInputs().getNetworkInterfaceId());
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getDeleteSubnetQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(SUBNET_ID, wrapper.getCustomInputs().getSubnetId());
 
         return queryParamsMap;
     }

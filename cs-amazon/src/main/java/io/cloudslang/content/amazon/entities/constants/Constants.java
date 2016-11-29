@@ -46,6 +46,7 @@ public class Constants {
         public static final String AVAILABILITY_ZONES = "AvailabilityZones";
         public static final String AWS_REQUEST_VERSION = "aws4_request";
         public static final String BLOCK_DEVICE_MAPPING = "BlockDeviceMapping";
+        public static final String CIDR_BLOCK = "CidrBlock";
         public static final String DEFAULT_AMAZON_REGION = "us-east-1";
         public static final String DELETE_ON_TERMINATION = "DeleteOnTermination";
         public static final String DESCRIPTION = "Description";
@@ -92,6 +93,7 @@ public class Constants {
         public static final String VALUES = "Values";
         public static final String VOLUME_ID = "VolumeId";
         public static final String VOLUME_TYPE = "VolumeType";
+        public static final String VPC_ID = "VpcId";
         public static final String ZONE_NAME = "ZoneName";
     }
 
@@ -103,10 +105,12 @@ public class Constants {
         public static final String CREATE_IMAGE = "CreateImage";
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
+        public static final String CREATE_SUBNET = "CreateSubnet";
         public static final String CREATE_TAGS = "CreateTags";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
+        public static final String DELETE_SUBNET = "DeleteSubnet";
         public static final String DELETE_VOLUME = "DeleteVolume";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_AVAILABILITY_ZONES = "DescribeAvailabilityZones";
