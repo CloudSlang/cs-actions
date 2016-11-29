@@ -2,8 +2,6 @@ package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
-
 /**
  * Created by Mihai Tusa.
  * 6/7/2016.
@@ -127,8 +125,7 @@ public class NetworkInputs {
         }
 
         public Builder withNetworkInterfaceDeviceIndex(String inputValue) {
-            networkInterfaceDeviceIndex = InputsUtil
-                    .getValidPositiveIntegerAsStringValue(inputValue, START_INDEX);
+            networkInterfaceDeviceIndex = inputValue;
             return this;
         }
 
@@ -138,8 +135,7 @@ public class NetworkInputs {
         }
 
         public Builder withSecondaryPrivateIpAddressCount(String inputValue) {
-            secondaryPrivateIpAddressCount = InputsUtil
-                    .getValidPositiveIntegerAsStringValue(inputValue, MINIMUM_PRIVATE_SECONDARY_IP_ADDRESSES_COUNT);
+            secondaryPrivateIpAddressCount = inputValue;
             return this;
         }
 

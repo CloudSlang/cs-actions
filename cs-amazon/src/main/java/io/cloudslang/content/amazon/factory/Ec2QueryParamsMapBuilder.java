@@ -17,7 +17,7 @@ class Ec2QueryParamsMapBuilder {
         // prevent instantiation
     }
 
-    static Map<String, String> getEc2QueryParamsMap(InputsWrapper wrapper) {
+    static Map<String, String> getEc2QueryParamsMap(InputsWrapper wrapper) throws Exception {
         switch (wrapper.getCommonInputs().getAction()) {
             case ALLOCATE_ADDRESS:
                 return new ElasticIpUtils().getAllocateAddressQueryParamsMap(wrapper);
