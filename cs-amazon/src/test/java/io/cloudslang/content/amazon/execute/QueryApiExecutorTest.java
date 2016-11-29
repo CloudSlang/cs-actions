@@ -153,6 +153,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateSubnet() throws Exception {
+        toTest.execute(getCommonInputs("CreateSubnet", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateSubnet")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testCreateTags() throws Exception {
         toTest.execute(getCommonInputs("CreateTags", HEADERS, ""), getCustomInputs());
 
@@ -500,6 +509,7 @@ public class QueryApiExecutorTest {
                 .withKeyTagsString("Name,webserver,stack,scope")
                 .withValueTagsString("Tagged from API call,Not relevant,Testing,For testing purposes")
                 .withRegionsString("us-east-1,eu-central-1")
+                .withVpcId("vpc-1a2b3c4d")
                 .build();
     }
 
@@ -550,6 +560,7 @@ public class QueryApiExecutorTest {
                 .withNetworkInterfaceDescription("anything in here")
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
                 .withSecondaryPrivateIpAddressCount("3")
+                .withCidrBlock("10.0.1.0/24")
                 .build();
     }
 
@@ -642,6 +653,11 @@ public class QueryApiExecutorTest {
             case "CreateSnapshot":
                 queryParamsMap.put("Description", "some-desc");
                 queryParamsMap.put("VolumeId", "v-12345678");
+                break;
+            case "CreateSubnet":
+                queryParamsMap.put("VpcId", "vpc-1a2b3c4d");
+                queryParamsMap.put("CidrBlock", "10.0.1.0/24");
+                queryParamsMap.put("AvailabilityZone", "us-east-1d");
                 break;
             case "CreateVolume":
                 queryParamsMap.put("VolumeType", "standard");

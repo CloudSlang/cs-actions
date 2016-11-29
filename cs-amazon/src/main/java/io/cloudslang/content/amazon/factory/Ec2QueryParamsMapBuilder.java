@@ -33,6 +33,8 @@ class Ec2QueryParamsMapBuilder {
                 return new NetworkUtils().getCreateNetworkInterfaceQueryParamsMap(wrapper);
             case CREATE_SNAPSHOT:
                 return new SnapshotUtils().getCreateSnapshotQueryParamsMap(wrapper);
+            case CREATE_SUBNET:
+                return new NetworkUtils().getCreateSubnetQueryParamsMap(wrapper);
             case CREATE_TAGS:
                 return new TagUtils().getCreateTagsQueryParamsMap(wrapper);
             case CREATE_VOLUME:
