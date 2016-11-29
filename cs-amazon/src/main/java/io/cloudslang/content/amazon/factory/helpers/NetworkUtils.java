@@ -171,8 +171,8 @@ public class NetworkUtils {
             List<String> currentPrivateIpAddresses = getStringsList(currentValues, PIPE_DELIMITER);
             if (currentPrivateIpAddresses != null) {
                 for (int step = 0; step < currentPrivateIpAddresses.size(); step++) {
-                    String currentIpKey = key + DOT + valueOf(step + 1);
-                    String currentIpTypeKey = key + DOT + valueOf(step + 1);
+                    String currentIpKey = key + DOT + valueOf(step + 1) + DOT + PRIVATE_IP_ADDRESS;
+                    String currentIpTypeKey = key + DOT + valueOf(step + 1) + DOT + PRIMARY;
                     String currentIpValue = currentPrivateIpAddresses.get(step);
                     String currentIpTypeValue = step == 0 ? valueOf(true) : valueOf(false);
 
