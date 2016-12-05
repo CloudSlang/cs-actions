@@ -189,7 +189,7 @@ public class InstanceUtils {
         return getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
     }
 
-    public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) {
+    public Map<String, String> getRunInstancesQueryParamsMap(InputsWrapper wrapper) throws Exception {
         Map<String, String> queryParamsMap = new HashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(DISABLE_API_TERMINATION, valueOf(wrapper.getInstanceInputs().isDisableApiTermination()));
@@ -231,13 +231,13 @@ public class InstanceUtils {
                 isNotBlank(wrapper.getCustomInputs().getRamdiskId()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, USER_DATA, wrapper.getInstanceInputs().getUserData(),
                 isNotBlank(wrapper.getInstanceInputs().getUserData()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, SUBNET_ID, wrapper.getCustomInputs().getSubnetId(),
-                isNotBlank(wrapper.getCustomInputs().getSubnetId()));
 
         setBlockDeviceMappingQueryParams(queryParamsMap, wrapper);
         setNetworkInterfaceQueryParams(queryParamsMap, wrapper);
 
         if (!queryParamsMap.keySet().toString().contains(NETWORK_INTERFACE)) {
+            InputsUtil.setOptionalMapEntry(queryParamsMap, SUBNET_ID, wrapper.getCustomInputs().getSubnetId(),
+                    isNotBlank(wrapper.getCustomInputs().getSubnetId()));
             setSecurityGroupQueryParams(queryParamsMap, wrapper);
         }
 
@@ -395,14 +395,9 @@ public class InstanceUtils {
                 SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
     }
 
-    private void setNetworkInterfaceQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
+    private void setNetworkInterfaceQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) throws Exception {
         NetworkUtils helper = new NetworkUtils();
-        helper.setPrivateIpAddressesQueryParams(queryParamsMap, wrapper, NETWORK_INTERFACE, wrapper.getCommonInputs().getDelimiter());
-        helper.setSecondaryPrivateIpAddressCountQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount());
-        if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacePrivateIpAddress())) {
-            new CommonUtils().setPrefixedAndSuffixedCommonQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
-                    NETWORK_INTERFACE, DOT + SECURITY_GROUP_ID, wrapper.getCommonInputs().getDelimiter());
-        }
+        helper.setNetworkInterfaceQueryParams(queryParamsMap, wrapper);
     }
 
     private void setBlockDeviceMappingQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {

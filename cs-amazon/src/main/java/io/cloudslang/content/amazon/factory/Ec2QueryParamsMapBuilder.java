@@ -17,7 +17,7 @@ class Ec2QueryParamsMapBuilder {
         // prevent instantiation
     }
 
-    static Map<String, String> getEc2QueryParamsMap(InputsWrapper wrapper) {
+    static Map<String, String> getEc2QueryParamsMap(InputsWrapper wrapper) throws Exception {
         switch (wrapper.getCommonInputs().getAction()) {
             case ALLOCATE_ADDRESS:
                 return new ElasticIpUtils().getAllocateAddressQueryParamsMap(wrapper);
@@ -33,6 +33,8 @@ class Ec2QueryParamsMapBuilder {
                 return new NetworkUtils().getCreateNetworkInterfaceQueryParamsMap(wrapper);
             case CREATE_SNAPSHOT:
                 return new SnapshotUtils().getCreateSnapshotQueryParamsMap(wrapper);
+            case CREATE_SUBNET:
+                return new NetworkUtils().getCreateSubnetQueryParamsMap(wrapper);
             case CREATE_TAGS:
                 return new TagUtils().getCreateTagsQueryParamsMap(wrapper);
             case CREATE_VOLUME:
@@ -41,6 +43,8 @@ class Ec2QueryParamsMapBuilder {
                 return new NetworkUtils().getDeleteNetworkInterfaceQueryParamsMap(wrapper);
             case DELETE_SNAPSHOT:
                 return new SnapshotUtils().getDeleteSnapshotQueryParamsMap(wrapper);
+            case DELETE_SUBNET:
+                return new NetworkUtils().getDeleteSubnetQueryParamsMap(wrapper);
             case DELETE_VOLUME:
                 return new VolumeUtils().getDeleteVolumeQueryParamsMap(wrapper);
             case DESCRIBE_AVAILABILITY_ZONES:

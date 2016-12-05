@@ -25,7 +25,7 @@ public class ParamsMapBuilder {
         // prevent instantiation
     }
 
-    public static Map<String, String> getParamsMap(InputsWrapper wrapper) {
+    public static Map<String, String> getParamsMap(InputsWrapper wrapper) throws Exception {
         Map<String, String> queryParamsMap;
         if (isBlank(wrapper.getCommonInputs().getQueryParams())) {
             switch (wrapper.getCommonInputs().getApiService()) {

@@ -1,7 +1,17 @@
 package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.amazon.entities.inputs.*;
+import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
+import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
+import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
+import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.amazon.entities.inputs.IamInputs;
+import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
+import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
+import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
+import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
+import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.MockingHelper;
@@ -21,7 +31,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyMapOf;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -153,6 +170,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateSubnet() throws Exception {
+        toTest.execute(getCommonInputs("CreateSubnet", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateSubnet")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testCreateTags() throws Exception {
         toTest.execute(getCommonInputs("CreateTags", HEADERS, ""), getCustomInputs());
 
@@ -186,6 +212,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteSnapshot")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDeleteSubnet() throws Exception {
+        toTest.execute(getCommonInputs("DeleteSubnet", HEADERS, ""), getCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteSubnet")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -353,6 +388,86 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testRunInstances() throws Exception {
+        toTest.execute(getCommonInputs("RunInstances", HEADERS, ""), getRunInstancesCustomInputs(),
+                getRunInstancesEbsInputs(), getRunInstancesElasticIpInputs(), getRunInstancesIamInputs(),
+                getRunInstancesInstanceInputs(), getRunInstancesNetworkInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("RunInstances")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    private InstanceInputs getRunInstancesInstanceInputs() {
+        return new InstanceInputs.Builder()
+                .withAffinity("affinity")
+                .withClientToken("token")
+                .withDisableApiTermination("false")
+                .withInstanceInitiatedShutdownBehavior("terminate")
+                .withMaxCount("1")
+                .withMinCount("2")
+                .withMonitoring("monitor")
+                .withPlacementGroupName("placement")
+                .withTenancy("default")
+                .withUserData("user_data")
+                .build();
+    }
+
+    private NetworkInputs getRunInstancesNetworkInputs() {
+        return new NetworkInputs.Builder()
+                .withNetworkInterfacesAssociatePublicIpAddressesString("false,true")
+                .withNetworkInterfaceDeleteOnTermination("true,false")
+                .withNetworkInterfaceDescription("description1,description2")
+                .withNetworkInterfaceDeviceIndex("0,1")
+                .withNetworkInterfaceId("nid1,nid2")
+                .withSecondaryPrivateIpAddressCount("3,4")
+                .build();
+    }
+
+    private IamInputs getRunInstancesIamInputs() {
+        return new IamInputs.Builder()
+                .withIamInstanceProfileArn("profile_arn")
+                .withIamInstanceProfileName("profile_name")
+                .withKeyPairName("pair_name")
+                .withSecurityGroupIdsString("gid1,gid2")
+                .withSecurityGroupNamesString("group_names")
+                .build();
+    }
+
+    private ElasticIpInputs getRunInstancesElasticIpInputs() {
+        return new ElasticIpInputs.Builder()
+                .withPrivateIpAddress("")
+                .withPrivateIpAddressesString("1.1.1.1|2.2.2.2,3.3.3.3")
+                .build();
+    }
+
+    private EbsInputs getRunInstancesEbsInputs() {
+        return new EbsInputs.Builder()
+                .withBlockDeviceMappingDeviceNamesString("key1")
+                .withBlockDeviceMappingVirtualNamesString("value1")
+                .withDeleteOnTerminationsString("true")
+                .withEbsOptimized("optimized")
+                .withEncryptedString("enc")
+                .withIopsString("iops")
+                .withSnapshotIdsString("s_ids")
+                .withVolumeSizesString("4")
+                .withVolumeTypesString("gp2")
+                .build();
+    }
+
+    private CustomInputs getRunInstancesCustomInputs() {
+        return new CustomInputs.Builder()
+                .withAvailabilityZone("eu-east-1")
+                .withHostId("host_id")
+                .withImageId("image_id")
+                .withInstanceType("t2.micro")
+                .withKernelId("kernel")
+                .withRamdiskId("ramdisk")
+                .withSubnetId("subnet1,subnet2")
+                .build();
+    }
+
+    @Test
     public void testResetLaunchPermissionOnImage() throws Exception {
         toTest.execute(getCommonInputs("ResetImageAttribute", HEADERS, ""), getResetLaunchPermissionOnImageInputs());
 
@@ -473,7 +588,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private NetworkInputs getNetworkInputsForLoadBalancers(){
+    private NetworkInputs getNetworkInputsForLoadBalancers() {
         return new NetworkInputs.Builder()
                 .withSubnetIdsString("subnet-abcdef12,subnet-12345678")
                 .build();
@@ -500,6 +615,7 @@ public class QueryApiExecutorTest {
                 .withKeyTagsString("Name,webserver,stack,scope")
                 .withValueTagsString("Tagged from API call,Not relevant,Testing,For testing purposes")
                 .withRegionsString("us-east-1,eu-central-1")
+                .withVpcId("vpc-1a2b3c4d")
                 .build();
     }
 
@@ -550,6 +666,7 @@ public class QueryApiExecutorTest {
                 .withNetworkInterfaceDescription("anything in here")
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
                 .withSecondaryPrivateIpAddressCount("3")
+                .withCidrBlock("10.0.1.0/24")
                 .build();
     }
 
@@ -592,8 +709,8 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Device", "device-name");
                 break;
             case "CreateLoadBalancer":
-                queryParamsMap.put("Name","testLB");
-                queryParamsMap.put("Scheme","internal");
+                queryParamsMap.put("Name", "testLB");
+                queryParamsMap.put("Scheme", "internal");
                 queryParamsMap.put("SecurityGroups.member.1", "sg-12345678");
                 queryParamsMap.put("SecurityGroups.member.2", "sg-abcdef12");
                 queryParamsMap.put("Subnets.member.1", "subnet-abcdef12");
@@ -643,6 +760,11 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Description", "some-desc");
                 queryParamsMap.put("VolumeId", "v-12345678");
                 break;
+            case "CreateSubnet":
+                queryParamsMap.put("VpcId", "vpc-1a2b3c4d");
+                queryParamsMap.put("CidrBlock", "10.0.1.0/24");
+                queryParamsMap.put("AvailabilityZone", "us-east-1d");
+                break;
             case "CreateVolume":
                 queryParamsMap.put("VolumeType", "standard");
                 queryParamsMap.put("Size", "10");
@@ -654,6 +776,9 @@ public class QueryApiExecutorTest {
                 break;
             case "DeleteSnapshot":
                 queryParamsMap.put("SnapshotId", "snap-id");
+                break;
+            case "DeleteSubnet":
+                queryParamsMap.put("SubnetId", "subnet-abcdef12");
                 break;
             case "DeleteVolume":
                 queryParamsMap.put("VolumeId", "v-12345678");
@@ -813,6 +938,55 @@ public class QueryApiExecutorTest {
             case "RebootInstances":
                 queryParamsMap.put("InstanceId.1", "i-12345678");
                 break;
+            case "RunInstances":
+                queryParamsMap.put("BlockDeviceMapping.1.Ebs.SnapshotId", "s_ids");
+                queryParamsMap.put("Placement.HostId", "host_id");
+                queryParamsMap.put("Placement.Tenancy", "default");
+                queryParamsMap.put("NetworkInterface.1.SecurityGroupId.1", "gid1");
+                queryParamsMap.put("MaxCount", "1");
+                queryParamsMap.put("BlockDeviceMapping.1.VirtualName", "value1");
+                queryParamsMap.put("NetworkInterface.1.AssociatePublicIpAddress", "false");
+                queryParamsMap.put("NetworkInterface.2.PrivateIpAddresses.1.Primary", "true");
+                queryParamsMap.put("NetworkInterface.2.DeleteOnTermination", "false");
+                queryParamsMap.put("NetworkInterface.1.SecondaryPrivateIpAddressCount", "3");
+                queryParamsMap.put("IamInstanceProfile.Name", "profile_name");
+                queryParamsMap.put("NetworkInterface.2.SubnetId", "subnet2");
+                queryParamsMap.put("ImageId", "image_id");
+                queryParamsMap.put("NetworkInterface.2.SecurityGroupId.1", "gid2");
+                queryParamsMap.put("NetworkInterface.1.PrivateIpAddresses.1.PrivateIpAddress", "1.1.1.1");
+                queryParamsMap.put("NetworkInterface.1.DeleteOnTermination", "true");
+                queryParamsMap.put("NetworkInterface.2.NetworkInterfaceId", "nid2");
+                queryParamsMap.put("NetworkInterface.1.NetworkInterfaceId", "nid1");
+                queryParamsMap.put("BlockDeviceMapping.1.DeviceName", "key1");
+                queryParamsMap.put("ClientToken", "token");
+                queryParamsMap.put("BlockDeviceMapping.1.Ebs.VolumeType", "gp2");
+                queryParamsMap.put("NetworkInterface.1.PrivateIpAddresses.1.Primary", "true");
+                queryParamsMap.put("MinCount", "2");
+                queryParamsMap.put("NetworkInterface.2.Description", "description2");
+                queryParamsMap.put("NetworkInterface.2.DeviceIndex", "1");
+                queryParamsMap.put("Placement.AvailabilityZone", "eu-east-1");
+                queryParamsMap.put("NetworkInterface.2.AssociatePublicIpAddress", "true");
+                queryParamsMap.put("NetworkInterface.2.SecondaryPrivateIpAddressCount", "4");
+                queryParamsMap.put("NetworkInterface.1.Description", "description1");
+                queryParamsMap.put("UserData", "user_data");
+                queryParamsMap.put("NetworkInterface.1.DeviceIndex", "0");
+                queryParamsMap.put("KernelId", "kernel");
+                queryParamsMap.put("EbsOptimized", "false");
+                queryParamsMap.put("NetworkInterface.1.SubnetId", "subnet1");
+                queryParamsMap.put("Placement.GroupName", "placement");
+                queryParamsMap.put("Placement.Affinity", "affinity");
+                queryParamsMap.put("Monitoring.Enabled", "false");
+                queryParamsMap.put("NetworkInterface.2.PrivateIpAddresses.1.PrivateIpAddress", "3.3.3.3");
+                queryParamsMap.put("InstanceType", "t2.micro");
+                queryParamsMap.put("IamInstanceProfile.Arn", "profile_arn");
+                queryParamsMap.put("BlockDeviceMapping.1.Ebs.VolumeSize", "4");
+                queryParamsMap.put("InstanceInitiatedShutdownBehavior", "terminate");
+                queryParamsMap.put("NetworkInterface.1.PrivateIpAddresses.2.Primary", "false");
+                queryParamsMap.put("NetworkInterface.1.PrivateIpAddresses.2.PrivateIpAddress", "2.2.2.2");
+                queryParamsMap.put("DisableApiTermination", "false");
+                queryParamsMap.put("KeyName", "pair_name");
+                queryParamsMap.put("RamdiskId", "ramdisk");
+                break;
             case "ReleaseAddress":
                 queryParamsMap.put("AllocationId", "eipalloc-abcdef12");
                 queryParamsMap.put("PublicIp", "52.0.0.2");
@@ -852,6 +1026,7 @@ public class QueryApiExecutorTest {
                 .withImageId("ami-abcd1234")
                 .build();
     }
+
     private ImageInputs getAddLaunchPermissionsToImageInputs() {
         return new ImageInputs.Builder()
                 .withUserIdsString("1,2")
@@ -904,6 +1079,7 @@ public class QueryApiExecutorTest {
                 .withVirtualizationType("paravirtual")
                 .build();
     }
+
     private ImageInputs getDescribeImagesInputs() {
         return new ImageInputs.Builder()
                 .withDescription("some-desc")
