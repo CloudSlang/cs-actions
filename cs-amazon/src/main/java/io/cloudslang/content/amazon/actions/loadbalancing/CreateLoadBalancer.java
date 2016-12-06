@@ -24,6 +24,7 @@ import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE_RETURN_CODE;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.CREATE_LOAD_BALANCER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -55,8 +56,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalance
  * 11/10/2016.
  */
 public class CreateLoadBalancer {
-    private static final String LATEST_CREATE_LOAD_BALANCER_API_VERSION = "2015-12-01";
-
     /**
      * Creates an Application Load Balancer.
      * To create listeners for your load balancer, use CreateListener. You can add security groups, subnets, and tags when
@@ -154,7 +153,7 @@ public class CreateLoadBalancer {
                                        @Param(value = KEY_TAGS_STRING) String keyTagsString,
                                        @Param(value = VALUE_TAGS_STRING) String valueTagsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LATEST_CREATE_LOAD_BALANCER_API_VERSION);
+            version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, LOAD_BALANCING_API)

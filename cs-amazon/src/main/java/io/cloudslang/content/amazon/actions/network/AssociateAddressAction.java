@@ -18,6 +18,7 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.ELASTIC_IP_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.ASSOCIATE_ADDRESS;
@@ -69,8 +70,8 @@ public class AssociateAddressAction {
      * @param proxyUsername      Optional - proxy server user name.
      * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
      * @param version            Optional - Version of the web service to made the call against it.
-     *                           Example: "2014-06-15"
-     *                           Default: "2014-06-15"
+     *                           Example: "2016-11-15"
+     *                           Default: "2016-11-15"
      * @param headers            Optional - string containing the headers to use for the request separated by new line
      *                           (CRLF). The header name-value pair will be separated by ":".
      *                           Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -137,7 +138,7 @@ public class AssociateAddressAction {
                                        @Param(value = PUBLIC_IP) String publicIp,
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
+            version = InputsUtil.getDefaultStringInput(version, ELASTIC_IP_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API)

@@ -16,6 +16,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.DELETE_LOAD_BALANCER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -45,8 +46,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
  * 12/5/2016.
  */
 public class DeleteLoadBalancer {
-    private static final String LATEST_DELETE_LOAD_BALANCER_API_VERSION = "2015-12-01";
-
     /**
      * Deletes the specified Application Load Balancer and its attached listeners.
      * Note: You can't delete a load balancer if deletion protection is enabled. If the load balancer does not exist or
@@ -56,7 +55,6 @@ public class DeleteLoadBalancer {
      *
      * @param endpoint        Optional - Endpoint to which request will be sent.
      *                        Default: "https://elasticloadbalancing.amazonaws.com"
-     *                        Default: "https://ec2.amazonaws.com"
      * @param identity        ID of the secret access key associated with your Amazon AWS or IAM account.
      *                        Example: "AKIAIOSFODNN7EXAMPLE"
      * @param credential      Secret access key associated with your Amazon AWS or IAM account.
@@ -112,7 +110,7 @@ public class DeleteLoadBalancer {
                                        @Param(value = VERSION) String version,
                                        @Param(value = LOAD_BALANCER_ARN, required = true) String loadBalancerArn) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LATEST_DELETE_LOAD_BALANCER_API_VERSION);
+            version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, LOAD_BALANCING_API)

@@ -22,7 +22,6 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.OWNER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.USER_GROUP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.USER_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMessages.BOTH_PERMISSION_INPUTS_EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static java.lang.String.valueOf;
@@ -39,6 +38,8 @@ public class ImageUtils {
     private static final String BLOCK_DEVICE_MAPPING_SNAPSHOT_ID = "block-device-mapping.snapshot-id";
     private static final String BLOCK_DEVICE_MAPPING_VOLUME_SIZE = "block-device-mapping.volume-size";
     private static final String BLOCK_DEVICE_MAPPING_VOLUME_TYPE = "block-device-mapping.volume-type";
+    private static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
+            " cannot be both empty in order to add/remove permission launch on specified image.";
     private static final String DESCRIPTION_FILTER = "description";
     private static final String HYPERVISOR = "hypervisor";
     private static final String IMAGE_ID_FILTER = "image-id";
@@ -60,6 +61,7 @@ public class ImageUtils {
     private static final String STATE_REASON_MESSAGE = "state-reason-message";
     private static final String TAG_KEY = "tag-key";
     private static final String TAG_VALUE = "tag-value";
+
     private static final String VIRTUALIZATION_TYPE = "virtualization-type";
 
     public Map<String, String> getDeregisterImageQueryParamsMap(InputsWrapper wrapper) {

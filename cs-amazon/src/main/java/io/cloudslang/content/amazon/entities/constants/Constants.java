@@ -10,6 +10,17 @@ public class Constants {
         public static final String LOAD_BALANCING_API = "elasticloadbalancing";
     }
 
+    public static class DefaultApiVersion {
+        public static final String ELASTIC_IP_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String IMAGES_DEFAULT_API_VERSION = "2016-04-01";
+        public static final String INSTANCES_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String LOAD_BALANCER_DEFAULT_API_VERSION = "2015-12-01";
+    }
+
+    public static class ErrorMessages {
+        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
+    }
+
     public static class Miscellaneous {
         public static final String AMAZON_HOSTNAME = "amazonaws.com";
         public static final String AMPERSAND = "&";
@@ -25,12 +36,6 @@ public class Constants {
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String PIPE_DELIMITER = "|";
         public static final String SCOPE_SEPARATOR = "/";
-    }
-
-    public static class ErrorMessages {
-        public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
-                " cannot be both empty in order to add/remove permission launch on specified image.";
-        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
     }
 
     public static class Values {
