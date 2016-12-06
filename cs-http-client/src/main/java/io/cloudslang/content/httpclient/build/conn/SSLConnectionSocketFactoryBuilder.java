@@ -98,9 +98,12 @@ public class SSLConnectionSocketFactoryBuilder {
         } else {
             try {
                 //need to override isTrusted() method to accept CA certs because the Apache HTTP Client ver.4.3 will only accepts self-signed certificates
-                KeyStore keyStore = createKeyStore(new URL("file:" + javaKeystore), changeit);
+                KeyStore keyStore = createKeyStore(new URL("file:" + keystore), keystorePassword);
+                sslContextBuilder.loadKeyMaterial(keyStore, keystorePassword.toCharArray());
 
-                sslContextBuilder.loadTrustMaterial(keyStore, new TrustSelfSignedStrategy() {
+                String internalJavaKeystoreUri = "file:" + System.getProperty("java.home") + "/lib/security/cacerts";
+                KeyStore javaTrustStore = createKeyStore(new URL(internalJavaKeystoreUri), changeit);
+                sslContextBuilder.loadTrustMaterial(javaTrustStore, new TrustSelfSignedStrategy() {
                     @Override
                     public boolean isTrusted(X509Certificate[] chain, String authType)
                             throws CertificateException {
