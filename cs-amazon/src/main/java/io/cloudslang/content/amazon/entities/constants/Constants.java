@@ -11,6 +11,7 @@ public class Constants {
     }
 
     public static class Miscellaneous {
+        public static final String AMAZON_HOSTNAME = "amazonaws.com";
         public static final String AMPERSAND = "&";
         public static final String COLON = ":";
         public static final String COMMA_DELIMITER = ",";
@@ -18,7 +19,6 @@ public class Constants {
         public static final String DOT = ".";
         public static final String EMPTY = "";
         public static final String ENCODING = "UTF-8";
-        public static final String HTTPS_EC2_AMAZONAWS_COM = "https://ec2.amazonaws.com";
         public static final String EQUAL = "=";
         public static final String LINE_SEPARATOR = "\n";
         public static final String NETWORK = "network";

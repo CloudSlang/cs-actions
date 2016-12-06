@@ -107,7 +107,7 @@ public class RemoveLaunchPermissionsFromImageAction {
         try {
             version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
             final CommonInputs inputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

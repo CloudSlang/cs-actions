@@ -131,7 +131,7 @@ public class CreateSubnetAction {
             version = InputsUtil.getDefaultStringInput(version, LATEST_CREATE_SUBNET_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

@@ -140,7 +140,7 @@ public class AssociateAddressAction {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

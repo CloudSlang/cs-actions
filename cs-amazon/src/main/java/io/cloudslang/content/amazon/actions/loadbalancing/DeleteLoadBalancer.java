@@ -55,7 +55,7 @@ public class DeleteLoadBalancer {
      * need these EC2 instances, you can stop or terminate them.
      *
      * @param endpoint        Optional - Endpoint to which request will be sent.
-     *                        Example: "https://elasticloadbalancing.amazonaws.com"
+     *                        Default: "https://elasticloadbalancing.amazonaws.com"
      *                        Default: "https://ec2.amazonaws.com"
      * @param identity        ID of the secret access key associated with your Amazon AWS or IAM account.
      *                        Example: "AKIAIOSFODNN7EXAMPLE"
@@ -115,7 +115,7 @@ public class DeleteLoadBalancer {
             version = InputsUtil.getDefaultStringInput(version, LATEST_DELETE_LOAD_BALANCER_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, LOAD_BALANCING_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

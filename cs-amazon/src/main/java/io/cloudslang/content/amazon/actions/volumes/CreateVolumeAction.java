@@ -138,9 +138,9 @@ public class CreateVolumeAction {
             version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
-                    .withEndpoint(endpoint)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
                     .withProxyUsername(proxyUsername)

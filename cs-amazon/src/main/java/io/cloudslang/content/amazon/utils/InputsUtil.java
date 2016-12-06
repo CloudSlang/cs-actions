@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
@@ -32,6 +31,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ZONE_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
@@ -49,7 +49,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
-import static org.apache.commons.lang3.StringUtils.countMatches;
 import static org.apache.commons.lang3.StringUtils.indexOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -64,11 +63,10 @@ import static java.util.regex.Pattern.quote;
  */
 public final class InputsUtil {
     private static final String ACTION = "Action";
-    private static final String ARN = "arn";
     private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
-    private static final String AWS = "aws";
     private static final String EXCEPTED_KEY_STRING = "aws:";
     private static final String GP2 = "gp2";
+    private static final String HTTPS_PROTOCOL = "https";
     private static final String IO1 = "io1";
     private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String SC1 = "sc1";
@@ -121,6 +119,11 @@ public final class InputsUtil {
             endpoint += COLON + url.getPort();
         }
         return endpoint;
+    }
+
+    public static String getUrlFromApiService(String endpoint, String apiService) {
+        return isBlank(endpoint) ?
+                HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + apiService + DOT + AMAZON_HOSTNAME : endpoint;
     }
 
     public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix,
@@ -373,16 +376,6 @@ public final class InputsUtil {
                 throw new IllegalArgumentException(getValidationException(input, false));
             }
         }
-    }
-
-    public static String getValidArn(String input) {
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9\\:\\-\\/]+");
-        if (!input.contains(COLON) || !input.startsWith(ARN) || !input.contains(AWS) || !input.contains(LOAD_BALANCING_API)
-                || countMatches(input, COLON) != 5 || !pattern.matcher(input).matches()) {
-            throw new RuntimeException(getValidationException(input, false));
-        }
-
-        return input;
     }
 
     static long getValidLong(String input, long defaultValue) {

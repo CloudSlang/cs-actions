@@ -40,7 +40,7 @@ public class LoadBalancerInputs {
         }
 
         public LoadBalancerInputs.Builder withLoadBalancerArn(String inputValue) {
-            loadBalancerArn = InputsUtil.getValidArn(inputValue);
+            loadBalancerArn = inputValue;
             return this;
         }
 
