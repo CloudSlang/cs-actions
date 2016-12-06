@@ -9,7 +9,7 @@ import java.net.URL;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.ENDPOINT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.HTTPS_EC2_AMAZONAWS_COM;
 
 /**
  * Created by persdana
@@ -139,7 +139,7 @@ public class CommonInputs {
         }
 
         public Builder withEndpoint(String inputValue) throws MalformedURLException {
-            String stringEndpoint = InputsUtil.getDefaultStringInput(inputValue, ENDPOINT);
+            String stringEndpoint = InputsUtil.getDefaultStringInput(inputValue, HTTPS_EC2_AMAZONAWS_COM);
             endpoint = new URL(stringEndpoint.toLowerCase()).toString();
             return this;
         }

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
@@ -48,6 +49,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.countMatches;
 import static org.apache.commons.lang3.StringUtils.indexOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -62,7 +64,9 @@ import static java.util.regex.Pattern.quote;
  */
 public final class InputsUtil {
     private static final String ACTION = "Action";
+    private static final String ARN = "arn";
     private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
+    private static final String AWS = "aws";
     private static final String EXCEPTED_KEY_STRING = "aws:";
     private static final String GP2 = "gp2";
     private static final String IO1 = "io1";
@@ -119,7 +123,8 @@ public final class InputsUtil {
         return endpoint;
     }
 
-    public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
+    public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix,
+                                                  boolean deleteLastChar) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
             sb.append(entry.getKey());
@@ -169,27 +174,34 @@ public final class InputsUtil {
     public static void setNetworkInterfaceSpecificQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper,
                                                               String[] referenceArray, int index) {
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription())) {
-            setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
-                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DESCRIPTION, DESCRIPTION, wrapper.getCommonInputs().getDelimiter(), index);
+            setSpecificQueryParamValue(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
+                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DESCRIPTION, DESCRIPTION,
+                    wrapper.getCommonInputs().getDelimiter(), index);
         }
         if (isNotBlank(wrapper.getCustomInputs().getSubnetId())) {
             setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getCustomInputs().getSubnetId(),
-                    PRIVATE_IP_ADDRESSES_STRING, SUBNET_ID_INPUT, SUBNET_ID, wrapper.getCommonInputs().getDelimiter(), index);
+                    PRIVATE_IP_ADDRESSES_STRING, SUBNET_ID_INPUT, SUBNET_ID, wrapper.getCommonInputs().getDelimiter(),
+                    index);
         }
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString())) {
-            setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString(),
+            setSpecificBooleanQueryParam(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS, ASSOCIATE_PUBLIC_IP_ADDRESS,
                     wrapper.getCommonInputs().getDelimiter(), index, false);
         }
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination())) {
-            setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination(),
+            setSpecificBooleanQueryParam(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DELETE_ON_TERMINATION, DELETE_ON_TERMINATION,
                     wrapper.getCommonInputs().getDelimiter(), index, true);
         }
 
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex())) {
-            setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex(),
-                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DEVICE_INDEX, DEVICE_INDEX, wrapper.getCommonInputs().getDelimiter(), index);
+            setSpecificQueryParamValue(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex(),
+                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DEVICE_INDEX, DEVICE_INDEX,
+                    wrapper.getCommonInputs().getDelimiter(), index);
         } else {
             queryParamsMap.put(NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + DEVICE_INDEX, valueOf(index));
         }
@@ -199,10 +211,10 @@ public final class InputsUtil {
     /**
      * If enforcedBoolean is "true" and string input is: null, empty, many empty chars, TrUe, tRuE... but not "false"
      * then returns "true".
-     * <p>
+     *
      * If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
      * then returns "false"
-     * <p>
+     *
      * This behavior is needed for inputs like: "imageNoReboot" when we want them to be set to "true" disregarding the
      * value provided (null, empty, many empty chars, TrUe, tRuE) except the case when is "false"
      *
@@ -284,7 +296,8 @@ public final class InputsUtil {
         } else if (NAME.equalsIgnoreCase(specificArea)) {
             return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
-            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
+            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
+                    valueOf(index + ONE) + DOT;
         } else if (RESOURCE_ID.equalsIgnoreCase(specificArea)) {
             return RESOURCE_ID + DOT + valueOf(index + ONE);
         } else if (KEY.equalsIgnoreCase(specificArea)) {
@@ -349,12 +362,6 @@ public final class InputsUtil {
         }
     }
 
-    public static String getValidPositiveIntegerAsStringValue(String input, int minimumValue) {
-        return isBlank(input) ? EMPTY : valueOf(getValidInt(input, minimumValue, Integer.MAX_VALUE,
-                getValidationException(input, true), getValidationException(input, false)));
-
-    }
-
     public static void validateKeyOrValueString(String input, boolean isKey) {
         if (isKey && (isBlank(input) || input.length() > 128)) {
             throw new IllegalArgumentException(getValidationException(input, false));
@@ -366,6 +373,16 @@ public final class InputsUtil {
                 throw new IllegalArgumentException(getValidationException(input, false));
             }
         }
+    }
+
+    public static String getValidArn(String input) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9\\:\\-\\/]+");
+        if (!input.contains(COLON) || !input.startsWith(ARN) || !input.contains(AWS) || !input.contains(LOAD_BALANCING_API)
+                || countMatches(input, COLON) != 5 || !pattern.matcher(input).matches()) {
+            throw new RuntimeException(getValidationException(input, false));
+        }
+
+        return input;
     }
 
     static long getValidLong(String input, long defaultValue) {
@@ -405,7 +422,8 @@ public final class InputsUtil {
     private static void setSpecificBooleanQueryParam(Map<String, String> queryParamsMap, String[] referenceArray,
                                                      String inputString, String referenceInputName, String currentInputName,
                                                      String suffix, String delimiter, int index, boolean enforcedBoolean) {
-        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
+        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName,
+                currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)), currentArray.length > START_INDEX);
     }
@@ -417,10 +435,11 @@ public final class InputsUtil {
         return new HashSet<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
     }
 
-    private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray, String inputString,
-                                                   String referenceInputName, String currentInputName, String suffix, String delimiter,
-                                                   int index) {
-        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
+    private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray,
+                                                   String inputString, String referenceInputName, String currentInputName,
+                                                   String suffix, String delimiter, int index) {
+        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName,
+                currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 currentArray[index], currentArray.length > START_INDEX);
     }

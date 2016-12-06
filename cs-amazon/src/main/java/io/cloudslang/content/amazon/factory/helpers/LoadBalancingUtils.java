@@ -4,6 +4,7 @@ import io.cloudslang.content.amazon.entities.aws.Scheme;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,13 +31,15 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
  * 11/10/2016.
  */
 public class LoadBalancingUtils {
+    private static final String LOAD_BALANCER_ARN = "LoadBalancerArn";
     private static final String NAME = "Name";
     private static final String SCHEME = "Scheme";
     private static final String TAGS = "Tags";
 
     public Map<String, String> getCreateLoadBalancerQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(NAME, wrapper.getLoadBalancerInputs().getLoadBalancerName());
 
         InputsUtil.setOptionalMapEntry(queryParamsMap, SCHEME, wrapper.getLoadBalancerInputs().getScheme(),
@@ -45,6 +48,15 @@ public class LoadBalancingUtils {
         setSubnetIdQueryParams(queryParamsMap, wrapper);
         setSecurityGroupQueryParams(queryParamsMap, wrapper);
         setKeyAndValueTag(queryParamsMap, wrapper);
+
+        return queryParamsMap;
+    }
+
+    public Map<String, String> getDeleteLoadBalancerQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
+                wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(LOAD_BALANCER_ARN, wrapper.getLoadBalancerInputs().getLoadBalancerArn());
 
         return queryParamsMap;
     }

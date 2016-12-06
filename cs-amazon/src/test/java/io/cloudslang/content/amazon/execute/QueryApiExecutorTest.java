@@ -142,6 +142,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDeleteLoadBalancer() throws Exception {
+        toTest.execute(getCommonInputsForLoadBalancers("DeleteLoadBalancer", HEADERS, ""), getLoadBalancerInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteLoadBalancer")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testCreateNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
                 getIamInputs(), getNetworkInputs(false));
@@ -679,7 +688,11 @@ public class QueryApiExecutorTest {
     }
 
     private LoadBalancerInputs getLoadBalancerInputs() {
-        return new LoadBalancerInputs.Builder().withLoadBalancerName("testLB").withScheme("internal").build();
+        return new LoadBalancerInputs.Builder()
+                .withLoadBalancerName("testLB")
+                .withScheme("internal")
+                .withLoadBalancerArn("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188")
+                .build();
     }
 
     private Map<String, String> getQueryParamsMap(String action) {
@@ -723,6 +736,9 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Tags.member.3.Value", "Testing");
                 queryParamsMap.put("Tags.member.4.Key", "scope");
                 queryParamsMap.put("Tags.member.4.Value", "For testing purposes");
+                break;
+            case "DeleteLoadBalancer":
+                queryParamsMap.put("LoadBalancerArn", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188");
                 break;
             case "CreateNetworkInterface":
                 queryParamsMap.put("SubnetId", "subnet-abcdef12");

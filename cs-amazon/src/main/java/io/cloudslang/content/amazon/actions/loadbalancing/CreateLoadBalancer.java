@@ -66,6 +66,7 @@ public class CreateLoadBalancer {
      * For more information, see http://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html
      *
      * @param endpoint               Optional - Endpoint to which request will be sent.
+     *                               Example: "https://elasticloadbalancing.amazonaws.com"
      *                               Default: "https://ec2.amazonaws.com"
      * @param identity               ID of the secret access key associated with your Amazon AWS or IAM account.
      *                               Example: "AKIAIOSFODNN7EXAMPLE"
