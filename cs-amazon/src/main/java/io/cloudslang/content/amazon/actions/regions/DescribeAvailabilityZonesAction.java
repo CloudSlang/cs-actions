@@ -17,6 +17,7 @@ import java.util.Map;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.REGIONS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_AVAILABILITY_ZONES;
@@ -84,8 +85,8 @@ public class DescribeAvailabilityZonesAction {
      *                           Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                           Default: ""
      * @param version            Version of the web service to made the call against it.
-     *                           Example: "2016-09-15"
-     *                           Default: "2016-09-15"
+     *                           Example: "2016-11-15"
+     *                           Default: "2016-11-15"
      * @param delimiter          Optional - Delimiter that will be used.
      * @param keyFiltersString   Optional - String that contains one or more filter keys separated by delimiter.
      *                           For a complete list of valid filters see: http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAvailabilityZones.html
@@ -128,7 +129,7 @@ public class DescribeAvailabilityZonesAction {
                                        @Param(value = ZONE_NAMES_STRING) String zoneNamesString) {
 
         try {
-            version = getDefaultStringInput(version, "2016-09-15");
+            version = getDefaultStringInput(version, REGIONS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API)

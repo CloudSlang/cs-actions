@@ -16,6 +16,7 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.TAGS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.CREATE_TAGS;
@@ -75,8 +76,8 @@ public class CreateTagsAction {
      *                          Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                          Default: ""
      * @param version           Optional - Version of the web service to made the call against it.
-     *                          Example: "2016-09-15"
-     *                          Default: "2016-04-01"
+     *                          Example: "2016-11-15"
+     *                          Default: "2016-11-15"
      * @param delimiter         Optional - delimiter that will be used
      *                          Default: ","
      * @param resourceIdsString String that contains Id's of one or more resources to tag.
@@ -127,7 +128,7 @@ public class CreateTagsAction {
                                        @Param(value = KEY_TAGS_STRING, required = true) String keyTagsString,
                                        @Param(value = VALUE_TAGS_STRING, required = true) String valueTagsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, TAGS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API)

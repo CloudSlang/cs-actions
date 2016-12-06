@@ -1,7 +1,6 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.Scheme;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 /**
  * Created by TusaM

@@ -16,6 +16,7 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.SNAPSHOTS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DELETE_SNAPSHOT;
@@ -72,8 +73,8 @@ public class DeleteSnapshotAction {
      *                      Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                      Default: ""
      * @param version       Optional - Version of the web service to made the call against it.
-     *                      Example: "2016-04-01"
-     *                      Default: "2016-04-01"
+     *                      Example: "2016-11-15"
+     *                      Default: "2016-11-15"
      * @param snapshotId    ID of the EBS snapshot to be deleted.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
@@ -104,7 +105,7 @@ public class DeleteSnapshotAction {
 
                                        @Param(value = SNAPSHOT_ID, required = true) String snapshotId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, SNAPSHOTS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API)
