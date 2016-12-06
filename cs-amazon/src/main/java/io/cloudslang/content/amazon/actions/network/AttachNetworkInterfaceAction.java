@@ -19,6 +19,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.ATTACH_NETWORK_INTERFACE;
@@ -91,8 +92,8 @@ public class AttachNetworkInterfaceAction {
      * @param deviceIndex        Optional - ID of the device for the network interface attachment on the instance.
      *                           Example: "1"
      * @param version            Optional - Version of the web service to made the call against it.
-     *                           Example: "2014-06-15"
-     *                           Default: "2014-06-15"
+     *                           Example: "2016-11-15"
+     *                           Default: "2016-11-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
@@ -123,7 +124,7 @@ public class AttachNetworkInterfaceAction {
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
                                        @Param(value = DEVICE_INDEX) String deviceIndex) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2014-06-15");
+            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API)

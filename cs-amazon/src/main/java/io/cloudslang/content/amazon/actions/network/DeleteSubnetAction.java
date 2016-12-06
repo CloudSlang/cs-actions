@@ -16,6 +16,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DELETE_SUBNET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -43,8 +44,6 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
  * 11/23/2016.
  */
 public class DeleteSubnetAction {
-    private static final String LATEST_DELETE_SUBNET_API_VERSION = "2016-09-15";
-
     /**
      * Deletes the specified subnet.
      * You must terminate all running instances in the subnet before you can delete the subnet.
@@ -64,8 +63,8 @@ public class DeleteSubnetAction {
      *                      Default: ""
      * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
      * @param version       Optional - Version of the web service to made the call against it.
-     *                      Example: "2016-09-15"
-     *                      Default: "2016-09-15"
+     *                      Example: "2016-11-15"
+     *                      Default: "2016-11-15"
      * @param headers       Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                      The header name-value pair will be separated by ":"
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -105,7 +104,7 @@ public class DeleteSubnetAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = SUBNET_ID, required = true) String subnetId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LATEST_DELETE_SUBNET_API_VERSION);
+            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API)

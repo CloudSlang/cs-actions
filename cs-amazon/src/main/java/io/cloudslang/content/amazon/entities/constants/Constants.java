@@ -15,6 +15,7 @@ public class Constants {
         public static final String IMAGES_DEFAULT_API_VERSION = "2016-04-01";
         public static final String INSTANCES_DEFAULT_API_VERSION = "2016-11-15";
         public static final String LOAD_BALANCER_DEFAULT_API_VERSION = "2015-12-01";
+        public static final String NETWORK_DEFAULT_API_VERSION = "2016-11-15";
     }
 
     public static class ErrorMessages {
