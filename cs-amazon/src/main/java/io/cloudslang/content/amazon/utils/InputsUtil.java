@@ -64,7 +64,6 @@ import static java.util.regex.Pattern.quote;
 public final class InputsUtil {
     private static final String ACTION = "Action";
     private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
-    private static final String EXCEPTED_KEY_STRING = "aws:";
     private static final String GP2 = "gp2";
     private static final String HTTPS_PROTOCOL = "https";
     private static final String IO1 = "io1";
@@ -75,7 +74,6 @@ public final class InputsUtil {
     private static final String SUBNET_ID_INPUT = "subnetId";
     private static final String VERSION = "Version";
 
-    private static final int KEY_TAG_LENGTH_CONSTRAIN = 127;
     private static final int MAXIMUM_EBS_SIZE = 16384;
     private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
@@ -84,7 +82,6 @@ public final class InputsUtil {
     private static final int MAXIMUM_MAX_RESULTS = 1000;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
-    private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
 
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
@@ -160,8 +157,8 @@ public final class InputsUtil {
     }
 
     public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {
-        String[] currentArray = InputsUtil.getStringsArray(inputString, EMPTY, delimiter);
-        InputsUtil.validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
+        String[] currentArray = getStringsArray(inputString, EMPTY, delimiter);
+        validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
 
         return currentArray;
     }
@@ -264,14 +261,19 @@ public final class InputsUtil {
         }
     }
 
-    public static String getValidKeyOrValueTag(String input, boolean isKey) {
-        if (isKey && (input.startsWith(EXCEPTED_KEY_STRING) || input.length() > KEY_TAG_LENGTH_CONSTRAIN)) {
+    public static String getValidKeyOrValueTag(String input, String pattern, boolean isKey, boolean condition,
+                                               boolean patternCheck, int keyMaxLength, int valueMaxLength) {
+        if (isKey && (condition || input.length() > keyMaxLength)) {
             throw new RuntimeException(getValidationException(input, false));
-        } else if (!isKey && input.length() > VALUE_TAG_LENGTH_CONSTRAIN) {
+        } else if (!isKey && input.length() > valueMaxLength) {
             throw new RuntimeException(getValidationException(input, false));
-        }
+        } else {
+            if (patternCheck) {
+                patternCheck(input, pattern);
+            }
 
-        return input;
+            return input;
+        }
     }
 
     public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
@@ -365,19 +367,6 @@ public final class InputsUtil {
         }
     }
 
-    public static void validateKeyOrValueString(String input, boolean isKey) {
-        if (isKey && (isBlank(input) || input.length() > 128)) {
-            throw new IllegalArgumentException(getValidationException(input, false));
-        } else if (!isKey && (input.length() > 256)) {
-            throw new IllegalArgumentException(getValidationException(input, false));
-        } else {
-            Pattern pattern = Pattern.compile("^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$");
-            if (!pattern.matcher(input).matches()) {
-                throw new IllegalArgumentException(getValidationException(input, false));
-            }
-        }
-    }
-
     static long getValidLong(String input, long defaultValue) {
         if (isBlank(input)) {
             return defaultValue;
@@ -390,6 +379,13 @@ public final class InputsUtil {
             return longInput;
         } catch (NumberFormatException nfe) {
             throw new RuntimeException("The provided value: " + input + " input must be long.");
+        }
+    }
+
+    private static void patternCheck(String input, String regex){
+        Pattern pattern = Pattern.compile(regex);
+        if (!pattern.matcher(input).matches()) {
+            throw new IllegalArgumentException(getValidationException(input, false));
         }
     }
 

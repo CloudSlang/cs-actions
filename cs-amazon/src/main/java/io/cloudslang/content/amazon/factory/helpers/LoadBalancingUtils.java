@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -33,6 +34,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 public class LoadBalancingUtils {
     private static final String LOAD_BALANCER_ARN = "LoadBalancerArn";
     private static final String NAME = "Name";
+    private static final String REGEX = "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$";
     private static final String SCHEME = "Scheme";
     private static final String TAGS = "Tags";
 
@@ -87,10 +89,13 @@ public class LoadBalancingUtils {
         if (isNotEmpty(keyTagsArray) && isNotEmpty(valueTagsArray)) {
             InputsUtil.validateAgainstDifferentArraysLength(keyTagsArray, valueTagsArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
             for (int index = START_INDEX; index < keyTagsArray.length; index++) {
-                InputsUtil.validateKeyOrValueString(keyTagsArray[index], true);
-                InputsUtil.validateKeyOrValueString(valueTagsArray[index], false);
-                queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + KEY, keyTagsArray[index]);
-                queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + VALUE, valueTagsArray[index]);
+                String currentTag = InputsUtil.getValidKeyOrValueTag(keyTagsArray[index], REGEX,
+                        true, isBlank(keyTagsArray[index]), true, 128, 256);
+                queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + KEY, currentTag);
+
+                String currentValue = InputsUtil.getValidKeyOrValueTag(valueTagsArray[index], REGEX,
+                        false, false, true, 128, 256);
+                queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + VALUE, currentValue);
             }
         }
     }
