@@ -102,6 +102,8 @@ public class SSLConnectionSocketFactoryBuilderTest {
     public void buildWithTrustAllRoots() throws Exception {
         builder = new SSLConnectionSocketFactoryBuilder();
         builder.setTrustAllRoots("true");
+        builder.setKeystore(System.getProperty("java.home") + "/lib/security/cacerts");
+        builder.setKeystorePassword("changeit");
         mockStatic(SSLContexts.class);
 
         when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);
