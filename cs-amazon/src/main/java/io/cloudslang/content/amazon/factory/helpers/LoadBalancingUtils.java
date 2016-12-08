@@ -38,6 +38,9 @@ public class LoadBalancingUtils {
     private static final String SCHEME = "Scheme";
     private static final String TAGS = "Tags";
 
+    private static final int KEY_TAG_LENGTH_CONSTRAIN = 128;
+    private static final int VALUE_TAG_LENGTH_CONSTRAIN = 256;
+
     public Map<String, String> getCreateLoadBalancerQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
         InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
@@ -89,12 +92,12 @@ public class LoadBalancingUtils {
         if (isNotEmpty(keyTagsArray) && isNotEmpty(valueTagsArray)) {
             InputsUtil.validateAgainstDifferentArraysLength(keyTagsArray, valueTagsArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
             for (int index = START_INDEX; index < keyTagsArray.length; index++) {
-                String currentTag = InputsUtil.getValidKeyOrValueTag(keyTagsArray[index], REGEX,
-                        true, isBlank(keyTagsArray[index]), true, 128, 256);
+                String currentTag = InputsUtil.getValidKeyOrValueTag(keyTagsArray[index], REGEX, true,
+                        isBlank(keyTagsArray[index]), true, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
                 queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + KEY, currentTag);
 
-                String currentValue = InputsUtil.getValidKeyOrValueTag(valueTagsArray[index], REGEX,
-                        false, false, true, 128, 256);
+                String currentValue = InputsUtil.getValidKeyOrValueTag(valueTagsArray[index], REGEX, false,
+                        false, true, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
                 queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + VALUE, currentValue);
             }
         }
