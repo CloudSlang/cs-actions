@@ -31,6 +31,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ZONE_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
@@ -63,8 +64,8 @@ import static java.util.regex.Pattern.quote;
 public final class InputsUtil {
     private static final String ACTION = "Action";
     private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
-    private static final String EXCEPTED_KEY_STRING = "aws:";
     private static final String GP2 = "gp2";
+    private static final String HTTPS_PROTOCOL = "https";
     private static final String IO1 = "io1";
     private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String SC1 = "sc1";
@@ -73,7 +74,6 @@ public final class InputsUtil {
     private static final String SUBNET_ID_INPUT = "subnetId";
     private static final String VERSION = "Version";
 
-    private static final int KEY_TAG_LENGTH_CONSTRAIN = 127;
     private static final int MAXIMUM_EBS_SIZE = 16384;
     private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
@@ -82,7 +82,6 @@ public final class InputsUtil {
     private static final int MAXIMUM_MAX_RESULTS = 1000;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
-    private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
 
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
@@ -119,7 +118,13 @@ public final class InputsUtil {
         return endpoint;
     }
 
-    public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
+    public static String getUrlFromApiService(String endpoint, String apiService) {
+        return isBlank(endpoint) ?
+                HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + apiService + DOT + AMAZON_HOSTNAME : endpoint;
+    }
+
+    public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix,
+                                                  boolean deleteLastChar) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
             sb.append(entry.getKey());
@@ -152,8 +157,8 @@ public final class InputsUtil {
     }
 
     public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {
-        String[] currentArray = InputsUtil.getStringsArray(inputString, EMPTY, delimiter);
-        InputsUtil.validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
+        String[] currentArray = getStringsArray(inputString, EMPTY, delimiter);
+        validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
 
         return currentArray;
     }
@@ -169,27 +174,34 @@ public final class InputsUtil {
     public static void setNetworkInterfaceSpecificQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper,
                                                               String[] referenceArray, int index) {
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDescription())) {
-            setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
-                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DESCRIPTION, DESCRIPTION, wrapper.getCommonInputs().getDelimiter(), index);
+            setSpecificQueryParamValue(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfaceDescription(),
+                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DESCRIPTION, DESCRIPTION,
+                    wrapper.getCommonInputs().getDelimiter(), index);
         }
         if (isNotBlank(wrapper.getCustomInputs().getSubnetId())) {
             setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getCustomInputs().getSubnetId(),
-                    PRIVATE_IP_ADDRESSES_STRING, SUBNET_ID_INPUT, SUBNET_ID, wrapper.getCommonInputs().getDelimiter(), index);
+                    PRIVATE_IP_ADDRESSES_STRING, SUBNET_ID_INPUT, SUBNET_ID, wrapper.getCommonInputs().getDelimiter(),
+                    index);
         }
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString())) {
-            setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString(),
+            setSpecificBooleanQueryParam(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS, ASSOCIATE_PUBLIC_IP_ADDRESS,
                     wrapper.getCommonInputs().getDelimiter(), index, false);
         }
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination())) {
-            setSpecificBooleanQueryParam(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination(),
+            setSpecificBooleanQueryParam(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination(),
                     PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DELETE_ON_TERMINATION, DELETE_ON_TERMINATION,
                     wrapper.getCommonInputs().getDelimiter(), index, true);
         }
 
         if (isNotBlank(wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex())) {
-            setSpecificQueryParamValue(queryParamsMap, referenceArray, wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex(),
-                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DEVICE_INDEX, DEVICE_INDEX, wrapper.getCommonInputs().getDelimiter(), index);
+            setSpecificQueryParamValue(queryParamsMap, referenceArray,
+                    wrapper.getNetworkInputs().getNetworkInterfaceDeviceIndex(),
+                    PRIVATE_IP_ADDRESSES_STRING, NETWORK_INTERFACE_DEVICE_INDEX, DEVICE_INDEX,
+                    wrapper.getCommonInputs().getDelimiter(), index);
         } else {
             queryParamsMap.put(NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + DEVICE_INDEX, valueOf(index));
         }
@@ -199,10 +211,10 @@ public final class InputsUtil {
     /**
      * If enforcedBoolean is "true" and string input is: null, empty, many empty chars, TrUe, tRuE... but not "false"
      * then returns "true".
-     * <p>
+     *
      * If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
      * then returns "false"
-     * <p>
+     *
      * This behavior is needed for inputs like: "imageNoReboot" when we want them to be set to "true" disregarding the
      * value provided (null, empty, many empty chars, TrUe, tRuE) except the case when is "false"
      *
@@ -249,14 +261,19 @@ public final class InputsUtil {
         }
     }
 
-    public static String getValidKeyOrValueTag(String input, boolean isKey) {
-        if (isKey && (input.startsWith(EXCEPTED_KEY_STRING) || input.length() > KEY_TAG_LENGTH_CONSTRAIN)) {
+    public static String getValidKeyOrValueTag(String input, String pattern, boolean isKey, boolean condition,
+                                               boolean patternCheck, int keyMaxLength, int valueMaxLength) {
+        if (isKey && (condition || input.length() > keyMaxLength)) {
             throw new RuntimeException(getValidationException(input, false));
-        } else if (!isKey && input.length() > VALUE_TAG_LENGTH_CONSTRAIN) {
+        } else if (!isKey && input.length() > valueMaxLength) {
             throw new RuntimeException(getValidationException(input, false));
-        }
+        } else {
+            if (patternCheck) {
+                patternCheck(input, pattern);
+            }
 
-        return input;
+            return input;
+        }
     }
 
     public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
@@ -284,7 +301,8 @@ public final class InputsUtil {
         } else if (NAME.equalsIgnoreCase(specificArea)) {
             return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
-            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
+            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
+                    valueOf(index + ONE) + DOT;
         } else if (RESOURCE_ID.equalsIgnoreCase(specificArea)) {
             return RESOURCE_ID + DOT + valueOf(index + ONE);
         } else if (KEY.equalsIgnoreCase(specificArea)) {
@@ -349,25 +367,6 @@ public final class InputsUtil {
         }
     }
 
-    public static String getValidPositiveIntegerAsStringValue(String input, int minimumValue) {
-        return isBlank(input) ? EMPTY : valueOf(getValidInt(input, minimumValue, Integer.MAX_VALUE,
-                getValidationException(input, true), getValidationException(input, false)));
-
-    }
-
-    public static void validateKeyOrValueString(String input, boolean isKey) {
-        if (isKey && (isBlank(input) || input.length() > 128)) {
-            throw new IllegalArgumentException(getValidationException(input, false));
-        } else if (!isKey && (input.length() > 256)) {
-            throw new IllegalArgumentException(getValidationException(input, false));
-        } else {
-            Pattern pattern = Pattern.compile("^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$");
-            if (!pattern.matcher(input).matches()) {
-                throw new IllegalArgumentException(getValidationException(input, false));
-            }
-        }
-    }
-
     static long getValidLong(String input, long defaultValue) {
         if (isBlank(input)) {
             return defaultValue;
@@ -380,6 +379,13 @@ public final class InputsUtil {
             return longInput;
         } catch (NumberFormatException nfe) {
             throw new RuntimeException("The provided value: " + input + " input must be long.");
+        }
+    }
+
+    private static void patternCheck(String input, String regex){
+        Pattern pattern = Pattern.compile(regex);
+        if (!pattern.matcher(input).matches()) {
+            throw new IllegalArgumentException(getValidationException(input, false));
         }
     }
 
@@ -405,7 +411,8 @@ public final class InputsUtil {
     private static void setSpecificBooleanQueryParam(Map<String, String> queryParamsMap, String[] referenceArray,
                                                      String inputString, String referenceInputName, String currentInputName,
                                                      String suffix, String delimiter, int index, boolean enforcedBoolean) {
-        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
+        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName,
+                currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 valueOf(getEnforcedBooleanCondition(currentArray[index], enforcedBoolean)), currentArray.length > START_INDEX);
     }
@@ -417,10 +424,11 @@ public final class InputsUtil {
         return new HashSet<>(asList(input.split(quote(getDefaultStringInput(delimiter, COMMA_DELIMITER)))));
     }
 
-    private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray, String inputString,
-                                                   String referenceInputName, String currentInputName, String suffix, String delimiter,
-                                                   int index) {
-        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName, currentInputName);
+    private static void setSpecificQueryParamValue(Map<String, String> queryParamsMap, String[] referenceArray,
+                                                   String inputString, String referenceInputName, String currentInputName,
+                                                   String suffix, String delimiter, int index) {
+        String[] currentArray = getValidStringArray(referenceArray, inputString, EMPTY, delimiter, referenceInputName,
+                currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 currentArray[index], currentArray.length > START_INDEX);
     }

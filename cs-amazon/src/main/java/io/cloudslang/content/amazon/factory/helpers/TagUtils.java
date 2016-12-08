@@ -24,9 +24,12 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
  * 10/12/2016.
  */
 public class TagUtils {
+    private static final String EXCEPTED_KEY_STRING = "aws:";
     private static final String MORE_THAN_50_TAGS_ERROR_MESSAGE = "The resources cannot be tagged with more than 50 tags!";
 
+    private static final int KEY_TAG_LENGTH_CONSTRAIN = 127;
     private static final int MAXIMUM_TAGS_ALLOWED = 50;
+    private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
 
     public Map<String, String> getCreateTagsQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -59,9 +62,15 @@ public class TagUtils {
             }
 
             for (int index = START_INDEX; index < keyTagsStringArray.length; index++) {
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(KEY, index), InputsUtil.getValidKeyOrValueTag(keyTagsStringArray[index], true));
-                String currentValue = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ? EMPTY : valueTagsStringArray[index];
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUE, index), InputsUtil.getValidKeyOrValueTag(currentValue, false));
+                String currentKey = InputsUtil.getValidKeyOrValueTag(keyTagsStringArray[index], EMPTY, true,
+                        keyTagsStringArray[index].startsWith(EXCEPTED_KEY_STRING), false, KEY_TAG_LENGTH_CONSTRAIN,
+                        VALUE_TAG_LENGTH_CONSTRAIN);
+                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(KEY, index), currentKey);
+
+                String emptyOrRelevant = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ? EMPTY : valueTagsStringArray[index];
+                String currentValue = InputsUtil.getValidKeyOrValueTag(emptyOrRelevant, EMPTY, false, false,
+                        false, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
+                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUE, index), currentValue);
             }
         }
     }

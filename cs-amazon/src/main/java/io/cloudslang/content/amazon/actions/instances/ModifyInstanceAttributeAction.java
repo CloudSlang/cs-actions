@@ -19,6 +19,7 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.MODIFY_INSTANCE_ATTRIBUTE;
@@ -94,8 +95,8 @@ public class ModifyInstanceAttributeAction {
      *                                             Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                                             Default: ""
      * @param version                              Version of the web service to made the call against it.
-     *                                             Example: "2016-09-15"
-     *                                             Default: "2016-09-15"
+     *                                             Example: "2016-11-15"
+     *                                             Default: "2016-11-15"
      * @param delimiter                            Optional - Delimiter that will be used.
      *                                             Default: ","
      * @param attribute                            Optional - name of the attribute.
@@ -252,10 +253,10 @@ public class ModifyInstanceAttributeAction {
                                        @Param(value = SRIOV_NET_SUPPORT) String sriovNetSupport,
                                        @Param(value = LOWER_CASE_USER_DATA) String userData) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-09-15");
+            version = InputsUtil.getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

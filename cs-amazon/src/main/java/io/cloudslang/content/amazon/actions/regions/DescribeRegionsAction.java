@@ -16,6 +16,7 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.REGIONS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_REGIONS;
@@ -71,8 +72,8 @@ public class DescribeRegionsAction {
      *                           Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                           Default: ""
      * @param version            Optional - Version of the web service to made the call against it.
-     *                           Example: "2016-04-01"
-     *                           Default: "2016-04-01"
+     *                           Example: "2016-11-15"
+     *                           Default: "2016-11-15"
      * @param delimiter          Optional - delimiter that will be used
      *                           Default: ","
      * @param keyFiltersString   Optional - String that contains one or more filter keys separated by delimiter.
@@ -114,10 +115,10 @@ public class DescribeRegionsAction {
                                        @Param(value = VALUE_FILTERS_STRING, required = true) String valueFiltersString,
                                        @Param(value = REGIONS_STRING, required = true) String regionsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, REGIONS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

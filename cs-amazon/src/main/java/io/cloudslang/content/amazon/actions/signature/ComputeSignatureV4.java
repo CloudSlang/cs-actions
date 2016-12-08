@@ -111,7 +111,7 @@ public class ComputeSignatureV4 {
                     queryParams, AMPERSAND, EQUAL, false);
 
             CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, amazonApi)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .build();

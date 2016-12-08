@@ -23,6 +23,7 @@ import java.util.Map;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.RUN_INSTANCES;
@@ -157,8 +158,8 @@ public class RunInstancesAction {
      *                                                  Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                                                  Default: ""
      * @param version                                   Optional - Version of the web service to made the call against it.
-     *                                                  Example: "2016-04-01"
-     *                                                  Default: "2016-04-01"
+     *                                                  Example: "2016-11-15"
+     *                                                  Default: "2016-11-15"
      * @param delimiter                                 Optional - delimiter that will be used.
      *                                                  Default: ","
      * @param availabilityZone                          Optional - availability zone of the instance (as part of Placement).
@@ -472,10 +473,10 @@ public class RunInstancesAction {
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
                                        @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

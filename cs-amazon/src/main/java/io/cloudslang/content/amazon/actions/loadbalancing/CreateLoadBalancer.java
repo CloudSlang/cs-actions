@@ -24,6 +24,7 @@ import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE_RETURN_CODE;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.CREATE_LOAD_BALANCER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -66,7 +67,7 @@ public class CreateLoadBalancer {
      * For more information, see http://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html
      *
      * @param endpoint               Optional - Endpoint to which request will be sent.
-     *                               Default: "https://ec2.amazonaws.com"
+     *                               Default: "https://elasticloadbalancing.amazonaws.com"
      * @param identity               ID of the secret access key associated with your Amazon AWS or IAM account.
      *                               Example: "AKIAIOSFODNN7EXAMPLE"
      * @param credential             Secret access key associated with your Amazon AWS or IAM account.
@@ -152,10 +153,10 @@ public class CreateLoadBalancer {
                                        @Param(value = KEY_TAGS_STRING) String keyTagsString,
                                        @Param(value = VALUE_TAGS_STRING) String valueTagsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2015-12-01");
+            version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, LOAD_BALANCING_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
