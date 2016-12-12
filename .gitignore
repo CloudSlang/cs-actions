@@ -7,3 +7,4 @@ target/
 *.iml
 .*
 !/.codeclimate.yml
+!/.coveralls.yml
