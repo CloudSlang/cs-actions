@@ -10,7 +10,24 @@ public class Constants {
         public static final String LOAD_BALANCING_API = "elasticloadbalancing";
     }
 
+    public static class DefaultApiVersion {
+        public static final String ELASTIC_IP_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String IMAGES_DEFAULT_API_VERSION = "2016-04-01";
+        public static final String INSTANCES_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String LOAD_BALANCER_DEFAULT_API_VERSION = "2015-12-01";
+        public static final String NETWORK_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String REGIONS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String SNAPSHOTS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
+    }
+
+    public static class ErrorMessages {
+        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
+    }
+
     public static class Miscellaneous {
+        public static final String AMAZON_HOSTNAME = "amazonaws.com";
         public static final String AMPERSAND = "&";
         public static final String COLON = ":";
         public static final String COMMA_DELIMITER = ",";
@@ -18,19 +35,12 @@ public class Constants {
         public static final String DOT = ".";
         public static final String EMPTY = "";
         public static final String ENCODING = "UTF-8";
-        public static final String ENDPOINT = "https://ec2.amazonaws.com";
         public static final String EQUAL = "=";
         public static final String LINE_SEPARATOR = "\n";
         public static final String NETWORK = "network";
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String PIPE_DELIMITER = "|";
         public static final String SCOPE_SEPARATOR = "/";
-    }
-
-    public static class ErrorMessages {
-        public static final String BOTH_PERMISSION_INPUTS_EMPTY = "The [userIdsString] and [userGroupsString] inputs" +
-                " cannot be both empty in order to add/remove permission launch on specified image.";
-        public static final String UNSUPPORTED_QUERY_API = "Unsupported Query API.";
     }
 
     public static class Values {
@@ -134,5 +144,6 @@ public class Constants {
 
     public static class LoadBalancingQueryApiActions {
         public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
+        public static final String DELETE_LOAD_BALANCER = "DeleteLoadBalancer";
     }
 }

@@ -16,6 +16,7 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.IMAGES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LAUNCH_PERMISSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -89,9 +90,9 @@ public class GetLaunchPermissionForImageAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = IMAGE_ID, required = true) String imageId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, "2016-04-01");
+            version = InputsUtil.getDefaultStringInput(version, IMAGES_DEFAULT_API_VERSION);
             final CommonInputs inputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
@@ -108,7 +109,10 @@ public class GetLaunchPermissionForImageAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            final CustomInputs customInputs = new CustomInputs.Builder().withAttribute(LAUNCH_PERMISSION).withImageId(imageId).build();
+            final CustomInputs customInputs = new CustomInputs.Builder()
+                    .withAttribute(LAUNCH_PERMISSION)
+                    .withImageId(imageId)
+                    .build();
 
             return new QueryApiExecutor().execute(inputs, customInputs);
         } catch (Exception exception) {

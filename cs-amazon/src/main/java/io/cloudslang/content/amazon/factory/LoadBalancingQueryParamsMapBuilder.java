@@ -6,6 +6,8 @@ import io.cloudslang.content.amazon.factory.helpers.LoadBalancingUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.CREATE_LOAD_BALANCER;
+import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.DELETE_LOAD_BALANCER;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMessages.UNSUPPORTED_QUERY_API;
 
 /**
@@ -21,6 +23,8 @@ class LoadBalancingQueryParamsMapBuilder {
         switch (wrapper.getCommonInputs().getAction()) {
             case CREATE_LOAD_BALANCER:
                 return new LoadBalancingUtils().getCreateLoadBalancerQueryParamsMap(wrapper);
+            case DELETE_LOAD_BALANCER:
+                return new LoadBalancingUtils().getDeleteLoadBalancerQueryParamsMap(wrapper);
             default:
                 throw new RuntimeException(UNSUPPORTED_QUERY_API);
         }

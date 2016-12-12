@@ -17,6 +17,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
@@ -36,7 +37,6 @@ public class AmazonSignatureService {
     private static final String T_REGEX_STRING = "T";
     private static final String X_AMZ_DATE = "X-Amz-Date";
     private static final String X_AMZ_SECURITY_TOKEN = "X-Amz-Security-Token";
-    private static final String AMAZON_HOSTNAME = "amazonaws.com";
 
     private final AwsSignatureV4 awsSignatureV4 = new AwsSignatureV4();
 
@@ -46,7 +46,8 @@ public class AmazonSignatureService {
         String amazonDate = isBlank(wrapper.getDate()) ? signatureUtils.getAmazonDateString(new Date()) : wrapper.getDate();
         String dateStamp = amazonDate.split(T_REGEX_STRING)[0];
 
-        String requestEndpoint = getRequestEndpoint(wrapper.getCommonInputs().getEndpoint());
+        String requestEndpoint = getRequestEndpoint(InputsUtil.getUrlFromApiService(wrapper.getCommonInputs().getEndpoint(),
+                wrapper.getCommonInputs().getApiService()));
         String region = signatureUtils.getAmazonRegion(requestEndpoint);
 
         String apiService = InputsUtil.getDefaultStringInput(wrapper.getApiService(), EC2_API);

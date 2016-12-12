@@ -1,5 +1,6 @@
 package io.cloudslang.content.amazon.factory;
 
+import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.inputs.*;
 
@@ -62,7 +63,7 @@ public class InputsWrapperBuilder {
     private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
 
-        httpClientInputs.setUrl(commonInputs.getEndpoint());
+        httpClientInputs.setUrl(InputsUtil.getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService()));
         httpClientInputs.setProxyHost(commonInputs.getProxyHost());
         httpClientInputs.setProxyPort(commonInputs.getProxyPort());
         httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());

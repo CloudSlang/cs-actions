@@ -17,6 +17,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.CREATE_SUBNET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
@@ -47,8 +48,6 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
  * 11/22/2016.
  */
 public class CreateSubnetAction {
-    private static final String LATEST_CREATE_SUBNET_API_VERSION = "2016-09-15";
-
     /**
      * Creates a subnet in an existing VPC.
      * Note: When you create each subnet, you provide the VPC ID and the CIDR block you want for the subnet. After you
@@ -80,8 +79,8 @@ public class CreateSubnetAction {
      *                         Default: ""
      * @param proxyPassword    Optional - proxy server password associated with the <proxyUsername> input value.
      * @param version          Optional - Version of the web service to made the call against it.
-     *                         Example: "2016-09-15"
-     *                         Default: "2016-09-15"
+     *                         Example: "2016-11-15"
+     *                         Default: "2016-11-15"
      * @param headers          Optional - string containing the headers to use for the request separated by new line
      *                         (CRLF). The header name-value pair will be separated by ":"
      *                         Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -128,10 +127,10 @@ public class CreateSubnetAction {
                                        @Param(value = VPC_ID, required = true) String vpcId,
                                        @Param(value = CIDR_BLOCK, required = true) String cidrBlock) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LATEST_CREATE_SUBNET_API_VERSION);
+            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint)
+                    .withEndpoint(endpoint, EC2_API)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

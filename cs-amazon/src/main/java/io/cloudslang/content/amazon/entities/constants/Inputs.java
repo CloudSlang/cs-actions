@@ -142,6 +142,7 @@ public class Inputs {
     }
 
     public static class LoadBalancerInputs {
+        public static final String LOAD_BALANCER_ARN = "loadBalancerArn";
         public static final String LOAD_BALANCER_NAME = "loadBalancerName";
         public static final String SCHEME = "schema";
     }
