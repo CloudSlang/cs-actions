@@ -1,12 +1,12 @@
-engines:
-  fixme:
-    enabled: true
-  checkstyle:
-    enabled: true
-    channel: "beta"
-  pmd:
-    enabled: true
-    channel: "beta"
+  engines:
+    fixme:
+      enabled: true
+    checkstyle:
+      enabled: true
+      channel: "beta"
+    pmd:
+      enabled: true
+      channel: "beta"
   ratings:
     paths:
     - "**.java"
