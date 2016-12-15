@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <additionalHeaders>
-    <cloudslang-java-header>
+    <cs-actions-java-header>
         <firstLine>/*******************************************************************************</firstLine>
         <beforeEachLine> </beforeEachLine>
         <endLine> *******************************************************************************/</endLine>
@@ -10,5 +10,5 @@
         <allowBlankLines>false</allowBlankLines>
         <isMultiline>true</isMultiline>
         <padLines>false</padLines>
-    </cloudslang-java-header>
+    </cs-actions-java-header>
 </additionalHeaders>

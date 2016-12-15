@@ -161,7 +161,7 @@
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>
                     <mapping>
-                        <java>cloudslang-java-header</java>
+                        <java>cs-actions-java-header</java>
                     </mapping>
                 </configuration>
                 <executions>
