@@ -113,6 +113,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
+                        <!-- Do not update this version because it is not compatible with java 7 -->
                         <version>6.19</version>
                     </dependency>
                 </dependencies>
