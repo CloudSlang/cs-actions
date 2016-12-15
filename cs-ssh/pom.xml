@@ -1,9 +1,4 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>io.cloudslang.content</groupId>
-        <artifactId>cs-actions</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
     <!--
         (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
@@ -152,15 +147,37 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <!--License checker for build-->
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
                 <configuration>
-                    <header>${project.parent.basedir}/license.template</header>
+                    <header>${project.basedir}/license.template</header>
                     <headerDefinitions>
-                        <headerDefinition>${project.parent.basedir}/header-definitions.xml</headerDefinition>
+                        <headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>
                     </headerDefinitions>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <!--Pass arguments using ${var} syntax in license.template file-->
+                    <properties>
+                        <copyright.year>2016</copyright.year>
+                    </properties>
+                    <!--Custom mapping for java extensions-->
+                    <useDefaultMapping>false</useDefaultMapping>
+                    <mapping>
+                        <java>cloudslang-java-header</java>
+                    </mapping>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
