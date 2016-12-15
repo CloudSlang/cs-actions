@@ -40,7 +40,7 @@ public class SendMailInputs {
     private String bcc;
     private String subject;
     private String body;
-    private String read_receipt;
+    private String readReceipt;
     private String attachments;
     private String headers;
     private String rowDelimiter;
@@ -170,11 +170,11 @@ public class SendMailInputs {
     }
 
     public String getReadReceipt() {
-        return read_receipt;
+        return readReceipt;
     }
 
-    public void setReadReceipt(String read_receipt) {
-        this.read_receipt = read_receipt;
+    public void setReadReceipt(String readReceipt) {
+        this.readReceipt = readReceipt;
     }
 
     public String getAttachments() {

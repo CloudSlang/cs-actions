@@ -81,6 +81,43 @@ http://www.apache.org/licenses/LICENSE-2.0
         </pluginManagement>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle-for-java-sources</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>false</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <!--
+                                AuthSSLX509TrustManager has a long header that can not be break
+                                SendMailTest has a long constant that can not be break.
+                            -->
+                            <maxAllowedViolations>2</maxAllowedViolations>
+                            <logViolationsToConsole>true</logViolationsToConsole>
+                            <violationSeverity>warning</violationSeverity>
+                            <includeResources>false</includeResources>
+                            <includeTestResources>false</includeTestResources>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>7.3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>

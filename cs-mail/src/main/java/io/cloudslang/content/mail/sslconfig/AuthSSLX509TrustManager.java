@@ -59,6 +59,7 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
      */
     private static final Log LOG = LogFactory
             .getLog(AuthSSLX509TrustManager.class);
+    public static final int RADIX_16 = 16;
     private X509TrustManager defaultTrustManager = null;
 
     /**
@@ -84,8 +85,7 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
                 X509Certificate cert = certificates[c];
                 LOG.info(" Client certificate " + (c + 1) + ":");
                 LOG.info("  Subject DN: " + cert.getSubjectDN());
-                LOG.info("  Signature Algorithm: "
-                        + cert.getSigAlgName());
+                LOG.info("  Signature Algorithm: " + cert.getSigAlgName());
                 LOG.info("  Valid from: " + cert.getNotBefore());
                 LOG.info("  Valid until: " + cert.getNotAfter());
                 LOG.info("  Issuer: " + cert.getIssuerDN());
@@ -104,12 +104,11 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
                 X509Certificate cert = certificates[c];
                 LOG.info(" Server certificate " + (c + 1) + ":");
                 LOG.info("  Subject DN: " + cert.getSubjectDN());
-                LOG.info("  Signature Algorithm: "
-                        + cert.getSigAlgName());
+                LOG.info("  Signature Algorithm: " + cert.getSigAlgName());
                 LOG.info("  Valid from: " + cert.getNotBefore());
                 LOG.info("  Valid until: " + cert.getNotAfter());
                 LOG.info("  Issuer: " + cert.getIssuerDN());
-                LOG.info("  SN: " + cert.getSerialNumber().toString(16));
+                LOG.info("  SN: " + cert.getSerialNumber().toString(RADIX_16));
             }
         }
         defaultTrustManager.checkServerTrusted(certificates, authType);
