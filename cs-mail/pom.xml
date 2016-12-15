@@ -113,7 +113,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>7.3</version>
+                        <version>6.19</version>
                     </dependency>
                 </dependencies>
             </plugin>
