@@ -48,8 +48,8 @@ public class OvfUtils {
     public static ManagedObjectReference getHttpNfcLease(final ConnectionResources connectionResources, final ImportSpec importSpec,
                                                          final ManagedObjectReference resourcePool, final ManagedObjectReference hostMor,
                                                          final ManagedObjectReference folderMor) throws Exception {
-        return connectionResources.getVimPortType().
-                importVApp(resourcePool, importSpec, folderMor, hostMor);
+        return connectionResources.getVimPortType()
+                .importVApp(resourcePool, importSpec, folderMor, hostMor);
     }
 
     public static HttpNfcLeaseInfo getHttpNfcLeaseInfo(final ConnectionResources connectionResources, final ManagedObjectReference httpNfcLease) throws Exception {

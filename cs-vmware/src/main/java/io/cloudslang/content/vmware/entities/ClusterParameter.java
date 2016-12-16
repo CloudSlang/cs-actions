@@ -19,7 +19,7 @@ public enum ClusterParameter {
     CLUSTER_PROFILE_MANAGER("ClusterProfileManager"),
     CONFIGURATION_EX("configurationEx");
 
-    final private String parameter;
+    private final String parameter;
 
     /**
      * Instantiates a VM parameter.

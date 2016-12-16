@@ -39,7 +39,7 @@ public class GuestService {
      * @param vmInputs    Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @param guestInputs Object that has all specific inputs necessary to customize specified virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> customizeVM(HttpInputs httpInputs, VmInputs vmInputs, GuestInputs guestInputs, boolean isWin)
@@ -75,7 +75,7 @@ public class GuestService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message or failure
-     * message and the exception if there is one
+     *         message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> mountTools(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {

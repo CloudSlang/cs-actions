@@ -64,7 +64,7 @@ public class CreateVM {
      * @param vmMemorySize       optional - the memory amount (in Mb) attached to the virtual machine that will will
      *                           be created - Default: "1024"
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     * task id of the execution or failure message and the exception if there is one
+     *         task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Create Virtual Machine",
             outputs = {

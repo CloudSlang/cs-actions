@@ -50,7 +50,7 @@ public class GetOSDescriptors {
      *                       - Example: 'host123.subdomain.example.com'
      * @param delimiter      the delimiter that will be used in response list - Default: ","
      * @return resultMap with String as key and value that contains returnCode of the operation, a list that contains all the
-     * guest operating system descriptors supported by the host system or failure message and the exception if there is one
+     *         guest operating system descriptors supported by the host system or failure message and the exception if there is one
      */
     @Action(name = "Get OS Descriptors",
             outputs = {

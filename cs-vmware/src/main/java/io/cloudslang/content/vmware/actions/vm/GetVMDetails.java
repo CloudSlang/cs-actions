@@ -45,7 +45,7 @@ public class GetVMDetails {
      *                           to see how to obtain a valid vCenter certificate
      * @param virtualMachineName the name of the targeted virtual machine to retrieve the details for
      * @return resultMap with String as key and value that contains returnCode of the operation, a JSON formatted string
-     * that contains details of the virtual machine or failure message and the exception if there is one
+     *         that contains details of the virtual machine or failure message and the exception if there is one
      */
     @Action(name = "Get VM Details",
             outputs = {

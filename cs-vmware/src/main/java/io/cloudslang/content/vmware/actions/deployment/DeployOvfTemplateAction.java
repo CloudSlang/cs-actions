@@ -156,7 +156,8 @@ public class DeployOvfTemplateAction {
             Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
             Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
 
-            new DeployOvfTemplateService(InputUtils.getBooleanInput(parallel, true)).deployOvfTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);
+            new DeployOvfTemplateService(InputUtils.getBooleanInput(parallel, true))
+                    .deployOvfTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);
             return OutputUtilities.getSuccessResultsMap(SUCCESSFULLY_DEPLOYED);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);

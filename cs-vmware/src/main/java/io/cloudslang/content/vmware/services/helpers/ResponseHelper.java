@@ -31,7 +31,7 @@ public class ResponseHelper {
     private ConnectionResources connectionResources;
     private ManagedObjectReference task;
 
-    public ResponseHelper(ConnectionResources connectionResources, ManagedObjectReference task){
+    public ResponseHelper(ConnectionResources connectionResources, ManagedObjectReference task) {
         this.connectionResources = connectionResources;
         this.task = task;
     }

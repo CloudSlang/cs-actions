@@ -87,8 +87,8 @@ public class ListVmGroups {
                     .withTrustEveryone(trustEveryone)
                     .build();
             return OutputUtilities.getSuccessResultsMap(
-                    new ClusterComputeResourceService().
-                            listGroups(httpInputs, clusterName, InputUtils.getDefaultDelimiter(delimiter, COMMA_DELIMITER), ClusterVmGroup.class));
+                    new ClusterComputeResourceService()
+                            .listGroups(httpInputs, clusterName, InputUtils.getDefaultDelimiter(delimiter, COMMA_DELIMITER), ClusterVmGroup.class));
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
         }

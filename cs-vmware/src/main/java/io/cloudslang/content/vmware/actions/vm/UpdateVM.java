@@ -59,7 +59,7 @@ public class UpdateVM {
      *                           be created - Valid values: "persistent", "independent_persistent", "independent_nonpersistent"
      *                           This input will be considered only when "add" operation and "disk" device are provided
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     * task id of the execution or failure message and the exception if there is one
+     *         task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Update Virtual Machine",
             outputs = {

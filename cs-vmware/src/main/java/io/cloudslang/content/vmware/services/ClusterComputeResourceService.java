@@ -79,8 +79,8 @@ public class ClusterComputeResourceService {
         final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
         final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
 
-        final ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
+        final ManagedObjectReference task = connectionResources.getVimPortType()
+                .reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
         final Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
@@ -125,8 +125,8 @@ public class ClusterComputeResourceService {
     }
 
     private Map<String, String> reconfigureCluster(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference clusterMor, ClusterConfigSpecEx clusterConfigSpecEx) throws RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg {
-        ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
+        ManagedObjectReference task = connectionResources.getVimPortType()
+                .reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
         Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),

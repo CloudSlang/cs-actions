@@ -47,8 +47,8 @@ public class ListVMsAndTemplates {
      *                      to see how to obtain a valid vCenter certificate
      * @param delimiter     the delimiter that will be used in response list - Default: ","
      * @return resultMap with String as key and value that contains returnCode of the operation, a list that contains
-     * all the virtual machines and templates within the data center  or failure message and the exception if there is
-     * one
+     *         all the virtual machines and templates within the data center  or failure message and the exception if there is
+     *         one
      */
     @Action(name = "List VMs and Templates",
             outputs = {
