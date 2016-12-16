@@ -9,8 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.azure.actions.utils;
 
-import io.cloudslang.content.azure.actions.utils.GetSharedAccessKeyToken;
-import io.cloudslang.content.constants.ReturnCodes;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
