@@ -101,7 +101,7 @@ public class SSLConnectionSocketFactoryBuilder {
                 KeyStore keyStore = createKeyStore(new URL("file:" + keystore), keystorePassword);
                 sslContextBuilder.loadKeyMaterial(keyStore, keystorePassword.toCharArray());
 
-                String internalJavaKeystoreUri = "file:" + System.getProperty("java.home") + "/lib/security/cacerts";
+                String internalJavaKeystoreUri = "file:" + javaKeystore;
                 KeyStore javaTrustStore = createKeyStore(new URL(internalJavaKeystoreUri), changeit);
                 sslContextBuilder.loadTrustMaterial(javaTrustStore, new TrustSelfSignedStrategy() {
                     @Override
