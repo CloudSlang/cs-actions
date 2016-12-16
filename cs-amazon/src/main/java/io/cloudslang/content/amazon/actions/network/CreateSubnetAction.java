@@ -81,12 +81,12 @@ public class CreateSubnetAction {
      *                         Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost        Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                         Default: ""
-     * @param proxyPort        Optional - proxy server port. You must either specify values for both <proxyHost> and <proxyPort>
+     * @param proxyPort        Optional - proxy server port. You must either specify values for both proxyHost and proxyPort
      *                         inputs or leave them both empty.
      *                         Default: ""
      * @param proxyUsername    Optional - proxy server user name.
      *                         Default: ""
-     * @param proxyPassword    Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword    Optional - proxy server password associated with the proxyUsername input value.
      * @param version          Optional - Version of the web service to made the call against it.
      *                         Example: "2016-11-15"
      *                         Default: "2016-11-15"
@@ -108,7 +108,7 @@ public class CreateSubnetAction {
      * @param cidrBlock        Network range for the subnet, in CIDR notation.
      *                         Example: "10.0.0.0/24"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Create Subnet",
             outputs = {

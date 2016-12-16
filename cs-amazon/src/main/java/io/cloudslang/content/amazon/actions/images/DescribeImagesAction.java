@@ -93,7 +93,7 @@ public class DescribeImagesAction {
      *                                     used.
      * @param proxyPort                    Optional - Proxy server port - Default: "8080"
      * @param proxyUsername                Optional - proxy server user name.
-     * @param proxyPassword                Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword                Optional - proxy server password associated with the proxyUsername input value.
      * @param headers                      Optional - string containing the headers to use for the request separated by
      *                                     new line (CRLF).
      *                                     The header name-value pair will be separated by ":".
@@ -156,7 +156,7 @@ public class DescribeImagesAction {
      * @param name                         Optional - Name of the AMI (provided during image creation).
      * @param state                        Optional - State of the image - Valid values: "available", "pending", "failed".
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Describe Images in Region",
             outputs = {

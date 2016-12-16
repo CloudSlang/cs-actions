@@ -84,11 +84,11 @@ public class ModifyInstanceAttributeAction {
      *                                             will be used.
      *                                             Default: ""
      * @param proxyPort                            Optional - proxy server port. You must either specify values for both
-     *                                             <proxyHost> and <proxyPort> inputs or leave them both empty.
+     *                                             proxyHost and proxyPort inputs or leave them both empty.
      *                                             Default: ""
      * @param proxyUsername                        Optional - proxy server user name.
      *                                             Default: ""
-     * @param proxyPassword                        Optional - proxy server password associated with the <proxyUsername>
+     * @param proxyPassword                        Optional - proxy server password associated with the proxyUsername
      *                                             input value.
      *                                             Default: ""
      * @param headers                              Optional - string containing the headers to use for the request separated
@@ -118,11 +118,11 @@ public class ModifyInstanceAttributeAction {
      *                                             attributes.
      *                                             Default: ""
      * @param blockDeviceMappingDeviceNamesString  Optional - String that contains one or more device names, exposed to
-     *                                             the instance, separated by <delimiter>.
+     *                                             the instance, separated by delimiter.
      *                                             Examples: "/dev/sdh,xvdh"
      *                                             Default: ""
      * @param blockDeviceMappingVirtualNamesString Optional - String that contains one or more virtual names separated
-     *                                             by <delimiter>. Virtual device name is "ephemeralN". Instance store
+     *                                             by delimiter. Virtual device name is "ephemeralN". Instance store
      *                                             volumes are numbered starting from 0. An instance type with 2 available
      *                                             instance store volumes can specify mappings for ephemeral0 and ephemeral1.
      *                                             The number of available instance store volumes depends on the instance
@@ -216,7 +216,7 @@ public class ModifyInstanceAttributeAction {
      *                                             you must provide Base64-encoded text.
      *                                             Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Modify Instance Attribute",
             outputs = {

@@ -61,8 +61,8 @@ public class AttachNetworkInterfaceAction {
 
     /**
      * Attaches a network interface to an instance.
-     * Note: The set of: <instanceId>, <networkInterfaceId>, <deviceIndex> are mutually exclusive with <queryParams> input.
-     * Please provide values EITHER FOR ALL: <instanceId>, <networkInterfaceId>, <deviceIndex> inputs OR FOR <queryParams> input.
+     * Note: The set of: instanceId, networkInterfaceId, deviceIndex are mutually exclusive with queryParams input.
+     * Please provide values EITHER FOR ALL: instanceId, networkInterfaceId, deviceIndex inputs OR FOR queryParams input.
      * Note: As with all Amazon EC2 operations, the results might not appear immediately.
      * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
      * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
@@ -75,12 +75,12 @@ public class AttachNetworkInterfaceAction {
      *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost          Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                           Default: ""
-     * @param proxyPort          Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                           <proxyPort> inputs or leave them both empty.
+     * @param proxyPort          Optional - proxy server port. You must either specify values for both proxyHost and
+     *                           proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername input value.
      *                           Default: ""
      * @param instanceId         Optional - ID of the instance that will be attached to the network interface. The instance
      *                           should be running (hot attach) or stopped (warm attach).
@@ -104,7 +104,7 @@ public class AttachNetworkInterfaceAction {
      *                           Example: "2016-11-15"
      *                           Default: "2016-11-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Attach Network Interface",
             outputs = {

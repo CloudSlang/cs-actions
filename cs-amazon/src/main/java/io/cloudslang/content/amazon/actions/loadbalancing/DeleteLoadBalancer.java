@@ -70,12 +70,12 @@ public class DeleteLoadBalancer {
      *                        Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost       Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                        Default: ""
-     * @param proxyPort       Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                        <proxyPort> inputs or leave them both empty.
+     * @param proxyPort       Optional - proxy server port. You must either specify values for both proxyHost and
+     *                        proxyPort inputs or leave them both empty.
      *                        Default: ""
      * @param proxyUsername   Optional - proxy server user name.
      *                        Default: ""
-     * @param proxyPassword   Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword   Optional - proxy server password associated with the proxyUsername input value.
      * @param headers         Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                        The header name-value pair will be separated by ":"
      *                        Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -93,7 +93,7 @@ public class DeleteLoadBalancer {
      * @param loadBalancerArn Amazon Resource Name (ARN) of the load balancer.
      *                        Example: "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Delete Load Balancer",
             outputs = {

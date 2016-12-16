@@ -174,11 +174,11 @@ public class InstanceUtils {
                 valueOf(wrapper.getInstanceInputs().isEnaSupport()), wrapper.getInstanceInputs().isEnaSupport());
         InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_INITIATED_SHUTDOWN_BEHAVIOR + DOT + VALUE,
                 wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior(),
-                (isNotBlank(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()))
-                        && !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()));
+                (isNotBlank(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior())) &&
+                        !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getInstanceInitiatedShutdownBehavior()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_TYPE + DOT + VALUE, wrapper.getCustomInputs().getInstanceType(),
-                (isNotBlank(wrapper.getCustomInputs().getInstanceType())
-                        && !NOT_RELEVANT.equalsIgnoreCase(wrapper.getCustomInputs().getInstanceType())));
+                (isNotBlank(wrapper.getCustomInputs().getInstanceType()) &&
+                        !NOT_RELEVANT.equalsIgnoreCase(wrapper.getCustomInputs().getInstanceType())));
         InputsUtil.setOptionalMapEntry(queryParamsMap, KERNEL + DOT + VALUE, wrapper.getInstanceInputs().getKernel(),
                 isNotBlank(wrapper.getInstanceInputs().getKernel()));
         InputsUtil.setOptionalMapEntry(queryParamsMap, RAMDISK + DOT + VALUE, wrapper.getInstanceInputs().getRamdisk(),
@@ -345,8 +345,8 @@ public class InstanceUtils {
         String[] valuesArray = InputsUtil.getStringsArray(filterValues, EMPTY, PIPE_DELIMITER);
         if (isNotEmpty(valuesArray)) {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
-                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
-                        || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
+                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter])) ||
+                        !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
                     queryParamsMap.put(getFilterValueKey(index, counter),
                             getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                 }
@@ -390,8 +390,8 @@ public class InstanceUtils {
         if (isNotEmpty(instanceIdsArray)) {
             for (int index = START_INDEX; index < instanceIdsArray.length; index++) {
                 InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index],
-                        isNotBlank(instanceIdsArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(instanceIdsArray[index])
-                                && !EMPTY.equals(instanceIdsArray[index]));
+                        isNotBlank(instanceIdsArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(instanceIdsArray[index]) &&
+                                !EMPTY.equals(instanceIdsArray[index]));
             }
         }
     }
@@ -415,8 +415,8 @@ public class InstanceUtils {
         String[] virtualNamesArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getEbsInputs().getBlockDeviceMappingVirtualNamesString(),
                 BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING, wrapper.getCommonInputs().getDelimiter());
 
-        if (deviceNamesArray != null && deviceNamesArray.length > START_INDEX
-                && virtualNamesArray != null && virtualNamesArray.length > START_INDEX) {
+        if (deviceNamesArray != null && deviceNamesArray.length > START_INDEX &&
+                virtualNamesArray != null && virtualNamesArray.length > START_INDEX) {
             InputsUtil.validateAgainstDifferentArraysLength(deviceNamesArray, virtualNamesArray,
                     BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING, BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING);
 
@@ -465,8 +465,8 @@ public class InstanceUtils {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(EBS, index) + customKey, inputArray[index]);
         } else if (condition && VOLUME_TYPE.equalsIgnoreCase(customKey)) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(EBS, index) + customKey, VolumeType.getValue(inputArray[index]));
-        } else if (condition && IOPS.equalsIgnoreCase(customKey)
-                && queryParamsMap.containsValue(VolumeType.IO1.toString())) {
+        } else if (condition && IOPS.equalsIgnoreCase(customKey) &&
+                queryParamsMap.containsValue(VolumeType.IO1.toString())) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(EBS, index) + customKey, inputArray[index]);
         } else if (condition && VOLUME_SIZE.equalsIgnoreCase(customKey) && queryParamsMap.keySet().toString().contains(BLOCK_DEVICE_MAPPING)) {
             String currentVolumeType = getCurrentVolumeType(queryParamsMap, index);
@@ -475,8 +475,8 @@ public class InstanceUtils {
             InputsUtil.setOptionalMapEntry(queryParamsMap,
                     InputsUtil.getQueryParamsSpecificString(EBS, index) + customKey, currentValidSize,
                     !NOT_RELEVANT.equalsIgnoreCase(currentValidSize));
-        } else if (condition && DELETE_ON_TERMINATION.equalsIgnoreCase(customKey)
-                && InputsUtil.getEnforcedBooleanCondition(inputArray[index], true) == Boolean.FALSE) {
+        } else if (condition && DELETE_ON_TERMINATION.equalsIgnoreCase(customKey) &&
+                InputsUtil.getEnforcedBooleanCondition(inputArray[index], true) == Boolean.FALSE) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(EBS, index) + customKey, inputArray[index]);
         } else if (condition && SNAPSHOT_ID.equalsIgnoreCase(customKey)) {
             queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(EBS, index) + customKey, inputArray[index]);
@@ -493,8 +493,8 @@ public class InstanceUtils {
                 InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
                         BLOCK_DEVICE_MAPPING_DEVICE_NAME, deviceNamesArray[index], isNotBlank(deviceNamesArray[index]));
                 InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(BLOCK_DEVICE_MAPPING, index) +
-                        VIRTUAL_NAME, virtualNamesArray[index], (virtualNamesArray.length > START_INDEX
-                        && isNotBlank(virtualNamesArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(virtualNamesArray[index])));
+                        VIRTUAL_NAME, virtualNamesArray[index], (virtualNamesArray.length > START_INDEX &&
+                        isNotBlank(virtualNamesArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(virtualNamesArray[index])));
                 InputsUtil.setOptionalMapEntry(queryParamsMap, InputsUtil.getQueryParamsSpecificString(EBS, index) + VOLUME_ID,
                         volumeIdsArray[index], isNotBlank(volumeIdsArray[index]));
 
