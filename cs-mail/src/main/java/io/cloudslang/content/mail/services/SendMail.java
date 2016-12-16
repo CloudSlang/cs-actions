@@ -47,6 +47,8 @@ import static com.sun.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
 import static com.sun.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
 import static io.cloudslang.content.mail.entities.EncryptionAlgorithmsEnum.getEncryptionAlgorithm;
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * Created by giloan on 10/30/2014.
@@ -291,7 +293,7 @@ public class SendMail {
             publicKeystoreInputStream.close();
         }
 
-        if (keyAlias.equals("")) {
+        if ("".equals(keyAlias)) {
             Enumeration aliases = ks.aliases();
             while (aliases.hasMoreElements()) {
                 String alias = (String) aliases.nextElement();
@@ -302,7 +304,7 @@ public class SendMail {
             }
         }
 
-        if (keyAlias.equals("")) {
+        if ("".equals(keyAlias)) {
             throw new Exception("Can't find a public key!");
         }
 
@@ -340,7 +342,7 @@ public class SendMail {
         String strAttachments = sendMailInputs.getAttachments();
         attachments = (null != strAttachments) ? strAttachments : "";
         String strDelimiter = sendMailInputs.getDelimiter();
-        delimiter = (strDelimiter == null || strDelimiter.equals("")) ? "," : strDelimiter;
+        delimiter = (isEmpty(strDelimiter)) ? "," : strDelimiter;
         user = sendMailInputs.getUser();
         String pass = sendMailInputs.getPassword();
         password = (null == pass) ? "" : pass;
@@ -348,27 +350,27 @@ public class SendMail {
         transferEncoding = sendMailInputs.getContentTransferEncoding();
         String strHtml = sendMailInputs.getHtmlEmail();
         // Default value for html is false
-        html = ((null != strHtml) && (strHtml.equalsIgnoreCase("true")));
+        html = ((null != strHtml) && ("true".equalsIgnoreCase(strHtml)));
         String strReadReceipt = sendMailInputs.getReadReceipt();
         // Default value for readReceipt is false
-        readReceipt = ((null != strReadReceipt) && (strReadReceipt.equalsIgnoreCase("true")));
+        readReceipt = ((null != strReadReceipt) && ("true".equalsIgnoreCase(strReadReceipt)));
         // By default the charset will be UTF-8
-        if (charset == null || charset.equals("")) {
+        if (isEmpty(charset)) {
             charset = "UTF-8";
         }
         // By default the filename encoding scheme will be Q
         encodingScheme = "Q";
         // By default the content transfer encoding for body and attachment will be quoted-printable
-        if (transferEncoding == null || transferEncoding.equals("")) {
+        if (isEmpty(transferEncoding)) {
             transferEncoding = "quoted-printable";
         }
         // Encoding for filename is either Q or B, so if the transferEncoding is not quoted-printable then it will be B
         // encoding.
-        if (!transferEncoding.equals("quoted-printable")) {
+        if (!"quoted-printable".equals(transferEncoding)) {
             encodingScheme = "B";
         }
         this.keystoreFile = sendMailInputs.getEncryptionKeystore();
-        if (this.keystoreFile != null && !this.keystoreFile.equals("")) {
+        if (isNotEmpty(keystoreFile)) {
             if (!keystoreFile.startsWith(HTTP)) {
                 keystoreFile = FILE + keystoreFile;
             }
@@ -393,13 +395,13 @@ public class SendMail {
         }
 
         String rowDelimiterInput = sendMailInputs.getRowDelimiter();
-        if (StringUtils.isEmpty(rowDelimiterInput)) {
+        if (isEmpty(rowDelimiterInput)) {
             rowDelimiter = "\n";
         } else {
             rowDelimiter = rowDelimiterInput;
         }
         String columnDelimiterInput = sendMailInputs.getColumnDelimiter();
-        if (StringUtils.isEmpty(columnDelimiterInput)) {
+        if (isEmpty(columnDelimiterInput)) {
             columnDelimiter = ":";
         } else {
             columnDelimiter = columnDelimiterInput;
@@ -408,7 +410,7 @@ public class SendMail {
         validateDelimiters(rowDelimiter, columnDelimiter);
 
         String headersMap = sendMailInputs.getHeaders();
-        if (!StringUtils.isEmpty(headersMap)) {
+        if (!isEmpty(headersMap)) {
             Object[] headers = extractHeaderNamesAndValues(headersMap, rowDelimiter, columnDelimiter);
             headerNames = (ArrayList<String>) headers[0];
             headerValues = (ArrayList<String>) headers[1];
@@ -462,7 +464,7 @@ public class SendMail {
         ArrayList<String> headerNames = new ArrayList<>();
         ArrayList<String> headerValues = new ArrayList<>();
         for (int i = 0; i < rows.length; i++) {
-            if (StringUtils.isEmpty(rows[i])) {
+            if (isEmpty(rows[i])) {
                 continue;
             } else {
                 if (validateRow(rows[i], columnDelimiter, i)) {

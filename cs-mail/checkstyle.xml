@@ -25,7 +25,12 @@
         <property name="eachLine" value="true"/>
     </module>
 
+    <module name="NewlineAtEndOfFile"/>
+
     <module name="TreeWalker">
+        <module name="UncommentedMain"/>
+        <module name="RedundantModifier"/>
+        <module name="RedundantImport"/>
         <module name="OuterTypeFilename"/>
         <module name="IllegalTokenText">
             <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
@@ -71,6 +76,7 @@
         <module name="MultipleVariableDeclarations"/>
         <module name="ArrayTypeStyle"/>
         <module name="MissingSwitchDefault"/>
+        <module name="DefaultComesLast"/>
         <module name="FallThrough"/>
         <module name="UpperEll"/>
         <module name="ModifierOrder"/>
@@ -185,5 +191,6 @@
         </module>
         <module name="CommentsIndentation"/>
         <module name="FileContentsHolder"/>
+        <module name="EqualsAvoidNull"/>
     </module>
 </module>

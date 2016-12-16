@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.bouncycastle.mail.smime.SMIMEUtil.toMimeBodyPart;
 
 /**
@@ -322,7 +323,7 @@ public class GetMailMessage {
             boolean storeExists = new File(javaKeystore).exists();
             keystore = (storeExists) ? FILE + javaKeystore : null;
             if (null != keystorePassword) {
-                if (keystorePassword.equals("")) {
+                if ("".equals(keystorePassword)) {
                     keystorePassword = DEFAULT_PASSWORD_FOR_STORE;
                 }
             }
@@ -390,7 +391,7 @@ public class GetMailMessage {
             decryptionStream.close();
         }
 
-        if (decryptionKeyAlias.equals("")) {
+        if ("".equals(decryptionKeyAlias)) {
             Enumeration aliases = ks.aliases();
             while (aliases.hasMoreElements()) {
                 String alias = (String) aliases.nextElement();
@@ -400,7 +401,7 @@ public class GetMailMessage {
                 }
             }
 
-            if (decryptionKeyAlias.equals("")) {
+            if ("".equals(decryptionKeyAlias)) {
                 throw new Exception("Can't find a private key!");
             }
         }
@@ -434,7 +435,7 @@ public class GetMailMessage {
     protected void processInputs(GetMailMessageInputs getMailMessageInputs) throws Exception {
 
         String strHost = getMailMessageInputs.getHostname();
-        if (null == strHost || strHost.equals("")) {
+        if (isEmpty(strHost)) {
             throw new Exception(HOST_NOT_SPECIFIED);
         } else {
             host = strHost.trim();
@@ -442,7 +443,7 @@ public class GetMailMessage {
         port = getMailMessageInputs.getPort();
         protocol = getMailMessageInputs.getProtocol();
         String strUsername = getMailMessageInputs.getUsername();
-        if (null == strUsername || strUsername.equals("")) {
+        if (isEmpty(strUsername)) {
             throw new Exception(USERNAME_NOT_SPECIFIED);
         } else {
             username = strUsername.trim();
@@ -454,7 +455,7 @@ public class GetMailMessage {
             password = strPassword.trim();
         }
         String strFolder = getMailMessageInputs.getFolder();
-        if (null == strFolder || strFolder.equals("")) {
+        if (isEmpty(strFolder)) {
             throw new Exception(FOLDER_NOT_SPECIFIED);
         } else {
             folder = strFolder.trim();
@@ -463,7 +464,7 @@ public class GetMailMessage {
         // Default value of trustAllRoots is true
         trustAllRoots = !(null != trustAll && trustAll.equalsIgnoreCase(STR_FALSE));
         String strMessageNumber = getMailMessageInputs.getMessageNumber();
-        if (strMessageNumber == null || strMessageNumber.equals("")) {
+        if (isEmpty(strMessageNumber)) {
             throw new Exception(MESSAGE_NUMBER_NOT_SPECIFIED);
         } else {
             messageNumber = Integer.parseInt(strMessageNumber);
@@ -488,24 +489,24 @@ public class GetMailMessage {
         if (messageNumber < 1) {
             throw new Exception(MESSAGES_ARE_NUMBERED_STARTING_AT_1);
         }
-        if ((protocol == null || protocol.equals("")) && (port == null || port.equals(""))) {
+        if ((isEmpty(protocol)) && (isEmpty(port))) {
             throw new Exception(SPECIFY_PORT_OR_PROTOCOL_OR_BOTH);
-        } else if ((protocol != null && !protocol.equals("")) && (!protocol.equalsIgnoreCase(IMAP)) &&
+        } else if ((protocol != null && !"".equals(protocol)) && (!protocol.equalsIgnoreCase(IMAP)) &&
                 (!protocol.equalsIgnoreCase(POP3)) && (!protocol.equalsIgnoreCase(IMAP_4)) &&
-                (port == null || port.equals(""))) {
+                (isEmpty(port))) {
             throw new Exception(SPECIFY_PORT_FOR_PROTOCOL);
-        } else if ((protocol == null || protocol.equals("")) && (port != null && !port.equals("")) &&
+        } else if ((isEmpty(protocol)) && (port != null && !"".equals(port)) &&
                 (!port.equalsIgnoreCase(IMAP_PORT)) && (!port.equalsIgnoreCase(POP3_PORT))) {
             throw new Exception(SPECIFY_PROTOCOL_FOR_GIVEN_PORT);
-        } else if ((protocol == null || protocol.equals("")) && (port.trim().equalsIgnoreCase(IMAP_PORT))) {
+        } else if ((isEmpty(protocol)) && (port.trim().equalsIgnoreCase(IMAP_PORT))) {
             protocol = IMAP;
-        } else if ((protocol == null || protocol.equals("")) && (port.trim().equalsIgnoreCase(POP3_PORT))) {
+        } else if ((isEmpty(protocol)) && (port.trim().equalsIgnoreCase(POP3_PORT))) {
             protocol = POP3;
-        } else if ((protocol.trim().equalsIgnoreCase(POP3)) && (port == null || port.equals(""))) {
+        } else if ((protocol.trim().equalsIgnoreCase(POP3)) && (isEmpty(port))) {
             port = POP3_PORT;
-        } else if ((protocol.trim().equalsIgnoreCase(IMAP)) && (port == null || port.equals(""))) {
+        } else if ((protocol.trim().equalsIgnoreCase(IMAP)) && (isEmpty(port))) {
             port = IMAP_PORT;
-        } else if ((protocol.trim().equalsIgnoreCase(IMAP_4)) && (port == null || port.equals(""))) {
+        } else if ((protocol.trim().equalsIgnoreCase(IMAP_4)) && (isEmpty(port))) {
             port = IMAP_PORT;
         }
 
@@ -516,7 +517,7 @@ public class GetMailMessage {
         }
 
         this.decryptionKeystore = getMailMessageInputs.getDecryptionKeystore();
-        if (this.decryptionKeystore != null && !this.decryptionKeystore.equals("")) {
+        if (isNotEmpty(this.decryptionKeystore)) {
             if (!decryptionKeystore.startsWith(HTTP)) {
                 decryptionKeystore = FILE + decryptionKeystore;
             }
@@ -536,7 +537,7 @@ public class GetMailMessage {
         }
 
         String timeout = getMailMessageInputs.getTimeout();
-        if (timeout != null && !timeout.isEmpty()) {
+        if (isNotEmpty(timeout)) {
             this.timeout = Integer.parseInt(timeout);
             if (this.timeout <= 0) {
                 throw new Exception("timeout value must be a positive number");
@@ -744,7 +745,7 @@ public class GetMailMessage {
             Multipart mpart = (Multipart) content;
             // iterate through all the parts in this Multipart ...
             for (int i = 0, n = mpart.getCount(); i < n; i++) {
-                if (!fileNames.equals("")) {
+                if (!"".equals(fileNames)) {
                     fileNames += STR_COMMA;
                 }
                 // to the list of attachments built so far append the list of attachments in the current MIME part ...

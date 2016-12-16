@@ -27,7 +27,7 @@ public enum EncryptionAlgorithmsEnum {
     SEED_WRAP(SMIMEEnvelopedGenerator.SEED_WRAP);
 
     private String encryptionOID;
-    private EncryptionAlgorithmsEnum(String encryptionOID) {
+    EncryptionAlgorithmsEnum(String encryptionOID) {
         this.encryptionOID = encryptionOID;
     }
 
