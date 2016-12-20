@@ -60,6 +60,38 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <!--License checker for build-->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <header>${project.basedir}/license.template</header>
+                    <headerDefinitions>
+                        <headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>
+                    </headerDefinitions>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <!--Pass arguments using ${var} syntax in license.template file-->
+                    <properties>
+                        <copyright.year>2016</copyright.year>
+                    </properties>
+                    <!--Custom mapping for java extensions-->
+                    <useDefaultMapping>false</useDefaultMapping>
+                    <mapping>
+                        <java>cs-actions-java-header</java>
+                    </mapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -163,7 +195,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
         </dependency>
 
         <dependency>
@@ -183,6 +215,12 @@
             <groupId>com.microsoft.azure</groupId>
             <artifactId>azure-storage</artifactId>
             <version>4.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
         </dependency>
 
         <!-- Testing dependencies -->
