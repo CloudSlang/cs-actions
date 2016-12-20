@@ -20,11 +20,13 @@ public final class Constants {
     public static final String DEFAULT_AUTHORITY = "https://login.windows.net/common";
     public static final String DEFAULT_RESOURCE = "https://management.azure.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
+    public static final String DEFAULT_TIMEOUT = "0";
 
     public static final String SHARED_ACCESS_SIGNATURE = "SharedAccessSignature uid=%s&ex=%s&sn=%s";
 
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port";
+    public static final String EXCEPTION_INVALID_NUMBER = "The %s is not a valid number";
 
     public static final String PROXY_HTTP_USER = "http.proxyUser";
     public static final String PROXY_HTTP_PASSWORD = "http.proxyPassword";

@@ -19,4 +19,5 @@ public final class StorageInputNames extends InputNames {
     public static final String KEY = "key";
     public static final String CONTAINER_NAME = "containerName";
     public static final String BLOB_NAME = "blobName";
+    public static final String TIMEOUT = "timeout";
 }
