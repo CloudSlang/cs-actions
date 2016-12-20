@@ -56,10 +56,11 @@ import static org.bouncycastle.mail.smime.SMIMEUtil.toMimeBodyPart;
 public class GetMailMessage {
 
     public static final String RETURN_RESULT = "returnResult";
-    public static final String SUBJECT = "Subject";
-    public static final String BODY_RESULT = "Body";
+    public static final String SUBJECT_HEADER = "Subject";
+    public static final String SUBJECT = "subject";
+    public static final String BODY_RESULT = "body";
     public static final String PLAIN_TEXT_BODY_RESULT = "plainTextBody";
-    public static final String ATTACHED_FILE_NAMES_RESULT = "AttachedFileNames";
+    public static final String ATTACHED_FILE_NAMES_RESULT = "attachedFileNames";
     public static final String RETURN_CODE = "returnCode";
     public static final String EXCEPTION = "exception";
 
@@ -157,7 +158,7 @@ public class GetMailMessage {
             if (subjectOnly) {
                 String subject;
                 if ((characterSet != null) && (characterSet.trim().length() > 0)) { //need to force the decode charset
-                    subject = message.getHeader(SUBJECT)[0];
+                    subject = message.getHeader(SUBJECT_HEADER)[0];
                     subject = changeHeaderCharset(subject, characterSet);
                     subject = MimeUtility.decodeText(subject);
                 } else {
@@ -173,7 +174,7 @@ public class GetMailMessage {
                     // Get subject and attachedFileNames
                     if ((characterSet != null) && (characterSet.trim().length() > 0)) {
                         //need to force the decode charset
-                        String subject = message.getHeader(SUBJECT)[0];
+                        String subject = message.getHeader(SUBJECT_HEADER)[0];
                         subject = changeHeaderCharset(subject, characterSet);
                         result.put(SUBJECT, MimeUtility.decodeText(subject));
                         String attachedFileNames = changeHeaderCharset(getAttachedFileNames(message), characterSet);

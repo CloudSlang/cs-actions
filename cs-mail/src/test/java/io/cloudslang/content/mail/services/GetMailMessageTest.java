@@ -95,9 +95,9 @@ public class GetMailMessageTest {
     private static final String SUCCESS_RETURN_CODE = "0";
     //operation results
     private static final String RETURN_RESULT = "returnResult";
-    private static final String SUBJECT_RESULT = "Subject";
-    private static final String BODY_RESULT = "Body";
-    private static final String ATTACHED_FILE_NAMES_RESULT = "AttachedFileNames";
+    private static final String SUBJECT_RESULT = "subject";
+    private static final String BODY_RESULT = "body";
+    private static final String ATTACHED_FILE_NAMES_RESULT = "attachedFileNames";
     private static final String BAD_CHARACTERSET = "badCharSet";
     private static final String STR_FALSE = "false";
     private static final String STR_TRUE = "true";

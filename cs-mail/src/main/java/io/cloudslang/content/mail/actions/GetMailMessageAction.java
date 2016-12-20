@@ -100,10 +100,10 @@ public class GetMailMessageAction {
      * @param timeout The timeout (seconds) for sending the mail messages.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <br><b>returnCode</b> - This is the primary output. It is 0 if the operation succeeded and -1 for failure.
-     * <br><b>Subject</b> - Subject of the email.
-     * <br><b>Body</b> - Only the body contents of the email. This will not contain the attachment including inline
+     * <br><b>subject</b> - Subject of the email.
+     * <br><b>body</b> - Only the body contents of the email. This will not contain the attachment including inline
      *                 attachments. This is in HTML format, not plain text.
-     * <br><b>AttachedFileNames</b> - Attached file names to the email.
+     * <br><b>attachedFileNames</b> - Attached file names to the email.
      * <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the operation
      *                       goes to failure.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
