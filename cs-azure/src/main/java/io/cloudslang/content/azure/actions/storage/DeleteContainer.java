@@ -54,7 +54,7 @@ public class DeleteContainer {
      * @param timeout        The time for the operation to wait for a response
      * @return The container name if it succeeded
      */
-    @Action(name = "Get the authorization token for Azure",
+    @Action(name = "Delete Container from a Storage Account",
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),

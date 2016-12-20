@@ -52,7 +52,7 @@ public class ListContainers {
      * @param timeout        The time for the operation to wait for a response
      * @return All the containers for the account
      */
-    @Action(name = "Get the authorization token for Azure",
+    @Action(name = "List Containers in Storage Account",
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),

@@ -54,7 +54,7 @@ public class ListBlobs {
      * @param timeout        The time for the operation to wait for a response
      * @return All the blobs in the container
      */
-    @Action(name = "Get the authorization token for Azure",
+    @Action(name = "List all Blobs within a Container",
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),

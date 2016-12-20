@@ -54,7 +54,7 @@ public class CreateContainer {
      * @param timeout        The time for the operation to wait for a response
      * @return The Container name if it succeeded
      */
-    @Action(name = "Get the authorization token for Azure",
+    @Action(name = "Create Container in a Storage Account",
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),

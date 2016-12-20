@@ -56,7 +56,7 @@ public class DeleteBlob {
      * @param timeout        The time for the operation to wait for a response
      * @return The blob name if it succeeded
      */
-    @Action(name = "Get the authorization token for Azure",
+    @Action(name = "Delete Blob from a Container",
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),
