@@ -28,6 +28,7 @@ public class WSManRequestInputs {
     private String trustKeystore;
     private String trustPassword;
     private String script;
+    private String modules;
     private String winrmLocale;
     private int operationTimeout;
 
@@ -53,6 +54,7 @@ public class WSManRequestInputs {
         this.trustKeystore = builder.trustKeystore;
         this.trustPassword = builder.trustPassword;
         this.script = builder.script;
+        this.modules = builder.modules;
         this.winrmLocale = builder.winrmLocale;
         this.operationTimeout = builder.operationTimeout;
     }
@@ -140,6 +142,9 @@ public class WSManRequestInputs {
     public String getScript() {
         return script;
     }
+    public String getModules() {
+        return modules;
+    }
 
     public String getWinrmLocale() {
         return winrmLocale;
@@ -171,6 +176,7 @@ public class WSManRequestInputs {
         private String trustKeystore;
         private String trustPassword;
         private String script;
+        private String modules;
         private String winrmLocale;
         private int operationTimeout;
 
@@ -293,6 +299,11 @@ public class WSManRequestInputs {
 
         public WSManRequestInputsBuilder withKerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
             this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withModules(String modules) {
+            this.modules = modules;
             return this;
         }
     }

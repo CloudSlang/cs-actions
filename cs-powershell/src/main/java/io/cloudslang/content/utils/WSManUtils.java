@@ -1,12 +1,32 @@
 package io.cloudslang.content.utils;
 
+import io.cloudslang.content.entities.EncoderDecoder;
+import io.cloudslang.content.entities.WSManRequestInputs;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
+import static io.cloudslang.content.utils.Constants.Others.ENCODED_COMMAND_PARAMETER;
+import static io.cloudslang.content.utils.Constants.Others.IMPORT_MODULE_PARAMETER;
+import static io.cloudslang.content.utils.Constants.Others.NON_INTERACTIVE_PARAMETER;
+import static io.cloudslang.content.utils.Constants.Others.POWERSHELL_SCRIPT_PREFIX;
+import static io.cloudslang.content.utils.Constants.Others.SINGLE_QUOTE;
+import static io.cloudslang.content.utils.Constants.Others.ZERO_SCRIPT_EXIT_CODE;
+import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.utils.Constants.OutputNames.SCRIPT_EXIT_CODE;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static org.apache.commons.lang3.StringUtils.LF;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
 /**
  * Created by giloan on 3/29/2016.
@@ -89,6 +109,53 @@ public class WSManUtils {
     public static void validateUUID(String uuid, String uuidValueOf) throws RuntimeException {
         if (!WSManUtils.isUUID(uuid)) {
             throw new RuntimeException("The returned " + uuidValueOf + " is not a valid UUID value! " + uuidValueOf + ": " + uuid);
+        }
+    }
+
+    public static String constructCommand(final WSManRequestInputs wsManRequestInputs) {
+        final StringBuilder command = new StringBuilder()
+                .append(POWERSHELL_SCRIPT_PREFIX)
+                .append(SPACE)
+                .append(NON_INTERACTIVE_PARAMETER)
+                .append(SPACE)
+                .append(ENCODED_COMMAND_PARAMETER)
+                .append(SPACE);
+
+        if (StringUtilities.isNotBlank(wsManRequestInputs.getModules())) {
+            command.append(EncoderDecoder.encodeStringInBase64(
+                    IMPORT_MODULE_PARAMETER +
+                            SPACE +
+                            getEscapedModules(wsManRequestInputs) +
+                            LF +
+                            wsManRequestInputs.getScript(), Charsets.UTF_16LE));
+        } else {
+            command.append(EncoderDecoder.encodeStringInBase64(wsManRequestInputs.getScript(), Charsets.UTF_16LE));
+        }
+        return command.toString();
+    }
+
+    private static String getEscapedModules(final WSManRequestInputs wsManRequestInputs) {
+        final String[] modules = StringUtilities.split(wsManRequestInputs.getModules(), COMMA_DELIMITER);
+        final List<String> escapedModules = new ArrayList<>();
+        for (String module : modules) {
+            module = StringUtilities.trim(module);
+            module = StringUtilities.prependIfMissing(module, SINGLE_QUOTE);
+            module = StringUtilities.appendIfMissing(module, SINGLE_QUOTE);
+            escapedModules.add(module);
+        }
+        return StringUtilities.join(escapedModules, COMMA_DELIMITER);
+    }
+
+
+    /**
+     * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
+     * @param resultMap
+     */
+    public static void verifyScriptExecutionStatus(final Map<String, String> resultMap) {
+        if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
+            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+        } else {
+            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
         }
     }
 }
