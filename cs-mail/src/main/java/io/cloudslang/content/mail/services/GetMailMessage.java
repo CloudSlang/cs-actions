@@ -189,7 +189,6 @@ public class GetMailMessage {
                 }
             }
 
-            // ALM defect #29395 ignore potential errors thrown when closing connection
             try {
                 message.getFolder().close(true);
             } catch (Throwable ignore) {
