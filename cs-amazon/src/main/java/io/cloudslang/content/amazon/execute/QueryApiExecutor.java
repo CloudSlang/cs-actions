@@ -12,6 +12,7 @@ package io.cloudslang.content.amazon.execute;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.factory.HeadersMapBuilder;
 import io.cloudslang.content.amazon.factory.InputsWrapperBuilder;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
@@ -20,15 +21,11 @@ import io.cloudslang.content.httpclient.CSHttpClient;
 
 import java.net.MalformedURLException;
 import java.security.SignatureException;
-import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getValidResponse;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -38,18 +35,16 @@ public class QueryApiExecutor {
     @SafeVarargs
     public final <T> Map<String, String> execute(CommonInputs commonInputs, T... builders) throws Exception {
         InputsWrapper inputs = InputsWrapperBuilder.getWrapper(commonInputs, builders);
-        Map<String, String> queryParamsMap = ParamsMapBuilder.getParamsMap(inputs);
 
-        Map<String, String> headersMap = isBlank(inputs.getCommonInputs().getHeaders()) ? new HashMap<String, String>() :
-                InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), inputs.getCommonInputs().getHeaders(),
-                        HEADER_DELIMITER, COLON, true);
+        Map<String, String> queryParamsMap = ParamsMapBuilder.getParamsMap(inputs);
+        Map<String, String> headersMap = HeadersMapBuilder.getHeadersMap(inputs);
 
         setQueryApiParams(inputs, queryParamsMap);
         setQueryApiHeaders(inputs, headersMap, queryParamsMap);
 
-        Map<String, String> queryMapResult = new CSHttpClient().execute(inputs.getHttpClientInputs());
-        queryMapResult = getValidResponse(queryMapResult);
-        return queryMapResult;
+        Map<String, String> awsResponse = new CSHttpClient().execute(inputs.getHttpClientInputs());
+
+        return getValidResponse(awsResponse);
     }
 
     void setQueryApiHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)

@@ -30,6 +30,7 @@ public class InputsWrapper {
     private InstanceInputs instanceInputs;
     private LoadBalancerInputs loadBalancerInputs;
     private NetworkInputs networkInputs;
+    private StorageInputs storageInputs;
     private VolumeInputs volumeInputs;
 
     private final String apiService;
@@ -121,6 +122,14 @@ public class InputsWrapper {
 
     public NetworkInputs getNetworkInputs() {
         return networkInputs;
+    }
+
+    public StorageInputs getStorageInputs() {
+        return storageInputs;
+    }
+
+    public void setStorageInputs(StorageInputs storageInputs) {
+        this.storageInputs = storageInputs;
     }
 
     public void setNetworkInputs(NetworkInputs networkInputs) {

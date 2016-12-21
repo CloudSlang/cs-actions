@@ -58,6 +58,8 @@ public class InputsWrapperBuilder {
                     wrapper.setLoadBalancerInputs((LoadBalancerInputs) builder);
                 } else if (builder instanceof NetworkInputs) {
                     wrapper.setNetworkInputs((NetworkInputs) builder);
+                } else if (builder instanceof StorageInputs) {
+                    wrapper.setStorageInputs((StorageInputs) builder);
                 } else if (builder instanceof VolumeInputs) {
                     wrapper.setVolumeInputs((VolumeInputs) builder);
                 } else {

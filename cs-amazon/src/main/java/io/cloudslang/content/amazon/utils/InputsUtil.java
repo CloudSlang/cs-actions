@@ -165,11 +165,8 @@ public final class InputsUtil {
         return isBlank(input) ? defaultValue : input;
     }
 
-    public static String getS3Headers(String input, String apiService, String prefix) {
-        String suffix = HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + (isBlank(prefix) ? EMPTY : prefix + DOT) +
-                apiService + DOT + AMAZON_HOSTNAME + "\r\n ";
-
-        return isBlank(input) ? "Host:" + suffix : input + "\r\n Host:" + suffix + "\r\n ";
+    public static String getS3HostHeaderValue(String apiService, String bucketName) {
+        return isBlank(bucketName) ? apiService + DOT + AMAZON_HOSTNAME : bucketName + DOT + apiService + DOT + AMAZON_HOSTNAME;
     }
 
     public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {

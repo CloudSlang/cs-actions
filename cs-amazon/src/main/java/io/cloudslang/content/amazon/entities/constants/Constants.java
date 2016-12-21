@@ -159,6 +159,6 @@ public class Constants {
     }
 
     public static class S3QueryApiActions {
-        public static final String LIST_ALL_MY_BUCKETS = "ListAllMyBuckets";
+        public static final String GET_SERVICE = "GET Service";
     }
 }

@@ -169,6 +169,10 @@ public class Inputs {
         public static final String SUBNET_IDS_STRING = "subnetIdsString";
     }
 
+    public static class StorageInputs {
+        public static final String BUCKET_NAME = "bucketName";
+    }
+
     public static class VolumeInputs {
         public static final String DEVICE_NAME = "deviceName";
         public static final String ENCRYPTED = "encrypted";
