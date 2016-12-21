@@ -48,8 +48,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * 9/9/2016.
  */
 public class NetworkUtils {
-    public static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
-    public static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
+    private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
+    private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String ALLOW_REASSOCIATION = "AllowReassociation";
     private static final String ASSOCIATION_ID = "AssociationId";
     private static final String ATTACHMENT_ID = "AttachmentId";
@@ -249,7 +249,7 @@ public class NetworkUtils {
         return alignmentValue;
     }
 
-    void setPrivateIpAddressesQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper, String specificArea, String delimiter) {
+    private void setPrivateIpAddressesQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper, String specificArea, String delimiter) {
         if (isNotBlank(wrapper.getElasticIpInputs().getPrivateIpAddressesString())) {
             String[] privateIpAddressesArray = InputsUtil
                     .getArrayWithoutDuplicateEntries(wrapper.getElasticIpInputs().getPrivateIpAddressesString(),
@@ -276,7 +276,7 @@ public class NetworkUtils {
         }
     }
 
-    void setSecondaryPrivateIpAddressCountQueryParams(Map<String, String> queryParamsMap, String inputString) {
+    private void setSecondaryPrivateIpAddressCountQueryParams(Map<String, String> queryParamsMap, String inputString) {
         if (!queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(NETWORK, ONE) + PRIMARY)
                 && !queryParamsMap.containsValue(Boolean.FALSE.toString().toLowerCase())) {
             InputsUtil.setOptionalMapEntry(queryParamsMap, SECONDARY_PRIVATE_IP_ADDRESS_COUNT, inputString,

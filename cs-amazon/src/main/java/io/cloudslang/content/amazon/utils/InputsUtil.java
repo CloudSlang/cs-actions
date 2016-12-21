@@ -165,6 +165,13 @@ public final class InputsUtil {
         return isBlank(input) ? defaultValue : input;
     }
 
+    public static String getS3Headers(String input, String apiService, String prefix) {
+        String suffix = HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + (isBlank(prefix) ? EMPTY : prefix + DOT) +
+                apiService + DOT + AMAZON_HOSTNAME + "\r\n ";
+
+        return isBlank(input) ? "Host:" + suffix : input + "\r\n Host:" + suffix + "\r\n ";
+    }
+
     public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {
         String[] currentArray = getStringsArray(inputString, EMPTY, delimiter);
         validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
@@ -220,10 +227,10 @@ public final class InputsUtil {
     /**
      * If enforcedBoolean is "true" and string input is: null, empty, many empty chars, TrUe, tRuE... but not "false"
      * then returns "true".
-     *
+     * <p>
      * If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
      * then returns "false"
-     *
+     * <p>
      * This behavior is needed for inputs like: "imageNoReboot" when we want them to be set to "true" disregarding the
      * value provided (null, empty, many empty chars, TrUe, tRuE) except the case when is "false"
      *
@@ -336,7 +343,7 @@ public final class InputsUtil {
         return input;
     }
 
-    public static String getValidCidrNotation(String input){
+    public static String getValidCidrNotation(String input) {
         if (!input.contains(SCOPE_SEPARATOR)) {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid CIDR notation.");
         }
@@ -391,7 +398,7 @@ public final class InputsUtil {
         }
     }
 
-    private static void patternCheck(String input, String regex){
+    private static void patternCheck(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         if (!pattern.matcher(input).matches()) {
             throw new IllegalArgumentException(getValidationException(input, false));
