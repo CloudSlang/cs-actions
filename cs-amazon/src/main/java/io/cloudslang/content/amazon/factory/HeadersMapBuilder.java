@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.factory;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
@@ -16,7 +25,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * 12/21/2016.
  */
 public class HeadersMapBuilder {
+    private static final String CONTENT_TYPE = "Content-Type";
     private static final String HOST = "Host";
+    private static final String TEXT_PLAIN = "text/plain";
 
     private HeadersMapBuilder() {
         // prevent instantiation
@@ -29,6 +40,7 @@ public class HeadersMapBuilder {
 
         switch (wrapper.getCommonInputs().getApiService()) {
             case S3_API:
+                headersMap.put(CONTENT_TYPE, TEXT_PLAIN);
                 headersMap.put(HOST, InputsUtil.getS3HostHeaderValue(wrapper.getCommonInputs().getApiService(),
                         wrapper.getStorageInputs().getBucketName()));
                 return headersMap;

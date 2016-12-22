@@ -134,6 +134,10 @@ public final class InputsUtil {
 
     public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix,
                                                   boolean deleteLastChar) {
+        if (headersOrParamsMap.isEmpty()) {
+            return EMPTY;
+        }
+
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
             sb.append(entry.getKey());

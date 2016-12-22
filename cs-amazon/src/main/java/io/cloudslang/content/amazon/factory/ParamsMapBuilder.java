@@ -19,6 +19,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
@@ -42,6 +43,8 @@ public class ParamsMapBuilder {
                     return Ec2QueryParamsMapBuilder.getEc2QueryParamsMap(wrapper);
                 case LOAD_BALANCING_API:
                     return LoadBalancingQueryParamsMapBuilder.getLoadBalancingQueryParamsMap(wrapper);
+                case S3_API:
+                    return new HashMap<>();
                 default:
                     throw new RuntimeException(UNSUPPORTED_AWS_API);
             }

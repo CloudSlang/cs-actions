@@ -130,7 +130,7 @@ public class ListAllMyBuckets {
                     .withVersion(version)
                     .withAction(GET_SERVICE)
                     .withApiService(S3_API)
-                    .withRequestUri(EMPTY)
+                    .withRequestUri(bucketName)
                     .withRequestPayload(EMPTY)
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();

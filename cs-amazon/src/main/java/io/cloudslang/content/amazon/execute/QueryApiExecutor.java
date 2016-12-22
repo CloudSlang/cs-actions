@@ -23,7 +23,11 @@ import java.net.MalformedURLException;
 import java.security.SignatureException;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getValidResponse;
 
@@ -32,6 +36,8 @@ import static io.cloudslang.content.amazon.utils.OutputsUtil.getValidResponse;
  * 9/6/2016.
  */
 public class QueryApiExecutor {
+    private static final String CANONICAL_HEADER_CONTENT_SHA = "x-amz-content-sha256";
+
     @SafeVarargs
     public final <T> Map<String, String> execute(CommonInputs commonInputs, T... builders) throws Exception {
         InputsWrapper inputs = InputsWrapperBuilder.getWrapper(commonInputs, builders);
@@ -51,10 +57,15 @@ public class QueryApiExecutor {
             throws SignatureException, MalformedURLException {
         AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
         inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
+        if (S3_API.equalsIgnoreCase(inputs.getCommonInputs().getApiService())) {
+            inputs.getHttpClientInputs().setHeaders(CANONICAL_HEADER_CONTENT_SHA + COLON + signedHeaders.getSignature());
+        }
     }
 
     private void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
         String queryParamsString = InputsUtil.getHeadersOrParamsString(queryParamsMap, EQUAL, AMPERSAND, true);
-        inputs.getHttpClientInputs().setQueryParams(queryParamsString);
+        if (isNotBlank(queryParamsString)) {
+            inputs.getHttpClientInputs().setQueryParams(queryParamsString);
+        }
     }
 }
