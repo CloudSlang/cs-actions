@@ -9,11 +9,14 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.utils;
 
+import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
@@ -41,11 +45,13 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ZONE_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
@@ -73,6 +79,7 @@ import static java.util.regex.Pattern.quote;
 public final class InputsUtil {
     private static final String ACTION = "Action";
     private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
+    private static final String CANONICAL_HEADER_CONTENT_SHA = "x-amz-content-sha256";
     private static final String GP2 = "gp2";
     private static final String HTTPS_PROTOCOL = "https";
     private static final String IO1 = "io1";
@@ -98,6 +105,23 @@ public final class InputsUtil {
     private InputsUtil() {
         // prevent instantiation
     }
+
+    public static void setQueryApiHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
+            throws SignatureException, MalformedURLException {
+        AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
+        inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
+        if (S3_API.equalsIgnoreCase(inputs.getCommonInputs().getApiService())) {
+            inputs.getHttpClientInputs().setHeaders(CANONICAL_HEADER_CONTENT_SHA + COLON + signedHeaders.getSignature());
+        }
+    }
+
+    public static void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
+        String queryParamsString = getHeadersOrParamsString(queryParamsMap, EQUAL, AMPERSAND, true);
+        if (isNotBlank(queryParamsString)) {
+            inputs.getHttpClientInputs().setQueryParams(queryParamsString);
+        }
+    }
+
 
     public static Map<String, String> getHeadersOrQueryParamsMap(Map<String, String> inputMap, String stringToSplit,
                                                                  String delimiter, String customDelimiter, boolean trim) {

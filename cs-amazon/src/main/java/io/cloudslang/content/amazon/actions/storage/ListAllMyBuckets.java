@@ -57,7 +57,7 @@ public class ListAllMyBuckets {
      * Anonymous requests cannot list buckets, and you cannot list buckets that you did not create.
      *
      * @param endpoint      Optional - Endpoint to which request will be sent.
-     *                      Default: "https://elasticloadbalancing.amazonaws.com"
+     *                      Default: "https://s3.amazonaws.com"
      * @param identity      ID of the secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "AKIAIOSFODNN7EXAMPLE"
      * @param credential    Secret access key associated with your Amazon AWS or IAM account.
