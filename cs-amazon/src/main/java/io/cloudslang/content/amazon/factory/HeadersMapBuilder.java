@@ -33,7 +33,7 @@ public class HeadersMapBuilder {
         // prevent instantiation
     }
 
-    public static Map<String, String> getHeadersMap(InputsWrapper wrapper) throws Exception {
+    public static Map<String, String> getHeadersMap(InputsWrapper wrapper) {
         Map<String, String> headersMap = isBlank(wrapper.getCommonInputs().getHeaders()) ? new HashMap<String, String>() :
                 InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(), wrapper.getCommonInputs().getHeaders(),
                         HEADER_DELIMITER, COLON, true);
