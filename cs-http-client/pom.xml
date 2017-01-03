@@ -94,6 +94,10 @@ http://www.apache.org/licenses/LICENSE-2.0
                 <artifactId>license-maven-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
+                    <header>${project.basedir}/license.template</header>
+                    <headerDefinitions>
+                        <headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>
+                    </headerDefinitions>
                     <includes>
                         <include>**/*.java</include>
                     </includes>
