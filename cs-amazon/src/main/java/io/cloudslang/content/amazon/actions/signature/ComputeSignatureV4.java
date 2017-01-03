@@ -37,6 +37,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PREFIX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AMAZON_API;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.DATE;
@@ -112,7 +113,8 @@ public class ComputeSignatureV4 {
                                        @Param(value = PAYLOAD_HASH) String payloadHash,
                                        @Param(value = DATE) String date,
 
-                                       @Param(value = SECURITY_TOKEN) String securityToken) {
+                                       @Param(value = SECURITY_TOKEN) String securityToken,
+                                       @Param(value = PREFIX) String prefix) {
         try {
             Map<String, String> headersMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
                     headers, HEADER_DELIMITER, COLON, true);
@@ -120,7 +122,7 @@ public class ComputeSignatureV4 {
                     queryParams, AMPERSAND, EQUAL, false);
 
             CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, amazonApi)
+                    .withEndpoint(endpoint, amazonApi, prefix)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .build();

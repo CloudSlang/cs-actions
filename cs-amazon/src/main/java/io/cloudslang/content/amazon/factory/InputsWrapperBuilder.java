@@ -13,6 +13,10 @@ import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.inputs.*;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+
 /**
  * Created by Mihai Tusa.
  * 9/5/2016.
@@ -26,7 +30,9 @@ public class InputsWrapperBuilder {
 
     @SafeVarargs
     public static <T> InputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
-        return buildWrapper(getHttpClientInputs(commonInputs), commonInputs, builders);
+        HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs, builders);
+
+        return buildWrapper(httpClientInputs, commonInputs, builders);
     }
 
     @SafeVarargs
@@ -71,10 +77,13 @@ public class InputsWrapperBuilder {
         return wrapper;
     }
 
-    private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
+    @SafeVarargs
+    private static <T> HttpClientInputs getHttpClientInputs(CommonInputs commonInputs, T... builders) {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
 
-        httpClientInputs.setUrl(InputsUtil.getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService()));
+        String prefix = getPrefix(builders);
+
+        httpClientInputs.setUrl(InputsUtil.getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService(), prefix));
         httpClientInputs.setProxyHost(commonInputs.getProxyHost());
         httpClientInputs.setProxyPort(commonInputs.getProxyPort());
         httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
@@ -84,5 +93,18 @@ public class InputsWrapperBuilder {
         httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
 
         return httpClientInputs;
+    }
+
+    private static <T> String getPrefix(T[] builders) {
+        String prefix = EMPTY;
+        if (builders.length > 0) {
+            for (T builder : builders) {
+                if (builder instanceof StorageInputs && isNotBlank(((StorageInputs) builder).getBucketName())) {
+                    prefix = ((StorageInputs) builder).getBucketName();
+                }
+            }
+        }
+
+        return prefix;
     }
 }

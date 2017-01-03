@@ -28,6 +28,7 @@ public class Inputs {
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PREFIX = "prefix";
         public static final String QUERY_PARAMS = "queryParams";
         public static final String VERSION = "version";
     }

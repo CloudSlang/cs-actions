@@ -146,8 +146,8 @@ public class CommonInputs {
             return new CommonInputs(this);
         }
 
-        public Builder withEndpoint(String inputValue, String apiService) throws MalformedURLException {
-            endpoint = new URL(InputsUtil.getUrlFromApiService(inputValue, apiService)).toString();
+        public Builder withEndpoint(String inputValue, String apiService, String prefix) throws MalformedURLException {
+            endpoint = new URL(InputsUtil.getUrlFromApiService(inputValue, apiService, prefix)).toString();
             return this;
         }
 

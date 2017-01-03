@@ -265,7 +265,7 @@ public class ModifyInstanceAttributeAction {
             version = InputsUtil.getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

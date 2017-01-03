@@ -151,9 +151,12 @@ public final class InputsUtil {
         return endpoint;
     }
 
-    public static String getUrlFromApiService(String endpoint, String apiService) {
+    public static String getUrlFromApiService(String endpoint, String apiService, String prefix) {
+        String insertionString = isBlank(prefix) ? apiService : prefix + DOT + apiService;
+
         return isBlank(endpoint) ?
-                HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + apiService + DOT + AMAZON_HOSTNAME : endpoint;
+                HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + insertionString + DOT + AMAZON_HOSTNAME :
+                endpoint;
     }
 
     public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix,

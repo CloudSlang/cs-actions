@@ -122,7 +122,7 @@ public class DeleteLoadBalancer {
             version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, LOAD_BALANCING_API)
+                    .withEndpoint(endpoint, LOAD_BALANCING_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

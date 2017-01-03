@@ -44,7 +44,7 @@ public class ParamsMapBuilder {
                 case LOAD_BALANCING_API:
                     return LoadBalancingQueryParamsMapBuilder.getLoadBalancingQueryParamsMap(wrapper);
                 case S3_API:
-                    return new HashMap<>();
+                    return S3QueryParamsMapBuilder.getS3QueryParamsMap(wrapper);
                 default:
                     throw new RuntimeException(UNSUPPORTED_AWS_API);
             }

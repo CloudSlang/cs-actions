@@ -117,7 +117,7 @@ public class AddLaunchPermissionsToImageAction {
             version = InputsUtil.getDefaultStringInput(version, IMAGES_DEFAULT_API_VERSION);
 
             final CommonInputs inputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

@@ -27,8 +27,8 @@ import java.util.Map;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.STORAGE_DEFAULT_API_VERSION;
-import static io.cloudslang.content.amazon.entities.constants.Constants.S3QueryApiActions.GET_SERVICE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.S3QueryApiActions.GET_BUCKET;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -50,11 +50,16 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
  * Created by TusaM
  * 12/21/2016.
  */
-public class ListAllMyBuckets {
+public class GetBucket {
     /**
-     * Returns a list of all buckets owned by the authenticated sender of the request.
-     * To authenticate a request, you must use a valid AWS Access Key ID that is registered with Amazon S3.
-     * Anonymous requests cannot list buckets, and you cannot list buckets that you did not create.
+     * Returns some or all (up to 1,000) of the objects in a bucket. You can use the request parameters as selection criteria
+     * to return a subset of the objects in a bucket. A 200 OK response can contain valid or invalid XML. Make sure to
+     * design your application to parse the contents of the response and handle it appropriately. To use this implementation
+     * of the operation, you must have READ access to the bucket.
+     * Note: This section describe the latest revision of the API. We recommend that you use this revised API, GET Bucket
+     * (List Objects) version 2, for application development. For backward compatibility, Amazon S3 continues to support
+     * the prior version of this API, GET Bucket (List Objects) version 1. For more information about the previous version,
+     * see GET Bucket (List Objects) Version 1: http://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketGET.html
      *
      * @param endpoint      Optional - Endpoint to which request will be sent.
      *                      Default: "https://s3.amazonaws.com"
@@ -90,7 +95,7 @@ public class ListAllMyBuckets {
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "List All My Buckets",
+    @Action(name = "Get Bucket",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -115,10 +120,9 @@ public class ListAllMyBuckets {
                                        @Param(value = BUCKET_NAME) String bucketName) {
         try {
             version = InputsUtil.getDefaultStringInput(version, STORAGE_DEFAULT_API_VERSION);
-            bucketName = InputsUtil.getDefaultStringInput(bucketName, EMPTY);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, S3_API)
+                    .withEndpoint(endpoint, S3_API, bucketName)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
@@ -128,9 +132,9 @@ public class ListAllMyBuckets {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
-                    .withAction(GET_SERVICE)
+                    .withAction(GET_BUCKET)
                     .withApiService(S3_API)
-                    .withRequestUri(bucketName)
+                    .withRequestUri(EMPTY)
                     .withRequestPayload(EMPTY)
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
