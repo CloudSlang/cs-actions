@@ -84,6 +84,10 @@ public class ComputeSignatureV4 {
      *                      separator between name-value pairs is "&" symbol. The query name will be separated from query
      *                      value by "="
      *                      Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;
+     * @param prefix        Optional - used to sign request for Simple Storage Service (S3). This prefix will precede the
+     *                      endpoint when made calls for specific bucket (for e.g. if prefix is "mybucket" then the endpoint
+     *                      where the request are made will be "mybucket.s3.amazonaws.com")
+     *                      Default: ""
      * @return A map, with strings as keys and values, that contains: outcome of the action, returnCode of the operation
      * or failure message, the exception if there is one, signature value and authorization header value
      */

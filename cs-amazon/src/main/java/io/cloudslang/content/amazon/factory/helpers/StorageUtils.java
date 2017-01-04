@@ -25,7 +25,6 @@ public class StorageUtils {
     public Map<String, String> retrieveGetBucketQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         queryParamsMap.put(LIST_TYPE_KEY, LIST_TYPE_VALUE);
-        queryParamsMap.put("delimiter", "mihaibucket");
 
         return queryParamsMap;
     }
