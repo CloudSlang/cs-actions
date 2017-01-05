@@ -23,13 +23,14 @@ import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.MODIFY_INSTANCE_ATTRIBUTE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -262,7 +263,7 @@ public class ModifyInstanceAttributeAction {
                                        @Param(value = SRIOV_NET_SUPPORT) String sriovNetSupport,
                                        @Param(value = LOWER_CASE_USER_DATA) String userData) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

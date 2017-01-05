@@ -21,9 +21,10 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.ELASTIC_IP_DEFAULT_API_VERSION;
@@ -117,7 +118,7 @@ public class DisassociateAddressAction {
                                        @Param(value = ASSOCIATION_ID) String associationId,
                                        @Param(value = PUBLIC_IP) String publicIp) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, ELASTIC_IP_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, ELASTIC_IP_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

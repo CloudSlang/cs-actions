@@ -21,13 +21,14 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.VOLUMES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.VOLUMES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DETACH_VOLUME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -132,7 +133,7 @@ public class DetachVolumeAction {
                                        @Param(value = DEVICE_NAME) String deviceName,
                                        @Param(value = FORCE) String force) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, VOLUMES_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, VOLUMES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

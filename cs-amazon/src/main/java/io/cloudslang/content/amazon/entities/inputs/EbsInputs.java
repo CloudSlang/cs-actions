@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 
@@ -109,12 +109,12 @@ public class EbsInputs {
         }
 
         public Builder withBlockDeviceMappingDeviceNamesString(String inputValue) {
-            blockDeviceMappingDeviceNamesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            blockDeviceMappingDeviceNamesString = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withBlockDeviceMappingVirtualNamesString(String inputValue) {
-            blockDeviceMappingVirtualNamesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            blockDeviceMappingVirtualNamesString = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 

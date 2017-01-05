@@ -21,9 +21,10 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.IMAGES_DEFAULT_API_VERSION;
@@ -114,7 +115,7 @@ public class AddLaunchPermissionsToImageAction {
                                        @Param(value = USER_IDS_STRING) String userIdsString,
                                        @Param(value = USER_GROUPS_STRING) String userGroupsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, IMAGES_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, IMAGES_DEFAULT_API_VERSION);
 
             final CommonInputs inputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

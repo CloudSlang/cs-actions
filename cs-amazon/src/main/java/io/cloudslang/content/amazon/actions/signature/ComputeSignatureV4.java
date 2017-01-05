@@ -21,11 +21,12 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.OutputsUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getHeadersOrQueryParamsMap;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
@@ -120,10 +121,8 @@ public class ComputeSignatureV4 {
                                        @Param(value = SECURITY_TOKEN) String securityToken,
                                        @Param(value = PREFIX) String prefix) {
         try {
-            Map<String, String> headersMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
-                    headers, HEADER_DELIMITER, COLON, true);
-            Map<String, String> queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
-                    queryParams, AMPERSAND, EQUAL, false);
+            Map<String, String> headersMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), headers, HEADER_DELIMITER, COLON, true);
+            Map<String, String> queryParamsMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), queryParams, AMPERSAND, EQUAL, false);
 
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, amazonApi, prefix)

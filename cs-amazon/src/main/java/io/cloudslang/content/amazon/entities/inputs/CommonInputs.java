@@ -10,10 +10,12 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getUrlFromApiService;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
@@ -147,7 +149,7 @@ public class CommonInputs {
         }
 
         public Builder withEndpoint(String inputValue, String apiService, String prefix) throws MalformedURLException {
-            endpoint = new URL(InputsUtil.getUrlFromApiService(inputValue, apiService, prefix)).toString();
+            endpoint = new URL(getUrlFromApiService(inputValue, apiService, prefix)).toString();
             return this;
         }
 
@@ -182,7 +184,7 @@ public class CommonInputs {
         }
 
         public Builder withDelimiter(String inputValue) {
-            delimiter = InputsUtil.getDefaultStringInput(inputValue, COMMA_DELIMITER);
+            delimiter = getDefaultStringInput(inputValue, COMMA_DELIMITER);
             return this;
         }
 
@@ -207,7 +209,7 @@ public class CommonInputs {
         }
 
         public Builder withRequestUri(String inputValue) {
-            requestUri = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            requestUri = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
@@ -217,12 +219,12 @@ public class CommonInputs {
         }
 
         public Builder withRequestPayload(String inputValue) {
-            requestPayload = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            requestPayload = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withHttpClientMethod(String inputValue) {
-            httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HTTP_CLIENT_METHOD_GET);
+            httpClientMethod = getDefaultStringInput(inputValue, HTTP_CLIENT_METHOD_GET);
             return this;
         }
     }

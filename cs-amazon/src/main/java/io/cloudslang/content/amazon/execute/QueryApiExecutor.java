@@ -14,9 +14,11 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.factory.HeadersMapBuilder;
 import io.cloudslang.content.amazon.factory.InputsWrapperBuilder;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.setQueryApiParams;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setQueryApiHeaders;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getValidResponse;
 
 /**
@@ -31,8 +33,8 @@ public class QueryApiExecutor {
         Map<String, String> queryParamsMap = ParamsMapBuilder.getParamsMap(inputs);
         Map<String, String> headersMap = HeadersMapBuilder.getHeadersMap(inputs);
 
-        InputsUtil.setQueryApiParams(inputs, queryParamsMap);
-        InputsUtil.setQueryApiHeaders(inputs, headersMap, queryParamsMap);
+        setQueryApiParams(inputs, queryParamsMap);
+        setQueryApiHeaders(inputs, headersMap, queryParamsMap);
 
         Map<String, String> awsResponse = new CSHttpClient().execute(inputs.getHttpClientInputs());
 

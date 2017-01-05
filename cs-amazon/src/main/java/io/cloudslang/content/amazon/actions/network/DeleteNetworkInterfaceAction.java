@@ -20,9 +20,10 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
@@ -107,7 +108,7 @@ public class DeleteNetworkInterfaceAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = NETWORK_INTERFACE_ID, required = true) String networkInterfaceId) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

@@ -20,13 +20,14 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.TAGS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.TAGS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.CREATE_TAGS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -137,7 +138,7 @@ public class CreateTagsAction {
                                        @Param(value = KEY_TAGS_STRING, required = true) String keyTagsString,
                                        @Param(value = VALUE_TAGS_STRING, required = true) String valueTagsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, TAGS_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, TAGS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

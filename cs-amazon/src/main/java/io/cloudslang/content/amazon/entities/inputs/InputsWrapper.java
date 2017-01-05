@@ -11,7 +11,8 @@ package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
 
@@ -209,7 +210,7 @@ public class InputsWrapper {
         }
 
         public Builder withRequestUri(String inputValue) {
-            requestUri = InputsUtil.getDefaultStringInput(inputValue, SCOPE_SEPARATOR);
+            requestUri = getDefaultStringInput(inputValue, SCOPE_SEPARATOR);
             return this;
         }
 

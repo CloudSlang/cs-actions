@@ -21,11 +21,12 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.OutputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
@@ -58,7 +59,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
  */
 public class AttachNetworkInterfaceAction {
     private static final String ATTACHMENT_ID_X_PATH_QUERY = "/AttachNetworkInterfaceResponse/attachmentId";
-
     /**
      * Attaches a network interface to an instance.
      * Note: The set of: <instanceId>, <networkInterfaceId>, <deviceIndex> are mutually exclusive with <queryParams> input.
@@ -133,7 +133,7 @@ public class AttachNetworkInterfaceAction {
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
                                        @Param(value = DEVICE_INDEX) String deviceIndex) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

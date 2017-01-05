@@ -18,7 +18,9 @@ import io.cloudslang.content.amazon.entities.aws.ProductCodeType;
 import io.cloudslang.content.amazon.entities.aws.RootDeviceType;
 import io.cloudslang.content.amazon.entities.aws.VirtualizationType;
 import io.cloudslang.content.amazon.entities.aws.VolumeType;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getRelevantBooleanString;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidVolumeAmount;
 
 /**
  * Created by Mihai Tusa.
@@ -395,7 +397,7 @@ public class CustomInputs {
         }
 
         public Builder withDeleteOnTermination(String inputValue) {
-            deleteOnTermination = InputsUtil.getRelevantBooleanString(inputValue);
+            deleteOnTermination = getRelevantBooleanString(inputValue);
             return this;
         }
 
@@ -405,7 +407,7 @@ public class CustomInputs {
         }
 
         public Builder withVolumeSize(String inputValue) {
-            volumeSize = InputsUtil.getValidVolumeAmount(inputValue);
+            volumeSize = getValidVolumeAmount(inputValue);
             return this;
         }
 
