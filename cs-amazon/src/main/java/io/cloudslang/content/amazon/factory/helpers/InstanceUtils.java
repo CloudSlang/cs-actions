@@ -44,10 +44,10 @@ import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParams
 import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
 import static io.cloudslang.content.amazon.utils.InputsUtil.validateAgainstDifferentArraysLength;
 
-import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
-import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static java.lang.String.valueOf;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
@@ -67,16 +67,13 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VOLUME_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VOLUME_TYPE;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.PIPE_DELIMITER;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_DEVICE_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.BLOCK_DEVICE_MAPPING_VIRTUAL_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.DELETE_ON_TERMINATIONS_STRING;
@@ -87,7 +84,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.S
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_SIZES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.VOLUME_TYPES_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_VALUES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_IDS_STRING;
@@ -250,7 +246,7 @@ public class InstanceUtils {
                 isNotBlank(wrapper.getInstanceInputs().getUserData()));
 
         setBlockDeviceMappingQueryParams(queryParamsMap, wrapper);
-        setNetworkInterfaceQueryParams(queryParamsMap, wrapper);
+        new NetworkUtils().setNetworkInterfaceQueryParams(queryParamsMap, wrapper);
 
         if (!queryParamsMap.keySet().toString().contains(NETWORK_INTERFACE)) {
             setOptionalMapEntry(queryParamsMap, SUBNET_ID, wrapper.getCustomInputs().getSubnetId(),
@@ -267,8 +263,7 @@ public class InstanceUtils {
 
     public Map<String, String> getStopInstancesQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = getRebootStartStopTerminateCommonQueryParamsMap(wrapper);
-        setOptionalMapEntry(queryParamsMap, FORCE, valueOf(wrapper.getInstanceInputs().isForceStop()),
-                wrapper.getInstanceInputs().isForceStop());
+        setOptionalMapEntry(queryParamsMap, FORCE, valueOf(wrapper.getInstanceInputs().isForceStop()), wrapper.getInstanceInputs().isForceStop());
 
         return queryParamsMap;
     }
@@ -355,8 +350,7 @@ public class InstanceUtils {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
                         || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
-                    queryParamsMap.put(getFilterValueKey(index, counter),
-                            getFilterValue(filterName, valuesArray[counter].toLowerCase()));
+                    queryParamsMap.put(getFilterValueKey(index, counter), getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                 }
             }
         }
@@ -410,11 +404,6 @@ public class InstanceUtils {
                 SECURITY_GROUP, EMPTY, wrapper.getCommonInputs().getDelimiter());
         helper.setPrefixedAndSuffixedCommonQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(),
                 SECURITY_GROUP_ID, EMPTY, wrapper.getCommonInputs().getDelimiter());
-    }
-
-    private void setNetworkInterfaceQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) throws Exception {
-        NetworkUtils helper = new NetworkUtils();
-        helper.setNetworkInterfaceQueryParams(queryParamsMap, wrapper);
     }
 
     private void setBlockDeviceMappingQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {

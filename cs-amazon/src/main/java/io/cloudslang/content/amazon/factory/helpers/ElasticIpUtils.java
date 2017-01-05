@@ -14,9 +14,11 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ALLOCATION_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PUBLIC_IP;
 
@@ -29,8 +31,7 @@ public class ElasticIpUtils {
 
     public Map<String, String> getAllocateAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(DOMAIN, wrapper.getCustomInputs().getDomain());
 
         return queryParamsMap;
@@ -38,8 +39,7 @@ public class ElasticIpUtils {
 
     public Map<String, String> getReleaseAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         setOptionalMapEntry(queryParamsMap, ALLOCATION_ID, wrapper.getCustomInputs().getAllocationId(),
                 isNotBlank(wrapper.getCustomInputs().getAllocationId()));

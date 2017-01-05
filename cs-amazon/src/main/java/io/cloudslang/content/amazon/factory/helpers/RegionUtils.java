@@ -44,8 +44,7 @@ public class RegionUtils {
 
     public Map<String, String> getDescribeAvailabilityZonesQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         String[] zonesArray = getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getAvailabilityZonesString(),
                 ZONE_NAMES_STRING, wrapper.getCommonInputs().getDelimiter());

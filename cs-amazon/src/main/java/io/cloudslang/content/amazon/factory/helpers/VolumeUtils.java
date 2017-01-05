@@ -43,7 +43,7 @@ public class VolumeUtils {
     private static final String SIZE = "Size";
 
     public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
-        return getAttachDetachVolumeCommonQueryParamsMap(wrapper);
+        return getAttachOrDetachVolumeCommonQueryParamsMap(wrapper);
     }
 
     public Map<String, String> getCreateVolumeQueryParamsMap(InputsWrapper wrapper) {
@@ -64,7 +64,7 @@ public class VolumeUtils {
     }
 
     public Map<String, String> getDetachVolumeQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = getAttachDetachVolumeCommonQueryParamsMap(wrapper);
+        Map<String, String> queryParamsMap = getAttachOrDetachVolumeCommonQueryParamsMap(wrapper);
         setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(wrapper.getVolumeInputs().isForce()), wrapper.getVolumeInputs().isForce());
 
         return queryParamsMap;
@@ -78,7 +78,7 @@ public class VolumeUtils {
         return queryParamsMap;
     }
 
-    private Map<String, String> getAttachDetachVolumeCommonQueryParamsMap(InputsWrapper wrapper) {
+    private Map<String, String> getAttachOrDetachVolumeCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(DEVICE, wrapper.getVolumeInputs().getDeviceName());

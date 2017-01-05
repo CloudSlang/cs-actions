@@ -9,8 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 
 /**
  * Created by Mihai Tusa.
@@ -36,6 +36,7 @@ public enum RootDeviceType {
                 return member.value;
             }
         }
+
         throw new RuntimeException("Unrecognized root device type value: [" + input + "]. Valid values are: available, in-use.");
     }
 }

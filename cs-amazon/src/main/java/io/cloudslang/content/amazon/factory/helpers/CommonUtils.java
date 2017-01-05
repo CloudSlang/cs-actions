@@ -11,13 +11,13 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 

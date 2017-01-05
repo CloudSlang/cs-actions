@@ -17,6 +17,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getUrlFromApiService;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 
 /**
  * Created by Mihai Tusa.
@@ -27,6 +28,7 @@ public class InputsWrapperBuilder {
     private static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
 
     private InputsWrapperBuilder() {
+        // prevent instantiation
     }
 
     @SafeVarargs
@@ -47,7 +49,7 @@ public class InputsWrapperBuilder {
                 .withHttpVerb(commonInputs.getHttpClientMethod())
                 .build();
 
-        if (builders.length > 0) {
+        if (builders.length > START_INDEX) {
             for (T builder : builders) {
                 if (builder instanceof CustomInputs) {
                     wrapper.setCustomInputs((CustomInputs) builder);
@@ -98,7 +100,7 @@ public class InputsWrapperBuilder {
 
     private static <T> String getPrefix(T[] builders) {
         String prefix = EMPTY;
-        if (builders.length > 0) {
+        if (builders.length > START_INDEX) {
             for (T builder : builders) {
                 if (builder instanceof StorageInputs && isNotBlank(((StorageInputs) builder).getBucketName())) {
                     prefix = ((StorageInputs) builder).getBucketName();

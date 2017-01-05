@@ -32,8 +32,7 @@ public class SnapshotUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(VOLUME_ID, wrapper.getCustomInputs().getVolumeId());
-        setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getVolumeInputs().getDescription(),
-                isNotBlank(wrapper.getVolumeInputs().getDescription()));
+        setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getVolumeInputs().getDescription(), isNotBlank(wrapper.getVolumeInputs().getDescription()));
 
         return queryParamsMap;
     }

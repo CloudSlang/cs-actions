@@ -25,6 +25,10 @@ public enum Scheme {
         this.value = value;
     }
 
+    private String getSchemeValue() {
+        return value;
+    }
+
     public static String getValue(String input) throws RuntimeException {
         if (isBlank(input)) {
             return INTERNET_FACING.getSchemeValue();
@@ -36,11 +40,6 @@ public enum Scheme {
             }
         }
 
-        throw new RuntimeException("Invalid Amazon load balancer scheme value: [" + input + "]. " +
-                "Valid values: ec2, elasticloadbalancing, s3.");
-    }
-
-    private String getSchemeValue() {
-        return value;
+        throw new RuntimeException("Invalid Amazon load balancer scheme value: [" + input + "]. Valid values: ec2, elasticloadbalancing, s3.");
     }
 }

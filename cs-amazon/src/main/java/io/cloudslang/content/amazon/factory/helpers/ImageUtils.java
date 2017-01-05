@@ -36,6 +36,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Values.O
 import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsList;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
+
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -117,8 +118,7 @@ public class ImageUtils {
             throw new RuntimeException(BOTH_PERMISSION_INPUTS_EMPTY);
         }
 
-        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTRIBUTE, wrapper.getCustomInputs().getAttribute());
         queryParamsMap.put(OPERATION_TYPE, wrapper.getCustomInputs().getOperationType());
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());

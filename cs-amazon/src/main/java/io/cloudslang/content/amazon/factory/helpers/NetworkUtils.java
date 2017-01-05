@@ -55,12 +55,13 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpIn
  * 9/9/2016.
  */
 public class NetworkUtils {
-    private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
-    private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String ALLOW_REASSOCIATION = "AllowReassociation";
     private static final String ASSOCIATION_ID = "AssociationId";
+    private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
     private static final String ATTACHMENT_ID = "AttachmentId";
     private static final String AVAILABILITY_ZONE = "AvailabilityZone";
+    private static final String INVALID_NUMBER_OF_ARGUMENTS = "Invalid number of arguments for network inputs.";
+    private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "SecondaryPrivateIpAddressCount";
     private static final String SUBNET_ID = "SubnetId";
 
@@ -163,7 +164,7 @@ public class NetworkUtils {
     }
 
     void setNetworkInterfaceQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) throws Exception {
-        int alignmentValue = 0;
+        int alignmentValue = START_INDEX;
         List<String> associatePublicIpAddressList = getStringsList(wrapper.getNetworkInputs().getNetworkInterfacesAssociatePublicIpAddressesString(), wrapper.getCommonInputs().getDelimiter());
         alignmentValue = validateParamsCount(alignmentValue, associatePublicIpAddressList);
         List<String> deleteOnTerminationList = getStringsList(wrapper.getNetworkInputs().getNetworkInterfaceDeleteOnTermination(), wrapper.getCommonInputs().getDelimiter());
@@ -178,7 +179,7 @@ public class NetworkUtils {
         alignmentValue = validateParamsCount(alignmentValue, privateIpAddressList);
         List<String> privateIpAddressesList = getStringsList(wrapper.getElasticIpInputs().getPrivateIpAddressesString(), wrapper.getCommonInputs().getDelimiter());
         alignmentValue = validateParamsCount(alignmentValue, privateIpAddressesList);
-        if (alignmentValue != 0) {
+        if (alignmentValue != START_INDEX) {
             List<String> secondaryPrivateIpAddressCountList = getStringsList(wrapper.getNetworkInputs().getSecondaryPrivateIpAddressCount(), wrapper.getCommonInputs().getDelimiter());
             alignmentValue = validateParamsCount(alignmentValue, secondaryPrivateIpAddressCountList);
             List<String> securityGroupIdsList = getStringsList(wrapper.getIamInputs().getSecurityGroupIdsString(), wrapper.getCommonInputs().getDelimiter());
@@ -207,11 +208,11 @@ public class NetworkUtils {
             String currentValues = paramsList.get(index);
             List<String> currentPrivateIpAddresses = getStringsList(currentValues, PIPE_DELIMITER);
             if (currentPrivateIpAddresses != null) {
-                for (int step = 0; step < currentPrivateIpAddresses.size(); step++) {
-                    String currentIpKey = key + DOT + valueOf(step + 1) + DOT + PRIVATE_IP_ADDRESS;
-                    String currentIpTypeKey = key + DOT + valueOf(step + 1) + DOT + PRIMARY;
+                for (int step = START_INDEX; step < currentPrivateIpAddresses.size(); step++) {
+                    String currentIpKey = key + DOT + valueOf(step + ONE) + DOT + PRIVATE_IP_ADDRESS;
+                    String currentIpTypeKey = key + DOT + valueOf(step + ONE) + DOT + PRIMARY;
                     String currentIpValue = currentPrivateIpAddresses.get(step);
-                    String currentIpTypeValue = step == 0 ? valueOf(true) : valueOf(false);
+                    String currentIpTypeValue = step == START_INDEX ? valueOf(true) : valueOf(false);
 
                     queryParamsMap.put(currentIpKey, currentIpValue);
                     queryParamsMap.put(currentIpTypeKey, currentIpTypeValue);
@@ -226,8 +227,8 @@ public class NetworkUtils {
             String currentValues = paramsList.get(index);
             List<String> instanceNetworkIds = getStringsList(currentValues, PIPE_DELIMITER);
             if (instanceNetworkIds != null) {
-                for (int step = 0; step < instanceNetworkIds.size(); step++) {
-                    String currentKey = key + DOT + valueOf(step + 1);
+                for (int step = START_INDEX; step < instanceNetworkIds.size(); step++) {
+                    String currentKey = key + DOT + valueOf(step + ONE);
                     String currentValue = instanceNetworkIds.get(step);
                     queryParamsMap.put(currentKey, currentValue);
                 }
@@ -246,8 +247,8 @@ public class NetworkUtils {
 
     private int validateParamsCount(int alignmentValue, List<String> paramList) throws Exception {
         if (paramList != null) {
-            if (alignmentValue != 0 && paramList.size() != alignmentValue) {
-                throw new Exception("Invalid number of arguments for network inputs.");
+            if (alignmentValue != START_INDEX && paramList.size() != alignmentValue) {
+                throw new Exception(INVALID_NUMBER_OF_ARGUMENTS);
             } else {
                 return paramList.size();
             }

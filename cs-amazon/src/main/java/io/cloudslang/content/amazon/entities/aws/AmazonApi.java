@@ -37,8 +37,7 @@ public enum AmazonApi {
             }
         }
 
-        throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. " +
-                "Valid values: ec2, elasticloadbalancing, s3.");
+        throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. Valid values: ec2, elasticloadbalancing, s3.");
     }
 
     private String getValue() {
