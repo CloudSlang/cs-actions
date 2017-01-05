@@ -10,6 +10,7 @@
 package io.cloudslang.content.amazon.factory;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.factory.helpers.StorageUtils;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.HashMap;
@@ -25,10 +26,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * 12/21/2016.
  */
 public class HeadersMapBuilder {
-    private static final String CONTENT_TYPE = "Content-Type";
-    private static final String HOST = "Host";
-    private static final String TEXT_PLAIN = "text/plain";
-
     private HeadersMapBuilder() {
         // prevent instantiation
     }
@@ -40,9 +37,7 @@ public class HeadersMapBuilder {
 
         switch (wrapper.getCommonInputs().getApiService()) {
             case S3_API:
-                headersMap.put(CONTENT_TYPE, TEXT_PLAIN);
-                headersMap.put(HOST, InputsUtil.getS3HostHeaderValue(wrapper.getCommonInputs().getApiService(),
-                        wrapper.getStorageInputs().getBucketName()));
+                new StorageUtils().setS3ApiHeadersMap(headersMap, wrapper);
                 return headersMap;
             default:
                 return headersMap;

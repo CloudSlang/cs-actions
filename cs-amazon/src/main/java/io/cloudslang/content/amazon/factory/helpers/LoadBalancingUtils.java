@@ -11,11 +11,17 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.aws.Scheme;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getArrayWithoutDuplicateEntries;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidKeyOrValueTag;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.amazon.utils.InputsUtil.validateAgainstDifferentArraysLength;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -52,11 +58,10 @@ public class LoadBalancingUtils {
 
     public Map<String, String> getCreateLoadBalancerQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(NAME, wrapper.getLoadBalancerInputs().getLoadBalancerName());
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, SCHEME, wrapper.getLoadBalancerInputs().getScheme(),
+        setOptionalMapEntry(queryParamsMap, SCHEME, wrapper.getLoadBalancerInputs().getScheme(),
                 Scheme.INTERNAL.name().equalsIgnoreCase(wrapper.getLoadBalancerInputs().getScheme()));
 
         setSubnetIdQueryParams(queryParamsMap, wrapper);
@@ -68,15 +73,14 @@ public class LoadBalancingUtils {
 
     public Map<String, String> getDeleteLoadBalancerQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(LOAD_BALANCER_ARN, wrapper.getLoadBalancerInputs().getLoadBalancerArn());
 
         return queryParamsMap;
     }
 
     private void setSubnetIdQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        String[] subnetIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getNetworkInputs().getSubnetIdsString(),
+        String[] subnetIdsArray = getArrayWithoutDuplicateEntries(wrapper.getNetworkInputs().getSubnetIdsString(),
                 SUBNET_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
         for (int index = START_INDEX; index < subnetIdsArray.length; index++) {
             queryParamsMap.put(SUBNETS + DOT + MEMBER + DOT + String.valueOf(index + ONE), subnetIdsArray[index]);
@@ -84,7 +88,7 @@ public class LoadBalancingUtils {
     }
 
     private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        String[] securityGroupsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getIamInputs().getSecurityGroupIdsString(),
+        String[] securityGroupsArray = getArrayWithoutDuplicateEntries(wrapper.getIamInputs().getSecurityGroupIdsString(),
                 SECURITY_GROUP_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
         if (isNotEmpty(securityGroupsArray)) {
             for (int index = START_INDEX; index < securityGroupsArray.length; index++) {
@@ -94,19 +98,19 @@ public class LoadBalancingUtils {
     }
 
     private void setKeyAndValueTag(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        String[] keyTagsArray = InputsUtil.getStringsArray(wrapper.getCustomInputs().getKeyTagsString(), EMPTY,
+        String[] keyTagsArray = getStringsArray(wrapper.getCustomInputs().getKeyTagsString(), EMPTY,
                 wrapper.getCommonInputs().getDelimiter());
-        String[] valueTagsArray = InputsUtil.getStringsArray(wrapper.getCustomInputs().getValueTagsString(), EMPTY,
+        String[] valueTagsArray = getStringsArray(wrapper.getCustomInputs().getValueTagsString(), EMPTY,
                 wrapper.getCommonInputs().getDelimiter());
         if (isNotEmpty(keyTagsArray) && isNotEmpty(valueTagsArray)) {
-            InputsUtil.validateAgainstDifferentArraysLength(keyTagsArray, valueTagsArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
+            validateAgainstDifferentArraysLength(keyTagsArray, valueTagsArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
             for (int index = START_INDEX; index < keyTagsArray.length; index++) {
-                String currentTag = InputsUtil.getValidKeyOrValueTag(keyTagsArray[index], REGEX, true,
-                        isBlank(keyTagsArray[index]), true, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
+                String currentTag = getValidKeyOrValueTag(keyTagsArray[index], REGEX, true, isBlank(keyTagsArray[index]), true,
+                        KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
                 queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + KEY, currentTag);
 
-                String currentValue = InputsUtil.getValidKeyOrValueTag(valueTagsArray[index], REGEX, false,
-                        false, true, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
+                String currentValue = getValidKeyOrValueTag(valueTagsArray[index], REGEX, false, false, true,
+                        KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
                 queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + VALUE, currentValue);
             }
         }

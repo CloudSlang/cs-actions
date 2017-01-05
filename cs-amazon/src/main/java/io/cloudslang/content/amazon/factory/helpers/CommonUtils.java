@@ -9,10 +9,9 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.factory.helpers;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
-
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -30,7 +29,7 @@ class CommonUtils {
     void setPrefixedAndSuffixedCommonQueryParams(Map<String, String> queryParamsMap, String inputString, String prefix,
                               String suffix, String delimiter) {
         if (isNotBlank(inputString)) {
-            String[] securityGroupsRelatedArray = InputsUtil.getStringsArray(inputString, EMPTY, delimiter);
+            String[] securityGroupsRelatedArray = getStringsArray(inputString, EMPTY, delimiter);
             if (isNotEmpty(securityGroupsRelatedArray)) {
                 for (int index = START_INDEX; index < securityGroupsRelatedArray.length; index++) {
                     queryParamsMap.put(prefix + DOT + String.valueOf(index + ONE) + suffix, securityGroupsRelatedArray[index]);

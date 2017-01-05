@@ -10,12 +10,14 @@
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SNAPSHOT_ID;
@@ -28,10 +30,9 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 public class SnapshotUtils {
     public Map<String, String> getCreateSnapshotQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(VOLUME_ID, wrapper.getCustomInputs().getVolumeId());
-
-        InputsUtil.setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getVolumeInputs().getDescription(),
+        setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getVolumeInputs().getDescription(),
                 isNotBlank(wrapper.getVolumeInputs().getDescription()));
 
         return queryParamsMap;
@@ -39,8 +40,7 @@ public class SnapshotUtils {
 
     public Map<String, String> getDeleteSnapshotQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(SNAPSHOT_ID, wrapper.getVolumeInputs().getSnapshotId());
 
         return queryParamsMap;

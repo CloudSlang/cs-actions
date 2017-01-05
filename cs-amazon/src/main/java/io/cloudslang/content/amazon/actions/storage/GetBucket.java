@@ -32,6 +32,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.S3QueryA
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
@@ -92,6 +93,12 @@ public class GetBucket {
      * @param bucketName    Optional - HTTP Host Header Bucket Specification as it is described in Virtual Hosting of
      *                      Buckets API Guide: http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html
      *                      Default: ""
+     * @param delimiter     Optional - Character you use to group keys. If you specify a prefix, all keys that contain
+     *                      the same string between the prefix and the first occurrence of the delimiter after the prefix
+     *                      are grouped under a single result element called CommonPrefixes. If you don't specify the
+     *                      prefix parameter, the substring starts at the beginning of the key. The keys that are grouped
+     *                      under the CommonPrefixes result element are not returned elsewhere in the response.
+     *                      Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
@@ -117,7 +124,8 @@ public class GetBucket {
                                        @Param(value = HEADERS) String headers,
                                        @Param(value = QUERY_PARAMS) String queryParams,
                                        @Param(value = VERSION) String version,
-                                       @Param(value = BUCKET_NAME) String bucketName) {
+                                       @Param(value = BUCKET_NAME) String bucketName,
+                                       @Param(value = BUCKET_NAME) String delimiter) {
         try {
             version = InputsUtil.getDefaultStringInput(version, STORAGE_DEFAULT_API_VERSION);
 
@@ -132,6 +140,7 @@ public class GetBucket {
                     .withHeaders(headers)
                     .withQueryParams(queryParams)
                     .withVersion(version)
+                    .withDelimiter(delimiter)
                     .withAction(GET_BUCKET)
                     .withApiService(S3_API)
                     .withRequestUri(EMPTY)

@@ -14,17 +14,35 @@ import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getS3HostHeaderValue;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
+
 /**
  * Created by TusaM
  * 12/23/2016.
  */
 public class StorageUtils {
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String HOST = "Host";
     private static final String LIST_TYPE_KEY = "list-type";
     private static final String LIST_TYPE_VALUE = "2";
+    private static final String TEXT_PLAIN = "text/plain";
+
+    public void setS3ApiHeadersMap(Map<String, String> headersMap, InputsWrapper wrapper) {
+        headersMap.put(CONTENT_TYPE, TEXT_PLAIN);
+        headersMap.put(HOST, getS3HostHeaderValue(wrapper.getCommonInputs().getApiService(),
+                wrapper.getStorageInputs().getBucketName()));
+    }
 
     public Map<String, String> retrieveGetBucketQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         queryParamsMap.put(LIST_TYPE_KEY, LIST_TYPE_VALUE);
+
+        setOptionalMapEntry(queryParamsMap, DELIMITER, wrapper.getCommonInputs().getDelimiter(),
+                isNotBlank(wrapper.getCommonInputs().getDelimiter()));
 
         return queryParamsMap;
     }
