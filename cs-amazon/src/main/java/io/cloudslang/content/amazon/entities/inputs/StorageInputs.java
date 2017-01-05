@@ -15,17 +15,31 @@ package io.cloudslang.content.amazon.entities.inputs;
  */
 public class StorageInputs {
     private final String bucketName;
+    private final String encodingType;
+    private final String maxKeys;
 
     public String getBucketName() {
         return bucketName;
     }
 
+    public String getEncodingType() {
+        return encodingType;
+    }
+
+    public String getMaxKeys() {
+        return maxKeys;
+    }
+
     private StorageInputs(StorageInputs.Builder builder) {
         this.bucketName = builder.bucketName;
+        this.encodingType = builder.encodingType;
+        this.maxKeys = builder.maxKeys;
     }
 
     public static class Builder {
         private String bucketName;
+        private String encodingType;
+        private String maxKeys;
 
         public StorageInputs build() {
             return new StorageInputs(this);
@@ -33,6 +47,16 @@ public class StorageInputs {
 
         public StorageInputs.Builder withBucketName(String inputValue) {
             bucketName = inputValue;
+            return this;
+        }
+
+        public StorageInputs.Builder withEncodingType(String inputValue) {
+            encodingType = inputValue;
+            return this;
+        }
+
+        public StorageInputs.Builder withMaxKeys(String inputValue) {
+            maxKeys = inputValue;
             return this;
         }
     }

@@ -19,10 +19,11 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.StorageInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
@@ -41,6 +42,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.BUCKET_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.ENCODING_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.MAX_KEYS;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -99,6 +102,19 @@ public class GetBucket {
      *                      prefix parameter, the substring starts at the beginning of the key. The keys that are grouped
      *                      under the CommonPrefixes result element are not returned elsewhere in the response.
      *                      Default: ""
+     * @param encodingType  Optional - Requests Amazon S3 to encode the response and specifies the encoding method to use.
+     *                      An object key can contain any Unicode character. However, XML 1.0 parsers cannot parse some
+     *                      characters, such as characters with an ASCII value from 0 to 10. For characters that are not
+     *                      supported in XML 1.0, you can add this parameter to request that Amazon S3 encode the keys in
+     *                      the response.
+     *                      Examples: "url"
+     *                      Default: ""
+     * @param maxKeys       Optional - Sets the maximum number of keys returned in the response body. If you want to retrieve
+     *                      fewer than the default 1,000 keys, you can add this to your request. The response might contain
+     *                      fewer keys, but it will never contain more. If there are additional keys that satisfy the search
+     *                      criteria, but these keys were not returned because max-keys was exceeded, the response contains
+     *                      <IsTruncated>true</IsTruncated>. To return the additional keys, see NextContinuationToken.
+     *                      Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
@@ -125,9 +141,11 @@ public class GetBucket {
                                        @Param(value = QUERY_PARAMS) String queryParams,
                                        @Param(value = VERSION) String version,
                                        @Param(value = BUCKET_NAME) String bucketName,
-                                       @Param(value = BUCKET_NAME) String delimiter) {
+                                       @Param(value = DELIMITER) String delimiter,
+                                       @Param(value = ENCODING_TYPE) String encodingType,
+                                       @Param(value = MAX_KEYS) String maxKeys) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, STORAGE_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, STORAGE_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, S3_API, bucketName)
@@ -148,7 +166,11 @@ public class GetBucket {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            final StorageInputs storageInputs = new StorageInputs.Builder().withBucketName(bucketName).build();
+            final StorageInputs storageInputs = new StorageInputs.Builder()
+                    .withBucketName(bucketName)
+                    .withEncodingType(encodingType)
+                    .withMaxKeys(maxKeys)
+                    .build();
 
             return new QueryApiExecutor().execute(commonInputs, storageInputs);
         } catch (Exception exception) {
