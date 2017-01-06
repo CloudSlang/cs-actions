@@ -62,8 +62,8 @@ public class AssociateAddressAction {
      * [VPC in an EC2-Classic account] If you don't specify a private IP address, the Elastic IP address is associated
      * with the primary IP address. If the Elastic IP address is already associated with a different instance or a network
      * interface, you get an error unless you allow re-association.
-     * <p>
-     * Important: This is an idempotent operation. If you perform the operation more than once, Amazon EC2 doesn't return
+     *
+     * <p>Important: This is an idempotent operation. If you perform the operation more than once, Amazon EC2 doesn't return
      * an error, and you may be charged for each time the Elastic IP address is remapped to the same instance. For more
      * information, see the Elastic IP Addresses section of Amazon EC2 Pricing.
      *
@@ -74,10 +74,10 @@ public class AssociateAddressAction {
      * @param credential         Secret access key associated with your Amazon AWS or IAM account.
      *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost          Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
-     * @param proxyPort          Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                           <proxyPort> inputs or leave them both empty.
+     * @param proxyPort          Optional - proxy server port. You must either specify values for both proxyHost and
+     *                           proxyPort inputs or leave them both empty.
      * @param proxyUsername      Optional - proxy server user name.
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername input value.
      * @param version            Optional - Version of the web service to made the call against it.
      *                           Example: "2016-11-15"
      *                           Default: "2016-11-15"
@@ -116,7 +116,7 @@ public class AssociateAddressAction {
      *                           Example: "eni-12345678"
      *                           Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Associate Address",
             outputs = {

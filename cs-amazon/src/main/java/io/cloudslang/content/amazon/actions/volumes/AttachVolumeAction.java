@@ -73,12 +73,12 @@ public class AttachVolumeAction {
      *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                      Default: ""
-     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and <proxyPort>
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and proxyPort
      *                      inputs or leave them both empty.
      *                      Default: ""
      * @param proxyUsername Optional - proxy server user name.
      *                      Default: ""
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
      *                      Default: ""
      * @param headers       Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                      The header name-value pair will be separated by ":".
@@ -99,7 +99,7 @@ public class AttachVolumeAction {
      * @param deviceName    Device name to expose to the instance.
      *                      Example: "/dev/sdh", "xvdh"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Attach Volume",
             outputs = {

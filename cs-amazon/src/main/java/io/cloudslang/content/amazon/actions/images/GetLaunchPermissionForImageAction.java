@@ -57,7 +57,7 @@ public class GetLaunchPermissionForImageAction {
      * @param proxyHost     Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort     Optional - Proxy server port.
      * @param proxyUsername Optional - proxy server user name.
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
      * @param headers       Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                      The header name-value pair will be separated by ":".
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -72,7 +72,7 @@ public class GetLaunchPermissionForImageAction {
      *                      Default: "2016-04-01"
      * @param imageId       ID of the specified image to retrieve launch permission for.
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Get Launch Permission for Image",
             outputs = {

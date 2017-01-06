@@ -258,9 +258,9 @@ public class NetworkUtils {
             if (isNotEmpty(privateIpAddressesArray)) {
                 for (int index = START_INDEX; index < privateIpAddressesArray.length; index++) {
                     privateIpAddressesArray[index] = InputsUtil.getValidIPv4Address(privateIpAddressesArray[index]);
-                    if (index == START_INDEX
-                            && !queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(specificArea, START_INDEX) + PRIMARY)
-                            && !queryParamsMap.containsValue(Boolean.TRUE.toString().toLowerCase())) {
+                    if (index == START_INDEX &&
+                            !queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(specificArea, START_INDEX) + PRIMARY) &&
+                            !queryParamsMap.containsValue(Boolean.TRUE.toString().toLowerCase())) {
                         queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, index) + PRIMARY, Boolean.TRUE.toString().toLowerCase());
                         queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificArea, index) + PRIVATE_IP_ADDRESS, privateIpAddressesArray[index]);
                     } else {
@@ -277,8 +277,8 @@ public class NetworkUtils {
     }
 
     void setSecondaryPrivateIpAddressCountQueryParams(Map<String, String> queryParamsMap, String inputString) {
-        if (!queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(NETWORK, ONE) + PRIMARY)
-                && !queryParamsMap.containsValue(Boolean.FALSE.toString().toLowerCase())) {
+        if (!queryParamsMap.containsKey(InputsUtil.getQueryParamsSpecificString(NETWORK, ONE) + PRIMARY) &&
+                !queryParamsMap.containsValue(Boolean.FALSE.toString().toLowerCase())) {
             InputsUtil.setOptionalMapEntry(queryParamsMap, SECONDARY_PRIVATE_IP_ADDRESS_COUNT, inputString,
                     isNotBlank(inputString));
         }

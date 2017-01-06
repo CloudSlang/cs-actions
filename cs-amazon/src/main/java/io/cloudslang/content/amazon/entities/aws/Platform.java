@@ -32,7 +32,7 @@ public enum Platform {
         }
 
         for (Platform member : Platform.values()) {
-            if(OTHERS.value.equals(input.toLowerCase())) {
+            if (OTHERS.value.equals(input.toLowerCase())) {
                 return "";
             } else if (member.value.equals(input.toLowerCase())) {
                 return member.value;

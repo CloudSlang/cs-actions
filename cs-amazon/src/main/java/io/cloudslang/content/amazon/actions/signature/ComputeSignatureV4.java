@@ -84,7 +84,7 @@ public class ComputeSignatureV4 {
      *                      value by "="
      *                      Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;
      * @return A map, with strings as keys and values, that contains: outcome of the action, returnCode of the operation
-     * or failure message, the exception if there is one, signature value and authorization header value
+     *         or failure message, the exception if there is one, signature value and authorization header value
      */
     @Action(name = "Compute Signature V4",
             outputs = {

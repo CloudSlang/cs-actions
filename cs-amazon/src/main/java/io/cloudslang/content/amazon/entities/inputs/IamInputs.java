@@ -69,7 +69,7 @@ public class IamInputs {
             return this;
         }
 
-        public Builder withKeyPairName (String inputValue) {
+        public Builder withKeyPairName(String inputValue) {
             keyPairName = inputValue;
             return this;
         }

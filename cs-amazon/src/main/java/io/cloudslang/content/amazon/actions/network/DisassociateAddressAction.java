@@ -52,8 +52,8 @@ public class DisassociateAddressAction {
      * Disassociates an Elastic IP address from the instance or network interface it's associated with.
      * Note: An Elastic IP address is for use in either the EC2-Classic platform or in a VPC. For more information, see
      * Elastic IP Addresses in the Amazon Elastic Compute Cloud User Guide.
-     * <p>
-     * Important: This is an idempotent operation. If you perform the operation more than once, Amazon EC2 doesn't return
+     *
+     * <p>Important: This is an idempotent operation. If you perform the operation more than once, Amazon EC2 doesn't return
      * an error.
      *
      * @param endpoint      Optional - Endpoint to which request will be sent.
@@ -64,12 +64,12 @@ public class DisassociateAddressAction {
      *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                      Default: ""
-     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and <proxyPort>
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and proxyPort
      *                      inputs or leave them both empty.
      *                      Default: ""
      * @param proxyUsername Optional - proxy server user name.
      *                      Default: ""
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
      *                      Default: ""
      * @param version       Optional - Version of the web service to made the call against it.
      *                      Example: "2016-11-15"
@@ -90,7 +90,7 @@ public class DisassociateAddressAction {
      * @param publicIp      Optional - Elastic IP address. This is required for EC2-Classic.
      *                      Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Disassociate Address",
             outputs = {
