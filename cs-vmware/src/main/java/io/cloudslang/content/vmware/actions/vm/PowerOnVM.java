@@ -45,7 +45,7 @@ public class PowerOnVM {
      *                           to see how to obtain a valid vCenter certificate
      * @param virtualMachineName the name of the virtual machine that will be powered on
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     * task id of the execution or failure message and the exception if there is one
+     *         task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Power On Virtual Machine",
             outputs = {

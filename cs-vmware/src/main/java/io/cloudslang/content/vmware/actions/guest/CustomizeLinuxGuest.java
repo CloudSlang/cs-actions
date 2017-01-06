@@ -56,7 +56,7 @@ public class CustomizeLinuxGuest {
      *                           https://technet.microsoft.com/en-us/library/ms145276%28v=sql.90%29.aspx
      *                           - Default: "360"
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     * task id of the execution or failure message and the exception if there is one
+     *         task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Customize Linux Guest",
             outputs = {

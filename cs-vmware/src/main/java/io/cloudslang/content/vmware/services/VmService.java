@@ -51,7 +51,7 @@ public class VmService {
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted host system
      * @param delimiter  String that represents the delimiter needed in the result list
      * @return Map with String as key and value that contains returnCode of the operation, a list that contains all the
-     * guest operating system descriptors supported by the host system or failure message and the exception if there is one
+     *         guest operating system descriptors supported by the host system or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
@@ -79,7 +79,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to create a new virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> createVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -111,7 +111,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> deleteVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -141,7 +141,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -171,7 +171,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -202,7 +202,7 @@ public class VmService {
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted data center
      * @param delimiter  String that represents the delimiter needed in the result list
      * @return Map with String as key and value that contains returnCode of the operation, a list that contains all the
-     * virtual machines and templates within the data center or failure message and the exception if there is one
+     *         virtual machines and templates within the data center or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> listVMsAndTemplates(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
@@ -231,7 +231,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, a JSON formatted string that
-     * contains details of the virtual machine or failure message and the exception if there is one
+     *         contains details of the virtual machine or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -273,7 +273,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted device
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -312,7 +312,7 @@ public class VmService {
      * @param vmInputs   Object that has all the specific inputs necessary to identify the virtual machine that will be
      *                   cloned
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> cloneVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {

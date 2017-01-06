@@ -37,4 +37,3 @@ public class PropertySpecBuilder extends PropertySpec {
         return this;
     }
 }
-

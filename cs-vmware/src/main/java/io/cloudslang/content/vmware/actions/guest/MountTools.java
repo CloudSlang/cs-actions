@@ -46,7 +46,7 @@ public class MountTools {
      *                           to see how to obtain a valid vCenter certificate
      * @param virtualMachineName the name of the targeted virtual machine to mount tools for
      * @return resultMap with String as key and value that contains returnCode of the operation, success message or
-     * failure message and the exception if there is one
+     *         failure message and the exception if there is one
      */
     @Action(name = "Mount Tools",
             outputs = {

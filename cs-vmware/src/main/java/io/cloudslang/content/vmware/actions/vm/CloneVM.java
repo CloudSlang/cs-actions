@@ -66,7 +66,7 @@ public class CloneVM {
      * @param cloneDescription:  optional - description of virtual machine that will be cloned
      *                           - Default: ""
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     * task id of the execution or failure message and the exception if there is one
+     *         task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Clone Virtual Machine",
             outputs = {
