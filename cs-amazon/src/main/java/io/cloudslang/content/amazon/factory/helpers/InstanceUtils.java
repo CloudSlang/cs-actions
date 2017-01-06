@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -351,10 +351,11 @@ public class InstanceUtils {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
                         || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
                     queryParamsMap.put(getFilterValueKey(index, counter), getFilterValue(filterName, valuesArray[counter].toLowerCase()));
-                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter])) ||
-                        !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
-                    queryParamsMap.put(getFilterValueKey(index, counter),
-                            getFilterValue(filterName, valuesArray[counter].toLowerCase()));
+                    if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter])) ||
+                            !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
+                        queryParamsMap.put(getFilterValueKey(index, counter),
+                                getFilterValue(filterName, valuesArray[counter].toLowerCase()));
+                    }
                 }
             }
         }
@@ -398,7 +399,7 @@ public class InstanceUtils {
                 setOptionalMapEntry(queryParamsMap, INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index],
                         isNotBlank(instanceIdsArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(instanceIdsArray[index])
                                 && !EMPTY.equals(instanceIdsArray[index]));
-                InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index],
+                setOptionalMapEntry(queryParamsMap, INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index],
                         isNotBlank(instanceIdsArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(instanceIdsArray[index]) &&
                                 !EMPTY.equals(instanceIdsArray[index]));
             }

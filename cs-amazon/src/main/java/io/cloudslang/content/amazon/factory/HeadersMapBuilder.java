@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -33,8 +33,8 @@ public class HeadersMapBuilder {
     }
 
     public static Map<String, String> getHeadersMap(InputsWrapper wrapper) {
-        Map<String, String> headersMap = isBlank(wrapper.getCommonInputs().getHeaders()) ? new HashMap<String, String>() :
-                getHeadersOrQueryParamsMap(new HashMap<String, String>(), wrapper.getCommonInputs().getHeaders(), HEADER_DELIMITER, COLON, true);
+        Map<String, String> headersMap = isBlank(wrapper.getCommonInputs().getHeaders()) ? new HashMap<>() :
+                getHeadersOrQueryParamsMap(new HashMap<>(), wrapper.getCommonInputs().getHeaders(), HEADER_DELIMITER, COLON, true);
 
         switch (wrapper.getCommonInputs().getApiService()) {
             case S3_API:
