@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -74,11 +74,11 @@ public class DescribeInstancesAction {
      *                           will be used.
      *                           Default: ""
      * @param proxyPort          Optional - proxy server port. You must either specify values for both
-     *                           <proxyHost> and <proxyPort> inputs or leave them both empty.
+     *                           proxyHost and proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername>
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername
      *                           input value.
      *                           Default: ""
      * @param headers            Optional - string containing the headers to use for the request separated
@@ -103,7 +103,7 @@ public class DescribeInstancesAction {
      *                           Default: ""
      * @param filterValuesString Optional - String that contains one or more values that represents filters values.
      *                           For a complete list of valid filters see: http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstances.html
-     *                           Example of filters values for the above <filterNamesString> input: "m1.small|m1.large,attached,true"
+     *                           Example of filters values for the above filterNamesString input: "m1.small|m1.large,attached,true"
      *                           Note that "m1.small|m1.large" represents values for "instance-type" and are separated
      *                           by the enforced "|" symbol
      *                           Default (describes all your instances): ""
@@ -119,7 +119,7 @@ public class DescribeInstancesAction {
      *                           there are no more results to return.
      *                           Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Describe Instances",
             outputs = {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -60,7 +60,7 @@ public class ResetLaunchPermissionsOnImageAction {
      * @param proxyHost     Optional - Proxy server used to access the web site. If empty no proxy will be used.
      * @param proxyPort     Optional - Proxy server port.
      * @param proxyUsername Optional - proxy server user name.
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
      * @param headers       Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                      The header name-value pair will be separated by ":".
      *                      Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -75,7 +75,7 @@ public class ResetLaunchPermissionsOnImageAction {
      *                      Default: "2016-04-01"
      * @param imageId       ID of the image to resets the launch permission attribute for
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Reset Launch Permissions On Image",
             outputs = {

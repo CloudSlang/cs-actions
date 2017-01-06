@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -51,8 +51,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 public class DetachNetworkInterfaceAction {
     /**
      * Detaches a network interface from an instance.
-     * Note: The set of: <attachmentId> and <force> are mutually exclusive with <queryParams> input.
-     * Please provide values EITHER FOR BOTH: <attachmentId> and <force> inputs OR FOR <queryParams> input.
+     * Note: The set of: attachmentId and force are mutually exclusive with queryParams input.
+     * Please provide values EITHER FOR BOTH: attachmentId and force inputs OR FOR queryParams input.
      * Note: As with all Amazon EC2 operations, the results might not appear immediately.
      * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
      * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
@@ -65,12 +65,12 @@ public class DetachNetworkInterfaceAction {
      *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                      Default: ""
-     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                      <proxyPort> inputs or leave them both empty.
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and
+     *                      proxyPort inputs or leave them both empty.
      *                      Default: ""
      * @param proxyUsername Optional - proxy server user name.
      *                      Default: ""
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
      *                      Default: ""
      * @param headers       Optional - string containing the headers to use for the request separated by new line
      *                      (CRLF). The header name-value pair will be separated by ":".
@@ -92,7 +92,7 @@ public class DetachNetworkInterfaceAction {
      *                      Example: "2016-11-15"
      *                      Default: "2016-11-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Detach Network Interface",
             outputs = {

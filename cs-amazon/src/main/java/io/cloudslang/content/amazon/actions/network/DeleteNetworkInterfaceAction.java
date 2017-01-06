@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -59,12 +59,12 @@ public class DeleteNetworkInterfaceAction {
      *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost          Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                           Default: ""
-     * @param proxyPort          Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                           <proxyPort> inputs or leave them both empty.
+     * @param proxyPort          Optional - proxy server port. You must either specify values for both proxyHost and
+     *                           proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername input value.
      *                           Default: ""
      * @param version            Optional - Version of the web service to made the call against it.
      *                           Example: "2016-11-15"
@@ -82,7 +82,7 @@ public class DeleteNetworkInterfaceAction {
      * @param networkInterfaceId ID of the network interface to delete.
      *                           Example: "eni-12345678"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Delete Network Interface",
             outputs = {

@@ -351,6 +351,10 @@ public class InstanceUtils {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
                         || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
                     queryParamsMap.put(getFilterValueKey(index, counter), getFilterValue(filterName, valuesArray[counter].toLowerCase()));
+                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter])) ||
+                        !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
+                    queryParamsMap.put(getFilterValueKey(index, counter),
+                            getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                 }
             }
         }
@@ -394,6 +398,9 @@ public class InstanceUtils {
                 setOptionalMapEntry(queryParamsMap, INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index],
                         isNotBlank(instanceIdsArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(instanceIdsArray[index])
                                 && !EMPTY.equals(instanceIdsArray[index]));
+                InputsUtil.setOptionalMapEntry(queryParamsMap, INSTANCE_ID + DOT + valueOf(index + ONE), instanceIdsArray[index],
+                        isNotBlank(instanceIdsArray[index]) && !NOT_RELEVANT.equalsIgnoreCase(instanceIdsArray[index]) &&
+                                !EMPTY.equals(instanceIdsArray[index]));
             }
         }
     }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -76,10 +76,10 @@ public class CreateNetworkInterfaceAction {
      *                                       Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost                      Optional - proxy server used to connect to Amazon API. If empty no proxy will
      *                                       be used.
-     * @param proxyPort                      Optional - proxy server port. You must either specify values for both <proxyHost>
-     *                                       and <proxyPort> inputs or leave them both empty.
+     * @param proxyPort                      Optional - proxy server port. You must either specify values for both proxyHost
+     *                                       and proxyPort inputs or leave them both empty.
      * @param proxyUsername                  Optional - proxy server user name.
-     * @param proxyPassword                  Optional - proxy server password associated with the <proxyUsername> input
+     * @param proxyPassword                  Optional - proxy server password associated with the proxyUsername input
      *                                       value.
      * @param headers                        Optional - string containing the headers to use for the request separated
      *                                       by new line (CRLF). The header name-value pair will be separated by ":".
@@ -103,7 +103,7 @@ public class CreateNetworkInterfaceAction {
      *                                       designated as primary).
      *                                       Default: ""
      * @param privateIpAddressesString       Optional - String that contains one or more private IP addresses separated
-     *                                       by <delimiter>
+     *                                       by delimiter
      *                                       Default: ""
      * @param networkInterfaceDescription    Optional - A description for the network interface.
      *                                       Default: ""
@@ -119,7 +119,7 @@ public class CreateNetworkInterfaceAction {
      * @param securityGroupIdsString         Optional - IDs of one or more security groups.
      *                                       Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Create Network Interface",
             outputs = {

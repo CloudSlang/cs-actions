@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -79,8 +79,8 @@ public class ClusterComputeResourceService {
         final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
         final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
 
-        final ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
+        final ManagedObjectReference task = connectionResources.getVimPortType()
+                .reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
         final Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
@@ -125,8 +125,8 @@ public class ClusterComputeResourceService {
     }
 
     private Map<String, String> reconfigureCluster(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference clusterMor, ClusterConfigSpecEx clusterConfigSpecEx) throws RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg {
-        ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
+        ManagedObjectReference task = connectionResources.getVimPortType()
+                .reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
         Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),

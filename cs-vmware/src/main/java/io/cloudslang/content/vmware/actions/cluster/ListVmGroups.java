@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -87,8 +87,8 @@ public class ListVmGroups {
                     .withTrustEveryone(trustEveryone)
                     .build();
             return OutputUtilities.getSuccessResultsMap(
-                    new ClusterComputeResourceService().
-                            listGroups(httpInputs, clusterName, InputUtils.getDefaultDelimiter(delimiter, COMMA_DELIMITER), ClusterVmGroup.class));
+                    new ClusterComputeResourceService()
+                            .listGroups(httpInputs, clusterName, InputUtils.getDefaultDelimiter(delimiter, COMMA_DELIMITER), ClusterVmGroup.class));
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
         }

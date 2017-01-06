@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -90,7 +90,7 @@ public class ComputeSignatureV4 {
      *                      where the request are made will be "mybucket.s3.amazonaws.com")
      *                      Default: ""
      * @return A map, with strings as keys and values, that contains: outcome of the action, returnCode of the operation
-     * or failure message, the exception if there is one, signature value and authorization header value
+     *         or failure message, the exception if there is one, signature value and authorization header value
      */
     @Action(name = "Compute Signature V4",
             outputs = {

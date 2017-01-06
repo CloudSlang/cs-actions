@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -60,9 +60,9 @@ public class DeployOvfTemplateServiceTest {
     private static final String TEST_CLUSTER = "test_cluster";
     private static final String TEST_RESOURCE_POOL = "test_resourcePool";
     private static final String EMPTY_STRING = "";
-    private long DISK_SIZE = 1024;
+    private static final long DISK_SIZE = 1024;
     private ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair;
-    private final static String OVF_TEMPLATE_AS_STRING = "template content";
+    private static final String OVF_TEMPLATE_AS_STRING = "template content";
 
     @Spy
     private DeployOvfTemplateService serviceSpy = new DeployOvfTemplateService(true);

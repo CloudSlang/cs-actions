@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,6 +13,7 @@ import com.sun.mail.smtp.SMTPMessage;
 import io.cloudslang.content.mail.entities.EncryptionAlgorithmsEnum;
 import io.cloudslang.content.mail.entities.SendMailInputs;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
@@ -35,12 +36,28 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.security.*;
+import java.security.InvalidParameterException;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
+
+import static com.sun.mail.smtp.SMTPMessage.NOTIFY_DELAY;
+import static com.sun.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
+import static com.sun.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
+import static io.cloudslang.content.mail.entities.EncryptionAlgorithmsEnum.getEncryptionAlgorithm;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * Created by giloan on 10/30/2014.
@@ -63,8 +80,16 @@ public class SendMail {
 
     private static final String PKCS_KEYSTORE_TYPE = "PKCS12";
     private static final String BOUNCY_CASTLE_PROVIDER = "BC";
-    private static final String INVALID_DELIMITERS = "The columnDelimiter and rowDelimiter inputs have the same value. They need to be different.";
+    private static final String INVALID_DELIMITERS = "The columnDelimiter and rowDelimiter inputs have the " +
+            "same value. They need to be different.";
     private static final String INVALID_ROW_DELIMITER = "The rowDelimiter can't be a substring of the columnDelimiter!";
+    public static final int ONE_SECOND = 1000;
+    public static final String ROW_WITH_MULTIPLE_COLUMN_DELIMITERS_IN_HEADERS_INPUT = "Row #%d in the 'headers' " +
+            "input has more than one column delimiter.";
+    public static final String ROW_WITH_EMPTY_HEADERS_INPUT = "Row #%d in the 'headers' input does not contain " +
+            "any values.";
+    public static final String ROW_WITH_MISSING_VALUE_FOR_HEADER = "Row #%d in the 'headers' input is missing one " +
+            "of the header values.";
 
     //Operation inputs
     private String attachments;
@@ -103,7 +128,6 @@ public class SendMail {
         try {
             processInputs(sendMailInputs);
 
-            String[] recipients = to.split(Pattern.quote(delimiter));
             // Create a mail session
             java.util.Properties props = new java.util.Properties();
             props.put("mail.smtp.host", smtpHost);
@@ -114,23 +138,19 @@ public class SendMail {
                 props.put("mail.smtp.password", password);
                 props.put("mail.smtp.auth", "true");
             }
-            if(enableTLS) {
+            if (enableTLS) {
                 props.put("mail.smtp.starttls.enable", "true");
             }
-            if(timeout > 0) {
-                props.put("mail.smtp.timeout",timeout);
+            if (timeout > 0) {
+                props.put("mail.smtp.timeout", timeout);
             }
 
-
-            Session session = Session.getInstance(props, null);
-
             //construct encryption SMIMEEnvelopedGenerator
-            if(encryptMessage) {
+            if (encryptMessage) {
                 addEncryptionSettings();
             }
 
             // Construct the message
-            SMTPMessage msg = new SMTPMessage(session);
             MimeMultipart multipart = new MimeMultipart();
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
@@ -148,31 +168,35 @@ public class SendMail {
             if (null != attachments && attachments.length() > 0) {
                 for (String attachment : attachments.split(Pattern.quote(delimiter))) {
                     FileDataSource source = new FileDataSource(attachment);
-                    if(!source.getFile().exists()) {
+                    if (!source.getFile().exists()) {
                         throw new FileNotFoundException("Cannot attach " + attachment);
                     }
 
-                    if(!Files.isReadable(source.getFile().toPath())) {
+                    if (!Files.isReadable(source.getFile().toPath())) {
                         throw new InvalidParameterException(attachment + " don't have read permision");
                     }
 
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setHeader("Content-Transfer-Encoding", transferEncoding);
                     messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName((MimeUtility.encodeText(attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1), charset,
-                            encodingScheme)));
+                    messageBodyPart.setFileName((MimeUtility.encodeText(attachment
+                            .substring(attachment.lastIndexOf(java.io.File.separator) + 1), charset, encodingScheme)));
                     messageBodyPart = encryptMimeBodyPart(messageBodyPart);
                     multipart.addBodyPart(messageBodyPart);
                 }
             }
+
+            Session session = Session.getInstance(props, null);
+            SMTPMessage msg = new SMTPMessage(session);
             msg.setContent(multipart);
             msg.setFrom(new InternetAddress(from));
             msg.setSubject(MimeUtility.encodeText(subject.replaceAll("[\\n\\r]", " "), charset, encodingScheme));
 
             if (readReceipt) {
-                msg.setNotifyOptions(SMTPMessage.NOTIFY_DELAY + SMTPMessage.NOTIFY_FAILURE + SMTPMessage.NOTIFY_SUCCESS);
+                msg.setNotifyOptions(NOTIFY_DELAY + NOTIFY_FAILURE + NOTIFY_SUCCESS);
             }
 
+            String[] recipients = to.split(Pattern.quote(delimiter));
             InternetAddress[] toRecipients = new InternetAddress[recipients.length];
             for (int count = 0; count < recipients.length; count++) {
                 toRecipients[count] = new InternetAddress(recipients[count]);
@@ -211,14 +235,15 @@ public class SendMail {
                 transport = session.getTransport("smtp");
                 transport.connect(smtpHost, smtpPort, user, password);
                 transport.sendMessage(msg, msg.getAllRecipients());
-            }
-            else {
+            } else {
                 Transport.send(msg);
             }
             result.put(RETURN_RESULT, MAIL_WAS_SENT);
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
         } finally {
-            if (null != transport) transport.close();
+            if (null != transport) {
+                transport.close();
+            }
         }
         return result;
     }
@@ -245,7 +270,8 @@ public class SendMail {
         }
     }
 
-    private MimeBodyPart getImageMimeBodyPart(Map<String, String> base64ImagesMap, String contentId) throws MessagingException {
+    private MimeBodyPart getImageMimeBodyPart(Map<String, String> base64ImagesMap, String contentId)
+            throws MessagingException {
         MimeBodyPart imagePart = new MimeBodyPart();
         imagePart.setContentID(contentId);
         imagePart.setHeader("Content-Transfer-Encoding", "base64");
@@ -255,13 +281,13 @@ public class SendMail {
 
     private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws NoSuchAlgorithmException,
             NoSuchProviderException, SMIMEException {
-        if(encryptMessage) {
+        if (encryptMessage) {
             mimeBodyPart = gen.generate(mimeBodyPart, encryptionOID, BOUNCY_CASTLE_PROVIDER);
         }
         return mimeBodyPart;
     }
 
-    private void addEncryptionSettings() throws  Exception{
+    private void addEncryptionSettings() throws  Exception {
         URL keystoreUrl = new URL(keystoreFile);
         InputStream publicKeystoreInputStream = keystoreUrl.openStream();
         char[] smimePw = new String(keystorePass).toCharArray();
@@ -276,10 +302,10 @@ public class SendMail {
             publicKeystoreInputStream.close();
         }
 
-        if(keyAlias.equals("")) {
-            Enumeration e = ks.aliases();
-            while (e.hasMoreElements()) {
-                String alias = (String) e.nextElement();
+        if ("".equals(keyAlias)) {
+            Enumeration aliases = ks.aliases();
+            while (aliases.hasMoreElements()) {
+                String alias = (String) aliases.nextElement();
 
                 if (ks.isKeyEntry(alias)) {
                     keyAlias = alias;
@@ -287,14 +313,13 @@ public class SendMail {
             }
         }
 
-        if (keyAlias.equals(""))
-        {
+        if ("".equals(keyAlias)) {
             throw new Exception("Can't find a public key!");
         }
 
         Certificate[]   chain = ks.getCertificateChain(keyAlias);
 
-        if(chain == null) {
+        if (chain == null) {
             throw new Exception("The key with alias \"" + keyAlias + "\" can't be fount in given keystore.");
         }
 
@@ -326,7 +351,7 @@ public class SendMail {
         String strAttachments = sendMailInputs.getAttachments();
         attachments = (null != strAttachments) ? strAttachments : "";
         String strDelimiter = sendMailInputs.getDelimiter();
-        delimiter = (strDelimiter == null || strDelimiter.equals("")) ? "," : strDelimiter;
+        delimiter = (isEmpty(strDelimiter)) ? "," : strDelimiter;
         user = sendMailInputs.getUser();
         String pass = sendMailInputs.getPassword();
         password = (null == pass) ? "" : pass;
@@ -334,37 +359,38 @@ public class SendMail {
         transferEncoding = sendMailInputs.getContentTransferEncoding();
         String strHtml = sendMailInputs.getHtmlEmail();
         // Default value for html is false
-        html = ((null != strHtml) && (strHtml.equalsIgnoreCase("true")));
+        html = ((null != strHtml) && ("true".equalsIgnoreCase(strHtml)));
         String strReadReceipt = sendMailInputs.getReadReceipt();
         // Default value for readReceipt is false
-        readReceipt = ((null != strReadReceipt) && (strReadReceipt.equalsIgnoreCase("true")));
+        readReceipt = ((null != strReadReceipt) && ("true".equalsIgnoreCase(strReadReceipt)));
         // By default the charset will be UTF-8
-        if (charset == null || charset.equals("")) {
+        if (isEmpty(charset)) {
             charset = "UTF-8";
         }
         // By default the filename encoding scheme will be Q
         encodingScheme = "Q";
         // By default the content transfer encoding for body and attachment will be quoted-printable
-        if (transferEncoding == null || transferEncoding.equals("")) {
+        if (isEmpty(transferEncoding)) {
             transferEncoding = "quoted-printable";
         }
-        // Encoding for filename is either Q or B, so if the transferEncoding is not quoted-printable then it will be B encoding.
-        if (!transferEncoding.equals("quoted-printable")) {
+        // Encoding for filename is either Q or B, so if the transferEncoding is not quoted-printable then it will be B
+        // encoding.
+        if (!"quoted-printable".equals(transferEncoding)) {
             encodingScheme = "B";
         }
         this.keystoreFile = sendMailInputs.getEncryptionKeystore();
-        if(this.keystoreFile != null && !this.keystoreFile.equals("")) {
+        if (isNotEmpty(keystoreFile)) {
             if (!keystoreFile.startsWith(HTTP)) {
                 keystoreFile = FILE + keystoreFile;
             }
 
             encryptMessage = true;
             keyAlias = sendMailInputs.getEncryptionKeyAlias();
-            if(null == keyAlias) {
+            if (null == keyAlias) {
                 keyAlias = "";
             }
             keystorePass = sendMailInputs.getEncryptionKeystorePassword();
-            if(null == keystorePass) {
+            if (null == keystorePass) {
                 keystorePass = "";
             }
         } else {
@@ -378,13 +404,13 @@ public class SendMail {
         }
 
         String rowDelimiterInput = sendMailInputs.getRowDelimiter();
-        if(StringUtils.isEmpty(rowDelimiterInput)) {
+        if (isEmpty(rowDelimiterInput)) {
             rowDelimiter = "\n";
         } else {
             rowDelimiter = rowDelimiterInput;
         }
         String columnDelimiterInput = sendMailInputs.getColumnDelimiter();
-        if(StringUtils.isEmpty(columnDelimiterInput)) {
+        if (isEmpty(columnDelimiterInput)) {
             columnDelimiter = ":";
         } else {
             columnDelimiter = columnDelimiterInput;
@@ -393,62 +419,63 @@ public class SendMail {
         validateDelimiters(rowDelimiter, columnDelimiter);
 
         String headersMap = sendMailInputs.getHeaders();
-        if(!StringUtils.isEmpty(headersMap)) {
+        if (!isEmpty(headersMap)) {
             Object[] headers = extractHeaderNamesAndValues(headersMap, rowDelimiter, columnDelimiter);
             headerNames = (ArrayList<String>) headers[0];
             headerValues = (ArrayList<String>) headers[1];
         }
 
         String timeout = sendMailInputs.getTimeout();
-        if(timeout != null && !timeout.isEmpty()) {
+        if (timeout != null && !timeout.isEmpty()) {
             this.timeout = Integer.parseInt(timeout);
-            if(this.timeout <= 0) {
+            if (this.timeout <= 0) {
                 throw new Exception("timeout value must be a positive number");
             }
-            this.timeout *= 1000; //timeouts in seconds
+            this.timeout *= ONE_SECOND; //timeouts in seconds
         }
 
         encryptionOID = encryptionAlgorithmToEncryptionOID(sendMailInputs.getEncryptionAlgorithm());
     }
 
     private String encryptionAlgorithmToEncryptionOID(String encryptionAlgorithmStr) throws Exception {
-        EncryptionAlgorithmsEnum encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithmStr);
+        EncryptionAlgorithmsEnum encryptionAlgorithm = getEncryptionAlgorithm(encryptionAlgorithmStr);
         return encryptionAlgorithm.getEncryptionOID();
     }
 
     /**
-     * This method checks if the delimiters are equal and if the row delimiter is a substring of the column delimiter and throws an exception with the apropriate message.
+     * This method checks if the delimiters are equal and if the row delimiter is a substring of the column delimiter
+     * and throws an exception with the appropriate message.
      * @param rowDelimiter
      * @param columnDelimiter
      * @throws Exception
      */
     protected void validateDelimiters(String rowDelimiter, String columnDelimiter) throws Exception {
-        if(rowDelimiter.equals(columnDelimiter)) {
+        if (rowDelimiter.equals(columnDelimiter)) {
             throw new Exception(INVALID_DELIMITERS);
         }
-        if(StringUtils.contains(columnDelimiter, rowDelimiter)) {
+        if (StringUtils.contains(columnDelimiter, rowDelimiter)) {
             throw new Exception(INVALID_ROW_DELIMITER);
         }
     }
 
     /**
-     * This method extracts and returns an object containing two Lists. A list with the header names and a list with the header values.
-     * Values found on same position in the two lists correspond to each other.
+     * This method extracts and returns an object containing two Lists. A list with the header names and a list with the
+     * header values. Values found on same position in the two lists correspond to each other.
      * @param headersMap
      * @param rowDelimiter
      * @param columnDelimiter
      * @return
      * @throws Exception
      */
-    protected Object[] extractHeaderNamesAndValues(String headersMap, String rowDelimiter, String columnDelimiter) throws Exception {
+    protected Object[] extractHeaderNamesAndValues(String headersMap, String rowDelimiter, String columnDelimiter)
+            throws Exception {
         String[] rows = headersMap.split(Pattern.quote(rowDelimiter));
         ArrayList<String> headerNames = new ArrayList<>();
         ArrayList<String> headerValues = new ArrayList<>();
         for (int i = 0; i < rows.length; i++) {
-            if (StringUtils.isEmpty(rows[i])) {
+            if (isEmpty(rows[i])) {
                 continue;
-            }
-            else {
+            } else {
                 if (validateRow(rows[i], columnDelimiter, i)) {
                     String[] headerNameAndValue = rows[i].split(Pattern.quote(columnDelimiter));
                     headerNames.add(i, headerNameAndValue[0].trim());
@@ -470,14 +497,14 @@ public class SendMail {
     protected boolean validateRow(String row, String columnDelimiter, int rowNumber) throws Exception {
         if (row.contains(columnDelimiter)) {
             if (row.equals(columnDelimiter)) {
-                throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input does not contain any values.");
+                throw new Exception(format(ROW_WITH_EMPTY_HEADERS_INPUT, rowNumber + 1));
             } else {
                 String[] headerNameAndValue = row.split(Pattern.quote(columnDelimiter));
                 if (StringUtils.countMatches(row, columnDelimiter) > 1) {
-                    throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input has more than one column delimiter.");
+                    throw new Exception(format(ROW_WITH_MULTIPLE_COLUMN_DELIMITERS_IN_HEADERS_INPUT, rowNumber + 1));
                 } else {
                     if (headerNameAndValue.length == 1) {
-                        throw new Exception("Row #" + (rowNumber + 1) + " in the 'headers' input is missing one of the header values.");
+                        throw new Exception(format(ROW_WITH_MISSING_VALUE_FOR_HEADER, rowNumber + 1));
                     } else {
                         return true;
                     }
@@ -489,21 +516,25 @@ public class SendMail {
     }
 
     /**
-     * The method creates a copy of the SMTPMessage object passed through the arguments list and adds the headers to the copied object then returns it. If the header is already present in the message then its values list will be updated with the given header value.
+     * The method creates a copy of the SMTPMessage object passed through the arguments list and adds the headers to the
+     * copied object then returns it. If the header is already present in the message then its values list will be
+     * updated with the given header value.
      * @param message The SMTPMessage object to which the headers are added or updated.
      * @param headerNames A list of strings containing the header names that need to be added or updated.
      * @param headerValues A list of strings containing the header values that need to be added.
      * @return The method returns the message with the headers added.
      * @throws MessagingException
      */
-    protected SMTPMessage addHeadersToSMTPMessage(SMTPMessage message, List<String> headerNames, List<String> headerValues) throws MessagingException {
+    protected SMTPMessage addHeadersToSMTPMessage(SMTPMessage message, List<String> headerNames,
+                                                  List<String> headerValues) throws MessagingException {
         SMTPMessage msg = new SMTPMessage(message);
         Iterator namesIter = headerNames.iterator();
         Iterator valuesIter = headerValues.iterator();
         while (namesIter.hasNext() && valuesIter.hasNext()) {
             String headerName = (String) namesIter.next();
             String headerValue = (String) valuesIter.next();
-            if (msg.getHeader(headerName) != null) { // then a header with this name already exists, add the headerValue to the existing values list.
+            if (msg.getHeader(headerName) != null) {
+                // then a header with this name already exists, add the headerValue to the existing values list.
                 msg.addHeader(headerName, headerValue);
             } else {
                 msg.setHeader(headerName, headerValue);

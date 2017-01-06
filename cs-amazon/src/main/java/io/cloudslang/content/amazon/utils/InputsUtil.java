@@ -255,10 +255,8 @@ public final class InputsUtil {
     /**
      * If enforcedBoolean is "true" and string input is: null, empty, many empty chars, TrUe, tRuE... but not "false"
      * then returns "true".
-     * <p>
      * If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
      * then returns "false"
-     * <p>
      * This behavior is needed for inputs like: "imageNoReboot" when we want them to be set to "true" disregarding the
      * value provided (null, empty, many empty chars, TrUe, tRuE) except the case when is "false"
      *
