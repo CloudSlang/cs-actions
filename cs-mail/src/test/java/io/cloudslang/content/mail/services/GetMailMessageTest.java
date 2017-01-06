@@ -28,10 +28,24 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.mail.*;
+import javax.mail.AuthenticationFailedException;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.URLName;
 import javax.mail.internet.MimeUtility;
 import javax.net.ssl.SSLContext;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
@@ -41,7 +55,15 @@ import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 //import javax.net.ssl.SSLContext;
 
@@ -49,7 +71,8 @@ import static org.mockito.Mockito.*;
  * Created by giloan on 11/6/2014.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({GetMailMessage.class, MimeUtility.class, URLName.class, Session.class, System.class, SSLContext.class, SSLUtils.class, ASCIIUtility.class, ByteArrayInputStream.class})
+@PrepareForTest({GetMailMessage.class, MimeUtility.class, URLName.class, Session.class, System.class, SSLContext.class,
+        SSLUtils.class, ASCIIUtility.class, ByteArrayInputStream.class})
 public class GetMailMessageTest {
 
     public static final int READ_ONLY = 1;
@@ -81,9 +104,9 @@ public class GetMailMessageTest {
     private static final String SUCCESS_RETURN_CODE = "0";
     //operation results
     private static final String RETURN_RESULT = "returnResult";
-    private static final String SUBJECT_RESULT = "Subject";
-    private static final String BODY_RESULT = "Body";
-    private static final String ATTACHED_FILE_NAMES_RESULT = "AttachedFileNames";
+    private static final String SUBJECT_RESULT = "subject";
+    private static final String BODY_RESULT = "body";
+    private static final String ATTACHED_FILE_NAMES_RESULT = "attachedFileNames";
     private static final String BAD_CHARACTERSET = "badCharSet";
     private static final String STR_FALSE = "false";
     private static final String STR_TRUE = "true";
@@ -191,7 +214,8 @@ public class GetMailMessageTest {
         addRequiredInputs();
         getMailMessageSpy.processInputs(inputs);
         exception.expect(Exception.class);
-        exception.expectMessage("message value was: " + MESSAGE_NUMBER + " there are only " + 0 + " messages in folder");
+        exception.expectMessage("message value was: " + MESSAGE_NUMBER + " there are only " + 0 +
+                " messages in folder");
         getMailMessageSpy.getMessage();
     }
 
@@ -456,9 +480,12 @@ public class GetMailMessageTest {
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.fallback", STR_FALSE);
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
-        PowerMockito.whenNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString()).thenReturn(urlNameMock);
+        PowerMockito.whenNew(URLName.class)
+                .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString())
+                .thenReturn(urlNameMock);
         PowerMockito.mockStatic(Session.class);
-        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        PowerMockito.doReturn(sessionMock)
+                .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
         doReturn(storeMock).when(sessionMock).getStore(urlNameMock);
 
         addRequiredInputs();
@@ -470,7 +497,8 @@ public class GetMailMessageTest {
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.fallback", STR_FALSE);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
         verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
-        PowerMockito.verifyNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
+        PowerMockito.verifyNew(URLName.class)
+                .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
         verify(sessionMock).getStore(urlNameMock);
@@ -482,9 +510,12 @@ public class GetMailMessageTest {
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
         doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
 
-        PowerMockito.whenNew(URLName.class).withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString()).thenReturn(urlNameMock);
+        PowerMockito.whenNew(URLName.class)
+                .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString())
+                .thenReturn(urlNameMock);
         PowerMockito.mockStatic(Session.class);
-        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        PowerMockito.doReturn(sessionMock)
+                .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
         doReturn(storeMock).when(sessionMock).getStore(any(String.class));
 
         addRequiredInputs();
@@ -510,7 +541,8 @@ public class GetMailMessageTest {
         doReturn(objectMock).when(propertiesMock).put("mail." + POP3_PROTOCOL + ".host", HOST);
         doReturn(objectMock).when(propertiesMock).put("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
         PowerMockito.mockStatic(Session.class);
-        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        PowerMockito.doReturn(sessionMock)
+                .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
         doReturn(storeMock).when(sessionMock).getStore(POP3_PROTOCOL);
 
         addRequiredInputs();
@@ -533,7 +565,9 @@ public class GetMailMessageTest {
     @Test
     public void testAddSSLSettingsWithFalseTrustAllRoots() throws Exception {
         mockGetSystemFileSeparatorAndGetSystemJavaHomeMethods();
-        PowerMockito.whenNew(File.class).withArguments(testJavaHome + testSeparator + "lib" + testSeparator + "security" + testSeparator + "cacerts").thenReturn(fileMock);
+        PowerMockito.whenNew(File.class)
+                .withArguments(testJavaHome + testSeparator + "lib" + testSeparator + "security" + testSeparator + "cacerts")
+                .thenReturn(fileMock);
         doReturn(true).when(fileMock).exists();
 
         PowerMockito.mockStatic(SSLContext.class);
@@ -542,7 +576,8 @@ public class GetMailMessageTest {
 
         getMailMessageSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_FALSE), "", "", "", "");
         verifyGetSystemFileSeparatorAndGetSystemJavaHomeInvocation();
-        PowerMockito.verifyNew(File.class, times(2)).withArguments(testJavaHome + testSeparator + "lib" + testSeparator + "security" + testSeparator + "cacerts");
+        PowerMockito.verifyNew(File.class, times(2))
+                .withArguments(testJavaHome + testSeparator + "lib" + testSeparator + "security" + testSeparator + "cacerts");
         verify(fileMock, times(2)).exists();
         verifyCommonStubbedMethodsForAddSSLSettingsMethod();
         PowerMockito.verifyNew(URL.class, times(2)).withArguments(anyString());
@@ -562,7 +597,8 @@ public class GetMailMessageTest {
         PowerMockito.whenNew(EasyX509TrustManager.class).withNoArguments().thenReturn(easyX509TrustManagerMock);
         commonStubbedMethodsForAddSSLSettings();
 
-        getMailMessageSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_TRUE), KEYSTORE, KEYSTORE_PASSWORD, TRUST_KEYSTORE, TRUST_PASSWORD);
+        getMailMessageSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_TRUE), KEYSTORE, KEYSTORE_PASSWORD,
+                TRUST_KEYSTORE, TRUST_PASSWORD);
         verifyGetSystemFileSeparatorAndGetSystemJavaHomeInvocation();
         PowerMockito.verifyStatic();
         SSLContext.getInstance(anyString());
@@ -608,8 +644,8 @@ public class GetMailMessageTest {
         doReturn(false).when(messageMock).isMimeType(TEXT_PLAIN);
         doReturn(false).when(messageMock).isMimeType(TEXT_HTML);
         doReturn(multipartMock).when(messageMock).getContent();
-        int n = 1;
-        doReturn(n).when(multipartMock).getCount();
+        int one = 1;
+        doReturn(one).when(multipartMock).getCount();
         doReturn(partMock).when(multipartMock).getBodyPart(anyInt());
         // return null disposition
         doReturn(null).when(partMock).getDisposition();
@@ -621,13 +657,15 @@ public class GetMailMessageTest {
         PowerMockito.whenNew(ByteArrayInputStream.class).withArguments(bytes).thenReturn(byteArrayInputStreamMock);
         int byteArrayInputStreamMockCount = 1;
         doReturn(byteArrayInputStreamMockCount).when(byteArrayInputStreamMock).available();
-        doReturn(byteArrayInputStreamMockCount).when(byteArrayInputStreamMock).read(new byte[byteArrayInputStreamMockCount], 0, byteArrayInputStreamMockCount);
+        doReturn(byteArrayInputStreamMockCount)
+                .when(byteArrayInputStreamMock)
+                .read(new byte[byteArrayInputStreamMockCount], 0, byteArrayInputStreamMockCount);
         String testCMessage = "testCMessage";
         PowerMockito.mockStatic(MimeUtility.class);
         PowerMockito.doReturn(testCMessage).when(MimeUtility.class, "decodeText", anyString());
 
-        Map<String, String> cMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
-        assertEquals(testCMessage, cMessage.get("text/plain"));
+        Map<String, String> contentMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        assertEquals(testCMessage, contentMessage.get("text/plain"));
         verify(messageMock).isMimeType(TEXT_PLAIN);
         verify(messageMock).isMimeType(TEXT_HTML);
         verify(messageMock).getContent();
@@ -651,15 +689,15 @@ public class GetMailMessageTest {
         doReturn(false).when(messageMock).isMimeType(TEXT_PLAIN);
         doReturn(false).when(messageMock).isMimeType(TEXT_HTML);
         doReturn(multipartMock).when(messageMock).getContent();
-        int n = 1;
-        doReturn(n).when(multipartMock).getCount();
+        int one = 1;
+        doReturn(one).when(multipartMock).getCount();
         doReturn(partMock).when(multipartMock).getBodyPart(anyInt());
         String testDisposition = "testDisposition";
         doReturn(testDisposition).when(partMock).getDisposition();
         doReturn("text/plain; charset=utf-8; format=flowed").when(partMock).getContentType();
 
-        Map<String, String> cMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
-        assertEquals(0, cMessage.size());
+        Map<String, String> contentMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        assertEquals(0, contentMessage.size());
         verify(messageMock).isMimeType(TEXT_PLAIN);
         verify(messageMock).isMimeType(TEXT_HTML);
         verify(messageMock).getContent();
@@ -911,7 +949,8 @@ public class GetMailMessageTest {
         return getMailMessageInputs;
     }
 
-    private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType) throws MessagingException, IOException {
+    private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType)
+            throws MessagingException, IOException {
         verify(messageMock).isMimeType(messageType);
         verify(messageMock).getContent();
         PowerMockito.verifyStatic();

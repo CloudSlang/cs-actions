@@ -33,7 +33,8 @@ public class HtmlImageNodeVisitor extends NodeVisitor {
             if (imageValue.contains("base64")) {
                 String contentId = getContentId();
                 tag.setAttribute("src", "cid:" + contentId);
-                base64ImagesMap.put(contentId, imageValue.substring(imageValue.indexOf("base64") + 7, imageValue.length()));
+                base64ImagesMap.put(contentId,
+                        imageValue.substring(imageValue.indexOf("base64") + 7, imageValue.length()));
             }
         }
     }

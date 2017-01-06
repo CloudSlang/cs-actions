@@ -36,19 +36,20 @@ public enum EncryptionAlgorithmsEnum {
     SEED_WRAP(SMIMEEnvelopedGenerator.SEED_WRAP);
 
     private String encryptionOID;
-    private EncryptionAlgorithmsEnum(String encryptionOID) {
+    EncryptionAlgorithmsEnum(String encryptionOID) {
         this.encryptionOID = encryptionOID;
     }
 
     public static EncryptionAlgorithmsEnum getEncryptionAlgorithm(String encryptionAlgorithm) {
-        if(StringUtils.isEmpty(encryptionAlgorithm))
+        if (StringUtils.isEmpty(encryptionAlgorithm)) {
             return AES256_CBC;
+        }
 
         try {
             return EncryptionAlgorithmsEnum.valueOf(encryptionAlgorithm.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid encryption algorithm \"" + encryptionAlgorithm + "\". Supported values:" +
-                    getSupportedEncryptionAlgorithms());
+            throw new IllegalArgumentException("Invalid encryption algorithm \"" + encryptionAlgorithm +
+                    "\". Supported values:" + getSupportedEncryptionAlgorithms());
         }
     }
 
@@ -59,7 +60,7 @@ public enum EncryptionAlgorithmsEnum {
     private static String getSupportedEncryptionAlgorithms() {
         String result = "";
         EncryptionAlgorithmsEnum[] algorithms = EncryptionAlgorithmsEnum.values();
-        for(EncryptionAlgorithmsEnum alg : algorithms) {
+        for (EncryptionAlgorithmsEnum alg : algorithms) {
             result += alg.name();
             result += ", ";
         }

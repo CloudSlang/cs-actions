@@ -9,7 +9,11 @@
  *******************************************************************************/
 package io.cloudslang.content.mail.sslconfig;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -35,7 +39,9 @@ public class SSLUtils {
             is = url.openStream();
             keystore.load(is, password != null ? password.toCharArray() : null);
         } finally {
-            if (is != null) is.close();
+            if (is != null) {
+                is.close();
+            }
         }
         return keystore;
     }
