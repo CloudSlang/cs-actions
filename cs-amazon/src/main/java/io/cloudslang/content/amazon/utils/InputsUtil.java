@@ -55,6 +55,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.DEFAULT_MAX_KEYS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
@@ -90,6 +91,7 @@ public final class InputsUtil {
     private static final String SUBNET_ID_INPUT = "subnetId";
     private static final String VERSION = "Version";
 
+    private static final int MAXIMUM_ACCEPTED_MAX_KEY = 1;
     private static final int MAXIMUM_EBS_SIZE = 16384;
     private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
@@ -285,6 +287,13 @@ public final class InputsUtil {
             return input.toLowerCase();
         }
         return NOT_RELEVANT;
+    }
+
+    public static int getRelevantMaxKeys(String input) {
+        if (isBlank(input)) {
+            return DEFAULT_MAX_KEYS;
+        }
+        return getValidInt(input, MAXIMUM_ACCEPTED_MAX_KEY, Integer.MAX_VALUE, getValidationException(input, true), getValidationException(input, false));
     }
 
     public static String getValidVolumeAmount(String input) {

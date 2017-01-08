@@ -9,6 +9,9 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getRelevantMaxKeys;
+
 /**
  * Created by TusaM
  * 12/21/2016.
@@ -17,8 +20,12 @@ public class StorageInputs {
     private final String bucketName;
     private final String continuationToken;
     private final String encodingType;
-    private final String maxKeys;
     private final String prefix;
+    private final String startAfter;
+
+    private final Integer maxKeys;
+
+    private final Boolean fetchOwner;
 
     public String getBucketName() {
         return bucketName;
@@ -32,12 +39,20 @@ public class StorageInputs {
         return encodingType;
     }
 
-    public String getMaxKeys() {
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public String getStartAfter() {
+        return startAfter;
+    }
+
+    public Integer getMaxKeys() {
         return maxKeys;
     }
 
-    public String getPrefix() {
-        return prefix;
+    public Boolean isFetchOwner() {
+        return fetchOwner;
     }
 
     private StorageInputs(StorageInputs.Builder builder) {
@@ -46,14 +61,20 @@ public class StorageInputs {
         this.encodingType = builder.encodingType;
         this.maxKeys = builder.maxKeys;
         this.prefix = builder.prefix;
+        this.startAfter = builder.startAfter;
+        this.fetchOwner = builder.fetchOwner;
     }
 
     public static class Builder {
         private String bucketName;
         private String continuationToken;
         private String encodingType;
-        private String maxKeys;
         private String prefix;
+        private String startAfter;
+
+        private Integer maxKeys;
+
+        private Boolean fetchOwner;
 
         public StorageInputs build() {
             return new StorageInputs(this);
@@ -74,13 +95,23 @@ public class StorageInputs {
             return this;
         }
 
-        public StorageInputs.Builder withMaxKeys(String inputValue) {
-            maxKeys = inputValue;
+        public StorageInputs.Builder withPrefix(String inputValue) {
+            prefix = inputValue;
             return this;
         }
 
-        public StorageInputs.Builder withPrefix(String inputValue) {
-            prefix = inputValue;
+        public StorageInputs.Builder withStartAfter(String inputValue) {
+            startAfter = inputValue;
+            return this;
+        }
+
+        public StorageInputs.Builder withMaxKeys(String inputValue) {
+            maxKeys = getRelevantMaxKeys(inputValue);
+            return this;
+        }
+
+        public StorageInputs.Builder withFetchOwner(String inputValue) {
+            fetchOwner = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
     }

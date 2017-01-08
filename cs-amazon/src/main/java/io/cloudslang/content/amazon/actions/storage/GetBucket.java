@@ -44,8 +44,10 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.BUCKET_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.CONTINUATION_TOKEN;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.ENCODING_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.FETCH_OWNER;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.MAX_KEYS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.PREFIX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.StorageInputs.START_AFTER;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -117,16 +119,30 @@ public class GetBucket {
      *                          the response.
      *                          Examples: "url"
      *                          Default: ""
+     * @param fetchOwner        Optional - By default, the API does not return the Owner information in the response.
+     *                          If you want the owner information in the response, you can specify this parameter with the
+     *                          value set to true.
+     *                          Valid values: "false", "true"
+     *                          Default: "false"
      * @param maxKeys           Optional - Sets the maximum number of keys returned in the response body. If you want to
      *                          retrieve fewer than the default 1,000 keys, you can add this to your request. The response
      *                          might contain fewer keys, but it will never contain more. If there are additional keys
      *                          that satisfy the search criteria, but these keys were not returned because max-keys was
      *                          exceeded, the response contains <IsTruncated>true</IsTruncated>. To return the additional
      *                          keys, see NextContinuationToken.
-     *                          Default: ""
+     *                          Examples: "3"
+     *                          Default: "1000"
      * @param prefix            Optional - Limits the response to keys that begin with the specified prefix. You can use
      *                          prefixes to separate a bucket into different groupings of keys. (You can think of using
      *                          prefix to make groups in the same way you'd use a folder in a file system.)
+     *                          Examples: "E"
+     *                          Default: ""
+     * @param startAfter        Optional - If you want the API to return key names after a specific object key in your
+     *                          key space, you can add this parameter. Amazon S3 lists objects in UTF-8 character encoding
+     *                          in lexicographical order. This parameter is valid only in your first request. In case the
+     *                          response is truncated, you can specify this parameter along with the continuation-token
+     *                          parameter, and then Amazon S3 will ignore this parameter.
+     *                          Examples: "ExampleGuide.pdf"
      *                          Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
@@ -157,8 +173,10 @@ public class GetBucket {
                                        @Param(value = CONTINUATION_TOKEN) String continuationToken,
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = ENCODING_TYPE) String encodingType,
+                                       @Param(value = FETCH_OWNER) String fetchOwner,
                                        @Param(value = MAX_KEYS) String maxKeys,
-                                       @Param(value = PREFIX) String prefix) {
+                                       @Param(value = PREFIX) String prefix,
+                                       @Param(value = START_AFTER) String startAfter) {
 
         try {
             version = getDefaultStringInput(version, STORAGE_DEFAULT_API_VERSION);
@@ -186,8 +204,10 @@ public class GetBucket {
                     .withBucketName(bucketName)
                     .withContinuationToken(continuationToken)
                     .withEncodingType(encodingType)
+                    .withFetchOwner(fetchOwner)
                     .withMaxKeys(maxKeys)
                     .withPrefix(prefix)
+                    .withStartAfter(startAfter)
                     .build();
 
             return new QueryApiExecutor().execute(commonInputs, storageInputs);

@@ -55,8 +55,9 @@ public class Constants {
     }
 
     public static class Values {
-        public static final int START_INDEX = 0;
+        public static final int DEFAULT_MAX_KEYS = 1000;
         public static final int ONE = 1;
+        public static final int START_INDEX = 0;
     }
 
     public static class AwsParams {
