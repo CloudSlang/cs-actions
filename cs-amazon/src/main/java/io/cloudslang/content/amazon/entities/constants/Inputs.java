@@ -172,8 +172,10 @@ public class Inputs {
 
     public static class StorageInputs {
         public static final String BUCKET_NAME = "bucketName";
+        public static final String CONTINUATION_TOKEN = "continuationToken";
         public static final String ENCODING_TYPE = "encodingType";
         public static final String MAX_KEYS = "maxKeys";
+        public static final String PREFIX = "prefix";
     }
 
     public static class VolumeInputs {
