@@ -187,7 +187,7 @@
         <module>cs-amazon</module>
         <module>cs-xml</module>
         <module>cs-date-time</module>
-        <!--<module>cs-vmware</module>-->
+        <module>cs-vmware</module>
         <module>cs-lists</module>
         <module>cs-commons</module>
         <module>cs-azure</module>

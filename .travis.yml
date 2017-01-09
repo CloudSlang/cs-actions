@@ -10,4 +10,4 @@ script:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
   - mvn test -B ${MVN_EXCLUDE_MODULES}
 after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report ${MVN_EXCLUDE_MODULES}
