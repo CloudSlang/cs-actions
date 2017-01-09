@@ -54,6 +54,9 @@
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
     </developers>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <build>
         <pluginManagement>
             <plugins>
@@ -71,9 +74,6 @@
                         <maxmem>256m</maxmem>
                         <!-- aggregated reports for multi-module projects -->
                         <aggregate>true</aggregate>
-                        <instrumentation>
-                            <exclude>io/cloudslang/content/vmware/**</exclude>
-                        </instrumentation>
                     </configuration>
                 </plugin>
                 <plugin>
