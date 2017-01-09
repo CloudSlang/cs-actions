@@ -8,6 +8,7 @@
 [![Code Climate](https://codeclimate.com/github/CloudSlang/cs-actions/badges/gpa.svg)](https://codeclimate.com/github/CloudSlang/cs-actions)
 
 
+
 ### Table of contents:
 * [Overview](#Overview)
 * [Common Integrations](#CommonIntegrations)
