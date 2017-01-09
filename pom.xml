@@ -71,6 +71,9 @@
                         <maxmem>256m</maxmem>
                         <!-- aggregated reports for multi-module projects -->
                         <aggregate>true</aggregate>
+                        <instrumentation>
+                            <exclude>io/cloudslang/content/vmware/**</exclude>
+                        </instrumentation>
                     </configuration>
                 </plugin>
                 <plugin>
