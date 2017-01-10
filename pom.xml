@@ -191,5 +191,6 @@
         <module>cs-lists</module>
         <module>cs-commons</module>
         <module>cs-azure</module>
+        <module>cs-database</module>
     </modules>
 </project>
