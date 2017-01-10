@@ -66,6 +66,11 @@
             <version>0.0.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.2</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

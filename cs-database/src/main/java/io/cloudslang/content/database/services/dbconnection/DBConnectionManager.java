@@ -1,10 +1,8 @@
 package io.cloudslang.content.database.services.dbconnection;
 
-import com.iconclude.content.actions.sql.dbconnection.PooledDataSourceCleaner.STATE_CLEANER;
 import com.mchange.v2.c3p0.PooledDataSource;
-import com.opsware.pas.content.commons.security.TripleDES;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import io.cloudslang.content.database.services.dbconnection.PooledDataSourceCleaner.STATE_CLEANER;
+import io.cloudslang.content.database.utils.TripleDES;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -32,7 +30,7 @@ import java.util.*;
  */
 public class DBConnectionManager {
     //logging
-    protected static final Log logger = LogFactory.getLog(DBConnectionManager.class);
+//    protected static final Log logger = LogFactory.getLog(DBConnectionManager.class);
 
     //singleton instance, make it protected so it can be mocked
     protected static volatile DBConnectionManager instance = null;
@@ -224,7 +222,7 @@ public class DBConnectionManager {
             //if the runnable has been shutdown when dbmspoolsize is 0
             //then need to resumbit to the thread and start it again
             if (datasourceCleaner.getState() == STATE_CLEANER.SHUTDOWN) {
-                logger.info("datasourceCleaner was shutdowned, will restart it");
+//               todo logger.info("datasourceCleaner was shutdowned, will restart it");
                 //submit it to the thread to run
                 cleanerThread = new Thread(datasourceCleaner);
                 cleanerThread.setPriority(Thread.MIN_PRIORITY);
@@ -242,10 +240,10 @@ public class DBConnectionManager {
      * clean any empty datasource and pool in the dbmsPool table.
      */
     public void cleanDataSources() {
-        //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("Ready to clean pools...");
-        }
+        // todo tracing
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Ready to clean pools...");
+//        }
 
         Hashtable<String, ArrayList<String>> removedDsKeyTable = null;
 
@@ -266,9 +264,9 @@ public class DBConnectionManager {
                     try {
                         conCount = pDs.getNumConnectionsAllUsers();
                     } catch (SQLException e) {
-                        logger.error
-                                ("Failed to get total number of connections for datasource. dbmsPoolKey = "
-                                        + dbPoolKey, e);
+//                  todo      logger.error
+//                                ("Failed to get total number of connections for datasource. dbmsPoolKey = "
+//                                        + dbPoolKey, e);
                         continue;
                     }
                     //no connections
@@ -308,25 +306,25 @@ public class DBConnectionManager {
                         provider.closePooledDataSource(removedDs);
                     } catch (SQLException e) {
                         //can't show the dsKey since it has encrypted password there
-                        logger.error("Failed to close datadsource in dmbs poolKey = "
-                                + removedPoolKey, e);
+//                  todo      logger.error("Failed to close datadsource in dmbs poolKey = "
+//                                + removedPoolKey, e);
                         continue;
                     }
 
                     //tracing
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Removed one datasource in dbms poolKey = "
-                                + removedPoolKey);
-                    }
+//                todo    if (logger.isDebugEnabled()) {
+//                        logger.debug("Removed one datasource in dbms poolKey = "
+//                                + removedPoolKey);
+//                    }
                 }
                 //don't have any ds for the pool key
                 if (dsTable.isEmpty()) {
                     dsTable = null;
                     dbmsPoolTable.remove(removedPoolKey);
                     //tracing
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Removed dbms poolKey = " + removedPoolKey);
-                    }
+//              todo      if (logger.isDebugEnabled()) {
+//                        logger.debug("Removed dbms poolKey = " + removedPoolKey);
+//                    }
                 }
             }
         }
@@ -356,8 +354,8 @@ public class DBConnectionManager {
                 try {
                     provider.closePooledDataSource(ds);
                 } catch (SQLException e) {
-                    logger.error("Failed to close datasource in dbms poolKey = "
-                            + dbmsKey);
+//          todo          logger.error("Failed to close datasource in dbms poolKey = "
+//                            + dbmsKey);
                 }
             }
             dsTable.clear();
@@ -463,9 +461,9 @@ public class DBConnectionManager {
         retValue = Boolean.valueOf(temp);
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("property name =  " + aPropName + " value = " + retValue);
-        }
+//     todo   if (logger.isDebugEnabled()) {
+//            logger.debug("property name =  " + aPropName + " value = " + retValue);
+//        }
         return retValue;
     }
 
@@ -485,9 +483,9 @@ public class DBConnectionManager {
         retValue = Integer.valueOf(temp);
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("property name =  " + aPropName + " value = " + retValue);
-        }
+//  todo      if (logger.isDebugEnabled()) {
+//            logger.debug("property name =  " + aPropName + " value = " + retValue);
+//        }
         return retValue;
     }
 
@@ -501,9 +499,9 @@ public class DBConnectionManager {
                             DB_DATASOURCE_CLEAN_INTERNAL_DEFAULT_VALUE);
 
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug("PooledDataSource cleaner interval = " + interval);
-            }
+//       todo     if (logger.isDebugEnabled()) {
+//                logger.debug("PooledDataSource cleaner interval = " + interval);
+//            }
 
             //this runnable
             this.datasourceCleaner = new PooledDataSourceCleaner(this, interval);
@@ -542,17 +540,17 @@ public class DBConnectionManager {
                                             String aPassword)
             throws SQLException {
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("Will getPlainConnection , dbUrl = " + aDbUrl +
-                    " username = " + aUsername);
-        }
+//      todo  if (logger.isDebugEnabled()) {
+//            logger.debug("Will getPlainConnection , dbUrl = " + aDbUrl +
+//                    " username = " + aUsername);
+//        }
         Connection retCon = DriverManager.getConnection(aDbUrl, aUsername, aPassword);
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("Done getPlainConnection , dbUrl = " + aDbUrl
-                    + " username = " + aUsername);
-        }
+//     todo   if (logger.isDebugEnabled()) {
+//            logger.debug("Done getPlainConnection , dbUrl = " + aDbUrl
+//                    + " username = " + aUsername);
+//        }
         return retCon;
     }
 
@@ -575,16 +573,16 @@ public class DBConnectionManager {
         String dbmsKey = aDbType + "." + aDbUrl;
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("Will getPooledConnection , dbms key = " + dbmsKey +
-                    " username = " + aUsername);
-        }
+//      todo  if (logger.isDebugEnabled()) {
+//            logger.debug("Will getPooledConnection , dbms key = " + dbmsKey +
+//                    " username = " + aUsername);
+//        }
 
         if (dbmsPoolTable.containsKey(dbmsKey)) {
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug("Find dbms pool table with key = " + dbmsKey);
-            }
+//      todo      if (logger.isDebugEnabled()) {
+//                logger.debug("Find dbms pool table with key = " + dbmsKey);
+//            }
 
             //each pool has pooled datasources, pool is based on dbUrl
             //so we can control the total size of connection to dbms
@@ -603,37 +601,37 @@ public class DBConnectionManager {
             DataSource ds = null;
             if (dsTable.containsKey(dsTableKey)) {
                 //tracing
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Find datasource with key = " + aDbUrl + "." + aUsername + ".<password>");
-                }
+//    todo            if (logger.isDebugEnabled()) {
+//                    logger.debug("Find datasource with key = " + aDbUrl + "." + aUsername + ".<password>");
+//                }
 
                 ds = dsTable.get(dsTableKey);
                 retCon = ds.getConnection();
             } else {
                 //tracing
-                if (logger.isDebugEnabled()) {
-                    logger.debug("No datasource with key = " + aDbUrl + "."
-                            + aUsername + "<password>, will create one");
-                }
+//         todo       if (logger.isDebugEnabled()) {
+//                    logger.debug("No datasource with key = " + aDbUrl + "."
+//                            + aUsername + "<password>, will create one");
+//                }
 
                 //need to check if it is ok to create another ds
                 ds = this.createDataSource(aDbType, aDbUrl, aUsername, aPassword, dsTable);
                 retCon = ds.getConnection();
 
                 //tracing
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Put the created DataSource into dsTable , dbms key = " + dbmsKey +
-                            " dsTableKey = " + aDbUrl + "." + aUsername + ".<password>");
-                }
+//           todo     if (logger.isDebugEnabled()) {
+//                    logger.debug("Put the created DataSource into dsTable , dbms key = " + dbmsKey +
+//                            " dsTableKey = " + aDbUrl + "." + aUsername + ".<password>");
+//                }
                 dsTable.put(dsTableKey, ds);
             }
         } else//don't have dbmsKey, will create one for that dbtype.dburl
         {
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug
-                        ("No dbms pool table with dbmsKey = " + dbmsKey + " will create a one");
-            }
+//     todo       if (logger.isDebugEnabled()) {
+//                logger.debug
+//                        ("No dbms pool table with dbmsKey = " + dbmsKey + " will create a one");
+//            }
 
             //just create, don't need to check, since we don't have this dbmsKey
             PooledDataSource ds = (PooledDataSource)this.createDataSource(aDbType, aDbUrl, aUsername, aPassword);
@@ -650,24 +648,24 @@ public class DBConnectionManager {
             String dsTableKey = aDbUrl + "." + aUsername + "." + encryptedPass;
 
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug("Put the created DataSource into dsTable , dbms key = " + dbmsKey +
-                        " dsTableKey = " + aDbUrl + "." + aUsername + ".<password>");
-            }
+//      todo      if (logger.isDebugEnabled()) {
+//                logger.debug("Put the created DataSource into dsTable , dbms key = " + dbmsKey +
+//                        " dsTableKey = " + aDbUrl + "." + aUsername + ".<password>");
+//            }
 
             dsTable.put(dsTableKey, ds);
 
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug("Put the dsTable into dbms table dbms key = " + dbmsKey);
-            }
+//            if (logger.isDebugEnabled()) {
+//         todo       logger.debug("Put the dsTable into dbms table dbms key = " + dbmsKey);
+//            }
             dbmsPoolTable.put(dbmsKey, dsTable);
         }
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("Done getPooledConnection , dbms key = " + dbmsKey + " username = " + aUsername);
-        }
+//     todo   if (logger.isDebugEnabled()) {
+//            logger.debug("Done getPooledConnection , dbms key = " + dbmsKey + " username = " + aUsername);
+//        }
 
         return retCon;
     }
@@ -782,16 +780,16 @@ public class DBConnectionManager {
         PooledDataSourceProvider provider = null;
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug
-                    ("Will create datasource with key = " + aDbUrl + "." + aUsername + ".<password>");
-        }
+//     todo   if (logger.isDebugEnabled()) {
+//            logger.debug
+//                    ("Will create datasource with key = " + aDbUrl + "." + aUsername + ".<password>");
+//        }
 
         if (providerTable == null) {
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug("Will create provider for dbType = " + aDbType);
-            }
+//      todo      if (logger.isDebugEnabled()) {
+//                logger.debug("Will create provider for dbType = " + aDbType);
+//            }
 
             switch (aDbType) {
                 //only has one at the moment
@@ -803,10 +801,10 @@ public class DBConnectionManager {
             providerTable.put(name, provider);
 
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug("Created a provider for dbType = " + aDbType +
-                        " provider name = " + name);
-            }
+//       todo     if (logger.isDebugEnabled()) {
+//                logger.debug("Created a provider for dbType = " + aDbType +
+//                        " provider name = " + name);
+//            }
         }
 
         String providerName = null;
@@ -818,10 +816,10 @@ public class DBConnectionManager {
         provider = providerTable.get(providerName);
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("Will use a provider for dbType = " + aDbType +
-                    " provider name = " + providerName);
-        }
+//     todo   if (logger.isDebugEnabled()) {
+//            logger.debug("Will use a provider for dbType = " + aDbType +
+//                    " provider name = " + providerName);
+//        }
 
         retDatasource = provider.openPooledDataSource(aDbType,
                 aDbUrl,
@@ -829,10 +827,10 @@ public class DBConnectionManager {
                 aPassword);
 
         //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug
-                    ("Done creating datasource with key = " + aDbUrl + "." + aUsername + ".<password>");
-        }
+//      todo  if (logger.isDebugEnabled()) {
+//            logger.debug
+//                    ("Done creating datasource with key = " + aDbUrl + "." + aUsername + ".<password>");
+//        }
 
         return retDatasource;
     }

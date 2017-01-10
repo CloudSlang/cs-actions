@@ -1,6 +1,6 @@
 package io.cloudslang.content.database.services.databases;
 
-import com.hp.oo.content.commons.util.Address;
+import io.cloudslang.content.database.utils.Address;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;

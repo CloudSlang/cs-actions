@@ -1,7 +1,7 @@
 package io.cloudslang.content.database.services.databases;
 
-import com.hp.oo.content.commons.util.Address;
-import com.iconclude.content.actions.sql.utils.Constants;
+import io.cloudslang.content.database.utils.Address;
+import io.cloudslang.content.database.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;

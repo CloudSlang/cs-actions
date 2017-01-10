@@ -1,8 +1,6 @@
 package io.cloudslang.content.database.services.dbconnection;
 
-import com.iconclude.content.actions.sql.dbconnection.DBConnectionManager.DBType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -14,9 +12,6 @@ import java.util.Properties;
  * @author ggu
  */
 public abstract class PooledDataSourceProvider {
-    //logging
-    private static final Log logger = LogFactory.getLog(PooledDataSourceProvider.class);
-
     //properties that contain configurable connection pooling params
     protected static Properties dbPoolingProperties = null;
 
@@ -184,10 +179,10 @@ public abstract class PooledDataSourceProvider {
         String retValue = dbPoolingProperties.getProperty(aPropName,
                 aDefaultValue);
 
-        //tracing
-        if (logger.isDebugEnabled()) {
-            logger.debug("property name =  " + aPropName + " value = " + retValue);
-        }
+        //tracing //todo
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("property name =  " + aPropName + " value = " + retValue);
+//        }
         return retValue;
     }
 

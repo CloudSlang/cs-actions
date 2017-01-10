@@ -1,7 +1,7 @@
 package io.cloudslang.content.database.services;
 
-import com.iconclude.content.actions.sql.entities.SQLInputs;
-import com.iconclude.content.actions.sql.utils.SQLUtils;
+import io.cloudslang.content.database.services.entities.SQLInputs;
+import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;

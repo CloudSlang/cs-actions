@@ -1,10 +1,10 @@
 package io.cloudslang.content.database.services;
 
-import com.iconclude.content.actions.sql.dbconnection.DBConnectionManager;
-import com.iconclude.content.actions.sql.dbconnection.TotalMaxPoolSizeExceedException;
-import com.iconclude.content.actions.sql.entities.SQLInputs;
 import io.cloudslang.content.database.services.databases.*;
-import com.iconclude.content.actions.sql.utils.Constants;
+import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
+import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
+import io.cloudslang.content.database.services.entities.SQLInputs;
+import io.cloudslang.content.database.utils.Constants;
 
 
 import java.sql.Connection;
@@ -129,9 +129,9 @@ public class ConnectionService {
             if (dbUrlTry != null && dbUrlTry.length() != 0) {
                 triedUrls = triedUrls + dbUrlTry + " | ";
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("dbUrl so far: " + triedUrls);
-                }
+//          todo      if (logger.isDebugEnabled()) {
+//                    logger.debug("dbUrl so far: " + triedUrls);
+//                }
             } else {
                 continue;//somehow the dbUrls might have empty string there
             }
@@ -149,17 +149,17 @@ public class ConnectionService {
                 sqlInputs.setDbUrl(dbUrlTry);
                 hasException = false;
             } catch (SQLException e) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(e);
-                }
+//           todo     if (logger.isDebugEnabled()) {
+//                    logger.debug(e);
+//                }
 
                 hasException = true;
                 ex = e;
 
                 if (e instanceof TotalMaxPoolSizeExceedException) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Get TotalMaxPoolSizeExceedException, will stop trying");
-                    }
+//             todo       if (logger.isDebugEnabled()) {
+//                        logger.debug("Get TotalMaxPoolSizeExceedException, will stop trying");
+//                    }
                     break;//don't try any more
                 }
             }
@@ -168,7 +168,7 @@ public class ConnectionService {
             //have some logging
             String msg = "Failed to check out connection for dbType = "
                     + dbType + " username = " + sqlInputs.getUsername() + " tried dbUrls = " + triedUrls;
-            logger.error(msg, ex);
+//      todo      logger.error(msg, ex);
             throw ex;
         }
 
@@ -190,18 +190,18 @@ public class ConnectionService {
      */
     public synchronized void closeConnection(Connection connection) {
         if (connection == null) {
-            logger.warn("Try to close a null Connection, ignore");
+//       todo     logger.warn("Try to close a null Connection, ignore");
             return;
         }
 
         try {
             connection.close();
             //tracing
-            if (logger.isDebugEnabled()) {
-                logger.debug("Closed connection");
-            }
+//        todo    if (logger.isDebugEnabled()) {
+//                logger.debug("Closed connection");
+//            }
         } catch (SQLException e) {
-            logger.warn("Failed to close a Connection", e);
+//          todo  logger.warn("Failed to close a Connection", e);
         }
     }
 }

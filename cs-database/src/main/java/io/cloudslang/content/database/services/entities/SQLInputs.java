@@ -1,6 +1,7 @@
 package io.cloudslang.content.database.services.entities;
 
-import com.iconclude.content.actions.sql.utils.OOResultSet;
+
+import io.cloudslang.content.database.utils.OOResultSet;
 
 import java.sql.Connection;
 import java.sql.Statement;

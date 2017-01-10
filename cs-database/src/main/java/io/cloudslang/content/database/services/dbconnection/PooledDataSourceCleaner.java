@@ -1,8 +1,5 @@
 package io.cloudslang.content.database.services.dbconnection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * The low priority thread class will remove pooled datasource from dbmsPoolTable
  * if the datasource has empty connections
@@ -11,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PooledDataSourceCleaner implements Runnable {
     //logging
-    protected static final Log logger = LogFactory.getLog(PooledDataSourceCleaner.class);
+//    protected static final Log logger = LogFactory.getLog(PooledDataSourceCleaner.class);
 
     //interval when this cleaner wakes up in seconds
     //this number is configurable
@@ -46,27 +43,27 @@ public class PooledDataSourceCleaner implements Runnable {
      * wake up and clean the pools if the pool has empty connection table.
      */
     public void run() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("start running PooledDataSourceCleaner");
-        }
+//    todo    if (logger.isDebugEnabled()) {
+//            logger.debug("start running PooledDataSourceCleaner");
+//        }
 
         state = STATE_CLEANER.RUNNING;
         while (state != STATE_CLEANER.SHUTDOWN) {
             try {
                 Thread.sleep(interval * 1000);
             } catch (InterruptedException e) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Get interrupted, shutdown the PooledDataSourceCleaner");
-                }
+//              todo  if (logger.isDebugEnabled()) {
+//                    logger.debug("Get interrupted, shutdown the PooledDataSourceCleaner");
+//                }
                 break;//get out if anyone interrupt
             }
             this.manager.cleanDataSources();
 
             //if no pool at all, going to stop itself
             if (this.manager.getDbmsPoolSize() == 0) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Empty pools, shutdown the PooledDataSourceCleaner");
-                }
+//             todo   if (logger.isDebugEnabled()) {
+//                    logger.debug("Empty pools, shutdown the PooledDataSourceCleaner");
+//                }
                 state = STATE_CLEANER.SHUTDOWN;//stop spinning
                 break; //get out
             }
@@ -77,7 +74,7 @@ public class PooledDataSourceCleaner implements Runnable {
      * force shutdown and derefrence manager
      */
     protected void shutdown() {
-        logger.info("Force shutdown the PooledDataSourceCleaner");
+//    todo    logger.info("Force shutdown the PooledDataSourceCleaner");
         state = STATE_CLEANER.SHUTDOWN;
         this.manager = null;
     }

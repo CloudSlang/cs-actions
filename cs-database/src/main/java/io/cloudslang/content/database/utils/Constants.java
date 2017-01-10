@@ -1,6 +1,5 @@
 package io.cloudslang.content.database.utils;
 
-import com.iconclude.content.properties.PropsLoader;
 
 /**
  * Created by vranau on 11/26/2014.
@@ -53,13 +52,13 @@ public class Constants {
     //QCCR 131219 add an optional input "timeout"
     public static final String TIMEOUT = "timeout";
     public static final String DATABASE_POOLING_PROPRTIES = "databasePoolingProperties";
-    public static final String RESPONSESUCCESS = PropsLoader.RESPONSES.getProperty("Passed");
-    public static final String RESPONSEPASSED = PropsLoader.RESPONSES.getProperty("More");
-    public static final String RESPONSEFAILED = PropsLoader.RESPONSES.getProperty("Failed");
-    public static final String RESPONSENOMORE = PropsLoader.RESPONSES.getProperty("NoMore");
-    public static final String NOMOREROWS = PropsLoader.RETURNRESULTS.getProperty("SQLNoMore");
-    public static final int PASSED = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("Passed"));
-    public static final int FAILED = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("Failed"));
-    public static final int NOMORE = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("NoMore"));
+//    public static final String RESPONSESUCCESS = PropsLoader.RESPONSES.getProperty("Passed");
+//    public static final String RESPONSEPASSED = PropsLoader.RESPONSES.getProperty("More");
+//    public static final String RESPONSEFAILED = PropsLoader.RESPONSES.getProperty("Failed");
+//    public static final String RESPONSENOMORE = PropsLoader.RESPONSES.getProperty("NoMore");
+//    public static final String NOMOREROWS = PropsLoader.RETURNRESULTS.getProperty("SQLNoMore");
+//    public static final int PASSED = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("Passed"));
+//    public static final int FAILED = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("Failed"));
+//    public static final int NOMORE = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("NoMore"));
     public static final String ESCAPED_BACKSLASH = "\\";
 }

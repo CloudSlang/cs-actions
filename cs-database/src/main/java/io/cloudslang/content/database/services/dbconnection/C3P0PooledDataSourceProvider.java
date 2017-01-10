@@ -1,8 +1,8 @@
 package io.cloudslang.content.database.services.dbconnection;
 
-import com.iconclude.content.actions.sql.dbconnection.DBConnectionManager.DBType;
 import com.mchange.v2.c3p0.DataSources;
 import com.mchange.v2.c3p0.PooledDataSource;
+import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -135,7 +135,7 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
      * @return a HashMap of c3p0 db pooling properties.
      */
     private Map<String, String> getPoolingProperties(DBType aDbType) {
-        Map<String, String> retMap = new HashMap<String, String>();
+        Map<String, String> retMap = new HashMap<>();
 
         //general properties
         //acquire increment size

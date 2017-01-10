@@ -1,11 +1,7 @@
 package io.cloudslang.content.database.utils;
 
-import com.hp.oo.content.commons.util.Address;
-import com.iconclude.content.properties.PropsLoader;
-import com.iconclude.webservices.extensions.java.types.Map;
-import com.iconclude.webservices.extensions.java.types.RASBinding;
-import com.iconclude.webservices.extensions.java.util.RASBindingFactory;
-import com.opsware.pas.content.commons.util.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -29,15 +25,14 @@ public class SQLUtils {
                     ) {
                 SQLException sqlEx =
                         new SQLException("Failed to getConnection. Please provide DBServerName if you use JDBC. Or please provide TNSEntry if you use TNS");
-//                logger.error(sqlEx);
+//                logger.error(sqlEx); todo
                 throw sqlEx;
             }
         } else//other db type
         {
             if (dbServer == null || dbServer.length() == 0) {
-                SQLException sqlEx =
-                        new SQLException("Failed to getConnection. DBServerName is empty.");
-//                logger.error(sqlEx);
+                SQLException sqlEx = new SQLException("Failed to getConnection. DBServerName is empty.");
+//                logger.error(sqlEx); todo
                 throw sqlEx;
             }
         }
@@ -61,7 +56,7 @@ public class SQLUtils {
 
     public static String processNullTerminatedString(String value) {
         String returnValue = value;
-        if (StringUtils.isNull(value)) {
+        if (StringUtils.isEmpty(value)) {
             return "null";
         }
         char[] charArray = value.toCharArray();
@@ -87,7 +82,7 @@ public class SQLUtils {
         Address address = new Address(dbServer);
         return address.getURIIPV6Literal();
     }
-
+/*
     public static String toString(SQLException e) {
         String curr = com.opsware.pas.content.commons.util.StringUtils.toString(e) + "\nstate:" + e.getSQLState();
         while ((e = e.getNextException()) != null)
@@ -167,7 +162,7 @@ public class SQLUtils {
         parameters.add(Constants.RESPONSEFAILED, String.valueOf(Constants.FAILED));
         return parameters;
     }
-
+*/
     //compute session id for JDBC operations
     public static String computeSessionId(String aString) {
         if (aString != null) {
@@ -237,9 +232,10 @@ public class SQLUtils {
         }
         throw e;
     }
-
+/*
     public static String getActionDescription(String operationName) {
         return PropsLoader.ACTIONDESCRIPTIONS.getProperty(operationName);
     }
+    */
 
 }

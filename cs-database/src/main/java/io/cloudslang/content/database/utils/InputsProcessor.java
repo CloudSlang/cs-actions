@@ -1,21 +1,16 @@
 package io.cloudslang.content.database.utils;
 
-import com.iconclude.content.actions.sql.entities.SQLInputs;
-import com.iconclude.webservices.extensions.java.types.ActionRequest;
-import com.iconclude.webservices.extensions.java.types.Map;
-import com.iconclude.webservices.extensions.java.util.ActionRequestUtils;
+import io.cloudslang.content.database.services.entities.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by vranau on 12/4/2014.
  */
 public class InputsProcessor {
+  /*
     public static SQLInputs processInputParameters(ActionRequest actionRequest, OOResultSet resultSetType, OOResultSet resultSetConcurrency) throws Exception {
         SQLInputs sqlInputs = new SQLInputs();
         init(sqlInputs);//clean up the variables before use them
@@ -25,11 +20,11 @@ public class InputsProcessor {
         String resultSetTypeParameter = (String) parameters.map(Constants.RESULT_SET_TYPE);
         String resultSetConcurrencyParameter = (String) parameters.map(Constants.RESULT_SET_CONCURRENCY);
 
-        if(!StringUtils.isNull(resultSetTypeParameter)) {
+        if(StringUtils.isNoneEmpty(resultSetTypeParameter)) {
             resultSetType = transformResultSetType(resultSetTypeParameter);
         }
 
-        if(!StringUtils.isNull(resultSetConcurrencyParameter)) {
+        if(StringUtils.isNoneEmpty(resultSetConcurrencyParameter)) {
             resultSetConcurrency = transformResultSetConcurrency(resultSetConcurrencyParameter);
         }
 
@@ -38,7 +33,7 @@ public class InputsProcessor {
 
         //ignore case
         String ignoreCase = ((String) parameters.map(Constants.IGNORE_CASE));
-        if (StringUtils.isNull(ignoreCase)) {
+        if (StringUtils.isEmpty(ignoreCase)) {
             ignoreCase = Boolean.TRUE.toString();
         } else {
             if (!(ignoreCase.equalsIgnoreCase("true") || ignoreCase.equalsIgnoreCase("false"))) {
@@ -61,7 +56,7 @@ public class InputsProcessor {
         String dbType = (String) parameters.map(Constants.DBTYPE);
         sqlInputs.setDbType(dbType);
         //default to be oracle if it is empty or null
-        if (StringUtils.isNull(sqlInputs.getDbType())) {
+        if (StringUtils.isEmpty(sqlInputs.getDbType())) {
             sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
         }
 
@@ -69,19 +64,19 @@ public class InputsProcessor {
         //username
         String username = ActionRequestUtils.resolveStringParam(actionRequest, Constants.USERNAME);
         sqlInputs.setUsername(username);
-        if (StringUtils.isNull(sqlInputs.getUsername())) {
+        if (StringUtils.isEmpty(sqlInputs.getUsername())) {
             throw new Exception("username input is empty.");
         }
 
         //password
         String password = ActionRequestUtils.resolveStringParam(actionRequest, Constants.PASSWORD);
         sqlInputs.setPassword(password);
-        if (StringUtils.isNull(sqlInputs.getPassword())) {
+        if (StringUtils.isEmpty(sqlInputs.getPassword())) {
             throw new Exception("password input is empty.");
         }
 
         //if using tns to make the connection, no need to process dbPort, database and autyType inputs
-        if (StringUtils.isNull(sqlInputs.getTnsEntry())) {
+        if (StringUtils.isEmpty(sqlInputs.getTnsEntry())) {
 
             //database
             String dbName = (String) parameters.map(Constants.DATABASENAME);
@@ -91,7 +86,7 @@ public class InputsProcessor {
             if (!Constants.SYBASE_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())
                     && !Constants.MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())
                     && !Constants.NETCOOL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                if (StringUtils.isNull(sqlInputs.getDbName())) {
+                if (StringUtils.isEmpty(sqlInputs.getDbName())) {
                     throw new Exception("database input is empty.");
                 }
             }
@@ -101,7 +96,7 @@ public class InputsProcessor {
             String authenticationType = (String) parameters.map(Constants.AUTH_TYPE);
             sqlInputs.setAuthenticationType(authenticationType);
             //windows authentication is only used with MSSQL.
-            if (StringUtils.isNull(sqlInputs.getAuthenticationType())) {
+            if (StringUtils.isEmpty(sqlInputs.getAuthenticationType())) {
                 sqlInputs.setAuthenticationType(Constants.AUTH_SQL);
             }
             if (!Constants.AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !Constants.AUTH_SQL.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
@@ -127,21 +122,21 @@ public class InputsProcessor {
         //when user enters empty value for "key", default it to empty string
         //otherwise key will have the value "null" (the same as user enters "null")
         String key = (String) parameters.map(Constants.KEY);
-        if (StringUtils.isNull(key)) {
+        if (StringUtils.isEmpty(key)) {
             key = "";
         }
         sqlInputs.setKey(key);
 
         //delimiter
         String strDelim = (String) parameters.map(Constants.DELIM);
-        if (StringUtils.isNull(strDelim)) {
+        if (StringUtils.isEmpty(strDelim)) {
             strDelim = "";
         }
         sqlInputs.setStrDelim(strDelim);
 
         //get a fresh list for each run
         String inputDbUrl = (String) parameters.map(Constants.DBURL);
-        if (!StringUtils.isNull(inputDbUrl)) {
+        if (StringUtils.isNoneEmpty(inputDbUrl)) {
             final List<String> dbUrls = sqlInputs.getDbUrls();
             dbUrls.add(inputDbUrl);
         }
@@ -154,14 +149,14 @@ public class InputsProcessor {
         //instance
         String instance = (String) parameters.map(Constants.INSTANCE);
         sqlInputs.setInstance(instance);
-        if (!StringUtils.isNull(sqlInputs.getInstance()) && !sqlInputs.getDbType().equalsIgnoreCase(Constants.MSSQL_DB_TYPE)) {
+        if (StringUtils.isNoneEmpty(sqlInputs.getInstance()) && !sqlInputs.getDbType().equalsIgnoreCase(Constants.MSSQL_DB_TYPE)) {
             throw new Exception("The instance input can only be used with MSSQL.");
         }
 
         //timeout
         String timeoutString = StringUtils.resolveString(actionRequest, Constants.TIMEOUT);
         try {
-            if (StringUtils.isNull(timeoutString)) {
+            if (StringUtils.isEmpty(timeoutString)) {
                 sqlInputs.setTimeout(Constants.DEFAULTTIMEOUT);
             } else {
                 sqlInputs.setTimeout(Integer.parseInt(timeoutString));
@@ -180,18 +175,18 @@ public class InputsProcessor {
 
         return sqlInputs;
     }
+*/
 
     /**
-     *
      * @param resultSetTypeParameter This is a required input. If this is empty an exception is thrown.
      * @return
      */
     private static OOResultSet transformResultSetType(String resultSetTypeParameter) throws SQLException {
-        if(resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_FORWARD_ONLY.toString())) {
+        if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_FORWARD_ONLY.toString())) {
             return OOResultSet.TYPE_FORWARD_ONLY;
-        } else if(resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString())) {
+        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString())) {
             return OOResultSet.TYPE_SCROLL_INSENSITIVE;
-        } else if(resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_SENSITIVE.toString())) {
+        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_SENSITIVE.toString())) {
             return OOResultSet.TYPE_SCROLL_SENSITIVE;
         }
         throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetTypeParameter are: "
@@ -201,14 +196,13 @@ public class InputsProcessor {
     }
 
     /**
-     *
      * @param resultSetConcurrency This is a required input. If this is empty an exception is thrown.
      * @return
      */
     private static OOResultSet transformResultSetConcurrency(String resultSetConcurrency) throws SQLException {
-        if(resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_READ_ONLY.toString())) {
+        if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_READ_ONLY.toString())) {
             return OOResultSet.CONCUR_READ_ONLY;
-        } else if(resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_UPDATABLE.toString())) {
+        } else if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_UPDATABLE.toString())) {
             return OOResultSet.CONCUR_UPDATABLE;
         }
         throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetConcurrency are: "
@@ -243,12 +237,12 @@ public class InputsProcessor {
         } else if (dbType.equalsIgnoreCase(Constants.POSTGRES_DB_TYPE)) {
             dbPort = Constants.DEFAULTPORT_PSQL;
         }
-        if (StringUtils.isNull(sqlInputs.getDbPort())) {
+        if (StringUtils.isEmpty(sqlInputs.getDbPort())) {
             sqlInputs.setDbPort(dbPort);
         }
         try {
             //in case that user entered dbType is not oracle, netcool, mssql or db2
-            if (StringUtils.isNull(sqlInputs.getDbPort())) {
+            if (StringUtils.isEmpty(sqlInputs.getDbPort())) {
                 throw new Exception("There's no default DBPort for " + sqlInputs.getDbType() + " db server, please enter a valid dbPort.");
             } else {
                 Integer.parseInt(sqlInputs.getDbPort());

@@ -1,8 +1,9 @@
 package io.cloudslang.content.database.services;
 
-import com.iconclude.content.actions.sql.entities.SQLInputs;
-import com.iconclude.content.actions.sql.utils.Constants;
-import com.iconclude.content.actions.sql.utils.SQLUtils;
+
+import io.cloudslang.content.database.services.entities.SQLInputs;
+import io.cloudslang.content.database.utils.Constants;
+import io.cloudslang.content.database.utils.SQLUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
