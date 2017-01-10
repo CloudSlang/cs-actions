@@ -10,17 +10,7 @@
 package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
-import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
-import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
-import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
-import io.cloudslang.content.amazon.entities.inputs.IamInputs;
-import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
-import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
-import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
-import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
-import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
+import io.cloudslang.content.amazon.entities.inputs.*;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.InputsUtil;
@@ -511,6 +501,15 @@ public class QueryApiExecutorTest {
         verify(csHttpClientMock, never()).execute(any(HttpClientInputs.class));
     }
 
+    @Test
+    public void testGetBucket() throws Exception {
+        toTest.execute(getStorageCommonInputs(), getStorageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getS3HeadersMap()),
+                eq(getS3QueryParamsmap("GET Bucket")));
+        runCommonVerifiersForQueryApi();
+    }
+
     private void addCommonMocksForQueryApi() throws Exception {
         whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
         when(amazonSignatureServiceMock
@@ -528,6 +527,18 @@ public class QueryApiExecutorTest {
         verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
         verifyNoMoreInteractions(amazonSignatureServiceMock);
         verifyNoMoreInteractions(csHttpClientMock);
+    }
+
+    private StorageInputs getStorageInputs() {
+        return new StorageInputs.Builder()
+                .withBucketName("testBucket")
+                .withContinuationToken("1ueGcxLPRx1Tr/XYExHnhbYLgveDs2J/wm36Hy4vbOwM=")
+                .withEncodingType("url")
+                .withFetchOwner("tRuE")
+                .withMaxKeys("100")
+                .withPrefix("E")
+                .withStartAfter("ExampleGuide.pdf")
+                .build();
     }
 
     private EbsInputs getModifyInstanceAttributeEbsinputs() {
@@ -591,6 +602,16 @@ public class QueryApiExecutorTest {
                 .withApiService("elasticloadbalancing")
                 .withVersion("2016-04-01")
                 .withDelimiter(",")
+                .build();
+    }
+
+    private CommonInputs getStorageCommonInputs() {
+        return new CommonInputs.Builder()
+                .withAction("GET Bucket")
+                .withHeaders("")
+                .withQueryParams("")
+                .withApiService("s3")
+                .withDelimiter("/")
                 .build();
     }
 
@@ -684,12 +705,40 @@ public class QueryApiExecutorTest {
         return headersMap;
     }
 
+    private Map<String, String> getS3HeadersMap() {
+        Map<String, String> headersMap = new HashMap<>();
+        headersMap.put("Content-Type", "text/plain");
+        headersMap.put("Host", "testBucket.s3.amazonaws.com");
+
+        return headersMap;
+    }
+
     private LoadBalancerInputs getLoadBalancerInputs() {
         return new LoadBalancerInputs.Builder()
                 .withLoadBalancerName("testLB")
                 .withScheme("internal")
                 .withLoadBalancerArn("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188")
                 .build();
+    }
+
+    private Map<String, String> getS3QueryParamsmap(String action){
+        Map<String, String> s3QueryParamsMap = new HashMap<>();
+        switch (action) {
+            case "GET Bucket":
+                s3QueryParamsMap.put("list-type", "2");
+                s3QueryParamsMap.put("continuation-token", "1ueGcxLPRx1Tr/XYExHnhbYLgveDs2J/wm36Hy4vbOwM=");
+                s3QueryParamsMap.put("delimiter", "/");
+                s3QueryParamsMap.put("encoding-type", "url");
+                s3QueryParamsMap.put("fetch-owner", "true");
+                s3QueryParamsMap.put("max-keys", "100");
+                s3QueryParamsMap.put("prefix", "E");
+                s3QueryParamsMap.put("start-after", "ExampleGuide.pdf");
+                break;
+            default:
+                throw new RuntimeException("You forgot to setup s3QueryParamsMap naughty developer!");
+        }
+
+        return s3QueryParamsMap;
     }
 
     private Map<String, String> getQueryParamsMap(String action) {
