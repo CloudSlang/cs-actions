@@ -1,8 +1,18 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.StringWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -82,14 +92,23 @@ public class SQLUtils {
         Address address = new Address(dbServer);
         return address.getURIIPV6Literal();
     }
-/*
-    public static String toString(SQLException e) {
-        String curr = com.opsware.pas.content.commons.util.StringUtils.toString(e) + "\nstate:" + e.getSQLState();
-        while ((e = e.getNextException()) != null)
-            curr += "\n\n" + com.opsware.pas.content.commons.util.StringUtils.toString(e) + "\nstate:" + e.getSQLState();
-        return curr;
+
+    public static String exceptionToString(Throwable e) {
+        // Print the stack trace into an in memory string
+        StringWriter writer = new StringWriter();
+        e.printStackTrace(new java.io.PrintWriter(writer));
+
+        // Process the stack trace, remove the FIRST null character
+        return writer.toString().replace("" + (char) 0x00, "");
     }
 
+    public static String toString(SQLException e) {
+        String curr = exceptionToString(e) + "\nstate:" + e.getSQLState();
+        while ((e = e.getNextException()) != null)
+            curr += "\n\n" + exceptionToString(e) + "\nstate:" + e.getSQLState();
+        return curr;
+    }
+/*
     public static Map getParameters() {
         Map parameters = new Map();
 
