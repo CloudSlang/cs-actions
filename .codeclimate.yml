@@ -1,0 +1,9 @@
+engines:
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "**.java"
+exclude_paths:
+- "test/"
+- "**/vendor/**"
