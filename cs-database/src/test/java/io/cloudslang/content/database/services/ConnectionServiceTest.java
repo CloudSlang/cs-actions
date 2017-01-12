@@ -42,6 +42,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.powermock.api.easymock.PowerMock.verify;
@@ -105,11 +106,14 @@ public class ConnectionServiceTest {
 
     @Test
     public void testSetUpConnectionMSSql() throws Exception {
+        sqlInputs.setDbClass(SQLSERVER_JDBC_DRIVER);
         sqlInputs.setDbType(Constants.MSSQL_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbPort("1433");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setAuthenticationType(Constants.AUTH_WINDOWS);
-        assertConnection(sqlInputs, 1, "jdbc:jtds:sqlserver://localhost:30;domain=CORP;useNTLMv2=true");
+        sqlInputs.setDbUrl("jdbc:sqlserver://localhost:1433;domain=CORP;useNTLMv2=true");
+        assertConnection(sqlInputs, 1, "jdbc:sqlserver://localhost:1433;domain=CORP;useNTLMv2=true");
+//        assertConnection(sqlInputs, 1, "jdbc:jtds:sqlserver://localhost:30;domain=CORP;useNTLMv2=true");
     }
 
     @Test

@@ -61,6 +61,9 @@ public class SQLInputs {
     private Statement stmt;
     private Properties databasePoolingProperties = null;
     private String windowsDomain;
+    private String trustStore;
+    private String trustStorePassword;
+    private String trustAllRoots;
 
     private OOResultSet resultSetType;
     private OOResultSet resultSetConcurrency;
@@ -384,5 +387,29 @@ public class SQLInputs {
 
     public void setWindowsDomain(String windowsDomain) {
         this.windowsDomain = windowsDomain;
+    }
+
+    public String getTrustStore() {
+        return trustStore;
+    }
+
+    public void setTrustStore(String trustStore) {
+        this.trustStore = trustStore;
+    }
+
+    public String getTrustStorePassword() {
+        return trustStorePassword;
+    }
+
+    public void setTrustStorePassword(String trustStorePassword) {
+        this.trustStorePassword = trustStorePassword;
+    }
+
+    public String getTrustAllRoots() {
+        return trustAllRoots;
+    }
+
+    public void setTrustAllRoots(String trustAllRoots) {
+        this.trustAllRoots = trustAllRoots;
     }
 }

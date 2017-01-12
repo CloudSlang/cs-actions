@@ -58,6 +58,10 @@ public class Constants {
     public static final String RESULT_SET_CONCURRENCY = "resultSetConcurrency";
     //QCCR 131222 add an optional input "instance"
     public static final String INSTANCE = "instance";
+    public static final String TRUST_STORE = "trustStore";
+    public static final String TRUST_STORE_PASSWORD = TRUST_STORE + "Password";
+    public static final String TRUST_ALL_ROOTS = "trustAllRoots";
+    public static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
     //QCCR 131219 add an optional input "timeout"
     public static final String TIMEOUT = "timeout";
     public static final String DATABASE_POOLING_PROPRTIES = "databasePoolingProperties";
@@ -70,4 +74,13 @@ public class Constants {
 //    public static final int FAILED = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("Failed"));
 //    public static final int NOMORE = Integer.parseInt(PropsLoader.RETURNCODES.getProperty("NoMore"));
     public static final String ESCAPED_BACKSLASH = "\\";
+    public static final String JTDS_JDBC_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
+    public static final String SQLSERVER_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    public static final String TRUE = Boolean.TRUE.toString();
+    public static final String ENCRYPT = "encrypt";
+    public static final String FALSE = Boolean.FALSE.toString();
+    public static final String SEMI_COLON = ";";
+    public static final String EQUALS = "=";
+    public static final String STRING_PARAMETER = "%s";
+    public static final String TRUSTORE_PARAMS = SEMI_COLON + TRUST_STORE + EQUALS + STRING_PARAMETER + SEMI_COLON + TRUST_STORE_PASSWORD + EQUALS + STRING_PARAMETER;
 }

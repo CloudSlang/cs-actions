@@ -14,6 +14,8 @@ import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
 import io.cloudslang.content.database.services.entities.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 import java.sql.Connection;
@@ -21,6 +23,9 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
+import static io.cloudslang.content.database.utils.Constants.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by vranau on 12/4/2014.
@@ -55,15 +60,29 @@ public class ConnectionService {
         final String dbPort = sqlInputs.getDbPort();
         final String tnsPath = sqlInputs.getTnsPath();
         final String authenticationType = sqlInputs.getAuthenticationType();
+        final String trustStore = sqlInputs.getTrustStore();
+        final String trustStorePassword = sqlInputs.getTrustStorePassword();
+        final String trustAllRoots = sqlInputs.getTrustAllRoots();
 
         if (dbUrls == null) {
             throw new SQLException("No database URL was provided");
         }
 
-        //localDbName will be like "/localDbName"
-        String localDbName =
-                (dbName == null || dbName.length() == 0) ? "" : "/" + dbName;
+        if(dbClass != null && dbClass.equals(SQLSERVER_JDBC_DRIVER)) { //what's the logic here eugen ? :))
+            if(dbUrls.size() > 0) {
+                final StringBuilder dbUrlBuilder = new StringBuilder(dbUrls.get(0));
+                dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS + TRUE + SEMI_COLON + TRUST_SERVER_CERTIFICATE + EQUALS);
+                if (trustAllRoots.equalsIgnoreCase(TRUE)) {
+                    dbUrlBuilder.append(TRUE);
+                } else {
+                    dbUrlBuilder.append(FALSE + String.format(TRUSTORE_PARAMS, trustStore, trustStorePassword));
+                }
+                dbUrls.set(0, dbUrlBuilder.toString());
+            }
+        }
 
+        //localDbName will be like "/localDbName"
+        String localDbName = isEmpty(dbName) ? "" : ("/" + dbName);
         //db type if we use connection pooling
         DBConnectionManager.DBType enumDbType;
         String triedUrls = " ";
@@ -84,7 +103,7 @@ public class ConnectionService {
         else if (Constants.MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MSSQL;
             MSSqlDatabase msSqlDatabase = new MSSqlDatabase();
-            msSqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, authenticationType, instance, windowsDomain);
+            msSqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, authenticationType, instance, windowsDomain, dbClass);
         }
         //Sybase
         else if (Constants.SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {

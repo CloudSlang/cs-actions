@@ -14,14 +14,19 @@ import io.cloudslang.content.database.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+
+import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
+import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 
 /**
  * Created by vranau on 12/10/2014.
  */
 public class MSSqlDatabase {
+    private List<String> supportedJdbcDrivers;
 
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String windowsDomain) throws ClassNotFoundException, SQLException {
+    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String windowsDomain, String dbClass) throws ClassNotFoundException, SQLException {
         if (dbName == null) {
             throw new SQLException("No database provided!");
         }
@@ -32,7 +37,7 @@ public class MSSqlDatabase {
             throw new IllegalArgumentException("host   not valid");
         }
 
-        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        loadJdbcDriver(dbClass);
 
         String dbUrlMSSQL = "";
         String host = "";
@@ -92,5 +97,24 @@ public class MSSqlDatabase {
         }
 
         dbUrls.add(dbUrlMSSQL);
+    }
+
+    private void initializeJdbcDrivers() {
+        supportedJdbcDrivers = Arrays.asList(SQLSERVER_JDBC_DRIVER, JTDS_JDBC_DRIVER);
+    }
+
+    private void loadJdbcDriver(String dbClass) throws ClassNotFoundException {
+        boolean driverFound = false;
+        initializeJdbcDrivers();
+        for(String driver: supportedJdbcDrivers) {
+            if(driver.equals(dbClass)) {
+                driverFound = true;
+            }
+        }
+        if(driverFound) {
+            Class.forName(dbClass);
+        } else {
+            throw new RuntimeException("The driver provided is not supported.");
+        }
     }
 }
