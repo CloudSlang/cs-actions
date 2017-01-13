@@ -9,9 +9,15 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.factory;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.inputs.*;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getUrlFromApiService;
+
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 
 /**
  * Created by Mihai Tusa.
@@ -22,11 +28,14 @@ public class InputsWrapperBuilder {
     private static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
 
     private InputsWrapperBuilder() {
+        // prevent instantiation
     }
 
     @SafeVarargs
     public static <T> InputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
-        return buildWrapper(getHttpClientInputs(commonInputs), commonInputs, builders);
+        HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs, builders);
+
+        return buildWrapper(httpClientInputs, commonInputs, builders);
     }
 
     @SafeVarargs
@@ -40,7 +49,7 @@ public class InputsWrapperBuilder {
                 .withHttpVerb(commonInputs.getHttpClientMethod())
                 .build();
 
-        if (builders.length > 0) {
+        if (builders.length > START_INDEX) {
             for (T builder : builders) {
                 if (builder instanceof CustomInputs) {
                     wrapper.setCustomInputs((CustomInputs) builder);
@@ -58,6 +67,8 @@ public class InputsWrapperBuilder {
                     wrapper.setLoadBalancerInputs((LoadBalancerInputs) builder);
                 } else if (builder instanceof NetworkInputs) {
                     wrapper.setNetworkInputs((NetworkInputs) builder);
+                } else if (builder instanceof StorageInputs) {
+                    wrapper.setStorageInputs((StorageInputs) builder);
                 } else if (builder instanceof VolumeInputs) {
                     wrapper.setVolumeInputs((VolumeInputs) builder);
                 } else {
@@ -69,10 +80,13 @@ public class InputsWrapperBuilder {
         return wrapper;
     }
 
-    private static HttpClientInputs getHttpClientInputs(CommonInputs commonInputs) {
+    @SafeVarargs
+    private static <T> HttpClientInputs getHttpClientInputs(CommonInputs commonInputs, T... builders) {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
 
-        httpClientInputs.setUrl(InputsUtil.getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService()));
+        String prefix = getPrefix(builders);
+
+        httpClientInputs.setUrl(getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService(), prefix));
         httpClientInputs.setProxyHost(commonInputs.getProxyHost());
         httpClientInputs.setProxyPort(commonInputs.getProxyPort());
         httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
@@ -82,5 +96,18 @@ public class InputsWrapperBuilder {
         httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
 
         return httpClientInputs;
+    }
+
+    private static <T> String getPrefix(T[] builders) {
+        String prefix = EMPTY;
+        if (builders.length > START_INDEX) {
+            for (T builder : builders) {
+                if (builder instanceof StorageInputs && isNotBlank(((StorageInputs) builder).getBucketName())) {
+                    prefix = ((StorageInputs) builder).getBucketName();
+                }
+            }
+        }
+
+        return prefix;
     }
 }

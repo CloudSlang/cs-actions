@@ -24,11 +24,11 @@ import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
@@ -482,10 +482,10 @@ public class RunInstancesAction {
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
                                        @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

@@ -12,7 +12,11 @@ package io.cloudslang.content.amazon.entities.inputs;
 import io.cloudslang.content.amazon.entities.aws.Attribute;
 import io.cloudslang.content.amazon.entities.aws.InstanceInitiatedShutdownBehavior;
 import io.cloudslang.content.amazon.entities.aws.Tenancy;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getMaxResultsCount;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getRelevantBooleanString;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidInstancesCount;
 
 /**
  * Created by Mihai Tusa.
@@ -222,7 +226,7 @@ public class InstanceInputs {
         }
 
         public Builder withSourceDestinationCheck(String inputValue) {
-            sourceDestinationCheck = InputsUtil.getRelevantBooleanString(inputValue);
+            sourceDestinationCheck = getRelevantBooleanString(inputValue);
             return this;
         }
 
@@ -272,7 +276,7 @@ public class InstanceInputs {
         }
 
         public Builder withMaxResults(String inputValue) {
-            maxResults = InputsUtil.getMaxResultsCount(inputValue);
+            maxResults = getMaxResultsCount(inputValue);
             return this;
         }
 
@@ -282,32 +286,32 @@ public class InstanceInputs {
         }
 
         public Builder withMaxCount(String inputValue) {
-            maxCount = InputsUtil.getValidInstancesCount(inputValue);
+            maxCount = getValidInstancesCount(inputValue);
             return this;
         }
 
         public Builder withMinCount(String inputValue) {
-            minCount = InputsUtil.getValidInstancesCount(inputValue);
+            minCount = getValidInstancesCount(inputValue);
             return this;
         }
 
         public Builder withDisableApiTermination(String inputValue) {
-            disableApiTermination = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            disableApiTermination = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
         public Builder withEnaSupport(String inputValue) {
-            enaSupport = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            enaSupport = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
         public Builder withMonitoring(String inputValue) {
-            monitoring = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            monitoring = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
         public Builder withForceStop(String inputValue) {
-            forceStop = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            forceStop = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
     }

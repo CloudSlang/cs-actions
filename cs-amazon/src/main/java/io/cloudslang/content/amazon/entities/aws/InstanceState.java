@@ -23,6 +23,7 @@ public enum InstanceState {
     STOPPING(64),
     STOPPED(80);
 
+    private static final String NOT_RELEVANT_STRING = "not relevant";
     private final Integer key;
 
     InstanceState(Integer key) {
@@ -38,9 +39,7 @@ public enum InstanceState {
     }
 
     public static String getValue(String input) throws RuntimeException {
-        return isBlank(input) ?
-                io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT.toLowerCase() :
-                (String) getKeyOrValue(input, false);
+        return isBlank(input) ? NOT_RELEVANT_STRING : (String) getKeyOrValue(input, false);
     }
 
     @SuppressWarnings("unchecked")
@@ -50,6 +49,7 @@ public enum InstanceState {
                 return isKey ? (T) member.getKey() : (T) member.name().toLowerCase();
             }
         }
+
         throw new RuntimeException(getErrorMessage(input, isKey));
     }
 

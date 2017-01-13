@@ -10,12 +10,14 @@
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ENCRYPTED;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FORCE;
@@ -41,51 +43,44 @@ public class VolumeUtils {
     private static final String SIZE = "Size";
 
     public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
-        return getAttachDetachVolumeCommonQueryParamsMap(wrapper);
+        return getAttachOrDetachVolumeCommonQueryParamsMap(wrapper);
     }
 
     public Map<String, String> getCreateVolumeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(AVAILABILITY_ZONE, wrapper.getCustomInputs().getAvailabilityZone());
 
-        String volumeType = NOT_RELEVANT.equals(wrapper.getCustomInputs().getVolumeType()) ? STANDARD :
-                wrapper.getCustomInputs().getVolumeType();
+        String volumeType = NOT_RELEVANT.equals(wrapper.getCustomInputs().getVolumeType()) ? STANDARD : wrapper.getCustomInputs().getVolumeType();
         queryParamsMap.put(VOLUME_TYPE, volumeType);
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, KMS_KEY_ID, wrapper.getCustomInputs().getKmsKeyId(),
-                isNotBlank(wrapper.getCustomInputs().getKmsKeyId()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, SIZE, wrapper.getVolumeInputs().getSize(),
-                isNotBlank(wrapper.getVolumeInputs().getSize()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, SNAPSHOT_ID, wrapper.getVolumeInputs().getSnapshotId(),
-                isNotBlank(wrapper.getVolumeInputs().getSnapshotId()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, ENCRYPTED, String.valueOf(ONE), wrapper.getVolumeInputs().isEncrypted());
-        InputsUtil.setOptionalMapEntry(queryParamsMap, IOPS, wrapper.getVolumeInputs().getIops(),
-                !NOT_RELEVANT.equals(wrapper.getVolumeInputs().getIops()));
+        setOptionalMapEntry(queryParamsMap, KMS_KEY_ID, wrapper.getCustomInputs().getKmsKeyId(), isNotBlank(wrapper.getCustomInputs().getKmsKeyId()));
+        setOptionalMapEntry(queryParamsMap, SIZE, wrapper.getVolumeInputs().getSize(), isNotBlank(wrapper.getVolumeInputs().getSize()));
+        setOptionalMapEntry(queryParamsMap, SNAPSHOT_ID, wrapper.getVolumeInputs().getSnapshotId(), isNotBlank(wrapper.getVolumeInputs().getSnapshotId()));
+        setOptionalMapEntry(queryParamsMap, ENCRYPTED, String.valueOf(ONE), wrapper.getVolumeInputs().isEncrypted());
+        setOptionalMapEntry(queryParamsMap, IOPS, wrapper.getVolumeInputs().getIops(), !NOT_RELEVANT.equals(wrapper.getVolumeInputs().getIops()));
 
         return queryParamsMap;
     }
 
     public Map<String, String> getDetachVolumeQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = getAttachDetachVolumeCommonQueryParamsMap(wrapper);
-        InputsUtil.setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(wrapper.getVolumeInputs().isForce()),
-                wrapper.getVolumeInputs().isForce());
+        Map<String, String> queryParamsMap = getAttachOrDetachVolumeCommonQueryParamsMap(wrapper);
+        setOptionalMapEntry(queryParamsMap, FORCE, String.valueOf(wrapper.getVolumeInputs().isForce()), wrapper.getVolumeInputs().isForce());
 
         return queryParamsMap;
     }
 
     public Map<String, String> getDeleteVolumeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(VOLUME_ID, wrapper.getCustomInputs().getVolumeId());
 
         return queryParamsMap;
     }
 
-    private Map<String, String> getAttachDetachVolumeCommonQueryParamsMap(InputsWrapper wrapper) {
+    private Map<String, String> getAttachOrDetachVolumeCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(DEVICE, wrapper.getVolumeInputs().getDeviceName());
         queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
         queryParamsMap.put(VOLUME_ID, wrapper.getCustomInputs().getVolumeId());

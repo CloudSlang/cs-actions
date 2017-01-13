@@ -51,7 +51,7 @@ public class AmazonSignatureServiceTest {
 
     private CommonInputs getCommonInputs() throws MalformedURLException {
         return new CommonInputs.Builder()
-                .withEndpoint("https://examplebucket.s3.amazonaws.com", "s3")
+                .withEndpoint("https://examplebucket.s3.amazonaws.com", "s3", "")
                 .withIdentity("AKIAIOSFODNN7EXAMPLE")
                 .withCredential("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
                 .withApiService(API_SERVICE)

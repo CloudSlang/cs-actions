@@ -9,8 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 
 /**
  * Created by Mihai Tusa.
@@ -34,7 +34,6 @@ public enum VolumeType {
             }
         }
 
-        throw new RuntimeException("Unrecognized  volume type value: [" + input + "]. " +
-                "Valid values are: standard, io1, gp2, sc1, st1.");
+        throw new RuntimeException("Unrecognized  volume type value: [" + input + "]. Valid values are: standard, io1, gp2, sc1, st1.");
     }
 }
