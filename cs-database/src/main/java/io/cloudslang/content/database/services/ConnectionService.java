@@ -66,7 +66,7 @@ public class ConnectionService {
             throw new SQLException("No database URL was provided");
         }
 
-        if(dbClass.equals(SQLSERVER_JDBC_DRIVER)) { //what's the logic here eugen ? :))
+        if(dbClass != null && dbClass.equals(SQLSERVER_JDBC_DRIVER)) { //what's the logic here eugen ? :))
             if(dbUrls.size() > 0) {
                 final StringBuilder dbUrlBuilder = new StringBuilder(dbUrls.get(0));
                 dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS + TRUE + SEMI_COLON + TRUST_SERVER_CERTIFICATE + EQUALS);
