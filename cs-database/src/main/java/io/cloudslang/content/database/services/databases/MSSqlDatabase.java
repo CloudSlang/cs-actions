@@ -68,7 +68,7 @@ public class MSSqlDatabase {
         host = address.getURIIPV6Literal();
 
         //instance is included in the host name
-        if(AUTH_SQL.equalsIgnoreCase(authenticationType)) {
+        if (AUTH_SQL.equalsIgnoreCase(authenticationType)) {
             if (serverInstanceComponents != null) {
                 //removed username and password form the url, since
                 //driver manager will use url , username and password later
@@ -85,11 +85,6 @@ public class MSSqlDatabase {
             dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
         }
         if (Constants.AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
-            String domain = "CORP";
-            // If present and the user name and password are provided, jTDS uses Windows (NTLM) authentication instead of the usual SQL Server authentication
-            if (windowsDomain != null) {
-                domain = windowsDomain;
-            }
             //instance is included in the host name
             if (serverInstanceComponents != null) {
                 dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1] + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
@@ -110,7 +105,6 @@ public class MSSqlDatabase {
             //we supply the empty string with sql
             throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + authenticationType);
         }
-
         dbUrls.add(dbUrlMSSQL);
     }
 
