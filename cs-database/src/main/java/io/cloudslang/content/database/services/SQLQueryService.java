@@ -19,7 +19,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
 /**
- * Created by vranau on 12/3/2014.
+ * Created by victor on 13.01.2017.
  */
 public class SQLQueryService {
 

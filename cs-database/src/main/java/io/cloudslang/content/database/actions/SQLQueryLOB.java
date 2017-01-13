@@ -256,7 +256,7 @@ public class SQLQueryLOB {
                 result.put("exception", SQLUtils.toString((SQLException) e));
             else
 //            todo    result.put("exception", StringUtils.toString(e));
-            result.put("rowsLeft", "0");
+                result.put("rowsLeft", "0");
             result.put(Constants.RETURNRESULT, e.getMessage());
             result.put("returnCode", "-1");
         }

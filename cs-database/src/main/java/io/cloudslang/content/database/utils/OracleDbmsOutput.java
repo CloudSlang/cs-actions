@@ -14,8 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * User: bancl
- * Date: 12/8/14
+ * Created by victor on 13.01.2017.
  */
 public class OracleDbmsOutput {
 

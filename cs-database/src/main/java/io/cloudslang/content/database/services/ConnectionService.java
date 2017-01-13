@@ -12,9 +12,8 @@ package io.cloudslang.content.database.services;
 import io.cloudslang.content.database.services.databases.*;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
-import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
-
+import io.cloudslang.content.database.utils.SQLInputs;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,7 +25,7 @@ import static io.cloudslang.content.database.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
- * Created by vranau on 12/4/2014.
+ * Created by victor on 13.01.2017.
  */
 public class ConnectionService {
 
@@ -66,8 +65,8 @@ public class ConnectionService {
             throw new SQLException("No database URL was provided");
         }
 
-        if(dbClass != null && dbClass.equals(SQLSERVER_JDBC_DRIVER)) { //what's the logic here eugen ? :))
-            if(dbUrls.size() > 0) {
+        if (dbClass != null && dbClass.equals(SQLSERVER_JDBC_DRIVER)) { //what's the logic here eugen ? :))
+            if (dbUrls.size() > 0) {
                 final StringBuilder dbUrlBuilder = new StringBuilder(dbUrls.get(0));
                 dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS + TRUE + SEMI_COLON + TRUST_SERVER_CERTIFICATE + EQUALS);
                 if (trustAllRoots.equalsIgnoreCase(TRUE)) {

@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * wrapper class for database pooling implementation using c3p0
- *
- * @author ggu
+ * Created by victor on 13.01.2017.
  */
 public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
+    //name of this provider
+    public final static String C3P0_DATASOURCE_PROVIDER_NAME = "C3P0PooledDataSourceProvider";
     //properties names for c3p0
     //deal with pool sizes
     //set default 1
@@ -33,27 +33,22 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
     private final static String C3P0_MIN_POOL_SIZE_NAME = "minPoolSize";
     //set default 20
     private final static String C3P0_MAX_POOL_SIZE_NAME = "maxPoolSize";
-
     //deal with cleaning connections
     //set default 300 seconds
     private final static String C3P0_MAX_IDLE_TIME_NAME = "maxIdleTime";
     //set default 3600 seconds = 1 hour
     private final static String C3P0_MAX_CONNECTION_AGE_NAME =
             "maxConnectionAge";
-
     //deal with validation
     //set default 1800 = 30 minutes
     private final static String C3P0_IDLE_CONNECTION_TEST_PERIOD_NAME =
             "idleConnectionTestPeriod";
-
     //set default true
     private final static String C3P0_TEST_CONNECTION_ON_CHECKOUT_NAME =
             "testConnectionOnCheckout";
-
     //set default false
     private final static String C3P0_TEST_CONNECTION_ON_CHECKIN_NAME =
             "testConnectionOnCheckin";
-
     //deal with check out connections
     //set default 1
     private final static String C3P0_ACQUIRE_INCREMENT_NAME = "acquireIncrement";
@@ -61,20 +56,15 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
     private final static String C3P0_ACQUIRE_RETRY_ATTEMPTS_NAME = "acquireRetryAttempts";
     //set default 5 seconds
     private final static String C3P0_ACQUIRE_RETRY_DELAY_NAME = "acquireRetryDelay";
-
     //deal with if max pool size reached, timeout will break the getConnection
     //hanging
     //set default 20 seconds
     private final static String C3P0_CHECKOUT_TIMEOUT_NAME = "checkoutTimeout";
-
     //deal with failure connection, there is a problem in c3p0, it will keeps
     //trying to getConneciton on its own if the connection fails. set this to
     //be true to clean the pool, so it won't keep trying
     private final static String C3P0_BREAK_AFTERACQUIREFAILURE_NAME =
             "breakAfterAcquireFailure";
-
-    //name of this provider
-    public final static String C3P0_DATASOURCE_PROVIDER_NAME = "C3P0PooledDataSourceProvider";
 
     /**
      * constructor

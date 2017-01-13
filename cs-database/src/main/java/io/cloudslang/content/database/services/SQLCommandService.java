@@ -9,16 +9,16 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services;
 
-import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.OracleDbmsOutput;
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 
 /**
- * Created by vranau on 12/3/2014.
+ * Created by victor on 13.01.2017.
  */
 public class SQLCommandService {
 

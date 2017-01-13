@@ -10,10 +10,7 @@
 package io.cloudslang.content.database.services.dbconnection;
 
 /**
- * The low priority thread class will remove pooled datasource from dbmsPoolTable
- * if the datasource has empty connections
- *
- * @author ggu
+ * Created by victor on 13.01.2017.
  */
 public class PooledDataSourceCleaner implements Runnable {
     //logging
@@ -25,15 +22,9 @@ public class PooledDataSourceCleaner implements Runnable {
 
     //DBConnectionPoolManager handle
     private DBConnectionManager manager = null;
-
-    //state to indicate if this runnable is running or shutdown
-    public static enum STATE_CLEANER {
-        RUNNING, SHUTDOWN
-    }
+    private STATE_CLEANER state = STATE_CLEANER.SHUTDOWN;
 
     ;
-
-    private STATE_CLEANER state = STATE_CLEANER.SHUTDOWN;
 
     /**
      * constructor
@@ -93,5 +84,10 @@ public class PooledDataSourceCleaner implements Runnable {
      */
     protected STATE_CLEANER getState() {
         return this.state;
+    }
+
+    //state to indicate if this runnable is running or shutdown
+    public static enum STATE_CLEANER {
+        RUNNING, SHUTDOWN
     }
 }//end PooledDataSourceCleaner class

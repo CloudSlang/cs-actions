@@ -36,8 +36,7 @@ public class SQLQueryUtil {
                                                                String trustStorePassword,
                                                                String timeout,
                                                                String databasePoolingProperties,
-                                                               String ignoreCase)
-    {
+                                                               String ignoreCase) {
         Map<String, String> inputParameters = new HashMap<>();
 
         inputParameters.put(DBSERVERNAME, dbServerName);

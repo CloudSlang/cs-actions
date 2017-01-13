@@ -12,7 +12,7 @@ package io.cloudslang.content.database.utils;
 import java.sql.ResultSet;
 
 /**
- * Created by vranau on 1/21/2015.
+ * Created by victor on 13.01.2017.
  */
 public enum OOResultSet {
 

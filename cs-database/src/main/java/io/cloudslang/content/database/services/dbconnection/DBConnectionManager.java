@@ -19,70 +19,26 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
-
 /**
- * The class will get connection or close connection for the SQL.java. If the
- * connection pooling is enabled, it manages the pooled datasource. DataSource is
- * provided by PooledDataSourceProvider. At this moment, we only have
- * C3P0PooledDataSourceProvider which will provide pooled DataSource. Each
- * DataSource pools the connection per user base. This manager will also control
- * the total max pool size per dbms base. Each entry in dbmsTable represent a dbms
- * by dbType.dbUrl. For each dbms, it has a datasource table which has DataSources
- * provided by the PooledDataSourceProvider. The configuration for pooled DataSource
- * and the connection pooling, is in
- * //<ooHome>//RAS//Java//Default//webapp//conf//databasePooling.properties
- * <p/>
- * There is low priority thread which to check the dbmsPoolTable to clean the
- * the empty DataSource or dbmsPool if the datasource table is empty.
- *
- * @author ggu
+ * Created by victor on 13.01.2017.
  */
 public class DBConnectionManager {
     //logging
 //    protected static final Log logger = LogFactory.getLog(DBConnectionManager.class);
-
-    //singleton instance, make it protected so it can be mocked
-    protected static volatile DBConnectionManager instance = null;
-
-    //table to hole the providers, for now it only has c3p0 provider
-    protected Hashtable<String, PooledDataSourceProvider> providerTable = null;
-
-    //dbms pool table, key = dbType + "." + dbUrl
-    //the reason that keep the dbType is we might use this dbType to find what
-    //datasource provider later if we have different kinds of datasource provider
-    //right now we only have one provider c3p0. Other provider might be implemented
-    //if it is necessary.
-    //the dbms pool table will have Hashtable dsTable which contians DataSources
-    //the key for the dsTable is dbUrl + "." + username + "." + encryptedpassword
-    //hashtable is synchronized already
-    protected Hashtable<String, Hashtable<String, DataSource>> dbmsPoolTable = null;
-
-    //datasource cleaner to clean the datasource with 0 connections.
-    private PooledDataSourceCleaner datasourceCleaner = null;
-
-    //the thread that will run the cleaner runnable
-    private Thread cleanerThread = null;
-
-    //properties that contain configurable connection pooling params
-    protected Properties dbPoolingProperties = null;
 
     //property that will check when to clean the datasource table
     private static final String DB_DATASOURCE_CLEAN_INTERNAL_NAME =
             "db.datasource.clean.interval";
     //2 hours in seconds
     private static final String DB_DATASOURCE_CLEAN_INTERNAL_DEFAULT_VALUE = "7200";//2 * 60 * 60;
-
     //proprety that will decide if we want to have pooling enabled
     private static final String DB_POOL_ENABLE_NAME = "db.pooling.enable";
-
     //default is false, meaning if the databasePooling.properties is not
     //there or the property is not there, then we don't want to have pooling
     private static final String DB_POOL_ENABLE_DEFAULT_VALUE = "false";
-
     //max number of connections for db server, this will control all the pooled
     //datasources for same db server.
     private final static String MAX_TOTAL_POOL_SIZE_DEFAULT_VALUE = "100";
-
     //properties in databasePooling.properties which are specific for
     //dbtype, this will control total max pool size for dbms
     //oracle
@@ -97,35 +53,47 @@ public class DBConnectionManager {
     //db2
     private final static String DB2_MAX_POOL_SIZE_NAME =
             "db2.connection.total.maxpoolsize";
-
     //sybase
     private final static String SYBASE_MAX_POOL_SIZE_NAME =
             "sybase.connection.total.maxpoolsize";
     //netcool
     private final static String NETCOOL_MAX_POOL_SIZE_NAME =
             "netcool.connection.total.maxpoolsize";
-
     //custom
     private final static String CUSTOM_MAX_POOL_SIZE_NAME =
             "custom.connection.total.maxpoolsize";
-
-    public static enum DBType {
-        ORACLE, MSSQL, SYBASE, NETCOOL, DB2, MYSQL, POSTGRESQL, CUSTOM
-    }
-
-
+    //singleton instance, make it protected so it can be mocked
+    protected static volatile DBConnectionManager instance = null;
+    //table to hole the providers, for now it only has c3p0 provider
+    protected Hashtable<String, PooledDataSourceProvider> providerTable = null;
+    //dbms pool table, key = dbType + "." + dbUrl
+    //the reason that keep the dbType is we might use this dbType to find what
+    //datasource provider later if we have different kinds of datasource provider
+    //right now we only have one provider c3p0. Other provider might be implemented
+    //if it is necessary.
+    //the dbms pool table will have Hashtable dsTable which contians DataSources
+    //the key for the dsTable is dbUrl + "." + username + "." + encryptedpassword
+    //hashtable is synchronized already
+    protected Hashtable<String, Hashtable<String, DataSource>> dbmsPoolTable = null;
+    //properties that contain configurable connection pooling params
+    protected Properties dbPoolingProperties = null;
     /**
      * if the pooling is enabled or not, default is false
      */
     protected boolean isPoolingEnabled = false;
+    //datasource cleaner to clean the datasource with 0 connections.
+    private PooledDataSourceCleaner datasourceCleaner = null;
+    //the thread that will run the cleaner runnable
+    private Thread cleanerThread = null;
+
 
     /**
      * constructor
      */
     protected DBConnectionManager() {
-		/* no longer supported in 10x:		
+        /* no longer supported in 10x:
 			//load configurable properties
-			//need to get configurable db properties 		 
+			//need to get configurable db properties
 			if(dbPoolingProperties == null)
 			{
 				dbPoolingProperties = this.loadDbPoolingProperties();
@@ -374,6 +342,27 @@ public class DBConnectionManager {
     }
 
     /**
+     * get boolean value based on the property name from property file
+     * the property file is databasePooling.properties
+     *
+     * @param aPropName     a property name
+     * @param aDefaultValue a default value for that property, if the property is not there.
+     * @return boolean value of that property
+     */
+    protected boolean getPropBooleanValue(String aPropName, String aDefaultValue) {
+        boolean retValue = false;
+
+        String temp = dbPoolingProperties.getProperty(aPropName, aDefaultValue);
+        retValue = Boolean.valueOf(temp);
+
+        //tracing
+//     todo   if (logger.isDebugEnabled()) {
+//            logger.debug("property name =  " + aPropName + " value = " + retValue);
+//        }
+        return retValue;
+    }
+
+    /**
      * load the properties from databasePooling.properties
      * @return the Properties contain the name=value pair from databasePooling.properties
      */
@@ -454,28 +443,6 @@ public class DBConnectionManager {
 		
 		return retProp;
 	}*/
-
-    /**
-     * get boolean value based on the property name from property file
-     * the property file is databasePooling.properties
-     *
-     * @param aPropName     a property name
-     * @param aDefaultValue a default value for that property, if the property is not there.
-     * @return boolean value of that property
-     */
-    protected boolean getPropBooleanValue(String aPropName, String aDefaultValue) {
-        boolean retValue = false;
-
-        String temp = dbPoolingProperties.getProperty(aPropName, aDefaultValue);
-        retValue = Boolean.valueOf(temp);
-
-        //tracing
-//     todo   if (logger.isDebugEnabled()) {
-//            logger.debug("property name =  " + aPropName + " value = " + retValue);
-//        }
-        return retValue;
-    }
-
 
     /**
      * get int value based on the property name from property file
@@ -643,7 +610,7 @@ public class DBConnectionManager {
 //            }
 
             //just create, don't need to check, since we don't have this dbmsKey
-            PooledDataSource ds = (PooledDataSource)this.createDataSource(aDbType, aDbUrl, aUsername, aPassword);
+            PooledDataSource ds = (PooledDataSource) this.createDataSource(aDbType, aDbUrl, aUsername, aPassword);
             retCon = getPooledConnection(ds, aUsername, aPassword);
 
             Hashtable<String, DataSource> dsTable = new Hashtable<String, DataSource>();
@@ -682,7 +649,7 @@ public class DBConnectionManager {
     private Connection getPooledConnection(PooledDataSource ds, String aUsername, String aPassword) throws SQLException {
         Connection retCon;
         try {
-             retCon = ds.getConnection();
+            retCon = ds.getConnection();
         } catch (Exception e) {
             if (ds.sampleLastAcquisitionFailureStackTrace(aUsername, aPassword) != null) {
                 throw new SQLException(ds.sampleLastAcquisitionFailureStackTrace(aUsername, aPassword));
@@ -844,14 +811,14 @@ public class DBConnectionManager {
         return retDatasource;
     }
 
-    //The followings are only for testing purpose
-
     /**
      * return how many dbms pools
      */
     public int getDbmsPoolSize() {
         return dbmsPoolTable.size();
     }
+
+    //The followings are only for testing purpose
 
     /**
      * @param aDbType type of db
@@ -1002,6 +969,10 @@ public class DBConnectionManager {
      */
     protected C3P0PooledDataSourceProvider getC3P0PooledDataSourceProvider() {
         return new C3P0PooledDataSourceProvider(dbPoolingProperties);
+    }
+
+    public static enum DBType {
+        ORACLE, MSSQL, SYBASE, NETCOOL, DB2, MYSQL, POSTGRESQL, CUSTOM
     }
 
 }//end DBConnectionManager

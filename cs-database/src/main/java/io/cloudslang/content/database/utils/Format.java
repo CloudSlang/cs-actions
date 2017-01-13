@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Created by victor on 13.01.2017.
+ */
 public class Format {
     public static int colPadding = 2;
 
@@ -163,7 +166,7 @@ public class Format {
 //        assert (resultSet != null);
 
         StringBuilder delimitedResult = new StringBuilder();
-        if(resultSet != null) {
+        if (resultSet != null) {
             ResultSetMetaData md = resultSet.getMetaData();
             int nCols = md.getColumnCount();
             // populate rows and cols

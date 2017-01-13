@@ -21,7 +21,7 @@ import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 
 /**
- * Created by vranau on 12/10/2014.
+ * Created by victor on 13.01.2017.
  */
 public class MSSqlDatabase {
     private List<String> supportedJdbcDrivers;
@@ -106,12 +106,12 @@ public class MSSqlDatabase {
     private void loadJdbcDriver(String dbClass) throws ClassNotFoundException {
         boolean driverFound = false;
         initializeJdbcDrivers();
-        for(String driver: supportedJdbcDrivers) {
-            if(driver.equals(dbClass)) {
+        for (String driver : supportedJdbcDrivers) {
+            if (driver.equals(dbClass)) {
                 driverFound = true;
             }
         }
-        if(driverFound) {
+        if (driverFound) {
             Class.forName(dbClass);
         } else {
             throw new RuntimeException("The driver provided is not supported.");

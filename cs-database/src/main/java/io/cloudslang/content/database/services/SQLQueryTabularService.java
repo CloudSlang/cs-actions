@@ -9,8 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services;
 
-import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Format;
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * Created by vranau on 12/9/2014.
+ * Created by victor on 13.01.2017.
  */
 public class SQLQueryTabularService {
 
@@ -46,7 +46,7 @@ public class SQLQueryTabularService {
             final ResultSet resultSet = statement.executeQuery(sqlInputs.getSqlCommand());
 
             final String resultSetToTable = Format.resultSetToTable(resultSet, sqlInputs.isNetcool());
-            if(resultSet != null) {
+            if (resultSet != null) {
                 resultSet.close();
             }
             return resultSetToTable;

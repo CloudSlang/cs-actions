@@ -21,7 +21,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * Created by vranau on 12/3/2014.
+ * Created by victor on 13.01.2017.
  */
 public class SQLQueryLobService {
 

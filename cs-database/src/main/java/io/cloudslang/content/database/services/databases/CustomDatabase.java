@@ -13,7 +13,7 @@ package io.cloudslang.content.database.services.databases;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Created by vranau on 12/10/2014.
+ * Created by victor on 13.01.2017.
  */
 public class CustomDatabase {
 

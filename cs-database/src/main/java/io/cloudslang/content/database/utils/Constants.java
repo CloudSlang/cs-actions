@@ -11,18 +11,18 @@ package io.cloudslang.content.database.utils;
 
 
 /**
- * Created by vranau on 11/26/2014.
+ * Created by victor on 13.01.2017.
  */
 public class Constants {
 
     //default values
-    public static final String DEFAULTPORT_ORACLE   = "1521";
-    public static final String DEFAULTPORT_MSSQL    = "1433";
-    public static final String DEFAULTPORT_SYBASE   = "5000";
-    public static final String DEFAULTPORT_NETCOOL  = "4100";
-    public static final String DEFAULTPORT_DB2      = "50000";
-    public static final String DEFAULTPORT_MYSQL    = "3306";
-    public static final String DEFAULTPORT_PSQL     = "5432";
+    public static final String DEFAULTPORT_ORACLE = "1521";
+    public static final String DEFAULTPORT_MSSQL = "1433";
+    public static final String DEFAULTPORT_SYBASE = "5000";
+    public static final String DEFAULTPORT_NETCOOL = "4100";
+    public static final String DEFAULTPORT_DB2 = "50000";
+    public static final String DEFAULTPORT_MYSQL = "3306";
+    public static final String DEFAULTPORT_PSQL = "5432";
     public static final int DEFAULTTIMEOUT = 0;
     public static final String DBSERVERNAME = "DBServerName";
     public static final String DBPORT = "DBPort";
@@ -65,7 +65,7 @@ public class Constants {
     //QCCR 131219 add an optional input "timeout"
     public static final String TIMEOUT = "timeout";
     public static final String DATABASE_POOLING_PROPRTIES = "databasePoolingProperties";
-//    public static final String RESPONSESUCCESS = PropsLoader.RESPONSES.getProperty("Passed");
+    //    public static final String RESPONSESUCCESS = PropsLoader.RESPONSES.getProperty("Passed");
 //    public static final String RESPONSEPASSED = PropsLoader.RESPONSES.getProperty("More");
 //    public static final String RESPONSEFAILED = PropsLoader.RESPONSES.getProperty("Failed");
 //    public static final String RESPONSENOMORE = PropsLoader.RESPONSES.getProperty("NoMore");

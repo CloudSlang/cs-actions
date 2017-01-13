@@ -12,9 +12,7 @@ package io.cloudslang.content.database.services.dbconnection;
 import java.sql.SQLException;
 
 /**
- * class for handling exception when total max pool size exceeded.
- *
- * @author ggu
+ * Created by victor on 13.01.2017.
  */
 public class TotalMaxPoolSizeExceedException extends SQLException {
     private static final long serialVersionUID = 1L;

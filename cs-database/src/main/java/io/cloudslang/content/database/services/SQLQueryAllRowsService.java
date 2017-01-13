@@ -10,8 +10,8 @@
 package io.cloudslang.content.database.services;
 
 
-import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Format;
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
@@ -19,7 +19,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * Created by vranau on 12/9/2014.
+ * Created by victor on 13.01.2017.
  */
 public class SQLQueryAllRowsService {
     /**
@@ -46,7 +46,7 @@ public class SQLQueryAllRowsService {
             final ResultSet resultSet = statement.executeQuery(sqlInputs.getSqlCommand());
 
             final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(resultSet, sqlInputs.isNetcool(), colDelimiter, rowDelimiter);
-            if(resultSet != null) {
+            if (resultSet != null) {
                 resultSet.close();
             }
             return resultSetToDelimitedColsAndRows;

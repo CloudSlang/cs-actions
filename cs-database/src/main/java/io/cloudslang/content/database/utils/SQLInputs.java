@@ -9,9 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
-
-import io.cloudslang.content.database.utils.OOResultSet;
-
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -19,15 +16,9 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by vranau on 12/2/2014.
+ * Created by victor on 13.01.2017.
  */
 public class SQLInputs {
-    private String strDelim;
-    private String strColumns;
-    private ArrayList<String> lRows;
-    private int iQuerys;
-    private int iUpdateCount;
-
     protected String sqlCommand;
     protected String dbServer;
     protected String dbName;
@@ -57,6 +48,11 @@ public class SQLInputs {
     protected List<String> lNames = null;
     protected List<ArrayList<String>> lRowsNames = new ArrayList<ArrayList<String>>();
     protected long skip = 0L;
+    private String strDelim;
+    private String strColumns;
+    private ArrayList<String> lRows;
+    private int iQuerys;
+    private int iUpdateCount;
     private Connection connection;
     private Statement stmt;
     private Properties databasePoolingProperties = null;
@@ -68,37 +64,36 @@ public class SQLInputs {
     private OOResultSet resultSetType;
     private OOResultSet resultSetConcurrency;
 
-
-    public void setStrDelim(String strDelim) {
-        this.strDelim = strDelim;
-    }
-
     public String getStrDelim() {
         return strDelim;
     }
 
-    public void setStrColumns(String strColumns) {
-        this.strColumns = strColumns;
+    public void setStrDelim(String strDelim) {
+        this.strDelim = strDelim;
     }
 
     public String getStrColumns() {
         return strColumns;
     }
 
-    public void setlRows(ArrayList<String> lRows) {
-        this.lRows = lRows;
+    public void setStrColumns(String strColumns) {
+        this.strColumns = strColumns;
     }
 
     public ArrayList<String> getlRows() {
         return lRows;
     }
 
-    public void setiQuerys(int iQuerys) {
-        this.iQuerys = iQuerys;
+    public void setlRows(ArrayList<String> lRows) {
+        this.lRows = lRows;
     }
 
     public int getiQuerys() {
         return iQuerys;
+    }
+
+    public void setiQuerys(int iQuerys) {
+        this.iQuerys = iQuerys;
     }
 
     public String getIgnoreCase() {
@@ -109,36 +104,36 @@ public class SQLInputs {
         this.ignoreCase = ignoreCase;
     }
 
-    public void setiUpdateCount(int iUpdateCount) {
-        this.iUpdateCount = iUpdateCount;
-    }
-
     public int getiUpdateCount() {
         return iUpdateCount;
     }
 
-    public void setSqlCommand(String sqlCommand) {
-        this.sqlCommand = sqlCommand;
+    public void setiUpdateCount(int iUpdateCount) {
+        this.iUpdateCount = iUpdateCount;
     }
 
     public String getSqlCommand() {
         return sqlCommand;
     }
 
-    public void setDbServer(String dbServer) {
-        this.dbServer = dbServer;
+    public void setSqlCommand(String sqlCommand) {
+        this.sqlCommand = sqlCommand;
     }
 
     public String getDbServer() {
         return dbServer;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
+    public void setDbServer(String dbServer) {
+        this.dbServer = dbServer;
     }
 
     public String getDbName() {
         return dbName;
+    }
+
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
     }
 
     public String getDbPort() {

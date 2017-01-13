@@ -20,7 +20,7 @@ import java.util.Properties;
 import static io.cloudslang.content.database.utils.Constants.*;
 
 /**
- * Created by vranau on 12/4/2014.
+ * Created by victor on 13.01.2017.
  */
 public class InputsProcessor {
   /*
@@ -198,11 +198,11 @@ public class InputsProcessor {
         String resultSetTypeParameter = parameters.get(RESULT_SET_TYPE);
         String resultSetConcurrencyParameter = parameters.get(RESULT_SET_CONCURRENCY);
 
-        if(!StringUtils.isEmpty(resultSetTypeParameter)) {
+        if (!StringUtils.isEmpty(resultSetTypeParameter)) {
             resultSetType = transformResultSetType(resultSetTypeParameter);
         }
 
-        if(!StringUtils.isEmpty(resultSetConcurrencyParameter)) {
+        if (!StringUtils.isEmpty(resultSetConcurrencyParameter)) {
             resultSetConcurrency = transformResultSetConcurrency(resultSetConcurrencyParameter);
         }
 
@@ -354,11 +354,11 @@ public class InputsProcessor {
         String trustStore = (String) parameters.get(TRUST_STORE);
         String trustStorePassword = (String) parameters.get(TRUST_STORE_PASSWORD);
 
-        if(StringUtils.isEmpty(trustAllRoots)) {
+        if (StringUtils.isEmpty(trustAllRoots)) {
             trustAllRoots = FALSE;
         }
 
-        if(trustAllRoots.equalsIgnoreCase(FALSE) && (StringUtils.isEmpty(trustStore) || StringUtils.isEmpty(trustStorePassword))) {
+        if (trustAllRoots.equalsIgnoreCase(FALSE) && (StringUtils.isEmpty(trustStore) || StringUtils.isEmpty(trustStorePassword))) {
             throw new Exception("A trustStore and a trustStorePassword should be provided.");
         }
 

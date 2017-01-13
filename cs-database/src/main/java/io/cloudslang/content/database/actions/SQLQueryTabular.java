@@ -62,7 +62,7 @@ public class SQLQueryTabular {
                                        @Param(value = "databasePoolingProperties") String databasePoolingProperties
                                        // @Param(value = "resultSetType") String resultSetType,
                                        //@Param(value = "resultSetConcurrency") String resultSetConcurrency,
-                                       ) {
+    ) {
         Map<String, String> inputParameters = SQLQueryTabularUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,
@@ -99,7 +99,7 @@ public class SQLQueryTabular {
                 result.put("exception", SQLUtils.toString((SQLException) e));
             else
 //          todo      result.put("exception", StringUtils.toString(e));
-            result.put(Constants.RETURNRESULT, e.getMessage());
+                result.put(Constants.RETURNRESULT, e.getMessage());
             result.put("returnCode", "-1");
         }
         return result;

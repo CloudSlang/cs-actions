@@ -121,7 +121,7 @@ public class SQLCommand {
                 result.put("exception", SQLUtils.toString((SQLException) e));
             else
 //           todo     result.put("exception", StringUtils.toString(e));
-            result.put(Constants.RETURNRESULT, e.getMessage());
+                result.put(Constants.RETURNRESULT, e.getMessage());
             result.put("returnCode", "-1");
         }
 

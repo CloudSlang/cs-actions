@@ -33,8 +33,7 @@ public class SQLQueryTabularUtil {
                                                                String trustStore,
                                                                String trustStorePassword,
                                                                String timeout,
-                                                               String databasePoolingProperties)
-    {
+                                                               String databasePoolingProperties) {
         Map<String, String> inputParameters = new HashMap<>();
 
         inputParameters.put(DBSERVERNAME, dbServerName);

@@ -10,7 +10,6 @@
 package io.cloudslang.content.database.actions;
 
 
-
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;

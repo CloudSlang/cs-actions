@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by vranau on 12/10/2014.
+ * Created by victor on 13.01.2017.
  */
 public class MySqlDatabase {
     public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {

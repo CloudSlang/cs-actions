@@ -10,8 +10,8 @@
 package io.cloudslang.content.database.services;
 
 
-import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 
 import java.sql.Connection;
@@ -20,7 +20,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * Created by vranau on 12/3/2014.
+ * Created by victor on 13.01.2017.
  */
 public class SQLScriptService {
 
@@ -50,8 +50,8 @@ public class SQLScriptService {
                         statement.addBatch(line);
                     }
                     int[] updateCounts = statement.executeBatch();
-                    for(int i:updateCounts) {
-                        if(i>0) {
+                    for (int i : updateCounts) {
+                        if (i > 0) {
                             updateCount += i;
                         }
                     }
