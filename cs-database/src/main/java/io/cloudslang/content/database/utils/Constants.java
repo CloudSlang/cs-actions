@@ -84,8 +84,7 @@ public class Constants {
     public static final String STRING_PARAMETER = "%s";
     public static final String TRUSTORE_PARAMS = SEMI_COLON + TRUST_STORE + EQUALS + STRING_PARAMETER + SEMI_COLON + TRUST_STORE_PASSWORD + EQUALS + STRING_PARAMETER;
     public static final String COLON = ":";
-    public static final String DOMAIN = "domain";
-    public static final String USE_NTLMV2 = "useNTLMv2";
     public static final String INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL = "Invalid authentication type for MS SQL : ";
     public static final String DATABASE_NAME = "DatabaseName";
+    public static final String INTEGRATED_SECURITY = "integratedSecurity";
 }
