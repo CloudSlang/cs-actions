@@ -12,7 +12,7 @@ package io.cloudslang.content.database.services;
 import io.cloudslang.content.database.services.databases.CustomDatabase;
 import io.cloudslang.content.database.services.databases.MSSqlDatabase;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
-import io.cloudslang.content.database.services.entities.SQLInputs;
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import org.junit.Before;
@@ -31,21 +31,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.powermock.api.easymock.PowerMock.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
@@ -111,7 +99,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort("1433");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setAuthenticationType(Constants.AUTH_WINDOWS);
-        sqlInputs.setDbUrl("jdbc:sqlserver://localhost:1433;domain=CORP;useNTLMv2=true");
+//        sqlInputs.setDbUrl("jdbc:sqlserver://localhost:1433;domain=CORP;useNTLMv2=true");
         assertConnection(sqlInputs, 1, "jdbc:sqlserver://localhost:1433;domain=CORP;useNTLMv2=true");
 //        assertConnection(sqlInputs, 1, "jdbc:jtds:sqlserver://localhost:30;domain=CORP;useNTLMv2=true");
     }

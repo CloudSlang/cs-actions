@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services;
 
-import io.cloudslang.content.database.services.entities.SQLInputs;
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Format;
 import org.apache.commons.lang3.StringUtils;
 

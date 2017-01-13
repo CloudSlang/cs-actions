@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.database.services.entities;
+package io.cloudslang.content.database.utils;
 
 
 import io.cloudslang.content.database.utils.OOResultSet;

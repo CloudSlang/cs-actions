@@ -11,7 +11,7 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.services.ConnectionService;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
-import io.cloudslang.content.database.services.entities.SQLInputs;
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import org.junit.*;

@@ -9,7 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
-import io.cloudslang.content.database.services.entities.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.StringReader;
