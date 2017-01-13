@@ -17,8 +17,21 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.cloudslang.content.database.utils.Constants.COLON;
+import static io.cloudslang.content.database.utils.Constants.DATABASE_NAME;
+import static io.cloudslang.content.database.utils.Constants.DOMAIN;
+import static io.cloudslang.content.database.utils.Constants.ENCRYPT;
+import static io.cloudslang.content.database.utils.Constants.EQUALS;
+import static io.cloudslang.content.database.utils.Constants.FALSE;
+import static io.cloudslang.content.database.utils.Constants.INSTANCE;
+import static io.cloudslang.content.database.utils.Constants.INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL;
 import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
+import static io.cloudslang.content.database.utils.Constants.SEMI_COLON;
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
+import static io.cloudslang.content.database.utils.Constants.TRUE;
+import static io.cloudslang.content.database.utils.Constants.TRUSTORE_PARAMS;
+import static io.cloudslang.content.database.utils.Constants.TRUST_SERVER_CERTIFICATE;
+import static io.cloudslang.content.database.utils.Constants.USE_NTLMV2;
 
 /**
  * Created by victor on 13.01.2017.
@@ -26,7 +39,8 @@ import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIV
 public class MSSqlDatabase {
     private List<String> supportedJdbcDrivers;
 
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String windowsDomain, String dbClass) throws ClassNotFoundException, SQLException {
+    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String windowsDomain, String dbClass,
+                      String trustAllRoots, String trustStore, String trustStorePassword) throws ClassNotFoundException, SQLException {
         if (dbName == null) {
             throw new SQLException("No database provided!");
         }
@@ -58,15 +72,18 @@ public class MSSqlDatabase {
         if (serverInstanceComponents != null) {
             //removed username and password form the url, since
             //driver manager will use url , username and password later
-            dbUrlMSSQL = Constants.MSSQL_URL + host + ":" + dbPort + dbName + ";instance=" + serverInstanceComponents[1] + ";";
+            dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1];
+            dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
         }
         //has instance input
         else if (StringUtils.isNoneEmpty(instance)) {
-            dbUrlMSSQL = Constants.MSSQL_URL + host + ":" + dbPort + dbName + ";instance=" + instance + ";";
+            dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance;
+            dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
         }
         //no instance
         else {
-            dbUrlMSSQL = Constants.MSSQL_URL + host + ":" + dbPort + dbName;
+            dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName;
+            dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
         }
         if (Constants.AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
             String domain = "CORP";
@@ -76,27 +93,40 @@ public class MSSqlDatabase {
             }
             //instance is included in the host name
             if (serverInstanceComponents != null) {
-                dbUrlMSSQL =
-                        Constants.MSSQL_URL + host + ":" + dbPort + dbName + ";instance=" + serverInstanceComponents[1] + ";domain=" + domain;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1] + SEMI_COLON + DOMAIN + EQUALS + domain;
+                dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
             }
             //has instance input
             else if (StringUtils.isNoneEmpty(instance)) {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + ":" + dbPort + dbName + ";instance=" + instance + ";domain=" + domain;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance + SEMI_COLON + DOMAIN + EQUALS + domain;
+                dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
             }
             //no instance
             else {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + ":" + dbPort + dbName + ";domain=" + domain;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + DOMAIN + EQUALS + domain;
+                dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
             }
             // Set to true to send LMv2/NTLMv2 responses when using Windows authentication
-            dbUrlMSSQL += ";useNTLMv2=true";
+            dbUrlMSSQL += SEMI_COLON + USE_NTLMV2 + EQUALS + TRUE;
         } else if (!Constants.AUTH_SQL.equalsIgnoreCase(authenticationType)) //check invalid authentication type
         {
             //if it is something other than sql or empty,
             //we supply the empty string with sql
-            throw new SQLException("Invalid authentication type for MS SQL : " + authenticationType);
+            throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + authenticationType);
         }
 
         dbUrls.add(dbUrlMSSQL);
+    }
+
+    public static String addSslEncryptionToConnection(String trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
+        final StringBuilder dbUrlBuilder = new StringBuilder(dbUrlMSSQL);
+        dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS + TRUE + SEMI_COLON + TRUST_SERVER_CERTIFICATE + EQUALS);
+        if (trustAllRoots.equalsIgnoreCase(TRUE)) {
+            dbUrlBuilder.append(TRUE);
+        } else {
+            dbUrlBuilder.append(FALSE + String.format(TRUSTORE_PARAMS, trustStore, trustStorePassword));
+        }
+        return dbUrlBuilder.toString();
     }
 
     private void initializeJdbcDrivers() {

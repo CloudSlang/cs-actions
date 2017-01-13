@@ -67,19 +67,13 @@ public class ConnectionService {
 
         if (dbClass != null && dbClass.equals(SQLSERVER_JDBC_DRIVER)) { //what's the logic here eugen ? :))
             if (dbUrls.size() > 0) {
-                final StringBuilder dbUrlBuilder = new StringBuilder(dbUrls.get(0));
-                dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS + TRUE + SEMI_COLON + TRUST_SERVER_CERTIFICATE + EQUALS);
-                if (trustAllRoots.equalsIgnoreCase(TRUE)) {
-                    dbUrlBuilder.append(TRUE);
-                } else {
-                    dbUrlBuilder.append(FALSE + String.format(TRUSTORE_PARAMS, trustStore, trustStorePassword));
-                }
-                dbUrls.set(0, dbUrlBuilder.toString());
+                String dbUrl = dbUrls.get(0);
+                dbUrl = MSSqlDatabase.addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrl);
+                dbUrls.set(0, dbUrl);
             }
         }
 
-        //localDbName will be like "/localDbName"
-        String localDbName = isEmpty(dbName) ? "" : ("/" + dbName);
+        String localDbName = isEmpty(dbName) ? "" : dbName;
         //db type if we use connection pooling
         DBConnectionManager.DBType enumDbType;
         String triedUrls = " ";
@@ -100,7 +94,7 @@ public class ConnectionService {
         else if (Constants.MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MSSQL;
             MSSqlDatabase msSqlDatabase = new MSSqlDatabase();
-            msSqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, authenticationType, instance, windowsDomain, dbClass);
+            msSqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, authenticationType, instance, windowsDomain, dbClass, trustAllRoots, trustStore, trustStorePassword);
         }
         //Sybase
         else if (Constants.SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {

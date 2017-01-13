@@ -50,14 +50,14 @@ public class MSSqlDatabaseTest {
         expectedEx.expect(SQLException.class);
         expectedEx.expectMessage("Invalid authentication type for MS SQL : " + AUTH_TYPE);
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp("", DB_SERVER, DB_PORT, dbUrls, INVALID_AUTH_TYPE, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp("", DB_SERVER, DB_PORT, dbUrls, INVALID_AUTH_TYPE, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
         assertEquals(1, dbUrls.size());
     }
 
     @Test
     public void testSetUpNoDbName() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp("", DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp("", DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
         assertEquals("jdbc:jtds:sqlserver://dbServer:30;instance=instance;domain=windowsDomain;useNTLMv2=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
@@ -67,7 +67,7 @@ public class MSSqlDatabaseTest {
         expectedEx.expect(SQLException.class);
         expectedEx.expectMessage("No database provided!");
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(null, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(null, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
     }
 
     @Test
@@ -75,7 +75,7 @@ public class MSSqlDatabaseTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("host   not valid");
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, null, DB_PORT, dbUrls, AUTH_TYPE, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(DB_NAME, null, DB_PORT, dbUrls, AUTH_TYPE, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
     }
 
     @Test
@@ -83,13 +83,13 @@ public class MSSqlDatabaseTest {
         expectedEx.expect(SQLException.class);
         expectedEx.expectMessage("No port provided!");
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, null, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, null, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
     }
 
     @Test
     public void testSetUpAllAuthWindows() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
         assertEquals("jdbc:jtds:sqlserver://dbServer:30/dbName;instance=instance;domain=windowsDomain;useNTLMv2=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
@@ -97,7 +97,7 @@ public class MSSqlDatabaseTest {
     @Test
     public void testSetUpAllAuthSQL() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
         assertEquals("jdbc:jtds:sqlserver://dbServer:30/dbName;instance=instance;", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
@@ -105,7 +105,7 @@ public class MSSqlDatabaseTest {
     @Test
     public void testSetUpAllIPV6LIteral() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER_IPV6_LITERAL, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER_IPV6_LITERAL, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
         assertEquals("jdbc:jtds:sqlserver://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:30/dbName;instance=instance;", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
@@ -113,7 +113,7 @@ public class MSSqlDatabaseTest {
     @Test
     public void testSetUpAllAuthWindowsAndHostWithInstance() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER_WITH_INSTANCE, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER_WITH_INSTANCE, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
         assertEquals("jdbc:jtds:sqlserver://dbServer:30/dbName;instance=instance;domain=windowsDomain;useNTLMv2=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
@@ -121,7 +121,7 @@ public class MSSqlDatabaseTest {
     @Test
     public void testSetUpAllAuthWindowsAndHostWithNoInstance() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, null, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER);
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, null, WINDOWS_DOMAIN, JTDS_JDBC_DRIVER,"","","");
         assertEquals("jdbc:jtds:sqlserver://dbServer:30/dbName;domain=windowsDomain;useNTLMv2=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
