@@ -54,7 +54,7 @@ public class MSSqlDatabase {
         loadJdbcDriver(dbClass);
 
         String dbUrlMSSQL = "";
-        String host = "";
+        String host;
 
         //compute the host value that will be used in the url
         String[] serverInstanceComponents = null;

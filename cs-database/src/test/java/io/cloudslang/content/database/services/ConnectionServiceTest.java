@@ -96,12 +96,13 @@ public class ConnectionServiceTest {
     public void testSetUpConnectionMSSql() throws Exception {
         sqlInputs.setDbClass(SQLSERVER_JDBC_DRIVER);
         sqlInputs.setDbType(Constants.MSSQL_DB_TYPE);
-        sqlInputs.setDbPort("1433");
-        sqlInputs.setDbServer("localhost");
+        sqlInputs.setDbPort("1443");
+        sqlInputs.setDbServer("dbServer");
         sqlInputs.setAuthenticationType(Constants.AUTH_WINDOWS);
-//        sqlInputs.setDbUrl("jdbc:sqlserver://localhost:1433;domain=CORP;useNTLMv2=true");
-        assertConnection(sqlInputs, 1, "jdbc:sqlserver://localhost:1433;domain=CORP;useNTLMv2=true");
-//        assertConnection(sqlInputs, 1, "jdbc:jtds:sqlserver://localhost:30;domain=CORP;useNTLMv2=true");
+        sqlInputs.setDbName("dbName");
+        sqlInputs.setInstance("instance");
+        sqlInputs.setTrustAllRoots("True");
+        assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1443;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true");
     }
 
     @Test
@@ -110,7 +111,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30//dbName");
+        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30/dbName");
     }
 
     @Test
