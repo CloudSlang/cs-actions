@@ -50,7 +50,7 @@ public class Constants {
     public static final String DELIM = "Delimiter";
     public static final String KEY = "Key";
     public static final String TRIM_ROWSTAT = "trimRowstat";
-    public static final String MSSQL_URL = "jdbc:jtds:sqlserver://";
+    public static final String MSSQL_URL = "jdbc:sqlserver://";
     public static final String LINE = "Line0";
     public static final String RETURNRESULT = "returnResult";
     public static final String OUTPUTTEXT = "outputText";
@@ -83,4 +83,8 @@ public class Constants {
     public static final String EQUALS = "=";
     public static final String STRING_PARAMETER = "%s";
     public static final String TRUSTORE_PARAMS = SEMI_COLON + TRUST_STORE + EQUALS + STRING_PARAMETER + SEMI_COLON + TRUST_STORE_PASSWORD + EQUALS + STRING_PARAMETER;
+    public static final String COLON = ":";
+    public static final String INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL = "Invalid authentication type for MS SQL : ";
+    public static final String DATABASE_NAME = "DatabaseName";
+    public static final String INTEGRATED_SECURITY = "integratedSecurity";
 }
