@@ -111,7 +111,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30/dbName");
+        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30//dbName");
     }
 
     @Test

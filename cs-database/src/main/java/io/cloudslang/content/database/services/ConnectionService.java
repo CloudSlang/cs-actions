@@ -72,8 +72,14 @@ public class ConnectionService {
                 dbUrls.set(0, dbUrl);
             }
         }
+        String localDbName;
+        if(MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
+            localDbName = isEmpty(dbName) ? "" : dbName;
+        } else {
+            //localDbName will be like "/localDbName"
+            localDbName = isEmpty(dbName) ? "" : ("/" + dbName);
+        }
 
-        String localDbName = isEmpty(dbName) ? "" : dbName;
         //db type if we use connection pooling
         DBConnectionManager.DBType enumDbType;
         String triedUrls = " ";
@@ -91,7 +97,7 @@ public class ConnectionService {
             mySqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls);
         }
         //MSSQL
-        else if (Constants.MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
+        else if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MSSQL;
             MSSqlDatabase msSqlDatabase = new MSSqlDatabase();
             msSqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, authenticationType, instance, windowsDomain, dbClass, trustAllRoots, trustStore, trustStorePassword);

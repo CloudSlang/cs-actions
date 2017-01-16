@@ -27,7 +27,7 @@ public class SQLUtilsTest {
 
     public static final String SQL_STATE = "s1000";
     public static String CUSTOM_URL = "jdbc:h2:tcp://localhost/~/test";
-    public static final String MSSQL_URL = "jdbc:jtds:sqlserver://";
+//    public static final String MSSQL_URL = "jdbc:jtds:sqlserver://";
     public static final String DB_SERVER_IPV6_LITERAL = "2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net";
 
     @Rule
@@ -65,10 +65,10 @@ public class SQLUtilsTest {
         trimRowstat = SQLUtils.trimRowstat(CUSTOM_URL, "false");
         assertFalse(trimRowstat);
 
-        trimRowstat = SQLUtils.trimRowstat(MSSQL_URL, "false");
+        trimRowstat = SQLUtils.trimRowstat(Constants.MSSQL_URL, "false");
         assertFalse(trimRowstat);
 
-        trimRowstat = SQLUtils.trimRowstat(MSSQL_URL, "true");
+        trimRowstat = SQLUtils.trimRowstat(Constants.MSSQL_URL, "true");
         assertTrue(trimRowstat);
 
         trimRowstat = SQLUtils.trimRowstat(null, null);
@@ -77,7 +77,7 @@ public class SQLUtilsTest {
         trimRowstat = SQLUtils.trimRowstat(null, "true");
         assertFalse(trimRowstat);
 
-        trimRowstat = SQLUtils.trimRowstat(MSSQL_URL, null);
+        trimRowstat = SQLUtils.trimRowstat(Constants.MSSQL_URL, null);
         assertTrue(trimRowstat);
 
         trimRowstat = SQLUtils.trimRowstat(CUSTOM_URL, null);
