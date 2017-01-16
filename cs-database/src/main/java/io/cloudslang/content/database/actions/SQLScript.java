@@ -20,7 +20,10 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.database.services.SQLScriptService;
-import io.cloudslang.content.database.utils.*;
+import io.cloudslang.content.database.utils.Constants;
+import io.cloudslang.content.database.utils.InputsProcessor;
+import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLScriptUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_CONCURRENCY;
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_TYPE;
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -63,10 +69,9 @@ public class SQLScript {
                                        @Param(value = "trustAllRoots") String trustAllRoots,
                                        @Param(value = "trustStore") String trustStore,
                                        @Param(value = "trustStorePassword") String trustStorePassword,
-                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties
-                                       // @Param(value = "resultSetType") String resultSetType,
-                                       //@Param(value = "resultSetConcurrency") String resultSetConcurrency,
-    ) {
+                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties,
+                                       @Param(value = "resultSetType") String resultSetType,
+                                       @Param(value = "resultSetConcurrency") String resultSetConcurrency) {
         Map<String, String> inputParameters = SQLScriptUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,
@@ -84,11 +89,13 @@ public class SQLScript {
                 trustStore,
                 trustStorePassword,
                 databasePoolingProperties);
+        inputParameters.put(RESULT_SET_TYPE, resultSetType);
+        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
         Map<String, String> result = new HashMap<>();
 
         try {
-            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
-            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
+//            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
+//            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
 
             String commandsDelimiter = StringUtils.isEmpty(sqlInputs.getStrDelim()) ? "--" : sqlInputs.getStrDelim();

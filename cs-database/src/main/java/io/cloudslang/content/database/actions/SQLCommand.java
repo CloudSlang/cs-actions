@@ -27,6 +27,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_CONCURRENCY;
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_TYPE;
+
 /**
  * Created by pinteae on 1/11/2017.
  */
@@ -58,10 +61,9 @@ public class SQLCommand {
                                        @Param(value = "trustAllRoots") String trustAllRoots,
                                        @Param(value = "trustStore") String trustStore,
                                        @Param(value = "trustStorePassword") String trustStorePassword,
-                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties)
-                                       // @Param(value = "resultSetType") String resultSetType,
-                                       //@Param(value = "resultSetConcurrency") String resultSetConcurrency,)
-                                       {
+                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties,
+                                       @Param(value = "resultSetType") String resultSetType,
+                                       @Param(value = "resultSetConcurrency") String resultSetConcurrency) {
         Map<String, String> inputParameters = SQLCommandUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,
@@ -77,10 +79,13 @@ public class SQLCommand {
                 trustStore,
                 trustStorePassword,
                 databasePoolingProperties);
+        inputParameters.put(RESULT_SET_TYPE, resultSetType);
+        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
+
         Map<String, String> result = new HashMap<>();
         try {
-            OOResultSet resultSetType = OOResultSet.TYPE_FORWARD_ONLY;
-            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
+//            OOResultSet resultSetType1 = OOResultSet.TYPE_FORWARD_ONLY;
+//            OOResultSet resultSetConcurrency1 = OOResultSet.CONCUR_READ_ONLY;
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
             if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
                 throw new Exception("command input is empty.");
@@ -97,8 +102,7 @@ public class SQLCommand {
                 }
                 res = "Command completed successfully";
             } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() != -1) {
-                final StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(String.valueOf(sqlInputs.getiUpdateCount()));
+                final StringBuilder stringBuilder = new StringBuilder(String.valueOf(sqlInputs.getiUpdateCount()));
                 stringBuilder.append(" row(s) affected");
                 outputText += stringBuilder.toString();
             } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() == -1) {

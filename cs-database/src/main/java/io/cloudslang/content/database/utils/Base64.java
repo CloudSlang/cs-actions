@@ -9,6 +9,10 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.prefs.BackingStoreException;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -46,7 +50,7 @@ class Base64 extends java.util.prefs.AbstractPreferences {
     }
 
 
-    public String encodeBase64(byte[] raw) throws java.io.UnsupportedEncodingException {
+    public String encodeBase64(byte[] raw) throws UnsupportedEncodingException {
 
         String key = new String(raw, TripleDES.DEFAULT_CODEPAGE);
 
@@ -57,9 +61,7 @@ class Base64 extends java.util.prefs.AbstractPreferences {
     }
 
 
-    public byte[] decodeBase64(String key, String base64String)
-
-            throws java.io.UnsupportedEncodingException, java.io.IOException {
+    public byte[] decodeBase64(String key, String base64String) throws IOException {
 
         this.encodedStore.put(key, base64String);
 
@@ -117,7 +119,7 @@ class Base64 extends java.util.prefs.AbstractPreferences {
     protected void removeSpi(String key) {
     }
 
-    protected void syncSpi() throws java.util.prefs.BackingStoreException {
+    protected void syncSpi() throws BackingStoreException {
     }
 
 }

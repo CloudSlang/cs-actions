@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -39,7 +41,7 @@ public class SQLScriptService {
             } catch (Exception e) {
             } // not all drivers support this
 
-            final Statement statement = connection.createStatement(sqlInputs.getResultSetType().getValue(), sqlInputs.getResultSetConcurrency().getValue());
+            final Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
             statement.setQueryTimeout(sqlInputs.getTimeout());
             try {
                 boolean autoCommit = connection.getAutoCommit();

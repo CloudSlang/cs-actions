@@ -18,6 +18,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -40,7 +42,7 @@ public class SQLQueryAllRowsService {
             connection = connectionService.setUpConnection(sqlInputs);
             connection.setReadOnly(true);
 
-            Statement statement = connection.createStatement(sqlInputs.getResultSetType().getValue(), sqlInputs.getResultSetConcurrency().getValue());
+            Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
 
             statement.setQueryTimeout(sqlInputs.getTimeout());
             final ResultSet resultSet = statement.executeQuery(sqlInputs.getSqlCommand());

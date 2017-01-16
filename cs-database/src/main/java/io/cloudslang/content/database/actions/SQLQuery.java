@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_CONCURRENCY;
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_TYPE;
+
 /**
  * Created by pinteae on 1/5/2017.
  */
@@ -65,8 +68,8 @@ public class SQLQuery {
                                        @Param(value = "key", required = true) String key,
                                        @Param(value = "timeout") String timeout,
                                        @Param(value = "databasePoolingProperties") String databasePoolingProperties,
-                                       // @Param(value = "resultSetType") String resultSetType,
-                                       //@Param(value = "resultSetConcurrency") String resultSetConcurrency,
+                                       @Param(value = "resultSetType") String resultSetType,
+                                       @Param(value = "resultSetConcurrency") String resultSetConcurrency,
                                        @Param(value = "ignoreCase") String ignoreCase,
                                        GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
@@ -89,11 +92,14 @@ public class SQLQuery {
                 timeout,
                 databasePoolingProperties,
                 ignoreCase);
+
+        inputParameters.put(RESULT_SET_TYPE, resultSetType);
+        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
         Map<String, String> result = new HashMap<>();
 
         try {
-            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
-            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
+//            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
+//            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
             final String sqlDbType = sqlInputs.getDbType();
             final String sqlDbServer = sqlInputs.getDbServer();
@@ -108,7 +114,7 @@ public class SQLQuery {
             final boolean sqlIgnoreCase = Boolean.parseBoolean(sqlInputs.getIgnoreCase());
 
             if (Constants.DB2_DB_TYPE.equalsIgnoreCase(sqlDbType)) {
-                sqlInputs.setResultSetType(OOResultSet.TYPE_FORWARD_ONLY);
+                sqlInputs.setResultSetType(OOResultSet.TYPE_FORWARD_ONLY.toString());
             }
             if (StringUtils.isEmpty(sqlCommand)) {
                 throw new Exception("Command input is empty.");

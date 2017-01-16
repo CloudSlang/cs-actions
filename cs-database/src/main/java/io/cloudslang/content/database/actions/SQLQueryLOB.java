@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_CONCURRENCY;
+import static io.cloudslang.content.database.utils.Constants.RESULT_SET_TYPE;
+
 /**
  * Created by pinteae on 1/11/2017.
  */
@@ -71,8 +74,8 @@ public class SQLQueryLOB {
                                        @Param(value = "key", required = true) String key,
                                        @Param(value = "timeout") String timeout,
                                        @Param(value = "databasePoolingProperties") String databasePoolingProperties,
-                                       // @Param(value = "resultSetType") String resultSetType,
-                                       //@Param(value = "resultSetConcurrency") String resultSetConcurrency,
+                                       @Param(value = "resultSetType") String resultSetType,
+                                       @Param(value = "resultSetConcurrency") String resultSetConcurrency,
                                        GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         Map<String, String> inputParameters = SQLQueryLOBUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -92,13 +95,16 @@ public class SQLQueryLOB {
                 trustStorePassword,
                 timeout,
                 databasePoolingProperties);
+
+        inputParameters.put(RESULT_SET_TYPE, resultSetType);
+        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
         Map<String, String> result = new HashMap<>();
         try {
-            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
-            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
+//            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
+//            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
             if (Constants.DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                sqlInputs.setResultSetType(OOResultSet.TYPE_FORWARD_ONLY);
+                sqlInputs.setResultSetType(OOResultSet.TYPE_FORWARD_ONLY.toString());
             }
             if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
                 throw new Exception("command input is empty.");

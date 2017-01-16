@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 
+import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -46,7 +48,7 @@ public class SQLCommandService {
                 oracleDbmsOutput.close();
                 return output;
             } else {
-                final Statement statement = connection.createStatement(sqlInputs.getResultSetType().getValue(), sqlInputs.getResultSetConcurrency().getValue());
+                final Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
                 statement.setQueryTimeout(sqlInputs.getTimeout());
                 try {
                     statement.execute(sqlInputs.getSqlCommand());

@@ -25,18 +25,18 @@ import static io.cloudslang.content.database.utils.Constants.*;
  */
 public class InputsProcessor {
 
-    public static SQLInputs handleInputParameters(Map<String, String> parameters, OOResultSet resultSetType, OOResultSet resultSetConcurrency) throws Exception {
+    public static SQLInputs handleInputParameters(Map<String, String> parameters, String resultSetType, String resultSetConcurrency) throws Exception {
         SQLInputs sqlInputs = new SQLInputs();
         init(sqlInputs);//clean up the variables before use them
 
         String resultSetTypeParameter = parameters.get(RESULT_SET_TYPE);
         String resultSetConcurrencyParameter = parameters.get(RESULT_SET_CONCURRENCY);
 
-        if (!StringUtils.isEmpty(resultSetTypeParameter)) {
+        if (StringUtils.isNoneEmpty(resultSetTypeParameter)) {
             resultSetType = transformResultSetType(resultSetTypeParameter);
         }
 
-        if (!StringUtils.isEmpty(resultSetConcurrencyParameter)) {
+        if (StringUtils.isNoneEmpty(resultSetConcurrencyParameter)) {
             resultSetConcurrency = transformResultSetConcurrency(resultSetConcurrencyParameter);
         }
 
@@ -184,9 +184,9 @@ public class InputsProcessor {
         Properties databasePoolingProperties = new Properties();
         databasePoolingProperties.load(new StringReader(databasePoolingPropertiesStr));
         sqlInputs.setDatabasePoolingProperties(databasePoolingProperties);
-        String trustAllRoots = (String) parameters.get(TRUST_ALL_ROOTS);
-        String trustStore = (String) parameters.get(TRUST_STORE);
-        String trustStorePassword = (String) parameters.get(TRUST_STORE_PASSWORD);
+        String trustAllRoots = parameters.get(TRUST_ALL_ROOTS);
+        String trustStore = parameters.get(TRUST_STORE);
+        String trustStorePassword = parameters.get(TRUST_STORE_PASSWORD);
 
         if (StringUtils.isEmpty(trustAllRoots)) {
             trustAllRoots = FALSE;
@@ -207,13 +207,13 @@ public class InputsProcessor {
      * @param resultSetTypeParameter This is a required input. If this is empty an exception is thrown.
      * @return
      */
-    private static OOResultSet transformResultSetType(String resultSetTypeParameter) throws SQLException {
+    private static String transformResultSetType(String resultSetTypeParameter) throws SQLException {
         if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_FORWARD_ONLY.toString())) {
-            return OOResultSet.TYPE_FORWARD_ONLY;
+            return OOResultSet.TYPE_FORWARD_ONLY.toString();
         } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString())) {
-            return OOResultSet.TYPE_SCROLL_INSENSITIVE;
+            return OOResultSet.TYPE_SCROLL_INSENSITIVE.toString();
         } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_SENSITIVE.toString())) {
-            return OOResultSet.TYPE_SCROLL_SENSITIVE;
+            return OOResultSet.TYPE_SCROLL_SENSITIVE.toString();
         }
         throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetTypeParameter are: "
                 + OOResultSet.TYPE_FORWARD_ONLY.toString() + ", " + OOResultSet.TYPE_SCROLL_INSENSITIVE.toString() +
@@ -225,11 +225,11 @@ public class InputsProcessor {
      * @param resultSetConcurrency This is a required input. If this is empty an exception is thrown.
      * @return
      */
-    private static OOResultSet transformResultSetConcurrency(String resultSetConcurrency) throws SQLException {
+    private static String transformResultSetConcurrency(String resultSetConcurrency) throws SQLException {
         if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_READ_ONLY.toString())) {
-            return OOResultSet.CONCUR_READ_ONLY;
+            return OOResultSet.CONCUR_READ_ONLY.toString();
         } else if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_UPDATABLE.toString())) {
-            return OOResultSet.CONCUR_UPDATABLE;
+            return OOResultSet.CONCUR_UPDATABLE.toString();
         }
         throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetConcurrency are: "
                 + OOResultSet.CONCUR_READ_ONLY.toString() + " and " + OOResultSet.CONCUR_UPDATABLE.toString());
@@ -315,8 +315,8 @@ public class InputsProcessor {
             sqlInputs.setTimeout(0);
             sqlInputs.setKey(null);
             sqlInputs.setIgnoreCase(null);
-            sqlInputs.setResultSetConcurrency(OOResultSet.NO_RESULT_SET);
-            sqlInputs.setResultSetType(OOResultSet.NO_RESULT_SET);
+            sqlInputs.setResultSetConcurrency(OOResultSet.NO_RESULT_SET.toString());
+            sqlInputs.setResultSetType(OOResultSet.NO_RESULT_SET.toString());
             sqlInputs.setWindowsDomain(null);
             sqlInputs.setTrustAllRoots("false");
             sqlInputs.setTrustStore("");

@@ -10,6 +10,8 @@
 package io.cloudslang.content.database.utils;
 
 
+import java.util.List;
+
 /**
  * Created by victor on 13.01.2017.
  */

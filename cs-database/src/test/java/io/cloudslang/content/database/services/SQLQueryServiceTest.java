@@ -101,8 +101,8 @@ public class SQLQueryServiceTest {
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setSqlCommand(SQL_QUERY);
-        sqlInputs.setResultSetType(OOResultSet.TYPE_SCROLL_INSENSITIVE);
-        sqlInputs.setResultSetConcurrency(OOResultSet.CONCUR_READ_ONLY);
+        sqlInputs.setResultSetType(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString());
+        sqlInputs.setResultSetConcurrency(OOResultSet.CONCUR_READ_ONLY.toString());
         sqlInputs.setTimeout(SQL_QUERY_TIMEOUT);
 
         sqlQueryService.executeSqlQuery(sqlInputs);

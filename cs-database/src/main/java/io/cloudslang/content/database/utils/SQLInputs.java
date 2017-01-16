@@ -36,7 +36,7 @@ public class SQLInputs {
     private String ignoreCase;
     private int timeout;
     private String dbUrl;  //the final dbUrl that was used to connect to the database
-    private List<String> dbUrls = null; //a list of dbUrls that are used to try to connect to the database
+    private List<String> dbUrls; //a list of dbUrls that are used to try to connect to the database
     private String dbClass;
     private String trimRowstat = "true";
     private boolean isNetcool = false; // needs to be visible for SQLQueryTabular to do check
@@ -47,14 +47,14 @@ public class SQLInputs {
     private String strColumns;
     private ArrayList<String> lRows;
     private int iUpdateCount;
-    private Properties databasePoolingProperties = null;
+    private Properties databasePoolingProperties;
     private String windowsDomain;
     private String trustStore;
     private String trustStorePassword;
     private String trustAllRoots;
 
-    private OOResultSet resultSetType;
-    private OOResultSet resultSetConcurrency;
+    private String resultSetType;
+    private String resultSetConcurrency;
 
     public SQLInputs() {
     }
@@ -307,19 +307,19 @@ public class SQLInputs {
         this.databasePoolingProperties = databasePoolingProperties;
     }
 
-    public OOResultSet getResultSetType() {
+    public String getResultSetType() {
         return resultSetType;
     }
 
-    public void setResultSetType(OOResultSet resultSetType) {
+    public void setResultSetType(String resultSetType) {
         this.resultSetType = resultSetType;
     }
 
-    public OOResultSet getResultSetConcurrency() {
+    public String getResultSetConcurrency() {
         return resultSetConcurrency;
     }
 
-    public void setResultSetConcurrency(OOResultSet resultSetConcurrency) {
+    public void setResultSetConcurrency(String resultSetConcurrency) {
         this.resultSetConcurrency = resultSetConcurrency;
     }
 

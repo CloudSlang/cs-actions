@@ -16,7 +16,6 @@ import java.net.URI;
  */
 public class Address {
     public final static int PORT_NOT_SET = -1;
-    public final static String INTEGER_PORT = "Port";
     int resolvedPort = PORT_NOT_SET;
     String bareHost; // host, stripped of any trailing colon and port number
     private String hostWithOptionalPort = "";
@@ -63,13 +62,6 @@ public class Address {
             this.inputPort = portFirstOption;
 
         parse();
-    }
-
-    public Address(String hostWithOptionalPort, int portFirstOption, int defaultPort) {
-        this(hostWithOptionalPort, portFirstOption);
-        if (!isPortSet()) {
-            resolvedPort = defaultPort;
-        }
     }
 
     /**
