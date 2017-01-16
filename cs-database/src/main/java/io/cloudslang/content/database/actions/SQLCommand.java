@@ -58,10 +58,10 @@ public class SQLCommand {
                                        @Param(value = "trustAllRoots") String trustAllRoots,
                                        @Param(value = "trustStore") String trustStore,
                                        @Param(value = "trustStorePassword") String trustStorePassword,
-                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties
+                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties)
                                        // @Param(value = "resultSetType") String resultSetType,
-                                       //@Param(value = "resultSetConcurrency") String resultSetConcurrency,
-    ) {
+                                       //@Param(value = "resultSetConcurrency") String resultSetConcurrency,)
+                                       {
         Map<String, String> inputParameters = SQLCommandUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,
@@ -97,7 +97,7 @@ public class SQLCommand {
                 }
                 res = "Command completed successfully";
             } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() != -1) {
-                StringBuilder stringBuilder = new StringBuilder();
+                final StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append(String.valueOf(sqlInputs.getiUpdateCount()));
                 stringBuilder.append(" row(s) affected");
                 outputText += stringBuilder.toString();

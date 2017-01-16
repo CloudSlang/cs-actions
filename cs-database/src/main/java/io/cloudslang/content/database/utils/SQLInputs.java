@@ -44,9 +44,9 @@ public class SQLInputs {
     protected String trimRowstat = "true";
     protected boolean isNetcool = false; // needs to be visible for SQLQueryTabular to do check
     protected List<String> lFiles = null;
-    protected List<ArrayList<String>> lRowsFiles = new ArrayList<ArrayList<String>>();
+    protected List<ArrayList<String>> lRowsFiles = new ArrayList<>();
     protected List<String> lNames = null;
-    protected List<ArrayList<String>> lRowsNames = new ArrayList<ArrayList<String>>();
+    protected List<ArrayList<String>> lRowsNames = new ArrayList<>();
     protected long skip = 0L;
     private String strDelim;
     private String strColumns;
@@ -54,7 +54,6 @@ public class SQLInputs {
     private int iQuerys;
     private int iUpdateCount;
     private Connection connection;
-    private Statement stmt;
     private Properties databasePoolingProperties = null;
     private String windowsDomain;
     private String trustStore;
@@ -63,6 +62,9 @@ public class SQLInputs {
 
     private OOResultSet resultSetType;
     private OOResultSet resultSetConcurrency;
+
+    public SQLInputs() {
+    }
 
     public String getStrDelim() {
         return strDelim;
@@ -366,14 +368,6 @@ public class SQLInputs {
 
     public void setResultSetConcurrency(OOResultSet resultSetConcurrency) {
         this.resultSetConcurrency = resultSetConcurrency;
-    }
-
-    public Statement getStmt() {
-        return stmt;
-    }
-
-    public void setStmt(Statement stmt) {
-        this.stmt = stmt;
     }
 
     public String getWindowsDomain() {
