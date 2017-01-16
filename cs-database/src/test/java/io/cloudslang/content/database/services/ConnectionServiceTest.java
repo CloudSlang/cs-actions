@@ -96,13 +96,13 @@ public class ConnectionServiceTest {
     public void testSetUpConnectionMSSql() throws Exception {
         sqlInputs.setDbClass(SQLSERVER_JDBC_DRIVER);
         sqlInputs.setDbType(Constants.MSSQL_DB_TYPE);
-        sqlInputs.setDbPort("1443");
+        sqlInputs.setDbPort("1433");
         sqlInputs.setDbServer("dbServer");
         sqlInputs.setAuthenticationType(Constants.AUTH_WINDOWS);
         sqlInputs.setDbName("dbName");
         sqlInputs.setInstance("instance");
         sqlInputs.setTrustAllRoots("True");
-        assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1443;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true");
+        assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true");
     }
 
     @Test

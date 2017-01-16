@@ -31,7 +31,7 @@ public class MSSqlDatabaseTest {
     public static final String DB_SERVER = "dbServer";
     public static final String INSTANCE = "instance";
     public static final String DB_SERVER_WITH_INSTANCE = DB_SERVER + Constants.ESCAPED_BACKSLASH + INSTANCE;
-    public static final String DB_PORT = "1443";
+    public static final String DB_PORT = "1433";
     public static final String DB_SERVER_IPV6_LITERAL = "2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net";
     public static final String AUTH_TYPE = "authType";
     public static final String INVALID_AUTH_TYPE = "invalidAuthType";
@@ -59,7 +59,7 @@ public class MSSqlDatabaseTest {
     public void testSetUpNoDbName() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
         mSSqlDatabase.setUp("", DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
-        assertEquals("jdbc:sqlserver://dbServer:1443;DatabaseName=;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
+        assertEquals("jdbc:sqlserver://dbServer:1433;DatabaseName=;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 
@@ -91,7 +91,7 @@ public class MSSqlDatabaseTest {
     public void testSetUpAllAuthWindows() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
         mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
-        assertEquals("jdbc:sqlserver://dbServer:1443;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
+        assertEquals("jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 
@@ -99,7 +99,7 @@ public class MSSqlDatabaseTest {
     public void testSetUpAllAuthSQL() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
         mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
-        assertEquals("jdbc:sqlserver://dbServer:1443;DatabaseName=dbName;instance=instance;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
+        assertEquals("jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 
@@ -107,7 +107,7 @@ public class MSSqlDatabaseTest {
     public void testSetUpAllIPV6LIteral() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
         mSSqlDatabase.setUp(DB_NAME, DB_SERVER_IPV6_LITERAL, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
-        assertEquals("jdbc:sqlserver://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:1443;DatabaseName=dbName;instance=instance;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
+        assertEquals("jdbc:sqlserver://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:1433;DatabaseName=dbName;instance=instance;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 
@@ -115,7 +115,7 @@ public class MSSqlDatabaseTest {
     public void testSetUpAllAuthWindowsAndHostWithInstance() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
         mSSqlDatabase.setUp(DB_NAME, DB_SERVER_WITH_INSTANCE, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
-        assertEquals("jdbc:sqlserver://dbServer:1443;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
+        assertEquals("jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 
@@ -123,7 +123,7 @@ public class MSSqlDatabaseTest {
     public void testSetUpAllAuthWindowsAndHostWithNoInstance() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
         mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_WINDOWS, null, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
-        assertEquals("jdbc:sqlserver://dbServer:1443;DatabaseName=dbName;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
+        assertEquals("jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;integratedSecurity=true;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 }
