@@ -210,7 +210,7 @@ public class SQLQuery {
                     result.put("sqlQuery", sqlCommand);
                     result.put("returnCode", "1");
                 }
-                result.put("queryCount", String.valueOf(sqlInputs.getiQuerys()));
+//                result.put("queryCount", String.valueOf(sqlInputs.getiQuerys()));
             }
         } catch (Exception e) {
             if (e instanceof SQLException)

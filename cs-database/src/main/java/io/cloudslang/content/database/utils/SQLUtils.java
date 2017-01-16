@@ -21,8 +21,6 @@ import java.sql.SQLException;
  * Created by victor on 13.01.2017.
  */
 public class SQLUtils {
-//
-//    protected static final Log logger = LogFactory.getLog(SQLUtils.class);
 
     public static void processHostorTNS(String dbType, String dbServer, String tnsEntry) throws Exception {
         if (dbType == null) {
@@ -109,80 +107,6 @@ public class SQLUtils {
         return curr;
     }
 
-    /*
-        public static Map getParameters() {
-            Map parameters = new Map();
-
-            RASBinding arg0 = RASBindingFactory.createPromptBinding("HostName:", true, false);
-            arg0.assignFrom = false;
-            arg0.assignTo = false;
-
-            RASBinding arg1 = RASBindingFactory.createPromptBinding("DBPort:", true, false);
-            arg1.assignFrom = false;
-            arg1.assignTo = false;
-
-            RASBinding arg2 = RASBindingFactory.createPromptBinding("Database Name:", true, false);
-            arg2.assignFrom = false;
-            arg2.assignTo = false;
-
-            RASBinding arg3 = RASBindingFactory.createPromptBinding("UserName:");
-            arg3.assignFrom = false;
-            arg3.assignTo = false;
-
-            RASBinding arg4 = RASBindingFactory.createPromptBinding("Password:", false, true);
-            arg4.assignFrom = false;
-            arg4.assignTo = false;
-
-            RASBinding arg5 = RASBindingFactory.createPromptBinding("SQL Command:", true);
-            arg5.assignFrom = false;
-            arg5.assignTo = false;
-
-            RASBinding arg6 = RASBindingFactory.createPromptBinding("DBType:", true);
-            arg6.assignFrom = false;
-            arg6.assignTo = false;
-
-            RASBinding arg7 = RASBindingFactory.createPromptBinding("Authentication Type:", false);
-            arg7.assignFrom = false;
-            arg7.assignTo = false;
-
-            RASBinding arg8 = RASBindingFactory.createPromptBinding("dbClass:", false);
-            arg8.assignFrom = false;
-            arg8.assignTo = false;
-
-            RASBinding arg9 = RASBindingFactory.createPromptBinding("dbURL:", false);
-            arg9.assignFrom = false;
-            arg9.assignTo = false;
-
-            parameters.add(Constants.DBSERVERNAME, arg0);
-            parameters.add(Constants.DBTYPE, arg6);
-            parameters.add(Constants.DBPORT, arg1);
-            parameters.add(Constants.DATABASENAME, arg2);
-            parameters.add(Constants.COMMAND, arg5);
-            parameters.add(Constants.USERNAME, arg3);
-            parameters.add(Constants.PASSWORD, arg4);
-            parameters.add(Constants.AUTH_TYPE, arg7);
-            parameters.add(Constants.CUSTOM_DB_CLASS, arg8);
-            parameters.add(Constants.DBURL, arg9);
-
-            //add "instance" and "timeout" inputs in operation
-
-            return parameters;
-        }
-
-        public static Map getResultFields() {
-            Map resultFields = new Map();
-            resultFields.add(Constants.RETURNRESULT, "");
-            resultFields.add("queryCount", "");
-            return resultFields;
-        }
-
-        public static Map getResponses() {
-            Map parameters = new Map();
-            parameters.add(Constants.RESPONSEPASSED, String.valueOf(Constants.PASSED));
-            parameters.add(Constants.RESPONSEFAILED, String.valueOf(Constants.FAILED));
-            return parameters;
-        }
-    */
     //compute session id for JDBC operations
     public static String computeSessionId(String aString) {
         if (aString != null) {
@@ -252,10 +176,4 @@ public class SQLUtils {
         }
         throw e;
     }
-/*
-    public static String getActionDescription(String operationName) {
-        return PropsLoader.ACTIONDESCRIPTIONS.getProperty(operationName);
-    }
-    */
-
 }

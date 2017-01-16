@@ -9,8 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -19,41 +17,36 @@ import java.util.Properties;
  * Created by victor on 13.01.2017.
  */
 public class SQLInputs {
-    protected String sqlCommand;
-    protected String dbServer;
-    protected String dbName;
-    protected String dbPort;
-    protected String dbType;
-    protected String tnsPath;
-    protected String tnsEntry;
-    protected String key;
-    protected String strKey;
-    protected String strKeyCol;
-    protected String strKeyFiles;
-    protected String strKeyNames;
-    protected String strKeySkip;
-    protected String username;
-    protected String password;
-    protected String authenticationType;
-    protected String instance;
-    protected String ignoreCase;
-    protected int timeout;
-    protected String dbUrl;  //the final dbUrl that was used to connect to the database
-    protected List<String> dbUrls = null; //a list of dbUrls that are used to try to connect to the database
-    protected String dbClass;
-    protected String trimRowstat = "true";
-    protected boolean isNetcool = false; // needs to be visible for SQLQueryTabular to do check
-    protected List<String> lFiles = null;
-    protected List<ArrayList<String>> lRowsFiles = new ArrayList<>();
-    protected List<String> lNames = null;
-    protected List<ArrayList<String>> lRowsNames = new ArrayList<>();
-    protected long skip = 0L;
+    private String sqlCommand;
+    private String dbServer;
+    private String dbName;
+    private String dbPort;
+    private String dbType;
+    private String tnsPath;
+    private String tnsEntry;
+    private String key;
+    private String strKeyCol;
+    private String strKeyFiles;
+    private String strKeyNames;
+    private String strKeySkip;
+    private String username;
+    private String password;
+    private String authenticationType;
+    private String instance;
+    private String ignoreCase;
+    private int timeout;
+    private String dbUrl;  //the final dbUrl that was used to connect to the database
+    private List<String> dbUrls = null; //a list of dbUrls that are used to try to connect to the database
+    private String dbClass;
+    private String trimRowstat = "true";
+    private boolean isNetcool = false; // needs to be visible for SQLQueryTabular to do check
+    private List<ArrayList<String>> lRowsFiles = new ArrayList<>();
+    private List<ArrayList<String>> lRowsNames = new ArrayList<>();
+    private long skip = 0L;
     private String strDelim;
     private String strColumns;
     private ArrayList<String> lRows;
-    private int iQuerys;
     private int iUpdateCount;
-    private Connection connection;
     private Properties databasePoolingProperties = null;
     private String windowsDomain;
     private String trustStore;
@@ -88,14 +81,6 @@ public class SQLInputs {
 
     public void setlRows(ArrayList<String> lRows) {
         this.lRows = lRows;
-    }
-
-    public int getiQuerys() {
-        return iQuerys;
-    }
-
-    public void setiQuerys(int iQuerys) {
-        this.iQuerys = iQuerys;
     }
 
     public String getIgnoreCase() {
@@ -176,14 +161,6 @@ public class SQLInputs {
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public String getStrKey() {
-        return strKey;
-    }
-
-    public void setStrKey(String strKey) {
-        this.strKey = strKey;
     }
 
     public String getStrKeyCol() {
@@ -298,28 +275,12 @@ public class SQLInputs {
         this.isNetcool = isNetcool;
     }
 
-    public List<String> getlFiles() {
-        return lFiles;
-    }
-
-    public void setlFiles(List<String> lFiles) {
-        this.lFiles = lFiles;
-    }
-
     public List<ArrayList<String>> getlRowsFiles() {
         return lRowsFiles;
     }
 
     public void setlRowsFiles(List<ArrayList<String>> lRowsFiles) {
         this.lRowsFiles = lRowsFiles;
-    }
-
-    public List<String> getlNames() {
-        return lNames;
-    }
-
-    public void setlNames(List<String> lNames) {
-        this.lNames = lNames;
     }
 
     public List<ArrayList<String>> getlRowsNames() {
@@ -336,14 +297,6 @@ public class SQLInputs {
 
     public void setSkip(long skip) {
         this.skip = skip;
-    }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
     }
 
     public Properties getDatabasePoolingProperties() {

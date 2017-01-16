@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class SQLQueryLOB {
 
-    private int iQueryCount = 0;
+//    private int iQueryCount = 0;
 
     @Action(name = "SQL Query LOB",
             outputs = {
@@ -225,7 +225,7 @@ public class SQLQueryLOB {
                 boolean isLOB = sqlQueryLobService.executeSqlQueryLob(sqlInputs);
 
                 if (!sqlInputs.getlRows().isEmpty()) {
-                    result.put(Constants.RETURNRESULT, (String) sqlInputs.getlRows().get(0));
+                    result.put(Constants.RETURNRESULT, sqlInputs.getlRows().get(0));
                     sqlInputs.getlRows().remove(0);
                     result.put("rowsLeft", "" + sqlInputs.getlRows().size());
                     result.put("columnNames", sqlInputs.getStrColumns());
@@ -248,8 +248,8 @@ public class SQLQueryLOB {
                     result.put("SQLQuery", sqlInputs.getSqlCommand());
                     result.put("returnCode", "1");
                 }
-                iQueryCount = sqlInputs.getiQuerys();
-                result.put("queryCount", String.valueOf(iQueryCount));
+//                iQueryCount = sqlInputs.getiQuerys();
+//                result.put("queryCount", String.valueOf(iQueryCount));
             }
         } catch (Exception e) {
             if (e instanceof SQLException)
@@ -261,7 +261,7 @@ public class SQLQueryLOB {
             result.put("returnCode", "-1");
         }
 
-        result.put("queryCount", String.valueOf(iQueryCount));
+//        result.put("queryCount", String.valueOf(iQueryCount));
         return result;
     }
 }

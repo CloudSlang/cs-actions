@@ -288,7 +288,6 @@ public class InputsProcessor {
             sqlInputs.setStrDelim(",");
             sqlInputs.setStrColumns("");
             sqlInputs.setlRows(new ArrayList<String>());
-            sqlInputs.setiQuerys(0);
             sqlInputs.setiUpdateCount(0);
             sqlInputs.setSqlCommand(null);
             sqlInputs.setDbServer(null);
@@ -297,7 +296,6 @@ public class InputsProcessor {
             sqlInputs.setDbType(null);
             sqlInputs.setTnsPath(null);
             sqlInputs.setTnsEntry(null);
-            sqlInputs.setStrKey(null);
             sqlInputs.setStrKeyCol(null);
             sqlInputs.setStrKeyFiles(null);
             sqlInputs.setStrKeyNames(null);
@@ -310,12 +308,9 @@ public class InputsProcessor {
             sqlInputs.setDbClass(null);
             sqlInputs.setTrimRowstat("true");
             sqlInputs.setNetcool(false);
-            sqlInputs.setlFiles(null);
             sqlInputs.setlRowsFiles(new ArrayList<ArrayList<String>>());
             sqlInputs.setlRowsNames(new ArrayList<ArrayList<String>>());
-            sqlInputs.setlNames(null);
             sqlInputs.setSkip(0L);
-            sqlInputs.setConnection(null);
             sqlInputs.setInstance(null);
             sqlInputs.setTimeout(0);
             sqlInputs.setKey(null);
