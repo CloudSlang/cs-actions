@@ -34,44 +34,50 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.database.utils.Constants.RESULT_SET_CONCURRENCY;
-import static io.cloudslang.content.database.utils.Constants.RESULT_SET_TYPE;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.database.constants.DBInputNames.*;
 
 /**
  * Created by pinteae on 1/11/2017.
  */
 public class SQLScript {
+
+    public static final String SQL_COMMANDS = "sqlCommands";
+
     @Action(name = "SQL Command",
             outputs = {
-                    @Output(OutputNames.RETURN_CODE),
+                    @Output(RETURN_CODE),
                     @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.EXCEPTION)
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE,
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> execute(@Param(value = "dbServerName", required = true) String dbServerName,
-                                       @Param(value = "dbType") String dbType,
-                                       @Param(value = "username", required = true) String username,
-                                       @Param(value = "password", required = true, encrypted = true) String password,
-                                       @Param(value = "instance") String instance,
-                                       @Param(value = "DBPort") String dbPort,
-                                       @Param(value = "database", required = true) String database,
-                                       @Param(value = "authenticationType") String authenticationType,
-                                       @Param(value = "dbClass") String dbClass,
-                                       @Param(value = "dbURL") String dbURL,
-                                       @Param(value = "sqlCommands", required = true) String sqlCommands,
-                                       @Param(value = "Delimiter", required = true) String delimiter,
-                                       @Param(value = "scriptFileName", required = true) String scriptFileName,
-                                       @Param(value = "trustAllRoots") String trustAllRoots,
-                                       @Param(value = "trustStore") String trustStore,
-                                       @Param(value = "trustStorePassword") String trustStorePassword,
-                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties,
-                                       @Param(value = "resultSetType") String resultSetType,
-                                       @Param(value = "resultSetConcurrency") String resultSetConcurrency) {
+    public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
+                                       @Param(value = DB_TYPE) String dbType,
+                                       @Param(value = USERNAME, required = true) String username,
+                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
+                                       @Param(value = INSTANCE) String instance,
+                                       @Param(value = DB_PORT) String dbPort,
+                                       @Param(value = DATABASE, required = true) String database,
+                                       @Param(value = AUTHENTICATION_TYPE) String authenticationType,
+                                       @Param(value = DB_CLASS) String dbClass,
+                                       @Param(value = DB_URL) String dbURL,
+                                       @Param(value = SQL_COMMANDS, required = true) String sqlCommands,
+                                       @Param(value = DELIMITER, required = true) String delimiter,
+                                       @Param(value = SCRIPT_FILE_NAME, required = true) String scriptFileName,
+                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(value = TRUST_STORE) String trustStore,
+                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
+                                       @Param(value = RESULT_SET_TYPE) String resultSetType,
+                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
         Map<String, String> inputParameters = SQLScriptUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,
@@ -118,17 +124,17 @@ public class SQLScript {
                 res = sqlScriptService.executeSqlScript(commands, sqlInputs);
                 result.put("updateCount", String.valueOf(sqlInputs.getiUpdateCount()));
                 result.put(Constants.RETURNRESULT, res);
-                result.put("returnCode", "0");
+                result.put(RETURN_CODE, SUCCESS);
             }
         } catch (Exception e) {
             if (e instanceof SQLException) {
-                result.put("exception", SQLUtils.toString((SQLException) e));
+                result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
             } else {
-//         todo       result.put("exception", StringUtils.toString(e));
+//         todo       result.put(EXCEPTION, StringUtils.toString(e));
             }
 
             result.put(Constants.RETURNRESULT, e.getMessage());
-            result.put("returnCode", "-1");
+            result.put(RETURN_CODE, FAILURE);
         }
         return result;
     }

@@ -19,6 +19,8 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.database.constants.DBOutputNames;
+import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryLobService;
 import io.cloudslang.content.database.utils.*;
 import io.cloudslang.content.database.utils.other.SQLQueryLOBUtil;
@@ -31,8 +33,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.database.utils.Constants.RESULT_SET_CONCURRENCY;
-import static io.cloudslang.content.database.utils.Constants.RESULT_SET_TYPE;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.database.constants.DBInputNames.*;
+import static io.cloudslang.content.database.constants.DBOtherValues.ZERO;
+import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
+import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
+import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
+
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -43,39 +53,39 @@ public class SQLQueryLOB {
 
     @Action(name = "SQL Query LOB",
             outputs = {
-                    @Output(OutputNames.RETURN_CODE),
+                    @Output(RETURN_CODE),
                     @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.EXCEPTION),
-                    @Output("rowsLeft")
+                    @Output(EXCEPTION),
+                    @Output(ROWS_LEFT)
             },
             responses = {
-                    @Response(text = "has more", field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
+                    @Response(text = HAS_MORE, field = RETURN_CODE, value = SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = "no more", field = OutputNames.RETURN_CODE, value = "1",
+                    @Response(text = NO_MORE, field = RETURN_CODE, value = DBReturnCodes.NO_MORE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE,
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> execute(@Param(value = "dbServerName", required = true) String dbServerName,
-                                       @Param(value = "dbType") String dbType,
-                                       @Param(value = "username", required = true) String username,
-                                       @Param(value = "password", required = true, encrypted = true) String password,
-                                       @Param(value = "instance") String instance,
-                                       @Param(value = "DBPort") String dbPort,
-                                       @Param(value = "database", required = true) String database,
-                                       @Param(value = "authenticationType") String authenticationType,
-                                       @Param(value = "dbClass") String dbClass,
-                                       @Param(value = "dbURL") String dbURL,
-                                       @Param(value = "command", required = true) String command,
-                                       @Param(value = "trustAllRoots") String trustAllRoots,
-                                       @Param(value = "trustStore") String trustStore,
-                                       @Param(value = "trustStorePassword") String trustStorePassword,
-                                       @Param(value = "delimiter", required = true) String delimiter,
-                                       @Param(value = "key", required = true) String key,
-                                       @Param(value = "timeout") String timeout,
-                                       @Param(value = "databasePoolingProperties") String databasePoolingProperties,
-                                       @Param(value = "resultSetType") String resultSetType,
-                                       @Param(value = "resultSetConcurrency") String resultSetConcurrency,
+    public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
+                                       @Param(value = DB_TYPE) String dbType,
+                                       @Param(value = USERNAME, required = true) String username,
+                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
+                                       @Param(value = INSTANCE) String instance,
+                                       @Param(value = DB_PORT) String dbPort,
+                                       @Param(value = DATABASE, required = true) String database,
+                                       @Param(value = AUTHENTICATION_TYPE) String authenticationType,
+                                       @Param(value = DB_CLASS) String dbClass,
+                                       @Param(value = DB_URL) String dbURL,
+                                       @Param(value = COMMAND, required = true) String command,
+                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(value = TRUST_STORE) String trustStore,
+                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = DELIMITER, required = true) String delimiter,
+                                       @Param(value = KEY, required = true) String key,
+                                       @Param(value = TIMEOUT) String timeout,
+                                       @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
+                                       @Param(value = RESULT_SET_TYPE) String resultSetType,
+                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
                                        GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         Map<String, String> inputParameters = SQLQueryLOBUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -152,15 +162,15 @@ public class SQLQueryLOB {
 
                     globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
 
-                    result.put(Constants.RETURNRESULT, "no more");
-                    result.put("rowsLeft", "0");
-                    result.put("returnCode", "1");
+                    result.put(Constants.RETURNRESULT, NO_MORE);
+                    result.put(ROWS_LEFT, ZERO);
+                    result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
                 } else if (sqlInputs.getlRowsFiles() == null || sqlInputs.getlRowsFiles().isEmpty() || (sqlInputs.getlRows().size() == sqlInputs.getlRowsFiles().size())) {
                     result.put(Constants.RETURNRESULT, (String) sqlInputs.getlRows().get(0));
                     sqlInputs.getlRows().remove(0);
                     result.put("columnNames", sqlInputs.getStrColumns());
-                    result.put("rowsLeft", "" + sqlInputs.getlRows().size());
-                    result.put("returnCode", "0");
+                    result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
+                    result.put(RETURN_CODE, SUCCESS);
                     sqlConnectionMap.put(aKey, sqlInputs.getlRows());
                     globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
                 } else {
@@ -206,8 +216,8 @@ public class SQLQueryLOB {
 
                         result.put(Constants.RETURNRESULT, resultStr);
                         result.put("columnNames", colName);
-                        result.put("rowsLeft", "" + sqlInputs.getlRows().size());
-                        result.put("returnCode", "0");
+                        result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
+                        result.put(RETURN_CODE, SUCCESS);
                         sqlConnectionMap.put(sqlInputs.getStrKeyFiles(), sqlInputs.getlRowsFiles());
                         sqlConnectionMap.put(sqlInputs.getStrKeyNames(), sqlInputs.getlRowsNames());
                         sqlConnectionMap.put(sqlInputs.getStrKeySkip(), sqlInputs.getSkip());
@@ -215,10 +225,10 @@ public class SQLQueryLOB {
                         globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
 
                     } catch (IOException e) {
-//                   todo     result.put("exception", StringUtils.toString(e));
-                        result.put("rowsLeft", "0");
+//                   todo     result.put(EXCEPTION, StringUtils.toString(e));
+                        result.put(ROWS_LEFT, ZERO);
                         result.put(Constants.RETURNRESULT, e.getMessage());
-                        result.put("returnCode", "-1");
+                        result.put(RETURN_CODE, FAILURE);
                     }
                 }
 
@@ -233,9 +243,9 @@ public class SQLQueryLOB {
                 if (!sqlInputs.getlRows().isEmpty()) {
                     result.put(Constants.RETURNRESULT, sqlInputs.getlRows().get(0));
                     sqlInputs.getlRows().remove(0);
-                    result.put("rowsLeft", "" + sqlInputs.getlRows().size());
+                    result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
                     result.put("columnNames", sqlInputs.getStrColumns());
-                    result.put("returnCode", "0");
+                    result.put(RETURN_CODE, SUCCESS);
                     sqlConnectionMap.put(aKey, sqlInputs.getlRows());
                     sqlConnectionMap.put(sqlInputs.getStrKeyCol(), sqlInputs.getStrColumns());
 
@@ -250,21 +260,21 @@ public class SQLQueryLOB {
                     }
                 } else {
                     result.put(Constants.RETURNRESULT, "no rows selected");
-                    result.put("rowsLeft", "0");
+                    result.put(ROWS_LEFT, ZERO);
                     result.put("SQLQuery", sqlInputs.getSqlCommand());
-                    result.put("returnCode", "1");
+                    result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
                 }
 //                iQueryCount = sqlInputs.getiQuerys();
 //                result.put("queryCount", String.valueOf(iQueryCount));
             }
         } catch (Exception e) {
             if (e instanceof SQLException)
-                result.put("exception", SQLUtils.toString((SQLException) e));
+                result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
             else
-//            todo    result.put("exception", StringUtils.toString(e));
-                result.put("rowsLeft", "0");
+//            todo    result.put(EXCEPTION, StringUtils.toString(e));
+                result.put(ROWS_LEFT, ZERO);
             result.put(Constants.RETURNRESULT, e.getMessage());
-            result.put("returnCode", "-1");
+            result.put(RETURN_CODE, FAILURE);
         }
 
 //        result.put("queryCount", String.valueOf(iQueryCount));
