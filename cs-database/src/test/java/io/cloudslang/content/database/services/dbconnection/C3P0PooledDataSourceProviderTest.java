@@ -21,6 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+import static io.cloudslang.content.database.constants.DBInputNames.USERNAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
@@ -65,7 +66,7 @@ public class C3P0PooledDataSourceProviderTest {
                 , any(DataSource.class), anyMap());
 
         assertEquals(retPooledDSMock, provider.openPooledDataSource(DBConnectionManager.DBType.MYSQL
-                , "url", "username", "password"));
+                , "url", USERNAME, "password"));
         //Call PowerMockito.verifyStatic() to start verifying behavior
         PowerMockito.verifyStatic();
         //Use EasyMock-like semantic to verify behavior:
