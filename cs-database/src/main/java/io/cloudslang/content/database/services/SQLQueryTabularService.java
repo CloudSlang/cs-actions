@@ -36,13 +36,11 @@ public class SQLQueryTabularService {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }
-        Connection connection = null;
         ConnectionService connectionService = new ConnectionService();
-        try {
-            connection = connectionService.setUpConnection(sqlInputs);
+        try (Connection connection = connectionService.setUpConnection(sqlInputs);){
             connection.setReadOnly(true);
 
-            Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
+            Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
 
             statement.setQueryTimeout(sqlInputs.getTimeout());
             final ResultSet resultSet = statement.executeQuery(sqlInputs.getSqlCommand());
@@ -52,8 +50,6 @@ public class SQLQueryTabularService {
                 resultSet.close();
             }
             return resultSetToTable;
-        } finally {
-            connectionService.closeConnection(connection);
         }
     }
 }

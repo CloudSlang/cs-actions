@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_VALUES;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
 import static io.cloudslang.content.database.utils.Constants.*;
 
 /**
@@ -33,15 +35,19 @@ public class InputsProcessor {
         String resultSetConcurrencyParameter = parameters.get(RESULT_SET_CONCURRENCY);
 
         if (StringUtils.isNoneEmpty(resultSetTypeParameter)) {
-            resultSetType = transformResultSetType(resultSetTypeParameter);
+            if (TYPE_VALUES.containsKey(resultSetTypeParameter)) {
+                resultSetType = resultSetTypeParameter;
+            }
         }
 
         if (StringUtils.isNoneEmpty(resultSetConcurrencyParameter)) {
-            resultSetConcurrency = transformResultSetConcurrency(resultSetConcurrencyParameter);
+            if (CONCUR_VALUES.containsKey(resultSetConcurrencyParameter)) {
+                resultSetConcurrency = resultSetConcurrencyParameter;
+            }
         }
 
-        sqlInputs.setResultSetType(resultSetType);
-        sqlInputs.setResultSetConcurrency(resultSetConcurrency);
+        sqlInputs.setResultSetType(TYPE_VALUES.get(resultSetType));
+        sqlInputs.setResultSetConcurrency(CONCUR_VALUES.get(resultSetConcurrency));
 
         //ignore case
         String ignoreCase = parameters.get(IGNORE_CASE);
@@ -203,37 +209,37 @@ public class InputsProcessor {
         return sqlInputs;
     }
 
-    /**
-     * @param resultSetTypeParameter This is a required input. If this is empty an exception is thrown.
-     * @return
-     */
-    private static String transformResultSetType(String resultSetTypeParameter) throws SQLException {
-        if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_FORWARD_ONLY.toString())) {
-            return OOResultSet.TYPE_FORWARD_ONLY.toString();
-        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString())) {
-            return OOResultSet.TYPE_SCROLL_INSENSITIVE.toString();
-        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_SENSITIVE.toString())) {
-            return OOResultSet.TYPE_SCROLL_SENSITIVE.toString();
-        }
-        throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetTypeParameter are: "
-                + OOResultSet.TYPE_FORWARD_ONLY.toString() + ", " + OOResultSet.TYPE_SCROLL_INSENSITIVE.toString() +
-                " and " + OOResultSet.TYPE_SCROLL_SENSITIVE.toString());
+//    /** //todo look in exception
+//     * @param resultSetTypeParameter This is a required input. If this is empty an exception is thrown.
+//     * @return
+//     */
+//    private static String transformResultSetType(String resultSetTypeParameter) throws SQLException {
+//        if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_FORWARD_ONLY.toString())) {
+//            return OOResultSet.TYPE_FORWARD_ONLY.toString();
+//        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString())) {
+//            return OOResultSet.TYPE_SCROLL_INSENSITIVE.toString();
+//        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_SENSITIVE.toString())) {
+//            return OOResultSet.TYPE_SCROLL_SENSITIVE.toString();
+//        }
+//        throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetTypeParameter are: "
+//                + OOResultSet.TYPE_FORWARD_ONLY.toString() + ", " + OOResultSet.TYPE_SCROLL_INSENSITIVE.toString() +
+//                " and " + OOResultSet.TYPE_SCROLL_SENSITIVE.toString());
+//
+//    }
 
-    }
-
-    /**
-     * @param resultSetConcurrency This is a required input. If this is empty an exception is thrown.
-     * @return
-     */
-    private static String transformResultSetConcurrency(String resultSetConcurrency) throws SQLException {
-        if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_READ_ONLY.toString())) {
-            return OOResultSet.CONCUR_READ_ONLY.toString();
-        } else if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_UPDATABLE.toString())) {
-            return OOResultSet.CONCUR_UPDATABLE.toString();
-        }
-        throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetConcurrency are: "
-                + OOResultSet.CONCUR_READ_ONLY.toString() + " and " + OOResultSet.CONCUR_UPDATABLE.toString());
-    }
+//    /**
+//     * @param resultSetConcurrency This is a required input. If this is empty an exception is thrown.
+//     * @return
+//     */
+//    private static String transformResultSetConcurrency(String resultSetConcurrency) throws SQLException {
+//        if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_READ_ONLY.toString())) {
+//            return OOResultSet.CONCUR_READ_ONLY.toString();
+//        } else if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_UPDATABLE.toString())) {
+//            return OOResultSet.CONCUR_UPDATABLE.toString();
+//        }
+//        throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetConcurrency are: "
+//                + OOResultSet.CONCUR_READ_ONLY.toString() + " and " + OOResultSet.CONCUR_UPDATABLE.toString());
+//    }
 
     private static void processDefaultValues(SQLInputs sqlInputs, String dbType, String authenticationType, String username) throws Exception {
         String dbPort = "";
@@ -308,15 +314,15 @@ public class InputsProcessor {
             sqlInputs.setDbClass(null);
             sqlInputs.setTrimRowstat("true");
             sqlInputs.setNetcool(false);
-            sqlInputs.setlRowsFiles(new ArrayList<ArrayList<String>>());
-            sqlInputs.setlRowsNames(new ArrayList<ArrayList<String>>());
+            sqlInputs.setlRowsFiles(new ArrayList<List<String>>());
+            sqlInputs.setlRowsNames(new ArrayList<List<String>>());
             sqlInputs.setSkip(0L);
             sqlInputs.setInstance(null);
             sqlInputs.setTimeout(0);
             sqlInputs.setKey(null);
             sqlInputs.setIgnoreCase(null);
-            sqlInputs.setResultSetConcurrency(OOResultSet.NO_RESULT_SET.toString());
-            sqlInputs.setResultSetType(OOResultSet.NO_RESULT_SET.toString());
+            sqlInputs.setResultSetConcurrency(-1000000);
+            sqlInputs.setResultSetType(-1000000);
             sqlInputs.setWindowsDomain(null);
             sqlInputs.setTrustAllRoots("false");
             sqlInputs.setTrustStore("");

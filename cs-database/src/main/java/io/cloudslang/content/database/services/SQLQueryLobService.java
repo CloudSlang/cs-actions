@@ -20,8 +20,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
-
 /**
  * Created by victor on 13.01.2017.
  */
@@ -34,14 +32,12 @@ public class SQLQueryLobService {
         }
         boolean isLOB = false;
         ConnectionService connectionService = new ConnectionService();
-        Connection connection = null;
-        try {
+        try (final Connection connection = connectionService.setUpConnection(sqlInputs);) {
 
             String strColumns = sqlInputs.getStrColumns();
 
-            connection = connectionService.setUpConnection(sqlInputs);
             connection.setReadOnly(true);
-            Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
+            Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
             statement.setQueryTimeout(sqlInputs.getTimeout());
 
             ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
@@ -98,8 +94,6 @@ public class SQLQueryLobService {
                 }
                 sqlInputs.getlRows().add(strRowHolder);
             }
-        } finally {
-            connectionService.closeConnection(connection);
         }
 
         return isLOB;

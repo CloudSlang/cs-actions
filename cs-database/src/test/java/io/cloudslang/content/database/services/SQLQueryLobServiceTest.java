@@ -88,7 +88,6 @@ public class SQLQueryLobServiceTest {
 
         assertEquals(false, executeSqlCommand);
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_QUERY);
@@ -106,7 +105,6 @@ public class SQLQueryLobServiceTest {
 
         assertEquals(false, executeSqlCommand);
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_QUERY);

@@ -12,11 +12,7 @@ package io.cloudslang.content.database.utils;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
 import java.security.MessageDigest;
-import java.util.Arrays;
 
 
 /**
@@ -28,27 +24,6 @@ public class TripleDES {
     private static String ENCRYPTION_MODE = "DESede/ECB/PKCS5Padding";
     private static String ENCRYPTION_KEYSPECTYPE = "DESede";
 
-    public static String decryptPassword(String encPass) {
-        try {
-            return decryptString(Base64.decode(encPass));
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public static String createPassword() throws Exception {
-        String input1 = new String(TripleDES.getPassword(System.in, "*Enter password "));
-        String input2 = new String(TripleDES.getPassword(System.in, "Enter password again "));
-        if (!(input1.equals(input2))) {
-            System.out.println("\n\nThe passwords you entered are not the same!\nPlease try again...\n\n");
-            return createPassword();
-        } else {
-            byte[] encString = encryptString(input1.getBytes(DEFAULT_CODEPAGE));
-
-            return Base64.encode(encString);
-        }
-    }
-
     /**
      * encrypt a plain password
      *
@@ -57,13 +32,11 @@ public class TripleDES {
      * @throws Exception
      */
     public static String encryptPassword(String aPlainPass) throws Exception {
-        String retEncryptedPass = null;
         if (aPlainPass == null)
             return "";
         byte[] encBytes = encryptString(aPlainPass.getBytes(DEFAULT_CODEPAGE));
-        retEncryptedPass = Base64.encode(encBytes);
 
-        return retEncryptedPass;
+        return Base64.encode(encBytes);
     }
 
     private static byte[] md5Hash(String toHash) throws Exception {
@@ -80,86 +53,16 @@ public class TripleDES {
         return new SecretKeySpec(TripleDES.md5Hash("NpWsCaJQj1LaXt)YYnzr\\%zP~RydB*3YGutr*@|A\\ckG3\\Yf%k"), ENCRYPTION_KEYSPECTYPE);
     }
 
-    private static String decryptString(byte[] text) throws Exception {
-        SecretKey key = secretKeySpec();
-
-        try {
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_MODE);
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] data = cipher.doFinal(text);
-
-            return new String(data, 0, data.length);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     static byte[] encryptString(byte[] text) throws Exception {
         SecretKey key = secretKeySpec();
 
         try {
             Cipher cipher = Cipher.getInstance(ENCRYPTION_MODE);
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] data = cipher.doFinal(text);
-
-            return data;
+            return cipher.doFinal(text);
         } catch (Exception e) {
             return null;
         }
-    }
-
-    private static final char[] getPassword(InputStream in, String prompt) throws IOException {
-        MaskingThread maskingthread = new MaskingThread(prompt);
-        Thread thread = new Thread(maskingthread);
-        thread.start();
-
-        char[] lineBuffer;
-        char[] buf;
-
-        buf = lineBuffer = new char[128];
-
-        int room = buf.length;
-        int offset = 0;
-        int c;
-
-        loop:
-        while (true) {
-            switch (c = in.read()) {
-                case -1:
-                case '\n':
-                    break loop;
-
-                case '\r':
-                    int c2 = in.read();
-                    if ((c2 != '\n') && (c2 != -1)) {
-                        if (!(in instanceof PushbackInputStream)) {
-                            in = new PushbackInputStream(in);
-                        }
-                        ((PushbackInputStream) in).unread(c2);
-                    } else {
-                        break loop;
-                    }
-
-                default:
-                    if (--room < 0) {
-                        buf = new char[offset + 128];
-                        room = buf.length - offset - 1;
-                        System.arraycopy(lineBuffer, 0, buf, 0, offset);
-                        Arrays.fill(lineBuffer, ' ');
-                        lineBuffer = buf;
-                    }
-                    buf[offset++] = (char) c;
-                    break;
-            }
-        }
-        maskingthread.stopMasking();
-        if (offset == 0) {
-            return null;
-        }
-        char[] ret = new char[offset];
-        System.arraycopy(buf, 0, ret, 0, offset);
-        Arrays.fill(buf, ' ');
-        return ret;
     }
 
 }

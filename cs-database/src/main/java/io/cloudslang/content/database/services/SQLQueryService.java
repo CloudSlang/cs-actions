@@ -30,13 +30,11 @@ public class SQLQueryService {
             throw new Exception("command input is empty.");
         }
         ConnectionService connectionService = new ConnectionService();
-        Connection connection = null;
-        try {
+        try (final Connection connection = connectionService.setUpConnection(sqlInputs);) {
             String strColumns = sqlInputs.getStrColumns();
 
-            connection = connectionService.setUpConnection(sqlInputs);
             connection.setReadOnly(true);
-            Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
+            Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
             statement.setQueryTimeout(sqlInputs.getTimeout());
             final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
 
@@ -67,8 +65,6 @@ public class SQLQueryService {
                 }
                 sqlInputs.getlRows().add(strRowHolder);
             }
-        } finally {
-            connectionService.closeConnection(connection);
         }
     }
 }

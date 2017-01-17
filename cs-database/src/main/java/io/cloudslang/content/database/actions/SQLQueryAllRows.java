@@ -33,6 +33,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
 
 /**
  * Created by pinteae on 1/10/2017.
@@ -94,12 +96,9 @@ public class SQLQueryAllRows {
         inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
         Map<String, String> result = new HashMap<>();
         try {
-            //default values
-//            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
-//            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
             if (Constants.DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                sqlInputs.setResultSetType(OOResultSet.TYPE_FORWARD_ONLY.toString());
+                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
             }
             if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
                 throw new Exception("command input is empty.");

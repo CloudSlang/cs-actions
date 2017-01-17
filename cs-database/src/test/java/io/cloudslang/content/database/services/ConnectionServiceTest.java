@@ -171,14 +171,6 @@ public class ConnectionServiceTest {
         connectionService.setUpConnection(null);
     }
 
-    @Test
-    public void testCloseConnection() throws SQLException {
-        connectionService.closeConnection(connectionMock);
-        connectionService.closeConnection(null);
-
-        Mockito.verify(connectionMock, Mockito.times(1)).close();
-    }
-
     private void checkExpectedSQLException(String message) {
         expectedEx.expect(SQLException.class);
         expectedEx.expectMessage(message);

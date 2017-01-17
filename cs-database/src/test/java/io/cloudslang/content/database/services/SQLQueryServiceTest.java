@@ -12,7 +12,6 @@ package io.cloudslang.content.database.services;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
-import io.cloudslang.content.database.utils.OOResultSet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -88,7 +88,6 @@ public class SQLQueryServiceTest {
         sqlQueryService.executeSqlQuery(sqlInputs);
 
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(SQL_QUERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_QUERY);
@@ -101,14 +100,13 @@ public class SQLQueryServiceTest {
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setSqlCommand(SQL_QUERY);
-        sqlInputs.setResultSetType(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString());
-        sqlInputs.setResultSetConcurrency(OOResultSet.CONCUR_READ_ONLY.toString());
+        sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_SCROLL_INSENSITIVE));
+        sqlInputs.setResultSetConcurrency(CONCUR_VALUES.get(CONCUR_READ_ONLY));
         sqlInputs.setTimeout(SQL_QUERY_TIMEOUT);
 
         sqlQueryService.executeSqlQuery(sqlInputs);
 
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(SQL_QUERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_QUERY);

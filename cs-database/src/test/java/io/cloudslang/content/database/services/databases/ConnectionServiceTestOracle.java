@@ -11,10 +11,13 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.services.ConnectionService;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
-import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
-import org.junit.*;
+import io.cloudslang.content.database.utils.SQLInputs;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -78,7 +81,9 @@ public class ConnectionServiceTestOracle {
 
     @After
     public void tearDown() throws Exception {
-        connectionService.closeConnection(connectionMock);
+        if (connectionMock != null) {
+            connectionMock.close();
+        }
     }
 
     @Test

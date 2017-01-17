@@ -18,7 +18,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
@@ -100,8 +99,6 @@ public class SQLScript {
         Map<String, String> result = new HashMap<>();
 
         try {
-//            OOResultSet resultSetType = OOResultSet.TYPE_SCROLL_INSENSITIVE;
-//            OOResultSet resultSetConcurrency = OOResultSet.CONCUR_READ_ONLY;
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
 
             String commandsDelimiter = StringUtils.isEmpty(sqlInputs.getStrDelim()) ? "--" : sqlInputs.getStrDelim();
@@ -142,14 +139,12 @@ public class SQLScript {
     ArrayList<String> readFromFile(String fileName) throws Exception {
         ArrayList<String> lines = new ArrayList<>();
 
-        DataInputStream in = null;
-        BufferedReader br = null;
-        try {
-            File file = new File(fileName);
-            FileInputStream fstream = new FileInputStream(file);
-            in = new DataInputStream(fstream);
-            final InputStreamReader inputStreamReader = new InputStreamReader(in);
-            br = new BufferedReader(inputStreamReader);
+
+        try (final FileInputStream fstream = new FileInputStream(new File(fileName));
+             final DataInputStream in = new DataInputStream(fstream);
+             final InputStreamReader inputStreamReader = new InputStreamReader(in);
+             final BufferedReader br = new BufferedReader(inputStreamReader)) {
+
             String strLine = "";
             String aString = "";
             int i = 0;
@@ -218,11 +213,6 @@ public class SQLScript {
                     i++;
                 }
             }
-        } finally {
-            if (in != null)
-                in.close();
-            if (br != null)
-                br.close();
         }
         return lines;
     }

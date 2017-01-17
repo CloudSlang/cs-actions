@@ -12,7 +12,7 @@ package io.cloudslang.content.database.utils;
 /**
  * Created by victor on 13.01.2017.
  */
-class MaskingThread extends Thread {
+class MaskingThread extends Thread { //todo look into this
     private volatile boolean stop;
     private char echochar = '*';
 

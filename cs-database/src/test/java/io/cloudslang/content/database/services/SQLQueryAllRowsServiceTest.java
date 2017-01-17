@@ -85,7 +85,6 @@ public class SQLQueryAllRowsServiceTest {
         final String execQueryAllRows = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, COL_DELIMITER, ROW_DELIMITER);
 
         assertEquals("", execQueryAllRows);
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_QUERY);
@@ -104,7 +103,6 @@ public class SQLQueryAllRowsServiceTest {
         final String execQueryAllRows = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, COL_DELIMITER, ROW_DELIMITER);
 
         assertEquals("", execQueryAllRows);
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_QUERY);
@@ -123,7 +121,6 @@ public class SQLQueryAllRowsServiceTest {
         final String execQueryAllRows = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, COL_DELIMITER, ROW_DELIMITER);
 
         assertEquals("", execQueryAllRows);
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_QUERY);

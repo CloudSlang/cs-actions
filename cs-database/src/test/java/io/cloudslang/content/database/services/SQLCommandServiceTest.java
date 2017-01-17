@@ -93,7 +93,6 @@ public class SQLCommandServiceTest {
         final String executeSqlCommand = sqlCommandService.executeSqlCommand(sqlInputs);
 
         assertEquals("Command completed successfully", executeSqlCommand);
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
         verify(resultSetMock, Mockito.times(1)).close();
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
@@ -118,7 +117,6 @@ public class SQLCommandServiceTest {
         final String executeSqlCommand = sqlCommandService.executeSqlCommand(sqlInputs);
 
         assertEquals("Command completed successfully", executeSqlCommand);
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
         verify(preparedStatementMock, Mockito.times(1)).close();
         verify(preparedStatementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);

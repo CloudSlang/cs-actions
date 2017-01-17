@@ -87,7 +87,6 @@ public class SQLScriptServiceTest {
 
         sqlScriptService.executeSqlScript(lines, sqlInputs);
 
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
         verify(connectionMock, Mockito.times(1)).commit();
         verify(connectionMock, Mockito.times(1)).setAutoCommit(false);
@@ -108,7 +107,6 @@ public class SQLScriptServiceTest {
 
         sqlScriptService.executeSqlScript(lines, sqlInputs);
 
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
         verify(connectionMock, Mockito.times(1)).commit();
         verify(connectionMock, Mockito.times(1)).setAutoCommit(false);

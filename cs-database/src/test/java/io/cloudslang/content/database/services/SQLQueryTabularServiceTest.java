@@ -84,7 +84,6 @@ public class SQLQueryTabularServiceTest {
         final String execSqlQueryTabular = sqlQueryTabularService.execSqlQueryTabular(sqlInputs);
 
         assertEquals("\n\n", execSqlQueryTabular);
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_COMMAND);
@@ -103,7 +102,6 @@ public class SQLQueryTabularServiceTest {
         final String execSqlQueryTabular = sqlQueryTabularService.execSqlQueryTabular(sqlInputs);
 
         assertEquals("\n\n", execSqlQueryTabular);
-        verify(connectionServiceMock, Mockito.times(1)).closeConnection(connectionMock);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
         verify(statementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(statementMock, Mockito.times(1)).executeQuery(SQL_COMMAND);

@@ -29,10 +29,9 @@ public class SQLCommandService {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }
-        Connection connection = null;
         ConnectionService connectionService = new ConnectionService();
-        try {
-            connection = connectionService.setUpConnection(sqlInputs);
+        try (final Connection connection = connectionService.setUpConnection(sqlInputs)){
+
             connection.setReadOnly(false);
 
             final String dbType = sqlInputs.getDbType();
@@ -48,7 +47,7 @@ public class SQLCommandService {
                 oracleDbmsOutput.close();
                 return output;
             } else {
-                final Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
+                final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
                 statement.setQueryTimeout(sqlInputs.getTimeout());
                 try {
                     statement.execute(sqlInputs.getSqlCommand());
@@ -112,8 +111,6 @@ public class SQLCommandService {
 
                 sqlInputs.setiUpdateCount(statement.getUpdateCount());
             }
-        } finally {
-            connectionService.closeConnection(connection);
         }
         return "Command completed successfully";
     }

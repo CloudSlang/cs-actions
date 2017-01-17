@@ -31,17 +31,15 @@ public class SQLScriptService {
         if (lines == null || lines.isEmpty()) {
             throw new Exception("No SQL command to be executed.");
         }
-        Connection connection = null;
         ConnectionService connectionService = new ConnectionService();
-        try {
-            connection = connectionService.setUpConnection(sqlInputs);
+        try (Connection connection = connectionService.setUpConnection(sqlInputs)){
 
             try {
                 connection.setReadOnly(false);
             } catch (Exception e) {
             } // not all drivers support this
 
-            final Statement statement = connection.createStatement(getResultSetValue(sqlInputs.getResultSetType()), getResultSetValue(sqlInputs.getResultSetConcurrency()));
+            final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
             statement.setQueryTimeout(sqlInputs.getTimeout());
             try {
                 boolean autoCommit = connection.getAutoCommit();
@@ -77,8 +75,6 @@ public class SQLScriptService {
                     throw e;
             }
 
-        } finally {
-            connectionService.closeConnection(connection);
         }
         return "Command completed successfully";
     }

@@ -206,27 +206,4 @@ public class ConnectionService {
         }
         return dbCon;
     }
-
-    /**
-     * close a Connection. If the Connection is a pooled Connection, it will return
-     * the connection to the pool
-     *
-     * @param connection a db Connection
-     */
-    public synchronized void closeConnection(Connection connection) {
-        if (connection == null) {
-//       todo     logger.warn("Try to close a null Connection, ignore");
-            return;
-        }
-
-        try {
-            connection.close();
-            //tracing
-//        todo    if (logger.isDebugEnabled()) {
-//                logger.debug("Closed connection");
-//            }
-        } catch (SQLException e) {
-//          todo  logger.warn("Failed to close a Connection", e);
-        }
-    }
 }

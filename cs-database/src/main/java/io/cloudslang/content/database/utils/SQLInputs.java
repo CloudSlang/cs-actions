@@ -40,12 +40,12 @@ public class SQLInputs {
     private String dbClass;
     private String trimRowstat = "true";
     private boolean isNetcool = false; // needs to be visible for SQLQueryTabular to do check
-    private List<ArrayList<String>> lRowsFiles = new ArrayList<>();
-    private List<ArrayList<String>> lRowsNames = new ArrayList<>();
+    private List<List<String>> lRowsFiles = new ArrayList<>();
+    private List<List<String>> lRowsNames = new ArrayList<>();
     private long skip = 0L;
     private String strDelim;
     private String strColumns;
-    private ArrayList<String> lRows;
+    private List<String> lRows;
     private int iUpdateCount;
     private Properties databasePoolingProperties;
     private String windowsDomain;
@@ -53,8 +53,8 @@ public class SQLInputs {
     private String trustStorePassword;
     private String trustAllRoots;
 
-    private String resultSetType;
-    private String resultSetConcurrency;
+    private Integer resultSetType;
+    private Integer resultSetConcurrency;
 
     public SQLInputs() {
     }
@@ -75,7 +75,7 @@ public class SQLInputs {
         this.strColumns = strColumns;
     }
 
-    public ArrayList<String> getlRows() {
+    public List<String> getlRows() {
         return lRows;
     }
 
@@ -275,19 +275,19 @@ public class SQLInputs {
         this.isNetcool = isNetcool;
     }
 
-    public List<ArrayList<String>> getlRowsFiles() {
+    public List<List<String>> getlRowsFiles() {
         return lRowsFiles;
     }
 
-    public void setlRowsFiles(List<ArrayList<String>> lRowsFiles) {
+    public void setlRowsFiles(List<List<String>> lRowsFiles) {
         this.lRowsFiles = lRowsFiles;
     }
 
-    public List<ArrayList<String>> getlRowsNames() {
+    public List<List<String>> getlRowsNames() {
         return lRowsNames;
     }
 
-    public void setlRowsNames(List<ArrayList<String>> lRowsNames) {
+    public void setlRowsNames(List<List<String>> lRowsNames) {
         this.lRowsNames = lRowsNames;
     }
 
@@ -307,19 +307,19 @@ public class SQLInputs {
         this.databasePoolingProperties = databasePoolingProperties;
     }
 
-    public String getResultSetType() {
+    public Integer getResultSetType() {
         return resultSetType;
     }
 
-    public void setResultSetType(String resultSetType) {
+    public void setResultSetType(Integer resultSetType) {
         this.resultSetType = resultSetType;
     }
 
-    public String getResultSetConcurrency() {
+    public Integer getResultSetConcurrency() {
         return resultSetConcurrency;
     }
 
-    public void setResultSetConcurrency(String resultSetConcurrency) {
+    public void setResultSetConcurrency(Integer resultSetConcurrency) {
         this.resultSetConcurrency = resultSetConcurrency;
     }
 

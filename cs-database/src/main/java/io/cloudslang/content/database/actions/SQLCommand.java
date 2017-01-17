@@ -36,6 +36,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
+import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_VALUES;
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -91,8 +92,6 @@ public class SQLCommand {
 
         Map<String, String> result = new HashMap<>();
         try {
-//            OOResultSet resultSetType1 = OOResultSet.TYPE_FORWARD_ONLY;
-//            OOResultSet resultSetConcurrency1 = OOResultSet.CONCUR_READ_ONLY;
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
             if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
                 throw new Exception("command input is empty.");
