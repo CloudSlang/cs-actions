@@ -34,6 +34,6 @@ public class CustomDatabaseTest {
         expectedEx.expect(ClassNotFoundException.class);
         expectedEx.expectMessage("No db class name provided");
         CustomDatabase customDatabase = new CustomDatabase();
-        customDatabase.setUp(null);
+        customDatabase.setUp("");
     }
 }
