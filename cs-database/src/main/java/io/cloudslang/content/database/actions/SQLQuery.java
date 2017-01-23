@@ -46,9 +46,7 @@ import static io.cloudslang.content.database.constants.DBOtherValues.ZERO;
 import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
 import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultDBPoolingProperties;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetConcurrency;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetType;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -106,6 +104,9 @@ public class SQLQuery {
         mySqlInputs.setTrustAllRoots(defaultIfEmpty(trustAllRoots, BooleanValues.FALSE));
         mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
+        mySqlInputs.setStrDelim(delimiter);
+        mySqlInputs.setKey(key);
+        mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, "1200"));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
         mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
         mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
@@ -171,9 +172,7 @@ public class SQLQuery {
                     aKey = SQLUtils.computeSessionId(sqlDbServer.toLowerCase() + sqlDbType.toLowerCase() +
                             sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
                             sqlAuthenticationType.toLowerCase() + sqlCommand.toLowerCase() + sqlKey);
-                }
-                //calculate session id for Oracle operations
-                else {
+                } else { //calculate session id for Oracle operations
                     if (StringUtils.isEmpty(sqlTnsPath)) {
                         throw new SQLException("Empty TNSPath for Oracle. ");
                     }

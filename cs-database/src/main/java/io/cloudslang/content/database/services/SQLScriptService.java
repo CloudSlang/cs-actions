@@ -17,16 +17,14 @@ import io.cloudslang.content.database.utils.SQLUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-
-import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
+import java.util.List;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class SQLScriptService {
 
-    public String executeSqlScript(ArrayList<String> lines, SQLInputs sqlInputs)
+    public String executeSqlScript(List<String> lines, SQLInputs sqlInputs)
             throws Exception {
         if (lines == null || lines.isEmpty()) {
             throw new Exception("No SQL command to be executed.");
@@ -39,7 +37,7 @@ public class SQLScriptService {
             } catch (Exception e) {
             } // not all drivers support this
 
-            try (final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency())){
+            try (final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency())) {
                 statement.setQueryTimeout(sqlInputs.getTimeout());
                 boolean autoCommit = connection.getAutoCommit();
                 connection.setAutoCommit(false);

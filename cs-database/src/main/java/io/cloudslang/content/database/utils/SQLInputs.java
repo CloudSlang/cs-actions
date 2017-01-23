@@ -55,9 +55,11 @@ public class SQLInputs {
     private String trustStore;
     private String trustStorePassword;
     private String trustAllRoots;
+    private String colDelimiter;
+    private String rowDelimiter;
     private Integer resultSetType;
     private Integer resultSetConcurrency;
-    private GlobalSessionObject<Map<String, Object>> globalSessionObject;//todo
+    private List<String> sqlCommands;
 
     public SQLInputs() {
     }
@@ -358,11 +360,27 @@ public class SQLInputs {
         this.trustAllRoots = trustAllRoots;
     }
 
-    public GlobalSessionObject<Map<String, Object>> getGlobalSessionObject() {
-        return globalSessionObject;
+    public String getColDelimiter() {
+        return colDelimiter;
     }
 
-    public void setGlobalSessionObject(GlobalSessionObject<Map<String, Object>> globalSessionObject) {
-        this.globalSessionObject = globalSessionObject;
+    public void setColDelimiter(String colDelimiter) {
+        this.colDelimiter = colDelimiter;
+    }
+
+    public String getRowDelimiter() {
+        return rowDelimiter;
+    }
+
+    public void setRowDelimiter(String rowDelimiter) {
+        this.rowDelimiter = rowDelimiter;
+    }
+
+    public List<String> getSqlCommands() {
+        return sqlCommands;
+    }
+
+    public void setSqlCommands(final List<String> sqlCommands) {
+        this.sqlCommands = sqlCommands;
     }
 }

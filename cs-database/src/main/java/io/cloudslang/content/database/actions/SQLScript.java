@@ -16,6 +16,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
@@ -24,20 +25,22 @@ import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLScriptUtil;
+import io.cloudslang.content.utils.CollectionUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
+import static io.cloudslang.content.database.utils.SQLUtils.readFromFile;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -68,15 +71,36 @@ public class SQLScript {
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
-                                       @Param(value = SQL_COMMANDS, required = true) String sqlCommands,
-                                       @Param(value = DELIMITER, required = true) String delimiter,
-                                       @Param(value = SCRIPT_FILE_NAME, required = true) String scriptFileName,
+                                       @Param(value = DELIMITER) String delimiter,
+                                       @Param(value = SQL_COMMANDS) String sqlCommands,
+                                       @Param(value = SCRIPT_FILE_NAME) String scriptFileName,
                                        @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+
+        SQLInputs mySqlInputs = new SQLInputs();
+        mySqlInputs.setDbServer(dbServerName); //mandatory
+        mySqlInputs.setDbType(defaultIfEmpty(dbType, ""));
+        mySqlInputs.setUsername(username);
+        mySqlInputs.setPassword(password);
+        mySqlInputs.setInstance(defaultIfEmpty(instance, ""));
+        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, ""));
+        mySqlInputs.setDbName(database);
+        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, ""));
+        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, ""));
+        mySqlInputs.setStrDelim(defaultIfEmpty(delimiter, "--"));
+        mySqlInputs.setSqlCommands(getSqlCommands(sqlCommands, scriptFileName, mySqlInputs.getStrDelim()));
+        mySqlInputs.setTrustAllRoots(defaultIfEmpty(trustAllRoots, BooleanValues.FALSE));
+        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
+        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
+        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+
         Map<String, String> inputParameters = SQLScriptUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,
@@ -102,7 +126,7 @@ public class SQLScript {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
 
             String commandsDelimiter = StringUtils.isEmpty(sqlInputs.getStrDelim()) ? "--" : sqlInputs.getStrDelim();
-            ArrayList<String> commands = new ArrayList<>(Arrays.asList(sqlCommands.split(commandsDelimiter)));
+            List<String> commands = new ArrayList<>(Arrays.asList(sqlCommands.split(commandsDelimiter)));
 
             //read from SQL script file
             if (commands.isEmpty()) {
@@ -116,9 +140,8 @@ public class SQLScript {
             if (commands.isEmpty()) {
                 throw new Exception("No SQL command to be executed.");
             } else {
-                String res = null;
                 SQLScriptService sqlScriptService = new SQLScriptService();
-                res = sqlScriptService.executeSqlScript(commands, sqlInputs);
+                String res = sqlScriptService.executeSqlScript(commands, sqlInputs);
                 result.put("updateCount", String.valueOf(sqlInputs.getiUpdateCount()));
                 result.put(Constants.RETURNRESULT, res);
                 result.put(RETURN_CODE, SUCCESS);
@@ -134,86 +157,5 @@ public class SQLScript {
             result.put(RETURN_CODE, FAILURE);
         }
         return result;
-    }
-
-    ArrayList<String> readFromFile(String fileName) throws Exception {
-        ArrayList<String> lines = new ArrayList<>();
-
-
-        try (final FileInputStream fstream = new FileInputStream(new File(fileName));
-             final DataInputStream in = new DataInputStream(fstream);
-             final InputStreamReader inputStreamReader = new InputStreamReader(in);
-             final BufferedReader br = new BufferedReader(inputStreamReader)) {
-
-            String strLine = "";
-            String aString = "";
-            int i = 0;
-            boolean youAreInAMultiLineComment = false;
-            while ((strLine = br.readLine()) != null) {
-                //ignore multi line comments
-                if (youAreInAMultiLineComment) {
-                    if (strLine.contains("*/")) {
-                        int indx = strLine.indexOf("*/");
-                        strLine = strLine.substring(indx + 2);
-                        youAreInAMultiLineComment = false;
-                    } else {
-                        continue;
-                    }
-                }
-
-                if (strLine.contains("/*")) {
-                    int indx = strLine.indexOf("/*");
-                    String firstPart = strLine.substring(0, indx);
-                    String secondPart = strLine.substring(indx + 2);
-                    strLine = firstPart;
-                    youAreInAMultiLineComment = true;
-
-                    if (secondPart.contains("*/")) {    //the comment starts and ends in the middle of the line
-                        indx = secondPart.indexOf("*/");
-                        secondPart = secondPart.substring(indx + 2);
-                        youAreInAMultiLineComment = false;
-                        strLine += secondPart;
-                    }
-                }
-
-                //ignore one line comments
-                if (strLine.contains("--")) {
-                    int indx = strLine.indexOf("--");
-                    strLine = strLine.substring(0, indx);
-                }
-
-                //ingnore empty lines
-                if (0 == strLine.length()) {
-                    continue;
-                }
-
-                //consider if a SQL statement is separated in different lines. eg,
-                //create table employee(
-                //  first varchar(15));
-                //if a sql command finishes in one line, add in commands
-                if (strLine.endsWith(";")) {
-                    //get rid of ';',otherwise the operation will fail on Oracle database
-                    int indx = strLine.indexOf(";", 0);
-                    strLine = strLine.substring(0, indx);
-                    //if the command has only one line
-                    if (i == 0) {
-                        lines.add(strLine);
-                    }
-                    //if the command has multiple lines
-                    else {
-                        aString += strLine;
-                        lines.add(aString);
-                        aString = "";
-                        i = 0;
-                    }
-                }
-                //if a line doesn't finish with a ';', it means the sql commands is not finished
-                else {
-                    aString = aString + strLine + " ";
-                    i++;
-                }
-            }
-        }
-        return lines;
     }
 }

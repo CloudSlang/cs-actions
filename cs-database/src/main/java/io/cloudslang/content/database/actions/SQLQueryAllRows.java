@@ -37,9 +37,7 @@ import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultDBPoolingProperties;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetConcurrency;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetType;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -73,8 +71,8 @@ public class SQLQueryAllRows {
                                        @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
-                                       @Param(value = COL_DELIMITER, required = true) String colDelimiter,
-                                       @Param(value = ROW_DELIMITER, required = true) String rowDelimiter,
+                                       @Param(value = COL_DELIMITER) String colDelimiter,
+                                       @Param(value = ROW_DELIMITER) String rowDelimiter,
                                        @Param(value = TIMEOUT) String timeout,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
@@ -94,6 +92,9 @@ public class SQLQueryAllRows {
         mySqlInputs.setTrustAllRoots(defaultIfEmpty(trustAllRoots, BooleanValues.FALSE));
         mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
+        mySqlInputs.setColDelimiter(defaultIfEmpty(colDelimiter, ","));
+        mySqlInputs.setRowDelimiter(defaultIfEmpty(rowDelimiter, "\n"));
+        mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, "1200"));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
         mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
         mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));

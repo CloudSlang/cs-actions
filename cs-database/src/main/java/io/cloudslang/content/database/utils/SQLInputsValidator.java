@@ -9,26 +9,41 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.utils.CollectionUtilities;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_VALUES;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
-import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created by victor on 18.01.2017.
  */
 public class SQLInputsValidator {
 
+    public static List<String> getSqlCommands(final String sqlCommandsStr, final String scriptFileName, final String commandsDelimiter) {
+        if (isNoneEmpty(sqlCommandsStr)) {
+            return CollectionUtilities.toList(sqlCommandsStr, commandsDelimiter);
+        }
+        if (isNoneEmpty(scriptFileName)) {
+            return SQLUtils.readFromFile(scriptFileName);
+        }
+        return Collections.emptyList();
+    }
+
     public static int getOrDefaultTimeout(final String timeout, final String defaultVal) {
-        return -1;
+        try {
+            return Integer.parseInt(defaultIfEmpty(timeout, defaultVal));
+        } catch (Exception e) {
+            e.printStackTrace(); //todo
+            return -1;
+        }
     }
 
     public static Properties getOrDefaultDBPoolingProperties(final String dbPoolingProperties, final String defaultVal) {

@@ -13,13 +13,12 @@ package io.cloudslang.content.database.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.StringWriter;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by victor on 13.01.2017.
@@ -200,4 +199,89 @@ public class SQLUtils {
         }
         throw e;
     }
+
+    public static List<String> readFromFile(String fileName) {
+        final List<String> lines = new ArrayList<>();
+
+
+        try (final FileInputStream fstream = new FileInputStream(new File(fileName));
+             final DataInputStream in = new DataInputStream(fstream);
+             final InputStreamReader inputStreamReader = new InputStreamReader(in);
+             final BufferedReader br = new BufferedReader(inputStreamReader)) {
+
+            String strLine = "";
+            String aString = "";
+            int i = 0;
+            boolean youAreInAMultiLineComment = false;
+            while ((strLine = br.readLine()) != null) {
+                //ignore multi line comments
+                if (youAreInAMultiLineComment) {
+                    if (strLine.contains("*/")) {
+                        int indx = strLine.indexOf("*/");
+                        strLine = strLine.substring(indx + 2);
+                        youAreInAMultiLineComment = false;
+                    } else {
+                        continue;
+                    }
+                }
+
+                if (strLine.contains("/*")) {
+                    int indx = strLine.indexOf("/*");
+                    String firstPart = strLine.substring(0, indx);
+                    String secondPart = strLine.substring(indx + 2);
+                    strLine = firstPart;
+                    youAreInAMultiLineComment = true;
+
+                    if (secondPart.contains("*/")) {    //the comment starts and ends in the middle of the line
+                        indx = secondPart.indexOf("*/");
+                        secondPart = secondPart.substring(indx + 2);
+                        youAreInAMultiLineComment = false;
+                        strLine += secondPart;
+                    }
+                }
+
+                //ignore one line comments
+                if (strLine.contains("--")) {
+                    int indx = strLine.indexOf("--");
+                    strLine = strLine.substring(0, indx);
+                }
+
+                //ingnore empty lines
+                if (0 == strLine.length()) {
+                    continue;
+                }
+
+                //consider if a SQL statement is separated in different lines. eg,
+                //create table employee(
+                //  first varchar(15));
+                //if a sql command finishes in one line, add in commands
+                if (strLine.endsWith(";")) {
+                    //get rid of ';',otherwise the operation will fail on Oracle database
+                    int indx = strLine.indexOf(";", 0);
+                    strLine = strLine.substring(0, indx);
+                    //if the command has only one line
+                    if (i == 0) {
+                        lines.add(strLine);
+                    }
+                    //if the command has multiple lines
+                    else {
+                        aString += strLine;
+                        lines.add(aString);
+                        aString = "";
+                        i = 0;
+                    }
+                }
+                //if a line doesn't finish with a ';', it means the sql commands is not finished
+                else {
+                    aString = aString + strLine + " ";
+                    i++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); //todo
+            return Collections.emptyList();
+        }
+        return lines;
+    }
+
 }
