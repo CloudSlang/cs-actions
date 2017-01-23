@@ -17,7 +17,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.constants.DBReturnCodes;

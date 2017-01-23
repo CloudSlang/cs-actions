@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by victor on 13.01.2017.
  */
-public class OracleDatabase {
+public class OracleDatabase implements SqlDatabase {
 
     public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String tnsPath, final String tnsEntry) throws ClassNotFoundException, SQLException {
         Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -61,5 +62,10 @@ public class OracleDatabase {
             System.setProperty("oracle.net.tns_admin", tnsPath);
             dbUrls.add("jdbc:oracle:thin:@" + tnsEntry);
         }
+    }
+
+    @Override
+    public void setUp(SQLInputs sqlInputs) {
+
     }
 }

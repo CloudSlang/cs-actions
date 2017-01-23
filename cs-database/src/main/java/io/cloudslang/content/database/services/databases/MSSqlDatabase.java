@@ -11,6 +11,7 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.Constants;
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ import static io.cloudslang.content.database.utils.Constants.*;
 /**
  * Created by victor on 13.01.2017.
  */
-public class MSSqlDatabase {
+public class MSSqlDatabase implements SqlDatabase {
     private List<String> supportedJdbcDrivers;
 
     public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String windowsDomain, String dbClass,
@@ -128,5 +129,10 @@ public class MSSqlDatabase {
         } else {
             throw new RuntimeException("The driver provided is not supported.");
         }
+    }
+
+    @Override
+    public void setUp(SQLInputs sqlInputs) {
+
     }
 }

@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Created by victor on 13.01.2017.
  */
-public class SybaseDatabase {
+public class SybaseDatabase implements SqlDatabase{
     public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {
         if (dbName == null) {
             throw new SQLException("No database provided!");
@@ -28,5 +29,10 @@ public class SybaseDatabase {
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         dbUrls.add("jdbc:jtds:sybase://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(dbServer) + ":" + dbPort + dbName + ";prepareSQL=1;useLOBs=false;TDS=4.2;");
+    }
+
+    @Override
+    public void setUp(SQLInputs sqlInputs) {
+
     }
 }

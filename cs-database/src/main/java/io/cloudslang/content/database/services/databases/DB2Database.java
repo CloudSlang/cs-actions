@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Created by victor on 13.01.2017.
  */
-public class DB2Database {
+public class DB2Database implements SqlDatabase {
 
     public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {
         if (dbName == null) {
@@ -29,5 +30,10 @@ public class DB2Database {
         }
         Class.forName("com.ibm.db2.jcc.DB2Driver");
         dbUrls.add("jdbc:db2://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(dbServer) + ":" + dbPort + dbName);
+    }
+
+    @Override
+    public void setUp(SQLInputs sqlInputs) {
+
     }
 }

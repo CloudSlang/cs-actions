@@ -10,12 +10,13 @@
 package io.cloudslang.content.database.services.databases;
 
 
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by victor on 13.01.2017.
  */
-public class CustomDatabase {
+public class CustomDatabase implements SqlDatabase {
 
     public void setUp(String dbClass) throws ClassNotFoundException {
         if (StringUtils.isNoneEmpty(dbClass)) {
@@ -23,5 +24,10 @@ public class CustomDatabase {
         } else {
             throw new ClassNotFoundException("No db class name provided");
         }
+    }
+
+    @Override
+    public void setUp(SQLInputs sqlInputs) {
+
     }
 }
