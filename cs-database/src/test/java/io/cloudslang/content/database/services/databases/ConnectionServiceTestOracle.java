@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -179,7 +180,7 @@ public class ConnectionServiceTestOracle {
     }
 
     private void populateOracle() throws Exception {
-        sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setTnsPath(TNS_PATH);
     }
 

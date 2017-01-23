@@ -15,6 +15,7 @@ import org.junit.rules.ExpectedException;
 
 import java.sql.SQLException;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -37,7 +38,7 @@ public class SQLUtilsTest {
     public void testProcessHostorTNSNullServerName() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("Failed to getConnection. Please provide DBServerName if you use JDBC. Or please provide TNSEntry if you use TNS");
-        SQLUtils.processHostorTNS(Constants.ORACLE_DB_TYPE, null, null);
+        SQLUtils.processHostorTNS(ORACLE_DB_TYPE, null, null);
     }
 
     @Test

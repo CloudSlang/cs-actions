@@ -14,4 +14,5 @@ package io.cloudslang.content.database.constants;
  */
 public class DBDefaultValues {
     public static final String AUTH_SQL = "Sql";
+    public static final String ORACLE_DB_TYPE = "Oracle";
 }

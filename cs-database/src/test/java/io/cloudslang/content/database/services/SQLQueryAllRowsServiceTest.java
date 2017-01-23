@@ -30,6 +30,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -76,7 +77,7 @@ public class SQLQueryAllRowsServiceTest {
 
     @Test
     public void testExecuteQueryAllRows() throws Exception {
-        sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
@@ -93,7 +94,7 @@ public class SQLQueryAllRowsServiceTest {
 
     @Test
     public void testExecuteQueryAllRowsIsNetcool() throws Exception {
-        sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");

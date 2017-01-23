@@ -27,6 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.sql.*;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -83,7 +84,7 @@ public class SQLCommandServiceTest {
 
     @Test
     public void testExecuteSqlCommand() throws Exception {
-        sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
@@ -106,7 +107,7 @@ public class SQLCommandServiceTest {
         when(preparedStatementMock.getUpdateCount()).thenReturn(1);
         when(oracleDbmsOutputMock.getOutput()).thenReturn("Command completed successfully");
 
-        sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
 
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");

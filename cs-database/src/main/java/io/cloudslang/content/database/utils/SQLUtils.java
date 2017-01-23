@@ -20,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -49,7 +51,7 @@ public class SQLUtils {
         if (dbType == null) {
             return;
         }
-        if (dbType.equalsIgnoreCase(Constants.ORACLE_DB_TYPE))//oracle
+        if (dbType.equalsIgnoreCase(ORACLE_DB_TYPE))//oracle
         {
             if ((dbServer == null || dbServer.length() == 0) &&
                     (tnsEntry == null || tnsEntry.length() == 0)

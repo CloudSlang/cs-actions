@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
 
 /**
@@ -34,7 +35,7 @@ public class SQLCommandService {
             connection.setReadOnly(false);
 
             final String dbType = sqlInputs.getDbType();
-            if (Constants.ORACLE_DB_TYPE.equalsIgnoreCase(dbType) &&
+            if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType) &&
                     sqlInputs.getSqlCommand().toLowerCase().contains("dbms_output")) {
                 final PreparedStatement preparedStatement = connection.prepareStatement(sqlInputs.getSqlCommand());
                 preparedStatement.setQueryTimeout(sqlInputs.getTimeout());

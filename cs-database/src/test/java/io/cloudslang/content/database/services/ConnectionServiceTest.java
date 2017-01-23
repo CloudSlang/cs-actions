@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -107,7 +108,7 @@ public class ConnectionServiceTest {
 
     @Test
     public void testSetUpConnectionOracle() throws Exception {
-        sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");

@@ -33,6 +33,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_READ_ONLY;
 import static io.cloudslang.content.database.constants.DBOtherValues.SET_NOCOUNT_ON;
@@ -75,7 +76,7 @@ public class SQLCommand {
         //todo validation required
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(defaultIfEmpty(dbType, ""));
+        mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(defaultIfEmpty(instance, ""));
@@ -91,6 +92,8 @@ public class SQLCommand {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
         mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_FORWARD_ONLY));
         mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
+
+        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
         Map<String, String> inputParameters = SQLCommandUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -122,7 +125,7 @@ public class SQLCommand {
 
             String outputText = "";
 
-            if (Constants.ORACLE_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType()) &&
+            if (ORACLE_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType()) &&
                     sqlInputs.getSqlCommand().toLowerCase().contains("dbms_output")) {
                 if (!"".equalsIgnoreCase(res)) {
                     outputText = res;

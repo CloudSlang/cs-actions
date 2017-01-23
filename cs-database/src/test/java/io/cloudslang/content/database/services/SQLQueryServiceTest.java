@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -78,7 +79,7 @@ public class SQLQueryServiceTest {
 
     @Test
     public void testExecuteSqlQuery() throws Exception {
-        sqlInputs.setDbType(Constants.ORACLE_DB_TYPE);
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbPort("30");
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");

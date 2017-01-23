@@ -14,6 +14,7 @@ import io.cloudslang.content.utils.CollectionUtilities;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -37,6 +38,14 @@ public class SQLInputsValidator {
         return Collections.emptyList();
     }
 
+    public static List<String> getDbUrls(final String dbUrl) {
+        final List<String> dbUrls = new ArrayList<>();
+        if (isNoneEmpty(dbUrl)) {
+            dbUrls.add(dbUrl);
+        }
+        return dbUrls;
+    }
+
     public static int getOrDefaultTimeout(final String timeout, final String defaultVal) {
         try {
             return Integer.parseInt(defaultIfEmpty(timeout, defaultVal));
@@ -45,6 +54,8 @@ public class SQLInputsValidator {
             return -1;
         }
     }
+
+
 
     public static Properties getOrDefaultDBPoolingProperties(final String dbPoolingProperties, final String defaultVal) {
         final Properties databasePoolingProperties = new Properties();

@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -85,7 +86,7 @@ public class ConnectionService {
         String triedUrls = " ";
 
         //Oracle
-        if (Constants.ORACLE_DB_TYPE.equalsIgnoreCase(dbType)) {
+        if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.ORACLE;
             OracleDatabase oracleDatabase = new OracleDatabase();
             oracleDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, tnsPath, tnsEntry);

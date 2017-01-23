@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_VALUES;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
 import static io.cloudslang.content.database.utils.Constants.*;
@@ -66,7 +67,7 @@ public class InputsProcessor {
         sqlInputs.setDbServer(dbServer);
 
         //tns
-        String tnsPath = parameters.get(TNS_PATH);
+        String tnsPath = parameters.get(TNS_PATH); //todo can't find this
         sqlInputs.setTnsPath(tnsPath);
 
         String tnsEntry = parameters.get(TNS_ENTRY);
@@ -80,7 +81,7 @@ public class InputsProcessor {
             sqlInputs.setDbType(ORACLE_DB_TYPE);
         }
 
-        SQLUtils.processHostorTNS(sqlInputs.getDbType(), sqlInputs.getDbServer(), sqlInputs.getTnsEntry());
+        SQLUtils.processHostorTNS(sqlInputs.getDbType(), sqlInputs.getDbServer(), sqlInputs.getTnsEntry()); //todo
         //username
         String username = parameters.get(USERNAME);
         sqlInputs.setUsername(username);
@@ -94,6 +95,7 @@ public class InputsProcessor {
         if (StringUtils.isEmpty(sqlInputs.getPassword())) {
             throw new Exception("password input is empty.");
         }
+
 
         //if using tns to make the connection, no need to process dbPort, database and autyType inputs
         if (StringUtils.isEmpty(sqlInputs.getTnsEntry())) {
@@ -115,6 +117,7 @@ public class InputsProcessor {
             //authType
             String authenticationType = parameters.get(AUTH_TYPE);
             sqlInputs.setAuthenticationType(authenticationType);
+
             //windows authentication is only used with MSSQL.
             if (StringUtils.isEmpty(sqlInputs.getAuthenticationType())) {
                 sqlInputs.setAuthenticationType(AUTH_SQL);
@@ -129,7 +132,8 @@ public class InputsProcessor {
             //dbPort
             String dbPort = parameters.get(DBPORT);
             sqlInputs.setDbPort(dbPort);
-            processDefaultValues(sqlInputs, sqlInputs.getDbType(), sqlInputs.getAuthenticationType(), username);
+
+            processDefaultValues(sqlInputs, sqlInputs.getDbType(), sqlInputs.getAuthenticationType(), username); //todo
         }
 
         //command
@@ -187,12 +191,10 @@ public class InputsProcessor {
         } catch (Exception e) {
             throw new Exception("timeout input is not in valid format.");
         }
-// todo already in SQLInputsValidator
         String databasePoolingPropertiesStr = parameters.get(DATABASE_POOLING_PROPRTIES);
         Properties databasePoolingProperties = new Properties();
         databasePoolingProperties.load(new StringReader(databasePoolingPropertiesStr));
         sqlInputs.setDatabasePoolingProperties(databasePoolingProperties);
-//
 
         String trustAllRoots = StringUtils.defaultIfEmpty(parameters.get(TRUST_ALL_ROOTS), FALSE);
 
