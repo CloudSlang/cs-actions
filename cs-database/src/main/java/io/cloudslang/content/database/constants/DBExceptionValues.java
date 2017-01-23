@@ -15,5 +15,13 @@ import io.cloudslang.content.constants.ExceptionValues;
  * Created by pinteae on 1/16/2017.
  */
 public class DBExceptionValues extends ExceptionValues {
-
+    public static final String INVALID_IGNORE_CASE = "The value \"%s\" is an invalid value for ignoreCase input.";
+    public static final String INVALID_AUTH_TYPE = "The authentication type input \"%s\" is not valid authentication method.";
+    public static final String INVALID_AUTH_TYPE_WINDOWS = "Windows authentication can only be used with MSSQL!";
+    public static final String INVALID_INSTANCE = "The instance input can only be used with MSSQL.";
+    public static final String INVALID_NEGATIVE_TIMEOUT = "Timeout must be greater than zero!";
+    public static final String INVALID_TRUS_ALL_ROOTS_REQUIRE = "Timeout must be greater than zero!";
+    public static final String INVALID_USERNAME = "username input is empty.";
+    public static final String INVALID_PASSWORD = "password input is empty.";
+    public static final String INVALID_DATABASE = "database input is empty.";
 }

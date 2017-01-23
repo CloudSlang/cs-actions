@@ -102,7 +102,7 @@ public class ConnectionServiceTest {
         sqlInputs.setAuthenticationType(Constants.AUTH_WINDOWS);
         sqlInputs.setDbName("dbName");
         sqlInputs.setInstance("instance");
-        sqlInputs.setTrustAllRoots("True");
+        sqlInputs.setTrustAllRoots(true);
         assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true");
     }
 

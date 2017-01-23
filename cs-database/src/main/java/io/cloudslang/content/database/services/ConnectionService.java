@@ -60,7 +60,7 @@ public class ConnectionService {
         final String authenticationType = sqlInputs.getAuthenticationType();
         final String trustStore = sqlInputs.getTrustStore();
         final String trustStorePassword = sqlInputs.getTrustStorePassword();
-        final String trustAllRoots = sqlInputs.getTrustAllRoots();
+        final boolean trustAllRoots = sqlInputs.getTrustAllRoots();
 
         if (dbUrls == null) {
             throw new SQLException("No database URL was provided");

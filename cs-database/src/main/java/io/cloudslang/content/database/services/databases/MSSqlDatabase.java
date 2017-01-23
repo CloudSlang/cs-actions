@@ -27,7 +27,7 @@ public class MSSqlDatabase {
     private List<String> supportedJdbcDrivers;
 
     public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String windowsDomain, String dbClass,
-                      String trustAllRoots, String trustStore, String trustStorePassword) throws ClassNotFoundException, SQLException {
+                      boolean trustAllRoots, String trustStore, String trustStorePassword) throws ClassNotFoundException, SQLException {
         if (dbName == null) {
             throw new SQLException("No database provided!");
         }
@@ -95,14 +95,14 @@ public class MSSqlDatabase {
         dbUrls.add(dbUrlMSSQL);
     }
 
-    public static String addSslEncryptionToConnection(String trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
+    public static String addSslEncryptionToConnection(boolean trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
         final StringBuilder dbUrlBuilder = new StringBuilder(dbUrlMSSQL);
         dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS)
                 .append(TRUE)
                 .append(SEMI_COLON)
                 .append(TRUST_SERVER_CERTIFICATE)
                 .append(EQUALS);
-        if (trustAllRoots.equalsIgnoreCase(TRUE)) {
+        if (trustAllRoots) {
             dbUrlBuilder.append(TRUE);
         } else {
             dbUrlBuilder.append(FALSE)

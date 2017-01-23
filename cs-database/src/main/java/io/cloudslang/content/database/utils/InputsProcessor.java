@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.StringReader;
@@ -196,13 +197,13 @@ public class InputsProcessor {
         databasePoolingProperties.load(new StringReader(databasePoolingPropertiesStr));
         sqlInputs.setDatabasePoolingProperties(databasePoolingProperties);
 
-        String trustAllRoots = StringUtils.defaultIfEmpty(parameters.get(TRUST_ALL_ROOTS), FALSE);
+        boolean trustAllRoots = BooleanUtilities.toBoolean(parameters.get(TRUST_ALL_ROOTS), false);
 
         String trustStore = parameters.get(TRUST_STORE);
         String trustStorePassword = parameters.get(TRUST_STORE_PASSWORD);
 
 
-        if (trustAllRoots.equalsIgnoreCase(FALSE) && (StringUtils.isEmpty(trustStore) || StringUtils.isEmpty(trustStorePassword))) {
+        if (!trustAllRoots && (StringUtils.isEmpty(trustStore) || StringUtils.isEmpty(trustStorePassword))) {
             throw new Exception("A trustStore and a trustStorePassword should be provided.");
         }
 
@@ -328,7 +329,7 @@ public class InputsProcessor {
             sqlInputs.setResultSetConcurrency(-1000000);
             sqlInputs.setResultSetType(-1000000);
             sqlInputs.setWindowsDomain(null);
-            sqlInputs.setTrustAllRoots("false");
+            sqlInputs.setTrustAllRoots(false);
             sqlInputs.setTrustStore("");
         } else throw new Exception("Cannot init null Sql inputs!");
     }

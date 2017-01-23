@@ -9,11 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -54,7 +51,7 @@ public class SQLInputs {
     private String windowsDomain;
     private String trustStore;
     private String trustStorePassword;
-    private String trustAllRoots;
+    private boolean trustAllRoots;
     private String colDelimiter;
     private String rowDelimiter;
     private Integer resultSetType;
@@ -352,11 +349,11 @@ public class SQLInputs {
         this.trustStorePassword = trustStorePassword;
     }
 
-    public String getTrustAllRoots() {
+    public boolean getTrustAllRoots() {
         return trustAllRoots;
     }
 
-    public void setTrustAllRoots(String trustAllRoots) {
+    public void setTrustAllRoots(boolean trustAllRoots) {
         this.trustAllRoots = trustAllRoots;
     }
 

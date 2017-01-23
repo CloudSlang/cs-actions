@@ -18,27 +18,28 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLCommandService;
-import io.cloudslang.content.database.utils.Constants;
-import io.cloudslang.content.database.utils.InputsProcessor;
-import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.SQLUtils;
+import io.cloudslang.content.database.utils.*;
 import io.cloudslang.content.database.utils.other.SQLCommandUtil;
+import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TRUST_ALL_ROOTS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_READ_ONLY;
 import static io.cloudslang.content.database.constants.DBOtherValues.SET_NOCOUNT_ON;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -79,21 +80,23 @@ public class SQLCommand {
         mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(defaultIfEmpty(instance, ""));
-        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, ""));
+        mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
+        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, EMPTY));
         mySqlInputs.setDbName(database);
         mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
-        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, ""));
-        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, ""));
+        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
+        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
         mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(defaultIfEmpty(trustAllRoots, BooleanValues.FALSE));
-        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
-        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
-        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
+        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots, DEFAULT_TRUST_ALL_ROOTS));
+        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
+        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
+        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_FORWARD_ONLY));
         mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
 
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
+
+        final List<String> validationIssues = SQLInputsValidator.validateSqlInputs(mySqlInputs);
 
         Map<String, String> inputParameters = SQLCommandUtil.createInputParametersMap(dbServerName,
                 dbType,
