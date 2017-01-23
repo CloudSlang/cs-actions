@@ -23,7 +23,6 @@ import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLCommandUtil;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
@@ -35,6 +34,9 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
+import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_READ_ONLY;
+import static io.cloudslang.content.database.constants.DBOtherValues.SET_NOCOUNT_ON;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -42,8 +44,6 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * Created by pinteae on 1/11/2017.
  */
 public class SQLCommand {
-
-    private final static String SET_NOCOUNT_ON = "SET NOCOUNT ON";
 
     @Action(name = "SQL Command",
             outputs = {
@@ -89,8 +89,8 @@ public class SQLCommand {
         mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_FORWARD_ONLY));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
 
         Map<String, String> inputParameters = SQLCommandUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -107,6 +107,7 @@ public class SQLCommand {
                 trustStore,
                 trustStorePassword,
                 databasePoolingProperties);
+
         inputParameters.put(RESULT_SET_TYPE, resultSetType);
         inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
 

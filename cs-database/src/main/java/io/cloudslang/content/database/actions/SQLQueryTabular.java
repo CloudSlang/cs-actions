@@ -19,9 +19,11 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryTabularService;
-import io.cloudslang.content.database.utils.*;
+import io.cloudslang.content.database.utils.Constants;
+import io.cloudslang.content.database.utils.InputsProcessor;
+import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLQueryTabularUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,8 +37,7 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -44,6 +45,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * Created by pinteae on 1/11/2017.
  */
 public class SQLQueryTabular {
+
     @Action(name = "SQL Query Tabular",
             outputs = {
                     @Output(RETURN_CODE),
@@ -92,8 +94,8 @@ public class SQLQueryTabular {
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, "1200"));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
 
         Map<String, String> inputParameters = SQLQueryTabularUtil.createInputParametersMap(dbServerName,
                 dbType,

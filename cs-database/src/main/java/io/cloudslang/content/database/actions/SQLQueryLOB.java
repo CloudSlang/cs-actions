@@ -19,8 +19,6 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.database.constants.DBOutputNames;
 import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryLobService;
 import io.cloudslang.content.database.utils.*;
@@ -40,9 +38,7 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
-import static io.cloudslang.content.database.constants.DBOtherValues.ZERO;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
 import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
@@ -55,8 +51,6 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class SQLQueryLOB {
 
-//    private int iQueryCount = 0;
-
     @Action(name = "SQL Query LOB",
             outputs = {
                     @Output(RETURN_CODE),
@@ -65,12 +59,9 @@ public class SQLQueryLOB {
                     @Output(ROWS_LEFT)
             },
             responses = {
-                    @Response(text = HAS_MORE, field = RETURN_CODE, value = SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = NO_MORE, field = RETURN_CODE, value = DBReturnCodes.NO_MORE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = HAS_MORE, field = RETURN_CODE, value = SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = NO_MORE, field = RETURN_CODE, value = DBReturnCodes.NO_MORE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
                                        @Param(value = DB_TYPE) String dbType,
@@ -113,8 +104,8 @@ public class SQLQueryLOB {
         mySqlInputs.setKey(key);
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, "1200"));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
 
         Map<String, String> inputParameters = SQLQueryLOBUtil.createInputParametersMap(dbServerName,
                 dbType,

@@ -20,8 +20,6 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.database.constants.DBInputNames;
 import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryService;
 import io.cloudslang.content.database.utils.*;
@@ -29,7 +27,6 @@ import io.cloudslang.content.database.utils.other.SQLQueryUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +37,7 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
-import static io.cloudslang.content.database.constants.DBOtherValues.ZERO;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
 import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
@@ -108,8 +103,8 @@ public class SQLQuery {
         mySqlInputs.setKey(key);
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, "1200"));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
         mySqlInputs.setIgnoreCase(defaultIfEmpty(ignoreCase, ""));
 //        mySqlInputs.setGlobalSessionObject();
 

@@ -25,10 +25,8 @@ import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLScriptUtil;
-import io.cloudslang.content.utils.CollectionUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -38,6 +36,8 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
+import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_READ_ONLY;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_SCROLL_INSENSITIVE;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static io.cloudslang.content.database.utils.SQLUtils.readFromFile;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -46,8 +46,6 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * Created by pinteae on 1/11/2017.
  */
 public class SQLScript {
-
-    public static final String SQL_COMMANDS = "sqlCommands";
 
     @Action(name = "SQL Command",
             outputs = {
@@ -98,8 +96,8 @@ public class SQLScript {
         mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
 
         Map<String, String> inputParameters = SQLScriptUtil.createInputParametersMap(dbServerName,
                 dbType,
