@@ -15,28 +15,28 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.database.constants.DBInputNames;
 import io.cloudslang.content.database.services.SQLCommandService;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLCommandUtil;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
-import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_VALUES;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -48,7 +48,7 @@ public class SQLCommand {
     @Action(name = "SQL Command",
             outputs = {
                     @Output(RETURN_CODE),
-                    @Output(OutputNames.RETURN_RESULT),
+                    @Output(RETURN_RESULT),
                     @Output(EXCEPTION)
             },
             responses = {
@@ -72,6 +72,26 @@ public class SQLCommand {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+        //todo validation required
+        SQLInputs mySqlInputs = new SQLInputs();
+        mySqlInputs.setDbServer(dbServerName); //mandatory
+        mySqlInputs.setDbType(defaultIfEmpty(dbType, ""));
+        mySqlInputs.setUsername(username);
+        mySqlInputs.setPassword(password);
+        mySqlInputs.setInstance(defaultIfEmpty(instance, ""));
+        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, ""));
+        mySqlInputs.setDbName(database);
+        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, ""));
+        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, ""));
+        mySqlInputs.setSqlCommand(command);
+        mySqlInputs.setTrustAllRoots(defaultIfEmpty(trustAllRoots, BooleanValues.FALSE));
+        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
+        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
+        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+
         Map<String, String> inputParameters = SQLCommandUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,

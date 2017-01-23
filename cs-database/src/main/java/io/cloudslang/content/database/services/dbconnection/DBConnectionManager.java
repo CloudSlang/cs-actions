@@ -222,7 +222,7 @@ public class DBConnectionManager {
 //            logger.debug("Ready to clean pools...");
 //        }
 
-        Hashtable<String, ArrayList<String>> removedDsKeyTable = null;
+        Hashtable<String, List<String>> removedDsKeyTable = null;
 
         //gather all the empty ds's key, can't remove item while iterate
         Enumeration<String> allPoolKeys = dbmsPoolTable.keys();
@@ -248,15 +248,15 @@ public class DBConnectionManager {
                     }
                     //no connections
                     if (conCount == 0) {
-                        ArrayList<String> removedList = null;
+                        List<String> removedList = null;
                         if (removedDsKeyTable == null) {
-                            removedDsKeyTable = new Hashtable<String, ArrayList<String>>();
+                            removedDsKeyTable = new Hashtable<>();
                         } else {
                             removedList = removedDsKeyTable.get(dbPoolKey);
                         }
 
                         if (removedList == null) {
-                            removedList = new ArrayList<String>();
+                            removedList = new ArrayList<>();
                             removedList.add(dsKey);
                             removedDsKeyTable.put(dbPoolKey, removedList);
                         } else {
@@ -273,7 +273,7 @@ public class DBConnectionManager {
             while (removedPoolKeys.hasMoreElements()) {
                 String removedPoolKey = removedPoolKeys.nextElement();
                 PooledDataSourceProvider provider = this.getProvider(removedPoolKey);
-                ArrayList<String> removedDsList = removedDsKeyTable.get(removedPoolKey);
+                List<String> removedDsList = removedDsKeyTable.get(removedPoolKey);
                 Hashtable<String, DataSource> dsTable = dbmsPoolTable.get(removedPoolKey);
                 Iterator<String> it = removedDsList.iterator();
                 while (it.hasNext()) {

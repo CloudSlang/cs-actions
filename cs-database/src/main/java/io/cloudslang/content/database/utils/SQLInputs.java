@@ -9,8 +9,11 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -52,9 +55,9 @@ public class SQLInputs {
     private String trustStore;
     private String trustStorePassword;
     private String trustAllRoots;
-
     private Integer resultSetType;
     private Integer resultSetConcurrency;
+    private GlobalSessionObject<Map<String, Object>> globalSessionObject;//todo
 
     public SQLInputs() {
     }
@@ -79,7 +82,7 @@ public class SQLInputs {
         return lRows;
     }
 
-    public void setlRows(ArrayList<String> lRows) {
+    public void setlRows(List<String> lRows) {
         this.lRows = lRows;
     }
 
@@ -353,5 +356,13 @@ public class SQLInputs {
 
     public void setTrustAllRoots(String trustAllRoots) {
         this.trustAllRoots = trustAllRoots;
+    }
+
+    public GlobalSessionObject<Map<String, Object>> getGlobalSessionObject() {
+        return globalSessionObject;
+    }
+
+    public void setGlobalSessionObject(GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+        this.globalSessionObject = globalSessionObject;
     }
 }

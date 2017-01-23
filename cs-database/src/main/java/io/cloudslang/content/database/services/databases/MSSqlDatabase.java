@@ -17,21 +17,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.cloudslang.content.database.utils.Constants.AUTH_SQL;
-import static io.cloudslang.content.database.utils.Constants.COLON;
-import static io.cloudslang.content.database.utils.Constants.DATABASE_NAME;
-import static io.cloudslang.content.database.utils.Constants.ENCRYPT;
-import static io.cloudslang.content.database.utils.Constants.EQUALS;
-import static io.cloudslang.content.database.utils.Constants.FALSE;
-import static io.cloudslang.content.database.utils.Constants.INSTANCE;
-import static io.cloudslang.content.database.utils.Constants.INTEGRATED_SECURITY;
-import static io.cloudslang.content.database.utils.Constants.INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL;
-import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
-import static io.cloudslang.content.database.utils.Constants.SEMI_COLON;
-import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
-import static io.cloudslang.content.database.utils.Constants.TRUE;
-import static io.cloudslang.content.database.utils.Constants.TRUSTORE_PARAMS;
-import static io.cloudslang.content.database.utils.Constants.TRUST_SERVER_CERTIFICATE;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.utils.Constants.*;
 
 /**
  * Created by victor on 13.01.2017.
@@ -99,7 +86,7 @@ public class MSSqlDatabase {
             }
             // Set to true to send LMv2/NTLMv2 responses when using Windows authentication
             dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
-        } else if (!Constants.AUTH_SQL.equalsIgnoreCase(authenticationType)) //check invalid authentication type
+        } else if (!AUTH_SQL.equalsIgnoreCase(authenticationType)) //check invalid authentication type
         {
             //if it is something other than sql or empty,
             //we supply the empty string with sql
@@ -110,11 +97,16 @@ public class MSSqlDatabase {
 
     public static String addSslEncryptionToConnection(String trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
         final StringBuilder dbUrlBuilder = new StringBuilder(dbUrlMSSQL);
-        dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS + TRUE + SEMI_COLON + TRUST_SERVER_CERTIFICATE + EQUALS);
+        dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS)
+                .append(TRUE)
+                .append(SEMI_COLON)
+                .append(TRUST_SERVER_CERTIFICATE)
+                .append(EQUALS);
         if (trustAllRoots.equalsIgnoreCase(TRUE)) {
             dbUrlBuilder.append(TRUE);
         } else {
-            dbUrlBuilder.append(FALSE + String.format(TRUSTORE_PARAMS, trustStore, trustStorePassword));
+            dbUrlBuilder.append(FALSE)
+                    .append(String.format(TRUSTORE_PARAMS, trustStore, trustStorePassword));
         }
         return dbUrlBuilder.toString();
     }

@@ -88,7 +88,7 @@ public class SQLQueryLOB {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
-                                       GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                       @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         Map<String, String> inputParameters = SQLQueryLOBUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,

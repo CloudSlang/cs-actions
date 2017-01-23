@@ -37,7 +37,7 @@ public class SQLQueryTabularService {
             throw new Exception("command input is empty.");
         }
         ConnectionService connectionService = new ConnectionService();
-        try (Connection connection = connectionService.setUpConnection(sqlInputs);){
+        try (Connection connection = connectionService.setUpConnection(sqlInputs)){
             connection.setReadOnly(true);
 
             Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());

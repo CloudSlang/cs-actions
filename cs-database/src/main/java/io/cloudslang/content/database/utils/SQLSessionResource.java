@@ -20,10 +20,9 @@ public class SQLSessionResource extends SessionResource<Map<String, Object>> {
 
     private Map<String, Object> sqlConnectionMap;
 
-    public SQLSessionResource(Map<String, Object> sqlConnectionMap) {
+    public SQLSessionResource(final Map<String, Object> sqlConnectionMap) {
         this.sqlConnectionMap = sqlConnectionMap;
     }
-
 
     @Override
     public Map<String, Object> get() {

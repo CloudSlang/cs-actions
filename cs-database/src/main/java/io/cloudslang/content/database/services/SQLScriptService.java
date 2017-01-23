@@ -32,16 +32,15 @@ public class SQLScriptService {
             throw new Exception("No SQL command to be executed.");
         }
         ConnectionService connectionService = new ConnectionService();
-        try (Connection connection = connectionService.setUpConnection(sqlInputs)){
+        try (final Connection connection = connectionService.setUpConnection(sqlInputs)) {
 
             try {
                 connection.setReadOnly(false);
             } catch (Exception e) {
             } // not all drivers support this
 
-            final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
-            statement.setQueryTimeout(sqlInputs.getTimeout());
-            try {
+            try (final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency())){
+                statement.setQueryTimeout(sqlInputs.getTimeout());
                 boolean autoCommit = connection.getAutoCommit();
                 connection.setAutoCommit(false);
                 int updateCount = 0;
@@ -74,7 +73,6 @@ public class SQLScriptService {
                 } else
                     throw e;
             }
-
         }
         return "Command completed successfully";
     }

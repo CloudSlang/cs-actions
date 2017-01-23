@@ -17,6 +17,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -30,12 +31,14 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
@@ -43,6 +46,10 @@ import static io.cloudslang.content.database.constants.DBOtherValues.ZERO;
 import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
 import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultDBPoolingProperties;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetConcurrency;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetType;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by pinteae on 1/5/2017.
@@ -82,7 +89,28 @@ public class SQLQuery {
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
                                        @Param(value = IGNORE_CASE) String ignoreCase,
-                                       GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                       @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+
+        SQLInputs mySqlInputs = new SQLInputs();
+        mySqlInputs.setDbServer(dbServerName); //mandatory
+        mySqlInputs.setDbType(defaultIfEmpty(dbType, ""));
+        mySqlInputs.setUsername(username);
+        mySqlInputs.setPassword(password);
+        mySqlInputs.setInstance(defaultIfEmpty(instance, ""));
+        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, ""));
+        mySqlInputs.setDbName(database);
+        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, ""));
+        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, ""));
+        mySqlInputs.setSqlCommand(command);
+        mySqlInputs.setTrustAllRoots(defaultIfEmpty(trustAllRoots, BooleanValues.FALSE));
+        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
+        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
+        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+        mySqlInputs.setIgnoreCase(defaultIfEmpty(ignoreCase, ""));
+//        mySqlInputs.setGlobalSessionObject();
 
         Map<String, String> inputParameters = SQLQueryUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -184,7 +212,7 @@ public class SQLQuery {
             }
 
             if (globalSessionObject.getResource() != null) {
-                sqlInputs.setlRows((ArrayList<String>) globalSessionObject.getResource().get().get(aKey));
+                sqlInputs.setlRows((List<String>) globalSessionObject.getResource().get().get(aKey));
                 sqlInputs.setStrColumns((String) globalSessionObject.getResource().get().get(sqlInputs.getStrKeyCol()));
 
                 if (!sqlInputs.getlRows().isEmpty()) {
@@ -227,6 +255,7 @@ public class SQLQuery {
                 }
 //                result.put("queryCount", String.valueOf(sqlInputs.getiQuerys()));
             }
+
         } catch (Exception e) {
             if (e instanceof SQLException)
                 result.put(EXCEPTION, SQLUtils.toString((SQLException) e));

@@ -18,6 +18,7 @@ import org.junit.rules.ExpectedException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.Constants.TRUE;
 import static junit.framework.Assert.assertEquals;
@@ -98,7 +99,7 @@ public class MSSqlDatabaseTest {
     @Test
     public void testSetUpAllAuthSQL() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls, AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
         assertEquals("jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
@@ -106,7 +107,7 @@ public class MSSqlDatabaseTest {
     @Test
     public void testSetUpAllIPV6LIteral() throws ClassNotFoundException, SQLException {
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
-        mSSqlDatabase.setUp(DB_NAME, DB_SERVER_IPV6_LITERAL, DB_PORT, dbUrls, Constants.AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
+        mSSqlDatabase.setUp(DB_NAME, DB_SERVER_IPV6_LITERAL, DB_PORT, dbUrls, AUTH_SQL, INSTANCE, WINDOWS_DOMAIN, SQLSERVER_JDBC_DRIVER, TRUE, "", "");
         assertEquals("jdbc:sqlserver://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:1433;DatabaseName=dbName;instance=instance;encrypt=true;trustServerCertificate=true", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }

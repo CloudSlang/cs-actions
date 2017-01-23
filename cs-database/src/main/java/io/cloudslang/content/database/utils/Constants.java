@@ -36,7 +36,7 @@ public class Constants {
     public static final String TNS_PATH = "TNSPath";
     public static final String TNS_ENTRY = "TNSEntry";
     public static final String AUTH_WINDOWS = "Windows";
-    public static final String AUTH_SQL = "Sql";
+//    public static final String AUTH_SQL = "Sql";
     public static final String IGNORE_CASE = "ignoreCase";
     public static final String ORACLE_DB_TYPE = "Oracle";
     public static final String MYSQL_DB_TYPE = "MySQL";

@@ -38,4 +38,5 @@ public class DBInputNames extends InputNames {
     public static final String COL_DELIMITER = "colDelimiter";
     public static final String ROW_DELIMITER = "rowDelimiter";
     public static final String SCRIPT_FILE_NAME = "scriptFileName";
+    public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
 }

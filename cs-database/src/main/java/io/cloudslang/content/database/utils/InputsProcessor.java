@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_VALUES;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
 import static io.cloudslang.content.database.utils.Constants.*;
@@ -67,6 +68,7 @@ public class InputsProcessor {
         //tns
         String tnsPath = parameters.get(TNS_PATH);
         sqlInputs.setTnsPath(tnsPath);
+
         String tnsEntry = parameters.get(TNS_ENTRY);
         sqlInputs.setTnsEntry(tnsEntry);
 
@@ -185,18 +187,18 @@ public class InputsProcessor {
         } catch (Exception e) {
             throw new Exception("timeout input is not in valid format.");
         }
-
+// todo already in SQLInputsValidator
         String databasePoolingPropertiesStr = parameters.get(DATABASE_POOLING_PROPRTIES);
         Properties databasePoolingProperties = new Properties();
         databasePoolingProperties.load(new StringReader(databasePoolingPropertiesStr));
         sqlInputs.setDatabasePoolingProperties(databasePoolingProperties);
-        String trustAllRoots = parameters.get(TRUST_ALL_ROOTS);
+//
+
+        String trustAllRoots = StringUtils.defaultIfEmpty(parameters.get(TRUST_ALL_ROOTS), FALSE);
+
         String trustStore = parameters.get(TRUST_STORE);
         String trustStorePassword = parameters.get(TRUST_STORE_PASSWORD);
 
-        if (StringUtils.isEmpty(trustAllRoots)) {
-            trustAllRoots = FALSE;
-        }
 
         if (trustAllRoots.equalsIgnoreCase(FALSE) && (StringUtils.isEmpty(trustStore) || StringUtils.isEmpty(trustStorePassword))) {
             throw new Exception("A trustStore and a trustStorePassword should be provided.");

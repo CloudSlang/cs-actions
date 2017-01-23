@@ -16,6 +16,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -32,9 +33,14 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultDBPoolingProperties;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetConcurrency;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.getOrDefaultResultSetType;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by pinteae on 1/10/2017.
@@ -73,6 +79,25 @@ public class SQLQueryAllRows {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+        SQLInputs mySqlInputs = new SQLInputs();
+        mySqlInputs.setDbServer(dbServerName); //mandatory
+        mySqlInputs.setDbType(defaultIfEmpty(dbType, ""));
+        mySqlInputs.setUsername(username);
+        mySqlInputs.setPassword(password);
+        mySqlInputs.setInstance(defaultIfEmpty(instance, ""));
+        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, ""));
+        mySqlInputs.setDbName(database);
+        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, ""));
+        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, ""));
+        mySqlInputs.setSqlCommand(command);
+        mySqlInputs.setTrustAllRoots(defaultIfEmpty(trustAllRoots, BooleanValues.FALSE));
+        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, ""));
+        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, ""));
+        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, ""));
+        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, ""));
+        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, ""));
+
         Map<String, String> inputParameters = SQLQueryAllUtil.createInputParametersMap(dbServerName,
                 dbType,
                 username,

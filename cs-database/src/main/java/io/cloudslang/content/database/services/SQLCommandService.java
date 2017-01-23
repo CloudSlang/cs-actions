@@ -24,8 +24,7 @@ import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
  */
 public class SQLCommandService {
 
-    public String executeSqlCommand(SQLInputs sqlInputs)
-            throws Exception {
+    public String executeSqlCommand(SQLInputs sqlInputs) throws Exception {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }
