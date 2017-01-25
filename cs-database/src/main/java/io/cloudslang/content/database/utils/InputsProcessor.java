@@ -13,17 +13,16 @@ import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.StringReader;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
-import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_VALUES;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_VALUES;
+
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by victor on 13.01.2017.
@@ -54,7 +53,7 @@ public class InputsProcessor {
 
         //ignore case
         String ignoreCase = parameters.get(IGNORE_CASE);
-        if (StringUtils.isEmpty(ignoreCase)) {
+        if (isEmpty(ignoreCase)) {
             ignoreCase = Boolean.TRUE.toString();
         } else {
             if (!(ignoreCase.equalsIgnoreCase("true") || ignoreCase.equalsIgnoreCase("false"))) {
@@ -68,74 +67,72 @@ public class InputsProcessor {
         sqlInputs.setDbServer(dbServer);
 
         //tns
-        String tnsPath = parameters.get(TNS_PATH); //todo can't find this
-        sqlInputs.setTnsPath(tnsPath);
-
-        String tnsEntry = parameters.get(TNS_ENTRY);
-        sqlInputs.setTnsEntry(tnsEntry);
+//        String tnsPath = parameters.get(TNS_PATH); //todo can't find this
+//        sqlInputs.setTnsPath(tnsPath);
+//
+//        String tnsEntry = parameters.get(TNS_ENTRY);
+//        sqlInputs.setTnsEntry(tnsEntry);
 
         //dbType
         String dbType = parameters.get(DBTYPE);
         sqlInputs.setDbType(dbType);
         //default to be oracle if it is empty or null
-        if (StringUtils.isEmpty(sqlInputs.getDbType())) {
+        if (isEmpty(sqlInputs.getDbType())) {
             sqlInputs.setDbType(ORACLE_DB_TYPE);
         }
 
-        SQLUtils.processHostorTNS(sqlInputs.getDbType(), sqlInputs.getDbServer(), sqlInputs.getTnsEntry()); //todo
+//        processHostorTNS(sqlInputs.getDbType(), sqlInputs.getDbServer(), sqlInputs.getTnsEntry()); //todo
         //username
         String username = parameters.get(USERNAME);
         sqlInputs.setUsername(username);
-        if (StringUtils.isEmpty(sqlInputs.getUsername())) {
+        if (isEmpty(sqlInputs.getUsername())) {
             throw new Exception("username input is empty.");
         }
 
         //password
         String password = parameters.get(PASSWORD);
         sqlInputs.setPassword(password);
-        if (StringUtils.isEmpty(sqlInputs.getPassword())) {
+        if (isEmpty(sqlInputs.getPassword())) {
             throw new Exception("password input is empty.");
         }
 
 
         //if using tns to make the connection, no need to process dbPort, database and autyType inputs
-        if (StringUtils.isEmpty(sqlInputs.getTnsEntry())) {
 
-            //database
-            String dbName = parameters.get(DATABASENAME);
-            sqlInputs.setDbName(dbName);
-            //check "Database" input is empty only if dbtype is not Sybase or MSSQL
-            //cause for Sybase and MSSQL, it is ok to use empty database, they will pick up the default db
-            if (!SYBASE_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())
-                    && !MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())
-                    && !NETCOOL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                if (StringUtils.isEmpty(sqlInputs.getDbName())) {
-                    throw new Exception("database input is empty.");
-                }
+        //database
+        String dbName = parameters.get(DATABASENAME);
+        sqlInputs.setDbName(dbName);
+        //check "Database" input is empty only if dbtype is not Sybase or MSSQL
+        //cause for Sybase and MSSQL, it is ok to use empty database, they will pick up the default db
+        if (!SYBASE_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())
+                && !MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())
+                && !NETCOOL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
+            if (isEmpty(sqlInputs.getDbName())) {
+                throw new Exception("database input is empty.");
             }
-
-
-            //authType
-            String authenticationType = parameters.get(AUTH_TYPE);
-            sqlInputs.setAuthenticationType(authenticationType);
-
-            //windows authentication is only used with MSSQL.
-            if (StringUtils.isEmpty(sqlInputs.getAuthenticationType())) {
-                sqlInputs.setAuthenticationType(AUTH_SQL);
-            }
-            if (!AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !AUTH_SQL.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
-                throw new Exception("authentication type input is not valid.");
-            }
-            if (AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                throw new Exception("Windows authentication can only be used with MSSQL!");
-            }
-
-            //dbPort
-            String dbPort = parameters.get(DBPORT);
-            sqlInputs.setDbPort(dbPort);
-
-            processDefaultValues(sqlInputs, sqlInputs.getDbType(), sqlInputs.getAuthenticationType(), username); //todo
         }
+
+
+        //authType
+        String authenticationType = parameters.get(AUTH_TYPE);
+        sqlInputs.setAuthenticationType(authenticationType);
+
+        //windows authentication is only used with MSSQL.
+        if (isEmpty(sqlInputs.getAuthenticationType())) {
+            sqlInputs.setAuthenticationType(AUTH_SQL);
+        }
+        if (!AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !AUTH_SQL.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
+            throw new Exception("authentication type input is not valid.");
+        }
+        if (AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
+            throw new Exception("Windows authentication can only be used with MSSQL!");
+        }
+
+        //dbPort
+        String dbPort = parameters.get(DBPORT);
+        sqlInputs.setDbPort(Integer.valueOf(dbPort)); //todo temporary fix
+
+        SQLInputsUtils.processDefaultValues(sqlInputs, sqlInputs.getDbType(), sqlInputs.getAuthenticationType(), username); //todo
 
         //command
         String sqlCommand = parameters.get(COMMAND);
@@ -147,21 +144,21 @@ public class InputsProcessor {
         //when user enters empty value for "key", default it to empty string
         //otherwise key will have the value "null" (the same as user enters "null")
         String key = parameters.get(KEY);
-        if (StringUtils.isEmpty(key)) {
+        if (isEmpty(key)) {
             key = "";
         }
         sqlInputs.setKey(key);
 
         //delimiter
         String strDelim = parameters.get(DELIM);
-        if (StringUtils.isEmpty(strDelim)) {
+        if (isEmpty(strDelim)) {
             strDelim = "";
         }
         sqlInputs.setStrDelim(strDelim);
 
         //get a fresh list for each run
         String inputDbUrl = parameters.get(DBURL);
-        if (!StringUtils.isEmpty(inputDbUrl)) {
+        if (!isEmpty(inputDbUrl)) {
             final List<String> dbUrls = sqlInputs.getDbUrls();
             dbUrls.add(inputDbUrl);
         }
@@ -174,14 +171,14 @@ public class InputsProcessor {
         //instance
         String instance = parameters.get(INSTANCE);
         sqlInputs.setInstance(instance);
-        if (!StringUtils.isEmpty(sqlInputs.getInstance()) && !sqlInputs.getDbType().equalsIgnoreCase(MSSQL_DB_TYPE)) {
+        if (!isEmpty(sqlInputs.getInstance()) && !sqlInputs.getDbType().equalsIgnoreCase(MSSQL_DB_TYPE)) {
             throw new Exception("The instance input can only be used with MSSQL.");
         }
 
         //timeout
         String timeoutString = parameters.get(TIMEOUT);
         try {
-            if (StringUtils.isEmpty(timeoutString)) {
+            if (isEmpty(timeoutString)) {
                 sqlInputs.setTimeout(DEFAULTTIMEOUT);
             } else {
                 sqlInputs.setTimeout(Integer.parseInt(timeoutString));
@@ -203,7 +200,7 @@ public class InputsProcessor {
         String trustStorePassword = parameters.get(TRUST_STORE_PASSWORD);
 
 
-        if (!trustAllRoots && (StringUtils.isEmpty(trustStore) || StringUtils.isEmpty(trustStorePassword))) {
+        if (!trustAllRoots && (isEmpty(trustStore) || isEmpty(trustStorePassword))) {
             throw new Exception("A trustStore and a trustStorePassword should be provided.");
         }
 
@@ -246,49 +243,6 @@ public class InputsProcessor {
 //                + OOResultSet.CONCUR_READ_ONLY.toString() + " and " + OOResultSet.CONCUR_UPDATABLE.toString());
 //    }
 
-    private static void processDefaultValues(SQLInputs sqlInputs, String dbType, String authenticationType, String username) throws Exception {
-        String dbPort = "";
-        if (dbType.equalsIgnoreCase(ORACLE_DB_TYPE)) {
-            dbPort = DEFAULTPORT_ORACLE;
-        } else if (dbType.equalsIgnoreCase(MSSQL_DB_TYPE)) {
-            dbPort = DEFAULTPORT_MSSQL;
-            if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
-                if (username.contains(ESCAPED_BACKSLASH)) {
-                    String domain = username.substring(0, username.indexOf(ESCAPED_BACKSLASH));
-                    final String newUsername = username.substring(username.indexOf(ESCAPED_BACKSLASH) + 1, username.length());
-                    sqlInputs.setUsername(newUsername);
-                    sqlInputs.setWindowsDomain(domain);
-                }
-
-            }
-
-        } else if (dbType.equalsIgnoreCase(NETCOOL_DB_TYPE)) {
-            dbPort = DEFAULTPORT_NETCOOL;
-            sqlInputs.setNetcool(true);
-        } else if (dbType.equalsIgnoreCase(DB2_DB_TYPE)) {
-            dbPort = DEFAULTPORT_DB2;
-        } else if (dbType.equalsIgnoreCase(SYBASE_DB_TYPE)) {
-            dbPort = DEFAULTPORT_SYBASE;
-        } else if (dbType.equalsIgnoreCase(MYSQL_DB_TYPE)) {
-            dbPort = DEFAULTPORT_MYSQL;
-        } else if (dbType.equalsIgnoreCase(Constants.POSTGRES_DB_TYPE)) {
-            dbPort = DEFAULTPORT_PSQL;
-        }
-        if (StringUtils.isEmpty(sqlInputs.getDbPort())) {
-            sqlInputs.setDbPort(dbPort);
-        }
-        try {
-            //in case that user entered dbType is not oracle, netcool, mssql or db2
-            if (StringUtils.isEmpty(sqlInputs.getDbPort())) {
-                throw new Exception("There's no default DBPort for " + sqlInputs.getDbType() + " db server, please enter a valid dbPort.");
-            } else {
-                Integer.parseInt(sqlInputs.getDbPort());
-            }
-        } catch (NumberFormatException e) {
-            throw new Exception("dbPort input is not in valid format.");
-        }
-    }
-
     /**
      * init all the non-static variables.
      *
@@ -303,10 +257,7 @@ public class InputsProcessor {
             sqlInputs.setSqlCommand(null);
             sqlInputs.setDbServer(null);
             sqlInputs.setDbName(null);
-            sqlInputs.setDbPort(null);
             sqlInputs.setDbType(null);
-            sqlInputs.setTnsPath(null);
-            sqlInputs.setTnsEntry(null);
             sqlInputs.setStrKeyCol(null);
             sqlInputs.setStrKeyFiles(null);
             sqlInputs.setStrKeyNames(null);

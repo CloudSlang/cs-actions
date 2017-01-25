@@ -86,13 +86,16 @@ public class SQLQuery {
                                        @Param(value = IGNORE_CASE) String ignoreCase,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
+        resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
+        resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
-        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, EMPTY));
+        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
         mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
@@ -105,8 +108,8 @@ public class SQLQuery {
         mySqlInputs.setKey(key);
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
+        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         mySqlInputs.setIgnoreCase(defaultIfEmpty(ignoreCase, TRUE));
 //        mySqlInputs.setGlobalSessionObject();
 
@@ -145,14 +148,14 @@ public class SQLQuery {
             final String sqlCommand = sqlInputs.getSqlCommand();
             final String sqlUsername = sqlInputs.getUsername();
             final String sqlAuthenticationType = sqlInputs.getAuthenticationType();
-            final String sqlDbPort = sqlInputs.getDbPort();
+            final String sqlDbPort = Integer.toString(sqlInputs.getDbPort());
             final String sqlKey = sqlInputs.getKey();
-            final String sqlTnsEntry = sqlInputs.getTnsEntry();
-            final String sqlTnsPath = sqlInputs.getTnsPath();
+            final String sqlTnsEntry = ""; //todo
+            final String sqlTnsPath = ""; //todo
             final String sqlPassword = sqlInputs.getPassword();
             final boolean sqlIgnoreCase = Boolean.parseBoolean(sqlInputs.getIgnoreCase());
 
-            if (Constants.DB2_DB_TYPE.equalsIgnoreCase(sqlDbType)) {
+            if (DB2_DB_TYPE.equalsIgnoreCase(sqlDbType)) {
                 sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
             }
             if (StringUtils.isEmpty(sqlCommand)) {
@@ -163,7 +166,7 @@ public class SQLQuery {
 
             if (sqlIgnoreCase) {
                 //calculate session id for JDBC operations
-                if (!StringUtils.isEmpty(sqlDbServer)) {
+                if (StringUtils.isNoneEmpty(sqlDbServer)) {
                     if (sqlInputs.getInstance() != null) {
                         sqlInputs.setInstance(sqlInputs.getInstance().toLowerCase());
                     }

@@ -30,7 +30,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
+
+import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -81,7 +82,7 @@ public class SQLScriptServiceTest {
     @Test
     public void testExecuteSqlScript() throws Exception {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
@@ -100,7 +101,7 @@ public class SQLScriptServiceTest {
     @Test
     public void testExecuteSqlScriptTwoLines() throws Exception {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);

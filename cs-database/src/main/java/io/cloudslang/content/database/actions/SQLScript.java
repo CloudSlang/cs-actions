@@ -16,7 +16,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
@@ -34,10 +33,8 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TRUST_ALL_ROOTS;
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
-import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_READ_ONLY;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_SCROLL_INSENSITIVE;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLUtils.readFromFile;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -80,13 +77,16 @@ public class SQLScript {
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
 
+        resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
+        resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
-        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, EMPTY));
+        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
         mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
@@ -97,8 +97,8 @@ public class SQLScript {
         mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
+        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
 
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 

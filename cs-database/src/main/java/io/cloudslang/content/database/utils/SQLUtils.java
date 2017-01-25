@@ -10,7 +10,6 @@
 package io.cloudslang.content.database.utils;
 
 
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -20,7 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by victor on 13.01.2017.
@@ -47,30 +47,6 @@ public class SQLUtils {
         return valueResultSet;
     }
 
-    public static void processHostorTNS(String dbType, String dbServer, String tnsEntry) throws Exception {
-        if (dbType == null) {
-            return;
-        }
-        if (dbType.equalsIgnoreCase(ORACLE_DB_TYPE))//oracle
-        {
-            if ((dbServer == null || dbServer.length() == 0) &&
-                    (tnsEntry == null || tnsEntry.length() == 0)
-                    ) {
-                SQLException sqlEx =
-                        new SQLException("Failed to getConnection. Please provide DBServerName if you use JDBC. Or please provide TNSEntry if you use TNS");
-//                logger.error(sqlEx); todo
-                throw sqlEx;
-            }
-        } else//other db type
-        {
-            if (dbServer == null || dbServer.length() == 0) {
-                SQLException sqlEx = new SQLException("Failed to getConnection. DBServerName is empty.");
-//                logger.error(sqlEx); todo
-                throw sqlEx;
-            }
-        }
-    }
-
     public static boolean trimRowstat(String dbUrl, String trimRowstat) {
         //trim the last(ROWSTAT) column for MSSQL
         //for more info see OO bug #8886 and jTDS bug #1329765
@@ -89,7 +65,7 @@ public class SQLUtils {
 
     public static String processNullTerminatedString(String value) {
         String returnValue = value;
-        if (StringUtils.isEmpty(value)) {
+        if (isEmpty(value)) {
             return "null";
         }
         char[] charArray = value.toCharArray();

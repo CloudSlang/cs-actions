@@ -20,8 +20,14 @@ public class DBExceptionValues extends ExceptionValues {
     public static final String INVALID_AUTH_TYPE_WINDOWS = "Windows authentication can only be used with MSSQL!";
     public static final String INVALID_INSTANCE = "The instance input can only be used with MSSQL.";
     public static final String INVALID_NEGATIVE_TIMEOUT = "Timeout must be greater than zero!";
-    public static final String INVALID_TRUS_ALL_ROOTS_REQUIRE = "Timeout must be greater than zero!";
+    public static final String INVALID_TRUST_ALL_ROOTS_REQUIRE = "Timeout must be greater than zero!";
+    public static final String INVALID_DB_TYPE = "The dbType input is invalid";
     public static final String INVALID_USERNAME = "username input is empty.";
     public static final String INVALID_PASSWORD = "password input is empty.";
     public static final String INVALID_DATABASE = "database input is empty.";
+    public static final String INVALID_COMMAND = "command input is empty.";
+    public static final String INVALID_DB_PORT = "dbPort must be an integer.";
+    public static final String INVALID_RESULT_SET_TYPE = "dbPort must be an integer.";
+    public static final String INVALID_RESULT_SET_CONCURRENCY = "dbPort must be an integer.";
+    public static final String INVALID_TRUST_ALL_ROOTS = "trustAllRoots must be 'true' or 'false'";
 }

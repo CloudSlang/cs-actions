@@ -30,7 +30,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
+
+import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.POSTGRES_DB_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -78,7 +80,7 @@ public class SQLQueryAllRowsServiceTest {
     @Test
     public void testExecuteQueryAllRows() throws Exception {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
@@ -95,7 +97,7 @@ public class SQLQueryAllRowsServiceTest {
     @Test
     public void testExecuteQueryAllRowsIsNetcool() throws Exception {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
@@ -112,8 +114,8 @@ public class SQLQueryAllRowsServiceTest {
 
     @Test
     public void testExecuteQueryAllRowsPSql() throws Exception {
-        sqlInputs.setDbType(Constants.POSTGRES_DB_TYPE);
-        sqlInputs.setDbPort("5432");
+        sqlInputs.setDbType(POSTGRES_DB_TYPE);
+        sqlInputs.setDbPort(5432);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);

@@ -17,8 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
-import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
+import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_TYPE;
 
 /**
  * Created by victor on 13.01.2017.
@@ -52,7 +52,7 @@ public class SQLCommandService {
                 try {
                     statement.execute(sqlInputs.getSqlCommand());
                 } catch (SQLException e) {
-                    if (Constants.SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
+                    if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
                         //during a dump sybase sends back status as exceptions.
                         if (sqlInputs.getSqlCommand().trim().toLowerCase().startsWith("dump")) {
                             return SQLUtils.processDumpException(e);
@@ -101,7 +101,7 @@ public class SQLCommandService {
 
                 }
                 //For sybase, when dbcc command is executed, the result is shown in warning message
-                else if (dbType.equalsIgnoreCase(Constants.SYBASE_DB_TYPE) && sqlInputs.getSqlCommand().trim().toLowerCase().startsWith("dbcc")) {
+                else if (dbType.equalsIgnoreCase(SYBASE_DB_TYPE) && sqlInputs.getSqlCommand().trim().toLowerCase().startsWith("dbcc")) {
                     SQLWarning warning = statement.getWarnings();
                     while (warning != null) {
                         sqlInputs.getlRows().add(warning.getMessage());

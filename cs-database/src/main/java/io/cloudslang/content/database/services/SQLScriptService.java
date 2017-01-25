@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_TYPE;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -62,7 +64,7 @@ public class SQLScriptService {
             } catch (SQLException e) {
                 //during a dump sybase sends back status as exceptions.
                 final String dbType = sqlInputs.getDbType();
-                if (Constants.SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
+                if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
                     if (lines.get(0).trim().toLowerCase().startsWith("dump")) {
                         return SQLUtils.processDumpException(e);
                     } else if (lines.get(0).trim().toLowerCase().startsWith("load")) {

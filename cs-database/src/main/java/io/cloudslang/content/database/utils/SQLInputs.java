@@ -20,10 +20,8 @@ public class SQLInputs {
     private String sqlCommand;
     private String dbServer;
     private String dbName;
-    private String dbPort;
+    private int dbPort;
     private String dbType;
-    private String tnsPath;
-    private String tnsEntry;
     private String key;
     private String strKeyCol;
     private String strKeyFiles;
@@ -125,11 +123,11 @@ public class SQLInputs {
         this.dbName = dbName;
     }
 
-    public String getDbPort() {
+    public int getDbPort() {
         return dbPort;
     }
 
-    public void setDbPort(String dbPort) {
+    public void setDbPort(int dbPort) {
         this.dbPort = dbPort;
     }
 
@@ -139,22 +137,6 @@ public class SQLInputs {
 
     public void setDbType(String dbType) {
         this.dbType = dbType;
-    }
-
-    public String getTnsPath() {
-        return tnsPath;
-    }
-
-    public void setTnsPath(String tnsPath) {
-        this.tnsPath = tnsPath;
-    }
-
-    public String getTnsEntry() {
-        return tnsEntry;
-    }
-
-    public void setTnsEntry(String tnsEntry) {
-        this.tnsEntry = tnsEntry;
     }
 
     public String getKey() {

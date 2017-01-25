@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
@@ -87,13 +86,16 @@ public class SQLQueryLOB {
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
+        resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
+        resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
-        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, EMPTY));
+        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
         mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
@@ -106,8 +108,8 @@ public class SQLQueryLOB {
         mySqlInputs.setKey(key);
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
+        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
 
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
@@ -137,7 +139,7 @@ public class SQLQueryLOB {
         Map<String, String> result = new HashMap<>();
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-            if (Constants.DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
+            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
                 sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
             }
             if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
@@ -160,8 +162,8 @@ public class SQLQueryLOB {
             }
             //calculate session id for Oracle operations
             else {
-                aKey = SQLUtils.computeSessionId(sqlInputs.getTnsPath().toLowerCase() +
-                        sqlInputs.getTnsEntry().toLowerCase() + sqlInputs.getUsername() + sqlInputs.getPassword() + sqlInputs.getSqlCommand().toLowerCase() + sqlInputs.getKey());
+//          todo      aKey = SQLUtils.computeSessionId(sqlInputs.getTnsPath().toLowerCase() +
+//                        sqlInputs.getTnsEntry().toLowerCase() + sqlInputs.getUsername() + sqlInputs.getPassword() + sqlInputs.getSqlCommand().toLowerCase() + sqlInputs.getKey());
             }
 
             sqlInputs.setStrKeyCol(aKey + " - Columns");
@@ -258,7 +260,7 @@ public class SQLQueryLOB {
 
             }//globalSessionObject
             else {
-                if ("windows".equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !Constants.MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
+                if ("windows".equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
                     throw new Exception("Windows authentication can only be used with MSSQL!");
                 }
                 SQLQueryLobService sqlQueryLobService = new SQLQueryLobService();

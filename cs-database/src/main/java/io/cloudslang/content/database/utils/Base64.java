@@ -20,7 +20,7 @@ class Base64 extends java.util.prefs.AbstractPreferences {
 
     //keep the key state
 
-    private java.util.Hashtable<String, String> encodedStore = new java.util.Hashtable<String, String>();
+    private java.util.Hashtable<String, String> encodedStore = new java.util.Hashtable<>();
 
 
     /**

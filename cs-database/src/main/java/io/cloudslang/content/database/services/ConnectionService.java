@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -48,15 +48,15 @@ public class ConnectionService {
         dbConnectionManager = DBConnectionManager.getInstance();
 
         final String instance = sqlInputs.getInstance();
-        final String tnsEntry = sqlInputs.getTnsEntry();
+        final String tnsEntry = ""; //todo
         final String windowsDomain = sqlInputs.getWindowsDomain();
         final String dbClass = sqlInputs.getDbClass();
         final List<String> dbUrls = sqlInputs.getDbUrls();
         final String dbType = sqlInputs.getDbType();
         final String dbServer = sqlInputs.getDbServer();
         final String dbName = sqlInputs.getDbName();
-        final String dbPort = sqlInputs.getDbPort();
-        final String tnsPath = sqlInputs.getTnsPath();
+        final int dbPort = sqlInputs.getDbPort();
+        final String tnsPath = ""; //todo
         final String authenticationType = sqlInputs.getAuthenticationType();
         final String trustStore = sqlInputs.getTrustStore();
         final String trustStorePassword = sqlInputs.getTrustStorePassword();
@@ -89,44 +89,44 @@ public class ConnectionService {
         if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.ORACLE;
             OracleDatabase oracleDatabase = new OracleDatabase();
-            oracleDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, tnsPath, tnsEntry);
+            oracleDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls, tnsPath, tnsEntry);
         }
         //MySql
-        else if (Constants.MYSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
+        else if (MYSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MYSQL;
             MySqlDatabase mySqlDatabase = new MySqlDatabase();
-            mySqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls);
+            mySqlDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //MSSQL
         else if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MSSQL;
             MSSqlDatabase msSqlDatabase = new MSSqlDatabase();
-            msSqlDatabase.setUp(localDbName, dbServer, dbPort, dbUrls, authenticationType, instance, windowsDomain, dbClass, trustAllRoots, trustStore, trustStorePassword);
+            msSqlDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls, authenticationType, instance, windowsDomain, dbClass, trustAllRoots, trustStore, trustStorePassword);
         }
         //Sybase
-        else if (Constants.SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
+        else if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.SYBASE;
             SybaseDatabase sybaseDatabase = new SybaseDatabase();
-            sybaseDatabase.setUp(localDbName, dbServer, dbPort, dbUrls);
+            sybaseDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //NetCool
-        else if (Constants.NETCOOL_DB_TYPE.equalsIgnoreCase(dbType)) {
+        else if (NETCOOL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.NETCOOL;
             NetcoolDatabase netcoolDatabase = new NetcoolDatabase();
-            netcoolDatabase.setUp(localDbName, dbServer, dbPort, dbUrls);
+            netcoolDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //Postgresql
-        else if (Constants.POSTGRES_DB_TYPE.equalsIgnoreCase(dbType)) {
+        else if (POSTGRES_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.POSTGRESQL;
             PostgreSqlDatabase psDatabase = new PostgreSqlDatabase();
-            psDatabase.setUp(localDbName, dbServer, dbPort, dbUrls);
+            psDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //DB2
-        else if (Constants.DB2_DB_TYPE.equalsIgnoreCase(dbType)) {
+        else if (DB2_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.DB2;
             DB2Database db2Database = new DB2Database();
-            db2Database.setUp(localDbName, dbServer, dbPort, dbUrls);
-        } else if (Constants.CUSTOM_DB_TYPE.equalsIgnoreCase(dbType)) {
+            db2Database.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
+        } else if (CUSTOM_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.CUSTOM;
             CustomDatabase customDatabase = new CustomDatabase();
             customDatabase.setUp(dbClass);

@@ -31,7 +31,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
+
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -86,7 +87,7 @@ public class ConnectionServiceTest {
     @Test
     public void testSetUpConnectionCustom() throws Exception {
         sqlInputs.setDbClass(CUSTOM_CLASS_DRIVER);
-        sqlInputs.setDbType(Constants.CUSTOM_DB_TYPE);
+        sqlInputs.setDbType(CUSTOM_DB_TYPE);
 
         sqlInputs.getDbUrls().add(CUSTOM_URL);
         assertConnection(sqlInputs, 1, CUSTOM_URL);
@@ -96,8 +97,8 @@ public class ConnectionServiceTest {
     @Test
     public void testSetUpConnectionMSSql() throws Exception {
         sqlInputs.setDbClass(SQLSERVER_JDBC_DRIVER);
-        sqlInputs.setDbType(Constants.MSSQL_DB_TYPE);
-        sqlInputs.setDbPort("1433");
+        sqlInputs.setDbType(MSSQL_DB_TYPE);
+        sqlInputs.setDbPort(1433);
         sqlInputs.setDbServer("dbServer");
         sqlInputs.setAuthenticationType(Constants.AUTH_WINDOWS);
         sqlInputs.setDbName("dbName");
@@ -109,7 +110,7 @@ public class ConnectionServiceTest {
     @Test
     public void testSetUpConnectionOracle() throws Exception {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30//dbName");
@@ -117,8 +118,8 @@ public class ConnectionServiceTest {
 
     @Test
     public void testSetUpConnectionSybase() throws Exception {
-        sqlInputs.setDbType(Constants.SYBASE_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbType(SYBASE_DB_TYPE);
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         assertConnection(sqlInputs, 1, "jdbc:jtds:sybase://localhost:30//dbName;prepareSQL=1;useLOBs=false;TDS=4.2;");
@@ -126,8 +127,8 @@ public class ConnectionServiceTest {
 
     @Test
     public void testSetUpConnectionDB2() throws Exception {
-        sqlInputs.setDbType(Constants.DB2_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbType(DB2_DB_TYPE);
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         assertConnection(sqlInputs, 1, "jdbc:db2://localhost:30//dbName");
@@ -136,17 +137,17 @@ public class ConnectionServiceTest {
     @Test
     public void testSetUpConnectionNetcool() throws Exception {
         expectedEx.expect(ClassNotFoundException.class);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbPort(30);
         expectedEx.expectMessage("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
-        sqlInputs.setDbType(Constants.NETCOOL_DB_TYPE);
+        sqlInputs.setDbType(NETCOOL_DB_TYPE);
 
         connectionService.setUpConnection(sqlInputs);
     }
 
     @Test
     public void testSetUpConnectionMySQL() throws Exception {
-        sqlInputs.setDbType(Constants.MYSQL_DB_TYPE);
-        sqlInputs.setDbPort("30");
+        sqlInputs.setDbType(MYSQL_DB_TYPE);
+        sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30//dbName");

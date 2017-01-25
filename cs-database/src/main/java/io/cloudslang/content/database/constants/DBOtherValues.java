@@ -31,6 +31,66 @@ public class DBOtherValues {
     public static final Map<String, Integer> CONCUR_VALUES = createConcurValues();
     public static final Map<String, Integer> TYPE_VALUES = createTypeValues();
 
+
+    public static final String ORACLE_DB_TYPE = "Oracle";
+    public static final String MSSQL_DB_TYPE = "MSSQL";
+    public static final String SYBASE_DB_TYPE = "Sybase";
+    public static final String NETCOOL_DB_TYPE = "Netcool";
+    public static final String DB2_DB_TYPE = "DB2";
+    public static final String MYSQL_DB_TYPE = "MySQL";
+    public static final String POSTGRES_DB_TYPE = "PostgreSQL";
+    public static final String CUSTOM_DB_TYPE = "Custom";
+
+    public static final Integer DEFAULT_PORT_ORACLE = 1521;
+    public static final Integer DEFAULT_PORT_MSSQL = 1433;
+    public static final Integer DEFAULT_PORT_SYBASE = 5000;
+    public static final Integer DEFAULT_PORT_NETCOOL = 4100;
+    public static final Integer DEFAULT_PORT_DB2 = 50000;
+    public static final Integer DEFAULT_PORT_MYSQL = 3306;
+    public static final Integer DEFAULT_PORT_PSQL = 5432;
+    public static final Integer DEFAULT_PORT_CUSTOM = DEFAULT_PORT_ORACLE;
+
+    public static final Map<String, Integer> DB_PORTS = createDBPortValues();
+
+    private static Map<String, Integer> createDBPortValues() {
+        final Map<String, Integer> concurValues = new HashMap<>();
+        concurValues.put(ORACLE_DB_TYPE, DEFAULT_PORT_ORACLE);
+        concurValues.put(MSSQL_DB_TYPE, DEFAULT_PORT_MSSQL);
+        concurValues.put(SYBASE_DB_TYPE, DEFAULT_PORT_SYBASE);
+        concurValues.put(NETCOOL_DB_TYPE, DEFAULT_PORT_NETCOOL);
+        concurValues.put(DB2_DB_TYPE, DEFAULT_PORT_DB2);
+        concurValues.put(MYSQL_DB_TYPE, DEFAULT_PORT_MYSQL);
+        concurValues.put(POSTGRES_DB_TYPE, DEFAULT_PORT_PSQL);
+        concurValues.put(CUSTOM_DB_TYPE, DEFAULT_PORT_CUSTOM);
+        return concurValues;
+    }
+
+    /*
+    if (dbType.equalsIgnoreCase(ORACLE_DB_TYPE)) {
+            dbPort = DEFAULT_PORT_ORACLE;
+        } else if (dbType.equalsIgnoreCase(MSSQL_DB_TYPE)) {
+            dbPort = DEFAULT_PORT_MSSQL;
+            if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
+                if (username.contains(ESCAPED_BACKSLASH)) {
+                    String domain = username.substring(0, username.indexOf(ESCAPED_BACKSLASH));
+                    final String newUsername = username.substring(username.indexOf(ESCAPED_BACKSLASH) + 1, username.length());
+                    sqlInputs.setUsername(newUsername);
+                    sqlInputs.setWindowsDomain(domain);
+                }
+
+            }
+        } else if (dbType.equalsIgnoreCase(NETCOOL_DB_TYPE)) {
+            dbPort = DEFAULT_PORT_NETCOOL;
+            sqlInputs.setNetcool(true);
+        } else if (dbType.equalsIgnoreCase(DB2_DB_TYPE)) {
+            dbPort = DEFAULT_PORT_DB2;
+        } else if (dbType.equalsIgnoreCase(SYBASE_DB_TYPE)) {
+            dbPort = DEFAULT_PORT_SYBASE;
+        } else if (dbType.equalsIgnoreCase(MYSQL_DB_TYPE)) {
+            dbPort = DEFAULT_PORT_MYSQL;
+        } else if (dbType.equalsIgnoreCase(Constants.POSTGRES_DB_TYPE)) {
+     */
+
     private static Map<String, Integer> createConcurValues() {
         final Map<String, Integer> concurValues = new HashMap<>();
         concurValues.put(CONCUR_READ_ONLY, ResultSet.CONCUR_READ_ONLY);

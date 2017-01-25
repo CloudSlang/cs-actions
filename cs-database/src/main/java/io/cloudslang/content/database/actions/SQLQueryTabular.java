@@ -16,7 +16,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryTabularService;
@@ -30,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.*;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
@@ -78,13 +76,16 @@ public class SQLQueryTabular {
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
 
+        resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
+        resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
-        mySqlInputs.setDbPort(defaultIfEmpty(dbPort, EMPTY));
+        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
         mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
@@ -95,8 +96,8 @@ public class SQLQueryTabular {
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getOrDefaultResultSetType(resultSetType, TYPE_SCROLL_INSENSITIVE));
-        mySqlInputs.setResultSetConcurrency(getOrDefaultResultSetConcurrency(resultSetConcurrency, CONCUR_READ_ONLY));
+        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
 
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
@@ -124,7 +125,7 @@ public class SQLQueryTabular {
         Map<String, String> result = new HashMap<>();
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-            if (Constants.DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
+            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
                 sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
             }
             if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {

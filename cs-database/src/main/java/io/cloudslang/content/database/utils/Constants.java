@@ -18,13 +18,13 @@ import java.util.List;
 public class Constants {
 
     //default values
-    public static final String DEFAULTPORT_ORACLE = "1521";
-    public static final String DEFAULTPORT_MSSQL = "1433";
-    public static final String DEFAULTPORT_SYBASE = "5000";
-    public static final String DEFAULTPORT_NETCOOL = "4100";
-    public static final String DEFAULTPORT_DB2 = "50000";
-    public static final String DEFAULTPORT_MYSQL = "3306";
-    public static final String DEFAULTPORT_PSQL = "5432";
+//    public static final String DEFAULTPORT_ORACLE = "1521";
+//    public static final String DEFAULTPORT_MSSQL = "1433";
+//    public static final String DEFAULTPORT_SYBASE = "5000";
+//    public static final String DEFAULTPORT_NETCOOL = "4100";
+//    public static final String DEFAULTPORT_DB2 = "50000";
+//    public static final String DEFAULTPORT_MYSQL = "3306";
+//    public static final String DEFAULTPORT_PSQL = "5432";
     public static final int DEFAULTTIMEOUT = 0;
     public static final String DBSERVERNAME = "DBServerName";
     public static final String DBPORT = "DBPort";
@@ -38,13 +38,13 @@ public class Constants {
     public static final String AUTH_WINDOWS = "Windows";
 //    public static final String AUTH_SQL = "Sql";
     public static final String IGNORE_CASE = "ignoreCase";
-    public static final String MYSQL_DB_TYPE = "MySQL";
-    public static final String MSSQL_DB_TYPE = "MSSQL";
-    public static final String SYBASE_DB_TYPE = "Sybase";
-    public static final String NETCOOL_DB_TYPE = "Netcool";
-    public static final String DB2_DB_TYPE = "DB2";
-    public static final String POSTGRES_DB_TYPE = "PostgreSQL";
-    public static final String CUSTOM_DB_TYPE = "Custom";
+//    public static final String MYSQL_DB_TYPE = "MySQL";
+//    public static final String MSSQL_DB_TYPE = "MSSQL";
+//    public static final String SYBASE_DB_TYPE = "Sybase";
+//    public static final String NETCOOL_DB_TYPE = "Netcool";
+//    public static final String DB2_DB_TYPE = "DB2";
+//    public static final String POSTGRES_DB_TYPE = "PostgreSQL";
+//    public static final String CUSTOM_DB_TYPE = "Custom";
     public static final String CUSTOM_DB_CLASS = "dbClass";
     public static final String DBURL = "dbURL";
     public static final String DBTYPE = "DbType";

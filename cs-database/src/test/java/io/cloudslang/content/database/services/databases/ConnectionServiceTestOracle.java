@@ -31,7 +31,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBDefaultValues.ORACLE_DB_TYPE;
+
+import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -49,7 +50,7 @@ public class ConnectionServiceTestOracle {
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
     public static final String TNS_ENTRY = "tnsEntry";
     public static final String DB_SERVER = "localhost";
-    public static final String DB_PORT = "30";
+    public static final int DB_PORT = 30;
     public static final String DB_NAME = "testDB";
     private ConnectionService connectionService;
     private SQLInputs sqlInputs;
@@ -91,7 +92,7 @@ public class ConnectionServiceTestOracle {
     public void testSetUpConnectionOracleEmptyTnsPath() throws Exception {
         checkExpectedSQLException("Empty TNSPath for Oracle.");
         populateOracle();
-        sqlInputs.setTnsPath(null);
+//        sqlInputs.setTnsPath(null);
         connectionService.setUpConnection(sqlInputs);
     }
 
@@ -99,7 +100,7 @@ public class ConnectionServiceTestOracle {
     public void testSetUpConnectionOracleNotExistingTnsPath() throws Exception {
         checkExpectedSQLException("Invalid TNSPath for Oracle : not existing");
         populateOracle();
-        sqlInputs.setTnsPath("not existing");
+//        sqlInputs.setTnsPath("not existing");
         connectionService.setUpConnection(sqlInputs);
     }
 
@@ -139,7 +140,7 @@ public class ConnectionServiceTestOracle {
         try {
 
             populateOracle();
-            sqlInputs.setTnsEntry(TNS_ENTRY);
+//            sqlInputs.setTnsEntry(TNS_ENTRY);
 
             whenNew(File.class).withArguments(TNS_PATH).thenReturn(tnsPathMock);
             when(tnsPathMock.exists()).thenReturn(true);
@@ -181,7 +182,7 @@ public class ConnectionServiceTestOracle {
 
     private void populateOracle() throws Exception {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
-        sqlInputs.setTnsPath(TNS_PATH);
+//        sqlInputs.setTnsPath(TNS_PATH);
     }
 
 }
