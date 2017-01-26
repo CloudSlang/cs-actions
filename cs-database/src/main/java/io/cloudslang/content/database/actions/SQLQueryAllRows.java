@@ -16,16 +16,13 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryAllRowsService;
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLQueryAllUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -34,8 +31,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.*;
@@ -43,8 +39,7 @@ import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryAllRowsInputs;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created by pinteae on 1/10/2017.
@@ -54,7 +49,7 @@ public class SQLQueryAllRows {
     @Action(name = "SQL Query All Rows",
             outputs = {
                     @Output(RETURN_CODE),
-                    @Output(OutputNames.RETURN_RESULT),
+                    @Output(RETURN_RESULT),
                     @Output(EXCEPTION)
             },
             responses = {
@@ -119,10 +114,7 @@ public class SQLQueryAllRows {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
-
-//        final List<String> validationIssues = SQLInputsValidator.validateSqlInputs(mySqlInputs);
 
         Map<String, String> inputParameters = SQLQueryAllUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -151,28 +143,22 @@ public class SQLQueryAllRows {
             if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
                 sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
             }
-            if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
+            if (isEmpty(sqlInputs.getSqlCommand())) {
                 throw new Exception("command input is empty.");
             }
             // String colDelimiter = StringUtils.resolveString(actionRequest, COL_DELIMITER);
             // String rowDelimiter = StringUtils.resolveString(actionRequest, ROW_DELIMITER);
-            if (colDelimiter == null || colDelimiter.length() <= 0) {
-                colDelimiter = ",";
-            }
-            if (rowDelimiter == null || rowDelimiter.length() <= 0) {
-                rowDelimiter = "\n";
-            }
 
             SQLQueryAllRowsService sqlQueryAllRowsService = new SQLQueryAllRowsService();
-            String queryResult = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, colDelimiter, rowDelimiter);
-            result.put(Constants.RETURNRESULT, queryResult);
+            String queryResult = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, mySqlInputs.getColDelimiter(), mySqlInputs.getRowDelimiter());
+            result.put(RETURN_RESULT, queryResult);
             result.put(RETURN_CODE, SUCCESS);
         } catch (Exception e) {
             if (e instanceof SQLException)
                 result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
-            else
+//            else
 //         todo       result.put(EXCEPTION, StringUtils.toString(e));
-                result.put(Constants.RETURNRESULT, e.getMessage());
+                result.put(RETURN_RESULT, e.getMessage());
             result.put(RETURN_CODE, FAILURE);
         }
         return result;

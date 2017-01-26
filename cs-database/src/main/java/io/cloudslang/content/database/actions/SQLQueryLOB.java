@@ -16,7 +16,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryLobService;
@@ -35,12 +34,13 @@ import java.util.Map;
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.*;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
+import static io.cloudslang.content.database.constants.DBOutputNames.*;
 import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
@@ -57,9 +57,11 @@ public class SQLQueryLOB {
     @Action(name = "SQL Query LOB",
             outputs = {
                     @Output(RETURN_CODE),
-                    @Output(OutputNames.RETURN_RESULT),
+                    @Output(RETURN_RESULT),
                     @Output(EXCEPTION),
-                    @Output(ROWS_LEFT)
+                    @Output(ROWS_LEFT),
+                    @Output(SQL_QUERY),
+                    @Output(COLUMN_NAMES)
             },
             responses = {
                     @Response(text = HAS_MORE, field = RETURN_CODE, value = SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -124,9 +126,7 @@ public class SQLQueryLOB {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
-
 
         Map<String, String> inputParameters = SQLQueryLOBUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -201,13 +201,13 @@ public class SQLQueryLOB {
 
                     globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
 
-                    result.put(Constants.RETURNRESULT, NO_MORE);
+                    result.put(RETURN_RESULT, NO_MORE);
                     result.put(ROWS_LEFT, ZERO);
                     result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
                 } else if (sqlInputs.getlRowsFiles() == null || sqlInputs.getlRowsFiles().isEmpty() || (sqlInputs.getlRows().size() == sqlInputs.getlRowsFiles().size())) {
-                    result.put(Constants.RETURNRESULT, (String) sqlInputs.getlRows().get(0));
+                    result.put(RETURN_RESULT, sqlInputs.getlRows().get(0));
                     sqlInputs.getlRows().remove(0);
-                    result.put("columnNames", sqlInputs.getStrColumns());
+                    result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
                     result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
                     result.put(RETURN_CODE, SUCCESS);
                     sqlConnectionMap.put(aKey, sqlInputs.getlRows());
@@ -253,8 +253,8 @@ public class SQLQueryLOB {
                             sqlInputs.getlRowsNames().remove(0);
                         }
 
-                        result.put(Constants.RETURNRESULT, resultStr);
-                        result.put("columnNames", colName);
+                        result.put(RETURN_RESULT, resultStr);
+                        result.put(COLUMN_NAMES, colName);
                         result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
                         result.put(RETURN_CODE, SUCCESS);
                         sqlConnectionMap.put(sqlInputs.getStrKeyFiles(), sqlInputs.getlRowsFiles());
@@ -266,7 +266,7 @@ public class SQLQueryLOB {
                     } catch (IOException e) {
 //                   todo     result.put(EXCEPTION, StringUtils.toString(e));
                         result.put(ROWS_LEFT, ZERO);
-                        result.put(Constants.RETURNRESULT, e.getMessage());
+                        result.put(RETURN_RESULT, e.getMessage());
                         result.put(RETURN_CODE, FAILURE);
                     }
                 }
@@ -283,7 +283,7 @@ public class SQLQueryLOB {
                     result.put(Constants.RETURNRESULT, sqlInputs.getlRows().get(0));
                     sqlInputs.getlRows().remove(0);
                     result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
-                    result.put("columnNames", sqlInputs.getStrColumns());
+                    result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
                     result.put(RETURN_CODE, SUCCESS);
                     sqlConnectionMap.put(aKey, sqlInputs.getlRows());
                     sqlConnectionMap.put(sqlInputs.getStrKeyCol(), sqlInputs.getStrColumns());
@@ -300,7 +300,7 @@ public class SQLQueryLOB {
                 } else {
                     result.put(Constants.RETURNRESULT, "no rows selected");
                     result.put(ROWS_LEFT, ZERO);
-                    result.put("SQLQuery", sqlInputs.getSqlCommand());
+                    result.put(SQL_QUERY, sqlInputs.getSqlCommand());
                     result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
                 }
 //                iQueryCount = sqlInputs.getiQuerys();

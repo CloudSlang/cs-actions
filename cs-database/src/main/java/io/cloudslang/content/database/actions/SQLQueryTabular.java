@@ -114,9 +114,7 @@ public class SQLQueryTabular {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
-
 
         Map<String, String> inputParameters = SQLQueryTabularUtil.createInputParametersMap(dbServerName,
                 dbType,

@@ -16,7 +16,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.Constants;
@@ -31,14 +30,14 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TRUST_ALL_ROOTS;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlScriptInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.readFromFile;
@@ -53,8 +52,9 @@ public class SQLScript {
     @Action(name = "SQL Command",
             outputs = {
                     @Output(RETURN_CODE),
-                    @Output(OutputNames.RETURN_RESULT),
-                    @Output(EXCEPTION)
+                    @Output(RETURN_RESULT),
+                    @Output(EXCEPTION),
+                    @Output(UPDATE_COUNT),
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS,
@@ -115,9 +115,7 @@ public class SQLScript {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
-
 
         Map<String, String> inputParameters = SQLScriptUtil.createInputParametersMap(dbServerName,
                 dbType,
@@ -160,8 +158,8 @@ public class SQLScript {
             } else {
                 SQLScriptService sqlScriptService = new SQLScriptService();
                 String res = sqlScriptService.executeSqlScript(commands, sqlInputs);
-                result.put("updateCount", String.valueOf(sqlInputs.getiUpdateCount()));
-                result.put(Constants.RETURNRESULT, res);
+                result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
+                result.put(RETURN_RESULT, res);
                 result.put(RETURN_CODE, SUCCESS);
             }
         } catch (Exception e) {
