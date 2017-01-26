@@ -19,7 +19,10 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryTabularService;
-import io.cloudslang.content.database.utils.*;
+import io.cloudslang.content.database.utils.Constants;
+import io.cloudslang.content.database.utils.InputsProcessor;
+import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLQueryTabularUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
@@ -37,6 +41,7 @@ import static io.cloudslang.content.database.constants.DBDefaultValues.*;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryTabularInputs;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -63,7 +68,7 @@ public class SQLQueryTabular {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String database,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -75,9 +80,20 @@ public class SQLQueryTabular {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+        dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
+        instance = defaultIfEmpty(instance, EMPTY);
+        authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+
+        final List<String> preInputsValidation = validateSqlQueryTabularInputs(dbServerName, dbType, username, password, instance, dbPort,
+                database, authenticationType, dbClass, dbURL, command, trustAllRoots, trustStore, trustStorePassword,
+                timeout, databasePoolingProperties, resultSetType, resultSetConcurrency);
 
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
@@ -101,7 +117,6 @@ public class SQLQueryTabular {
 
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
-        final List<String> validationIssues = SQLInputsValidator.validateSqlInputs(mySqlInputs);
 
         Map<String, String> inputParameters = SQLQueryTabularUtil.createInputParametersMap(dbServerName,
                 dbType,

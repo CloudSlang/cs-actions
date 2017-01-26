@@ -48,7 +48,6 @@ public class ConnectionService {
         dbConnectionManager = DBConnectionManager.getInstance();
 
         final String instance = sqlInputs.getInstance();
-        final String tnsEntry = ""; //todo
         final String windowsDomain = sqlInputs.getWindowsDomain();
         final String dbClass = sqlInputs.getDbClass();
         final List<String> dbUrls = sqlInputs.getDbUrls();
@@ -57,6 +56,7 @@ public class ConnectionService {
         final String dbName = sqlInputs.getDbName();
         final int dbPort = sqlInputs.getDbPort();
         final String tnsPath = ""; //todo
+        final String tnsEntry = ""; //todo
         final String authenticationType = sqlInputs.getAuthenticationType();
         final String trustStore = sqlInputs.getTrustStore();
         final String trustStorePassword = sqlInputs.getTrustStorePassword();

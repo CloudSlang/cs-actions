@@ -46,9 +46,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class ConnectionServiceTestOracle {
 
 
-    public static final String TNS_PATH = "tnsPath";
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
-    public static final String TNS_ENTRY = "tnsEntry";
     public static final String DB_SERVER = "localhost";
     public static final int DB_PORT = 30;
     public static final String DB_NAME = "testDB";
@@ -63,11 +61,6 @@ public class ConnectionServiceTestOracle {
 
     @Rule
     private ExpectedException expectedEx = ExpectedException.none();
-    @Mock
-    private File tnsPathMock;
-    @Mock
-    private File tnsFileOraMock;
-
 
     @Before
     public void beforeTest() throws Exception {
@@ -88,82 +81,6 @@ public class ConnectionServiceTestOracle {
         }
     }
 
-    @Test
-    public void testSetUpConnectionOracleEmptyTnsPath() throws Exception {
-        checkExpectedSQLException("Empty TNSPath for Oracle.");
-        populateOracle();
-//        sqlInputs.setTnsPath(null);
-        connectionService.setUpConnection(sqlInputs);
-    }
-
-    @Test
-    public void testSetUpConnectionOracleNotExistingTnsPath() throws Exception {
-        checkExpectedSQLException("Invalid TNSPath for Oracle : not existing");
-        populateOracle();
-//        sqlInputs.setTnsPath("not existing");
-        connectionService.setUpConnection(sqlInputs);
-    }
-
-    @Test
-    public void testSetUpConnectionOracleNotExistingTnsFile() throws Exception {
-        populateOracle();
-
-        checkExpectedSQLException("Failed to find tnsnames.ora file from :" + TNS_PATH);
-
-        whenNew(File.class).withArguments(TNS_PATH).thenReturn(tnsPathMock);
-        when(tnsPathMock.exists()).thenReturn(true);
-        when(tnsPathMock.isDirectory()).thenReturn(true);
-
-        whenNew(File.class).withArguments(TNS_PATH + File.separator + "tnsnames.ora").thenReturn(tnsFileOraMock);
-        when(tnsFileOraMock.exists()).thenReturn(false);
-        connectionService.setUpConnection(sqlInputs);
-    }
-
-    private void checkExpectedSQLException(String message) {
-        expectedEx.expect(SQLException.class);
-        expectedEx.expectMessage(message);
-    }
-
-    @Test
-    public void testSetUpConnectionOracleNotDirectory() throws Exception {
-        populateOracle();
-        whenNew(File.class).withArguments(TNS_PATH).thenReturn(tnsPathMock);
-        when(tnsPathMock.exists()).thenReturn(true);
-        checkExpectedSQLException("Invalid TNSPath for Oracle, TNSPath is not a directory: " + TNS_PATH);
-        connectionService.setUpConnection(sqlInputs);
-    }
-
-    @Test
-    public void testSetUpConnectionOracleWithTns() throws Exception {
-
-        String originalTnsPath = System.getProperty("oracle.net.tns_admin");
-        try {
-
-            populateOracle();
-//            sqlInputs.setTnsEntry(TNS_ENTRY);
-
-            whenNew(File.class).withArguments(TNS_PATH).thenReturn(tnsPathMock);
-            when(tnsPathMock.exists()).thenReturn(true);
-            when(tnsPathMock.isDirectory()).thenReturn(true);
-
-            whenNew(File.class).withArguments(TNS_PATH + File.separator + "tnsnames.ora").thenReturn(tnsFileOraMock);
-            when(tnsFileOraMock.exists()).thenReturn(true);
-
-            final Connection connection = connectionService.setUpConnection(sqlInputs);
-            assertEquals(1, sqlInputs.getDbUrls().size());
-            assertEquals(ORACLE_URL + TNS_ENTRY, sqlInputs.getDbUrls().get(0));
-            assertEquals(ORACLE_URL + TNS_ENTRY, sqlInputs.getDbUrl());
-            assertEquals(connectionMock, connection);
-            assertEquals(TNS_PATH, System.getProperty("oracle.net.tns_admin"));
-
-        } finally {
-            if (originalTnsPath != null) {
-                System.setProperty("oracle.net.tns_admin", originalTnsPath);
-            } else {
-                System.setProperty("oracle.net.tns_admin", "");
-            }
-        }
-    }
 
     @Test
     public void testSetUpConnectionOracleWithoutTns() throws Exception {

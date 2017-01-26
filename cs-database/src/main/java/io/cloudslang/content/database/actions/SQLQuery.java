@@ -31,18 +31,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.database.constants.DBDefaultValues.*;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TIMEOUT;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
 import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -69,7 +72,7 @@ public class SQLQuery {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String database,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -86,36 +89,48 @@ public class SQLQuery {
                                        @Param(value = IGNORE_CASE) String ignoreCase,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
+
+        dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
+        instance = defaultIfEmpty(instance, EMPTY);
+        authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+        ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
+
+        final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
+                database, authenticationType, dbClass, dbURL, command, trustAllRoots, trustStore, trustStorePassword, delimiter, key,
+                timeout, databasePoolingProperties, resultSetType, resultSetConcurrency, ignoreCase);
 
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
+        mySqlInputs.setDbType(dbType);
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
+        mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
-        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
         mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots, DEFAULT_TRUST_ALL_ROOTS));
-        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
-        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
+        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+        mySqlInputs.setTrustStore(trustStore);
+        mySqlInputs.setTrustStorePassword(trustStorePassword);
         mySqlInputs.setStrDelim(delimiter);
         mySqlInputs.setKey(key);
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        mySqlInputs.setIgnoreCase(defaultIfEmpty(ignoreCase, TRUE));
-//        mySqlInputs.setGlobalSessionObject();
-
+        mySqlInputs.setIgnoreCase(ignoreCase);
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
-        final List<String> validationIssues = SQLInputsValidator.validateSqlInputs(mySqlInputs);
+
+//        final List<String> validationIssues = SQLInputsValidator.validateSqlInputs(mySqlInputs);
 
         Map<String, String> inputParameters = SQLQueryUtil.createInputParametersMap(dbServerName,
                 dbType,

@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class DBOtherValues {
     public static final String ZERO = "0";
-
+    public static final String DATABASE_NAME_CAP = "DatabaseName";
     public final static String SET_NOCOUNT_ON = "SET NOCOUNT ON";
 
     public static final String CONCUR_READ_ONLY = "CONCUR_READ_ONLY";

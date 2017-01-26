@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
@@ -43,6 +44,7 @@ import static io.cloudslang.content.database.constants.DBOutputNames.ROWS_LEFT;
 import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryLOBInputs;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -70,7 +72,7 @@ public class SQLQueryLOB {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String database,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -85,9 +87,21 @@ public class SQLQueryLOB {
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+        dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
+        instance = defaultIfEmpty(instance, EMPTY);
+        authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+
+        final List<String> preInputsValidation = validateSqlQueryLOBInputs(dbServerName, dbType, username, password, instance, dbPort,
+                database, authenticationType, dbClass, dbURL, command, trustAllRoots, trustStore, trustStorePassword, delimiter, key,
+                timeout, databasePoolingProperties, resultSetType, resultSetConcurrency);
+
 
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
@@ -113,7 +127,6 @@ public class SQLQueryLOB {
 
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
-        final List<String> validationIssues = SQLInputsValidator.validateSqlInputs(mySqlInputs);
 
         Map<String, String> inputParameters = SQLQueryLOBUtil.createInputParametersMap(dbServerName,
                 dbType,

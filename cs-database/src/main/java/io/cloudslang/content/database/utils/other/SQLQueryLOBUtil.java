@@ -12,7 +12,9 @@ package io.cloudslang.content.database.utils.other;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.database.utils.Constants.*;
+import static io.cloudslang.content.constants.InputNames.DELIMITER;
+import static io.cloudslang.content.database.constants.DBInputNames.*;
+
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -38,24 +40,24 @@ public class SQLQueryLOBUtil {
                                                                String databasePoolingProperties) {
         Map<String, String> inputParameters = new HashMap<>();
 
-        inputParameters.put(DBSERVERNAME, dbServerName);
-        inputParameters.put(DBTYPE, dbType);
+        inputParameters.put(DB_SERVER_NAME, dbServerName);
+        inputParameters.put(DB_TYPE, dbType);
         inputParameters.put(USERNAME, username);
         inputParameters.put(PASSWORD, password);
         inputParameters.put(INSTANCE, instance);
-        inputParameters.put(DBPORT, dbPort);
-        inputParameters.put(DATABASENAME, database);
-        inputParameters.put(AUTH_TYPE, authenticationType);
-        inputParameters.put(CUSTOM_DB_CLASS, dbClass);
-        inputParameters.put(DBURL, dbURL);
+        inputParameters.put(DB_PORT, dbPort);
+        inputParameters.put(DATABASE_NAME, database);
+        inputParameters.put(AUTHENTICATION_TYPE, authenticationType);
+        inputParameters.put(DB_CLASS, dbClass);
+        inputParameters.put(DB_URL, dbURL);
         inputParameters.put(COMMAND, command);
-        inputParameters.put(DELIM, delimiter);
+        inputParameters.put(DELIMITER, delimiter);
         inputParameters.put(KEY, key);
         inputParameters.put(TRUST_ALL_ROOTS, trustAllRoots);
         inputParameters.put(TRUST_STORE, trustStore);
         inputParameters.put(TRUST_STORE_PASSWORD, trustStorePassword);
         inputParameters.put(TIMEOUT, timeout);
-        inputParameters.put(DATABASE_POOLING_PROPRTIES, databasePoolingProperties);
+        inputParameters.put(DATABASE_POOLING_PROPERTIES, databasePoolingProperties);
 
         return inputParameters;
     }

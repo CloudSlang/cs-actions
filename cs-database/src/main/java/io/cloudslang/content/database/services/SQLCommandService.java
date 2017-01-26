@@ -25,7 +25,7 @@ import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_T
  */
 public class SQLCommandService {
 
-    public String executeSqlCommand(SQLInputs sqlInputs) throws Exception {
+    public String executeSqlCommand(final SQLInputs sqlInputs) throws Exception {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }

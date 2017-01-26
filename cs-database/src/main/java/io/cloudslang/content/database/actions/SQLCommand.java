@@ -17,13 +17,10 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLCommandService;
-import io.cloudslang.content.database.utils.*;
-import io.cloudslang.content.database.utils.other.SQLCommandUtil;
+import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +31,12 @@ import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.constants.DBOutputNames.OUTPUT_TEXT;
+import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlCommandInputs;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -48,7 +49,9 @@ public class SQLCommand {
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
-                    @Output(EXCEPTION)
+                    @Output(UPDATE_COUNT),
+                    @Output(OUTPUT_TEXT),
+                    @Output(EXCEPTION),
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -60,7 +63,7 @@ public class SQLCommand {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String database,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -71,101 +74,75 @@ public class SQLCommand {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
-        //todo validation required
+
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_FORWARD_ONLY);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        instance = defaultIfEmpty(instance, EMPTY);
+
+
         final List<String> preInputsValidation = validateSqlCommandInputs(dbType, username, password, instance, dbPort,
-                database, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency);
-
-        SQLInputs mySqlInputs = new SQLInputs();
-        mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(dbType);
-        mySqlInputs.setUsername(username);
-        mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
-        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(database);
-        mySqlInputs.setAuthenticationType(authenticationType);
-        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
-        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
-        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
-        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
-        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
-
-        final List<String> postInputsValidation = validateSqlInputs(mySqlInputs);
-
-        Map<String, String> inputParameters = SQLCommandUtil.createInputParametersMap(dbServerName,
-                dbType,
-                username,
-                password,
-                instance,
-                dbPort,
-                database,
-                authenticationType,
-                dbClass,
-                dbURL,
-                command,
-                trustAllRoots,
-                trustStore,
-                trustStorePassword,
-                databasePoolingProperties);
-
-        inputParameters.put(RESULT_SET_TYPE, resultSetType);
-        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
-
-        Map<String, String> result = new HashMap<>();
+                database, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
+                trustStorePassword);
+        if (preInputsValidation.isEmpty()) {
+            return getFailureResultsMap(StringUtils.join(preInputsValidation, "\n"));
+        }
         try {
-            final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-            if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
-                throw new Exception("command input is empty.");
-            }
-            SQLCommandService sqlCommandService = new SQLCommandService();
-            String res = sqlCommandService.executeSqlCommand(sqlInputs);
+            SQLInputs mySqlInputs = new SQLInputs();
+            mySqlInputs.setDbServer(dbServerName);
+            mySqlInputs.setDbType(dbType);
+            mySqlInputs.setUsername(username);
+            mySqlInputs.setPassword(password);
+            mySqlInputs.setInstance(instance);
+            mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
+            mySqlInputs.setDbName(database);
+            mySqlInputs.setAuthenticationType(authenticationType);
+            mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
+            mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
+            mySqlInputs.setSqlCommand(command);
+            mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+            mySqlInputs.setTrustStore(trustStore);
+            mySqlInputs.setTrustStorePassword(trustStorePassword);
+            mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
+            mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+            mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+            mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
+
+            final SQLCommandService sqlCommandService = new SQLCommandService();
+            String res = sqlCommandService.executeSqlCommand(mySqlInputs);
 
             String outputText = "";
 
-            if (ORACLE_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType()) &&
-                    sqlInputs.getSqlCommand().toLowerCase().contains("dbms_output")) {
+            if (ORACLE_DB_TYPE.equalsIgnoreCase(mySqlInputs.getDbType()) && mySqlInputs.getSqlCommand().toLowerCase().contains("dbms_output")) {
                 if (!"".equalsIgnoreCase(res)) {
                     outputText = res;
                 }
                 res = "Command completed successfully";
-            } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() != -1) {
-                final StringBuilder stringBuilder = new StringBuilder(String.valueOf(sqlInputs.getiUpdateCount()));
-                stringBuilder.append(" row(s) affected");
-                outputText += stringBuilder.toString();
-            } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() == -1) {
+            } else if (mySqlInputs.getlRows().size() == 0 && mySqlInputs.getiUpdateCount() != -1) {
+                outputText += String.valueOf(mySqlInputs.getiUpdateCount()) + " row(s) affected";
+            } else if (mySqlInputs.getlRows().size() == 0 && mySqlInputs.getiUpdateCount() == -1) {
                 outputText = "The command has no results!";
-                if (sqlInputs.getSqlCommand().toUpperCase().contains(SET_NOCOUNT_ON)) {
+                if (mySqlInputs.getSqlCommand().toUpperCase().contains(SET_NOCOUNT_ON)) {
                     outputText = res;
                 }
             } else {
-                for (String row : sqlInputs.getlRows()) {
+                for (String row : mySqlInputs.getlRows()) {
                     outputText += row + "\n";
                 }
             }
+            final Map<String, String> result = getSuccessResultsMap(res);
+            result.put(UPDATE_COUNT, String.valueOf(mySqlInputs.getiUpdateCount()));
+            result.put(OUTPUT_TEXT, outputText);
+            return result;
 
-            result.put("updateCount", String.valueOf(sqlInputs.getiUpdateCount()));
-            result.put(Constants.RETURNRESULT, res);
-            result.put(Constants.OUTPUTTEXT, outputText);
-            result.put(RETURN_CODE, SUCCESS);
         } catch (Exception e) {
-            if (e instanceof SQLException)
-                result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
-            else
-//           todo     result.put(EXCEPTION, StringUtils.toString(e));
-                result.put(Constants.RETURNRESULT, e.getMessage());
-            result.put(RETURN_CODE, FAILURE);
+            return getFailureResultsMap(e);
         }
 
-        return result;
     }
+
 }

@@ -16,4 +16,6 @@ import io.cloudslang.content.constants.OutputNames;
  */
 public class DBOutputNames extends OutputNames {
     public static final String ROWS_LEFT = "rowsLeft";
+    public static final String UPDATE_COUNT = "updateCount";
+    public static final String OUTPUT_TEXT = "outputText";
 }

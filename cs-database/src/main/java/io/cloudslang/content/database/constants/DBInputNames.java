@@ -21,7 +21,7 @@ public class DBInputNames extends InputNames {
     public static final String PASSWORD = "password";
     public static final String INSTANCE = "instance";
     public static final String DB_PORT = "DBPort";
-    public static final String DATABASE = "database";
+    public static final String DATABASE_NAME = "databaseName";
     public static final String AUTHENTICATION_TYPE = "authenticationType";
     public static final String DB_CLASS = "dbClass";
     public static final String DB_URL = "dbURL";

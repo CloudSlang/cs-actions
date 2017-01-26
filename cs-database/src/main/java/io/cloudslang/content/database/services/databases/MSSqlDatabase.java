@@ -19,12 +19,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
+import static io.cloudslang.content.database.constants.DBOtherValues.DATABASE_NAME_CAP;
 import static io.cloudslang.content.database.utils.Constants.*;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class MSSqlDatabase implements SqlDatabase {
+
     private List<String> supportedJdbcDrivers;
 
     public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String windowsDomain, String dbClass,
@@ -60,30 +63,30 @@ public class MSSqlDatabase implements SqlDatabase {
             if (serverInstanceComponents != null) {
                 //removed username and password form the url, since
                 //driver manager will use url , username and password later
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1];
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1];
             }
             //has instance input
             else if (StringUtils.isNoneEmpty(instance)) {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance;
             }
             //no instance
             else {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName;
             }
             dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
         }
         if (Constants.AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
             //instance is included in the host name
             if (serverInstanceComponents != null) {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1] + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1] + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
             }
             //has instance input
             else if (StringUtils.isNoneEmpty(instance)) {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
             }
             //no instance
             else {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME + EQUALS + dbName + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
+                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
             }
             // Set to true to send LMv2/NTLMv2 responses when using Windows authentication
             dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);

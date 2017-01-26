@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static io.cloudslang.content.constants.InputNames.DELIMITER;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 
+import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -63,7 +65,7 @@ public class InputsProcessor {
         sqlInputs.setIgnoreCase(ignoreCase);
 
         //host
-        String dbServer = parameters.get(DBSERVERNAME);
+        String dbServer = parameters.get(DB_SERVER_NAME);
         sqlInputs.setDbServer(dbServer);
 
         //tns
@@ -74,7 +76,7 @@ public class InputsProcessor {
 //        sqlInputs.setTnsEntry(tnsEntry);
 
         //dbType
-        String dbType = parameters.get(DBTYPE);
+        String dbType = parameters.get(DB_TYPE);
         sqlInputs.setDbType(dbType);
         //default to be oracle if it is empty or null
         if (isEmpty(sqlInputs.getDbType())) {
@@ -100,7 +102,7 @@ public class InputsProcessor {
         //if using tns to make the connection, no need to process dbPort, database and autyType inputs
 
         //database
-        String dbName = parameters.get(DATABASENAME);
+        String dbName = parameters.get(DATABASE_NAME);
         sqlInputs.setDbName(dbName);
         //check "Database" input is empty only if dbtype is not Sybase or MSSQL
         //cause for Sybase and MSSQL, it is ok to use empty database, they will pick up the default db
@@ -114,7 +116,7 @@ public class InputsProcessor {
 
 
         //authType
-        String authenticationType = parameters.get(AUTH_TYPE);
+        String authenticationType = parameters.get(AUTHENTICATION_TYPE);
         sqlInputs.setAuthenticationType(authenticationType);
 
         //windows authentication is only used with MSSQL.
@@ -129,7 +131,7 @@ public class InputsProcessor {
         }
 
         //dbPort
-        String dbPort = parameters.get(DBPORT);
+        String dbPort = parameters.get(DB_PORT);
         sqlInputs.setDbPort(Integer.valueOf(dbPort)); //todo temporary fix
 
         SQLInputsUtils.processDefaultValues(sqlInputs, sqlInputs.getDbType(), sqlInputs.getAuthenticationType(), username); //todo
@@ -150,20 +152,20 @@ public class InputsProcessor {
         sqlInputs.setKey(key);
 
         //delimiter
-        String strDelim = parameters.get(DELIM);
+        String strDelim = parameters.get(DELIMITER);
         if (isEmpty(strDelim)) {
             strDelim = "";
         }
         sqlInputs.setStrDelim(strDelim);
 
         //get a fresh list for each run
-        String inputDbUrl = parameters.get(DBURL);
+        String inputDbUrl = parameters.get(DB_URL);
         if (!isEmpty(inputDbUrl)) {
             final List<String> dbUrls = sqlInputs.getDbUrls();
             dbUrls.add(inputDbUrl);
         }
 
-        String dbClass = parameters.get(CUSTOM_DB_CLASS);
+        String dbClass = parameters.get(DB_CLASS);
         String trimRowstat = parameters.get(TRIM_ROWSTAT);
         sqlInputs.setDbClass(dbClass);
         sqlInputs.setTrimRowstat(trimRowstat);
@@ -189,7 +191,7 @@ public class InputsProcessor {
         } catch (Exception e) {
             throw new Exception("timeout input is not in valid format.");
         }
-        String databasePoolingPropertiesStr = parameters.get(DATABASE_POOLING_PROPRTIES);
+        String databasePoolingPropertiesStr = parameters.get(DATABASE_POOLING_PROPERTIES);
         Properties databasePoolingProperties = new Properties();
         databasePoolingProperties.load(new StringReader(databasePoolingPropertiesStr));
         sqlInputs.setDatabasePoolingProperties(databasePoolingProperties);
