@@ -24,7 +24,9 @@ import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLScriptUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
+import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -43,6 +45,7 @@ import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlScriptInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.readFromFile;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -102,21 +105,21 @@ public class SQLScript {
         }
 
         SQLInputs mySqlInputs = new SQLInputs();
-        mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
+        mySqlInputs.setDbServer(dbServerName);
+        mySqlInputs.setDbType(dbType);
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
+        mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
-        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
         mySqlInputs.setStrDelim(defaultIfEmpty(delimiter, "--")); //todo not ok
         mySqlInputs.setSqlCommands(getSqlCommands(sqlCommands, scriptFileName, mySqlInputs.getStrDelim()));
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots, DEFAULT_TRUST_ALL_ROOTS));
-        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
-        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
+        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+        mySqlInputs.setTrustStore(trustStore);
+        mySqlInputs.setTrustStorePassword(trustStorePassword);
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
@@ -141,7 +144,7 @@ public class SQLScript {
                 databasePoolingProperties);
         inputParameters.put(RESULT_SET_TYPE, resultSetType);
         inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
-        Map<String, String> result = new HashMap<>();
+//        Map<String, String> result = new HashMap<>();
 
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
@@ -150,33 +153,24 @@ public class SQLScript {
             List<String> commands = new ArrayList<>(Arrays.asList(sqlCommands.split(commandsDelimiter)));
 
             //read from SQL script file
-            if (commands.isEmpty()) {
-                String fileName = inputParameters.get("scriptFileName");
-                if (StringUtils.isEmpty(fileName)) {
-                    throw new Exception("Both Script file name and Line are empty!");
-                } else {
-                    commands = readFromFile(fileName);
-                }
-            }
-            if (commands.isEmpty()) {
-                throw new Exception("No SQL command to be executed.");
-            } else {
-                SQLScriptService sqlScriptService = new SQLScriptService();
-                String res = sqlScriptService.executeSqlScript(commands, sqlInputs);
+//            if (commands.isEmpty()) {
+//                String fileName = inputParameters.get("scriptFileName");
+//                if (StringUtils.isEmpty(fileName)) {
+//                    throw new Exception("Both Script file name and Line are empty!");
+//                } else {
+//                    commands = readFromFile(fileName);
+//                }
+//            }
+            if (!commands.isEmpty()) {
+                final String res = SQLScriptService.executeSqlScript(commands, sqlInputs);
+                final Map<String, String> result =  getSuccessResultsMap(res);
                 result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
-                result.put(RETURN_RESULT, res);
-                result.put(RETURN_CODE, SUCCESS);
+                return result;
+            } else {
+                return getFailureResultsMap("No SQL command to be executed.");
             }
         } catch (Exception e) {
-            if (e instanceof SQLException) {
-                result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
-            } else {
-//         todo       result.put(EXCEPTION, StringUtils.toString(e));
-            }
-
-            result.put(Constants.RETURNRESULT, e.getMessage());
-            result.put(RETURN_CODE, FAILURE);
+            return getFailureResultsMap(e);
         }
-        return result;
     }
 }

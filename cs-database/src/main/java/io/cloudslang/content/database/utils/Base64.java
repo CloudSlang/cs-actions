@@ -16,7 +16,7 @@ import java.util.prefs.BackingStoreException;
 /**
  * Created by victor on 13.01.2017.
  */
-class Base64 extends java.util.prefs.AbstractPreferences {
+public class Base64 extends java.util.prefs.AbstractPreferences {
 
     //keep the key state
 

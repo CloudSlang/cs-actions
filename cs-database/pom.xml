@@ -79,6 +79,11 @@
             <version>0.0.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
         <!-- JDBC -->
         <dependency>
             <groupId>com.mchange</groupId>

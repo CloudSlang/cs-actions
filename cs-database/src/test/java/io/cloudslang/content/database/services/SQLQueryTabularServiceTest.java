@@ -42,11 +42,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({ConnectionService.class, SQLQueryTabularService.class})
 public class SQLQueryTabularServiceTest {
 
-    public static final String COL_DELIMITER = ",";
-    public static final String ROW_DELIMITER = "|";
     public static final String SQL_COMMAND = "select * from dbTable";
     public static final int QUYERY_TIMEOUT = 10;
-    SQLQueryTabularService sqlQueryTabularService = new SQLQueryTabularService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -83,7 +80,7 @@ public class SQLQueryTabularServiceTest {
         sqlInputs.setDbName("/dbName");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
         sqlInputs.setSqlCommand(SQL_COMMAND);
-        final String execSqlQueryTabular = sqlQueryTabularService.execSqlQueryTabular(sqlInputs);
+        final String execSqlQueryTabular = SQLQueryTabularService.execSqlQueryTabular(sqlInputs);
 
         assertEquals("\n\n", execSqlQueryTabular);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
@@ -101,7 +98,7 @@ public class SQLQueryTabularServiceTest {
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
         sqlInputs.setNetcool(true);
         sqlInputs.setSqlCommand(SQL_COMMAND);
-        final String execSqlQueryTabular = sqlQueryTabularService.execSqlQueryTabular(sqlInputs);
+        final String execSqlQueryTabular = SQLQueryTabularService.execSqlQueryTabular(sqlInputs);
 
         assertEquals("\n\n", execSqlQueryTabular);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
@@ -114,6 +111,6 @@ public class SQLQueryTabularServiceTest {
     public void testExecuteSqlQueryTabularNoCommand() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("command input is empty.");
-        sqlQueryTabularService.execSqlQueryTabular(sqlInputs);
+        SQLQueryTabularService.execSqlQueryTabular(sqlInputs);
     }
 }

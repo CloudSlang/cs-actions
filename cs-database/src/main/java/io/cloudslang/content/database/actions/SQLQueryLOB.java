@@ -111,24 +111,24 @@ public class SQLQueryLOB {
         }
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
+        mySqlInputs.setDbType(dbType);
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
+        mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
-        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
         mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots, DEFAULT_TRUST_ALL_ROOTS));
-        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
+        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+        mySqlInputs.setTrustStore(trustStore);
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
         mySqlInputs.setStrDelim(delimiter);
         mySqlInputs.setKey(key);
         mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
@@ -156,9 +156,9 @@ public class SQLQueryLOB {
         Map<String, String> result = new HashMap<>();
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
-            }
+//            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
+//                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
+//            }
             String aKey = "";
             Map<String, Object> sqlConnectionMap = new HashMap<>();
 
@@ -278,7 +278,7 @@ public class SQLQueryLOB {
                 boolean isLOB = sqlQueryLobService.executeSqlQueryLob(sqlInputs);
 
                 if (!sqlInputs.getlRows().isEmpty()) {
-                    result.put(Constants.RETURNRESULT, sqlInputs.getlRows().get(0));
+                    result.put(RETURN_RESULT, sqlInputs.getlRows().get(0));
                     sqlInputs.getlRows().remove(0);
                     result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
                     result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
@@ -296,7 +296,7 @@ public class SQLQueryLOB {
                         globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
                     }
                 } else {
-                    result.put(Constants.RETURNRESULT, "no rows selected");
+                    result.put(RETURN_RESULT, "no rows selected");
                     result.put(ROWS_LEFT, ZERO);
                     result.put(SQL_QUERY, sqlInputs.getSqlCommand());
                     result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
@@ -310,7 +310,7 @@ public class SQLQueryLOB {
             else
 //            todo    result.put(EXCEPTION, StringUtils.toString(e));
                 result.put(ROWS_LEFT, ZERO);
-            result.put(Constants.RETURNRESULT, e.getMessage());
+            result.put(RETURN_RESULT, e.getMessage());
             result.put(RETURN_CODE, FAILURE);
         }
 

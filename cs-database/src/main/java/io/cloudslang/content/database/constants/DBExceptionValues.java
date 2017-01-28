@@ -33,4 +33,5 @@ public class DBExceptionValues extends ExceptionValues {
     public static final String INVALID_TRUST_ALL_ROOTS = "trustAllRoots must be 'true' or 'false'";
     public static final String INVALID_DB_SERVER_NAME = "dbServerName can't be empty";
     public static final String INVALID_COMMANDS_EXCLUSIVITY = "Only one of the sqlCommands and scriptFileName can be specified";
+    public static final String INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL = "Invalid authentication type for MS SQL : ";
 }

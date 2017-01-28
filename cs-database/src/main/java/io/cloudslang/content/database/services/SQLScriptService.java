@@ -26,7 +26,7 @@ import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_T
  */
 public class SQLScriptService {
 
-    public String executeSqlScript(List<String> lines, SQLInputs sqlInputs)
+    public static String executeSqlScript(List<String> lines, SQLInputs sqlInputs)
             throws Exception {
         if (lines == null || lines.isEmpty()) {
             throw new Exception("No SQL command to be executed.");

@@ -94,7 +94,6 @@ public class SQLQuery {
                                        @Param(value = IGNORE_CASE) String ignoreCase,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
-
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
@@ -109,9 +108,11 @@ public class SQLQuery {
         final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
                 database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency, ignoreCase);
+
         if (preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
+
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(dbType);
@@ -131,7 +132,7 @@ public class SQLQuery {
         mySqlInputs.setKey(key);
         mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         mySqlInputs.setIgnoreCase(ignoreCase);
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
@@ -158,6 +159,7 @@ public class SQLQuery {
 
         inputParameters.put(RESULT_SET_TYPE, resultSetType);
         inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
+
         Map<String, String> result = new HashMap<>();
 
         try {
@@ -232,7 +234,7 @@ public class SQLQuery {
             else
 //            todo    result.put(EXCEPTION, StringUtils.toString(e));
                 result.put(ROWS_LEFT, SUCCESS);
-            result.put(Constants.RETURNRESULT, e.getMessage());
+            result.put(RETURN_RESULT, e.getMessage());
             result.put(RETURN_CODE, FAILURE);
         }
 

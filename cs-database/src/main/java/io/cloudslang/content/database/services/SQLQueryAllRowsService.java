@@ -32,7 +32,6 @@ public class SQLQueryAllRowsService {
      * @throws java.sql.SQLException
      */
     public String execQueryAllRows(SQLInputs sqlInputs, String colDelimiter, String rowDelimiter) throws Exception {
-
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }

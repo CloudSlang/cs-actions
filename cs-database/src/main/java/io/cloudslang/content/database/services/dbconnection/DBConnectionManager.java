@@ -613,7 +613,7 @@ public class DBConnectionManager {
             PooledDataSource ds = (PooledDataSource) this.createDataSource(aDbType, aDbUrl, aUsername, aPassword);
             retCon = getPooledConnection(ds, aUsername, aPassword);
 
-            Hashtable<String, DataSource> dsTable = new Hashtable<String, DataSource>();
+            Hashtable<String, DataSource> dsTable = new Hashtable<>();
             String encryptedPass = null;
             try {
                 encryptedPass = TripleDES.encryptPassword(aPassword);

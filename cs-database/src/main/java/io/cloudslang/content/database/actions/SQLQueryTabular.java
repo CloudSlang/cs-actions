@@ -25,6 +25,7 @@ import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLQueryTabularUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
+import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
@@ -83,6 +84,7 @@ public class SQLQueryTabular {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
@@ -103,22 +105,22 @@ public class SQLQueryTabular {
 
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
+        mySqlInputs.setDbType(dbType);
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
+        mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
-        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
         mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots, DEFAULT_TRUST_ALL_ROOTS));
-        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
-        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
+        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+        mySqlInputs.setTrustStore(trustStore);
+        mySqlInputs.setTrustStorePassword(trustStorePassword);
         mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
@@ -138,27 +140,16 @@ public class SQLQueryTabular {
                 trustStorePassword,
                 timeout,
                 databasePoolingProperties);
-
         inputParameters.put(RESULT_SET_TYPE, resultSetType);
         inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
-        Map<String, String> result = new HashMap<>();
+
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
-            }
-            SQLQueryTabularService sqlQueryTabularService = new SQLQueryTabularService();
-            String queryResult = sqlQueryTabularService.execSqlQueryTabular(sqlInputs);
-            result.put(RETURN_RESULT, queryResult);
-            result.put(RETURN_CODE, SUCCESS);
+
+            final String queryResult = SQLQueryTabularService.execSqlQueryTabular(sqlInputs);
+            return OutputUtilities.getSuccessResultsMap(queryResult);
         } catch (Exception e) {
-            if (e instanceof SQLException)
-                result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
-            else
-//          todo      result.put(EXCEPTION, StringUtils.toString(e));
-                result.put(Constants.RETURNRESULT, e.getMessage());
-            result.put(RETURN_CODE, FAILURE);
+           return OutputUtilities.getFailureResultsMap(e);
         }
-        return result;
     }
 }

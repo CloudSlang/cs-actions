@@ -18,7 +18,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLCommandService;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -86,13 +85,14 @@ public class SQLCommand {
         trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
 
-
         final List<String> preInputsValidation = validateSqlCommandInputs(dbServerName, dbType, username, password, instance, dbPort,
                 database, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
                 trustStorePassword);
+
         if (preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
+
         try {
             SQLInputs mySqlInputs = new SQLInputs();
             mySqlInputs.setDbServer(dbServerName);

@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.database.constants.DBExceptionValues;
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
@@ -22,6 +23,8 @@ import java.util.List;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
 import static io.cloudslang.content.database.constants.DBOtherValues.DATABASE_NAME_CAP;
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.database.utils.Constants.*;
 
 /**
@@ -95,7 +98,7 @@ public class MSSqlDatabase implements SqlDatabase {
         {
             //if it is something other than sql or empty,
             //we supply the empty string with sql
-            throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + authenticationType);
+            throw new SQLException(DBExceptionValues.INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + authenticationType);
         }
         dbUrls.add(dbUrlMSSQL);
     }
@@ -190,7 +193,7 @@ public class MSSqlDatabase implements SqlDatabase {
             } else if (!AUTH_SQL.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
                 //if it is something other than sql or empty,
                 //we supply the empty string with sql
-                throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + sqlInputs.getAuthenticationType());
+                throw new SQLException(DBExceptionValues.INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + sqlInputs.getAuthenticationType());
             }
             dbUrlMSSQL = addSslEncryptionToConnection(sqlInputs.getTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL);
             sqlInputs.getDbUrls().add(dbUrlMSSQL);

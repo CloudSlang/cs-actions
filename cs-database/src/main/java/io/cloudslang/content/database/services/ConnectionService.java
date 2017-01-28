@@ -160,8 +160,7 @@ public class ConnectionService {
                 //Get the Connection, depends on what user set in
                 //databasePooling.properties, this connection could be
                 //pooled or not pooled
-                dbCon =
-                        dbConnectionManager.getConnection(enumDbType,
+                dbCon = dbConnectionManager.getConnection(enumDbType,
                                 dbUrlTry,
                                 sqlInputs.getUsername(),
                                 sqlInputs.getPassword(),

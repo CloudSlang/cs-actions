@@ -96,11 +96,13 @@ public class SQLQueryAllRows {
         final List<String> preInputsValidation = validateSqlQueryAllRowsInputs(dbServerName, dbType, username, password, instance,
                 dbPort, database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency);
+
         if (preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
+
         SQLInputs mySqlInputs = new SQLInputs();
-        mySqlInputs.setDbServer(dbServerName); //mandatory
+        mySqlInputs.setDbServer(dbServerName);
         mySqlInputs.setDbType(dbType);
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
@@ -118,7 +120,7 @@ public class SQLQueryAllRows {
         mySqlInputs.setRowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE));
         mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
+        mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
@@ -146,9 +148,9 @@ public class SQLQueryAllRows {
         Map<String, String> result = new HashMap<>();
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
-            }
+//            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
+//                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
+//            }
             // String colDelimiter = StringUtils.resolveString(actionRequest, COL_DELIMITER);
             // String rowDelimiter = StringUtils.resolveString(actionRequest, ROW_DELIMITER);
 

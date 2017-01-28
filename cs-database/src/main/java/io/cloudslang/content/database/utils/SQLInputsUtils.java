@@ -91,6 +91,15 @@ public class SQLInputsUtils {
         }
         return -1000000;
     }
+    public static int getResultSetTypeForDbType(final String resultSetType, final String dbType) {
+        if (DB2_DB_TYPE.equalsIgnoreCase(dbType)) {
+            return TYPE_VALUES.get(TYPE_FORWARD_ONLY);
+        }
+        if (SQLInputsValidator.isValidResultSetType(resultSetType)) {
+            return TYPE_VALUES.get(resultSetType);
+        }
+        return -1000000;
+    }
 
     public static boolean notInCollectionIgnoreCase(final String toCheck, final Iterable<String> inList) {
         return !inCollectionIgnoreCase(toCheck, inList);

@@ -44,9 +44,6 @@ public class SQLScriptServiceTest {
 
     private static final int QUYERY_TIMEOUT = 10;
     public static final String SQL_COMMAND = "select * from dbTable";
-    private static final Integer COLUMN_COUNT = 3;
-    public static final String DEFAUL_LABEL = "defaulLabel";
-    SQLScriptService sqlScriptService = new SQLScriptService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -87,7 +84,7 @@ public class SQLScriptServiceTest {
         sqlInputs.setDbName("/dbName");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
 
-        sqlScriptService.executeSqlScript(lines, sqlInputs);
+        SQLScriptService.executeSqlScript(lines, sqlInputs);
 
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
         verify(connectionMock, Mockito.times(1)).commit();
@@ -107,7 +104,7 @@ public class SQLScriptServiceTest {
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
         lines.add(SQL_COMMAND);
 
-        sqlScriptService.executeSqlScript(lines, sqlInputs);
+        SQLScriptService.executeSqlScript(lines, sqlInputs);
 
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
         verify(connectionMock, Mockito.times(1)).commit();
@@ -122,13 +119,13 @@ public class SQLScriptServiceTest {
     public void testExecuteSqlScriptNullLines() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("No SQL command to be executed.");
-        sqlScriptService.executeSqlScript(null, sqlInputs);
+        SQLScriptService.executeSqlScript(null, sqlInputs);
     }
 
     @Test
     public void testExecuteSqlScriptEmptyLines() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("No SQL command to be executed.");
-        sqlScriptService.executeSqlScript(new ArrayList<String>(), sqlInputs);
+        SQLScriptService.executeSqlScript(new ArrayList<String>(), sqlInputs);
     }
 }

@@ -68,12 +68,6 @@ public class InputsProcessor {
         String dbServer = parameters.get(DB_SERVER_NAME);
         sqlInputs.setDbServer(dbServer);
 
-        //tns
-//        String tnsPath = parameters.get(TNS_PATH); //todo can't find this
-//        sqlInputs.setTnsPath(tnsPath);
-//
-//        String tnsEntry = parameters.get(TNS_ENTRY);
-//        sqlInputs.setTnsEntry(tnsEntry);
 
         //dbType
         String dbType = parameters.get(DB_TYPE);
@@ -83,7 +77,6 @@ public class InputsProcessor {
             sqlInputs.setDbType(ORACLE_DB_TYPE);
         }
 
-//        processHostorTNS(sqlInputs.getDbType(), sqlInputs.getDbServer(), sqlInputs.getTnsEntry()); //todo
         //username
         String username = parameters.get(USERNAME);
         sqlInputs.setUsername(username);
@@ -132,7 +125,7 @@ public class InputsProcessor {
 
         //dbPort
         String dbPort = parameters.get(DB_PORT);
-        sqlInputs.setDbPort(Integer.valueOf(dbPort)); //todo temporary fix
+        sqlInputs.setDbPort(Integer.valueOf(dbPort));
 
         //command
         String sqlCommand = parameters.get(COMMAND);
@@ -210,38 +203,6 @@ public class InputsProcessor {
 
         return sqlInputs;
     }
-
-//    /** //todo look in exception
-//     * @param resultSetTypeParameter This is a required input. If this is empty an exception is thrown.
-//     * @return
-//     */
-//    private static String transformResultSetType(String resultSetTypeParameter) throws SQLException {
-//        if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_FORWARD_ONLY.toString())) {
-//            return OOResultSet.TYPE_FORWARD_ONLY.toString();
-//        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_INSENSITIVE.toString())) {
-//            return OOResultSet.TYPE_SCROLL_INSENSITIVE.toString();
-//        } else if (resultSetTypeParameter.equalsIgnoreCase(OOResultSet.TYPE_SCROLL_SENSITIVE.toString())) {
-//            return OOResultSet.TYPE_SCROLL_SENSITIVE.toString();
-//        }
-//        throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetTypeParameter are: "
-//                + OOResultSet.TYPE_FORWARD_ONLY.toString() + ", " + OOResultSet.TYPE_SCROLL_INSENSITIVE.toString() +
-//                " and " + OOResultSet.TYPE_SCROLL_SENSITIVE.toString());
-//
-//    }
-
-//    /**
-//     * @param resultSetConcurrency This is a required input. If this is empty an exception is thrown.
-//     * @return
-//     */
-//    private static String transformResultSetConcurrency(String resultSetConcurrency) throws SQLException {
-//        if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_READ_ONLY.toString())) {
-//            return OOResultSet.CONCUR_READ_ONLY.toString();
-//        } else if (resultSetConcurrency.equalsIgnoreCase(OOResultSet.CONCUR_UPDATABLE.toString())) {
-//            return OOResultSet.CONCUR_UPDATABLE.toString();
-//        }
-//        throw new SQLException("Invalid resultSetConcurrency provided. The allowed values for resultSetConcurrency are: "
-//                + OOResultSet.CONCUR_READ_ONLY.toString() + " and " + OOResultSet.CONCUR_UPDATABLE.toString());
-//    }
 
     /**
      * init all the non-static variables.

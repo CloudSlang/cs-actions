@@ -25,19 +25,15 @@ public class Constants {
     public static final String AUTH_WINDOWS = "Windows";
     public static final String TRIM_ROWSTAT = "trimRowstat";
     public static final String MSSQL_URL = "jdbc:sqlserver://";
-    public static final String RETURNRESULT = "returnResult";
     public static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
     public static final String ESCAPED_BACKSLASH = "\\";
     public static final String JTDS_JDBC_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
     public static final String SQLSERVER_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    public static final String TRUE = BooleanValues.TRUE;
     public static final String ENCRYPT = "encrypt";
-    public static final String FALSE = BooleanValues.FALSE;
     public static final String SEMI_COLON = ";";
     public static final String EQUALS = "=";
     public static final String STRING_PARAMETER = "%s";
     public static final String TRUSTORE_PARAMS = SEMI_COLON + TRUST_STORE + EQUALS + STRING_PARAMETER + SEMI_COLON + TRUST_STORE_PASSWORD + EQUALS + STRING_PARAMETER;
     public static final String COLON = ":";
-    public static final String INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL = "Invalid authentication type for MS SQL : ";
     public static final String INTEGRATED_SECURITY = "integratedSecurity";
 }

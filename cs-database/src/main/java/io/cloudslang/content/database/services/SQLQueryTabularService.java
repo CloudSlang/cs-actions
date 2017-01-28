@@ -31,7 +31,7 @@ public class SQLQueryTabularService {
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public String execSqlQueryTabular(SQLInputs sqlInputs) throws Exception {
+    public static String execSqlQueryTabular(SQLInputs sqlInputs) throws Exception {
 
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
