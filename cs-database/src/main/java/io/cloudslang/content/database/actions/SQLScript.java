@@ -35,12 +35,14 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TRUST_ALL_ROOTS;
+import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlScriptInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.readFromFile;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -93,8 +95,11 @@ public class SQLScript {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlScriptInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, dbClass, dbURL, delimiter, sqlCommands, trustAllRoots, trustStore, trustStorePassword,
-                databasePoolingProperties, resultSetType, resultSetConcurrency);
+                database, authenticationType, sqlCommands, scriptFileName, trustAllRoots, trustStore, trustStorePassword,
+                resultSetType, resultSetConcurrency);
+        if (preInputsValidation.isEmpty()) {
+            return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
+        }
 
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory

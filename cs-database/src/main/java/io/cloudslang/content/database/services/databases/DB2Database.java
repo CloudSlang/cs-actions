@@ -12,6 +12,7 @@ package io.cloudslang.content.database.services.databases;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -25,15 +26,21 @@ public class DB2Database implements SqlDatabase {
         if (dbName == null) {
             throw new SQLException("No database provided!");
         }
-        if (StringUtils.isEmpty(dbPort)) {
-            throw new SQLException("No port provided!");
-        }
         Class.forName("com.ibm.db2.jcc.DB2Driver");
         dbUrls.add("jdbc:db2://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(dbServer) + ":" + dbPort + dbName);
     }
 
     @Override
-    public void setUp(SQLInputs sqlInputs) {
+    public void setUp(@NotNull final SQLInputs sqlInputs) {
+        if (sqlInputs.getDbName() == null) {
+            throw new RuntimeException("No database provided!");
+        }
+        try {
+            Class.forName("com.ibm.db2.jcc.DB2Driver");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e.getCause());
+        }
+        sqlInputs.getDbUrls().add("jdbc:db2://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer()) + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName());
 
     }
 }

@@ -10,20 +10,21 @@
 package io.cloudslang.content.database.utils;
 
 import io.cloudslang.content.utils.CollectionUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidDbType;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**
  * Created by victor on 18.01.2017.
@@ -67,15 +68,6 @@ public class SQLInputsUtils {
         return dbUrls;
     }
 
-    public static int getOrDefaultTimeout(final String timeout, final String defaultVal) {
-        try {
-            return Integer.parseInt(defaultIfEmpty(timeout, defaultVal));
-        } catch (Exception e) {
-            e.printStackTrace(); //todo
-            return -1;
-        }
-    }
-
     public static Properties getOrDefaultDBPoolingProperties(final String dbPoolingProperties, final String defaultVal) {
         final Properties databasePoolingProperties = new Properties();
         try (final Reader reader = new StringReader(defaultIfBlank(dbPoolingProperties, defaultVal))) {
@@ -100,48 +92,6 @@ public class SQLInputsUtils {
         return -1000000;
     }
 
-    public static void processDefaultValues(SQLInputs sqlInputs, String dbType, String authenticationType, String username) throws Exception {
-        int dbPort = 0;
-        if (dbType.equalsIgnoreCase(ORACLE_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_ORACLE;
-        } else if (dbType.equalsIgnoreCase(MSSQL_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_MSSQL;
-            if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
-                if (username.contains(ESCAPED_BACKSLASH)) {
-                    String domain = username.substring(0, username.indexOf(ESCAPED_BACKSLASH));
-                    final String newUsername = username.substring(username.indexOf(ESCAPED_BACKSLASH) + 1, username.length());
-                    sqlInputs.setUsername(newUsername);
-                    sqlInputs.setWindowsDomain(domain);
-                }
-
-            }
-        } else if (dbType.equalsIgnoreCase(NETCOOL_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_NETCOOL;
-            sqlInputs.setNetcool(true);
-        } else if (dbType.equalsIgnoreCase(DB2_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_DB2;
-        } else if (dbType.equalsIgnoreCase(SYBASE_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_SYBASE;
-        } else if (dbType.equalsIgnoreCase(MYSQL_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_MYSQL;
-        } else if (dbType.equalsIgnoreCase(POSTGRES_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_PSQL;
-        }
-        if (isEmpty(Integer.toString(sqlInputs.getDbPort()))) { //todo temporary fix
-            sqlInputs.setDbPort(dbPort);
-        }
-        try {
-            //in case that user entered dbType is not oracle, netcool, mssql or db2
-            if (isEmpty(Integer.toString(sqlInputs.getDbPort()))) { //todo temporary fix
-                throw new Exception("There's no default DBPort for " + sqlInputs.getDbType() + " db server, please enter a valid dbPort.");
-            } else {
-//         todo       Integer.parseInt(sqlInputs.getDbPort());
-            }
-        } catch (NumberFormatException e) {
-            throw new Exception("dbPort input is not in valid format.");
-        }
-    }
-
     public static boolean notInCollectionIgnoreCase(final String toCheck, final Iterable<String> inList) {
         return !inCollectionIgnoreCase(toCheck, inList);
     }
@@ -155,5 +105,61 @@ public class SQLInputsUtils {
             }
         }
         return isPresent;
+    }
+
+    public static String getSqlKey(SQLInputs sqlInputs, String sqlDbType, String sqlDbServer, String sqlCommand, String sqlUsername,
+                                   String sqlAuthenticationType, String sqlDbPort, String sqlKey, String sqlTnsEntry, String sqlTnsPath,
+                                   String sqlPassword, boolean sqlIgnoreCase) throws SQLException {
+        String aKey;
+        if (sqlIgnoreCase) {
+            //calculate session id for JDBC operations
+            if (StringUtils.isNoneEmpty(sqlDbServer)) {
+                if (sqlInputs.getInstance() != null) {
+                    sqlInputs.setInstance(sqlInputs.getInstance().toLowerCase());
+                }
+                if (sqlInputs.getDbName() != null) {
+                    sqlInputs.setDbName(sqlInputs.getDbName().toLowerCase());
+                }
+                aKey = SQLUtils.computeSessionId(sqlDbServer.toLowerCase() + sqlDbType.toLowerCase() +
+                        sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
+                        sqlAuthenticationType.toLowerCase() + sqlCommand.toLowerCase() + sqlKey);
+            } else { //calculate session id for Oracle operations
+                if (StringUtils.isEmpty(sqlTnsPath)) {
+                    throw new SQLException("Empty TNSPath for Oracle. ");
+                }
+
+                if (StringUtils.isEmpty(sqlTnsEntry)) {
+                    throw new SQLException("Empty TNSEntry for Oracle. ");
+                }
+                aKey = SQLUtils.computeSessionId(sqlTnsPath.toLowerCase() +
+                        sqlTnsEntry.toLowerCase() + sqlUsername + sqlPassword + sqlCommand.toLowerCase() + sqlKey);
+            }
+        } else {
+            //calculate session id for JDBC operations
+            if (!StringUtils.isEmpty(sqlDbServer)) {
+                if (sqlInputs.getInstance() != null) {
+                    sqlInputs.setInstance(sqlInputs.getInstance());
+                }
+                if (sqlInputs.getDbName() != null) {
+                    sqlInputs.setDbName(sqlInputs.getDbName());
+                }
+                aKey = SQLUtils.computeSessionId(sqlDbServer + sqlDbType +
+                        sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
+                        sqlAuthenticationType + sqlCommand + sqlKey);
+            }
+            //calculate session id for Oracle operations
+            else {
+                if (StringUtils.isEmpty(sqlTnsPath)) {
+                    throw new SQLException("Empty TNSPath for Oracle. ");
+                }
+
+                if (StringUtils.isEmpty(sqlTnsEntry)) {
+                    throw new SQLException("Empty TNSEntry for Oracle. ");
+                }
+                aKey = SQLUtils.computeSessionId(sqlTnsPath +
+                        sqlTnsEntry + sqlUsername + sqlPassword + sqlCommand + sqlKey);
+            }
+        }
+        return aKey;
     }
 }

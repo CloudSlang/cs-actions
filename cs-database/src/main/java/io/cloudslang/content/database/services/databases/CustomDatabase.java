@@ -12,6 +12,8 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by victor on 13.01.2017.
@@ -27,7 +29,11 @@ public class CustomDatabase implements SqlDatabase {
     }
 
     @Override
-    public void setUp(SQLInputs sqlInputs) {
-
+    public void setUp(@NotNull final SQLInputs sqlInputs) {
+        try {
+            Class.forName(sqlInputs.getDbClass());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e.getMessage(), e.getCause());
+        }
     }
 }

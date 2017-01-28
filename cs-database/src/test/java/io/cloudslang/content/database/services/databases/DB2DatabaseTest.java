@@ -54,14 +54,6 @@ public class DB2DatabaseTest {
     }
 
     @Test
-    public void testSetUpNoDbPort() throws ClassNotFoundException, SQLException {
-        expectedEx.expect(SQLException.class);
-        expectedEx.expectMessage("No port provided!");
-        DB2Database db2Database = new DB2Database();
-        db2Database.setUp(DB_NAME, DB_SERVER, null, dbUrls);
-    }
-
-    @Test
     public void testSetUpAll() throws ClassNotFoundException, SQLException {
         DB2Database db2Database = new DB2Database();
         db2Database.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls);

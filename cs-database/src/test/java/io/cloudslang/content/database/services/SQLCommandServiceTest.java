@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services;
 
+import io.cloudslang.content.database.actions.SQLCommand;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
@@ -51,7 +52,6 @@ public class SQLCommandServiceTest {
                                                          "dbms_output.put_line(a) ;\n" +
                                                          "dbms_output.put_line('Hello World ! ')  ;\n" +
                                                          "END ;";
-    private SQLCommandService sqlCommandService = new SQLCommandService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -92,7 +92,7 @@ public class SQLCommandServiceTest {
         sqlInputs.setSqlCommand(SQL_COMMAND);
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
 
-        final String executeSqlCommand = sqlCommandService.executeSqlCommand(sqlInputs);
+        final String executeSqlCommand = SQLCommandService.executeSqlCommand(sqlInputs);
 
         assertEquals("Command completed successfully", executeSqlCommand);
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
@@ -116,7 +116,7 @@ public class SQLCommandServiceTest {
         sqlInputs.setSqlCommand(SQL_COMMAND_DBMS_OUTPUT);
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
 
-        final String executeSqlCommand = sqlCommandService.executeSqlCommand(sqlInputs);
+        final String executeSqlCommand = SQLCommandService.executeSqlCommand(sqlInputs);
 
         assertEquals("Command completed successfully", executeSqlCommand);
         verify(connectionMock, Mockito.times(1)).setReadOnly(false);
@@ -127,10 +127,4 @@ public class SQLCommandServiceTest {
         verify(oracleDbmsOutputMock, Mockito.times(1)).close();
     }
 
-    @Test
-    public void testExecuteSqlCommandNoCommand() throws Exception {
-        expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("command input is empty.");
-        sqlCommandService.executeSqlCommand(sqlInputs);
-    }
 }

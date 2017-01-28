@@ -55,14 +55,6 @@ public class MySqlDatabaseTest {
     }
 
     @Test
-    public void testSetUpNoDbPort() throws ClassNotFoundException, SQLException {
-        expectedEx.expect(SQLException.class);
-        expectedEx.expectMessage("No port provided!");
-        MySqlDatabase mySqlDatabase = new MySqlDatabase();
-        mySqlDatabase.setUp(DB_NAME, DB_SERVER, null, dbUrls);
-    }
-
-    @Test
     public void testSetUpAll() throws ClassNotFoundException, SQLException {
         MySqlDatabase mySqlDatabase = new MySqlDatabase();
         mySqlDatabase.setUp(DB_NAME, DB_SERVER, DB_PORT, dbUrls);

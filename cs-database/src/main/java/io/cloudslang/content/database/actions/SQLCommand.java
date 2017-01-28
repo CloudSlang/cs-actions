@@ -29,6 +29,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.OUTPUT_TEXT;
@@ -86,11 +87,11 @@ public class SQLCommand {
         instance = defaultIfEmpty(instance, EMPTY);
 
 
-        final List<String> preInputsValidation = validateSqlCommandInputs(dbType, username, password, instance, dbPort,
+        final List<String> preInputsValidation = validateSqlCommandInputs(dbServerName, dbType, username, password, instance, dbPort,
                 database, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
                 trustStorePassword);
         if (preInputsValidation.isEmpty()) {
-            return getFailureResultsMap(StringUtils.join(preInputsValidation, "\n"));
+            return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
         try {
             SQLInputs mySqlInputs = new SQLInputs();
@@ -113,8 +114,7 @@ public class SQLCommand {
             mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
             mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
-            final SQLCommandService sqlCommandService = new SQLCommandService();
-            String res = sqlCommandService.executeSqlCommand(mySqlInputs);
+            String res = SQLCommandService.executeSqlCommand(mySqlInputs);
 
             String outputText = "";
 
@@ -135,11 +135,11 @@ public class SQLCommand {
                     outputText += row + "\n";
                 }
             }
+
             final Map<String, String> result = getSuccessResultsMap(res);
             result.put(UPDATE_COUNT, String.valueOf(mySqlInputs.getiUpdateCount()));
             result.put(OUTPUT_TEXT, outputText);
             return result;
-
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

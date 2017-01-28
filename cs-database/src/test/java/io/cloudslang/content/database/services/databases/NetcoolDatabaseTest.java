@@ -53,13 +53,4 @@ public class NetcoolDatabaseTest {
         netcoolDatabase.setUp(null, DB_SERVER, DB_PORT, dbUrls);
         assertEquals("jdbc:jtds:sybase://dbServer:30;prepareSQL=1;useLOBs=false;TDS=4.2;", dbUrls.get(0));
     }
-
-    @Test
-    public void testSetUpNoDbPort() throws ClassNotFoundException, SQLException {
-        expectedEx.expect(SQLException.class);
-        expectedEx.expectMessage("No port provided!");
-        NetcoolDatabase netcoolDatabase = new NetcoolDatabase();
-        netcoolDatabase.setUp(DB_NAME, DB_SERVER, null, dbUrls);
-    }
-
 }

@@ -12,8 +12,8 @@ package io.cloudslang.content.database.services;
 import io.cloudslang.content.database.services.databases.*;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,25 +38,19 @@ public class ConnectionService {
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public Connection setUpConnection(SQLInputs sqlInputs) throws ClassNotFoundException, SQLException {
-        if (sqlInputs == null) {
-            throw new SQLException("No connection inputs are provided!");
-        }
+    public Connection setUpConnection(@NotNull final SQLInputs sqlInputs) throws ClassNotFoundException, SQLException {
 
         Properties databasePoolingProperties = sqlInputs.getDatabasePoolingProperties();
 
         dbConnectionManager = DBConnectionManager.getInstance();
 
         final String instance = sqlInputs.getInstance();
-        final String windowsDomain = sqlInputs.getWindowsDomain();
         final String dbClass = sqlInputs.getDbClass();
         final List<String> dbUrls = sqlInputs.getDbUrls();
         final String dbType = sqlInputs.getDbType();
         final String dbServer = sqlInputs.getDbServer();
         final String dbName = sqlInputs.getDbName();
         final int dbPort = sqlInputs.getDbPort();
-        final String tnsPath = ""; //todo
-        final String tnsEntry = ""; //todo
         final String authenticationType = sqlInputs.getAuthenticationType();
         final String trustStore = sqlInputs.getTrustStore();
         final String trustStorePassword = sqlInputs.getTrustStorePassword();
@@ -73,8 +67,9 @@ public class ConnectionService {
                 dbUrls.set(0, dbUrl);
             }
         }
+
         String localDbName;
-        if(MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
+        if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             localDbName = isEmpty(dbName) ? "" : dbName;
         } else {
             //localDbName will be like "/localDbName"
@@ -89,7 +84,7 @@ public class ConnectionService {
         if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.ORACLE;
             OracleDatabase oracleDatabase = new OracleDatabase();
-            oracleDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls, tnsPath, tnsEntry);
+            oracleDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //MySql
         else if (MYSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
@@ -101,7 +96,7 @@ public class ConnectionService {
         else if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MSSQL;
             MSSqlDatabase msSqlDatabase = new MSSqlDatabase();
-            msSqlDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls, authenticationType, instance, windowsDomain, dbClass, trustAllRoots, trustStore, trustStorePassword);
+            msSqlDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls, authenticationType, instance, dbClass, trustAllRoots, trustStore, trustStorePassword);
         }
         //Sybase
         else if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
@@ -131,8 +126,7 @@ public class ConnectionService {
             CustomDatabase customDatabase = new CustomDatabase();
             customDatabase.setUp(dbClass);
             // dbUrl should already be defined!
-        } else //check the dbtype
-        {
+        } else {
             //if something other than allowed type or empty
             //we supply dbType to be default to Oracle if it is empty
             throw new SQLException("Invalid database type : " + dbType);

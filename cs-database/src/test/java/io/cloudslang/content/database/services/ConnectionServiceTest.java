@@ -167,11 +167,6 @@ public class ConnectionServiceTest {
         connectionService.setUpConnection(sqlInputs);
     }
 
-    @Test
-    public void testSetUpConnectionEmptySqlInputs() throws SQLException, ClassNotFoundException {
-        checkExpectedSQLException("No connection inputs are provided!");
-        connectionService.setUpConnection(null);
-    }
 
     private void checkExpectedSQLException(String message) {
         expectedEx.expect(SQLException.class);

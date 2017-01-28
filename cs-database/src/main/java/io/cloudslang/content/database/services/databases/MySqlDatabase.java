@@ -12,6 +12,7 @@ package io.cloudslang.content.database.services.databases;
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -25,9 +26,7 @@ public class MySqlDatabase implements SqlDatabase {
         if (dbName == null) {
             throw new SQLException("No database provided!");
         }
-        if (StringUtils.isEmpty(dbPort)) {
-            throw new SQLException("No port provided!");
-        }
+
         Class.forName("com.mysql.jdbc.Driver");
         Address address = new Address(dbServer);
         if (address.isIPV6Literal()) {//the host is an IPv6 literal
@@ -39,7 +38,22 @@ public class MySqlDatabase implements SqlDatabase {
     }
 
     @Override
-    public void setUp(SQLInputs sqlInputs) {
+    public void setUp(@NotNull final SQLInputs sqlInputs) {
+        if (sqlInputs.getDbName() == null) {
+            throw new RuntimeException("No database provided!");
+        }
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e.getCause());
+        }
+        Address address = new Address(sqlInputs.getDbServer());
+        if (address.isIPV6Literal()) {//the host is an IPv6 literal
+            sqlInputs.getDbUrls().add("jdbc:mysql://address=(protocol=tcp)" + "(host=" + sqlInputs.getDbServer() + ")(port="
+                    + sqlInputs.getDbPort() + ")" + sqlInputs.getDbName());
+        } else {//the host is an IPv4 literal or a Host Name
+            sqlInputs.getDbUrls().add("jdbc:mysql://" + sqlInputs.getDbServer() + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName());
+        }
 
     }
 }

@@ -65,32 +65,6 @@ public class DBOtherValues {
         return concurValues;
     }
 
-    /*
-    if (dbType.equalsIgnoreCase(ORACLE_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_ORACLE;
-        } else if (dbType.equalsIgnoreCase(MSSQL_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_MSSQL;
-            if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
-                if (username.contains(ESCAPED_BACKSLASH)) {
-                    String domain = username.substring(0, username.indexOf(ESCAPED_BACKSLASH));
-                    final String newUsername = username.substring(username.indexOf(ESCAPED_BACKSLASH) + 1, username.length());
-                    sqlInputs.setUsername(newUsername);
-                    sqlInputs.setWindowsDomain(domain);
-                }
-
-            }
-        } else if (dbType.equalsIgnoreCase(NETCOOL_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_NETCOOL;
-            sqlInputs.setNetcool(true);
-        } else if (dbType.equalsIgnoreCase(DB2_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_DB2;
-        } else if (dbType.equalsIgnoreCase(SYBASE_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_SYBASE;
-        } else if (dbType.equalsIgnoreCase(MYSQL_DB_TYPE)) {
-            dbPort = DEFAULT_PORT_MYSQL;
-        } else if (dbType.equalsIgnoreCase(Constants.POSTGRES_DB_TYPE)) {
-     */
-
     private static Map<String, Integer> createConcurValues() {
         final Map<String, Integer> concurValues = new HashMap<>();
         concurValues.put(CONCUR_READ_ONLY, ResultSet.CONCUR_READ_ONLY);

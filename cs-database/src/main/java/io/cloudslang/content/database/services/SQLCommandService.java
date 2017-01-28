@@ -9,7 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services;
 
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.OracleDbmsOutput;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
@@ -25,11 +24,8 @@ import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_T
  */
 public class SQLCommandService {
 
-    public String executeSqlCommand(final SQLInputs sqlInputs) throws Exception {
-        if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
-            throw new Exception("command input is empty.");
-        }
-        ConnectionService connectionService = new ConnectionService();
+    public static String executeSqlCommand(final SQLInputs sqlInputs) throws Exception {
+        final ConnectionService connectionService = new ConnectionService();
         try (final Connection connection = connectionService.setUpConnection(sqlInputs)){
 
             connection.setReadOnly(false);

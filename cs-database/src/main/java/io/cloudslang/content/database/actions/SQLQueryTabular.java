@@ -35,6 +35,7 @@ import java.util.Map;
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.*;
@@ -42,6 +43,8 @@ import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryTabularInputs;
+import static io.cloudslang.content.utils.NumberUtilities.toInteger;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -92,8 +95,11 @@ public class SQLQueryTabular {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryTabularInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, dbClass, dbURL, command, trustAllRoots, trustStore, trustStorePassword,
-                timeout, databasePoolingProperties, resultSetType, resultSetConcurrency);
+                database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                timeout, resultSetType, resultSetConcurrency);
+        if (preInputsValidation.isEmpty()) {
+            return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
+        }
 
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
@@ -110,7 +116,7 @@ public class SQLQueryTabular {
         mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots, DEFAULT_TRUST_ALL_ROOTS));
         mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
-        mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
+        mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
@@ -141,12 +147,9 @@ public class SQLQueryTabular {
             if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
                 sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
             }
-            if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
-                throw new Exception("command input is empty.");
-            }
             SQLQueryTabularService sqlQueryTabularService = new SQLQueryTabularService();
             String queryResult = sqlQueryTabularService.execSqlQueryTabular(sqlInputs);
-            result.put(Constants.RETURNRESULT, queryResult);
+            result.put(RETURN_RESULT, queryResult);
             result.put(RETURN_CODE, SUCCESS);
         } catch (Exception e) {
             if (e instanceof SQLException)

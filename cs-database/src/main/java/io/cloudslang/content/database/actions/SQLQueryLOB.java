@@ -45,6 +45,8 @@ import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryLOBInputs;
+import static io.cloudslang.content.utils.NumberUtilities.toInteger;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -101,10 +103,12 @@ public class SQLQueryLOB {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryLOBInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, dbClass, dbURL, command, trustAllRoots, trustStore, trustStorePassword, delimiter, key,
-                timeout, databasePoolingProperties, resultSetType, resultSetConcurrency);
+                database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                timeout, resultSetType, resultSetConcurrency);
 
-
+        if (preInputsValidation.isEmpty()) {
+            return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
+        }
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
@@ -122,7 +126,7 @@ public class SQLQueryLOB {
         mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
         mySqlInputs.setStrDelim(delimiter);
         mySqlInputs.setKey(key);
-        mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
+        mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
@@ -155,14 +159,11 @@ public class SQLQueryLOB {
             if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
                 sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
             }
-            if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
-                throw new Exception("command input is empty.");
-            }
             String aKey = "";
             Map<String, Object> sqlConnectionMap = new HashMap<>();
 
             //calculate session id for JDBC operations
-            if (!StringUtils.isEmpty(sqlInputs.getDbServer())) {
+            if (StringUtils.isNoneEmpty(sqlInputs.getDbServer())) {
                 if (sqlInputs.getInstance() != null) {
                     sqlInputs.setInstance(sqlInputs.getInstance().toLowerCase());
                 }
@@ -248,7 +249,7 @@ public class SQLQueryLOB {
                         tmpFile.delete();
                         ((List) sqlInputs.getlRowsFiles().get(0)).remove(0);
                         ((List) sqlInputs.getlRowsNames().get(0)).remove(0);
-                        if (((List) sqlInputs.getlRowsFiles().get(0)).isEmpty()) {
+                        if (sqlInputs.getlRowsFiles().get(0).isEmpty()) {
                             sqlInputs.getlRowsFiles().remove(0);
                             sqlInputs.getlRowsNames().remove(0);
                         }
@@ -273,9 +274,6 @@ public class SQLQueryLOB {
 
             }//globalSessionObject
             else {
-                if ("windows".equalsIgnoreCase(sqlInputs.getAuthenticationType()) && !MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                    throw new Exception("Windows authentication can only be used with MSSQL!");
-                }
                 SQLQueryLobService sqlQueryLobService = new SQLQueryLobService();
                 boolean isLOB = sqlQueryLobService.executeSqlQueryLob(sqlInputs);
 

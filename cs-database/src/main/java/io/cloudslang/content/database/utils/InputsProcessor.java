@@ -134,8 +134,6 @@ public class InputsProcessor {
         String dbPort = parameters.get(DB_PORT);
         sqlInputs.setDbPort(Integer.valueOf(dbPort)); //todo temporary fix
 
-        SQLInputsUtils.processDefaultValues(sqlInputs, sqlInputs.getDbType(), sqlInputs.getAuthenticationType(), username); //todo
-
         //command
         String sqlCommand = parameters.get(COMMAND);
         sqlInputs.setSqlCommand(sqlCommand);
@@ -281,7 +279,6 @@ public class InputsProcessor {
             sqlInputs.setIgnoreCase(null);
             sqlInputs.setResultSetConcurrency(-1000000);
             sqlInputs.setResultSetType(-1000000);
-            sqlInputs.setWindowsDomain(null);
             sqlInputs.setTrustAllRoots(false);
             sqlInputs.setTrustStore("");
         } else throw new Exception("Cannot init null Sql inputs!");

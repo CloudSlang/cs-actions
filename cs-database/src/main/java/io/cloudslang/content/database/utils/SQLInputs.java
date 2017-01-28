@@ -46,7 +46,6 @@ public class SQLInputs {
     private List<String> lRows;
     private int iUpdateCount;
     private Properties databasePoolingProperties;
-    private String windowsDomain;
     private String trustStore;
     private String trustStorePassword;
     private boolean trustAllRoots;
@@ -307,13 +306,6 @@ public class SQLInputs {
         this.resultSetConcurrency = resultSetConcurrency;
     }
 
-    public String getWindowsDomain() {
-        return windowsDomain;
-    }
-
-    public void setWindowsDomain(String windowsDomain) {
-        this.windowsDomain = windowsDomain;
-    }
 
     public String getTrustStore() {
         return trustStore;

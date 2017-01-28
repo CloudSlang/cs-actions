@@ -39,6 +39,7 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TIMEOUT;
+import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.*;
@@ -46,6 +47,8 @@ import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
+import static io.cloudslang.content.utils.NumberUtilities.toInteger;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -104,9 +107,11 @@ public class SQLQuery {
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
 
         final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, dbClass, dbURL, command, trustAllRoots, trustStore, trustStorePassword, delimiter, key,
-                timeout, databasePoolingProperties, resultSetType, resultSetConcurrency, ignoreCase);
-
+                database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                timeout, resultSetType, resultSetConcurrency, ignoreCase);
+        if (preInputsValidation.isEmpty()) {
+            return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
+        }
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(dbType);
@@ -124,7 +129,7 @@ public class SQLQuery {
         mySqlInputs.setTrustStorePassword(trustStorePassword);
         mySqlInputs.setStrDelim(delimiter);
         mySqlInputs.setKey(key);
-        mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
+        mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
@@ -169,65 +174,13 @@ public class SQLQuery {
             final String sqlPassword = sqlInputs.getPassword();
             final boolean sqlIgnoreCase = Boolean.parseBoolean(sqlInputs.getIgnoreCase());
 
-            if (DB2_DB_TYPE.equalsIgnoreCase(sqlDbType)) {
-                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
-            }
-            if (StringUtils.isEmpty(sqlCommand)) {
-                throw new Exception("Command input is empty.");
-            }
-            String aKey = "";
+//            if (DB2_DB_TYPE.equalsIgnoreCase(sqlDbType)) { //todo this should be documented
+//                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
+//            }
+
+            String aKey = getSqlKey(sqlInputs, sqlDbType, sqlDbServer, sqlCommand, sqlUsername, sqlAuthenticationType, sqlDbPort, sqlKey, sqlTnsEntry, sqlTnsPath, sqlPassword, sqlIgnoreCase);
+
             Map<String, Object> sqlConnectionMap = new HashMap<>();
-
-            if (sqlIgnoreCase) {
-                //calculate session id for JDBC operations
-                if (StringUtils.isNoneEmpty(sqlDbServer)) {
-                    if (sqlInputs.getInstance() != null) {
-                        sqlInputs.setInstance(sqlInputs.getInstance().toLowerCase());
-                    }
-                    if (sqlInputs.getDbName() != null) {
-                        sqlInputs.setDbName(sqlInputs.getDbName().toLowerCase());
-                    }
-                    aKey = SQLUtils.computeSessionId(sqlDbServer.toLowerCase() + sqlDbType.toLowerCase() +
-                            sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
-                            sqlAuthenticationType.toLowerCase() + sqlCommand.toLowerCase() + sqlKey);
-                } else { //calculate session id for Oracle operations
-                    if (StringUtils.isEmpty(sqlTnsPath)) {
-                        throw new SQLException("Empty TNSPath for Oracle. ");
-                    }
-
-                    if (StringUtils.isEmpty(sqlTnsEntry)) {
-                        throw new SQLException("Empty TNSEntry for Oracle. ");
-                    }
-                    aKey = SQLUtils.computeSessionId(sqlTnsPath.toLowerCase() +
-                            sqlTnsEntry.toLowerCase() + sqlUsername + sqlPassword + sqlCommand.toLowerCase() + sqlKey);
-                }
-            } else {
-                //calculate session id for JDBC operations
-                if (!StringUtils.isEmpty(sqlDbServer)) {
-                    if (sqlInputs.getInstance() != null) {
-                        sqlInputs.setInstance(sqlInputs.getInstance());
-                    }
-                    if (sqlInputs.getDbName() != null) {
-                        sqlInputs.setDbName(sqlInputs.getDbName());
-                    }
-                    aKey = SQLUtils.computeSessionId(sqlDbServer + sqlDbType +
-                            sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
-                            sqlAuthenticationType + sqlCommand + sqlKey);
-                }
-                //calculate session id for Oracle operations
-                else {
-                    if (StringUtils.isEmpty(sqlTnsPath)) {
-                        throw new SQLException("Empty TNSPath for Oracle. ");
-                    }
-
-                    if (StringUtils.isEmpty(sqlTnsEntry)) {
-                        throw new SQLException("Empty TNSEntry for Oracle. ");
-                    }
-                    aKey = SQLUtils.computeSessionId(sqlTnsPath +
-                            sqlTnsEntry + sqlUsername + sqlPassword + sqlCommand + sqlKey);
-                }
-            }
-
             if (globalSessionObject.getResource() != null) {
                 sqlInputs.setlRows((List<String>) globalSessionObject.getResource().get().get(aKey));
                 sqlInputs.setStrColumns((String) globalSessionObject.getResource().get().get(sqlInputs.getStrKeyCol()));

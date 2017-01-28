@@ -176,7 +176,8 @@ public class Format {
                     if (colN == 0) {
                         delimitedResult.append(colVal);
                     } else {
-                        delimitedResult.append(colDelimiter + colVal);
+                        delimitedResult.append(colDelimiter)
+                                .append(colVal);
                     }
                 }
                 delimitedResult.append(rowDelimiter);

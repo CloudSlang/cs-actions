@@ -22,7 +22,7 @@ import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLQueryAllUtil;
-import io.cloudslang.content.utils.BooleanUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -40,6 +40,8 @@ import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryAllRowsInputs;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
+import static io.cloudslang.content.utils.NumberUtilities.toInteger;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -92,9 +94,11 @@ public class SQLQueryAllRows {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryAllRowsInputs(dbServerName, dbType, username, password, instance,
-                dbPort, database, authenticationType, dbClass, dbURL, command, trustAllRoots, trustStore, trustStorePassword, colDelimiter,
-                rowDelimiter, timeout, databasePoolingProperties, resultSetType, resultSetConcurrency);
-
+                dbPort, database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                timeout, resultSetType, resultSetConcurrency);
+        if (preInputsValidation.isEmpty()) {
+            return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
+        }
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(dbType);
@@ -112,7 +116,7 @@ public class SQLQueryAllRows {
         mySqlInputs.setTrustStorePassword(trustStorePassword);
         mySqlInputs.setColDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER));
         mySqlInputs.setRowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE));
-        mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));
+        mySqlInputs.setTimeout(toInteger(timeout));
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
@@ -144,9 +148,6 @@ public class SQLQueryAllRows {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
             if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
                 sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
-            }
-            if (isEmpty(sqlInputs.getSqlCommand())) {
-                throw new Exception("command input is empty.");
             }
             // String colDelimiter = StringUtils.resolveString(actionRequest, COL_DELIMITER);
             // String rowDelimiter = StringUtils.resolveString(actionRequest, ROW_DELIMITER);

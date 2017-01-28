@@ -11,6 +11,7 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,9 +27,7 @@ public class NetcoolDatabase implements SqlDatabase {
         if (dbName == null) {
             throw new SQLException("No database provided!");
         }
-        if (StringUtils.isEmpty(dbPort)) {
-            throw new SQLException("No port provided!");
-        }
+
         //Attempt to load jconn3 driver first, then jconn2 driver
         try {
             Class.forName("com.sybase.jdbc3.jdbc.SybDriver");
@@ -45,7 +44,21 @@ public class NetcoolDatabase implements SqlDatabase {
     }
 
     @Override
-    public void setUp(SQLInputs sqlInputs) {
+    public void setUp(@NotNull final SQLInputs sqlInputs) {
+        if (sqlInputs.getDbName() == null) {
+            throw new RuntimeException("No database provided!");
+        }
 
+        //Attempt to load jconn3 driver first, then jconn2 driver
+        try {
+            Class.forName("com.sybase.jdbc3.jdbc.SybDriver");
+        } catch (Exception e) {
+            try {
+                Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
+            }
+        }
+        sqlInputs.getDbUrls().add("jdbc:sybase:Tds:" + sqlInputs.getDbServer() + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName());
     }
 }
