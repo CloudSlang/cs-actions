@@ -39,6 +39,7 @@ import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryAllRowsInputs;
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -78,6 +79,7 @@ public class SQLQueryAllRows {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
@@ -95,19 +97,19 @@ public class SQLQueryAllRows {
 
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(defaultIfEmpty(dbType, ORACLE_DB_TYPE));
+        mySqlInputs.setDbType(dbType);
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(defaultIfEmpty(instance, EMPTY));
+        mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
         mySqlInputs.setDbName(database);
-        mySqlInputs.setAuthenticationType(defaultIfEmpty(authenticationType, AUTH_SQL));
+        mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
         mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots, DEFAULT_TRUST_ALL_ROOTS));
-        mySqlInputs.setTrustStore(defaultIfEmpty(trustStore, EMPTY));
-        mySqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
+        mySqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
+        mySqlInputs.setTrustStore(trustStore);
+        mySqlInputs.setTrustStorePassword(trustStorePassword);
         mySqlInputs.setColDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER));
         mySqlInputs.setRowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE));
         mySqlInputs.setTimeout(getOrDefaultTimeout(timeout, DEFAULT_TIMEOUT));

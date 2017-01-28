@@ -10,6 +10,8 @@
 package io.cloudslang.content.database.utils;
 
 
+import io.cloudslang.content.constants.BooleanValues;
+
 import static io.cloudslang.content.database.constants.DBInputNames.TRUST_STORE;
 import static io.cloudslang.content.database.constants.DBInputNames.TRUST_STORE_PASSWORD;
 
@@ -28,9 +30,9 @@ public class Constants {
     public static final String ESCAPED_BACKSLASH = "\\";
     public static final String JTDS_JDBC_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
     public static final String SQLSERVER_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    public static final String TRUE = Boolean.TRUE.toString();
+    public static final String TRUE = BooleanValues.TRUE;
     public static final String ENCRYPT = "encrypt";
-    public static final String FALSE = Boolean.FALSE.toString();
+    public static final String FALSE = BooleanValues.FALSE;
     public static final String SEMI_COLON = ";";
     public static final String EQUALS = "=";
     public static final String STRING_PARAMETER = "%s";

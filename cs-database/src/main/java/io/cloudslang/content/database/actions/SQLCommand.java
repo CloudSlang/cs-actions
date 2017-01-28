@@ -35,6 +35,7 @@ import static io.cloudslang.content.database.constants.DBOutputNames.OUTPUT_TEXT
 import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlCommandInputs;
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -104,7 +105,7 @@ public class SQLCommand {
             mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
             mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
             mySqlInputs.setSqlCommand(command);
-            mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+            mySqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
             mySqlInputs.setTrustStore(trustStore);
             mySqlInputs.setTrustStorePassword(trustStorePassword);
             mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
