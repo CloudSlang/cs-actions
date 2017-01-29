@@ -9,10 +9,12 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.MessageDigest;
 
 
 /**
@@ -31,21 +33,18 @@ public class TripleDES {
      * @return an encrypted password
      * @throws Exception
      */
-    public static String encryptPassword(String aPlainPass) throws Exception {
+    public static String encryptPassword(final String aPlainPass) throws Exception {
         if (aPlainPass == null)
             return "";
         byte[] encBytes = encryptString(aPlainPass.getBytes(DEFAULT_CODEPAGE));
-
-        return Base64.encode(encBytes);
+        return Base64.encodeBase64String(encBytes);
     }
 
-    private static byte[] md5Hash(String toHash) throws Exception {
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
-        byte[] digest = md5.digest(toHash.getBytes());
+    public static byte[] md5Hash(String toHash) throws Exception {
+        byte[] digest = DigestUtils.md5(toHash.getBytes());
         byte[] key = new byte[24];
         System.arraycopy(digest, 0, key, 0, 16);
         System.arraycopy(digest, 0, key, 16, 8);
-
         return key;
     }
 
@@ -55,7 +54,6 @@ public class TripleDES {
 
     static byte[] encryptString(byte[] text) throws Exception {
         SecretKey key = secretKeySpec();
-
         try {
             Cipher cipher = Cipher.getInstance(ENCRYPTION_MODE);
             cipher.init(Cipher.ENCRYPT_MODE, key);

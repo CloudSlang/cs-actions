@@ -10,8 +10,6 @@
 package io.cloudslang.content.database.utils;
 
 
-import io.cloudslang.content.constants.BooleanValues;
-
 import static io.cloudslang.content.database.constants.DBInputNames.TRUST_STORE;
 import static io.cloudslang.content.database.constants.DBInputNames.TRUST_STORE_PASSWORD;
 

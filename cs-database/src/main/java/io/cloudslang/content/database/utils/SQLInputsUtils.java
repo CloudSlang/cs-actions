@@ -23,16 +23,25 @@ import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidDbType;
-import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
-import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created by victor on 18.01.2017.
  */
 public class SQLInputsUtils {
 
+    public static String getOrDefaultDBName(final String dbName, final String dbType) {
+        if (isEmpty(dbName)) {
+            return EMPTY;
+        }
+        if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
+            return dbName;
+        }
+        return FORWARD_SLASH + dbName;
+    }
+
     public static int getOrDefaultDBPort(final String dbPort, final String dbType) {
-        if(isNoneEmpty(dbPort)) {
+        if (isNoneEmpty(dbPort)) {
             return Integer.valueOf(dbPort);
         }
         if (isValidDbType(dbType)) {
@@ -91,6 +100,7 @@ public class SQLInputsUtils {
         }
         return -1000000;
     }
+
     public static int getResultSetTypeForDbType(final String resultSetType, final String dbType) {
         if (DB2_DB_TYPE.equalsIgnoreCase(dbType)) {
             return TYPE_VALUES.get(TYPE_FORWARD_ONLY);
@@ -117,9 +127,9 @@ public class SQLInputsUtils {
     }
 
     public static String getSqlKey(SQLInputs sqlInputs, String sqlDbType, String sqlDbServer, String sqlCommand, String sqlUsername,
-                                   String sqlAuthenticationType, String sqlDbPort, String sqlKey, String sqlTnsEntry, String sqlTnsPath,
-                                   String sqlPassword, boolean sqlIgnoreCase) throws SQLException {
-        String aKey;
+                                   String sqlAuthenticationType, String sqlDbPort, String sqlKey, String sqlPassword,
+                                   boolean sqlIgnoreCase) throws SQLException {
+        String aKey = ""; // todo refactor and check if toLowerCase aKey is right
         if (sqlIgnoreCase) {
             //calculate session id for JDBC operations
             if (StringUtils.isNoneEmpty(sqlDbServer)) {
@@ -132,16 +142,6 @@ public class SQLInputsUtils {
                 aKey = SQLUtils.computeSessionId(sqlDbServer.toLowerCase() + sqlDbType.toLowerCase() +
                         sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
                         sqlAuthenticationType.toLowerCase() + sqlCommand.toLowerCase() + sqlKey);
-            } else { //calculate session id for Oracle operations
-                if (StringUtils.isEmpty(sqlTnsPath)) {
-                    throw new SQLException("Empty TNSPath for Oracle. ");
-                }
-
-                if (StringUtils.isEmpty(sqlTnsEntry)) {
-                    throw new SQLException("Empty TNSEntry for Oracle. ");
-                }
-                aKey = SQLUtils.computeSessionId(sqlTnsPath.toLowerCase() +
-                        sqlTnsEntry.toLowerCase() + sqlUsername + sqlPassword + sqlCommand.toLowerCase() + sqlKey);
             }
         } else {
             //calculate session id for JDBC operations
@@ -155,18 +155,6 @@ public class SQLInputsUtils {
                 aKey = SQLUtils.computeSessionId(sqlDbServer + sqlDbType +
                         sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
                         sqlAuthenticationType + sqlCommand + sqlKey);
-            }
-            //calculate session id for Oracle operations
-            else {
-                if (StringUtils.isEmpty(sqlTnsPath)) {
-                    throw new SQLException("Empty TNSPath for Oracle. ");
-                }
-
-                if (StringUtils.isEmpty(sqlTnsEntry)) {
-                    throw new SQLException("Empty TNSEntry for Oracle. ");
-                }
-                aKey = SQLUtils.computeSessionId(sqlTnsPath +
-                        sqlTnsEntry + sqlUsername + sqlPassword + sqlCommand + sqlKey);
             }
         }
         return aKey;

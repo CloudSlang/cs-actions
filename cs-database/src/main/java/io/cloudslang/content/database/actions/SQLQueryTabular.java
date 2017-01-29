@@ -19,24 +19,19 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryTabularService;
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLQueryTabularUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.*;
@@ -72,7 +67,7 @@ public class SQLQueryTabular {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE_NAME, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String databaseName,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -97,7 +92,7 @@ public class SQLQueryTabular {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryTabularInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency);
         if (preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -110,7 +105,7 @@ public class SQLQueryTabular {
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(database);
+        mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -130,7 +125,7 @@ public class SQLQueryTabular {
                 password,
                 instance,
                 dbPort,
-                database,
+                databaseName,
                 authenticationType,
                 dbClass,
                 dbURL,

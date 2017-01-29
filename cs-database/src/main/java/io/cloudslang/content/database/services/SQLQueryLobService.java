@@ -32,7 +32,7 @@ public class SQLQueryLobService {
         }
         boolean isLOB = false;
         ConnectionService connectionService = new ConnectionService();
-        try (final Connection connection = connectionService.setUpConnection(sqlInputs);) {
+        try (final Connection connection = connectionService.setUpConnection(sqlInputs)) {
 
             String strColumns = sqlInputs.getStrColumns();
 
@@ -56,10 +56,10 @@ public class SQLQueryLobService {
                     if (i > 1) strRowHolder += sqlInputs.getStrDelim();
                     Object columnObject = results.getObject(i);
                     if (columnObject != null) {
-                        String value = null;
+                        String value;
                         if (columnObject instanceof java.sql.Clob) {
                             isLOB = true;
-                            File tmpFile = File.createTempFile(new StringBuilder().append("CLOB_").append(mtd.getColumnLabel(i)).toString(), ".txt");
+                            File tmpFile = File.createTempFile("CLOB_" + mtd.getColumnLabel(i), ".txt");
 
                             BufferedReader reader = new BufferedReader(results.getCharacterStream(i));
                             FileOutputStream fos = new FileOutputStream(tmpFile);

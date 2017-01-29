@@ -18,8 +18,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
-import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
-
 /**
  * Created by victor on 13.01.2017.
  */
@@ -30,7 +28,7 @@ public class SQLQueryService {
             throw new Exception("command input is empty.");
         }
         ConnectionService connectionService = new ConnectionService();
-        try (final Connection connection = connectionService.setUpConnection(sqlInputs);) {
+        try (final Connection connection = connectionService.setUpConnection(sqlInputs)) {
             String strColumns = sqlInputs.getStrColumns();
 
             connection.setReadOnly(true);

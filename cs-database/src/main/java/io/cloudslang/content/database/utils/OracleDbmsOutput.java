@@ -41,7 +41,7 @@ public class OracleDbmsOutput {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        int done = 0;
+        int done;
 
         retrieveOutputStatement.registerOutParameter(2, java.sql.Types.INTEGER);
         retrieveOutputStatement.registerOutParameter(3, java.sql.Types.VARCHAR);

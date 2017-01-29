@@ -40,6 +40,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -64,7 +65,7 @@ public class SQLCommand {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE_NAME, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String databaseName,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -84,9 +85,8 @@ public class SQLCommand {
         trustStore = defaultIfEmpty(trustStore, EMPTY);
         trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
-
         final List<String> preInputsValidation = validateSqlCommandInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
+                databaseName, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
                 trustStorePassword);
 
         if (preInputsValidation.isEmpty()) {
@@ -101,7 +101,7 @@ public class SQLCommand {
             mySqlInputs.setPassword(password);
             mySqlInputs.setInstance(instance);
             mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-            mySqlInputs.setDbName(database);
+            mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
             mySqlInputs.setAuthenticationType(authenticationType);
             mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
             mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -119,7 +119,7 @@ public class SQLCommand {
             String outputText = "";
 
             if (ORACLE_DB_TYPE.equalsIgnoreCase(mySqlInputs.getDbType()) && mySqlInputs.getSqlCommand().toLowerCase().contains("dbms_output")) {
-                if (!"".equalsIgnoreCase(res)) {
+                if (isNoneEmpty(res)) {
                     outputText = res;
                 }
                 res = "Command completed successfully";

@@ -102,7 +102,7 @@ public class Format {
         int[] headerSz = new int[nCols]; // Note: Eclipse has a friendly getDisplaySizes() function
         int maxWidth = 1; // maximum column width - initially set at 1 to prevent an edge case
 
-        ArrayList<String[]> rows = new ArrayList<String[]>(); // columns
+        ArrayList<String[]> rows = new ArrayList<>(); // columns
         int rowCount = 0;
         // This is fairly space intensive because we don't want to turn this into an O^2(n) problem
         // instead of a O(n) problem. It's O(n) space but with a k of 2, and same with space.
@@ -186,7 +186,7 @@ public class Format {
 
         //If a multi-char delimiter is used, removing the last character is not enough
         int length = rowDelimiter.length();
-        String delimitedResultString = "";
+        String delimitedResultString;
         if ((delimitedResult.length() - length) >= 0)
             delimitedResultString = delimitedResult.substring(0, delimitedResult.length() - length);
         else

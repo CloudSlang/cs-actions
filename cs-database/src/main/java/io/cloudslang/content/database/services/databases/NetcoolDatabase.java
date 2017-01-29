@@ -10,7 +10,6 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -45,9 +44,9 @@ public class NetcoolDatabase implements SqlDatabase {
 
     @Override
     public void setUp(@NotNull final SQLInputs sqlInputs) {
-        if (sqlInputs.getDbName() == null) {
-            throw new RuntimeException("No database provided!");
-        }
+//        if (sqlInputs.getDbName() == null) {
+//            throw new RuntimeException("No database provided!");
+//        }
 
         //Attempt to load jconn3 driver first, then jconn2 driver
         try {

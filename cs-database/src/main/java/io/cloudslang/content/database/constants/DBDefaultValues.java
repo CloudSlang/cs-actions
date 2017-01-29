@@ -15,6 +15,5 @@ package io.cloudslang.content.database.constants;
 public class DBDefaultValues {
     public static final String AUTH_SQL = "Sql";
     public static final String DEFAULT_TIMEOUT = "120";
-    public static final boolean DEFAULT_TRUST_ALL_ROOTS = false;
     public static final String NEW_LINE = "\n";
 }

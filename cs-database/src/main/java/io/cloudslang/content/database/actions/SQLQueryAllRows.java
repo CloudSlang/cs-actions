@@ -20,12 +20,10 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryAllRowsService;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLQueryAllUtil;
+import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +65,7 @@ public class SQLQueryAllRows {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE_NAME, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String databaseName,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -94,7 +92,7 @@ public class SQLQueryAllRows {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryAllRowsInputs(dbServerName, dbType, username, password, instance,
-                dbPort, database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                dbPort, databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency);
 
         if (preInputsValidation.isEmpty()) {
@@ -108,7 +106,7 @@ public class SQLQueryAllRows {
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(database);
+        mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -130,7 +128,7 @@ public class SQLQueryAllRows {
                 password,
                 instance,
                 dbPort,
-                database,
+                databaseName,
                 authenticationType,
                 dbClass,
                 dbURL,
@@ -145,27 +143,13 @@ public class SQLQueryAllRows {
 
         inputParameters.put(RESULT_SET_TYPE, resultSetType);
         inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
-        Map<String, String> result = new HashMap<>();
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-//            if (DB2_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-//                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
-//            }
-            // String colDelimiter = StringUtils.resolveString(actionRequest, COL_DELIMITER);
-            // String rowDelimiter = StringUtils.resolveString(actionRequest, ROW_DELIMITER);
 
-            SQLQueryAllRowsService sqlQueryAllRowsService = new SQLQueryAllRowsService();
-            String queryResult = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, mySqlInputs.getColDelimiter(), mySqlInputs.getRowDelimiter());
-            result.put(RETURN_RESULT, queryResult);
-            result.put(RETURN_CODE, SUCCESS);
+            final String queryResult = SQLQueryAllRowsService.execQueryAllRows(sqlInputs);
+            return OutputUtilities.getSuccessResultsMap(queryResult);
         } catch (Exception e) {
-            if (e instanceof SQLException)
-                result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
-//            else
-//         todo       result.put(EXCEPTION, StringUtils.toString(e));
-                result.put(RETURN_RESULT, e.getMessage());
-            result.put(RETURN_CODE, FAILURE);
+            return OutputUtilities.getFailureResultsMap(e);
         }
-        return result;
     }
 }

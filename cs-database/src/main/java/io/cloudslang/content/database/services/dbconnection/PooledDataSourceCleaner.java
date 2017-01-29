@@ -24,8 +24,6 @@ public class PooledDataSourceCleaner implements Runnable {
     private DBConnectionManager manager = null;
     private STATE_CLEANER state = STATE_CLEANER.SHUTDOWN;
 
-    ;
-
     /**
      * constructor
      *
@@ -87,7 +85,7 @@ public class PooledDataSourceCleaner implements Runnable {
     }
 
     //state to indicate if this runnable is running or shutdown
-    public static enum STATE_CLEANER {
+    public enum STATE_CLEANER {
         RUNNING, SHUTDOWN
     }
 }//end PooledDataSourceCleaner class

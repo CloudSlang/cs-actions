@@ -11,7 +11,6 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -39,9 +38,9 @@ public class MySqlDatabase implements SqlDatabase {
 
     @Override
     public void setUp(@NotNull final SQLInputs sqlInputs) {
-        if (sqlInputs.getDbName() == null) {
-            throw new RuntimeException("No database provided!");
-        }
+//        if (sqlInputs.getDbName() == null) {
+//            throw new RuntimeException("No database provided!");
+//        }
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (Exception e) {

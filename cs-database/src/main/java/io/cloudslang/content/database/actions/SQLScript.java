@@ -18,17 +18,12 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.database.utils.other.SQLScriptUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
-import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.sql.SQLException;
 import java.util.*;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
@@ -36,14 +31,12 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
-import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TRUST_ALL_ROOTS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlScriptInputs;
-import static io.cloudslang.content.database.utils.SQLUtils.readFromFile;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -73,7 +66,7 @@ public class SQLScript {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE_NAME, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String databaseName,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -98,7 +91,7 @@ public class SQLScript {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlScriptInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, sqlCommands, scriptFileName, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, sqlCommands, scriptFileName, trustAllRoots, trustStore, trustStorePassword,
                 resultSetType, resultSetConcurrency);
         if (preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -111,7 +104,7 @@ public class SQLScript {
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(database);
+        mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -131,7 +124,7 @@ public class SQLScript {
                 password,
                 instance,
                 dbPort,
-                database,
+                databaseName,
                 authenticationType,
                 dbClass,
                 dbURL,
@@ -144,7 +137,6 @@ public class SQLScript {
                 databasePoolingProperties);
         inputParameters.put(RESULT_SET_TYPE, resultSetType);
         inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
-//        Map<String, String> result = new HashMap<>();
 
         try {
             final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
@@ -163,7 +155,7 @@ public class SQLScript {
 //            }
             if (!commands.isEmpty()) {
                 final String res = SQLScriptService.executeSqlScript(commands, sqlInputs);
-                final Map<String, String> result =  getSuccessResultsMap(res);
+                final Map<String, String> result = getSuccessResultsMap(res);
                 result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
                 return result;
             } else {

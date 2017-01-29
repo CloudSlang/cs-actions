@@ -112,7 +112,7 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
                                            String aUsername,
                                            String aPassword)
             throws SQLException {
-        DataSource retPooledDS = null;
+        DataSource retPooledDS;
 
         DataSource unPooledDS =
                 DataSources.unpooledDataSource(aDbUrl, aUsername, aPassword);
@@ -202,7 +202,7 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
 
         //db specific properties
         //connection life time
-        String conLifeTimeName = null;
+        String conLifeTimeName;
 
         switch (aDbType) {
             case ORACLE:

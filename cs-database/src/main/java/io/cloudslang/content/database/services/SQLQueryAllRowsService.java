@@ -12,31 +12,26 @@ package io.cloudslang.content.database.services;
 
 import io.cloudslang.content.database.utils.Format;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import static io.cloudslang.content.database.utils.SQLUtils.getResultSetValue;
-
 /**
  * Created by victor on 13.01.2017.
  */
 public class SQLQueryAllRowsService {
-    /**
+    /** todo
      * Run a SQL query with given configuration
      *
      * @return the formatted result set by colDelimiter and rowDelimiter
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public String execQueryAllRows(SQLInputs sqlInputs, String colDelimiter, String rowDelimiter) throws Exception {
-        if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
-            throw new Exception("command input is empty.");
-        }
+    public static String execQueryAllRows(@NotNull final SQLInputs sqlInputs) throws Exception {
         ConnectionService connectionService = new ConnectionService();
-        try (Connection connection = connectionService.setUpConnection(sqlInputs);) {
+        try (final Connection connection = connectionService.setUpConnection(sqlInputs)) {
             connection.setReadOnly(true);
 
             Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
@@ -44,7 +39,7 @@ public class SQLQueryAllRowsService {
             statement.setQueryTimeout(sqlInputs.getTimeout());
             final ResultSet resultSet = statement.executeQuery(sqlInputs.getSqlCommand());
 
-            final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(resultSet, sqlInputs.isNetcool(), colDelimiter, rowDelimiter);
+            final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(resultSet, sqlInputs.isNetcool(), sqlInputs.getColDelimiter(), sqlInputs.getRowDelimiter());
             if (resultSet != null) {
                 resultSet.close();
             }

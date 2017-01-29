@@ -12,7 +12,6 @@ package io.cloudslang.content.database.utils.other;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.InputNames.DELIMITER;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 
 /**

@@ -107,10 +107,4 @@ public class SQLQueryTabularServiceTest {
         verify(resultSetMock, Mockito.times(1)).close();
     }
 
-    @Test
-    public void testExecuteSqlQueryTabularNoCommand() throws Exception {
-        expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("command input is empty.");
-        SQLQueryTabularService.execSqlQueryTabular(sqlInputs);
-    }
 }

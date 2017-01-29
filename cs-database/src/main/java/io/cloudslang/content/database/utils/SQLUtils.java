@@ -148,7 +148,7 @@ public class SQLUtils {
             StringBuilder s = new StringBuilder();
             s.append(f.getMessage());
             while ((f = f.getNextException()) != null)
-                s.append("\n" + f.getMessage());
+                s.append("\n").append(f.getMessage());
             String str = s.toString();
             if (str.toLowerCase().contains("dump is complete"))
                 return str;
@@ -187,7 +187,7 @@ public class SQLUtils {
              final InputStreamReader inputStreamReader = new InputStreamReader(in);
              final BufferedReader br = new BufferedReader(inputStreamReader)) {
 
-            String strLine = "";
+            String strLine;
             String aString = "";
             int i = 0;
             boolean youAreInAMultiLineComment = false;

@@ -68,7 +68,7 @@ public class ConnectionService {
             }
         }
 
-        String localDbName;
+        String localDbName; //todo can be removed
         if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             localDbName = isEmpty(dbName) ? "" : dbName;
         } else {

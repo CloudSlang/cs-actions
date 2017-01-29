@@ -10,7 +10,6 @@
 package io.cloudslang.content.database.services;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.Format;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import org.junit.Before;
@@ -44,11 +43,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({ConnectionService.class, SQLQueryAllRowsService.class, Format.class})
 public class SQLQueryAllRowsServiceTest {
 
-    private static final String COL_DELIMITER = ",";
-    private static final String ROW_DELIMITER = "|";
     private static final String SQL_QUERY = "select * from dbTable";
     private static final int QUYERY_TIMEOUT = 10;
-    private SQLQueryAllRowsService sqlQueryAllRowsService = new SQLQueryAllRowsService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -83,9 +79,11 @@ public class SQLQueryAllRowsServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
+        sqlInputs.setRowDelimiter(",");
+        sqlInputs.setColDelimiter("|");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
         sqlInputs.setSqlCommand(SQL_QUERY);
-        final String execQueryAllRows = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, COL_DELIMITER, ROW_DELIMITER);
+        final String execQueryAllRows = SQLQueryAllRowsService.execQueryAllRows(sqlInputs);
 
         assertEquals("", execQueryAllRows);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
@@ -100,10 +98,12 @@ public class SQLQueryAllRowsServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
+        sqlInputs.setRowDelimiter(",");
+        sqlInputs.setColDelimiter("|");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
         sqlInputs.setSqlCommand(SQL_QUERY);
         sqlInputs.setNetcool(true);
-        final String execQueryAllRows = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, COL_DELIMITER, ROW_DELIMITER);
+        final String execQueryAllRows = SQLQueryAllRowsService.execQueryAllRows(sqlInputs);
 
         assertEquals("", execQueryAllRows);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
@@ -118,10 +118,12 @@ public class SQLQueryAllRowsServiceTest {
         sqlInputs.setDbPort(5432);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
+        sqlInputs.setRowDelimiter(",");
+        sqlInputs.setColDelimiter("|");
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
         sqlInputs.setSqlCommand(SQL_QUERY);
         sqlInputs.setNetcool(true);
-        final String execQueryAllRows = sqlQueryAllRowsService.execQueryAllRows(sqlInputs, COL_DELIMITER, ROW_DELIMITER);
+        final String execQueryAllRows = SQLQueryAllRowsService.execQueryAllRows(sqlInputs);
 
         assertEquals("", execQueryAllRows);
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
@@ -130,10 +132,4 @@ public class SQLQueryAllRowsServiceTest {
         verify(resultSetMock, Mockito.times(1)).close();
     }
 
-    @Test
-    public void testExecuteQueryAllRowsNoCommand() throws Exception {
-        expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("command input is empty.");
-        sqlQueryAllRowsService.execQueryAllRows(sqlInputs, COL_DELIMITER, ROW_DELIMITER);
-    }
 }

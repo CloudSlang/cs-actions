@@ -13,10 +13,8 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryLobService;
 import io.cloudslang.content.database.utils.*;
@@ -31,12 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
-import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.database.constants.DBDefaultValues.*;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
@@ -66,9 +63,9 @@ public class SQLQueryLOB {
                     @Output(COLUMN_NAMES)
             },
             responses = {
-                    @Response(text = HAS_MORE, field = RETURN_CODE, value = SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = NO_MORE, field = RETURN_CODE, value = DBReturnCodes.NO_MORE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = HAS_MORE, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
+                    @Response(text = NO_MORE, field = RETURN_CODE, value = DBReturnCodes.NO_MORE, matchType = COMPARE_EQUAL, responseType = RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
                                        @Param(value = DB_TYPE) String dbType,
@@ -76,7 +73,7 @@ public class SQLQueryLOB {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE_NAME, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String databaseName,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -103,7 +100,7 @@ public class SQLQueryLOB {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryLOBInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency);
 
         if (preInputsValidation.isEmpty()) {
@@ -116,7 +113,7 @@ public class SQLQueryLOB {
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(database);
+        mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -138,7 +135,7 @@ public class SQLQueryLOB {
                 password,
                 instance,
                 dbPort,
-                database,
+                databaseName,
                 authenticationType,
                 dbClass,
                 dbURL,
@@ -210,23 +207,23 @@ public class SQLQueryLOB {
                     sqlInputs.getlRows().remove(0);
                     result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
                     result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
-                    result.put(RETURN_CODE, SUCCESS);
+                    result.put(RETURN_CODE, ReturnCodes.SUCCESS);
                     sqlConnectionMap.put(aKey, sqlInputs.getlRows());
                     globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
                 } else {
                     File tmpFile = new File(sqlInputs.getlRowsFiles().get(0).get(0));
                     try {
                         FileInputStream in = new FileInputStream(tmpFile);
-                        String resultStr = "";
-                        String colName = "CLOB column: " + ((String) ((List) sqlInputs.getlRowsNames().get(0)).get(0));
+                        String resultStr;
+                        String colName = "CLOB column: " + ((List) sqlInputs.getlRowsNames().get(0)).get(0);
 
                         InputStreamReader ir = new InputStreamReader(in, "UTF-8");
                         BufferedReader reader = new BufferedReader(ir);
-                        StringBuffer buffer = new StringBuffer();
+                        StringBuilder buffer = new StringBuilder();
 
                         String NL = System.getProperty("line.separator");
 
-                        String line = null;
+                        String line;
                         boolean isFirstLine = true;
                         while (reader.ready() && (line = reader.readLine()) != null) {
                             if (isFirstLine) {
@@ -257,7 +254,7 @@ public class SQLQueryLOB {
                         result.put(RETURN_RESULT, resultStr);
                         result.put(COLUMN_NAMES, colName);
                         result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
-                        result.put(RETURN_CODE, SUCCESS);
+                        result.put(RETURN_CODE, ReturnCodes.SUCCESS);
                         sqlConnectionMap.put(sqlInputs.getStrKeyFiles(), sqlInputs.getlRowsFiles());
                         sqlConnectionMap.put(sqlInputs.getStrKeyNames(), sqlInputs.getlRowsNames());
                         sqlConnectionMap.put(sqlInputs.getStrKeySkip(), sqlInputs.getSkip());
@@ -268,7 +265,7 @@ public class SQLQueryLOB {
 //                   todo     result.put(EXCEPTION, StringUtils.toString(e));
                         result.put(ROWS_LEFT, ZERO);
                         result.put(RETURN_RESULT, e.getMessage());
-                        result.put(RETURN_CODE, FAILURE);
+                        result.put(RETURN_CODE, ReturnCodes.FAILURE);
                     }
                 }
 
@@ -282,7 +279,7 @@ public class SQLQueryLOB {
                     sqlInputs.getlRows().remove(0);
                     result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
                     result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
-                    result.put(RETURN_CODE, SUCCESS);
+                    result.put(RETURN_CODE, ReturnCodes.SUCCESS);
                     sqlConnectionMap.put(aKey, sqlInputs.getlRows());
                     sqlConnectionMap.put(sqlInputs.getStrKeyCol(), sqlInputs.getStrColumns());
 
@@ -311,7 +308,7 @@ public class SQLQueryLOB {
 //            todo    result.put(EXCEPTION, StringUtils.toString(e));
                 result.put(ROWS_LEFT, ZERO);
             result.put(RETURN_RESULT, e.getMessage());
-            result.put(RETURN_CODE, FAILURE);
+            result.put(RETURN_CODE, ReturnCodes.FAILURE);
         }
 
 //        result.put("queryCount", String.valueOf(iQueryCount));

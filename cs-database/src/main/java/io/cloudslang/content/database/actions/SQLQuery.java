@@ -32,9 +32,6 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
@@ -77,7 +74,7 @@ public class SQLQuery {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
-                                       @Param(value = DATABASE_NAME, required = true) String database,
+                                       @Param(value = DATABASE_NAME, required = true) String databaseName,
                                        @Param(value = AUTHENTICATION_TYPE) String authenticationType,
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
@@ -106,7 +103,7 @@ public class SQLQuery {
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
 
         final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency, ignoreCase);
 
         if (preInputsValidation.isEmpty()) {
@@ -120,7 +117,7 @@ public class SQLQuery {
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(instance);
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(database);
+        mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -143,7 +140,7 @@ public class SQLQuery {
                 password,
                 instance,
                 dbPort,
-                database,
+                databaseName,
                 authenticationType,
                 dbClass,
                 dbURL,
@@ -171,8 +168,6 @@ public class SQLQuery {
             final String sqlAuthenticationType = sqlInputs.getAuthenticationType();
             final String sqlDbPort = Integer.toString(sqlInputs.getDbPort());
             final String sqlKey = sqlInputs.getKey();
-            final String sqlTnsEntry = ""; //todo
-            final String sqlTnsPath = ""; //todo
             final String sqlPassword = sqlInputs.getPassword();
             final boolean sqlIgnoreCase = Boolean.parseBoolean(sqlInputs.getIgnoreCase());
 
@@ -180,7 +175,7 @@ public class SQLQuery {
 //                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
 //            }
 
-            String aKey = getSqlKey(sqlInputs, sqlDbType, sqlDbServer, sqlCommand, sqlUsername, sqlAuthenticationType, sqlDbPort, sqlKey, sqlTnsEntry, sqlTnsPath, sqlPassword, sqlIgnoreCase);
+            String aKey = getSqlKey(sqlInputs, sqlDbType, sqlDbServer, sqlCommand, sqlUsername, sqlAuthenticationType, sqlDbPort, sqlKey, sqlPassword, sqlIgnoreCase);
 
             Map<String, Object> sqlConnectionMap = new HashMap<>();
             if (globalSessionObject.getResource() != null) {

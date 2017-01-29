@@ -140,9 +140,9 @@ public class MSSqlDatabase implements SqlDatabase {
 
     @Override
     public void setUp(@NotNull final SQLInputs sqlInputs) {
-        if (sqlInputs.getDbName() == null) {
-            throw new RuntimeException("No database provided!");
-        }
+//        if (sqlInputs.getDbName() == null) {
+//            throw new RuntimeException("No database provided!");
+//        }
 
         try {
             loadJdbcDriver(sqlInputs.getDbClass());

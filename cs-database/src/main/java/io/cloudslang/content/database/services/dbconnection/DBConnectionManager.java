@@ -127,8 +127,7 @@ public class DBConnectionManager {
     private void customizeDbPoolingProperties(Properties dbPoolingProperties) {
         if (dbPoolingProperties != null && dbPoolingProperties.size() > 0) {
             this.dbPoolingProperties = dbPoolingProperties;
-            this.isPoolingEnabled = this.getPropBooleanValue(DB_POOL_ENABLE_NAME,
-                    DB_POOL_ENABLE_DEFAULT_VALUE);
+            this.isPoolingEnabled = this.getPropBooleanValue(DB_POOL_ENABLE_NAME, DB_POOL_ENABLE_DEFAULT_VALUE);
         }
     }
 
@@ -237,7 +236,7 @@ public class DBConnectionManager {
                 //c3p0 impl
                 if (ds != null && ds instanceof PooledDataSource) {
                     PooledDataSource pDs = (PooledDataSource) ds;
-                    int conCount = -1;
+                    int conCount;
                     try {
                         conCount = pDs.getNumConnectionsAllUsers();
                     } catch (SQLException e) {
@@ -275,9 +274,7 @@ public class DBConnectionManager {
                 PooledDataSourceProvider provider = this.getProvider(removedPoolKey);
                 List<String> removedDsList = removedDsKeyTable.get(removedPoolKey);
                 Hashtable<String, DataSource> dsTable = dbmsPoolTable.get(removedPoolKey);
-                Iterator<String> it = removedDsList.iterator();
-                while (it.hasNext()) {
-                    String dsKey = it.next();
+                for (String dsKey : removedDsList) {
                     DataSource removedDs = dsTable.remove(dsKey);
                     try {
                         provider.closePooledDataSource(removedDs);
@@ -296,7 +293,6 @@ public class DBConnectionManager {
                 }
                 //don't have any ds for the pool key
                 if (dsTable.isEmpty()) {
-                    dsTable = null;
                     dbmsPoolTable.remove(removedPoolKey);
                     //tracing
 //              todo      if (logger.isDebugEnabled()) {
@@ -350,7 +346,7 @@ public class DBConnectionManager {
      * @return boolean value of that property
      */
     protected boolean getPropBooleanValue(String aPropName, String aDefaultValue) {
-        boolean retValue = false;
+        boolean retValue;
 
         String temp = dbPoolingProperties.getProperty(aPropName, aDefaultValue);
         retValue = Boolean.valueOf(temp);
@@ -453,7 +449,7 @@ public class DBConnectionManager {
      * @return int value of that property
      */
     protected int getPropIntValue(String aPropName, String aDefaultValue) {
-        int retValue = -1;
+        int retValue;
 
         String temp = dbPoolingProperties.getProperty(aPropName, aDefaultValue);
         retValue = Integer.valueOf(temp);
@@ -493,7 +489,7 @@ public class DBConnectionManager {
      * @return a PooledDataSourceProvider
      */
     private PooledDataSourceProvider getProvider(String aDbmsPoolKey) {
-        PooledDataSourceProvider retProvider = null;
+        PooledDataSourceProvider retProvider;
         //TODO: now we only has one provider, later should use that key to find
         //what type of db and find provider since first part of that key is dbType
         String providerName = C3P0PooledDataSourceProvider.C3P0_DATASOURCE_PROVIDER_NAME;
@@ -543,7 +539,7 @@ public class DBConnectionManager {
                                              String aUsername,
                                              String aPassword)
             throws SQLException {
-        Connection retCon = null;
+        Connection retCon;
 
         //key to hashtable of datasources for that dbms
         String dbmsKey = aDbType + "." + aDbUrl;
@@ -564,7 +560,7 @@ public class DBConnectionManager {
             //so we can control the total size of connection to dbms
             Hashtable<String, DataSource> dsTable = dbmsPoolTable.get(dbmsKey);
 
-            String encryptedPass = null;
+            String encryptedPass;
             try {
                 encryptedPass = TripleDES.encryptPassword(aPassword);
             } catch (Exception e) {
@@ -574,7 +570,7 @@ public class DBConnectionManager {
 
             String dsTableKey = aDbUrl + "." + aUsername + "." + encryptedPass;
 
-            DataSource ds = null;
+            DataSource ds;
             if (dsTable.containsKey(dsTableKey)) {
                 //tracing
 //    todo            if (logger.isDebugEnabled()) {
@@ -614,7 +610,7 @@ public class DBConnectionManager {
             retCon = getPooledConnection(ds, aUsername, aPassword);
 
             Hashtable<String, DataSource> dsTable = new Hashtable<>();
-            String encryptedPass = null;
+            String encryptedPass;
             try {
                 encryptedPass = TripleDES.encryptPassword(aPassword);
             } catch (Exception e) {
@@ -689,9 +685,9 @@ public class DBConnectionManager {
                                           String aPassword,
                                           Hashtable<String, DataSource> aDsTable)
             throws SQLException {
-        DataSource retDatasource = null;
+        DataSource retDatasource;
 
-        String totalMaxPoolSizeName = null;
+        String totalMaxPoolSizeName;
 
         switch (aDbType) {
             case ORACLE:
@@ -752,8 +748,8 @@ public class DBConnectionManager {
                                         String aUsername,
                                         String aPassword)
             throws SQLException {
-        DataSource retDatasource = null;
-        PooledDataSourceProvider provider = null;
+        DataSource retDatasource;
+        PooledDataSourceProvider provider;
 
         //tracing
 //     todo   if (logger.isDebugEnabled()) {
@@ -773,7 +769,7 @@ public class DBConnectionManager {
                     provider = new C3P0PooledDataSourceProvider(dbPoolingProperties);
             }
             String name = provider.getProviderName();
-            providerTable = new Hashtable<String, PooledDataSourceProvider>();
+            providerTable = new Hashtable<>();
             providerTable.put(name, provider);
 
             //tracing
@@ -783,7 +779,7 @@ public class DBConnectionManager {
 //            }
         }
 
-        String providerName = null;
+        String providerName;
         switch (aDbType) {
             default:
                 providerName = C3P0PooledDataSourceProvider.C3P0_DATASOURCE_PROVIDER_NAME;
@@ -971,7 +967,7 @@ public class DBConnectionManager {
         return new C3P0PooledDataSourceProvider(dbPoolingProperties);
     }
 
-    public static enum DBType {
+    public enum DBType {
         ORACLE, MSSQL, SYBASE, NETCOOL, DB2, MYSQL, POSTGRESQL, CUSTOM
     }
 

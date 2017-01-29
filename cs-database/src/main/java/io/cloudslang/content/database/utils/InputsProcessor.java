@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static io.cloudslang.content.constants.InputNames.DELIMITER;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 
 import static io.cloudslang.content.database.constants.DBInputNames.*;
