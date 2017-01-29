@@ -17,9 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.*;
@@ -31,6 +29,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class ConnectionService {
 
     private DBConnectionManager dbConnectionManager = null;
+
+    private final Map<String, Class<? extends SqlDatabase>> dbTypes = getTypesOfDatabase();
 
     /**
      * get a pooled connection or a plain connection
@@ -59,68 +59,51 @@ public class ConnectionService {
         if (dbUrls == null) {
             throw new SQLException("No database URL was provided");
         }
-
-        if (dbClass != null && dbClass.equals(SQLSERVER_JDBC_DRIVER)) {
-            if (dbUrls.size() > 0) {
-                String dbUrl = dbUrls.get(0);
-                dbUrl = MSSqlDatabase.addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrl);
-                dbUrls.set(0, dbUrl);
-            }
-        }
-
-        String localDbName; //todo can be removed
-        if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
-            localDbName = isEmpty(dbName) ? "" : dbName;
-        } else {
-            //localDbName will be like "/localDbName"
-            localDbName = isEmpty(dbName) ? "" : ("/" + dbName);
-        }
-
         //db type if we use connection pooling
         DBConnectionManager.DBType enumDbType;
         String triedUrls = " ";
-
+//        SqlDatabase currentDatabase = dbTypes.get()
         //Oracle
         if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.ORACLE;
             OracleDatabase oracleDatabase = new OracleDatabase();
-            oracleDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
+            oracleDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //MySql
         else if (MYSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MYSQL;
             MySqlDatabase mySqlDatabase = new MySqlDatabase();
-            mySqlDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
+            mySqlDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //MSSQL
         else if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.MSSQL;
             MSSqlDatabase msSqlDatabase = new MSSqlDatabase();
-            msSqlDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls, authenticationType, instance, dbClass, trustAllRoots, trustStore, trustStorePassword);
+            msSqlDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls, authenticationType, instance, dbClass, trustAllRoots, trustStore, trustStorePassword);
         }
         //Sybase
         else if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.SYBASE;
             SybaseDatabase sybaseDatabase = new SybaseDatabase();
-            sybaseDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
+            sybaseDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //NetCool
         else if (NETCOOL_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.NETCOOL;
             NetcoolDatabase netcoolDatabase = new NetcoolDatabase();
-            netcoolDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
+            netcoolDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
         //Postgresql
         else if (POSTGRES_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.POSTGRESQL;
             PostgreSqlDatabase psDatabase = new PostgreSqlDatabase();
-            psDatabase.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
+            psDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
         }
-        //DB2
+        //DB2papple
         else if (DB2_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.DB2;
             DB2Database db2Database = new DB2Database();
-            db2Database.setUp(localDbName, dbServer, Integer.toString(dbPort), dbUrls);
+            db2Database.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
         } else if (CUSTOM_DB_TYPE.equalsIgnoreCase(dbType)) {
             enumDbType = DBConnectionManager.DBType.CUSTOM;
             CustomDatabase customDatabase = new CustomDatabase();
@@ -132,6 +115,27 @@ public class ConnectionService {
             throw new SQLException("Invalid database type : " + dbType);
         }
         return obtainConnection(enumDbType, triedUrls, dbType, dbUrls, sqlInputs, databasePoolingProperties);
+    }
+
+// todo set the types to custom
+//   private Class<? extends SqlDatabase> getDbClassForType(@NotNull final String dbType) {
+//
+//    }
+////    private SqlDatabase getDbForType(final String dbType) {
+//
+//    }
+
+    private static Map<String, Class<? extends SqlDatabase>> getTypesOfDatabase() {
+        final Map<String, Class<? extends SqlDatabase>> dbForType = new HashMap<>();
+        dbForType.put(ORACLE_DB_TYPE, OracleDatabase.class);
+        dbForType.put(MYSQL_DB_TYPE, MySqlDatabase.class);
+        dbForType.put(MSSQL_DB_TYPE, MSSqlDatabase.class);
+        dbForType.put(SYBASE_DB_TYPE, SybaseDatabase.class);
+        dbForType.put(NETCOOL_DB_TYPE, NetcoolDatabase.class);
+        dbForType.put(POSTGRES_DB_TYPE, PostgreSqlDatabase.class);
+        dbForType.put(DB2_DB_TYPE, DB2Database.class);
+        dbForType.put(CUSTOM_DB_TYPE, CustomDatabase.class);
+        return dbForType;
     }
 
     private Connection obtainConnection(DBConnectionManager.DBType enumDbType, String triedUrls, String dbType, List<String> dbUrls, SQLInputs sqlInputs, Properties properties) throws SQLException {

@@ -14,13 +14,15 @@ import io.cloudslang.content.database.utils.SQLInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
+
 /**
  * Created by victor on 13.01.2017.
  */
 public class CustomDatabase implements SqlDatabase {
 
     public void setUp(String dbClass) throws ClassNotFoundException {
-        if (StringUtils.isNoneEmpty(dbClass)) {
+        if (isNoneEmpty(dbClass)) {
             Class.forName(dbClass);
         } else {
             throw new ClassNotFoundException("No db class name provided");

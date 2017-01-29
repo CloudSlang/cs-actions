@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 
+import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -87,7 +88,7 @@ public class ConnectionServiceTestOracle {
         populateOracle();
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbName(DB_NAME);
+        sqlInputs.setDbName(FORWARD_SLASH + DB_NAME);
         final Connection connection = connectionService.setUpConnection(sqlInputs);
         assertEquals(2, sqlInputs.getDbUrls().size());
         assertEquals(ORACLE_URL + "//" + DB_SERVER + ":" + DB_PORT + "/" + DB_NAME, sqlInputs.getDbUrls().get(0));

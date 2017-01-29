@@ -140,11 +140,18 @@ public class MSSqlDatabase implements SqlDatabase {
 
     @Override
     public void setUp(@NotNull final SQLInputs sqlInputs) {
-//        if (sqlInputs.getDbName() == null) {
-//            throw new RuntimeException("No database provided!");
-//        }
 
         try {
+            // todo ask eugen if need to check class
+            if (sqlInputs.getDbClass() != null && sqlInputs.getDbClass().equals(SQLSERVER_JDBC_DRIVER)) {
+                if (sqlInputs.getDbUrls().size() > 0) {
+                    String dbUrl = sqlInputs.getDbUrls().get(0);
+                    dbUrl = MSSqlDatabase.addSslEncryptionToConnection(sqlInputs.getTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrl);
+                    sqlInputs.getDbUrls().set(0, dbUrl);
+                }
+            }
+
+
             loadJdbcDriver(sqlInputs.getDbClass());
 
             String dbUrlMSSQL = "";

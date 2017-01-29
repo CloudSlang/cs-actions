@@ -113,7 +113,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30//dbName");
+        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30/dbName");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 1, "jdbc:jtds:sybase://localhost:30//dbName;prepareSQL=1;useLOBs=false;TDS=4.2;");
+        assertConnection(sqlInputs, 1, "jdbc:jtds:sybase://localhost:30/dbName;prepareSQL=1;useLOBs=false;TDS=4.2;");
     }
 
     @Test
@@ -131,7 +131,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 1, "jdbc:db2://localhost:30//dbName");
+        assertConnection(sqlInputs, 1, "jdbc:db2://localhost:30/dbName");
     }
 
     @Test
@@ -140,7 +140,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         expectedEx.expectMessage("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
         sqlInputs.setDbType(NETCOOL_DB_TYPE);
-
+        sqlInputs.setDbName("");
         connectionService.setUpConnection(sqlInputs);
     }
 
@@ -150,7 +150,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30//dbName");
+        assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30/dbName");
     }
 
     @Test

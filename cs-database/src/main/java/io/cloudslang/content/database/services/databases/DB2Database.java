@@ -31,9 +31,6 @@ public class DB2Database implements SqlDatabase {
 
     @Override
     public void setUp(@NotNull final SQLInputs sqlInputs) {
-//        if (sqlInputs.getDbName() == null) {
-//            throw new RuntimeException("No database provided!");
-//        }
         try {
             Class.forName("com.ibm.db2.jcc.DB2Driver");
         } catch (Exception e) {
