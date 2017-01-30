@@ -89,7 +89,7 @@ public class SQLCommand {
                 databaseName, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
                 trustStorePassword);
 
-        if (preInputsValidation.isEmpty()) {
+        if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 

@@ -93,7 +93,7 @@ public class SQLScript {
         final List<String> preInputsValidation = validateSqlScriptInputs(dbServerName, dbType, username, password, instance, dbPort,
                 databaseName, authenticationType, sqlCommands, scriptFileName, trustAllRoots, trustStore, trustStorePassword,
                 resultSetType, resultSetConcurrency);
-        if (preInputsValidation.isEmpty()) {
+        if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 

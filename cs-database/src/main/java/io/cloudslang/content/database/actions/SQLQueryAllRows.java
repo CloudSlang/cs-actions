@@ -95,7 +95,7 @@ public class SQLQueryAllRows {
                 dbPort, databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency);
 
-        if (preInputsValidation.isEmpty()) {
+        if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 

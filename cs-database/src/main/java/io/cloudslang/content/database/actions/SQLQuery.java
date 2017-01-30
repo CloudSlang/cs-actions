@@ -106,7 +106,7 @@ public class SQLQuery {
                 databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
                 timeout, resultSetType, resultSetConcurrency, ignoreCase);
 
-        if (preInputsValidation.isEmpty()) {
+        if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
