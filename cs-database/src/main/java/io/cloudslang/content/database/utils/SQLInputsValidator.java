@@ -161,7 +161,7 @@ public class SQLInputsValidator {
     }
 
     private static void validateAuthType(final String authType, final String dbType, final List<String> validationList) {
-        if (notInCollectionIgnoreCase(authType, AUTH_TYPES)) {
+        if (isNotValidAuthType(authType)) {
             validationList.add(String.format(INVALID_AUTH_TYPE, authType));
         } else if (AUTH_WINDOWS.equalsIgnoreCase(authType) && !MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
             validationList.add(INVALID_AUTH_TYPE_WINDOWS);
@@ -196,6 +196,14 @@ public class SQLInputsValidator {
         if (!isValidResultSetType(resultSetType)) {
             validationList.add(INVALID_RESULT_SET_TYPE);
         }
+    }
+
+    public static boolean isValidAuthType(final String authType) {
+        return inCollectionIgnoreCase(authType, AUTH_TYPES);
+    }
+
+    public static boolean isNotValidAuthType(final String authType) {
+        return notInCollectionIgnoreCase(authType, AUTH_TYPES);
     }
 
     public static boolean isValidDbType(final String dbType) {

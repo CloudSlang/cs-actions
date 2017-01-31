@@ -23,12 +23,14 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -48,7 +50,10 @@ public class ConnectionServiceTest {
 
     public static final String CUSTOM_CLASS_DRIVER = "org.h2.Driver";
     public static String CUSTOM_URL = "jdbc:h2:tcp://localhost/~/test";
-    private ConnectionService connectionService = new ConnectionService();
+    @Spy
+    private ConnectionService connectionServiceSpy = new ConnectionService();
+////    @Spy
+//    private ConnectionService connectionServiceSpy = new ConnectionService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -67,11 +72,15 @@ public class ConnectionServiceTest {
 
     // this method is used in most of the tests. If you comment the code, you could deactivate the (sometimes) failing tests.
     // sometimes it fails to mock the dbConnectionManagerMock and the tests are failing.
-    private void assertConnection(SQLInputs sqlInputs, int noUrls, String url) throws SQLException, ClassNotFoundException {
-        Connection connection = connectionService.setUpConnection(sqlInputs);
-        assertEquals(noUrls, sqlInputs.getDbUrls().size());
-        assertEquals(url, sqlInputs.getDbUrls().get(0));
+    private void assertConnection(SQLInputs sqlInputs, int noUrls, String resultedUrl, String url) throws SQLException, ClassNotFoundException {
+//        final Connection connection = connectionService.setUpConnection(sqlInputs);
+        final List<String> sqlConnections = connectionServiceSpy.getConnectionUrls(sqlInputs);
+        assertEquals(noUrls, sqlConnections.size());
+        assertEquals(resultedUrl, sqlConnections.get(0));
         assertEquals(url, sqlInputs.getDbUrl());
+//        when(connectionServiceSpy.getConnectionUrls(sqlInputs)).thenReturn(sqlConnections);
+        doReturn(sqlConnections).when(connectionServiceSpy).getConnectionUrls(sqlInputs);
+        final Connection connection = connectionServiceSpy.setUpConnection(sqlInputs);
         assertEquals(connectionMock, connection);
     }
 
@@ -89,8 +98,8 @@ public class ConnectionServiceTest {
         sqlInputs.setDbClass(CUSTOM_CLASS_DRIVER);
         sqlInputs.setDbType(CUSTOM_DB_TYPE);
 
-        sqlInputs.getDbUrls().add(CUSTOM_URL);
-        assertConnection(sqlInputs, 1, CUSTOM_URL);
+        sqlInputs.setDbUrl(CUSTOM_URL);
+        assertConnection(sqlInputs, 1, CUSTOM_URL, CUSTOM_URL);
     }
 
 
@@ -104,7 +113,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbName("dbName");
         sqlInputs.setInstance("instance");
         sqlInputs.setTrustAllRoots(true);
-        assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true");
+        assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", null);
     }
 
     @Test
@@ -113,7 +122,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30/dbName");
+        assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30/dbName", null);
     }
 
     @Test
@@ -122,7 +131,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 1, "jdbc:jtds:sybase://localhost:30/dbName;prepareSQL=1;useLOBs=false;TDS=4.2;");
+        assertConnection(sqlInputs, 1, "jdbc:jtds:sybase://localhost:30/dbName;prepareSQL=1;useLOBs=false;TDS=4.2;", null);
     }
 
     @Test
@@ -131,17 +140,17 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 1, "jdbc:db2://localhost:30/dbName");
+        assertConnection(sqlInputs, 1, "jdbc:db2://localhost:30/dbName", null);
     }
 
     @Test
     public void testSetUpConnectionNetcool() throws Exception {
-        expectedEx.expect(ClassNotFoundException.class);
+        expectedEx.expect(RuntimeException.class);
         sqlInputs.setDbPort(30);
         expectedEx.expectMessage("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
         sqlInputs.setDbType(NETCOOL_DB_TYPE);
         sqlInputs.setDbName("");
-        connectionService.setUpConnection(sqlInputs);
+        connectionServiceSpy.setUpConnection(sqlInputs);
     }
 
     @Test
@@ -150,27 +159,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
-        assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30/dbName");
-    }
-
-    @Test
-    public void testSetUpConnectionEmptyDbType() throws SQLException, ClassNotFoundException {
-        checkExpectedSQLException("Invalid database type : null");
-        sqlInputs.setDbType(null);
-        connectionService.setUpConnection(sqlInputs);
-    }
-
-    @Test
-    public void testSetUpConnectionEmptyUrls() throws SQLException, ClassNotFoundException {
-        checkExpectedSQLException("No database URL was provided");
-        sqlInputs.setDbUrls(null);
-        connectionService.setUpConnection(sqlInputs);
-    }
-
-
-    private void checkExpectedSQLException(String message) {
-        expectedEx.expect(SQLException.class);
-        expectedEx.expectMessage(message);
+        assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30/dbName", null);
     }
 
 }

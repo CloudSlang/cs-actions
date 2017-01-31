@@ -63,21 +63,19 @@ public class SQLUtils {
     }
 
 
-    public static String processNullTerminatedString(String value) {
-        String returnValue = value;
+    public static String processNullTerminatedString(final String value) {
         if (isEmpty(value)) {
             return "null";
         }
         char[] charArray = value.toCharArray();
-        if (charArray.length == 1 && (int) charArray[0] <= 0)
+        if (charArray.length == 1 && (int) charArray[0] <= 0) {
             return "null";
-        else {
+        } else {
             if ((int) charArray[charArray.length - 1] <= 0) {
-                returnValue = value.substring(0, value.length() - 1);
+                return value.substring(0, value.length() - 1);
             }
         }
-
-        return returnValue;
+        return value;
     }
 
 

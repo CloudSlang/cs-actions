@@ -11,9 +11,11 @@ package io.cloudslang.content.database.services.databases;
 
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**
@@ -30,11 +32,13 @@ public class CustomDatabase implements SqlDatabase {
     }
 
     @Override
-    public void setUp(@NotNull final SQLInputs sqlInputs) {
+    public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         try {
             Class.forName(sqlInputs.getDbClass());
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e.getMessage(), e.getCause());
+            throw new RuntimeException("No db class name provided", e.getCause());
         }
+
+        return getDbUrls(sqlInputs.getDbUrl());
     }
 }

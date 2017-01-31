@@ -45,19 +45,11 @@ public class SQLInputsUtils {
             return Integer.valueOf(dbPort);
         }
         if (isValidDbType(dbType)) {
-            return getPortForDbType(dbType);
+            return DB_PORTS.get(dbType);
         }
         return -1;
     }
 
-    private static int getPortForDbType(final String dbType) {
-        for (final String toCheck : DB_PORTS.keySet()) {
-            if (toCheck.equalsIgnoreCase(dbType)) {
-                return DB_PORTS.get(toCheck);
-            }
-        }
-        return -1;
-    }
 
     public static List<String> getSqlCommands(final String sqlCommandsStr, final String scriptFileName, final String commandsDelimiter) {
         if (isNoneEmpty(sqlCommandsStr)) {
@@ -118,12 +110,21 @@ public class SQLInputsUtils {
     public static boolean inCollectionIgnoreCase(final String toCheck, final Iterable<String> inList) {
         boolean isPresent = false;
         for (final String element : inList) {
-            if (!element.equalsIgnoreCase(toCheck)) {
+            if (element.equalsIgnoreCase(toCheck)) {
                 isPresent = true;
                 break;
             }
         }
         return isPresent;
+    }
+
+    public static String getDbType(final String dbType) {
+        for (final String element : DB_PORTS.keySet()) {
+            if (element.equalsIgnoreCase(dbType)) {
+                return element;
+            }
+        }
+        return dbType;
     }
 
     public static String getSqlKey(SQLInputs sqlInputs, String sqlDbType, String sqlDbServer, String sqlCommand, String sqlUsername,

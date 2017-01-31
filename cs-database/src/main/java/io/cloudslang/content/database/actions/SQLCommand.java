@@ -96,7 +96,7 @@ public class SQLCommand {
         try {
             SQLInputs mySqlInputs = new SQLInputs();
             mySqlInputs.setDbServer(dbServerName);
-            mySqlInputs.setDbType(dbType);
+            mySqlInputs.setDbType(getDbType(dbType));
             mySqlInputs.setUsername(username);
             mySqlInputs.setPassword(password);
             mySqlInputs.setInstance(instance);
@@ -112,7 +112,7 @@ public class SQLCommand {
             mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
             mySqlInputs.setResultSetType(getResultSetType(resultSetType));
             mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-            mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
+//            mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
             String res = SQLCommandService.executeSqlCommand(mySqlInputs);
 

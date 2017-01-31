@@ -12,12 +12,15 @@ package io.cloudslang.content.database.services.dbconnection;
 import com.mchange.v2.c3p0.PooledDataSource;
 import io.cloudslang.content.database.services.dbconnection.PooledDataSourceCleaner.STATE_CLEANER;
 import io.cloudslang.content.database.utils.TripleDES;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by victor on 13.01.2017.
@@ -160,26 +163,17 @@ public class DBConnectionManager {
                                                  String aDbUrl,
                                                  String aUsername,
                                                  String aPassword,
-                                                 Properties properties)
-            throws SQLException {
-        if (aDbUrl == null || aDbUrl.length() == 0) {
-            throw new SQLException
-                    ("Failed to check out connection dbUrl is empty");
+                                                 Properties properties) throws SQLException {
+        if (isEmpty(aDbUrl)) {
+            throw new SQLException ("Failed to check out connection dbUrl is empty");
         }
 
-        if (aUsername == null || aUsername.length() == 0) {
-            String msg =
-                    "Failed to check out connection,username is empty. dburl = " + aDbUrl;
-
-            throw new SQLException(msg);
+        if (isEmpty(aUsername)) {
+            throw new SQLException("Failed to check out connection,username is empty. dburl = " + aDbUrl);
         }
 
-        if (aPassword == null || aPassword.length() == 0) {
-            String msg =
-                    "Failed to check out connection, password is empty. username = "
-                            + aUsername + " dbUrl = " + aDbUrl;
-
-            throw new SQLException(msg);
+        if (isEmpty(aPassword)) {
+            throw new SQLException("Failed to check out connection, password is empty. username = " + aUsername + " dbUrl = " + aDbUrl);
         }
 
         customizeDBConnectionManager(properties);
@@ -188,11 +182,10 @@ public class DBConnectionManager {
         if (!this.isPoolingEnabled) {
             //just call driver manager to create connection
             retCon = this.getPlainConnection(aDbUrl, aUsername, aPassword);
-        } else //want connection pooling
-        {
+        } else {
+            //want connection pooling
             if (aDbType == null) {
-                throw new SQLException
-                        ("Failed to check out connection db type is null");
+                throw new SQLException("Failed to check out connection db type is null");
             }
 
             //if the runnable has been shutdown when dbmspoolsize is 0
@@ -204,7 +197,6 @@ public class DBConnectionManager {
                 cleanerThread.setPriority(Thread.MIN_PRIORITY);
                 cleanerThread.start();
             }
-
             //will use pooled datasource provider
             retCon = this.getPooledConnection(aDbType, aDbUrl, aUsername, aPassword);
         }
@@ -357,88 +349,6 @@ public class DBConnectionManager {
 //        }
         return retValue;
     }
-
-    /**
-     * load the properties from databasePooling.properties
-     * @return the Properties contain the name=value pair from databasePooling.properties
-     */
-	/* no longer supported in 10x
-	protected Properties loadDbPoolingProperties()
-	{
-		Properties retProp = null;
-		
-		String ooHome = null; 
-		
-		//enhancement for k2 so we can move on with no ICONCLUDEHOME or RAS dir
-		try
-		{
-			ooHome = HomeUtil.getIconcludeHome();
-			//try one more time, for ras installation only
-			if(ooHome == null)
-			{
-				//get the path of this class , then figure out what is the oo or ras
-				//installation
-				String pathOfMan = ClassUtil.getLoadedFromPath(DBConnectionManager.class);
-				int rasPos = pathOfMan.indexOf("RAS");
-				ooHome = pathOfMan.substring(0,rasPos - 1);
-			}
-		}catch(Exception e)
-		{
-			//could get exception where there is no iconclude home
-			//tracing
-			if(logger.isDebugEnabled())
-			{
-				logger.debug("Won't be able to get ICONCLUDE_HOME or RAS path," + e);
-			}
-			
-			return null;
-		}
-		
-		//tracing
-		if(logger.isDebugEnabled())
-		{
-			logger.debug("ooHome = " + ooHome);
-		}
-		
-		StringBuffer buff = new StringBuffer(ooHome);
-		buff.append(File.separator);
-		buff.append("RAS");
-		buff.append(File.separator);
-		buff.append("Java");
-		buff.append(File.separator);
-		buff.append("Default");
-		buff.append(File.separator);
-		buff.append("webapp");
-		buff.append(File.separator);
-		buff.append("conf");
-		buff.append(File.separator);
-		buff.append("databasePooling.properties");
-		//<ooHome>//RAS//Java//Default//webapp//conf//databasePooling.properties
-		String jrasPropertiesFilePath = buff.toString();
-		
-		retProp = new Properties();
-		FileInputStream in;
-		try 
-		{
-			in = new FileInputStream(jrasPropertiesFilePath);
-			if(in != null)
-			{
-				retProp.load(in);
-				in.close();
-			}
-		} catch (FileNotFoundException e) 
-		{
-			retProp = null;
-			logger.warn("Faled to load databasePooling properties, will not have connections pooling.", e);
-		}
-		catch (IOException e) 
-		{ 
-			logger.warn("Faled to load databasePooling properties, will not have connections pooling.", e);
-			retProp = null;
-		}
-		
-		return retProp;
-	}*/
 
     /**
      * get int value based on the property name from property file
@@ -947,24 +857,6 @@ public class DBConnectionManager {
         }
 
         return retTotal;
-    }
-
-    /**
-     * Sets the dataSourceCleaner.
-     *
-     * @param cleaner
-     */
-    protected void setDatasourceCleaner(PooledDataSourceCleaner cleaner) {
-        this.datasourceCleaner = cleaner;
-    }
-
-    /**
-     * One line method for retrieving a C3P0PooledDataSourceProvider in order to enable testing with mockito.
-     *
-     * @return
-     */
-    protected C3P0PooledDataSourceProvider getC3P0PooledDataSourceProvider() {
-        return new C3P0PooledDataSourceProvider(dbPoolingProperties);
     }
 
     public enum DBType {

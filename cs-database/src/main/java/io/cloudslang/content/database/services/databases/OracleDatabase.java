@@ -14,8 +14,10 @@ import io.cloudslang.content.database.utils.SQLUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**
@@ -37,19 +39,30 @@ public class OracleDatabase implements SqlDatabase {
     }
 
     @Override
-    public void setUp(@NotNull final SQLInputs sqlInputs) {
+    public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e.getCause());
         }
-        if (isNoneEmpty(sqlInputs.getDbServer()) ||
-                isNoneEmpty(sqlInputs.getDbName())) {
-            //Connect using the host, port and database info
-            String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
-            sqlInputs.getDbUrls().add("jdbc:oracle:thin:@//" + host + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName());
-            sqlInputs.getDbUrls().add("jdbc:oracle:thin:@" + host + ":" + sqlInputs.getDbPort() + ":" + sqlInputs.getDbName().substring(1));
-        }
 
+        final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
+
+        if (isNoneEmpty(sqlInputs.getDbServer()) || isNoneEmpty(sqlInputs.getDbName())) {
+            //Connect using the host, port and database info
+            final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
+
+            final String firstConnectionString = String.format("jdbc:oracle:thin:@//%s:%d%s",
+                    host, sqlInputs.getDbPort(), sqlInputs.getDbName());
+            final String secondConnectionString = String.format("jdbc:oracle:thin:@%s:%d:%s",
+                    host, sqlInputs.getDbPort(), sqlInputs.getDbName().substring(1));
+
+            sqlInputs.getDbUrls().add(firstConnectionString);
+            sqlInputs.getDbUrls().add(secondConnectionString);
+
+            dbUrls.add(firstConnectionString);
+            dbUrls.add(secondConnectionString);
+        }
+        return dbUrls;
     }
 }

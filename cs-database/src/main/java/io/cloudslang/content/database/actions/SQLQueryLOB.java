@@ -108,7 +108,7 @@ public class SQLQueryLOB {
         }
         SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(dbType);
+        mySqlInputs.setDbType(getDbType(dbType));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(instance);
@@ -127,7 +127,7 @@ public class SQLQueryLOB {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
+//        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
         Map<String, String> inputParameters = SQLQueryLOBUtil.createInputParametersMap(dbServerName,
                 dbType,

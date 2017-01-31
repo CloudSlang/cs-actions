@@ -11,6 +11,7 @@ package io.cloudslang.content.database.services;
 
 import io.cloudslang.content.database.services.databases.*;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
+import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.jetbrains.annotations.NotNull;
@@ -19,9 +20,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
+import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static io.cloudslang.content.database.utils.Constants.*;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by victor on 13.01.2017.
@@ -30,7 +30,9 @@ public class ConnectionService {
 
     private DBConnectionManager dbConnectionManager = null;
 
-    private final Map<String, Class<? extends SqlDatabase>> dbTypes = getTypesOfDatabase();
+    private final Map<String, Class<? extends SqlDatabase>> dbTypesClass = getTypesOfDatabase();
+    private final Map<String, DBType> dbTypesToEnum = getTypesEnum();
+
 
     /**
      * get a pooled connection or a plain connection
@@ -39,91 +41,31 @@ public class ConnectionService {
      * @throws java.sql.SQLException
      */
     public Connection setUpConnection(@NotNull final SQLInputs sqlInputs) throws ClassNotFoundException, SQLException {
-
-        Properties databasePoolingProperties = sqlInputs.getDatabasePoolingProperties();
-
         dbConnectionManager = DBConnectionManager.getInstance();
-
-        final String instance = sqlInputs.getInstance();
-        final String dbClass = sqlInputs.getDbClass();
-        final List<String> dbUrls = sqlInputs.getDbUrls();
-        final String dbType = sqlInputs.getDbType();
-        final String dbServer = sqlInputs.getDbServer();
-        final String dbName = sqlInputs.getDbName();
-        final int dbPort = sqlInputs.getDbPort();
-        final String authenticationType = sqlInputs.getAuthenticationType();
-        final String trustStore = sqlInputs.getTrustStore();
-        final String trustStorePassword = sqlInputs.getTrustStorePassword();
-        final boolean trustAllRoots = sqlInputs.getTrustAllRoots();
-
-        if (dbUrls == null) {
-            throw new SQLException("No database URL was provided");
-        }
-        //db type if we use connection pooling
-        DBConnectionManager.DBType enumDbType;
-        String triedUrls = " ";
-//        SqlDatabase currentDatabase = dbTypes.get()
-        //Oracle
-        if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.ORACLE;
-            OracleDatabase oracleDatabase = new OracleDatabase();
-            oracleDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
-        }
-        //MySql
-        else if (MYSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.MYSQL;
-            MySqlDatabase mySqlDatabase = new MySqlDatabase();
-            mySqlDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
-        }
-        //MSSQL
-        else if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.MSSQL;
-            MSSqlDatabase msSqlDatabase = new MSSqlDatabase();
-            msSqlDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls, authenticationType, instance, dbClass, trustAllRoots, trustStore, trustStorePassword);
-        }
-        //Sybase
-        else if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.SYBASE;
-            SybaseDatabase sybaseDatabase = new SybaseDatabase();
-            sybaseDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
-        }
-        //NetCool
-        else if (NETCOOL_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.NETCOOL;
-            NetcoolDatabase netcoolDatabase = new NetcoolDatabase();
-            netcoolDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
-        }
-        //Postgresql
-        else if (POSTGRES_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.POSTGRESQL;
-            PostgreSqlDatabase psDatabase = new PostgreSqlDatabase();
-            psDatabase.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
-        }
-        //DB2papple
-        else if (DB2_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.DB2;
-            DB2Database db2Database = new DB2Database();
-            db2Database.setUp(dbName, dbServer, Integer.toString(dbPort), dbUrls);
-        } else if (CUSTOM_DB_TYPE.equalsIgnoreCase(dbType)) {
-            enumDbType = DBConnectionManager.DBType.CUSTOM;
-            CustomDatabase customDatabase = new CustomDatabase();
-            customDatabase.setUp(dbClass);
-            // dbUrl should already be defined!
-        } else {
-            //if something other than allowed type or empty
-            //we supply dbType to be default to Oracle if it is empty
-            throw new SQLException("Invalid database type : " + dbType);
-        }
-        return obtainConnection(enumDbType, triedUrls, dbType, dbUrls, sqlInputs, databasePoolingProperties);
+        final List<String> connectionUrls = getConnectionUrls(sqlInputs);
+        return obtainConnection(connectionUrls, sqlInputs);
     }
 
-// todo set the types to custom
-//   private Class<? extends SqlDatabase> getDbClassForType(@NotNull final String dbType) {
-//
-//    }
-////    private SqlDatabase getDbForType(final String dbType) {
-//
-//    }
+    public List<String> getConnectionUrls(@NotNull final SQLInputs sqlInputs) {
+        final SqlDatabase currentDatabase = getDbClassForType(sqlInputs.getDbType());
+        return currentDatabase.setUp(sqlInputs);
+    }
+
+    private SqlDatabase getDbClassForType(@NotNull final String dbType) {
+        try {
+            return dbTypesClass.get(dbType).newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(INVALID_DB_TYPE, e.getCause());
+        }
+    }
+
+    private DBType getDbEnumForType(@NotNull final String dbType) {
+        try {
+            return dbTypesToEnum.get(dbType);
+        } catch (Exception e) {
+            throw new RuntimeException(INVALID_DB_TYPE, e.getCause());
+        }
+    }
 
     private static Map<String, Class<? extends SqlDatabase>> getTypesOfDatabase() {
         final Map<String, Class<? extends SqlDatabase>> dbForType = new HashMap<>();
@@ -138,9 +80,27 @@ public class ConnectionService {
         return dbForType;
     }
 
-    private Connection obtainConnection(DBConnectionManager.DBType enumDbType, String triedUrls, String dbType, List<String> dbUrls, SQLInputs sqlInputs, Properties properties) throws SQLException {
+    private Map<String, DBType> getTypesEnum() {
+        final Map<String, DBType> dbTypes = new HashMap<>();
+        dbTypes.put(ORACLE_DB_TYPE, DBType.ORACLE);
+        dbTypes.put(MYSQL_DB_TYPE, DBType.MYSQL);
+        dbTypes.put(MSSQL_DB_TYPE, DBType.MSSQL);
+        dbTypes.put(SYBASE_DB_TYPE, DBType.SYBASE);
+        dbTypes.put(NETCOOL_DB_TYPE, DBType.NETCOOL);
+        dbTypes.put(POSTGRES_DB_TYPE, DBType.POSTGRESQL);
+        dbTypes.put(DB2_DB_TYPE, DBType.DB2);
+        dbTypes.put(CUSTOM_DB_TYPE, DBType.CUSTOM);
+        return dbTypes;
+    }
+
+    private Connection obtainConnection(List<String> dbUrls, SQLInputs sqlInputs) throws SQLException {
         //iterate through the dbUrls until we find one that we can connect
         //to the DB with and throw an error if no URL works
+        String triedUrls = " ";
+        final String dbType = sqlInputs.getDbType();
+        final DBType enumDbType = getDbEnumForType(dbType);
+        final Properties properties = sqlInputs.getDatabasePoolingProperties();
+
         Iterator<String> iter = dbUrls.iterator();
 
         Connection dbCon = null;

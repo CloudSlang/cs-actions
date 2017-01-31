@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.SQLException;
 import java.util.List;
 
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -33,18 +35,22 @@ public class SybaseDatabase implements SqlDatabase {
     }
 
     @Override
-    public void setUp(@NotNull final SQLInputs sqlInputs) {
-//        if (sqlInputs.getDbName() == null) {
-//            throw new RuntimeException("No database provided!");
-//        }
-
+    public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e.getCause());
         }
-        sqlInputs.getDbUrls().add("jdbc:jtds:sybase://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer())
-                + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName() + ";prepareSQL=1;useLOBs=false;TDS=4.2;");
+
+        final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
+        final String connectionString = String.format("jdbc:jtds:sybase://%s:%d%s;prepareSQL=1;useLOBs=false;TDS=4.2;",
+                host, sqlInputs.getDbPort(), sqlInputs.getDbName());
+        sqlInputs.getDbUrls().add(connectionString);
+
+        final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
+        dbUrls.add(connectionString);
+
+        return dbUrls;
 
     }
 }

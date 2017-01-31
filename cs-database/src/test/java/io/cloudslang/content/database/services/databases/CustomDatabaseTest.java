@@ -9,9 +9,13 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 
 /**
  * Created by vranau on 12/10/2014.
@@ -25,15 +29,19 @@ public class CustomDatabaseTest {
     @Test
     public void testSetUp() throws ClassNotFoundException {
         CustomDatabase customDatabase = new CustomDatabase();
-        customDatabase.setUp(CUSTOM_CLASS_DRIVER);
+        SQLInputs sqlInput = new SQLInputs();
+        sqlInput.setDbClass(CUSTOM_CLASS_DRIVER);
+        customDatabase.setUp(sqlInput);
     }
 
     @Test
     public void testSetUpNoClassName() throws ClassNotFoundException {
 
-        expectedEx.expect(ClassNotFoundException.class);
+        expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("No db class name provided");
         CustomDatabase customDatabase = new CustomDatabase();
-        customDatabase.setUp("");
+        SQLInputs sqlInput = new SQLInputs();
+        sqlInput.setDbClass(EMPTY);
+        customDatabase.setUp(sqlInput);
     }
 }

@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.SQLException;
 import java.util.List;
 
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+
 /**
  * Created by victor on 13.01.2017.
  */
@@ -39,21 +41,29 @@ public class PostgreSqlDatabase implements SqlDatabase {
     }
 
     @Override
-    public void setUp(@NotNull final SQLInputs sqlInputs) {
-//        if (sqlInputs.getDbName() == null) {
-//            throw new RuntimeException("No database provided!");
-//        }
+    public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e.getCause());
         }
-        Address address = new Address(sqlInputs.getDbServer());
-        if (address.isIPV6Literal()) {//the host is an IPv6 literal
-            sqlInputs.getDbUrls().add("jdbc:postgresql://[host=" + sqlInputs.getDbServer() + "]" + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName());
-        } else {//the host is an IPv4 literal or a Host Name
-            sqlInputs.getDbUrls().add("jdbc:postgresql://" + sqlInputs.getDbServer() + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName());
-        }
 
+        final String connectionString = getConnectionString(sqlInputs);
+        sqlInputs.getDbUrls().add(connectionString);
+
+        final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
+        dbUrls.add(connectionString);
+
+        return dbUrls;
+    }
+
+    private String getConnectionString(final SQLInputs sqlInputs) {
+        final Address address = new Address(sqlInputs.getDbServer());
+        if (address.isIPV6Literal()) {//the host is an IPv6 literal
+            return String.format("jdbc:postgresql://[host=%s]:%d%s",
+                    sqlInputs.getDbServer(), sqlInputs.getDbPort(), sqlInputs.getDbName());
+        }
+        //the host is an IPv4 literal or a Host Name
+        return String.format("jdbc:postgresql://%s:%d%s", sqlInputs.getDbServer(), sqlInputs.getDbPort(), sqlInputs.getDbName());
     }
 }

@@ -14,7 +14,10 @@ import io.cloudslang.content.database.utils.SQLUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 
 /**
  * Created by victor on 13.01.2017.
@@ -30,13 +33,24 @@ public class DB2Database implements SqlDatabase {
     }
 
     @Override
-    public void setUp(@NotNull final SQLInputs sqlInputs) {
+    public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         try {
             Class.forName("com.ibm.db2.jcc.DB2Driver");
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e.getCause());
         }
-        sqlInputs.getDbUrls().add("jdbc:db2://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer()) + ":" + sqlInputs.getDbPort() + sqlInputs.getDbName());
+
+        final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
+
+        final String connectionString = String.format("jdbc:db2://%s:%d%s",
+                host, sqlInputs.getDbPort(), sqlInputs.getDbName());
+
+        sqlInputs.getDbUrls().add(connectionString);
+
+        final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
+        dbUrls.add(connectionString);
+
+        return dbUrls;
 
     }
 }
