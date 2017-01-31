@@ -80,7 +80,7 @@ public class MSSqlDatabase implements SqlDatabase {
                 if (isNoneEmpty(sqlInputs.getDbUrl())) {
                     final String dbUrl = MSSqlDatabase.addSslEncryptionToConnection(sqlInputs.getTrustAllRoots(),
                             sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), sqlInputs.getDbUrl());
-                    sqlInputs.getDbUrls().set(0, dbUrl);
+//                    sqlInputs.getDbUrls().set(0, dbUrl);
                     dbUrls.add(dbUrl);
 
                 }
@@ -120,7 +120,7 @@ public class MSSqlDatabase implements SqlDatabase {
                     dbUrlMSSQL.append(SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE);
                 }
                 final String connectionString = addSslEncryptionToConnection(sqlInputs.getTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
-                sqlInputs.getDbUrls().add(connectionString);
+//                sqlInputs.getDbUrls().add(connectionString);
 
                 dbUrls.add(connectionString);
 

@@ -11,7 +11,6 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.services.ConnectionService;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.junit.After;
@@ -21,16 +20,15 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.File;
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
-
 
 import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
@@ -51,7 +49,8 @@ public class ConnectionServiceTestOracle {
     public static final String DB_SERVER = "localhost";
     public static final int DB_PORT = 30;
     public static final String DB_NAME = "testDB";
-    private ConnectionService connectionService;
+    @Spy
+    private ConnectionService connectionServiceSpy = new ConnectionService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -66,7 +65,7 @@ public class ConnectionServiceTestOracle {
     @Before
     public void beforeTest() throws Exception {
         sqlInputs = new SQLInputs();
-        connectionService = new ConnectionService();
+//        connectionServiceSpy = new ConnectionService();
         InputsProcessor.init(sqlInputs);
 
         mockStatic(DBConnectionManager.class);
@@ -85,22 +84,21 @@ public class ConnectionServiceTestOracle {
 
     @Test
     public void testSetUpConnectionOracleWithoutTns() throws Exception {
-        populateOracle();
+        sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
         sqlInputs.setDbName(FORWARD_SLASH + DB_NAME);
-        final Connection connection = connectionService.setUpConnection(sqlInputs);
-        assertEquals(2, sqlInputs.getDbUrls().size());
-        assertEquals(ORACLE_URL + "//" + DB_SERVER + ":" + DB_PORT + "/" + DB_NAME, sqlInputs.getDbUrls().get(0));
-        assertEquals(ORACLE_URL + "//" + DB_SERVER + ":" + DB_PORT + "/" + DB_NAME, sqlInputs.getDbUrl());
-        assertEquals(ORACLE_URL + DB_SERVER + ":" + DB_PORT + ":" + DB_NAME, sqlInputs.getDbUrls().get(1));
-        assertEquals(ORACLE_URL + "//" + DB_SERVER + ":" + DB_PORT + "/" + DB_NAME, sqlInputs.getDbUrl());
-        assertEquals(connectionMock, connection);
-    }
 
-    private void populateOracle() throws Exception {
-        sqlInputs.setDbType(ORACLE_DB_TYPE);
-//        sqlInputs.setTnsPath(TNS_PATH);
+        final List<String> sqlConnections = connectionServiceSpy.getConnectionUrls(sqlInputs);
+
+        assertEquals(2, sqlConnections.size());
+        assertEquals(ORACLE_URL + "//" + DB_SERVER + ":" + DB_PORT + "/" + DB_NAME, sqlConnections.get(0));
+        assertEquals(ORACLE_URL + DB_SERVER + ":" + DB_PORT + ":" + DB_NAME, sqlConnections.get(1));
+
+        doReturn(sqlConnections).when(connectionServiceSpy).getConnectionUrls(sqlInputs);
+        final Connection connection = connectionServiceSpy.setUpConnection(sqlInputs);
+
+        assertEquals(connectionMock, connection);
     }
 
 }

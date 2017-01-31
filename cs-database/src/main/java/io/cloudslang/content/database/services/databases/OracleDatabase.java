@@ -39,8 +39,8 @@ public class OracleDatabase implements SqlDatabase {
             final String secondConnectionString = String.format("jdbc:oracle:thin:@%s:%d:%s",
                     host, sqlInputs.getDbPort(), sqlInputs.getDbName().substring(1));
 
-            sqlInputs.getDbUrls().add(firstConnectionString);
-            sqlInputs.getDbUrls().add(secondConnectionString);
+//            sqlInputs.getDbUrls().add(firstConnectionString);
+//            sqlInputs.getDbUrls().add(secondConnectionString);
 
             dbUrls.add(firstConnectionString);
             dbUrls.add(secondConnectionString);

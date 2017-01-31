@@ -32,7 +32,7 @@ public class DB2Database implements SqlDatabase {
         final String connectionString = String.format("jdbc:db2://%s:%d%s",
                 host, sqlInputs.getDbPort(), sqlInputs.getDbName());
 
-        sqlInputs.getDbUrls().add(connectionString);
+//        sqlInputs.getDbUrls().add(connectionString);
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
         dbUrls.add(connectionString);

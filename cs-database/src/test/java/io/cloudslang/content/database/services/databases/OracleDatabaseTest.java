@@ -52,7 +52,7 @@ public class OracleDatabaseTest {
         sqlInputs.setDbName(SLASH + DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = oracleDatabase.setUp(sqlInputs);
         assertEquals(2, dbUrls.size());
         assertEquals(ORACLE_URL + "//" + DB_SERVER + ":" + DB_PORT + "/" + DB_NAME, dbUrls.get(0));

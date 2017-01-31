@@ -10,13 +10,11 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -42,7 +40,7 @@ public class MySqlDatabaseTest {
         sqlInputs.setDbName(EMPTY);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = mySqlDatabase.setUp(sqlInputs);
         assertEquals("jdbc:mysql://dbServer:30", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
@@ -57,7 +55,7 @@ public class MySqlDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         mySqlDatabase.setUp(sqlInputs);
     }
 
@@ -68,7 +66,7 @@ public class MySqlDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = mySqlDatabase.setUp(sqlInputs);
         assertEquals("jdbc:mysql://dbServer:30/dbName", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
@@ -81,7 +79,7 @@ public class MySqlDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER_IPV6_LITERAL);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = mySqlDatabase.setUp(sqlInputs);
         assertEquals("jdbc:mysql://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:30/dbName", dbUrls.get(0));
         assertEquals(1, dbUrls.size());

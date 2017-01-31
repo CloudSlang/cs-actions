@@ -41,7 +41,7 @@ public class SybaseDatabaseTest {
         sqlInputs.setDbName(EMPTY);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = sybaseDatabase.setUp(sqlInputs);
         assertEquals("jdbc:jtds:sybase://dbServer:30;prepareSQL=1;useLOBs=false;TDS=4.2;", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
@@ -56,7 +56,7 @@ public class SybaseDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         sybaseDatabase.setUp(sqlInputs);
     }
 
@@ -67,7 +67,7 @@ public class SybaseDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = sybaseDatabase.setUp(sqlInputs);
         assertEquals("jdbc:jtds:sybase://dbServer:30/dbName;prepareSQL=1;useLOBs=false;TDS=4.2;", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
@@ -80,7 +80,7 @@ public class SybaseDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER_IPV6_LITERAL);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = sybaseDatabase.setUp(sqlInputs);
         assertEquals("jdbc:jtds:sybase://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:30/dbName;prepareSQL=1;useLOBs=false;TDS=4.2;", dbUrls.get(0));
         assertEquals(1, dbUrls.size());

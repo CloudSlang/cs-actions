@@ -43,7 +43,7 @@ public class NetcoolDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         netcoolDatabase.setUp(sqlInputs);
     }
 }

@@ -41,7 +41,7 @@ public class DB2DatabaseTest {
         sqlInputs.setDbName(EMPTY);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = db2Database.setUp(sqlInputs);
         assertEquals("jdbc:db2://dbServer:30", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
@@ -70,7 +70,7 @@ public class DB2DatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
 
         final List<String> dbUrls = db2Database.setUp(sqlInputs);
 

@@ -35,7 +35,7 @@ public class NetcoolDatabase implements SqlDatabase {
         }
         final String connectionString = String.format("jdbc:sybase:Tds:%s:%d%s",
                 sqlInputs.getDbServer(), sqlInputs.getDbPort(), sqlInputs.getDbName());
-        sqlInputs.getDbUrls().add(connectionString);
+//        sqlInputs.getDbUrls().add(connectionString);
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
         dbUrls.add(connectionString);

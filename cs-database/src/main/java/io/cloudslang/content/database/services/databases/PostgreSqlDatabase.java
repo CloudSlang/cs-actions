@@ -28,7 +28,7 @@ public class PostgreSqlDatabase implements SqlDatabase {
         loadClassForName("org.postgresql.Driver");
 
         final String connectionString = getConnectionString(sqlInputs);
-        sqlInputs.getDbUrls().add(connectionString);
+//        sqlInputs.getDbUrls().add(connectionString);
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
         dbUrls.add(connectionString);

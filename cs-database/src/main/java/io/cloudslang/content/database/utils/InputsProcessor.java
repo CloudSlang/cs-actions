@@ -150,10 +150,10 @@ public class InputsProcessor {
 
         //get a fresh list for each run
         String inputDbUrl = parameters.get(DB_URL);
-        if (!isEmpty(inputDbUrl)) {
-            final List<String> dbUrls = sqlInputs.getDbUrls();
-            dbUrls.add(inputDbUrl);
-        }
+//        if (!isEmpty(inputDbUrl)) {
+//            final List<String> dbUrls = sqlInputs.getDbUrls();
+//            dbUrls.add(inputDbUrl);
+//        }
 
         String dbClass = parameters.get(DB_CLASS);
         String trimRowstat = parameters.get(TRIM_ROWSTAT);
@@ -226,7 +226,7 @@ public class InputsProcessor {
             sqlInputs.setPassword(null);
             sqlInputs.setAuthenticationType(null);
             sqlInputs.setDbUrl(null);
-            sqlInputs.setDbUrls(new ArrayList<String>(3));
+//            sqlInputs.setDbUrls(new ArrayList<String>(3));
             sqlInputs.setDbClass(null);
             sqlInputs.setTrimRowstat("true");
             sqlInputs.setNetcool(false);

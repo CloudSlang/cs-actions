@@ -143,7 +143,7 @@ public class MSSqlDatabaseTest {
         sqlInputs.setDbName(dbName);
         sqlInputs.setDbServer(dbServer);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         sqlInputs.setAuthenticationType(authWindows);
         sqlInputs.setInstance(instance);
         sqlInputs.setDbClass(SQLSERVER_JDBC_DRIVER);

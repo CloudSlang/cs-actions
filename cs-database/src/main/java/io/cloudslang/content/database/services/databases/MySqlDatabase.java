@@ -29,7 +29,7 @@ public class MySqlDatabase implements SqlDatabase {
 
         final String connectionString = getConnectionString(sqlInputs);
 
-        sqlInputs.getDbUrls().add(connectionString);
+//        sqlInputs.getDbUrls().add(connectionString);
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
         dbUrls.add(connectionString);

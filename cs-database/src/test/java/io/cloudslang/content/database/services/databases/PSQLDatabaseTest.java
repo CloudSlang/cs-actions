@@ -39,7 +39,7 @@ public class PSQLDatabaseTest {
         sqlInputs.setDbName(EMPTY);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
 
         final List<String> dbUrls = pSqlDatabase.setUp(sqlInputs);
         assertEquals("jdbc:postgresql://dbServer:5432", dbUrls.get(0));
@@ -55,7 +55,7 @@ public class PSQLDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         pSqlDatabase.setUp(sqlInputs);
     }
 
@@ -66,7 +66,7 @@ public class PSQLDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = pSqlDatabase.setUp(sqlInputs);
 
         assertEquals("jdbc:postgresql://dbServer:5432/dbName", dbUrls.get(0));
@@ -80,7 +80,7 @@ public class PSQLDatabaseTest {
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER_IPV6_LITERAL);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbUrls(new ArrayList<String>());
+//        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = pSqlDatabase.setUp(sqlInputs);
 
         assertEquals("jdbc:postgresql://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:5432/dbName", dbUrls.get(0));

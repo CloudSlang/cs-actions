@@ -116,7 +116,6 @@ public class SQLScript {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-//        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
         Map<String, String> inputParameters = SQLScriptUtil.createInputParametersMap(dbServerName,
                 dbType,

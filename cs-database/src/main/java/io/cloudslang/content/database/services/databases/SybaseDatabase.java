@@ -30,7 +30,7 @@ public class SybaseDatabase implements SqlDatabase {
         final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
         final String connectionString = String.format("jdbc:jtds:sybase://%s:%d%s;prepareSQL=1;useLOBs=false;TDS=4.2;",
                 host, sqlInputs.getDbPort(), sqlInputs.getDbName());
-        sqlInputs.getDbUrls().add(connectionString);
+//        sqlInputs.getDbUrls().add(connectionString);
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
         dbUrls.add(connectionString);

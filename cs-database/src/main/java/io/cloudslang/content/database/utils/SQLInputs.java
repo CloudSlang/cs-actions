@@ -34,7 +34,6 @@ public class SQLInputs {
     private String ignoreCase;
     private int timeout;
     private String dbUrl;  //the final dbUrl that was used to connect to the database
-    private List<String> dbUrls; //a list of dbUrls that are used to try to connect to the database
     private String dbClass;
     private String trimRowstat = "true";
     private boolean isNetcool = false; // needs to be visible for SQLQueryTabular to do check
@@ -224,14 +223,6 @@ public class SQLInputs {
 
     public void setDbUrl(String dbUrl) {
         this.dbUrl = dbUrl;
-    }
-
-    public List<String> getDbUrls() {
-        return dbUrls;
-    }
-
-    public void setDbUrls(List<String> dbUrls) {
-        this.dbUrls = dbUrls;
     }
 
     public String getDbClass() {
