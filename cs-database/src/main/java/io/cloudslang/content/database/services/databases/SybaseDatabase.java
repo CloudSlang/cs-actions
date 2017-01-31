@@ -11,37 +11,22 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class SybaseDatabase implements SqlDatabase {
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {
-        if (dbName == null) {
-            throw new SQLException("No database provided!");
-        }
-        if (StringUtils.isEmpty(dbPort)) {
-            throw new SQLException("No port provided!");
-        }
-        Class.forName("net.sourceforge.jtds.jdbc.Driver");
-        dbUrls.add("jdbc:jtds:sybase://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(dbServer) + ":" + dbPort + dbName + ";prepareSQL=1;useLOBs=false;TDS=4.2;");
-    }
 
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e.getCause());
-        }
-
+        loadClassForName("net.sourceforge.jtds.jdbc.Driver");
+        
         final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
         final String connectionString = String.format("jdbc:jtds:sybase://%s:%d%s;prepareSQL=1;useLOBs=false;TDS=4.2;",
                 host, sqlInputs.getDbPort(), sqlInputs.getDbName());

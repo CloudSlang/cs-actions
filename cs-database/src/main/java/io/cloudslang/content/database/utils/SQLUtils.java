@@ -15,10 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -27,24 +27,13 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  */
 public class SQLUtils {
 
-    private final static Map<String, Integer> valueResultSet = getResultSetMap();
 
-    public static int getResultSetValue(final String strResultSet) {
-        if (valueResultSet.containsKey(strResultSet.toUpperCase())) {
-            return valueResultSet.get(strResultSet.toUpperCase());
+    public static void loadClassForName(@NotNull final String className) {
+        try {
+            Class.forName(className);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e.getCause());
         }
-        return -1000000;
-    }
-
-    @NotNull
-    private static Map<String, Integer> getResultSetMap() {
-        final Map<String, Integer> valueResultSet = new HashMap<>(5);
-        valueResultSet.put("CONCUR_READ_ONLY", ResultSet.CONCUR_READ_ONLY);
-        valueResultSet.put("CONCUR_UPDATABLE", ResultSet.CONCUR_UPDATABLE);
-        valueResultSet.put("TYPE_FORWARD_ONLY", ResultSet.TYPE_FORWARD_ONLY);
-        valueResultSet.put("TYPE_SCROLL_INSENSITIVE", ResultSet.TYPE_SCROLL_INSENSITIVE);
-        valueResultSet.put("TYPE_SCROLL_SENSITIVE", ResultSet.TYPE_SCROLL_SENSITIVE);
-        return valueResultSet;
     }
 
     public static boolean trimRowstat(String dbUrl, String trimRowstat) {

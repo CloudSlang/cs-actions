@@ -9,11 +9,9 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
-import io.cloudslang.content.database.constants.DBExceptionValues;
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -23,12 +21,12 @@ import java.util.List;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
 import static io.cloudslang.content.database.constants.DBOtherValues.DATABASE_NAME_CAP;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidAuthType;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**
@@ -54,76 +52,6 @@ public class MSSqlDatabase implements SqlDatabase {
         return dbUrlBuilder.toString();
     }
 
-    @SuppressWarnings("Duplicates")
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls, final String authenticationType, final String instance, String dbClass,
-                      boolean trustAllRoots, String trustStore, String trustStorePassword) throws ClassNotFoundException, SQLException {
-        if (dbName == null) {
-            throw new SQLException("No database provided!");
-        }
-        if (StringUtils.isEmpty(dbPort)) {
-            throw new SQLException("No port provided!");
-        }
-        if (StringUtils.isEmpty(dbServer)) {
-            throw new IllegalArgumentException("host   not valid");
-        }
-
-        loadJdbcDriver(dbClass);
-
-        String dbUrlMSSQL = "";
-        String host;
-
-        //compute the host value that will be used in the url
-        String[] serverInstanceComponents = null;
-        if (dbServer.contains(Constants.ESCAPED_BACKSLASH)) { //instance is included in the dbServer value
-            serverInstanceComponents = dbServer.split("\\\\");
-            host = serverInstanceComponents[0];
-        } else {
-            host = dbServer;
-        }
-        Address address = new Address(host);
-        host = address.getURIIPV6Literal();
-
-        //instance is included in the host name
-        if (AUTH_SQL.equalsIgnoreCase(authenticationType)) {
-            if (serverInstanceComponents != null) {
-                //removed username and password form the url, since
-                //driver manager will use url , username and password later
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1];
-            }
-            //has instance input
-            else if (isNoneEmpty(instance)) {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance;
-            }
-            //no instance
-            else {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName;
-            }
-            dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
-        }
-        if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
-            //instance is included in the host name
-            if (serverInstanceComponents != null) {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + serverInstanceComponents[1] + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
-            }
-            //has instance input
-            else if (isNoneEmpty(instance)) {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INSTANCE + EQUALS + instance + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
-            }
-            //no instance
-            else {
-                dbUrlMSSQL = Constants.MSSQL_URL + host + COLON + dbPort + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + dbName + SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE;
-            }
-            // Set to true to send LMv2/NTLMv2 responses when using Windows authentication
-            dbUrlMSSQL = addSslEncryptionToConnection(trustAllRoots, trustStore, trustStorePassword, dbUrlMSSQL);
-        } else if (!AUTH_SQL.equalsIgnoreCase(authenticationType)) //check invalid authentication type
-        {
-            //if it is something other than sql or empty,
-            //we supply the empty string with sql
-            throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + authenticationType);
-        }
-        dbUrls.add(dbUrlMSSQL);
-    }
-
     private void initializeJdbcDrivers() {
         supportedJdbcDrivers = Arrays.asList(SQLSERVER_JDBC_DRIVER, JTDS_JDBC_DRIVER);
     }
@@ -145,7 +73,6 @@ public class MSSqlDatabase implements SqlDatabase {
 
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-
         try {
             final List<String> dbUrls = new ArrayList<>();
             // todo ask eugen if need to check class

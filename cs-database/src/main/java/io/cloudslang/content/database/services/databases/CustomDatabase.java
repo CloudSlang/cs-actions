@@ -16,29 +16,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
-import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
+import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class CustomDatabase implements SqlDatabase {
 
-    public void setUp(String dbClass) throws ClassNotFoundException {
-        if (isNoneEmpty(dbClass)) {
-            Class.forName(dbClass);
-        } else {
-            throw new ClassNotFoundException("No db class name provided");
-        }
-    }
-
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         try {
-            Class.forName(sqlInputs.getDbClass());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("No db class name provided", e.getCause());
+            loadClassForName(sqlInputs.getDbClass());
+        } catch (final RuntimeException e) {
+            throw new RuntimeException("No db class name provided");
         }
-
         return getDbUrls(sqlInputs.getDbUrl());
     }
 }

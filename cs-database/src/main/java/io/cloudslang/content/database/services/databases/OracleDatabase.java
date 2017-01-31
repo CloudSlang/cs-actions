@@ -13,11 +13,10 @@ import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**
@@ -25,26 +24,9 @@ import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
  */
 public class OracleDatabase implements SqlDatabase {
 
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {
-        Class.forName("oracle.jdbc.driver.OracleDriver");
-
-        if (((dbServer != null) && (!dbServer.equals(""))) ||
-                ((dbPort != null) && (!dbPort.equals(""))) ||
-                ((dbName != null) && (!dbName.equals("")))) {
-            //Connect using the host, port and database info
-            String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(dbServer);
-            dbUrls.add("jdbc:oracle:thin:@//" + host + ":" + dbPort + dbName);
-            dbUrls.add("jdbc:oracle:thin:@" + host + ":" + dbPort + ":" + dbName.substring(1));
-        }
-    }
-
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e.getCause());
-        }
+        loadClassForName("oracle.jdbc.driver.OracleDriver");
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
 

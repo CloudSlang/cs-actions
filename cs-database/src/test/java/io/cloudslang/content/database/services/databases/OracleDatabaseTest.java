@@ -9,23 +9,20 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by vranau on 12/10/2014.
@@ -36,24 +33,27 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class OracleDatabaseTest {
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
     public static final String DB_SERVER = "localhost";
-    public static final String DB_PORT = "30";
+    public static final int DB_PORT = 30;
     public static final String SLASH = "/";
     public static final String DB_NAME = "testDB";
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
-    private ArrayList<String> dbUrls = null;
     private OracleDatabase oracleDatabase = null;
 
     @Before
     public void setUp() {
         oracleDatabase = new OracleDatabase();
-        dbUrls = new ArrayList<>();
     }
 
     @Test
     public void testSetUpConnectionOracleWithoutTns() throws Exception {
         //set up method needs a SLASH before dbName (if dbName is provided)
-        oracleDatabase.setUp(SLASH + DB_NAME, DB_SERVER, DB_PORT, dbUrls);
+        final SQLInputs sqlInputs = new SQLInputs();
+        sqlInputs.setDbName(SLASH + DB_NAME);
+        sqlInputs.setDbServer(DB_SERVER);
+        sqlInputs.setDbPort(DB_PORT);
+        sqlInputs.setDbUrls(new ArrayList<String>());
+        final List<String> dbUrls = oracleDatabase.setUp(sqlInputs);
         assertEquals(2, dbUrls.size());
         assertEquals(ORACLE_URL + "//" + DB_SERVER + ":" + DB_PORT + "/" + DB_NAME, dbUrls.get(0));
         assertEquals(ORACLE_URL + DB_SERVER + ":" + DB_PORT + ":" + DB_NAME, dbUrls.get(1));

@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.sql.SQLException;
-import java.sql.SQLInput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +33,6 @@ public class DB2DatabaseTest {
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
-    private ArrayList<String> dbUrls = null;
-
-    @Before
-    public void setUp() {
-        dbUrls = new ArrayList<>();
-    }
 
     @Test
     public void testSetUpNoDbName() throws ClassNotFoundException, SQLException {
@@ -50,7 +43,6 @@ public class DB2DatabaseTest {
         sqlInputs.setDbPort(DB_PORT);
         sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = db2Database.setUp(sqlInputs);
-//        db2Database.setUp("", DB_SERVER, DB_PORT, dbUrls);
         assertEquals("jdbc:db2://dbServer:30", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }

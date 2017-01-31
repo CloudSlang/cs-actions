@@ -13,32 +13,19 @@ import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class DB2Database implements SqlDatabase {
 
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {
-        if (dbName == null) {
-            throw new SQLException("No database provided!");
-        }
-        Class.forName("com.ibm.db2.jcc.DB2Driver");
-        dbUrls.add("jdbc:db2://" + SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(dbServer) + ":" + dbPort + dbName);
-    }
-
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        try {
-            Class.forName("com.ibm.db2.jcc.DB2Driver");
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e.getCause());
-        }
+        loadClassForName("com.ibm.db2.jcc.DB2Driver");
 
         final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
 

@@ -13,39 +13,20 @@ import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class MySqlDatabase implements SqlDatabase {
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {
-
-        if (dbName == null) {
-            throw new SQLException("No database provided!");
-        }
-
-        Class.forName("com.mysql.jdbc.Driver");
-        Address address = new Address(dbServer);
-        if (address.isIPV6Literal()) {//the host is an IPv6 literal
-            dbUrls.add("jdbc:mysql://address=(protocol=tcp)" + "(host=" + dbServer + ")(port="
-                    + dbPort + ")" + dbName);
-        } else {//the host is an IPv4 literal or a Host Name
-            dbUrls.add("jdbc:mysql://" + dbServer + ":" + dbPort + dbName);
-        }
-    }
 
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e.getCause());
-        }
+        loadClassForName("com.mysql.jdbc.Driver");
+
         final String connectionString = getConnectionString(sqlInputs);
 
         sqlInputs.getDbUrls().add(connectionString);

@@ -10,11 +10,8 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.SQLUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
@@ -23,28 +20,6 @@ import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
  * Created by victor on 13.01.2017.
  */
 public class NetcoolDatabase implements SqlDatabase {
-
-    public void setUp(String dbName, String dbServer, String dbPort, List<String> dbUrls) throws ClassNotFoundException, SQLException {
-
-
-        if (dbName == null) {
-            throw new SQLException("No database provided!");
-        }
-
-        //Attempt to load jconn3 driver first, then jconn2 driver
-        try {
-            Class.forName("com.sybase.jdbc3.jdbc.SybDriver");
-
-        } catch (ClassNotFoundException e) {
-            try {
-                Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
-            } catch (ClassNotFoundException ex) {
-                throw new ClassNotFoundException
-                        ("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
-            }
-        }
-        dbUrls.add("jdbc:sybase:Tds:" + dbServer + ":" + dbPort + dbName);
-    }
 
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {

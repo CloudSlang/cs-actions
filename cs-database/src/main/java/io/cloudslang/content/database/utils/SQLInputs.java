@@ -306,7 +306,6 @@ public class SQLInputs {
         this.resultSetConcurrency = resultSetConcurrency;
     }
 
-
     public String getTrustStore() {
         return trustStore;
     }
