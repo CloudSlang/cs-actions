@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -17,6 +18,71 @@ import static org.junit.Assert.*;
  * Created by victor on 1/28/17.
  */
 public class SQLInputsValidatorTest {
+    @Before
+    public void setUp() throws Exception {
+
+    }
+
+    @Test
+    public void validateSqlCommandInputs1() throws Exception {
+
+    }
+
+    @Test
+    public void validateSqlQueryInputs1() throws Exception {
+
+    }
+
+    @Test
+    public void validateSqlQueryAllRowsInputs1() throws Exception {
+
+    }
+
+    @Test
+    public void validateSqlQueryLOBInputs1() throws Exception {
+
+    }
+
+    @Test
+    public void validateSqlQueryTabularInputs1() throws Exception {
+
+    }
+
+    @Test
+    public void validateSqlScriptInputs1() throws Exception {
+
+    }
+
+    @Test
+    public void isValidAuthType() throws Exception {
+
+    }
+
+    @Test
+    public void isNotValidAuthType() throws Exception {
+
+    }
+
+    @Test
+    public void isValidDbType1() throws Exception {
+
+    }
+
+    @Test
+    public void isNotValidDbType1() throws Exception {
+
+    }
+
+    @Test
+    public void isValidResultSetConcurrency1() throws Exception {
+
+    }
+
+    @Test
+    public void isValidResultSetType1() throws Exception {
+
+    }
+
     @Test
     public void validateSqlCommandInputs() throws Exception {
 

@@ -112,7 +112,6 @@ public class SQLCommand {
             mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
             mySqlInputs.setResultSetType(getResultSetType(resultSetType));
             mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-//            mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
             String res = SQLCommandService.executeSqlCommand(mySqlInputs);
 

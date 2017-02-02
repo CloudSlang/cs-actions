@@ -20,8 +20,9 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryService;
-import io.cloudslang.content.database.utils.*;
-import io.cloudslang.content.database.utils.other.SQLQueryUtil;
+import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.database.utils.SQLSessionResource;
+import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,9 +35,7 @@ import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
-import static io.cloudslang.content.database.constants.DBDefaultValues.DEFAULT_TIMEOUT;
-import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
+import static io.cloudslang.content.database.constants.DBDefaultValues.*;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.*;
@@ -110,57 +109,32 @@ public class SQLQuery {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        SQLInputs mySqlInputs = new SQLInputs();
-        mySqlInputs.setDbServer(dbServerName); //mandatory
-        mySqlInputs.setDbType(getDbType(dbType));
-        mySqlInputs.setUsername(username);
-        mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(instance);
-        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
-        mySqlInputs.setAuthenticationType(authenticationType);
-        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
-        mySqlInputs.setTrustStore(trustStore);
-        mySqlInputs.setTrustStorePassword(trustStorePassword);
-        mySqlInputs.setStrDelim(delimiter);
-        mySqlInputs.setKey(key);
-        mySqlInputs.setTimeout(toInteger(timeout));
-        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
-        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        mySqlInputs.setIgnoreCase(ignoreCase);
+        SQLInputs sqlInputs = new SQLInputs();
+        sqlInputs.setDbServer(dbServerName); //mandatory
+        sqlInputs.setDbType(getDbType(dbType));
+        sqlInputs.setUsername(username);
+        sqlInputs.setPassword(password);
+        sqlInputs.setInstance(instance);
+        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
+        sqlInputs.setDbName(getOrDefaultDBName(databaseName, sqlInputs.getDbType()));
+        sqlInputs.setAuthenticationType(authenticationType);
+        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
+        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
+        sqlInputs.setSqlCommand(command);
+        sqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+        sqlInputs.setTrustStore(trustStore);
+        sqlInputs.setTrustStorePassword(trustStorePassword);
+        sqlInputs.setStrDelim(delimiter);
+        sqlInputs.setKey(key);
+        sqlInputs.setTimeout(toInteger(timeout));
+        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
+        sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
+        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+        sqlInputs.setIgnoreCase(ignoreCase);
 //        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
-
-        Map<String, String> inputParameters = SQLQueryUtil.createInputParametersMap(dbServerName,
-                dbType,
-                username,
-                password,
-                instance,
-                dbPort,
-                databaseName,
-                authenticationType,
-                dbClass,
-                dbURL,
-                command,
-                delimiter,
-                key,
-                trustAllRoots,
-                trustStore,
-                trustStorePassword,
-                timeout,
-                databasePoolingProperties,
-                ignoreCase);
-
-        inputParameters.put(RESULT_SET_TYPE, resultSetType);
-        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
-
-        Map<String, String> result = new HashMap<>();
+        HashMap<String, String> result = new HashMap<>();
 
         try {
-            final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
             final String sqlDbType = sqlInputs.getDbType();
             final String sqlDbServer = sqlInputs.getDbServer();
             final String sqlCommand = sqlInputs.getSqlCommand();

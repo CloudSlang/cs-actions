@@ -18,9 +18,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryAllRowsService;
-import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.other.SQLQueryAllUtil;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,7 +38,8 @@ import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSq
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by pinteae on 1/10/2017.
@@ -120,33 +119,10 @@ public class SQLQueryAllRows {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-//        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
-        Map<String, String> inputParameters = SQLQueryAllUtil.createInputParametersMap(dbServerName,
-                dbType,
-                username,
-                password,
-                instance,
-                dbPort,
-                databaseName,
-                authenticationType,
-                dbClass,
-                dbURL,
-                command,
-                colDelimiter,
-                rowDelimiter,
-                trustAllRoots,
-                trustStore,
-                trustStorePassword,
-                timeout,
-                databasePoolingProperties);
-
-        inputParameters.put(RESULT_SET_TYPE, resultSetType);
-        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
         try {
-            final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
 
-            final String queryResult = SQLQueryAllRowsService.execQueryAllRows(sqlInputs);
+            final String queryResult = SQLQueryAllRowsService.execQueryAllRows(mySqlInputs);
             return OutputUtilities.getSuccessResultsMap(queryResult);
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);

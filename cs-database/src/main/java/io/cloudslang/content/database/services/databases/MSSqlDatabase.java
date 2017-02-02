@@ -80,7 +80,6 @@ public class MSSqlDatabase implements SqlDatabase {
                 if (isNoneEmpty(sqlInputs.getDbUrl())) {
                     final String dbUrl = MSSqlDatabase.addSslEncryptionToConnection(sqlInputs.getTrustAllRoots(),
                             sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), sqlInputs.getDbUrl());
-//                    sqlInputs.getDbUrls().set(0, dbUrl);
                     dbUrls.add(dbUrl);
 
                 }

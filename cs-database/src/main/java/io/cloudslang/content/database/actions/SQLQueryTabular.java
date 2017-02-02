@@ -19,9 +19,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryTabularService;
-import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.other.SQLQueryTabularUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
@@ -117,31 +115,10 @@ public class SQLQueryTabular {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-//        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
 
-        Map<String, String> inputParameters = SQLQueryTabularUtil.createInputParametersMap(dbServerName,
-                dbType,
-                username,
-                password,
-                instance,
-                dbPort,
-                databaseName,
-                authenticationType,
-                dbClass,
-                dbURL,
-                command,
-                trustAllRoots,
-                trustStore,
-                trustStorePassword,
-                timeout,
-                databasePoolingProperties);
-        inputParameters.put(RESULT_SET_TYPE, resultSetType);
-        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
 
         try {
-            final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-
-            final String queryResult = SQLQueryTabularService.execSqlQueryTabular(sqlInputs);
+            final String queryResult = SQLQueryTabularService.execSqlQueryTabular(mySqlInputs);
             return OutputUtilities.getSuccessResultsMap(queryResult);
         } catch (Exception e) {
            return OutputUtilities.getFailureResultsMap(e);

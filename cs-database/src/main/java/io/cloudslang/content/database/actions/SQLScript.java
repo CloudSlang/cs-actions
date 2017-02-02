@@ -18,13 +18,14 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
-import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.database.utils.other.SQLScriptUtil;
 import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
@@ -117,45 +118,15 @@ public class SQLScript {
         mySqlInputs.setResultSetType(getResultSetType(resultSetType));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
 
-        Map<String, String> inputParameters = SQLScriptUtil.createInputParametersMap(dbServerName,
-                dbType,
-                username,
-                password,
-                instance,
-                dbPort,
-                databaseName,
-                authenticationType,
-                dbClass,
-                dbURL,
-                sqlCommands,
-                delimiter,
-                scriptFileName,
-                trustAllRoots,
-                trustStore,
-                trustStorePassword,
-                databasePoolingProperties);
-        inputParameters.put(RESULT_SET_TYPE, resultSetType);
-        inputParameters.put(RESULT_SET_CONCURRENCY, resultSetConcurrency);
 
         try {
-            final SQLInputs sqlInputs = InputsProcessor.handleInputParameters(inputParameters, resultSetType, resultSetConcurrency);
-
-            String commandsDelimiter = StringUtils.isEmpty(sqlInputs.getStrDelim()) ? "--" : sqlInputs.getStrDelim(); //todo this is not ok
+            String commandsDelimiter = StringUtils.isEmpty(mySqlInputs.getStrDelim()) ? "--" : mySqlInputs.getStrDelim(); //todo this is not ok
             List<String> commands = new ArrayList<>(Arrays.asList(sqlCommands.split(commandsDelimiter)));
 
-            //read from SQL script file
-//            if (commands.isEmpty()) {
-//                String fileName = inputParameters.get("scriptFileName");
-//                if (StringUtils.isEmpty(fileName)) {
-//                    throw new Exception("Both Script file name and Line are empty!");
-//                } else {
-//                    commands = readFromFile(fileName);
-//                }
-//            }
             if (!commands.isEmpty()) {
-                final String res = SQLScriptService.executeSqlScript(commands, sqlInputs);
+                final String res = SQLScriptService.executeSqlScript(commands, mySqlInputs);
                 final Map<String, String> result = getSuccessResultsMap(res);
-                result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
+                result.put(UPDATE_COUNT, String.valueOf(mySqlInputs.getiUpdateCount()));
                 return result;
             } else {
                 return getFailureResultsMap("No SQL command to be executed.");

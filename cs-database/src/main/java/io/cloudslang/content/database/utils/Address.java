@@ -49,22 +49,6 @@ public class Address {
     }
 
     /**
-     * Constructor
-     *
-     * @param hostWithOptionalPort
-     * @param portFirstOption
-     */
-    public Address(String hostWithOptionalPort, int portFirstOption) {
-        if (hostWithOptionalPort != null)
-            this.hostWithOptionalPort = hostWithOptionalPort;
-
-        if (portFirstOption >= 0)
-            this.inputPort = portFirstOption;
-
-        parse();
-    }
-
-    /**
      * Returns the host, stripped of any trailing colon and port
      *
      * @return host
@@ -80,10 +64,6 @@ public class Address {
      */
     public int getPort() {
         return resolvedPort;
-    }
-
-    public boolean isPortSet() {
-        return resolvedPort != PORT_NOT_SET;
     }
 
     /**
