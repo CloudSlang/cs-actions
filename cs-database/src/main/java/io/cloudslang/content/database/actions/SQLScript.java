@@ -121,7 +121,7 @@ public class SQLScript {
 
         try {
             String commandsDelimiter = StringUtils.isEmpty(mySqlInputs.getStrDelim()) ? "--" : mySqlInputs.getStrDelim(); //todo this is not ok
-            List<String> commands = new ArrayList<>(Arrays.asList(sqlCommands.split(commandsDelimiter)));
+            List<String> commands = new ArrayList<>(Arrays.asList(sqlCommands.split(commandsDelimiter))); //todo this is set i think
 
             if (!commands.isEmpty()) {
                 final String res = SQLScriptService.executeSqlScript(commands, mySqlInputs);

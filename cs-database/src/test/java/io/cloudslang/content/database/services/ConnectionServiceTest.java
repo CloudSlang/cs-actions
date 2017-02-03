@@ -73,12 +73,11 @@ public class ConnectionServiceTest {
     // this method is used in most of the tests. If you comment the code, you could deactivate the (sometimes) failing tests.
     // sometimes it fails to mock the dbConnectionManagerMock and the tests are failing.
     private void assertConnection(SQLInputs sqlInputs, int noUrls, String resultedUrl, String url) throws SQLException, ClassNotFoundException {
-//        final Connection connection = connectionService.setUpConnection(sqlInputs);
         final List<String> sqlConnections = connectionServiceSpy.getConnectionUrls(sqlInputs);
         assertEquals(noUrls, sqlConnections.size());
         assertEquals(resultedUrl, sqlConnections.get(0));
         assertEquals(url, sqlInputs.getDbUrl());
-//        when(connectionServiceSpy.getConnectionUrls(sqlInputs)).thenReturn(sqlConnections);
+
         doReturn(sqlConnections).when(connectionServiceSpy).getConnectionUrls(sqlInputs);
         final Connection connection = connectionServiceSpy.setUpConnection(sqlInputs);
         assertEquals(connectionMock, connection);
