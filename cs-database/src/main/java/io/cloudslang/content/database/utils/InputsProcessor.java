@@ -63,7 +63,7 @@ public class InputsProcessor {
             sqlInputs.setInstance(null);
             sqlInputs.setTimeout(0);
             sqlInputs.setKey(null);
-            sqlInputs.setIgnoreCase(null);
+            sqlInputs.setIgnoreCase(false);
             sqlInputs.setResultSetConcurrency(-1000000);
             sqlInputs.setResultSetType(-1000000);
             sqlInputs.setTrustAllRoots(false);

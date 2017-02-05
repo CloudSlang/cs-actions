@@ -130,26 +130,14 @@ public class SQLQuery {
         sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
         sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        sqlInputs.setIgnoreCase(ignoreCase);
+        sqlInputs.setIgnoreCase(BooleanUtilities.toBoolean(ignoreCase));
 //        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
+
         HashMap<String, String> result = new HashMap<>();
 
         try {
-            final String sqlDbType = sqlInputs.getDbType();
-            final String sqlDbServer = sqlInputs.getDbServer();
-            final String sqlCommand = sqlInputs.getSqlCommand();
-            final String sqlUsername = sqlInputs.getUsername();
-            final String sqlAuthenticationType = sqlInputs.getAuthenticationType();
-            final String sqlDbPort = Integer.toString(sqlInputs.getDbPort());
-            final String sqlKey = sqlInputs.getKey();
-            final String sqlPassword = sqlInputs.getPassword();
-            final boolean sqlIgnoreCase = Boolean.parseBoolean(sqlInputs.getIgnoreCase());
 
-//            if (DB2_DB_TYPE.equalsIgnoreCase(sqlDbType)) { //todo this should be documented
-//                sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_FORWARD_ONLY));
-//            }
-
-            String aKey = getSqlKey(sqlInputs, sqlDbType, sqlDbServer, sqlCommand, sqlUsername, sqlAuthenticationType, sqlDbPort, sqlKey, sqlPassword, sqlIgnoreCase);
+            final String aKey = getSqlKey(sqlInputs);
 
             Map<String, Object> sqlConnectionMap = new HashMap<>();
             if (globalSessionObject.getResource() != null) {
@@ -191,7 +179,7 @@ public class SQLQuery {
                 } else {
                     result.put(RETURN_RESULT, "no rows selected");
                     result.put(ROWS_LEFT, ZERO);
-                    result.put(SQL_QUERY, sqlCommand);
+                    result.put(SQL_QUERY, sqlInputs.getSqlCommand());
                     result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
                 }
 //                result.put("queryCount", String.valueOf(sqlInputs.getiQuerys()));

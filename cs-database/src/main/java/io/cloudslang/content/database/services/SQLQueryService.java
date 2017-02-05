@@ -12,6 +12,7 @@ package io.cloudslang.content.database.services;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,7 +24,7 @@ import java.sql.Statement;
  */
 public class SQLQueryService {
 
-    public void executeSqlQuery(SQLInputs sqlInputs) throws Exception {
+    public void executeSqlQuery(@NotNull final SQLInputs sqlInputs) throws Exception {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }

@@ -31,7 +31,7 @@ public class SQLInputs {
     private String password;
     private String authenticationType;
     private String instance;
-    private String ignoreCase;
+    private boolean ignoreCase;
     private int timeout;
     private String dbUrl;  //the final dbUrl that was used to connect to the database
     private String dbClass;
@@ -81,11 +81,11 @@ public class SQLInputs {
         this.lRows = lRows;
     }
 
-    public String getIgnoreCase() {
+    public boolean getIgnoreCase() {
         return ignoreCase;
     }
 
-    public void setIgnoreCase(String ignoreCase) {
+    public void setIgnoreCase(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
     }
 

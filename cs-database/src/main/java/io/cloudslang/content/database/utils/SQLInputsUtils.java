@@ -11,6 +11,7 @@ package io.cloudslang.content.database.utils;
 
 import io.cloudslang.content.utils.CollectionUtilities;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -34,7 +35,7 @@ public class SQLInputsUtils {
         if (isEmpty(dbName)) {
             return EMPTY;
         }
-        if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) {
+        if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) { // todo don't think it's necessary
             return dbName;
         }
         return FORWARD_SLASH + dbName;
@@ -74,7 +75,7 @@ public class SQLInputsUtils {
         try (final Reader reader = new StringReader(defaultIfBlank(dbPoolingProperties, defaultVal))) {
             databasePoolingProperties.load(reader);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage(), e.getCause());
         }
         return databasePoolingProperties;
     }
@@ -120,42 +121,41 @@ public class SQLInputsUtils {
 
     public static String getDbType(final String dbType) {
         for (final String element : DB_PORTS.keySet()) {
-            if (element.equalsIgnoreCase(dbType)) {
+            if (element.equalsIgnoreCase(dbType.trim())) {
                 return element;
             }
         }
         return dbType;
     }
 
-    public static String getSqlKey(SQLInputs sqlInputs, String sqlDbType, String sqlDbServer, String sqlCommand, String sqlUsername,
-                                   String sqlAuthenticationType, String sqlDbPort, String sqlKey, String sqlPassword,
-                                   boolean sqlIgnoreCase) throws SQLException {
+    public static String getSqlKey(@NotNull final SQLInputs sqlInputs) throws SQLException {
         String aKey = ""; // todo refactor and check if toLowerCase aKey is right
-        if (sqlIgnoreCase) {
+
+        if (sqlInputs.getIgnoreCase()) {
             //calculate session id for JDBC operations
-            if (StringUtils.isNoneEmpty(sqlDbServer)) {
+            if (StringUtils.isNoneEmpty(sqlInputs.getDbServer())) {
                 if (sqlInputs.getInstance() != null) {
                     sqlInputs.setInstance(sqlInputs.getInstance().toLowerCase());
                 }
                 if (sqlInputs.getDbName() != null) {
                     sqlInputs.setDbName(sqlInputs.getDbName().toLowerCase());
                 }
-                aKey = SQLUtils.computeSessionId(sqlDbServer.toLowerCase() + sqlDbType.toLowerCase() +
-                        sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
-                        sqlAuthenticationType.toLowerCase() + sqlCommand.toLowerCase() + sqlKey);
+                aKey = SQLUtils.computeSessionId(sqlInputs.getDbServer().toLowerCase() + sqlInputs.getDbType().toLowerCase() +
+                        sqlInputs.getUsername() + sqlInputs.getPassword() + sqlInputs.getInstance() + sqlInputs.getDbPort() + sqlInputs.getDbName() +
+                        sqlInputs.getAuthenticationType().toLowerCase() + sqlInputs.getSqlCommand().toLowerCase() + sqlInputs.getKey());
             }
         } else {
             //calculate session id for JDBC operations
-            if (!StringUtils.isEmpty(sqlDbServer)) {
+            if (!StringUtils.isEmpty(sqlInputs.getDbServer())) {
                 if (sqlInputs.getInstance() != null) {
                     sqlInputs.setInstance(sqlInputs.getInstance());
                 }
                 if (sqlInputs.getDbName() != null) {
                     sqlInputs.setDbName(sqlInputs.getDbName());
                 }
-                aKey = SQLUtils.computeSessionId(sqlDbServer + sqlDbType +
-                        sqlUsername + sqlPassword + sqlInputs.getInstance() + sqlDbPort + sqlInputs.getDbName() +
-                        sqlAuthenticationType + sqlCommand + sqlKey);
+                aKey = SQLUtils.computeSessionId(sqlInputs.getDbServer() + sqlInputs.getDbType() +
+                        sqlInputs.getUsername() + sqlInputs.getPassword() + sqlInputs.getInstance() + sqlInputs.getDbPort() + sqlInputs.getDbName() +
+                        sqlInputs.getAuthenticationType() + sqlInputs.getSqlCommand() + sqlInputs.getKey());
             }
         }
         return aKey;
