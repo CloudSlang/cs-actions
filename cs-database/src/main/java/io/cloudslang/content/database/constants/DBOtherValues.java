@@ -9,8 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.database.constants;
 
-import java.sql.ResultSet;
-import java.util.HashMap;
+import io.cloudslang.content.database.utils.SQLInputsUtils;
+
 import java.util.Map;
 
 /**
@@ -30,10 +30,6 @@ public class DBOtherValues {
     public static final String TYPE_SCROLL_INSENSITIVE = "TYPE_SCROLL_INSENSITIVE";
     public static final String TYPE_SCROLL_SENSITIVE = "TYPE_SCROLL_SENSITIVE";
 
-    public static final Map<String, Integer> CONCUR_VALUES = createConcurValues();
-    public static final Map<String, Integer> TYPE_VALUES = createTypeValues();
-
-
     public static final String ORACLE_DB_TYPE = "Oracle";
     public static final String MSSQL_DB_TYPE = "MSSQL";
     public static final String SYBASE_DB_TYPE = "Sybase";
@@ -52,34 +48,5 @@ public class DBOtherValues {
     public static final Integer DEFAULT_PORT_PSQL = 5432;
     public static final Integer DEFAULT_PORT_CUSTOM = DEFAULT_PORT_ORACLE;
 
-    public static final Map<String, Integer> DB_PORTS = createDBPortValues();
-
-    private static Map<String, Integer> createDBPortValues() {
-        final Map<String, Integer> concurValues = new HashMap<>();
-        concurValues.put(ORACLE_DB_TYPE, DEFAULT_PORT_ORACLE);
-        concurValues.put(MSSQL_DB_TYPE, DEFAULT_PORT_MSSQL);
-        concurValues.put(SYBASE_DB_TYPE, DEFAULT_PORT_SYBASE);
-        concurValues.put(NETCOOL_DB_TYPE, DEFAULT_PORT_NETCOOL);
-        concurValues.put(DB2_DB_TYPE, DEFAULT_PORT_DB2);
-        concurValues.put(MYSQL_DB_TYPE, DEFAULT_PORT_MYSQL);
-        concurValues.put(POSTGRES_DB_TYPE, DEFAULT_PORT_PSQL);
-        concurValues.put(CUSTOM_DB_TYPE, DEFAULT_PORT_CUSTOM);
-        return concurValues;
-    }
-
-    private static Map<String, Integer> createConcurValues() {
-        final Map<String, Integer> concurValues = new HashMap<>();
-        concurValues.put(CONCUR_READ_ONLY, ResultSet.CONCUR_READ_ONLY);
-        concurValues.put(CONCUR_UPDATABLE, ResultSet.CONCUR_UPDATABLE);
-        return concurValues;
-    }
-
-    private static Map<String, Integer> createTypeValues() {
-        final Map<String, Integer> typeValues = new HashMap<>();
-        typeValues.put(TYPE_FORWARD_ONLY, ResultSet.TYPE_FORWARD_ONLY);
-        typeValues.put(TYPE_SCROLL_INSENSITIVE, ResultSet.TYPE_SCROLL_INSENSITIVE);
-        typeValues.put(TYPE_SCROLL_SENSITIVE, ResultSet.TYPE_SCROLL_SENSITIVE);
-        return typeValues;
-    }
-//    NO_RESULT_SET(-1000000, "NO_RESULT_SET");
+    //    NO_RESULT_SET(-1000000, "NO_RESULT_SET");
 }

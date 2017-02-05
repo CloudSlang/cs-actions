@@ -11,6 +11,7 @@ package io.cloudslang.content.database.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -22,7 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Created by victor on 13.01.2017.
  */
 public class TripleDES {
-    static String DEFAULT_CODEPAGE = "windows-1252";
+    private static String DEFAULT_CODEPAGE = "windows-1252";
     private static String ENCRYPTION_MODE = "DESede/ECB/PKCS5Padding";
     private static String ENCRYPTION_KEYSPECTYPE = "DESede";
 
@@ -40,7 +41,7 @@ public class TripleDES {
         return Base64.encodeBase64String(encBytes);
     }
 
-    public static byte[] md5Hash(String toHash) throws Exception {
+    public static byte[] md5Hash(@NotNull final String toHash) {
         byte[] digest = DigestUtils.md5(toHash.getBytes());
         byte[] key = new byte[24];
         System.arraycopy(digest, 0, key, 0, 16);
@@ -48,14 +49,10 @@ public class TripleDES {
         return key;
     }
 
-    private static SecretKeySpec secretKeySpec() throws Exception {
-        return new SecretKeySpec(TripleDES.md5Hash("NpWsCaJQj1LaXt)YYnzr\\%zP~RydB*3YGutr*@|A\\ckG3\\Yf%k"), ENCRYPTION_KEYSPECTYPE);
-    }
-
     static byte[] encryptString(byte[] text) throws Exception {
-        SecretKey key = secretKeySpec();
+        final SecretKey key = new SecretKeySpec(TripleDES.md5Hash("NpWsCaJQj1LaXt)YYnzr\\%zP~RydB*3YGutr*@|A\\ckG3\\Yf%k"), ENCRYPTION_KEYSPECTYPE);
         try {
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_MODE);
+            final Cipher cipher = Cipher.getInstance(ENCRYPTION_MODE);
             cipher.init(Cipher.ENCRYPT_MODE, key);
             return cipher.doFinal(text);
         } catch (Exception e) {

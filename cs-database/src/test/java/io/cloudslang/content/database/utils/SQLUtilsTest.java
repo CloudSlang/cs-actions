@@ -130,11 +130,8 @@ public class SQLUtilsTest {
 
     @Test
     public void testComputeSessionId() {
-        String sessionIdInput = SQLUtils.computeSessionId("sessionIdInput");
+        final String sessionIdInput = SQLUtils.computeSessionId("sessionIdInput");
         assertEquals("SQLQuery:920c83186d589d993633e3e0ddf6f25b7815cccd241b5a8ef1569558b07764b7", sessionIdInput);
-
-        sessionIdInput = SQLUtils.computeSessionId(null);
-        assertEquals(null, sessionIdInput);
     }
 
 

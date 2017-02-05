@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services;
 
-import io.cloudslang.content.database.services.databases.*;
+import io.cloudslang.content.database.services.databases.SqlDatabase;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
@@ -18,10 +18,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_DB_TYPE;
-import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbClassForType;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbEnumForType;
 
 /**
  * Created by victor on 13.01.2017.
@@ -29,10 +31,6 @@ import static io.cloudslang.content.database.constants.DBOtherValues.*;
 public class ConnectionService {
 
     private DBConnectionManager dbConnectionManager = null;
-
-    private final Map<String, Class<? extends SqlDatabase>> dbTypesClass = getTypesOfDatabase();
-    private final Map<String, DBType> dbTypesToEnum = getTypesEnum();
-
 
     /**
      * get a pooled connection or a plain connection
@@ -49,48 +47,6 @@ public class ConnectionService {
     public List<String> getConnectionUrls(@NotNull final SQLInputs sqlInputs) {
         final SqlDatabase currentDatabase = getDbClassForType(sqlInputs.getDbType());
         return currentDatabase.setUp(sqlInputs);
-    }
-
-    private SqlDatabase getDbClassForType(@NotNull final String dbType) {
-        try {
-            return dbTypesClass.get(dbType).newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(INVALID_DB_TYPE, e.getCause());
-        }
-    }
-
-    private DBType getDbEnumForType(@NotNull final String dbType) {
-        try {
-            return dbTypesToEnum.get(dbType);
-        } catch (Exception e) {
-            throw new RuntimeException(INVALID_DB_TYPE, e.getCause());
-        }
-    }
-
-    private static Map<String, Class<? extends SqlDatabase>> getTypesOfDatabase() {
-        final Map<String, Class<? extends SqlDatabase>> dbForType = new HashMap<>();
-        dbForType.put(ORACLE_DB_TYPE, OracleDatabase.class);
-        dbForType.put(MYSQL_DB_TYPE, MySqlDatabase.class);
-        dbForType.put(MSSQL_DB_TYPE, MSSqlDatabase.class);
-        dbForType.put(SYBASE_DB_TYPE, SybaseDatabase.class);
-        dbForType.put(NETCOOL_DB_TYPE, NetcoolDatabase.class);
-        dbForType.put(POSTGRES_DB_TYPE, PostgreSqlDatabase.class);
-        dbForType.put(DB2_DB_TYPE, DB2Database.class);
-        dbForType.put(CUSTOM_DB_TYPE, CustomDatabase.class);
-        return dbForType;
-    }
-
-    private Map<String, DBType> getTypesEnum() {
-        final Map<String, DBType> dbTypes = new HashMap<>();
-        dbTypes.put(ORACLE_DB_TYPE, DBType.ORACLE);
-        dbTypes.put(MYSQL_DB_TYPE, DBType.MYSQL);
-        dbTypes.put(MSSQL_DB_TYPE, DBType.MSSQL);
-        dbTypes.put(SYBASE_DB_TYPE, DBType.SYBASE);
-        dbTypes.put(NETCOOL_DB_TYPE, DBType.NETCOOL);
-        dbTypes.put(POSTGRES_DB_TYPE, DBType.POSTGRESQL);
-        dbTypes.put(DB2_DB_TYPE, DBType.DB2);
-        dbTypes.put(CUSTOM_DB_TYPE, DBType.CUSTOM);
-        return dbTypes;
     }
 
     private Connection obtainConnection(List<String> dbUrls, SQLInputs sqlInputs) throws SQLException {

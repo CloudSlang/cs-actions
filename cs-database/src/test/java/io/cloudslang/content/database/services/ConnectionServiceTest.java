@@ -12,17 +12,15 @@ package io.cloudslang.content.database.services;
 import io.cloudslang.content.database.services.databases.CustomDatabase;
 import io.cloudslang.content.database.services.databases.MSSqlDatabase;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
-import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -32,7 +30,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
-
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
@@ -50,11 +47,10 @@ public class ConnectionServiceTest {
 
     public static final String CUSTOM_CLASS_DRIVER = "org.h2.Driver";
     public static String CUSTOM_URL = "jdbc:h2:tcp://localhost/~/test";
+    private SQLInputs sqlInputs;
+
     @Spy
     private ConnectionService connectionServiceSpy = new ConnectionService();
-////    @Spy
-//    private ConnectionService connectionServiceSpy = new ConnectionService();
-    private SQLInputs sqlInputs;
 
     @Mock
     private DBConnectionManager dbConnectionManagerMock;
@@ -64,14 +60,6 @@ public class ConnectionServiceTest {
     @Rule
     private ExpectedException expectedEx = ExpectedException.none();
 
-    @BeforeClass
-    public static void setUp() throws Exception {
-//        dbConnectionManagerMock = mock(DBConnectionManager.class);
-//        connectionMock = mock(Connection.class);
-    }
-
-    // this method is used in most of the tests. If you comment the code, you could deactivate the (sometimes) failing tests.
-    // sometimes it fails to mock the dbConnectionManagerMock and the tests are failing.
     private void assertConnection(SQLInputs sqlInputs, int noUrls, String resultedUrl, String url) throws SQLException, ClassNotFoundException {
         final List<String> sqlConnections = connectionServiceSpy.getConnectionUrls(sqlInputs);
         assertEquals(noUrls, sqlConnections.size());
@@ -100,7 +88,6 @@ public class ConnectionServiceTest {
         sqlInputs.setDbUrl(CUSTOM_URL);
         assertConnection(sqlInputs, 1, CUSTOM_URL, CUSTOM_URL);
     }
-
 
     @Test
     public void testSetUpConnectionMSSql() throws Exception {

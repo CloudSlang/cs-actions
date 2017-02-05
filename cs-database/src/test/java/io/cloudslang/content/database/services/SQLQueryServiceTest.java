@@ -12,6 +12,7 @@ package io.cloudslang.content.database.services;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
+import io.cloudslang.content.database.utils.SQLInputsUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,6 +32,8 @@ import java.sql.Statement;
 
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getResultSetConcurrency;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getResultSetType;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -101,8 +104,8 @@ public class SQLQueryServiceTest {
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("/dbName");
         sqlInputs.setSqlCommand(SQL_QUERY);
-        sqlInputs.setResultSetType(TYPE_VALUES.get(TYPE_SCROLL_INSENSITIVE));
-        sqlInputs.setResultSetConcurrency(CONCUR_VALUES.get(CONCUR_READ_ONLY));
+        sqlInputs.setResultSetType(getResultSetType(TYPE_SCROLL_INSENSITIVE));
+        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(CONCUR_READ_ONLY));
         sqlInputs.setTimeout(SQL_QUERY_TIMEOUT);
 
         sqlQueryService.executeSqlQuery(sqlInputs);

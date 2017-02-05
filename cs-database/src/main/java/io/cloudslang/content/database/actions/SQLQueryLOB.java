@@ -18,6 +18,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryLobService;
 import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.database.utils.SQLInputsUtils;
 import io.cloudslang.content.database.utils.SQLSessionResource;
 import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.utils.BooleanUtilities;
@@ -112,9 +113,9 @@ public class SQLQueryLOB {
         mySqlInputs.setDbType(getDbType(dbType));
         mySqlInputs.setUsername(username);
         mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(instance);
+        mySqlInputs.setInstance(getOrLower(instance, true));
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()));
+        mySqlInputs.setDbName(getOrLower(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()), true));
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -128,26 +129,15 @@ public class SQLQueryLOB {
         mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+        mySqlInputs.setIgnoreCase(true);
+
         Map<String, String> result = new HashMap<>();
         try {
-            String aKey = "";
             Map<String, Object> sqlConnectionMap = new HashMap<>();
 
-            if (StringUtils.isNoneEmpty(mySqlInputs.getDbServer())) {
-                if (mySqlInputs.getInstance() != null) {
-                    mySqlInputs.setInstance(mySqlInputs.getInstance().toLowerCase());
-                }
-                if (mySqlInputs.getDbName() != null) {
-                    mySqlInputs.setDbName(mySqlInputs.getDbName().toLowerCase());
-                }
-                aKey = SQLUtils.computeSessionId(mySqlInputs.getDbServer().toLowerCase() + mySqlInputs.getDbType().toLowerCase() +
-                        mySqlInputs.getUsername() + mySqlInputs.getPassword() + mySqlInputs.getInstance() + mySqlInputs.getDbPort() + mySqlInputs.getDbName() +
-                        mySqlInputs.getAuthenticationType().toLowerCase() + mySqlInputs.getSqlCommand().toLowerCase() + mySqlInputs.getKey());
-            }
-            else {
-//          todo      aKey = SQLUtils.computeSessionId(mySqlInputs.getTnsPath().toLowerCase() +
-//                        mySqlInputs.getTnsEntry().toLowerCase() + mySqlInputs.getUsername() + mySqlInputs.getPassword() + mySqlInputs.getSqlCommand().toLowerCase() + mySqlInputs.getKey());
-            }
+
+            final String aKey = SQLInputsUtils.getSqlKey(mySqlInputs);
+
 
             mySqlInputs.setStrKeyCol(aKey + " - Columns");
             mySqlInputs.setStrKeyFiles(aKey + " - Files");

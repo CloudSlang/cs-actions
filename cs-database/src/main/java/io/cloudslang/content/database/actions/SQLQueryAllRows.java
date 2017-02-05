@@ -121,7 +121,6 @@ public class SQLQueryAllRows {
         mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
 
         try {
-
             final String queryResult = SQLQueryAllRowsService.execQueryAllRows(mySqlInputs);
             return OutputUtilities.getSuccessResultsMap(queryResult);
         } catch (Exception e) {

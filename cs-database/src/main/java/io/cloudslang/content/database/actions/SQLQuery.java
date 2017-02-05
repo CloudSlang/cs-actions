@@ -109,14 +109,16 @@ public class SQLQuery {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
+        final boolean ignoreCaseBool = BooleanUtilities.toBoolean(ignoreCase);
+
         SQLInputs sqlInputs = new SQLInputs();
         sqlInputs.setDbServer(dbServerName); //mandatory
         sqlInputs.setDbType(getDbType(dbType));
         sqlInputs.setUsername(username);
         sqlInputs.setPassword(password);
-        sqlInputs.setInstance(instance);
+        sqlInputs.setInstance(getOrLower(instance, ignoreCaseBool));
         sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-        sqlInputs.setDbName(getOrDefaultDBName(databaseName, sqlInputs.getDbType()));
+        sqlInputs.setDbName(getOrLower(getOrDefaultDBName(databaseName, sqlInputs.getDbType()), ignoreCaseBool));
         sqlInputs.setAuthenticationType(authenticationType);
         sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
@@ -130,8 +132,7 @@ public class SQLQuery {
         sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
         sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
         sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        sqlInputs.setIgnoreCase(BooleanUtilities.toBoolean(ignoreCase));
-//        mySqlInputs.setDbUrls(getDbUrls(mySqlInputs.getDbUrl()));
+        sqlInputs.setIgnoreCase(ignoreCaseBool);
 
         HashMap<String, String> result = new HashMap<>();
 

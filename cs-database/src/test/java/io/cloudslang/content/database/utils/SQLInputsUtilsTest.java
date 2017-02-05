@@ -9,9 +9,10 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import io.cloudslang.content.database.services.databases.*;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -19,13 +20,18 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by victor on 02.02.2017.
@@ -33,6 +39,21 @@ import static org.mockito.BDDMockito.given;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SQLUtils.class)
 public class SQLInputsUtilsTest {
+    @Test
+    public void getOrLowerTrue() throws Exception {
+        assertThat(getOrLower("AnA", true), is("ana"));
+        assertThat(getOrLower("A 2N 1A", true), is("a 2n 1a"));
+        assertThat(getOrLower(EMPTY, true), is(EMPTY));
+        assertThat(getOrLower("tHis iS a shoRt stoRy!", true), is("this is a short story!"));
+    }
+
+    @Test
+    public void getOrLowerFalse() throws Exception {
+        assertThat(getOrLower("AnA", false), is("AnA"));
+        assertThat(getOrLower("A 2N 1A", false), is("A 2N 1A"));
+        assertThat(getOrLower(EMPTY, false), is(EMPTY));
+        assertThat(getOrLower("tHis iS a shoRt stoRy!", false), is("tHis iS a shoRt stoRy!"));
+    }
 
     @Test
     public void getOrDefaultDBNameMSSql() throws Exception {
@@ -92,11 +113,11 @@ public class SQLInputsUtilsTest {
     public void getSqlCommandsScriptFile() throws Exception {
         final List<String> commandsScript = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         final String scriptName = "someFile";
-        PowerMockito.mockStatic(SQLUtils.class);
+        mockStatic(SQLUtils.class);
 
         given(SQLUtils.readFromFile(scriptName)).willReturn(commandsScript);
         assertThat(commandsScript, is(getSqlCommands(EMPTY, scriptName, ",")));
-        PowerMockito.verifyStatic();
+        verifyStatic();
     }
 
     @Test
@@ -113,8 +134,40 @@ public class SQLInputsUtilsTest {
     }
 
     @Test
-    public void getOrDefaultDBPoolingProperties() throws Exception {
+    public void getOrDefaultDBPoolingPropertiesSimple() throws Exception {
+        final Properties dbProperties1 = getOrDefaultDBPoolingProperties("Truth = Beauty", EMPTY);
+        assertThat("Beauty", is(dbProperties1.getProperty("Truth")));
+        assertThat(1, is(dbProperties1.size()));
 
+        final Properties dbProperties2 = getOrDefaultDBPoolingProperties(" fruits       " +
+                "       apple, banana, pear, \\\n" +
+                "       cantaloupe, watermelon, \\\n" +
+                "       kiwi, mango", EMPTY);
+        assertThat("apple, banana, pear, cantaloupe, watermelon, kiwi, mango", is(dbProperties2.getProperty("fruits")));
+        assertThat(1, is(dbProperties2.size()));
+    }
+
+    @Test
+    public void getOrDefaultDBPoolingPropertiesDefault() throws Exception {
+        final Properties dbProperties = getOrDefaultDBPoolingProperties(EMPTY, "Truth = Beauty");
+        assertThat("Beauty", is(dbProperties.getProperty("Truth")));
+        assertThat(1, is(dbProperties.size()));
+    }
+
+    @Test
+    public void getOrDefaultDBPoolingPropertiesExceptiont() throws Exception {
+//        mockStatic(SQLInputsUtils.class); todo
+//
+//        final Properties databasePoolingProperties = mock(Properties.class);
+//
+//        whenNew(Properties.class).withNoArguments().thenReturn(databasePoolingProperties);
+////        doReturn(databasePoolingProperties).when(Properties.class).newInstance();
+//        doThrow(IllegalArgumentException.class).when(databasePoolingProperties).load(any(Reader.class));
+//
+//
+//        getOrDefaultDBPoolingProperties(EMPTY, "this should fail");
+//
+//        verifyStatic();
     }
 
     @Test
@@ -203,8 +256,66 @@ public class SQLInputsUtilsTest {
     }
 
     @Test
-    public void getSqlKey() throws Exception {
+    public void getSqlKeyTrue() throws Exception {
+        assertThat(getSqlKey(getTestInputsSqlKey(true)), is("SQLQuery:c05adb0bad168df8966ba01a77697005f75ed8bd08815593c5524d6375312ccd"));
+    }
 
+    @Test
+    public void getSqlKeyFalse() throws Exception {
+        assertThat(getSqlKey(getTestInputsSqlKey(false)), is("SQLQuery:8835ea6c637a5e1b67bf01952bc9225597ae33ceeaf17e913aae50193c18346d"));
+    }
+
+    @Test
+    public void getDbClassForTypeSimple() throws Exception {
+        assertThat(getDbClassForType(ORACLE_DB_TYPE), instanceOf(OracleDatabase.class));
+        assertThat(getDbClassForType(MYSQL_DB_TYPE), instanceOf(MySqlDatabase.class));
+        assertThat(getDbClassForType(MSSQL_DB_TYPE), instanceOf(MSSqlDatabase.class));
+        assertThat(getDbClassForType(SYBASE_DB_TYPE), instanceOf(SybaseDatabase.class));
+        assertThat(getDbClassForType(NETCOOL_DB_TYPE), instanceOf(NetcoolDatabase.class));
+        assertThat(getDbClassForType(POSTGRES_DB_TYPE), instanceOf(PostgreSqlDatabase.class));
+        assertThat(getDbClassForType(DB2_DB_TYPE), instanceOf(DB2Database.class));
+        assertThat(getDbClassForType(CUSTOM_DB_TYPE), instanceOf(CustomDatabase.class));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void getDbClassForTypeFailure() throws Exception {
+        getDbClassForType("NoType");
+    }
+
+    @Test
+    public void getDbEnumForTypeSimple() throws Exception {
+        assertThat(getDbEnumForType(ORACLE_DB_TYPE), is(ORACLE));
+        assertThat(getDbEnumForType(MYSQL_DB_TYPE), is(MYSQL));
+        assertThat(getDbEnumForType(MSSQL_DB_TYPE), is(MSSQL));
+        assertThat(getDbEnumForType(SYBASE_DB_TYPE), is(SYBASE));
+        assertThat(getDbEnumForType(NETCOOL_DB_TYPE), is(NETCOOL));
+        assertThat(getDbEnumForType(POSTGRES_DB_TYPE), is(POSTGRESQL));
+        assertThat(getDbEnumForType(DB2_DB_TYPE), is(DB2));
+        assertThat(getDbEnumForType(CUSTOM_DB_TYPE), is(CUSTOM));
+    }
+
+
+    @Test(expected = RuntimeException.class)
+    public void getDbEnumForTypeFailure() throws Exception {
+        getDbEnumForType("NoType");
+    }
+
+    @NotNull
+    private SQLInputs getTestInputsSqlKey(boolean ignoreCase) {
+        final SQLInputs sqlInputs = new SQLInputs();
+        sqlInputs.setIgnoreCase(ignoreCase);
+        sqlInputs.setInstance("INSTANCE");
+        sqlInputs.setDbName("DBNAME");
+        sqlInputs.setDbServer("DBSERVER");
+        sqlInputs.setDbType("DBTYPE");
+        sqlInputs.setUsername("USERNAME");
+        sqlInputs.setPassword("PASSWORD");
+        sqlInputs.setDbPort(123);
+        sqlInputs.setDbName("DBNAME");
+        sqlInputs.setAuthenticationType("AUTHTYPE");
+        sqlInputs.setSqlCommand("SQLCOMMAND");
+
+        return sqlInputs;
     }
 
 }

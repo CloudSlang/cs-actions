@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBOtherValues.BACK_SLASH;
 import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
 import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static junit.framework.Assert.assertEquals;
@@ -35,7 +36,7 @@ public class MSSqlDatabaseTest {
     public static final String DB_NAME = "dbName";
     public static final String DB_SERVER = "dbServer";
     public static final String INSTANCE = "instance";
-    public static final String DB_SERVER_WITH_INSTANCE = DB_SERVER + Constants.ESCAPED_BACKSLASH + INSTANCE;
+    public static final String DB_SERVER_WITH_INSTANCE = DB_SERVER + BACK_SLASH + INSTANCE;
     public static final int DB_PORT = 1433;
     public static final String DB_SERVER_IPV6_LITERAL = "2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net";
     public static final String AUTH_TYPE = "authType";

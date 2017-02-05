@@ -10,11 +10,10 @@
 package io.cloudslang.content.database.utils;
 
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +74,7 @@ public class SQLUtils {
      * @return
      */
     public static String getIPv4OrIPv6WithSquareBracketsHost(String dbServer) {
-        Address address = new Address(dbServer);
+        final Address address = new Address(dbServer);
         return address.getURIIPV6Literal();
     }
 
@@ -96,28 +95,19 @@ public class SQLUtils {
     }
 
     //compute session id for JDBC operations
-    public static String computeSessionId(String aString) {
-        if (aString != null) {
-            MessageDigest digest;
-            byte[] byteData = null;
-            try {
-                digest = MessageDigest.getInstance("SHA-256");
-                digest.update(aString.getBytes());
-                byteData = digest.digest();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+    @NotNull
+    public static String computeSessionId(@NotNull final String aString) {
+        final byte[] byteData = DigestUtils.sha256(aString.getBytes());
+        final StringBuilder sb = new StringBuilder("SQLQuery:");
 
-            StringBuilder sb = new StringBuilder();
-            for (byte aByteData : byteData) {
-                String hex = Integer.toHexString(0xFF & aByteData);
-                if (hex.length() == 1) sb.append('0');
-                sb.append(hex);
+        for (final byte aByteData : byteData) {
+            final String hex = Integer.toHexString(0xFF & aByteData);
+            if (hex.length() == 1) {
+                sb.append('0');
             }
-            return "SQLQuery:" + sb.toString();
-        } else {
-            return null;
+            sb.append(hex);
         }
+        return sb.toString();
     }
 
 
@@ -126,7 +116,7 @@ public class SQLUtils {
      *
      * @param sqlException The exception to analyze
      * @return The output of the dump command
-     * @throws java.sql.SQLException If it was not a successful dump comamnd's exception.
+     * @throws java.sql.SQLException If it was not a successful dump command's exception.
      */
     public static String processDumpException(SQLException sqlException) throws SQLException {
         final String sqlState = sqlException.getSQLState();
@@ -134,8 +124,9 @@ public class SQLUtils {
             SQLException f = sqlException;
             StringBuilder s = new StringBuilder();
             s.append(f.getMessage());
-            while ((f = f.getNextException()) != null)
+            while ((f = f.getNextException()) != null) {
                 s.append("\n").append(f.getMessage());
+            }
             String str = s.toString();
             if (str.toLowerCase().contains("dump is complete"))
                 return str;

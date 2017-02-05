@@ -23,6 +23,7 @@ import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
+import static io.cloudslang.content.database.constants.DBOtherValues.BACK_SLASH;
 import static io.cloudslang.content.database.constants.DBOtherValues.DATABASE_NAME_CAP;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidAuthType;
@@ -92,7 +93,7 @@ public class MSSqlDatabase implements SqlDatabase {
 
             //compute the host value that will be used in the url
             String[] serverInstanceComponents = null;
-            if (sqlInputs.getDbServer().contains(Constants.ESCAPED_BACKSLASH)) { //instance is included in the dbServer value
+            if (sqlInputs.getDbServer().contains(BACK_SLASH)) { //instance is included in the dbServer value
                 serverInstanceComponents = sqlInputs.getDbServer().split("\\\\");
                 host = serverInstanceComponents[0];
             } else {
