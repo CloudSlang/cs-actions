@@ -91,7 +91,7 @@ public class SQLInputsUtilsTest {
     @Test
     public void getSqlCommandsScriptFile() throws Exception {
         final List<String> commandsScript = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
-        final String scriptName = "someFile"
+        final String scriptName = "someFile";
         PowerMockito.mockStatic(SQLUtils.class);
 
         given(SQLUtils.readFromFile(scriptName)).willReturn(commandsScript);
