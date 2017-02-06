@@ -9,128 +9,232 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBExceptionValues.*;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
  * Created by victor on 1/28/17.
  */
 public class SQLInputsValidatorTest {
-    @Before
-    public void setUp() throws Exception {
+    @Test
+    public void validateSqlCommandInputsValid() throws Exception {
+        final List<String> validationList = validateSqlCommandInputs("1", MSSQL_DB_TYPE, "username",
+                "Password", "someInstance", "123", "database", AUTH_SQL, "Command", TRUE,
+                TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, EMPTY, EMPTY);
+        assertThat(validationList, is(Collections.<String>emptyList()));
+    }
+
+    @Test
+    public void validateSqlCommandInputsEmpty() throws Exception {
+        final List<String> validationList1 = validateSqlCommandInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList1, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_COMMAND)));
+
+        final List<String> validationList2 = validateSqlCommandInputs(EMPTY, MYSQL_DB_TYPE, EMPTY, EMPTY, "Instance", EMPTY, EMPTY, EMPTY,
+                EMPTY, FALSE, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList2, is(Arrays.asList(INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_INSTANCE, INVALID_DATABASE,
+                String.format(INVALID_AUTH_TYPE, EMPTY), INVALID_TRUST_ALL_ROOTS_REQUIRE, INVALID_COMMAND)));
+
+        final List<String> validationList3 = validateSqlCommandInputs(EMPTY, MYSQL_DB_TYPE, EMPTY, EMPTY, "Instance", EMPTY, EMPTY, AUTH_WINDOWS,
+                EMPTY, FALSE, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList3, is(Arrays.asList(INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_INSTANCE, INVALID_DATABASE,
+                INVALID_AUTH_TYPE_WINDOWS, INVALID_TRUST_ALL_ROOTS_REQUIRE, INVALID_COMMAND)));
 
     }
 
     @Test
-    public void validateSqlCommandInputs1() throws Exception {
+    public void validateSqlQueryInputsValid() throws Exception {
+        final List<String> validationList = validateSqlQueryInputs("1", MSSQL_DB_TYPE, "username",
+                "Password", "someInstance", "123", "database", AUTH_SQL, "Command", TRUE, EMPTY, EMPTY
+                , "1", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, FALSE);
+        assertThat(validationList, is(Collections.<String>emptyList()));
+    }
+
+    @Test
+    public void validateSqlQueryInputsEmpty() throws Exception {
+        final List<String> validationList1 = validateSqlQueryInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList1, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, String.format(INVALID_IGNORE_CASE, EMPTY),
+                INVALID_COMMAND, INVALID_TIMEOUT)));
+
+        final List<String> validationList2 = validateSqlQueryInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, "1a12a", EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList2, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_DB_PORT, String.format(INVALID_IGNORE_CASE, EMPTY),
+                INVALID_COMMAND, INVALID_TIMEOUT)));
+    }
+
+    @Test
+    public void validateSqlQueryAllRowsInputsValid() throws Exception {
+        final List<String> validationList = validateSqlQueryAllRowsInputs("1", MSSQL_DB_TYPE, "username",
+                "Password", "someInstance", "123", "database", AUTH_SQL, "Command", TRUE, EMPTY, EMPTY
+                , "1", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+        assertThat(validationList, is(Collections.<String>emptyList()));
+    }
+
+    @Test
+    public void validateSqlQueryAllRowsInputsEmpty() throws Exception {
+        final List<String> validationList1 = validateSqlQueryAllRowsInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList1, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_COMMAND, INVALID_TIMEOUT)));
+
+        final List<String> validationList2 = validateSqlQueryAllRowsInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, "-1", EMPTY, EMPTY);
+        assertThat(validationList2, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_COMMAND, INVALID_NEGATIVE_TIMEOUT)));
+    }
+
+    @Test
+    public void validateSqlQueryLOBInputsValid() throws Exception {
+        final List<String> validationList = validateSqlQueryLOBInputs("1", MSSQL_DB_TYPE, "username",
+                "Password", "someInstance", "123", "database", AUTH_SQL, "Command", TRUE, EMPTY, EMPTY
+                , "1", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+        assertThat(validationList, is(Collections.<String>emptyList()));
+    }
+
+    @Test
+    public void validateSqlQueryLOBInputsEmpty() throws Exception {
+        final List<String> validationList1 = validateSqlQueryLOBInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList1, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_COMMAND, INVALID_TIMEOUT)));
+    }
+
+    @Test
+    public void validateSqlQueryTabularInputsValid() throws Exception {
+        final List<String> validationList = validateSqlQueryTabularInputs("1", MSSQL_DB_TYPE, "username",
+                "Password", "someInstance", "123", "database", AUTH_SQL, "Command", TRUE, EMPTY, EMPTY
+                , "1", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+        assertThat(validationList, is(Collections.<String>emptyList()));
+    }
+
+    @Test
+    public void validateSqlQueryTabularInputsEmpty() throws Exception {
+        final List<String> validationList1 = validateSqlQueryTabularInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList1, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_COMMAND, INVALID_TIMEOUT)));
+    }
+
+    @Test
+    public void validateSqlScriptInputsValid() throws Exception {
+        final List<String> validationList = validateSqlScriptInputs("1", MSSQL_DB_TYPE, "username",
+                "Password", "someInstance", "123", "database", AUTH_SQL, "Commands", EMPTY, TRUE, EMPTY
+                , EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+        assertThat(validationList, is(Collections.<String>emptyList()));
+    }
+
+    @Test
+    public void validateSqlScriptInputsEmpty() throws Exception {
+        final List<String> validationList1 = validateSqlScriptInputs(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        assertThat(validationList1, is(Arrays.asList(INVALID_DB_TYPE, INVALID_DB_SERVER_NAME, INVALID_USERNAME, INVALID_PASSWORD,
+                INVALID_TRUST_ALL_ROOTS, INVALID_RESULT_SET_TYPE, INVALID_RESULT_SET_CONCURRENCY, INVALID_COMMANDS_EXCLUSIVITY)));
 
     }
 
     @Test
-    public void validateSqlQueryInputs1() throws Exception {
-
+    public void isValidAuthTypeValid() throws Exception {
+        assertTrue(isValidAuthType(AUTH_WINDOWS));
+        assertTrue(isValidAuthType(AUTH_SQL));
     }
 
     @Test
-    public void validateSqlQueryAllRowsInputs1() throws Exception {
-
+    public void isValidAuthTypeInvalid() throws Exception {
+        assertFalse(isValidAuthType(EMPTY));
+        assertFalse(isValidAuthType("123"));
     }
 
     @Test
-    public void validateSqlQueryLOBInputs1() throws Exception {
-
+    public void isNotValidAuthTypeValid() throws Exception {
+        assertTrue(isNotValidAuthType(EMPTY));
+        assertTrue(isNotValidAuthType("123"));
     }
 
     @Test
-    public void validateSqlQueryTabularInputs1() throws Exception {
-
+    public void isNotValidAuthTypeInvalid() throws Exception {
+        assertFalse(isNotValidAuthType(AUTH_WINDOWS));
+        assertFalse(isNotValidAuthType(AUTH_SQL));
     }
 
     @Test
-    public void validateSqlScriptInputs1() throws Exception {
-
+    public void isValidDbTypeValid() throws Exception {
+        assertTrue(isValidDbType(ORACLE_DB_TYPE));
+        assertTrue(isValidDbType(MSSQL_DB_TYPE));
+        assertTrue(isValidDbType(SYBASE_DB_TYPE));
+        assertTrue(isValidDbType(NETCOOL_DB_TYPE));
+        assertTrue(isValidDbType(DB2_DB_TYPE));
+        assertTrue(isValidDbType(MYSQL_DB_TYPE));
+        assertTrue(isValidDbType(POSTGRES_DB_TYPE));
+        assertTrue(isValidDbType(CUSTOM_DB_TYPE));
     }
 
     @Test
-    public void isValidAuthType() throws Exception {
-
+    public void isValidDbTypeInvalid() throws Exception {
+        assertFalse(isValidDbType(EMPTY));
+        assertFalse(isValidDbType("123"));
     }
 
     @Test
-    public void isNotValidAuthType() throws Exception {
-
+    public void isNotValidDbTypeValid() throws Exception {
+        assertTrue(isNotValidDbType(EMPTY));
+        assertTrue(isNotValidDbType("123"));
     }
 
     @Test
-    public void isValidDbType1() throws Exception {
-
+    public void isNotValidDbTypeInvalid() throws Exception {
+        assertFalse(isNotValidDbType(ORACLE_DB_TYPE));
+        assertFalse(isNotValidDbType(MSSQL_DB_TYPE));
+        assertFalse(isNotValidDbType(SYBASE_DB_TYPE));
+        assertFalse(isNotValidDbType(NETCOOL_DB_TYPE));
+        assertFalse(isNotValidDbType(DB2_DB_TYPE));
+        assertFalse(isNotValidDbType(MYSQL_DB_TYPE));
+        assertFalse(isNotValidDbType(POSTGRES_DB_TYPE));
+        assertFalse(isNotValidDbType(CUSTOM_DB_TYPE));
     }
 
     @Test
-    public void isNotValidDbType1() throws Exception {
-
+    public void isValidResultSetConcurrencyValid() throws Exception {
+        assertTrue(isValidResultSetConcurrency(CONCUR_READ_ONLY));
+        assertTrue(isValidResultSetConcurrency(CONCUR_UPDATABLE));
     }
 
     @Test
-    public void isValidResultSetConcurrency1() throws Exception {
-
+    public void isValidResultSetConcurrencyInvalid() throws Exception {
+        assertFalse(isValidResultSetConcurrency("123"));
+        assertFalse(isValidResultSetConcurrency(EMPTY));
     }
 
     @Test
-    public void isValidResultSetType1() throws Exception {
-
+    public void isValidResultSetTypeValid() throws Exception {
+        assertTrue(isValidResultSetType(TYPE_FORWARD_ONLY));
+        assertTrue(isValidResultSetType(TYPE_SCROLL_INSENSITIVE));
+        assertTrue(isValidResultSetType(TYPE_SCROLL_SENSITIVE));
     }
 
     @Test
-    public void validateSqlCommandInputs() throws Exception {
-
-    }
-
-    @Test
-    public void validateSqlQueryInputs() throws Exception {
-
-    }
-
-    @Test
-    public void validateSqlQueryAllRowsInputs() throws Exception {
-
-    }
-
-    @Test
-    public void validateSqlQueryLOBInputs() throws Exception {
-
-    }
-
-    @Test
-    public void validateSqlQueryTabularInputs() throws Exception {
-
-    }
-
-    @Test
-    public void validateSqlScriptInputs() throws Exception {
-
-    }
-
-    @Test
-    public void isValidDbType() throws Exception {
-
-    }
-
-    @Test
-    public void isNotValidDbType() throws Exception {
-
-    }
-
-    @Test
-    public void isValidResultSetConcurrency() throws Exception {
-
-    }
-
-    @Test
-    public void isValidResultSetType() throws Exception {
-
+    public void isValidResultSetTypeInvalid() throws Exception {
+        assertFalse(isValidResultSetType("123"));
+        assertFalse(isValidResultSetConcurrency(EMPTY));
     }
 
 }

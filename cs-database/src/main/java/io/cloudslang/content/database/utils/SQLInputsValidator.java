@@ -110,13 +110,13 @@ public class SQLInputsValidator {
             validateAuthType(authenticationType, dbType, validationList);
         }
         if (BooleanUtilities.isValid(trustAllRoots)) {
-            validateTrustAllRootsRequire(Boolean.getBoolean(trustAllRoots), trustStore, trustStorePassword, validationList);
+            validateTrustAllRootsRequire(BooleanUtilities.toBoolean(trustAllRoots), trustStore, trustStorePassword, validationList);
         }
         return validationList;
     }
 
     private static void validateMExclusivityCommands(final String sqlCommands, final String scriptFileName, final List<String> validationList) {
-        if (isEmpty(sqlCommands) ^ isEmpty(scriptFileName)) {
+        if (isEmpty(sqlCommands) == isEmpty(scriptFileName)) {
             validationList.add(INVALID_COMMANDS_EXCLUSIVITY);
         }
     }
@@ -128,7 +128,7 @@ public class SQLInputsValidator {
     }
 
     private static void validateTrustAllRoots(final String trustAllRoots, final List<String> validationList) {
-        if (BooleanUtilities.isValid(trustAllRoots)) {
+        if (!BooleanUtilities.isValid(trustAllRoots)) {
             validationList.add(INVALID_TRUST_ALL_ROOTS);
         }
     }
