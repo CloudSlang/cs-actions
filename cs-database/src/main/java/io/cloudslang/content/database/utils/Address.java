@@ -129,7 +129,6 @@ public class Address {
     }
 
     private void verify() {
-
         String hostPort = getHostAndPortForURI();
         try {
             URI.create("dummy://" + hostPort);

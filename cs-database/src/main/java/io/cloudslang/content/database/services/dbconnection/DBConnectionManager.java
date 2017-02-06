@@ -159,11 +159,8 @@ public class DBConnectionManager {
      * @return a Connection to db
      * @throws SQLException
      */
-    public synchronized Connection getConnection(DBType aDbType,
-                                                 String aDbUrl,
-                                                 String aUsername,
-                                                 String aPassword,
-                                                 Properties properties) throws SQLException {
+    public synchronized Connection getConnection(DBType aDbType, String aDbUrl, String aUsername, String aPassword, Properties properties)
+            throws SQLException {
         if (isEmpty(aDbUrl)) {
             throw new SQLException ("Failed to check out connection dbUrl is empty");
         }
@@ -177,11 +174,10 @@ public class DBConnectionManager {
         }
 
         customizeDBConnectionManager(properties);
-        Connection retCon;
 
         if (!this.isPoolingEnabled) {
             //just call driver manager to create connection
-            retCon = this.getPlainConnection(aDbUrl, aUsername, aPassword);
+            return this.getPlainConnection(aDbUrl, aUsername, aPassword);
         } else {
             //want connection pooling
             if (aDbType == null) {
@@ -198,10 +194,9 @@ public class DBConnectionManager {
                 cleanerThread.start();
             }
             //will use pooled datasource provider
-            retCon = this.getPooledConnection(aDbType, aDbUrl, aUsername, aPassword);
+            return getPooledConnection(aDbType, aDbUrl, aUsername, aPassword);
         }
 
-        return retCon;
     }
 
     /**
@@ -417,23 +412,8 @@ public class DBConnectionManager {
      * supplies
      * @throws SQLException
      */
-    protected Connection getPlainConnection(String aDbUrl,
-                                            String aUsername,
-                                            String aPassword)
-            throws SQLException {
-        //tracing
-//      todo  if (logger.isDebugEnabled()) {
-//            logger.debug("Will getPlainConnection , dbUrl = " + aDbUrl +
-//                    " username = " + aUsername);
-//        }
-        Connection retCon = DriverManager.getConnection(aDbUrl, aUsername, aPassword);
-
-        //tracing
-//     todo   if (logger.isDebugEnabled()) {
-//            logger.debug("Done getPlainConnection , dbUrl = " + aDbUrl
-//                    + " username = " + aUsername);
-//        }
-        return retCon;
+    protected Connection getPlainConnection(String aDbUrl, String aUsername, String aPassword) throws SQLException {
+        return DriverManager.getConnection(aDbUrl, aUsername, aPassword);
     }
 
     /**
@@ -444,11 +424,7 @@ public class DBConnectionManager {
      * @return a db Connection which is pooled
      * @throws SQLException
      */
-    protected Connection getPooledConnection(DBType aDbType,
-                                             String aDbUrl,
-                                             String aUsername,
-                                             String aPassword)
-            throws SQLException {
+    protected Connection getPooledConnection(DBType aDbType, String aDbUrl, String aUsername, String aPassword) throws SQLException {
         Connection retCon;
 
         //key to hashtable of datasources for that dbms

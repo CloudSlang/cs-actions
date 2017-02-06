@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -32,13 +31,7 @@ public class ConnectionService {
 
     private DBConnectionManager dbConnectionManager = null;
 
-    /**
-     * get a pooled connection or a plain connection
-     *
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
-     */
-    public Connection setUpConnection(@NotNull final SQLInputs sqlInputs) throws ClassNotFoundException, SQLException {
+    public Connection setUpConnection(@NotNull final SQLInputs sqlInputs) throws SQLException {
         dbConnectionManager = DBConnectionManager.getInstance();
         final List<String> connectionUrls = getConnectionUrls(sqlInputs);
         return obtainConnection(connectionUrls, sqlInputs);
@@ -49,75 +42,24 @@ public class ConnectionService {
         return currentDatabase.setUp(sqlInputs);
     }
 
-    private Connection obtainConnection(List<String> dbUrls, SQLInputs sqlInputs) throws SQLException {
-        //iterate through the dbUrls until we find one that we can connect
-        //to the DB with and throw an error if no URL works
-        String triedUrls = " ";
-        final String dbType = sqlInputs.getDbType();
-        final DBType enumDbType = getDbEnumForType(dbType);
+    private Connection obtainConnection(@NotNull final List<String> dbUrls, @NotNull final SQLInputs sqlInputs) {
+        final DBType enumDbType = getDbEnumForType(sqlInputs.getDbType());
         final Properties properties = sqlInputs.getDatabasePoolingProperties();
 
-        Iterator<String> iter = dbUrls.iterator();
 
-        Connection dbCon = null;
-        boolean hasException = true;
-        SQLException ex = new SQLException("No database URL was provided");
-        while (hasException && iter.hasNext()) {
-            String dbUrlTry = iter.next();
-
-            //for logging, in case something goes wrong
-            if (dbUrlTry != null && dbUrlTry.length() != 0) {
-                triedUrls = triedUrls + dbUrlTry + " | ";
-
-//          todo      if (logger.isDebugEnabled()) {
-//                    logger.debug("dbUrl so far: " + triedUrls);
-//                }
-            } else {
-                continue;//somehow the dbUrls might have empty string there
-            }
-
+        for (final String currentUrl : dbUrls) {
             try {
-                //Get the Connection, depends on what user set in
-                //databasePooling.properties, this connection could be
-                //pooled or not pooled
-                dbCon = dbConnectionManager.getConnection(enumDbType,
-                                dbUrlTry,
-                                sqlInputs.getUsername(),
-                                sqlInputs.getPassword(),
-                                properties);
-                sqlInputs.setDbUrl(dbUrlTry);
-                hasException = false;
-            } catch (SQLException e) {
-//           todo     if (logger.isDebugEnabled()) {
-//                    logger.debug(e);
-//                }
-
-                hasException = true;
-                ex = e;
-
-                if (e instanceof TotalMaxPoolSizeExceedException) {
-//             todo       if (logger.isDebugEnabled()) {
-//                        logger.debug("Get TotalMaxPoolSizeExceedException, will stop trying");
-//                    }
-                    break;//don't try any more
-                }
+                final Connection dbCon = dbConnectionManager.getConnection(enumDbType, currentUrl, sqlInputs.getUsername(),
+                        sqlInputs.getPassword(), properties); //closing of the connection should not be handled here( no try with resources)
+                sqlInputs.setDbUrl(currentUrl);
+                return dbCon;
+            } catch (TotalMaxPoolSizeExceedException e) {
+                throw new RuntimeException(e.getMessage(), e.getCause());
+            } catch (SQLException ignored) {
             }
         }
-        if (hasException) {
-            //have some logging
-            String msg = "Failed to check out connection for dbType = "
-                    + dbType + " username = " + sqlInputs.getUsername() + " tried dbUrls = " + triedUrls;
-//      todo      logger.error(msg, ex);
-            throw ex;
-        }
+        throw new RuntimeException("Couldn't find a valid url to connect to");
 
-        //for some reason it is till null, should not happen
-        if (dbCon == null) {
-            String msg = "Failed to check out connection. Connection is null. dbType = "
-                    + dbType + " username = " + sqlInputs.getUsername() + " tried dbUrls = " + triedUrls;
 
-            throw new SQLException(msg);
-        }
-        return dbCon;
     }
 }

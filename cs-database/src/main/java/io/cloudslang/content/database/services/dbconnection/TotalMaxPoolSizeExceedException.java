@@ -22,26 +22,8 @@ public class TotalMaxPoolSizeExceedException extends SQLException {
      *
      * @param aMsg a message
      */
-    public TotalMaxPoolSizeExceedException(String aMsg) {
+    public TotalMaxPoolSizeExceedException(final String aMsg) {
         super(aMsg);
     }
 
-    /**
-     * constructor
-     *
-     * @param aThrowable a Throwable
-     */
-    public TotalMaxPoolSizeExceedException(Throwable aThrowable) {
-        super(aThrowable);
-    }
-
-    /**
-     * constructor
-     *
-     * @param aMsg       a message
-     * @param aThrowable a Throwable
-     */
-    public TotalMaxPoolSizeExceedException(String aMsg, Throwable aThrowable) {
-        super(aMsg, aThrowable);
-    }
 }
