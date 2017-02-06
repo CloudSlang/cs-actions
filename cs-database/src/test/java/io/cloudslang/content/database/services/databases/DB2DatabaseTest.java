@@ -27,7 +27,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 public class DB2DatabaseTest {
 
-    public static final String DB_NAME = "/dbName";
+    public static final String DB_NAME = "dbName";
     public static final String DB_SERVER = "dbServer";
     public static final int DB_PORT = 30;
 

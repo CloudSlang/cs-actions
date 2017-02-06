@@ -115,7 +115,7 @@ public class SQLQueryLOB {
         mySqlInputs.setPassword(password);
         mySqlInputs.setInstance(getOrLower(instance, true));
         mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(getOrLower(getOrDefaultDBName(databaseName, mySqlInputs.getDbType()), true));
+        mySqlInputs.setDbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), true));
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));

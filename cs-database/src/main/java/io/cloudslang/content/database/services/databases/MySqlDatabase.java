@@ -11,10 +11,12 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.SQLInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 
@@ -29,8 +31,6 @@ public class MySqlDatabase implements SqlDatabase {
 
         final String connectionString = getConnectionString(sqlInputs);
 
-//        sqlInputs.getDbUrls().add(connectionString);
-
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
         dbUrls.add(connectionString);
 
@@ -39,11 +39,16 @@ public class MySqlDatabase implements SqlDatabase {
 
     private String getConnectionString(final SQLInputs sqlInputs) {
         final Address address = new Address(sqlInputs.getDbServer());
+        final StringBuilder connectionSb = new StringBuilder("jdbc:mysql://");
         if (address.isIPV6Literal()) {//the host is an IPv6 literal
-            return String.format("jdbc:mysql://address=(protocol=tcp)(host=%s)(port=%d)%s",
-                    sqlInputs.getDbServer(), sqlInputs.getDbPort(), sqlInputs.getDbName());
+            connectionSb.append(String.format("address=(protocol=tcp)(host=%s)(port=%d)", sqlInputs.getDbServer(), sqlInputs.getDbPort()));
+        } else { //the host is an IPv4 literal or a Host Name
+            connectionSb.append(String.format("%s:%d", sqlInputs.getDbServer(), sqlInputs.getDbPort()));
         }
-        //the host is an IPv4 literal or a Host Name
-        return String.format("jdbc:mysql://%s:%d%s", sqlInputs.getDbServer(), sqlInputs.getDbPort(), sqlInputs.getDbName());
+        if (StringUtils.isNoneEmpty(sqlInputs.getDbName())) {
+            connectionSb.append(FORWARD_SLASH)
+                    .append(sqlInputs.getDbName());
+        }
+        return connectionSb.toString();
     }
 }

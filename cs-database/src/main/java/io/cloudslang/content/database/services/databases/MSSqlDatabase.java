@@ -104,7 +104,7 @@ public class MSSqlDatabase implements SqlDatabase {
 
 
             //instance is included in the host name
-
+            //todo check if mssql dbName can be null, the other operation "supported" it
             if (isValidAuthType(sqlInputs.getAuthenticationType())) {
                 final StringBuilder dbUrlMSSQL = new StringBuilder(Constants.MSSQL_URL + host + COLON + sqlInputs.getDbPort()
                         + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + sqlInputs.getDbName());

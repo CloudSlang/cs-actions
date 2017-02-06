@@ -118,7 +118,7 @@ public class SQLQuery {
         sqlInputs.setPassword(password);
         sqlInputs.setInstance(getOrLower(instance, ignoreCaseBool));
         sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-        sqlInputs.setDbName(getOrLower(getOrDefaultDBName(databaseName, sqlInputs.getDbType()), ignoreCaseBool));
+        sqlInputs.setDbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), ignoreCaseBool));
         sqlInputs.setAuthenticationType(authenticationType);
         sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));

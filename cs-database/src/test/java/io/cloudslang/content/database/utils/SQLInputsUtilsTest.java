@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.Reader;
 import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,8 +31,12 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by victor on 02.02.2017.
@@ -53,24 +58,6 @@ public class SQLInputsUtilsTest {
         assertThat(getOrLower("A 2N 1A", false), is("A 2N 1A"));
         assertThat(getOrLower(EMPTY, false), is(EMPTY));
         assertThat(getOrLower("tHis iS a shoRt stoRy!", false), is("tHis iS a shoRt stoRy!"));
-    }
-
-    @Test
-    public void getOrDefaultDBNameMSSql() throws Exception {
-        final String dbName = "testDB";
-        assertEquals(dbName, getOrDefaultDBName(dbName, MSSQL_DB_TYPE));
-    }
-
-    @Test
-    public void getOrDefaultDBNameSimple() throws Exception {
-        final String dbName = "testDB";
-        assertEquals(FORWARD_SLASH + dbName, getOrDefaultDBName(dbName, ORACLE_DB_TYPE));
-    }
-
-    @Test
-    public void getOrDefaultDBNameEmpty() throws Exception {
-        assertEquals(EMPTY, getOrDefaultDBName(EMPTY, ORACLE_DB_TYPE));
-        assertEquals(EMPTY, getOrDefaultDBName(EMPTY, MSSQL_DB_TYPE));
     }
 
     @Test
@@ -154,20 +141,16 @@ public class SQLInputsUtilsTest {
         assertThat(1, is(dbProperties.size()));
     }
 
+//    @Test(expected = RuntimeException.class)
     @Test
-    public void getOrDefaultDBPoolingPropertiesExceptiont() throws Exception {
-//        mockStatic(SQLInputsUtils.class); todo
-//
+    public void getOrDefaultDBPoolingPropertiesException() throws Exception {
+//todo
 //        final Properties databasePoolingProperties = mock(Properties.class);
 //
 //        whenNew(Properties.class).withNoArguments().thenReturn(databasePoolingProperties);
 ////        doReturn(databasePoolingProperties).when(Properties.class).newInstance();
 //        doThrow(IllegalArgumentException.class).when(databasePoolingProperties).load(any(Reader.class));
-//
-//
 //        getOrDefaultDBPoolingProperties(EMPTY, "this should fail");
-//
-//        verifyStatic();
     }
 
     @Test

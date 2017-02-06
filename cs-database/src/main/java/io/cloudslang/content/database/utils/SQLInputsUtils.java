@@ -44,17 +44,6 @@ public class SQLInputsUtils {
         return aString;
     }
 
-    @NotNull
-    public static String getOrDefaultDBName(final String dbName, final String dbType) {
-        if (isEmpty(dbName)) {
-            return EMPTY;
-        }
-        if (MSSQL_DB_TYPE.equalsIgnoreCase(dbType)) { // todo don't think it's necessary
-            return dbName;
-        }
-        return FORWARD_SLASH + dbName;
-    }
-
     public static int getOrDefaultDBPort(final String dbPort, final String dbType) {
         if (isNoneEmpty(dbPort)) {
             return Integer.valueOf(dbPort);

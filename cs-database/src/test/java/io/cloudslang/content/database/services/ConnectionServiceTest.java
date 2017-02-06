@@ -107,7 +107,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
-        sqlInputs.setDbName("/dbName");
+        sqlInputs.setDbName("dbName");
         assertConnection(sqlInputs, 2, "jdbc:oracle:thin:@//localhost:30/dbName", null);
     }
 
@@ -116,7 +116,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbType(SYBASE_DB_TYPE);
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
-        sqlInputs.setDbName("/dbName");
+        sqlInputs.setDbName("dbName");
         assertConnection(sqlInputs, 1, "jdbc:jtds:sybase://localhost:30/dbName;prepareSQL=1;useLOBs=false;TDS=4.2;", null);
     }
 
@@ -125,7 +125,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbType(DB2_DB_TYPE);
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
-        sqlInputs.setDbName("/dbName");
+        sqlInputs.setDbName("dbName");
         assertConnection(sqlInputs, 1, "jdbc:db2://localhost:30/dbName", null);
     }
 
@@ -144,7 +144,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbType(MYSQL_DB_TYPE);
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
-        sqlInputs.setDbName("/dbName");
+        sqlInputs.setDbName("dbName");
         assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30/dbName", null);
     }
 

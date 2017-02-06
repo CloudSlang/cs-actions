@@ -10,10 +10,12 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 
 /**
@@ -33,12 +35,14 @@ public class NetcoolDatabase implements SqlDatabase {
                 throw new RuntimeException("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
             }
         }
-        final String connectionString = String.format("jdbc:sybase:Tds:%s:%d%s",
-                sqlInputs.getDbServer(), sqlInputs.getDbPort(), sqlInputs.getDbName());
-//        sqlInputs.getDbUrls().add(connectionString);
-
+        final StringBuilder connectionSb = new StringBuilder(String.format("jdbc:sybase:Tds:%s:%d",
+                sqlInputs.getDbServer(), sqlInputs.getDbPort()));
+        if (StringUtils.isNoneEmpty(sqlInputs.getDbName())) {
+            connectionSb.append(FORWARD_SLASH)
+                    .append(sqlInputs.getDbName());
+        }
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
-        dbUrls.add(connectionString);
+        dbUrls.add(connectionSb.toString());
 
         return dbUrls;
     }

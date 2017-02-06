@@ -34,7 +34,6 @@ public class OracleDatabaseTest {
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
     public static final String DB_SERVER = "localhost";
     public static final int DB_PORT = 30;
-    public static final String SLASH = "/";
     public static final String DB_NAME = "testDB";
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -49,7 +48,7 @@ public class OracleDatabaseTest {
     public void testSetUpConnectionOracleWithoutTns() throws Exception {
         //set up method needs a SLASH before dbName (if dbName is provided)
         final SQLInputs sqlInputs = new SQLInputs();
-        sqlInputs.setDbName(SLASH + DB_NAME);
+        sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
 //        sqlInputs.setDbUrls(new ArrayList<String>());

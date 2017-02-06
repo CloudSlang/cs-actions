@@ -11,10 +11,12 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 
@@ -28,12 +30,15 @@ public class SybaseDatabase implements SqlDatabase {
         loadClassForName("net.sourceforge.jtds.jdbc.Driver");
         
         final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
-        final String connectionString = String.format("jdbc:jtds:sybase://%s:%d%s;prepareSQL=1;useLOBs=false;TDS=4.2;",
-                host, sqlInputs.getDbPort(), sqlInputs.getDbName());
-//        sqlInputs.getDbUrls().add(connectionString);
+        final StringBuilder connectionSb = new StringBuilder(String.format("jdbc:jtds:sybase://%s:%d", host, sqlInputs.getDbPort()));
+        if (StringUtils.isNoneEmpty(sqlInputs.getDbName())) {
+            connectionSb.append(FORWARD_SLASH)
+                    .append(sqlInputs.getDbName());
+        }
+        connectionSb.append(";prepareSQL=1;useLOBs=false;TDS=4.2;");
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
-        dbUrls.add(connectionString);
+        dbUrls.add(connectionSb.toString());
 
         return dbUrls;
 

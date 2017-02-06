@@ -34,13 +34,10 @@ public class OracleDatabase implements SqlDatabase {
             //Connect using the host, port and database info
             final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
 
-            final String firstConnectionString = String.format("jdbc:oracle:thin:@//%s:%d%s",
+            final String firstConnectionString = String.format("jdbc:oracle:thin:@//%s:%d/%s",
                     host, sqlInputs.getDbPort(), sqlInputs.getDbName());
             final String secondConnectionString = String.format("jdbc:oracle:thin:@%s:%d:%s",
-                    host, sqlInputs.getDbPort(), sqlInputs.getDbName().substring(1));
-
-//            sqlInputs.getDbUrls().add(firstConnectionString);
-//            sqlInputs.getDbUrls().add(secondConnectionString);
+                    host, sqlInputs.getDbPort(), sqlInputs.getDbName());
 
             dbUrls.add(firstConnectionString);
             dbUrls.add(secondConnectionString);

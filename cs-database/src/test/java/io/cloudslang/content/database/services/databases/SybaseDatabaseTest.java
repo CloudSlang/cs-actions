@@ -26,7 +26,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 public class SybaseDatabaseTest {
 
-    public static final String DB_NAME = "/dbName";
+    public static final String DB_NAME = "dbName";
     public static final String DB_SERVER = "dbServer";
     public static final int DB_PORT = 30;
     public static final String DB_SERVER_IPV6_LITERAL = "2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net";

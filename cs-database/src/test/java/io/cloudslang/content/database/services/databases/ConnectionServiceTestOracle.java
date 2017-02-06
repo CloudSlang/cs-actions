@@ -87,7 +87,7 @@ public class ConnectionServiceTestOracle {
         sqlInputs.setDbType(ORACLE_DB_TYPE);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
-        sqlInputs.setDbName(FORWARD_SLASH + DB_NAME);
+        sqlInputs.setDbName(DB_NAME);
 
         final List<String> sqlConnections = connectionServiceSpy.getConnectionUrls(sqlInputs);
 
