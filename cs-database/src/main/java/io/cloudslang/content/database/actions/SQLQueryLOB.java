@@ -143,17 +143,13 @@ public class SQLQueryLOB {
             final String strKeyFiles = aKey + " - Files";
             final String strKeyNames = aKey + " - CLOBNames";
             final String strKeySkip = aKey + " - Skip";
-            mySqlInputs.setStrKeyCol(aKey + " - Columns");
-            mySqlInputs.setStrKeyFiles(aKey + " - Files");
-            mySqlInputs.setStrKeyNames(aKey + " - CLOBNames");
-            mySqlInputs.setStrKeySkip(aKey + " - Skip");
 
 
             if (globalSessionObject != null && globalSessionObject.get() != null && globalSessionObject.get().get(aKey) != null) {
                 mySqlInputs.setlRows((ArrayList) globalSessionObject.get().get(aKey));
                 mySqlInputs.setStrColumns((String) globalSessionObject.get().get(strKeyCol));
-                if (globalSessionObject.get().get(mySqlInputs.getStrKeyFiles()) != null) {
-                    mySqlInputs.setSkip((Long) globalSessionObject.get().get(mySqlInputs.getStrKeySkip()));
+                if (globalSessionObject.get().get(strKeyFiles) != null) {
+                    mySqlInputs.setSkip((Long) globalSessionObject.get().get(strKeySkip));
                     mySqlInputs.setlRowsFiles((ArrayList) globalSessionObject.get().get(strKeyFiles));
                     mySqlInputs.setlRowsNames((ArrayList) globalSessionObject.get().get(strKeyNames));
                 }
@@ -223,9 +219,9 @@ public class SQLQueryLOB {
                         result.put(COLUMN_NAMES, colName);
                         result.put(ROWS_LEFT, "" + mySqlInputs.getlRows().size());
                         result.put(RETURN_CODE, ReturnCodes.SUCCESS);
-                        sqlConnectionMap.put(mySqlInputs.getStrKeyFiles(), mySqlInputs.getlRowsFiles());
-                        sqlConnectionMap.put(mySqlInputs.getStrKeyNames(), mySqlInputs.getlRowsNames());
-                        sqlConnectionMap.put(mySqlInputs.getStrKeySkip(), mySqlInputs.getSkip());
+                        sqlConnectionMap.put(strKeyFiles, mySqlInputs.getlRowsFiles());
+                        sqlConnectionMap.put(strKeyNames, mySqlInputs.getlRowsNames());
+                        sqlConnectionMap.put(strKeySkip, mySqlInputs.getSkip());
 
                         globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
 
@@ -252,9 +248,9 @@ public class SQLQueryLOB {
                     globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
 
                     if (isLOB) {
-                        sqlConnectionMap.put(mySqlInputs.getStrKeyFiles(), mySqlInputs.getlRowsFiles());
-                        sqlConnectionMap.put(mySqlInputs.getStrKeyNames(), mySqlInputs.getlRowsNames());
-                        sqlConnectionMap.put(mySqlInputs.getStrKeySkip(), 0L);
+                        sqlConnectionMap.put(strKeyFiles, mySqlInputs.getlRowsFiles());
+                        sqlConnectionMap.put(strKeyNames, mySqlInputs.getlRowsNames());
+                        sqlConnectionMap.put(strKeySkip, 0L);
 
                         globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
                     }

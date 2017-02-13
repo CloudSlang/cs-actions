@@ -172,7 +172,7 @@ public class SQLQuery {
                     result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
                     result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
                     result.put(RETURN_CODE, SUCCESS);
-                    sqlConnectionMap.put(aKey, sqlInputs.getlRows());
+                    sqlConnectionMap.put(aKey, sqlInputs.getlRows()); //todo check if sqlInputs.getStrKeyCol was used in the old code
                     sqlConnectionMap.put(sqlInputs.getStrKeyCol(), sqlInputs.getStrColumns());
                     globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
                 } else {

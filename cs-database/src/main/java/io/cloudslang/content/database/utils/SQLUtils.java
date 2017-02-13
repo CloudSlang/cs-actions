@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.SEMI_COLON;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -166,7 +167,7 @@ public class SQLUtils {
              final BufferedReader br = new BufferedReader(inputStreamReader)) {
 
             String strLine;
-            String aString = "";
+            StringBuilder aString = new StringBuilder();
             int i = 0;
             boolean youAreInAMultiLineComment = false;
             while ((strLine = br.readLine()) != null) {
@@ -211,9 +212,9 @@ public class SQLUtils {
                 //create table employee(
                 //  first varchar(15));
                 //if a sql command finishes in one line, add in commands
-                if (strLine.endsWith(";")) {
+                if (strLine.endsWith(SEMI_COLON)) {
                     //get rid of ';',otherwise the operation will fail on Oracle database
-                    int indx = strLine.indexOf(";", 0);
+                    int indx = strLine.indexOf(SEMI_COLON, 0);
                     strLine = strLine.substring(0, indx);
                     //if the command has only one line
                     if (i == 0) {
@@ -221,15 +222,13 @@ public class SQLUtils {
                     }
                     //if the command has multiple lines
                     else {
-                        aString += strLine;
-                        lines.add(aString);
-                        aString = "";
+                        aString.append(strLine);
+                        lines.add(aString.toString());
+                        aString = new StringBuilder();
                         i = 0;
                     }
-                }
-                //if a line doesn't finish with a ';', it means the sql commands is not finished
-                else {
-                    aString = aString + strLine + " ";
+                } else {//if a line doesn't finish with a ';', it means the sql commands is not finished
+                    aString.append(strLine).append(" ");
                     i++;
                 }
             }

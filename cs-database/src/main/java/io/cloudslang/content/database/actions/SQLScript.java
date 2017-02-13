@@ -22,8 +22,6 @@ import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +97,7 @@ public class SQLScript {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        SQLInputs mySqlInputs = new SQLInputs();
+        final SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName);
         mySqlInputs.setDbType(getDbType(dbType));
         mySqlInputs.setUsername(username);
@@ -121,17 +119,14 @@ public class SQLScript {
 
 
         try {
-
             final List<String> commands = mySqlInputs.getSqlCommands();
             if (!commands.isEmpty()) {
                 final String res = SQLScriptService.executeSqlScript(commands, mySqlInputs);
-
                 final Map<String, String> result = getSuccessResultsMap(res);
                 result.put(UPDATE_COUNT, String.valueOf(mySqlInputs.getiUpdateCount()));
                 return result;
-            } else {
-                return getFailureResultsMap(NO_SQL_COMMAND);
             }
+            return getFailureResultsMap(NO_SQL_COMMAND);
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

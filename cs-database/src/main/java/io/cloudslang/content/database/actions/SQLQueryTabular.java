@@ -96,7 +96,7 @@ public class SQLQueryTabular {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        SQLInputs mySqlInputs = new SQLInputs();
+        final SQLInputs mySqlInputs = new SQLInputs();
         mySqlInputs.setDbServer(dbServerName); //mandatory
         mySqlInputs.setDbType(getDbType(dbType));
         mySqlInputs.setUsername(username);

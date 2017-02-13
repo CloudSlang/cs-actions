@@ -30,39 +30,37 @@ public class SQLQueryService {
         }
         ConnectionService connectionService = new ConnectionService();
         try (final Connection connection = connectionService.setUpConnection(sqlInputs)) {
-            String strColumns = sqlInputs.getStrColumns();
 
             connection.setReadOnly(true);
             Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
             statement.setQueryTimeout(sqlInputs.getTimeout());
             final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
 
-            ResultSetMetaData mtd = results.getMetaData();
+            final ResultSetMetaData mtd = results.getMetaData();
 
             int iNumCols = mtd.getColumnCount();
 
+            final StringBuilder strColumns = new StringBuilder(sqlInputs.getStrColumns());
+
             for (int i = 1; i <= iNumCols; i++) {
                 if (i > 1) {
-                    strColumns += sqlInputs.getStrDelim();
+                    strColumns.append(sqlInputs.getStrDelim());
                 }
-                strColumns += mtd.getColumnLabel(i);
+                strColumns.append(mtd.getColumnLabel(i));
             }
-            sqlInputs.setStrColumns(strColumns);
+            sqlInputs.setStrColumns(strColumns.toString());
 
             while (results.next()) {
-                String strRowHolder = "";
+                final StringBuilder strRowHolder = new StringBuilder();
                 for (int i = 1; i <= iNumCols; i++) {
-                    if (i > 1) strRowHolder += sqlInputs.getStrDelim();
+                    if (i > 1) strRowHolder.append(sqlInputs.getStrDelim());
                     String value = results.getString(i).trim();
-                    if (value != null) {
-                        if (sqlInputs.isNetcool())
-                            value = SQLUtils.processNullTerminatedString(value);
+                    if (sqlInputs.isNetcool())
+                        value = SQLUtils.processNullTerminatedString(value);
 
-                        strRowHolder += value;
-                    } else
-                        strRowHolder += "null";
+                    strRowHolder.append(value);
                 }
-                sqlInputs.getlRows().add(strRowHolder);
+                sqlInputs.getlRows().add(strRowHolder.toString());
             }
         }
     }

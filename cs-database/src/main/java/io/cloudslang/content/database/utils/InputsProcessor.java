@@ -45,15 +45,10 @@ public class InputsProcessor {
             sqlInputs.setDbServer(null);
             sqlInputs.setDbName(null);
             sqlInputs.setDbType(null);
-            sqlInputs.setStrKeyCol(null);
-            sqlInputs.setStrKeyFiles(null);
-            sqlInputs.setStrKeyNames(null);
-            sqlInputs.setStrKeySkip(null);
             sqlInputs.setUsername(null);
             sqlInputs.setPassword(null);
             sqlInputs.setAuthenticationType(null);
             sqlInputs.setDbUrl(null);
-//            sqlInputs.setDbUrls(new ArrayList<String>(3));
             sqlInputs.setDbClass(null);
             sqlInputs.setTrimRowstat("true");
             sqlInputs.setNetcool(false);

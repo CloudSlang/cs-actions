@@ -14,6 +14,7 @@ import io.cloudslang.content.database.utils.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -34,7 +35,7 @@ public class SQLQueryLobService {
         ConnectionService connectionService = new ConnectionService();
         try (final Connection connection = connectionService.setUpConnection(sqlInputs)) {
 
-            String strColumns = sqlInputs.getStrColumns();
+            StringBuilder strColumns = new StringBuilder(sqlInputs.getStrColumns());
 
             connection.setReadOnly(true);
             Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
@@ -44,16 +45,16 @@ public class SQLQueryLobService {
             ResultSetMetaData mtd = results.getMetaData();
             int iNumCols = mtd.getColumnCount();
             for (int i = 1; i <= iNumCols; i++) {
-                if (i > 1) strColumns += sqlInputs.getStrDelim();
-                strColumns += mtd.getColumnLabel(i);
+                if (i > 1) strColumns.append(sqlInputs.getStrDelim());
+                strColumns.append(mtd.getColumnLabel(i));
             }
-            sqlInputs.setStrColumns(strColumns);
+            sqlInputs.setStrColumns(strColumns.toString());
             int nr = -1;
             while (results.next()) {
                 nr++;
-                String strRowHolder = "";
+                final StringBuilder strRowHolder = new StringBuilder();
                 for (int i = 1; i <= iNumCols; i++) {
-                    if (i > 1) strRowHolder += sqlInputs.getStrDelim();
+                    if (i > 1) strRowHolder.append(sqlInputs.getStrDelim());
                     Object columnObject = results.getObject(i);
                     if (columnObject != null) {
                         String value;
@@ -61,12 +62,13 @@ public class SQLQueryLobService {
                             isLOB = true;
                             File tmpFile = File.createTempFile("CLOB_" + mtd.getColumnLabel(i), ".txt");
 
-                            BufferedReader reader = new BufferedReader(results.getCharacterStream(i));
-                            FileOutputStream fos = new FileOutputStream(tmpFile);
-                            Writer wr = new OutputStreamWriter(fos, "utf-8");
-                            BufferedWriter writer = new BufferedWriter(wr);
+                            final BufferedReader reader = new BufferedReader(results.getCharacterStream(i));
+                            final FileOutputStream fos = new FileOutputStream(tmpFile);
+                            final Writer wr = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+                            final BufferedWriter writer = new BufferedWriter(wr);
 
                             String data;
+
                             while ((data = reader.readLine()) != null) {
                                 writer.write(data);
                                 writer.newLine();
@@ -88,11 +90,11 @@ public class SQLQueryLobService {
                             if (sqlInputs.isNetcool())
                                 value = SQLUtils.processNullTerminatedString(value);
                         }
-                        strRowHolder += value;
+                        strRowHolder.append(value);
                     } else
-                        strRowHolder += "null";
+                        strRowHolder.append("null");
                 }
-                sqlInputs.getlRows().add(strRowHolder);
+                sqlInputs.getlRows().add(strRowHolder.toString());
             }
         }
 

@@ -24,9 +24,6 @@ public class SQLInputs {
     private String dbType;
     private String key;
     private String strKeyCol;
-    private String strKeyFiles;
-    private String strKeyNames;
-    private String strKeySkip;
     private String username;
     private String password;
     private String authenticationType;
@@ -153,29 +150,6 @@ public class SQLInputs {
         this.strKeyCol = strKeyCol;
     }
 
-    public String getStrKeyFiles() {
-        return strKeyFiles;
-    }
-
-    public void setStrKeyFiles(String strKeyFiles) {
-        this.strKeyFiles = strKeyFiles;
-    }
-
-    public String getStrKeyNames() {
-        return strKeyNames;
-    }
-
-    public void setStrKeyNames(String strKeyNames) {
-        this.strKeyNames = strKeyNames;
-    }
-
-    public String getStrKeySkip() {
-        return strKeySkip;
-    }
-
-    public void setStrKeySkip(String strKeySkip) {
-        this.strKeySkip = strKeySkip;
-    }
 
     public String getUsername() {
         return username;
