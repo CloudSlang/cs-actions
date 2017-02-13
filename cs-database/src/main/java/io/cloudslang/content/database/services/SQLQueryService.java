@@ -24,7 +24,7 @@ import java.sql.Statement;
  */
 public class SQLQueryService {
 
-    public void executeSqlQuery(@NotNull final SQLInputs sqlInputs) throws Exception {
+    public static void executeSqlQuery(@NotNull final SQLInputs sqlInputs) throws Exception {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }

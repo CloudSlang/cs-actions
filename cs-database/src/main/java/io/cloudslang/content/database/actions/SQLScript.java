@@ -33,6 +33,7 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
+import static io.cloudslang.content.database.constants.DBExceptionValues.NO_SQL_COMMAND;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
@@ -109,7 +110,7 @@ public class SQLScript {
         mySqlInputs.setAuthenticationType(authenticationType);
         mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
         mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        mySqlInputs.setStrDelim(defaultIfEmpty(delimiter, "--")); //todo not ok
+        mySqlInputs.setStrDelim(defaultIfEmpty(delimiter, SEMI_COLON)); //todo not ok
         mySqlInputs.setSqlCommands(getSqlCommands(sqlCommands, scriptFileName, mySqlInputs.getStrDelim()));
         mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
         mySqlInputs.setTrustStore(trustStore);
@@ -120,16 +121,16 @@ public class SQLScript {
 
 
         try {
-            String commandsDelimiter = StringUtils.isEmpty(mySqlInputs.getStrDelim()) ? "--" : mySqlInputs.getStrDelim(); //todo this is not ok
-            List<String> commands = new ArrayList<>(Arrays.asList(sqlCommands.split(commandsDelimiter))); //todo this is set i think
 
+            final List<String> commands = mySqlInputs.getSqlCommands();
             if (!commands.isEmpty()) {
                 final String res = SQLScriptService.executeSqlScript(commands, mySqlInputs);
+
                 final Map<String, String> result = getSuccessResultsMap(res);
                 result.put(UPDATE_COUNT, String.valueOf(mySqlInputs.getiUpdateCount()));
                 return result;
             } else {
-                return getFailureResultsMap("No SQL command to be executed.");
+                return getFailureResultsMap(NO_SQL_COMMAND);
             }
         } catch (Exception e) {
             return getFailureResultsMap(e);

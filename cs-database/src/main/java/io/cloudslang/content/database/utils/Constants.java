@@ -12,6 +12,7 @@ package io.cloudslang.content.database.utils;
 
 import static io.cloudslang.content.database.constants.DBInputNames.TRUST_STORE;
 import static io.cloudslang.content.database.constants.DBInputNames.TRUST_STORE_PASSWORD;
+import static io.cloudslang.content.database.constants.DBOtherValues.SEMI_COLON;
 
 /**
  * Created by victor on 13.01.2017.
@@ -27,7 +28,7 @@ public class Constants {
     public static final String JTDS_JDBC_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
     public static final String SQLSERVER_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     public static final String ENCRYPT = "encrypt";
-    public static final String SEMI_COLON = ";";
+
     public static final String EQUALS = "=";
     public static final String STRING_PARAMETER = "%s";
     public static final String TRUSTORE_PARAMS = SEMI_COLON + TRUST_STORE + EQUALS + STRING_PARAMETER + SEMI_COLON + TRUST_STORE_PASSWORD + EQUALS + STRING_PARAMETER;

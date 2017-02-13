@@ -25,9 +25,9 @@ import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID
 import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
 import static io.cloudslang.content.database.constants.DBOtherValues.BACK_SLASH;
 import static io.cloudslang.content.database.constants.DBOtherValues.DATABASE_NAME_CAP;
+import static io.cloudslang.content.database.constants.DBOtherValues.SEMI_COLON;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidAuthType;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**

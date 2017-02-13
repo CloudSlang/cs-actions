@@ -49,7 +49,6 @@ public class SQLQueryServiceTest {
     private static final String SQL_QUERY = "select * from dbTable";
     private static final java.lang.Integer COLUMN_COUNT = 3;
     private static final String DEFAUL_LABEL = "defaulLabel";
-    private SQLQueryService sqlQueryService = new SQLQueryService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -89,7 +88,7 @@ public class SQLQueryServiceTest {
         sqlInputs.setSqlCommand(SQL_QUERY);
         sqlInputs.setTimeout(SQL_QUERY_TIMEOUT);
 
-        sqlQueryService.executeSqlQuery(sqlInputs);
+        SQLQueryService.executeSqlQuery(sqlInputs);
 
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
@@ -108,7 +107,7 @@ public class SQLQueryServiceTest {
         sqlInputs.setResultSetConcurrency(getResultSetConcurrency(CONCUR_READ_ONLY));
         sqlInputs.setTimeout(SQL_QUERY_TIMEOUT);
 
-        sqlQueryService.executeSqlQuery(sqlInputs);
+        SQLQueryService.executeSqlQuery(sqlInputs);
 
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
         verify(connectionMock, Mockito.times(1)).setReadOnly(true);
@@ -120,6 +119,6 @@ public class SQLQueryServiceTest {
     public void testExecuteSqlQueryNoCommand() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("command input is empty.");
-        sqlQueryService.executeSqlQuery(sqlInputs);
+        SQLQueryService.executeSqlQuery(sqlInputs);
     }
 }

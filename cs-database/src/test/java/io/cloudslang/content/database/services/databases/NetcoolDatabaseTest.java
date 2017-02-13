@@ -10,40 +10,55 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * Created by vranau on 12/10/2014.
  */
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Class.class)
 public class NetcoolDatabaseTest {
 
-    public static final String DB_NAME = "/dbName";
-    public static final String DB_SERVER = "dbServer";
-    public static final int DB_PORT = 30;
+    @Spy
+    private NetcoolDatabase netcoolDatabase = new NetcoolDatabase();
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
-    public void testSetUp() throws ClassNotFoundException, SQLException {
+    public void testSetUpInvalid() throws Exception {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Could not locate either jconn2.jar or jconn3.jar file in the classpath");
-        final NetcoolDatabase netcoolDatabase = new NetcoolDatabase();
         final SQLInputs sqlInputs = new SQLInputs();
-        sqlInputs.setDbName(DB_NAME);
+        sqlInputs.setDbName("dbName");
         sqlInputs.setDbServer(null);
-        sqlInputs.setDbPort(DB_PORT);
-//        sqlInputs.setDbUrls(new ArrayList<String>());
+        sqlInputs.setDbPort(30);
         netcoolDatabase.setUp(sqlInputs);
+    }
+
+    @Test
+    public void testSetUpValid() throws Exception {
+
+//todo
+//        final SQLInputs sqlInputs = new SQLInputs();
+//        sqlInputs.setDbName("dbName");
+//        sqlInputs.setDbServer(null);
+//        sqlInputs.setDbPort(30);
+//
+//        Class cls = any(Class.class);
+//
+//        mockStatic(Class.class);
+//        given(Class.forName("com.sybase.jdbc3.jdbc.SybDriver")).willReturn(cls);
+//
+//        netcoolDatabase.setUp(sqlInputs);
+//        verifyStatic();
+
     }
 }

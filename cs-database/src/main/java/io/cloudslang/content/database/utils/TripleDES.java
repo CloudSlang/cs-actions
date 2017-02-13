@@ -34,9 +34,7 @@ public class TripleDES {
      * @return an encrypted password
      * @throws Exception
      */
-    public static String encryptPassword(final String aPlainPass) throws Exception {
-        if (aPlainPass == null)
-            return "";
+    public static String encryptPassword(@NotNull final String aPlainPass) throws Exception {
         byte[] encBytes = encryptString(aPlainPass.getBytes(DEFAULT_CODEPAGE));
         return Base64.encodeBase64String(encBytes);
     }
@@ -49,15 +47,11 @@ public class TripleDES {
         return key;
     }
 
-    static byte[] encryptString(byte[] text) throws Exception {
+    static byte[] encryptString(final byte[] text) throws Exception {
         final SecretKey key = new SecretKeySpec(TripleDES.md5Hash("NpWsCaJQj1LaXt)YYnzr\\%zP~RydB*3YGutr*@|A\\ckG3\\Yf%k"), ENCRYPTION_KEYSPECTYPE);
-        try {
-            final Cipher cipher = Cipher.getInstance(ENCRYPTION_MODE);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            return cipher.doFinal(text);
-        } catch (Exception e) {
-            return null;
-        }
+        final Cipher cipher = Cipher.getInstance(ENCRYPTION_MODE);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(text);
     }
 
 }

@@ -22,6 +22,8 @@ public class DBOtherValues {
     public static final String SET_NOCOUNT_ON = "SET NOCOUNT ON";
     public static final String FORWARD_SLASH = "/";
     public static final String BACK_SLASH = "\\";
+    public static final String SEMI_COLON = ";";
+    public static final String DBMS_OUTPUT = "dbms_output";
 
     public static final String CONCUR_READ_ONLY = "CONCUR_READ_ONLY";
     public static final String CONCUR_UPDATABLE = "CONCUR_UPDATABLE";

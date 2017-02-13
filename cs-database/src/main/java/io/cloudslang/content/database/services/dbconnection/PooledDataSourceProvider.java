@@ -161,14 +161,8 @@ public abstract class PooledDataSourceProvider {
      * @return string value of that property
      */
     protected String getPropStringValue(String aPropName, String aDefaultValue) {
-        String retValue = dbPoolingProperties.getProperty(aPropName,
+        return dbPoolingProperties.getProperty(aPropName,
                 aDefaultValue);
-
-        //tracing //todo
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("property name =  " + aPropName + " value = " + retValue);
-//        }
-        return retValue;
     }
 
     //the followings are only for testing purpose

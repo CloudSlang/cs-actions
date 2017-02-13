@@ -37,18 +37,14 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
     //set default 300 seconds
     private final static String C3P0_MAX_IDLE_TIME_NAME = "maxIdleTime";
     //set default 3600 seconds = 1 hour
-    private final static String C3P0_MAX_CONNECTION_AGE_NAME =
-            "maxConnectionAge";
+    private final static String C3P0_MAX_CONNECTION_AGE_NAME = "maxConnectionAge";
     //deal with validation
     //set default 1800 = 30 minutes
-    private final static String C3P0_IDLE_CONNECTION_TEST_PERIOD_NAME =
-            "idleConnectionTestPeriod";
+    private final static String C3P0_IDLE_CONNECTION_TEST_PERIOD_NAME = "idleConnectionTestPeriod";
     //set default true
-    private final static String C3P0_TEST_CONNECTION_ON_CHECKOUT_NAME =
-            "testConnectionOnCheckout";
+    private final static String C3P0_TEST_CONNECTION_ON_CHECKOUT_NAME = "testConnectionOnCheckout";
     //set default false
-    private final static String C3P0_TEST_CONNECTION_ON_CHECKIN_NAME =
-            "testConnectionOnCheckin";
+    private final static String C3P0_TEST_CONNECTION_ON_CHECKIN_NAME = "testConnectionOnCheckin";
     //deal with check out connections
     //set default 1
     private final static String C3P0_ACQUIRE_INCREMENT_NAME = "acquireIncrement";
@@ -63,8 +59,7 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
     //deal with failure connection, there is a problem in c3p0, it will keeps
     //trying to getConneciton on its own if the connection fails. set this to
     //be true to clean the pool, so it won't keep trying
-    private final static String C3P0_BREAK_AFTERACQUIREFAILURE_NAME =
-            "breakAfterAcquireFailure";
+    private final static String C3P0_BREAK_AFTERACQUIREFAILURE_NAME = "breakAfterAcquireFailure";
 
     /**
      * constructor
@@ -88,12 +83,10 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
      * @param aPooledDataSource a pooled datasource
      * @throws SQLException
      */
-    public void closePooledDataSource(DataSource aPooledDataSource)
-            throws SQLException {
+    public void closePooledDataSource(DataSource aPooledDataSource) throws SQLException {
         if (aPooledDataSource == null) {
             return;
         }
-
         DataSources.destroy(aPooledDataSource);
     }
 
@@ -107,15 +100,10 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
      * @return a DataSource  a pooled data source
      * @throws SQLException
      */
-    public DataSource openPooledDataSource(DBType aDbType,
-                                           String aDbUrl,
-                                           String aUsername,
-                                           String aPassword)
-            throws SQLException {
+    public DataSource openPooledDataSource(DBType aDbType, String aDbUrl, String aUsername, String aPassword) throws SQLException {
         DataSource retPooledDS;
 
-        DataSource unPooledDS =
-                DataSources.unpooledDataSource(aDbUrl, aUsername, aPassword);
+        DataSource unPooledDS = DataSources.unpooledDataSource(aDbUrl, aUsername, aPassword);
 
         //override the default properties with ours
         Map<String, String> props = this.getPoolingProperties(aDbType);
@@ -238,25 +226,20 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
     }
 
     //The followings are only for testing purpose
-    public int getAllConnectionNumber(DataSource aPooledDataSource)
-            throws SQLException {
+    public int getAllConnectionNumber(DataSource aPooledDataSource) throws SQLException {
         PooledDataSource pDs = (PooledDataSource) aPooledDataSource;
-        int retValue = pDs.getNumConnectionsAllUsers();
-        return retValue;
+        return pDs.getNumConnectionsAllUsers();
     }
 
-    public int getCheckedInConnectionNumber(DataSource aPooledDataSource)
-            throws SQLException {
+    public int getCheckedInConnectionNumber(DataSource aPooledDataSource) throws SQLException {
         PooledDataSource pDs = (PooledDataSource) aPooledDataSource;
-        int retValue = pDs.getNumIdleConnectionsAllUsers();
-        return retValue;
+        return pDs.getNumIdleConnectionsAllUsers();
     }
 
     public int getCheckedOutConnectionNumber(DataSource aPooledDataSource)
             throws SQLException {
         PooledDataSource pDs = (PooledDataSource) aPooledDataSource;
-        int retValue = pDs.getNumBusyConnectionsAllUsers();
-        return retValue;
+        return pDs.getNumBusyConnectionsAllUsers();
     }
 
 }//end of C3P0PooledDataSourceProvider

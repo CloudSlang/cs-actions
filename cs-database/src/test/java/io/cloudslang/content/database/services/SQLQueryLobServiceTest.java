@@ -47,7 +47,6 @@ public class SQLQueryLobServiceTest {
     public  static final String SQL_QUERY = "select * from dbTable";
     private static final java.lang.Integer COLUMN_COUNT = 3;
     private static final java.lang.String DEFAUL_LABEL = "defaulLabel";
-    private SQLQueryLobService sqlQueryLobService = new SQLQueryLobService();
     private SQLInputs sqlInputs;
 
     @Mock
@@ -87,7 +86,7 @@ public class SQLQueryLobServiceTest {
         sqlInputs.setSqlCommand(SQL_QUERY);
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
 
-        final boolean executeSqlCommand = sqlQueryLobService.executeSqlQueryLob(sqlInputs);
+        final boolean executeSqlCommand = SQLQueryLobService.executeSqlQueryLob(sqlInputs);
 
         assertEquals(false, executeSqlCommand);
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
@@ -104,7 +103,7 @@ public class SQLQueryLobServiceTest {
         sqlInputs.setSqlCommand(SQL_QUERY);
         sqlInputs.setTimeout(QUYERY_TIMEOUT);
 
-        final boolean executeSqlCommand = sqlQueryLobService.executeSqlQueryLob(sqlInputs);
+        final boolean executeSqlCommand = SQLQueryLobService.executeSqlQueryLob(sqlInputs);
 
         assertEquals(false, executeSqlCommand);
         assertEquals("defaulLabel,defaulLabel,defaulLabel", sqlInputs.getStrColumns());
@@ -118,6 +117,6 @@ public class SQLQueryLobServiceTest {
     public void testExecuteSqlQueryLobNoCommand() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("command input is empty.");
-        sqlQueryLobService.executeSqlQueryLob(sqlInputs);
+        SQLQueryLobService.executeSqlQueryLob(sqlInputs);
     }
 }

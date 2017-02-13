@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.DBMS_OUTPUT;
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_TYPE;
 
@@ -31,15 +32,15 @@ public class SQLCommandService {
             connection.setReadOnly(false);
 
             final String dbType = sqlInputs.getDbType();
-            if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType) &&
-                    sqlInputs.getSqlCommand().toLowerCase().contains("dbms_output")) {
+            if (ORACLE_DB_TYPE.equalsIgnoreCase(dbType) && sqlInputs.getSqlCommand().toLowerCase().contains(DBMS_OUTPUT)) {
+
                 final PreparedStatement preparedStatement = connection.prepareStatement(sqlInputs.getSqlCommand());
                 preparedStatement.setQueryTimeout(sqlInputs.getTimeout());
                 OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection);
                 preparedStatement.executeQuery();
                 sqlInputs.setiUpdateCount(preparedStatement.getUpdateCount());
                 preparedStatement.close();
-                String output = oracleDbmsOutput.getOutput();
+                final String output = oracleDbmsOutput.getOutput();
                 oracleDbmsOutput.close();
                 return output;
             } else {

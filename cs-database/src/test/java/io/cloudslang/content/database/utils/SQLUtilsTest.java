@@ -30,30 +30,6 @@ public class SQLUtilsTest {
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
-    public void testProcessHostorTNSNullServerName() throws Exception {
-//        expectedEx.expect(Exception.class);
-//        expectedEx.expectMessage("Failed to getConnection. Please provide DBServerName if you use JDBC. Or please provide TNSEntry if you use TNS");
-        //todo      processHostorTNS(ORACLE_DB_TYPE, null, null);
-    }
-
-    @Test
-    public void testProcessHostOrTNSOtherEmptyServerName() throws Exception {
-//        expectedEx.expect(Exception.class);
-//        expectedEx.expectMessage("Failed to getConnection. DBServerName is empty.");
-        //todo processHostorTNS("other t", "", null);
-    }
-
-    @Test
-    public void testProcessHostOrTNSOtherAllNull() throws Exception {
-        //todo  processHostorTNS(null, null, null);
-    }
-
-    @Test
-    public void testProcessHostOrTNSOther() throws Exception {
-        //todo processHostorTNS("other t", "localhost", "tnsEntry");
-    }
-
-    @Test
     public void testTrimRowStat() {
         boolean trimRowstat = SQLUtils.trimRowstat(CUSTOM_URL, "true");
 

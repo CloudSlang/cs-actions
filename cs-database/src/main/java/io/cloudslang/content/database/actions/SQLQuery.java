@@ -22,11 +22,10 @@ import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryService;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLSessionResource;
-import io.cloudslang.content.database.utils.SQLUtils;
 import io.cloudslang.content.utils.BooleanUtilities;
+import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +44,7 @@ import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -134,43 +134,41 @@ public class SQLQuery {
         sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         sqlInputs.setIgnoreCase(ignoreCaseBool);
 
-        HashMap<String, String> result = new HashMap<>();
+        Map<String, String> result = new HashMap<>();
 
         try {
 
             final String aKey = getSqlKey(sqlInputs);
 
-            Map<String, Object> sqlConnectionMap = new HashMap<>();
+            final Map<String, Object> sqlConnectionMap = new HashMap<>();
+
             if (globalSessionObject.getResource() != null) {
                 sqlInputs.setlRows((List<String>) globalSessionObject.getResource().get().get(aKey));
                 sqlInputs.setStrColumns((String) globalSessionObject.getResource().get().get(sqlInputs.getStrKeyCol()));
 
                 if (!sqlInputs.getlRows().isEmpty()) {
-                    result.put(RETURN_RESULT, sqlInputs.getlRows().get(0));
-                    sqlInputs.getlRows().remove(0);
-                    result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
-                    result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
-                    result.put(RETURN_CODE, SUCCESS);
-
+                    final String getFirstRow = sqlInputs.getlRows().remove(0);
                     sqlConnectionMap.put(aKey, sqlInputs.getlRows());
-                    globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
+
+                    result = getSuccessResultsMap(getFirstRow);
+                    result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
+                    result.put(ROWS_LEFT, String.valueOf(sqlInputs.getlRows().size()));
 
                 } else {
                     sqlConnectionMap.put(aKey, null);
                     sqlConnectionMap.put(sqlInputs.getStrKeyCol(), null);
-                    globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
                     result.put(RETURN_RESULT, NO_MORE);
                     result.put(ROWS_LEFT, SUCCESS);
                     result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
                 }
+                globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
             } else {
 
-                SQLQueryService sqlQueryService = new SQLQueryService();
-                sqlQueryService.executeSqlQuery(sqlInputs);
+                SQLQueryService.executeSqlQuery(sqlInputs);
 
                 if (!sqlInputs.getlRows().isEmpty()) {
-                    result.put(RETURN_RESULT, sqlInputs.getlRows().get(0));
-                    sqlInputs.getlRows().remove(0);
+                    final String getFirstRow = sqlInputs.getlRows().remove(0);
+                    result.put(RETURN_RESULT, getFirstRow);
                     result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
                     result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
                     result.put(RETURN_CODE, SUCCESS);
@@ -187,13 +185,9 @@ public class SQLQuery {
             }
 
         } catch (Exception e) {
-            if (e instanceof SQLException)
-                result.put(EXCEPTION, SQLUtils.toString((SQLException) e));
-            else
-//            todo    result.put(EXCEPTION, StringUtils.toString(e));
-                result.put(ROWS_LEFT, SUCCESS);
-            result.put(RETURN_RESULT, e.getMessage());
-            result.put(RETURN_CODE, FAILURE);
+            final Map<String, String> failureMap = getFailureResultsMap(e);
+            failureMap.put(ROWS_LEFT, ZERO);
+            return failureMap;
         }
 
         return result;

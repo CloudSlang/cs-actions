@@ -41,17 +41,17 @@ public class OracleDbmsOutput {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        int done;
 
         retrieveOutputStatement.registerOutParameter(2, java.sql.Types.INTEGER);
         retrieveOutputStatement.registerOutParameter(3, java.sql.Types.VARCHAR);
 
-        for (; ; ) {
+        int done = 0;
+
+        while(done != 1) {
             retrieveOutputStatement.setInt(1, 32000);
             retrieveOutputStatement.executeUpdate();
             stringBuilder.append(retrieveOutputStatement.getString(3));
             done = retrieveOutputStatement.getInt(2);
-            if (done == 1) break;
         }
 
         return stringBuilder.toString();

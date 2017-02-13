@@ -11,6 +11,7 @@ package io.cloudslang.content.database.utils;
 
 import org.junit.Test;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -20,9 +21,8 @@ import static org.junit.Assert.assertEquals;
 public class TripleDESTest {
     @Test
     public void md5Hash() throws Exception {
-        assertArrayEquals(TripleDES.md5Hash("ana123"), new byte[]{83, -112, 72, -99, -93, -105, 28, -69, -51, 34, -63, 89, -43, 77, 36, -38, 83, -112, 72, -99, -93, -105, 28, -69});
-//        System.out.println(StringUtils.toEncodedString(TripleDES.md5Hash("ana123"), StandardCharsets.UTF_8));
-//        System.out.println(StringUtils.toEncodedString(DigestUtils.md5("ana123"), StandardCharsets.UTF_8));
+        assertArrayEquals(TripleDES.md5Hash("ana123"),
+                new byte[]{83, -112, 72, -99, -93, -105, 28, -69, -51, 34, -63, 89, -43, 77, 36, -38, 83, -112, 72, -99, -93, -105, 28, -69});
     }
 
     @Test
@@ -32,7 +32,8 @@ public class TripleDESTest {
 
     @Test
     public void encryptString() throws Exception {
-        assertArrayEquals(TripleDES.encryptString("ana123!@#".getBytes()), new byte[]{6, -61, -37, 96, 99, 60, -8, 90, -109, 31, -68, -91, -33, 6, 44, -86});
+        assertArrayEquals(TripleDES.encryptString("ana123!@#".getBytes()),
+                new byte[]{6, -61, -37, 96, 99, 60, -8, 90, -109, 31, -68, -91, -33, 6, 44, -86});
     }
 
 }

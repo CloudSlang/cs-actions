@@ -18,6 +18,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLCommandService;
 import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -46,6 +47,7 @@ import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
  * Created by pinteae on 1/11/2017.
  */
 public class SQLCommand {
+
 
     @Action(name = "SQL Command",
             outputs = {
@@ -117,22 +119,21 @@ public class SQLCommand {
 
             String outputText = "";
 
-            if (ORACLE_DB_TYPE.equalsIgnoreCase(mySqlInputs.getDbType()) && mySqlInputs.getSqlCommand().toLowerCase().contains("dbms_output")) {
+            if (ORACLE_DB_TYPE.equalsIgnoreCase(mySqlInputs.getDbType()) &&
+                    mySqlInputs.getSqlCommand().toLowerCase().contains(DBMS_OUTPUT)) {
                 if (isNoneEmpty(res)) {
                     outputText = res;
                 }
                 res = "Command completed successfully";
             } else if (mySqlInputs.getlRows().size() == 0 && mySqlInputs.getiUpdateCount() != -1) {
-                outputText += String.valueOf(mySqlInputs.getiUpdateCount()) + " row(s) affected";
+                outputText = String.valueOf(mySqlInputs.getiUpdateCount()) + " row(s) affected";
             } else if (mySqlInputs.getlRows().size() == 0 && mySqlInputs.getiUpdateCount() == -1) {
                 outputText = "The command has no results!";
                 if (mySqlInputs.getSqlCommand().toUpperCase().contains(SET_NOCOUNT_ON)) {
                     outputText = res;
                 }
             } else {
-                for (String row : mySqlInputs.getlRows()) {
-                    outputText += row + "\n";
-                }
+                outputText = StringUtilities.join(mySqlInputs.getlRows(), NEW_LINE);
             }
 
             final Map<String, String> result = getSuccessResultsMap(res);

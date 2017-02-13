@@ -49,10 +49,12 @@ public class Format {
 
         String value = rs.getString(col);
         if (value != null) {
-            if (checkNullTermination)
+            if (checkNullTermination) {
                 value = processNullTerminatedString(value);
-        } else
+            }
+        } else {
             value = "null";
+        }
         return value;
     }
 

@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 public class SQLQueryLobService {
 
-    public boolean executeSqlQueryLob(SQLInputs sqlInputs) throws
+    public static boolean executeSqlQueryLob(SQLInputs sqlInputs) throws
             Exception {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
