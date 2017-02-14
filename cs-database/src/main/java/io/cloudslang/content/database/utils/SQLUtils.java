@@ -10,6 +10,7 @@
 package io.cloudslang.content.database.utils;
 
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,15 +19,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.SEMI_COLON;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class SQLUtils {
-
 
     public static void loadClassForName(@NotNull final String className) {
         try {
@@ -51,7 +53,6 @@ public class SQLUtils {
         return trim;
     }
 
-
     public static String processNullTerminatedString(final String value) {
         if (isEmpty(value)) {
             return "null";
@@ -66,7 +67,6 @@ public class SQLUtils {
         }
         return value;
     }
-
 
     /**
      * Method returning the host surrounded by square brackets if 'dbServer' is IPv6 format.
@@ -110,7 +110,6 @@ public class SQLUtils {
         }
         return sb.toString();
     }
-
 
     /**
      * Some databases (Sybase) throw exceptions during a database dump. This function processes that exception, and if it is that type, builds up the output of the command
@@ -237,6 +236,35 @@ public class SQLUtils {
             return Collections.emptyList();
         }
         return lines;
+    }
+
+    @NotNull
+    public static List<String> getRowsFromGlobalSessionMap(@NotNull final GlobalSessionObject<Map<String, Object>> globalSessionObject, @NotNull final String aKey) {
+        final Map<String, Object> globalMap = globalSessionObject.get();
+        if (globalMap.containsKey(aKey)) {
+            try {
+                return (List<String>) globalMap.get(aKey);
+            } catch (Exception e) {
+                globalMap.remove(aKey);
+                globalSessionObject.setResource(new SQLSessionResource(globalMap));
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    @NotNull
+    public static String getStrColumns(@NotNull final GlobalSessionObject<Map<String, Object>> globalSessionObject, @NotNull final String strKeyCol) {
+        final Map<String, Object> globalMap = globalSessionObject.get();
+        if (globalMap.containsKey(strKeyCol) && globalMap.get(strKeyCol) instanceof String) {
+            try {
+                return (String) globalMap.get(strKeyCol);
+            } catch (Exception e) {
+                globalMap.remove(strKeyCol);
+                globalSessionObject.setResource(new SQLSessionResource(globalMap));
+            }
+        }
+        return EMPTY;
+
     }
 
 }

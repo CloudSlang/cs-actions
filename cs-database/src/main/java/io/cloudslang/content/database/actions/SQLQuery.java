@@ -42,6 +42,8 @@ import static io.cloudslang.content.database.constants.DBResponseNames.HAS_MORE;
 import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
+import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
+import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -134,62 +136,46 @@ public class SQLQuery {
         sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         sqlInputs.setIgnoreCase(ignoreCaseBool);
 
-        Map<String, String> result = new HashMap<>();
-
         try {
 
             final String aKey = getSqlKey(sqlInputs);
+            globalSessionObject = getOrDefaultGlobalSessionObj(globalSessionObject);
 
-            final Map<String, Object> sqlConnectionMap = new HashMap<>();
+            final Map<String, Object> globalMap = globalSessionObject.get();
 
-            if (globalSessionObject.getResource() != null) {
-                sqlInputs.setlRows((List<String>) globalSessionObject.getResource().get().get(aKey));
-                sqlInputs.setStrColumns((String) globalSessionObject.getResource().get().get(sqlInputs.getStrKeyCol()));
-
-                if (!sqlInputs.getlRows().isEmpty()) {
-                    final String getFirstRow = sqlInputs.getlRows().remove(0);
-                    sqlConnectionMap.put(aKey, sqlInputs.getlRows());
-
-                    result = getSuccessResultsMap(getFirstRow);
-                    result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
-                    result.put(ROWS_LEFT, String.valueOf(sqlInputs.getlRows().size()));
-
-                } else {
-                    sqlConnectionMap.put(aKey, null);
-                    sqlConnectionMap.put(sqlInputs.getStrKeyCol(), null);
-                    result.put(RETURN_RESULT, NO_MORE);
-                    result.put(ROWS_LEFT, SUCCESS);
-                    result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
-                }
-                globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
+            if (globalMap.containsKey(aKey)) {
+                sqlInputs.setlRows(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
+                sqlInputs.setStrColumns(getStrColumns(globalSessionObject, sqlInputs.getStrKeyCol()));
             } else {
-
                 SQLQueryService.executeSqlQuery(sqlInputs);
-
-                if (!sqlInputs.getlRows().isEmpty()) {
-                    final String getFirstRow = sqlInputs.getlRows().remove(0);
-                    result.put(RETURN_RESULT, getFirstRow);
-                    result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
-                    result.put(ROWS_LEFT, "" + sqlInputs.getlRows().size());
-                    result.put(RETURN_CODE, SUCCESS);
-                    sqlConnectionMap.put(aKey, sqlInputs.getlRows()); //todo check if sqlInputs.getStrKeyCol was used in the old code
-                    sqlConnectionMap.put(sqlInputs.getStrKeyCol(), sqlInputs.getStrColumns());
-                    globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
-                } else {
-                    result.put(RETURN_RESULT, "no rows selected");
-                    result.put(ROWS_LEFT, ZERO);
-                    result.put(SQL_QUERY, sqlInputs.getSqlCommand());
-                    result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
-                }
-//                result.put("queryCount", String.valueOf(sqlInputs.getiQuerys()));
             }
 
+            Map<String, String> result = new HashMap<>();
+            if (!sqlInputs.getlRows().isEmpty()) {
+                final String getFirstRow = sqlInputs.getlRows().remove(0);
+
+                result = getSuccessResultsMap(getFirstRow);
+                result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
+                result.put(ROWS_LEFT, String.valueOf(sqlInputs.getlRows().size()));
+
+                globalMap.put(aKey, sqlInputs.getlRows());
+
+                globalSessionObject.setResource(new SQLSessionResource(globalMap));
+
+            } else {
+                result.put(SQL_QUERY, sqlInputs.getSqlCommand());
+                result.put(RETURN_RESULT, NO_MORE);
+                result.put(ROWS_LEFT, ZERO);
+                result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
+            }
+
+            return result;
         } catch (Exception e) {
             final Map<String, String> failureMap = getFailureResultsMap(e);
             failureMap.put(ROWS_LEFT, ZERO);
             return failureMap;
         }
 
-        return result;
+
     }
 }

@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.services.databases.*;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.utils.CollectionUtilities;
@@ -35,6 +36,16 @@ public class SQLInputsUtils {
     static final Map<String, Integer> DB_PORTS = createDBPortValues();
     private static final Map<String, Class<? extends SqlDatabase>> dbTypesClass = getTypesOfDatabase();
     private static final Map<String, DBType> dbTypesToEnum = getTypesEnum();
+
+    @NotNull
+    public static GlobalSessionObject<Map<String, Object>> getOrDefaultGlobalSessionObj(final GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+        if (globalSessionObject != null && globalSessionObject.getResource() != null) {
+            return globalSessionObject;
+        }
+        final GlobalSessionObject<Map<String, Object>> newGlobalSessionObject = new GlobalSessionObject<>();
+        newGlobalSessionObject.setResource(new SQLSessionResource(new HashMap<String, Object>()));
+        return newGlobalSessionObject;
+    }
 
     @NotNull
     public static String getOrLower(@NotNull final String aString, final boolean toLower) {
