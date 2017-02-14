@@ -270,6 +270,21 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeVolumes() throws Exception {
+        final VolumeInputs volumeInputs = new VolumeInputs.Builder()
+                .withFilterNamesString("status")
+                .withFilterValuesString("in-use")
+                .withMaxResults("10")
+                .withNextToken("token")
+                .build();
+        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS, ""), volumeInputs);
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeVolumes")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDescribeInstances() throws Exception {
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), getDescribeInstancesInputs());
 
@@ -786,6 +801,12 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Size", "10");
                 queryParamsMap.put("SnapshotId", "snap-id");
                 queryParamsMap.put("AvailabilityZone", "us-east-1d");
+                break;
+            case "DescribeVolumes":
+                queryParamsMap.put("Filter.1.Name", "status");
+                queryParamsMap.put("Filter.1.Value.1", "in-use");
+                queryParamsMap.put("MaxResults", "10");
+                queryParamsMap.put("NextToken", "token");
                 break;
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
