@@ -10,7 +10,18 @@
 package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
-import io.cloudslang.content.amazon.entities.inputs.*;
+import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
+import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
+import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
+import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.amazon.entities.inputs.IamInputs;
+import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
+import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
+import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
+import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
+import io.cloudslang.content.amazon.entities.inputs.StorageInputs;
+import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.InputsUtil;
@@ -30,7 +41,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyMapOf;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -297,6 +315,37 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeInstancesSuccess")));
+    }
+
+    @Test
+    public void testDescribeNetworkInterfacesWithSuccess() throws Exception {
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("status,attachment.status")
+                .withFilterValuesString("in-use|available,attaching|attached|detaching|detached")
+                .build();
+
+        NetworkInputs networkInputs = new NetworkInputs.Builder()
+                .withNetworkInterfaceId("eni-12345678,eni-87654321")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), instanceInputs, networkInputs);
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeNetworkInterfacesSuccess")));
+    }
+
+    @Test
+    public void testDescribeNetworkInterfacesWithWrongStatus() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid attachment status value: [WRONG]. Valid values: attaching, attached, detaching, detached.");
+
+        InstanceInputs instanceInputs = new InstanceInputs.Builder()
+                .withFilterNamesString("attachment.status")
+                .withFilterValuesString("WRONG")
+                .build();
+
+        NetworkInputs networkInputs = new NetworkInputs.Builder()
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), instanceInputs, networkInputs);
     }
 
     @Test
@@ -953,6 +1002,19 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("MaxResults", "5");
                 queryParamsMap.put("Filter.1.Name", "availability-zone");
                 queryParamsMap.put("Filter.1.Value.1", "new_value");
+                break;
+            case "DescribeNetworkInterfacesSuccess":
+                queryParamsMap.put("Action", "DescribeNetworkInterfaces");
+                queryParamsMap.put("NetworkInterfaceId.1", "eni-12345678");
+                queryParamsMap.put("NetworkInterfaceId.2", "eni-87654321");
+                queryParamsMap.put("Filter.1.Name", "status");
+                queryParamsMap.put("Filter.1.Value.1", "in-use");
+                queryParamsMap.put("Filter.1.Value.2", "available");
+                queryParamsMap.put("Filter.2.Name", "attachment.status");
+                queryParamsMap.put("Filter.2.Value.1", "attaching");
+                queryParamsMap.put("Filter.2.Value.2", "attached");
+                queryParamsMap.put("Filter.2.Value.3", "detaching");
+                queryParamsMap.put("Filter.2.Value.4", "detached");
                 break;
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");

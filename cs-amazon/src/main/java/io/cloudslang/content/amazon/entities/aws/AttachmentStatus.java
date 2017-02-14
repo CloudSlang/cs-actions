@@ -33,6 +33,6 @@ public enum AttachmentStatus {
             }
         }
 
-        throw new RuntimeException("Invalid affinity value: [" + input + "]. Valid values: default, host.");
+        throw new RuntimeException("Invalid attachment status value: [" + input + "]. Valid values: attaching, attached, detaching, detached.");
     }
 }
