@@ -128,6 +128,7 @@ public class Constants {
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
         public static final String DESCRIBE_INSTANCES = "DescribeInstances";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
+        public static final String DESCRIBE_VOLUMES = "DescribeVolumes";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
