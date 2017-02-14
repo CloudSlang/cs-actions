@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.services.databases.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -16,12 +17,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.Reader;
 import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.*;
@@ -31,12 +28,8 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by victor on 02.02.2017.
@@ -44,6 +37,27 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SQLUtils.class)
 public class SQLInputsUtilsTest {
+
+    @Test
+    public void getOrDefaultGlobalSessionObjNull() throws Exception {
+        final GlobalSessionObject<Map<String, Object>> globalSessionObj = getOrDefaultGlobalSessionObj(null);
+        assertThat(globalSessionObj, instanceOf(GlobalSessionObject.class));
+        assertThat(globalSessionObj.get(), instanceOf(Map.class));
+    }
+
+    @Test
+    public void getOrDefaultGlobalSessionObjNotNull() throws Exception {
+        final GlobalSessionObject<Map<String, Object>> validGlobalSessionObj = new GlobalSessionObject<>();
+        final SQLSessionResource sqlSessionResource = new SQLSessionResource(new HashMap<String, Object>());
+        validGlobalSessionObj.setResource(sqlSessionResource);
+
+        final GlobalSessionObject<Map<String, Object>> globalSessionObj = getOrDefaultGlobalSessionObj(validGlobalSessionObj);
+
+        assertThat(globalSessionObj, is(validGlobalSessionObj));
+        assertThat(globalSessionObj.get(), instanceOf(Map.class));
+        sqlSessionResource.release();
+    }
+
     @Test
     public void getOrLowerTrue() throws Exception {
         assertThat(getOrLower("AnA", true), is("ana"));
@@ -141,7 +155,7 @@ public class SQLInputsUtilsTest {
         assertThat(1, is(dbProperties.size()));
     }
 
-//    @Test(expected = RuntimeException.class)
+    //    @Test(expected = RuntimeException.class)
     @Test
     public void getOrDefaultDBPoolingPropertiesException() throws Exception {
 //todo
