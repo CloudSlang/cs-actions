@@ -11,9 +11,7 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +30,10 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.USER_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
-
 import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsList;
+import static io.cloudslang.content.amazon.utils.InputsUtil.putCollectionInQueryMap;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
-
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -174,17 +171,6 @@ public class ImageUtils {
         appendOptionalFilters(queryParamsMap, STATE, currentIndex, wrapper.getImageInputs().getState());
 
         return queryParamsMap;
-    }
-
-    private void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
-        if (set != null) {
-            int step;
-            Iterator<String> iterator = set.iterator();
-            for (step = ONE; iterator.hasNext(); step++) {
-                String curValue = iterator.next();
-                queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
-            }
-        }
     }
 
     private int appendOptionalFilters(Map<String, String> queryParamsMap, String filterName, int filterIndex, String filterValue) {

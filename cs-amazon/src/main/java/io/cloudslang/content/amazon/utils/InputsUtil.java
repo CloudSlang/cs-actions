@@ -18,7 +18,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,15 +65,14 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
-
+import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.indexOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
-import static java.lang.String.valueOf;
-import static java.util.Arrays.asList;
-import static java.util.regex.Pattern.quote;
 
 /**
  * Created by Mihai Tusa.
@@ -214,6 +215,17 @@ public final class InputsUtil {
         if (isNotEmpty(firstArray) && isNotEmpty(secondArray) && firstArray.length != secondArray.length) {
             throw new RuntimeException("The values provided: [" + firstInputName + "] and [" + secondInputName + "] " +
                     "cannot have different length!");
+        }
+    }
+
+    public static void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
+        if (set != null) {
+            int step;
+            Iterator<String> iterator = set.iterator();
+            for (step = ONE; iterator.hasNext(); step++) {
+                String curValue = iterator.next();
+                queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
+            }
         }
     }
 
