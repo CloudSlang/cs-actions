@@ -47,7 +47,7 @@ public class OracleDatabaseTest {
     @Test
     public void testSetUpConnectionOracleWithoutTns() throws Exception {
         //set up method needs a SLASH before dbName (if dbName is provided)
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);

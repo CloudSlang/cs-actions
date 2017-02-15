@@ -73,7 +73,7 @@ public class ConnectionServiceTest {
 
     @Before
     public void beforeTest() throws Exception {
-        sqlInputs = new SQLInputs();
+        sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
         mockStatic(DBConnectionManager.class);
         when(DBConnectionManager.getInstance()).thenReturn(dbConnectionManagerMock);

@@ -60,7 +60,7 @@ public class SQLQueryService {
 
                     strRowHolder.append(value);
                 }
-                sqlInputs.getlRows().add(strRowHolder.toString());
+                sqlInputs.getLRows().add(strRowHolder.toString());
             }
         }
     }

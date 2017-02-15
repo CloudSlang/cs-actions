@@ -29,7 +29,7 @@ public class CustomDatabaseTest {
     @Test
     public void testSetUp() throws ClassNotFoundException {
         CustomDatabase customDatabase = new CustomDatabase();
-        SQLInputs sqlInput = new SQLInputs();
+        SQLInputs sqlInput = SQLInputs.builder().build();
         sqlInput.setDbClass(CUSTOM_CLASS_DRIVER);
         customDatabase.setUp(sqlInput);
     }
@@ -40,7 +40,7 @@ public class CustomDatabaseTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("No db class name provided");
         CustomDatabase customDatabase = new CustomDatabase();
-        SQLInputs sqlInput = new SQLInputs();
+        SQLInputs sqlInput = SQLInputs.builder().build();
         sqlInput.setDbClass(EMPTY);
         customDatabase.setUp(sqlInput);
     }

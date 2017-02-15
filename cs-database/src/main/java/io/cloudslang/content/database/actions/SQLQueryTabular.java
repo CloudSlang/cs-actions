@@ -39,6 +39,7 @@ import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryTabularInputs;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -95,33 +96,34 @@ public class SQLQueryTabular {
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
+        dbType = getDbType(dbType);
 
-        final SQLInputs sqlInputs = new SQLInputs();
-        sqlInputs.setDbServer(dbServerName); //mandatory
-        sqlInputs.setDbType(getDbType(dbType));
-        sqlInputs.setUsername(username);
-        sqlInputs.setPassword(password);
-        sqlInputs.setInstance(instance);
-        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-        sqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
-        sqlInputs.setAuthenticationType(authenticationType);
-        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        sqlInputs.setSqlCommand(command);
-        sqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
-        sqlInputs.setTrustStore(trustStore);
-        sqlInputs.setTrustStorePassword(trustStorePassword);
-        sqlInputs.setTimeout(toInteger(timeout));
-        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
-        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
-
+        final SQLInputs sqlInputs = SQLInputs.builder()
+                .dbServer(dbServerName) //mandator
+                .dbType(dbType)
+                .username(username)
+                .password(password)
+                .instance(instance)
+                .dbPort(getOrDefaultDBPort(dbPort, dbType))
+                .dbName(defaultIfEmpty(databaseName, EMPTY))
+                .authenticationType(authenticationType)
+                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbUrl(defaultIfEmpty(dbURL, EMPTY))
+                .sqlCommand(command)
+                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .timeout(toInteger(timeout))
+                .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
+                .resultSetType(getResultSetTypeForDbType(resultSetType, dbType))
+                .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
+                .isNetcool(checkIsNetcool(dbType))
+                .build();
         try {
             final String queryResult = SQLQueryTabularService.execSqlQueryTabular(sqlInputs);
-            return OutputUtilities.getSuccessResultsMap(queryResult);
+            return getSuccessResultsMap(queryResult);
         } catch (Exception e) {
-           return OutputUtilities.getFailureResultsMap(e);
+            return getFailureResultsMap(e);
         }
     }
 }

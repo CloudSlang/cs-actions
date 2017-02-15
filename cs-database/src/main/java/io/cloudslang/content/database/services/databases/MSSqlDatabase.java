@@ -79,7 +79,7 @@ public class MSSqlDatabase implements SqlDatabase {
             // todo ask eugen if need to check class
             if (sqlInputs.getDbClass() != null && sqlInputs.getDbClass().equals(SQLSERVER_JDBC_DRIVER)) {
                 if (isNoneEmpty(sqlInputs.getDbUrl())) {
-                    final String dbUrl = MSSqlDatabase.addSslEncryptionToConnection(sqlInputs.getTrustAllRoots(),
+                    final String dbUrl = MSSqlDatabase.addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(),
                             sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), sqlInputs.getDbUrl());
                     dbUrls.add(dbUrl);
 
@@ -119,7 +119,7 @@ public class MSSqlDatabase implements SqlDatabase {
                 if (AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
                     dbUrlMSSQL.append(SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE);
                 }
-                final String connectionString = addSslEncryptionToConnection(sqlInputs.getTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
+                final String connectionString = addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
 //                sqlInputs.getDbUrls().add(connectionString);
 
                 dbUrls.add(connectionString);

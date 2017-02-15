@@ -151,7 +151,7 @@ public class SQLInputsUtils {
 
     @NotNull
     public static String getSqlKey(@NotNull final SQLInputs sqlInputs) {
-        if (sqlInputs.getIgnoreCase()) {
+        if (sqlInputs.isIgnoreCase()) {
             return SQLUtils.computeSessionId(sqlInputs.getDbServer().toLowerCase() + sqlInputs.getDbType().toLowerCase() +
                     sqlInputs.getUsername() + sqlInputs.getPassword() + sqlInputs.getInstance() + sqlInputs.getDbPort() + sqlInputs.getDbName() +
                     sqlInputs.getAuthenticationType().toLowerCase() + sqlInputs.getSqlCommand().toLowerCase() + sqlInputs.getKey());

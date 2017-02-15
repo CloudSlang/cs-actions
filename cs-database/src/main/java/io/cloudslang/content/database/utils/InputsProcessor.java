@@ -9,21 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
-import io.cloudslang.content.utils.BooleanUtilities;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
-
-import static io.cloudslang.content.database.constants.DBInputNames.*;
-import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static io.cloudslang.content.database.utils.Constants.*;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by victor on 13.01.2017.
@@ -39,8 +26,8 @@ public class InputsProcessor {
         if (sqlInputs != null) {
             sqlInputs.setStrDelim(",");
             sqlInputs.setStrColumns("");
-            sqlInputs.setlRows(new ArrayList<String>());
-            sqlInputs.setiUpdateCount(0);
+            sqlInputs.setLRows(new ArrayList<String>());
+            sqlInputs.setIUpdateCount(0);
             sqlInputs.setSqlCommand(null);
             sqlInputs.setDbServer(null);
             sqlInputs.setDbName(null);
@@ -51,8 +38,8 @@ public class InputsProcessor {
             sqlInputs.setDbUrl(null);
             sqlInputs.setDbClass(null);
             sqlInputs.setNetcool(false);
-            sqlInputs.setlRowsFiles(new ArrayList<List<String>>());
-            sqlInputs.setlRowsNames(new ArrayList<List<String>>());
+            sqlInputs.setLRowsFiles(new ArrayList<List<String>>());
+            sqlInputs.setLRowsNames(new ArrayList<List<String>>());
             sqlInputs.setSkip(0L);
             sqlInputs.setInstance(null);
             sqlInputs.setTimeout(0);

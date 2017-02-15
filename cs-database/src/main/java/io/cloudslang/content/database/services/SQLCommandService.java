@@ -38,7 +38,7 @@ public class SQLCommandService {
                 preparedStatement.setQueryTimeout(sqlInputs.getTimeout());
                 OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection);
                 preparedStatement.executeQuery();
-                sqlInputs.setiUpdateCount(preparedStatement.getUpdateCount());
+                sqlInputs.setIUpdateCount(preparedStatement.getUpdateCount());
                 preparedStatement.close();
                 final String output = oracleDbmsOutput.getOutput();
                 oracleDbmsOutput.close();
@@ -65,13 +65,13 @@ public class SQLCommandService {
                 if (rs != null) {
                     ResultSetMetaData rsMtd = rs.getMetaData();
                     if (rsMtd != null) {
-                        sqlInputs.getlRows().clear();
+                        sqlInputs.getLRows().clear();
                         int colCount = rsMtd.getColumnCount();
 
                         if (sqlInputs.getSqlCommand().trim().toLowerCase().startsWith("dbcc")) {
                             while (rs.next()) {
                                 if (colCount >= 4) {
-                                    sqlInputs.getlRows().add(rs.getString(4));
+                                    sqlInputs.getLRows().add(rs.getString(4));
                                 }
                             }
                         } else {
@@ -85,7 +85,7 @@ public class SQLCommandService {
                                     }
                                     strRowHolder += rs.getString(i);
                                 }
-                                sqlInputs.getlRows().add(strRowHolder);
+                                sqlInputs.getLRows().add(strRowHolder);
                             }
                         }
                         rs.close();
@@ -96,12 +96,12 @@ public class SQLCommandService {
                 else if (dbType.equalsIgnoreCase(SYBASE_DB_TYPE) && sqlInputs.getSqlCommand().trim().toLowerCase().startsWith("dbcc")) {
                     SQLWarning warning = statement.getWarnings();
                     while (warning != null) {
-                        sqlInputs.getlRows().add(warning.getMessage());
+                        sqlInputs.getLRows().add(warning.getMessage());
                         warning = warning.getNextWarning();
                     }
                 }
 
-                sqlInputs.setiUpdateCount(statement.getUpdateCount());
+                sqlInputs.setIUpdateCount(statement.getUpdateCount());
             }
         }
         return "Command completed successfully";

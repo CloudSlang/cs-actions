@@ -37,7 +37,7 @@ public class SybaseDatabaseTest {
     @Test
     public void testSetUpNoDbName() throws ClassNotFoundException, SQLException {
         SybaseDatabase sybaseDatabase = new SybaseDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(EMPTY);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
@@ -52,7 +52,7 @@ public class SybaseDatabaseTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("host   not valid");
         SybaseDatabase sybaseDatabase = new SybaseDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(DB_PORT);
@@ -63,7 +63,7 @@ public class SybaseDatabaseTest {
     @Test
     public void testSetUpAll() throws ClassNotFoundException, SQLException {
         SybaseDatabase sybaseDatabase = new SybaseDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
@@ -76,7 +76,7 @@ public class SybaseDatabaseTest {
     @Test
     public void testSetUpAllIPV6LIteral() throws ClassNotFoundException, SQLException {
         SybaseDatabase sybaseDatabase = new SybaseDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER_IPV6_LITERAL);
         sqlInputs.setDbPort(DB_PORT);

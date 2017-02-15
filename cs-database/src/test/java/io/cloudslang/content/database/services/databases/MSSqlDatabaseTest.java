@@ -140,7 +140,7 @@ public class MSSqlDatabaseTest {
 
     @NotNull
     public SQLInputs getSqlInputsForMSSql(String dbName, String dbServer, String authWindows, String instance) {
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(dbName);
         sqlInputs.setDbServer(dbServer);
         sqlInputs.setDbPort(DB_PORT);

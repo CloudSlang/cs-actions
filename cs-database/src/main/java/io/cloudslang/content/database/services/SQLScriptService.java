@@ -57,7 +57,7 @@ public class SQLScriptService {
                     statement.execute(lines.get(0));
                     updateCount = statement.getUpdateCount();
                 }
-                sqlInputs.setiUpdateCount(updateCount);
+                sqlInputs.setIUpdateCount(updateCount);
                 connection.commit();
                 connection.setAutoCommit(autoCommit);
             } catch (SQLException e) {

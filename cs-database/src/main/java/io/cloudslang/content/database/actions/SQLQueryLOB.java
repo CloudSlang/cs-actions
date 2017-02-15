@@ -25,9 +25,8 @@ import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,30 +111,34 @@ public class SQLQueryLOB {
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
-        SQLInputs sqlInputs = new SQLInputs();
-        sqlInputs.setDbServer(dbServerName); //mandatory
-        sqlInputs.setDbType(getDbType(dbType));
-        sqlInputs.setUsername(username);
-        sqlInputs.setPassword(password);
-        sqlInputs.setInstance(getOrLower(instance, true));
-        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-        sqlInputs.setDbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), true));
-        sqlInputs.setAuthenticationType(authenticationType);
-        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        sqlInputs.setSqlCommand(command);
-        sqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
-        sqlInputs.setTrustStore(trustStore);
-        sqlInputs.setTrustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY));
-        sqlInputs.setStrDelim(delimiter);
-        sqlInputs.setKey(key);
-        sqlInputs.setTimeout(toInteger(timeout));
-        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
-        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        sqlInputs.setIgnoreCase(true);
-        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
-        Map<String, String> result = new HashMap<>();
+        dbType = getDbType(dbType);
+
+
+        final SQLInputs sqlInputs = SQLInputs.builder()
+                .dbServer(dbServerName) //mandatory
+                .dbType(dbType)
+                .username(username)
+                .password(password)
+                .instance(getOrLower(instance, true))
+                .dbPort(getOrDefaultDBPort(dbPort, dbType))
+                .dbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), true))
+                .authenticationType(authenticationType)
+                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbUrl(defaultIfEmpty(dbURL, EMPTY))
+                .sqlCommand(command)
+                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY))
+                .strDelim(delimiter)
+                .key(key)
+                .timeout(toInteger(timeout))
+                .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
+                .resultSetType(getResultSetTypeForDbType(resultSetType, dbType))
+                .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
+                .ignoreCase(true)
+                .isNetcool(checkIsNetcool(dbType))
+                .build();
+
         try {
 
             final String aKey = SQLInputsUtils.getSqlKey(sqlInputs);
@@ -149,17 +152,20 @@ public class SQLQueryLOB {
 
             final Map<String, Object> sqlConnectionMap = globalSessionObject.get();
 
-            if (globalSessionObject.get().get(aKey) != null) {
-                sqlInputs.setlRows(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
+            Map<String, String> result = new HashMap<>();
+
+            if (sqlConnectionMap.containsKey(aKey)) {
+
+                sqlInputs.setLRows(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
                 sqlInputs.setStrColumns(getStrColumns(globalSessionObject, strKeyCol));
 
-                if (globalSessionObject.get().get(strKeyFiles) != null) {
-                    sqlInputs.setSkip((Long) globalSessionObject.get().get(strKeySkip));
-                    sqlInputs.setlRowsFiles((ArrayList) globalSessionObject.get().get(strKeyFiles));
-                    sqlInputs.setlRowsNames((ArrayList) globalSessionObject.get().get(strKeyNames));
+                if (sqlConnectionMap.get(strKeyFiles) != null) {
+                    sqlInputs.setSkip((Long) sqlConnectionMap.get(strKeySkip));
+                    sqlInputs.setLRowsFiles((List) sqlConnectionMap.get(strKeyFiles));
+                    sqlInputs.setLRowsNames((List) sqlConnectionMap.get(strKeyNames));
                 }
 
-                if (sqlInputs.getlRows().isEmpty() && (sqlInputs.getlRowsFiles() == null || sqlInputs.getlRowsFiles().isEmpty())) {
+                if (sqlInputs.getLRows().isEmpty() && (sqlInputs.getLRowsFiles() == null || sqlInputs.getLRowsFiles().isEmpty())) {
 
                     sqlConnectionMap.put(aKey, null);
                     sqlConnectionMap.put(strKeyCol, null);
@@ -170,40 +176,36 @@ public class SQLQueryLOB {
                     result.put(RETURN_RESULT, NO_MORE);
                     result.put(ROWS_LEFT, ZERO);
                     result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
-                } else if (sqlInputs.getlRowsFiles() == null || sqlInputs.getlRowsFiles().isEmpty() || (sqlInputs.getlRows().size() == sqlInputs.getlRowsFiles().size())) {
-                    final String getFirstRow = sqlInputs.getlRows().remove(0);
+                } else if (sqlInputs.getLRowsFiles() == null || sqlInputs.getLRowsFiles().isEmpty() || (sqlInputs.getLRows().size() == sqlInputs.getLRowsFiles().size())) {
+                    final String getFirstRow = sqlInputs.getLRows().remove(0);
 
                     result.put(RETURN_RESULT, getFirstRow);
                     result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
-                    result.put(ROWS_LEFT, String.valueOf(sqlInputs.getlRows().size()));
+                    result.put(ROWS_LEFT, String.valueOf(sqlInputs.getLRows().size()));
                     result.put(RETURN_CODE, SUCCESS);
-                    sqlConnectionMap.put(aKey, sqlInputs.getlRows());
+                    sqlConnectionMap.put(aKey, sqlInputs.getLRows());
                 } else {
+                    final String colName = "CLOB column: " + ((List) sqlInputs.getLRowsNames().get(0)).get(0);
+                    final File tmpFile = new File(sqlInputs.getLRowsFiles().get(0).get(0));
+                    final String fileContent = FileUtils.readFileToString(tmpFile, StandardCharsets.UTF_8);
+                    FileUtils.deleteQuietly(tmpFile);
 
-                        final String colName = "CLOB column: " + ((List) sqlInputs.getlRowsNames().get(0)).get(0);
-
-                        final File tmpFile = new File(sqlInputs.getlRowsFiles().get(0).get(0));
-
-                        final String fileContent = FileUtils.readFileToString(tmpFile, StandardCharsets.UTF_8);
-
-                        FileUtils.deleteQuietly(tmpFile);
-
-                        ((List) sqlInputs.getlRowsFiles().get(0)).remove(0);
-                        ((List) sqlInputs.getlRowsNames().get(0)).remove(0);
-                        if (sqlInputs.getlRowsFiles().get(0).isEmpty()) { //todo where does lrowsfiles come from ?
-                            sqlInputs.getlRowsFiles().remove(0);
-                            sqlInputs.getlRowsNames().remove(0);
-                        }
+                    sqlInputs.getLRowsFiles().get(0).remove(0);
+                    sqlInputs.getLRowsNames().get(0).remove(0);
+                    if (sqlInputs.getLRowsFiles().get(0).isEmpty()) {
+                        sqlInputs.getLRowsFiles().remove(0);
+                        sqlInputs.getLRowsNames().remove(0);
+                    }
 
 
-                        result.put(RETURN_RESULT, fileContent);
-                        result.put(COLUMN_NAMES, colName);
-                        result.put(ROWS_LEFT, String.valueOf(sqlInputs.getlRows().size()));
-                        result.put(RETURN_CODE, SUCCESS);
+                    result.put(RETURN_RESULT, fileContent);
+                    result.put(COLUMN_NAMES, colName);
+                    result.put(ROWS_LEFT, String.valueOf(sqlInputs.getLRows().size()));
+                    result.put(RETURN_CODE, SUCCESS);
 
-                        sqlConnectionMap.put(strKeyFiles, sqlInputs.getlRowsFiles());
-                        sqlConnectionMap.put(strKeyNames, sqlInputs.getlRowsNames());
-                        sqlConnectionMap.put(strKeySkip, sqlInputs.getSkip());
+                    sqlConnectionMap.put(strKeyFiles, sqlInputs.getLRowsFiles());
+                    sqlConnectionMap.put(strKeyNames, sqlInputs.getLRowsNames());
+                    sqlConnectionMap.put(strKeySkip, sqlInputs.getSkip());
 
                 }
                 globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
@@ -211,19 +213,19 @@ public class SQLQueryLOB {
             } else { //globalSessionObject
                 boolean isLOB = SQLQueryLobService.executeSqlQueryLob(sqlInputs);
 
-                if (!sqlInputs.getlRows().isEmpty()) {
-                    final String getFirstRow = sqlInputs.getlRows().remove(0);
+                if (!sqlInputs.getLRows().isEmpty()) {
+                    final String getFirstRow = sqlInputs.getLRows().remove(0);
 
                     result.put(RETURN_RESULT, getFirstRow);
-                    result.put(ROWS_LEFT, String.valueOf(sqlInputs.getlRows().size()));
+                    result.put(ROWS_LEFT, String.valueOf(sqlInputs.getLRows().size()));
                     result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
                     result.put(RETURN_CODE, SUCCESS);
-                    sqlConnectionMap.put(aKey, sqlInputs.getlRows());
-                    sqlConnectionMap.put(strKeyCol, sqlInputs.getStrColumns());
 
+                    sqlConnectionMap.put(aKey, sqlInputs.getLRows());
+                    sqlConnectionMap.put(strKeyCol, sqlInputs.getStrColumns());
                     if (isLOB) {
-                        sqlConnectionMap.put(strKeyFiles, sqlInputs.getlRowsFiles());
-                        sqlConnectionMap.put(strKeyNames, sqlInputs.getlRowsNames());
+                        sqlConnectionMap.put(strKeyFiles, sqlInputs.getLRowsFiles());
+                        sqlConnectionMap.put(strKeyNames, sqlInputs.getLRowsNames());
                         sqlConnectionMap.put(strKeySkip, 0L);
                     }
                     globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
@@ -234,6 +236,7 @@ public class SQLQueryLOB {
                     result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
                 }
             }
+            globalSessionObject.setResource(new SQLSessionResource(sqlConnectionMap));
             return result;
         } catch (Exception e) {
             final Map<String, String> failureMap = OutputUtilities.getFailureResultsMap(e);

@@ -9,10 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.database.constants;
 
-import io.cloudslang.content.database.utils.SQLInputsUtils;
-
-import java.util.Map;
-
 /**
  * Created by pinteae on 1/17/2017.
  */

@@ -64,7 +64,7 @@ public class SQLScriptServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        sqlInputs = new SQLInputs();
+        sqlInputs = SQLInputs.builder().build();
         lines = new ArrayList<>();
         lines.add(SQL_COMMAND);
         InputsProcessor.init(sqlInputs);

@@ -23,7 +23,6 @@ import io.cloudslang.content.database.services.SQLQueryService;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLSessionResource;
 import io.cloudslang.content.utils.BooleanUtilities;
-import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -43,7 +42,6 @@ import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
-import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -112,30 +110,32 @@ public class SQLQuery {
         }
 
         final boolean ignoreCaseBool = BooleanUtilities.toBoolean(ignoreCase);
+        dbType = getDbType(dbType);
 
-        SQLInputs sqlInputs = new SQLInputs();
-        sqlInputs.setDbServer(dbServerName); //mandatory
-        sqlInputs.setDbType(getDbType(dbType));
-        sqlInputs.setUsername(username);
-        sqlInputs.setPassword(password);
-        sqlInputs.setInstance(getOrLower(instance, ignoreCaseBool));
-        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-        sqlInputs.setDbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), ignoreCaseBool));
-        sqlInputs.setAuthenticationType(authenticationType);
-        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        sqlInputs.setSqlCommand(command);
-        sqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
-        sqlInputs.setTrustStore(trustStore);
-        sqlInputs.setTrustStorePassword(trustStorePassword);
-        sqlInputs.setStrDelim(delimiter);
-        sqlInputs.setKey(key);
-        sqlInputs.setTimeout(toInteger(timeout));
-        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
-        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        sqlInputs.setIgnoreCase(ignoreCaseBool);
-        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
+        final SQLInputs sqlInputs = SQLInputs.builder()
+                .dbServer(dbServerName) //mandatory
+                .dbType(dbType)
+                .username(username)
+                .password(password)
+                .instance(getOrLower(instance, ignoreCaseBool))
+                .dbPort(getOrDefaultDBPort(dbPort, dbType))
+                .dbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), ignoreCaseBool))
+                .authenticationType(authenticationType)
+                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbUrl(defaultIfEmpty(dbURL, EMPTY))
+                .sqlCommand(command)
+                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .strDelim(delimiter)
+                .key(key)
+                .timeout(toInteger(timeout))
+                .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
+                .resultSetType(getResultSetTypeForDbType(resultSetType, dbType))
+                .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
+                .ignoreCase(ignoreCaseBool)
+                .isNetcool(checkIsNetcool(dbType))
+                .build();
 
 
         try {
@@ -146,20 +146,20 @@ public class SQLQuery {
             final Map<String, Object> globalMap = globalSessionObject.get();
 
             if (globalMap.containsKey(aKey)) {
-                sqlInputs.setlRows(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
+                sqlInputs.setLRows(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
             } else {
                 SQLQueryService.executeSqlQuery(sqlInputs);
             }
 
             Map<String, String> result = new HashMap<>();
-            if (!sqlInputs.getlRows().isEmpty()) {
-                final String getFirstRow = sqlInputs.getlRows().remove(0);
+            if (!sqlInputs.getLRows().isEmpty()) {
+                final String getFirstRow = sqlInputs.getLRows().remove(0);
 
                 result = getSuccessResultsMap(getFirstRow);
                 result.put(COLUMN_NAMES, sqlInputs.getStrColumns());
-                result.put(ROWS_LEFT, String.valueOf(sqlInputs.getlRows().size()));
+                result.put(ROWS_LEFT, String.valueOf(sqlInputs.getLRows().size()));
 
-                globalMap.put(aKey, sqlInputs.getlRows());
+                globalMap.put(aKey, sqlInputs.getLRows());
 
                 globalSessionObject.setResource(new SQLSessionResource(globalMap));
 

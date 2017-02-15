@@ -39,9 +39,7 @@ import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSq
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created by pinteae on 1/11/2017.
@@ -87,6 +85,7 @@ public class SQLCommand {
         trustStore = defaultIfEmpty(trustStore, EMPTY);
         trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
+
         final List<String> preInputsValidation = validateSqlCommandInputs(dbServerName, dbType, username, password, instance, dbPort,
                 databaseName, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
                 trustStorePassword);
@@ -96,25 +95,27 @@ public class SQLCommand {
         }
 
         try {
-            SQLInputs sqlInputs = new SQLInputs();
-            sqlInputs.setDbServer(dbServerName);
-            sqlInputs.setDbType(getDbType(dbType));
-            sqlInputs.setUsername(username);
-            sqlInputs.setPassword(password);
-            sqlInputs.setInstance(instance);
-            sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-            sqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
-            sqlInputs.setAuthenticationType(authenticationType);
-            sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-            sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-            sqlInputs.setSqlCommand(command);
-            sqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
-            sqlInputs.setTrustStore(trustStore);
-            sqlInputs.setTrustStorePassword(trustStorePassword);
-            sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-            sqlInputs.setResultSetType(getResultSetType(resultSetType));
-            sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-            sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
+            dbType = getDbType(dbType);
+            final SQLInputs sqlInputs = SQLInputs.builder()
+                    .dbServer(dbServerName)
+                    .dbType(dbType)
+                    .username(username)
+                    .password(password)
+                    .instance(instance)
+                    .dbPort(getOrDefaultDBPort(dbPort, dbType))
+                    .dbName(defaultIfEmpty(databaseName, EMPTY))
+                    .authenticationType(authenticationType)
+                    .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                    .dbUrl(defaultIfEmpty(dbURL, EMPTY))
+                    .sqlCommand(command)
+                    .trustAllRoots(toBoolean(trustAllRoots))
+                    .trustStore(trustStore)
+                    .trustStorePassword(trustStorePassword)
+                    .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
+                    .resultSetType(getResultSetType(resultSetType))
+                    .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
+                    .isNetcool(checkIsNetcool(dbType))
+                    .build();
 
             String res = SQLCommandService.executeSqlCommand(sqlInputs);
 
@@ -126,19 +127,19 @@ public class SQLCommand {
                     outputText = res;
                 }
                 res = "Command completed successfully";
-            } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() != -1) {
-                outputText = String.valueOf(sqlInputs.getiUpdateCount()) + " row(s) affected";
-            } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() == -1) {
+            } else if (sqlInputs.getLRows().size() == 0 && sqlInputs.getIUpdateCount() != -1) {
+                outputText = String.valueOf(sqlInputs.getIUpdateCount()) + " row(s) affected";
+            } else if (sqlInputs.getLRows().size() == 0 && sqlInputs.getIUpdateCount() == -1) {
                 outputText = "The command has no results!";
                 if (sqlInputs.getSqlCommand().toUpperCase().contains(SET_NOCOUNT_ON)) {
                     outputText = res;
                 }
             } else {
-                outputText = StringUtilities.join(sqlInputs.getlRows(), NEW_LINE);
+                outputText = StringUtilities.join(sqlInputs.getLRows(), NEW_LINE);
             }
 
             final Map<String, String> result = getSuccessResultsMap(res);
-            result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
+            result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getIUpdateCount()));
             result.put(OUTPUT_TEXT, outputText);
             return result;
         } catch (Exception e) {

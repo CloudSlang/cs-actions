@@ -37,6 +37,19 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SQLUtils.class)
 public class SQLInputsUtilsTest {
+    @Test
+    public void checkIsNetcoolTrue() throws Exception {
+        assertTrue(checkIsNetcool(NETCOOL_DB_TYPE));
+    }
+
+    @Test
+    public void checkIsNetcoolFalse() throws Exception {
+        assertFalse(checkIsNetcool(MSSQL_DB_TYPE));
+        assertFalse(checkIsNetcool(MYSQL_DB_TYPE));
+        assertFalse(checkIsNetcool(ORACLE_DB_TYPE));
+        assertFalse(checkIsNetcool(CUSTOM_DB_TYPE));
+
+    }
 
     @Test
     public void getOrDefaultGlobalSessionObjNull() throws Exception {
@@ -299,7 +312,7 @@ public class SQLInputsUtilsTest {
 
     @NotNull
     private SQLInputs getTestInputsSqlKey(boolean ignoreCase) {
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setIgnoreCase(ignoreCase);
         sqlInputs.setInstance("INSTANCE");
         sqlInputs.setDbName("DBNAME");

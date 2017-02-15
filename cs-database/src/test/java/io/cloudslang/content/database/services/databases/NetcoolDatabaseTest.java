@@ -36,7 +36,7 @@ public class NetcoolDatabaseTest {
     public void testSetUpInvalid() throws Exception {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Could not locate either jconn2.jar or jconn3.jar file in the classpath");
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName("dbName");
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(30);
@@ -47,7 +47,7 @@ public class NetcoolDatabaseTest {
     public void testSetUpValid() throws Exception {
 
 //todo
-//        final SQLInputs sqlInputs = new SQLInputs();
+//        final SQLInputs sqlInputs = SQLInputs.builder().build();
 //        sqlInputs.setDbName("dbName");
 //        sqlInputs.setDbServer(null);
 //        sqlInputs.setDbPort(30);

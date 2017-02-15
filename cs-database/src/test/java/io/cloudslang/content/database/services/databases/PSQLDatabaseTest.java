@@ -35,7 +35,7 @@ public class PSQLDatabaseTest {
     @Test
     public void testSetUpNoDbName() throws ClassNotFoundException, SQLException {
         PostgreSqlDatabase pSqlDatabase = new PostgreSqlDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(EMPTY);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
@@ -51,7 +51,7 @@ public class PSQLDatabaseTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("host   not valid");
         PostgreSqlDatabase pSqlDatabase = new PostgreSqlDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(DB_PORT);
@@ -62,7 +62,7 @@ public class PSQLDatabaseTest {
     @Test
     public void testSetUpAll() throws ClassNotFoundException, SQLException {
         PostgreSqlDatabase pSqlDatabase = new PostgreSqlDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER);
         sqlInputs.setDbPort(DB_PORT);
@@ -76,7 +76,7 @@ public class PSQLDatabaseTest {
     @Test
     public void testSetUpAllIPV6LIteral() throws ClassNotFoundException, SQLException {
         PostgreSqlDatabase pSqlDatabase = new PostgreSqlDatabase();
-        final SQLInputs sqlInputs = new SQLInputs();
+        final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(DB_SERVER_IPV6_LITERAL);
         sqlInputs.setDbPort(DB_PORT);

@@ -11,15 +11,18 @@ package io.cloudslang.content.database.services;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
+import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import static org.apache.commons.io.FileUtils.*;
 
 /**
  * Created by victor on 13.01.2017.
@@ -60,30 +63,17 @@ public class SQLQueryLobService {
                         String value;
                         if (columnObject instanceof java.sql.Clob) {
                             isLOB = true;
-                            File tmpFile = File.createTempFile("CLOB_" + mtd.getColumnLabel(i), ".txt");
+                            final File tmpFile = File.createTempFile("CLOB_" + mtd.getColumnLabel(i), ".txt");
 
-                            final BufferedReader reader = new BufferedReader(results.getCharacterStream(i));
-                            final FileOutputStream fos = new FileOutputStream(tmpFile);
-                            final Writer wr = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-                            final BufferedWriter writer = new BufferedWriter(wr);
+                            copyInputStreamToFile(new ReaderInputStream(results.getCharacterStream(i), StandardCharsets.UTF_8), tmpFile);
 
-                            String data;
-
-                            while ((data = reader.readLine()) != null) {
-                                writer.write(data);
-                                writer.newLine();
-                                writer.flush();
+                            if (sqlInputs.getLRowsFiles().size() == nr) {
+                                sqlInputs.getLRowsFiles().add(nr, new ArrayList<String>());
+                                sqlInputs.getLRowsNames().add(nr, new ArrayList<String>());
                             }
-
-                            if (sqlInputs.getlRowsFiles().size() == nr) {
-                                sqlInputs.getlRowsFiles().add(nr, new ArrayList<String>());
-                                sqlInputs.getlRowsNames().add(nr, new ArrayList<String>());
-                            }
-                            sqlInputs.getlRowsFiles().get(nr).add(tmpFile.getAbsolutePath());
-                            sqlInputs.getlRowsNames().get(nr).add(mtd.getColumnLabel(i));
+                            sqlInputs.getLRowsFiles().get(nr).add(tmpFile.getAbsolutePath());
+                            sqlInputs.getLRowsNames().get(nr).add(mtd.getColumnLabel(i));
                             value = "(CLOB)...";
-                            reader.close();
-                            writer.close();
 
                         } else {
                             value = results.getString(i);
@@ -94,7 +84,7 @@ public class SQLQueryLobService {
                     } else
                         strRowHolder.append("null");
                 }
-                sqlInputs.getlRows().add(strRowHolder.toString());
+                sqlInputs.getLRows().add(strRowHolder.toString());
             }
         }
 

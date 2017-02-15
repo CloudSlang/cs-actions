@@ -64,7 +64,7 @@ public class ConnectionServiceTestOracle {
 
     @Before
     public void beforeTest() throws Exception {
-        sqlInputs = new SQLInputs();
+        sqlInputs = SQLInputs.builder().build();
 //        connectionServiceSpy = new ConnectionService();
         InputsProcessor.init(sqlInputs);
 

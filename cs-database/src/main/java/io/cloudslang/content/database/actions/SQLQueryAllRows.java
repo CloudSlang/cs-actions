@@ -97,29 +97,31 @@ public class SQLQueryAllRows {
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
+        dbType = getDbType(dbType);
 
-        SQLInputs sqlInputs = new SQLInputs();
-        sqlInputs.setDbServer(dbServerName);
-        sqlInputs.setDbType(getDbType(dbType));
-        sqlInputs.setUsername(username);
-        sqlInputs.setPassword(password);
-        sqlInputs.setInstance(instance);
-        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-        sqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
-        sqlInputs.setAuthenticationType(authenticationType);
-        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        sqlInputs.setSqlCommand(command);
-        sqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
-        sqlInputs.setTrustStore(trustStore);
-        sqlInputs.setTrustStorePassword(trustStorePassword);
-        sqlInputs.setColDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER));
-        sqlInputs.setRowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE));
-        sqlInputs.setTimeout(toInteger(timeout));
-        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
-        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
+        final SQLInputs sqlInputs = SQLInputs.builder()
+                .dbServer(dbServerName)
+                .dbType(dbType)
+                .username(username)
+                .password(password)
+                .instance(instance)
+                .dbPort(getOrDefaultDBPort(dbPort, dbType))
+                .dbName(defaultIfEmpty(databaseName, EMPTY))
+                .authenticationType(authenticationType)
+                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbUrl(defaultIfEmpty(dbURL, EMPTY))
+                .sqlCommand(command)
+                .trustAllRoots(toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .colDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER))
+                .rowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE))
+                .timeout(toInteger(timeout))
+                .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
+                .resultSetType(getResultSetTypeForDbType(resultSetType, dbType))
+                .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
+                .isNetcool(checkIsNetcool(dbType))
+                .build();
 
         try {
             final String queryResult = SQLQueryAllRowsService.execQueryAllRows(sqlInputs);

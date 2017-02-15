@@ -68,7 +68,7 @@ public class SQLQueryServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        sqlInputs = new SQLInputs();
+        sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
         PowerMockito.whenNew(ConnectionService.class).withNoArguments().thenReturn(connectionServiceMock);
         when(connectionServiceMock.setUpConnection(sqlInputs)).thenReturn(connectionMock);

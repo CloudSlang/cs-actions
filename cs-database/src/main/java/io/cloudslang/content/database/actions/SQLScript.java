@@ -97,33 +97,36 @@ public class SQLScript {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        final SQLInputs sqlInputs = new SQLInputs();
-        sqlInputs.setDbServer(dbServerName);
-        sqlInputs.setDbType(getDbType(dbType));
-        sqlInputs.setUsername(username);
-        sqlInputs.setPassword(password);
-        sqlInputs.setInstance(instance);
-        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
-        sqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
-        sqlInputs.setAuthenticationType(authenticationType);
-        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        sqlInputs.setStrDelim(defaultIfEmpty(delimiter, SEMI_COLON)); //todo not ok
-        sqlInputs.setSqlCommands(getSqlCommands(sqlCommands, scriptFileName, sqlInputs.getStrDelim()));
-        sqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
-        sqlInputs.setTrustStore(trustStore);
-        sqlInputs.setTrustStorePassword(trustStorePassword);
-        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        sqlInputs.setResultSetType(getResultSetType(resultSetType));
-        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
+        dbType = getDbType(dbType);
+        delimiter = defaultIfEmpty(delimiter, SEMI_COLON);
+        final SQLInputs sqlInputs = SQLInputs.builder()
+                .dbServer(dbServerName)
+                .dbType(dbType)
+                .username(username)
+                .password(password)
+                .instance(instance)
+                .dbPort(getOrDefaultDBPort(dbPort, dbType))
+                .dbName(defaultIfEmpty(databaseName, EMPTY))
+                .authenticationType(authenticationType)
+                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbUrl(defaultIfEmpty(dbURL, EMPTY))
+                .strDelim(delimiter)
+                .sqlCommands(getSqlCommands(sqlCommands, scriptFileName, delimiter))
+                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
+                .resultSetType(getResultSetType(resultSetType))
+                .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
+                .isNetcool(checkIsNetcool(dbType))
+                .build();
 
         try {
             final List<String> commands = sqlInputs.getSqlCommands();
             if (!commands.isEmpty()) {
                 final String res = SQLScriptService.executeSqlScript(commands, sqlInputs);
                 final Map<String, String> result = getSuccessResultsMap(res);
-                result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
+                result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getIUpdateCount()));
                 return result;
             }
             return getFailureResultsMap(NO_SQL_COMMAND);
