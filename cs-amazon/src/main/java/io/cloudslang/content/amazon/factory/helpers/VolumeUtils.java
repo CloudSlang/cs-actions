@@ -21,27 +21,11 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.*;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
-import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ENCRYPTED;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FORCE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.INSTANCE_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.IOPS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SNAPSHOT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.STANDARD;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VOLUME_TYPE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VOLUME_ID;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_VALUES_STRING;
-import static java.lang.String.valueOf;
+import static io.cloudslang.content.amazon.utils.InputsUtil.*;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -59,8 +43,8 @@ public class VolumeUtils {
     private static final String DEVICE = "Device";
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";
-    public static final String NEXT_TOKEN = "NextToken";
-    public static final String MAX_RESULTS = "MaxResults";
+    private static final String NEXT_TOKEN = "NextToken";
+    private static final String MAX_RESULTS = "MaxResults";
 
     public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
         return getAttachOrDetachVolumeCommonQueryParamsMap(wrapper);
@@ -98,6 +82,21 @@ public class VolumeUtils {
         return queryParamsMap;
     }
 
+    public Map<String, String> getDescribeVolumesQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getVolumeInputs().getMaxResults(),
+                !NOT_RELEVANT.equalsIgnoreCase(wrapper.getVolumeInputs().getMaxResults()));
+        setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getVolumeInputs().getNextToken(),
+                isNotBlank(wrapper.getVolumeInputs().getNextToken()));
+
+        setDescribeVolumesQueryParamsFilter(queryParamsMap, wrapper);
+
+        return queryParamsMap;
+    }
+
+
     private Map<String, String> getAttachOrDetachVolumeCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
@@ -109,11 +108,11 @@ public class VolumeUtils {
     }
 
     private void setDescribeVolumesQueryParamsFilter(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        final String[] filterNamesArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getVolumeInputs().getFilterNamesString(),
+        final String[] filterNamesArray = getArrayWithoutDuplicateEntries(wrapper.getVolumeInputs().getFilterNamesString(),
                 FILTER_NAMES_STRING, wrapper.getCommonInputs().getDelimiter());
-        final String[] filterValuesArray = InputsUtil.getStringsArray(wrapper.getVolumeInputs().getFilterValuesString(), EMPTY,
+        final String[] filterValuesArray = getStringsArray(wrapper.getVolumeInputs().getFilterValuesString(), EMPTY,
                 wrapper.getCommonInputs().getDelimiter());
-        InputsUtil.validateAgainstDifferentArraysLength(filterNamesArray, filterValuesArray, FILTER_NAMES_STRING, FILTER_VALUES_STRING);
+        validateAgainstDifferentArraysLength(filterNamesArray, filterValuesArray, FILTER_NAMES_STRING, FILTER_VALUES_STRING);
         if (isNotEmpty(filterNamesArray) && isNotEmpty(filterValuesArray)) {
             for (int index = START_INDEX; index < filterNamesArray.length; index++) {
                 String filterName = VolumeFilter.getVolumeFilter(filterNamesArray[index]);
@@ -124,7 +123,7 @@ public class VolumeUtils {
     }
 
     private void setFilterValues(Map<String, String> queryParamsMap, String filterName, String filterValues, int index) {
-        String[] valuesArray = InputsUtil.getStringsArray(filterValues, Constants.Miscellaneous.EMPTY, PIPE_DELIMITER);
+        String[] valuesArray = getStringsArray(filterValues, Constants.Miscellaneous.EMPTY, PIPE_DELIMITER);
         if (isNotEmpty(valuesArray)) {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
@@ -150,12 +149,10 @@ public class VolumeUtils {
     }
 
     private String getFilterNameKey(int index) {
-        return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
+        return FILTER + DOT + String.valueOf(index + ONE) + DOT + NAME;
     }
 
     private String getFilterValueKey(int index, int counter) {
-        return FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + DOT + valueOf(counter + ONE);
+        return FILTER + DOT + String.valueOf(index + ONE) + DOT + VALUE + DOT + String.valueOf(counter + ONE);
     }
-}
-
 }

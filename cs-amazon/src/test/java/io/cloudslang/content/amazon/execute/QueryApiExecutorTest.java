@@ -264,7 +264,7 @@ public class QueryApiExecutorTest {
                 .withMaxResults("10")
                 .withNextToken("token")
                 .build();
-        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS, ""), volumeInputs);
+        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs);
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeVolumes")));

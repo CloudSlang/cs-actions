@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
+import io.cloudslang.content.amazon.utils.InputsUtil;
+
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;

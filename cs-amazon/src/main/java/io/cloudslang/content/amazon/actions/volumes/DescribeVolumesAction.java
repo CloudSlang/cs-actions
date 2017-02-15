@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.actions.volumes;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -120,7 +129,7 @@ public class DescribeVolumesAction {
             version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
@@ -149,28 +158,5 @@ public class DescribeVolumesAction {
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
-    }
-
-    public static void main(String[] args) {
-        DescribeVolumesAction describeVolumesAction = new DescribeVolumesAction();
-        Map<String, String> result = describeVolumesAction.execute(
-                "",
-                "AKIAIDLBIEGO4QANHPEA",
-                "2yr0Q8Q7b2S5zT0i7hMAgzWQFXDkW9pxdiXT+D1o",
-                "web-proxy.corp.hpecorp.net",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "10",
-                ""
-        );
-        System.out.println(result);
-        System.out.println(result.get("statusCode"));
     }
 }
