@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -14,6 +23,7 @@ public enum InstanceState {
     STOPPING(64),
     STOPPED(80);
 
+    private static final String NOT_RELEVANT_STRING = "not relevant";
     private final Integer key;
 
     InstanceState(Integer key) {
@@ -29,9 +39,7 @@ public enum InstanceState {
     }
 
     public static String getValue(String input) throws RuntimeException {
-        return isBlank(input) ?
-                io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT.toLowerCase() :
-                (String) getKeyOrValue(input, false);
+        return isBlank(input) ? NOT_RELEVANT_STRING : (String) getKeyOrValue(input, false);
     }
 
     @SuppressWarnings("unchecked")
@@ -41,6 +49,7 @@ public enum InstanceState {
                 return isKey ? (T) member.getKey() : (T) member.name().toLowerCase();
             }
         }
+
         throw new RuntimeException(getErrorMessage(input, isKey));
     }
 

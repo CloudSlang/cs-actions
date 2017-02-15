@@ -5,7 +5,9 @@ env:
 
 install:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V ${MVN_EXCLUDE_MODULES}
+  - mvn install -DskipTests=true -DrepoToken=${repoToken} -Dmaven.javadoc.skip=true -B -V ${MVN_EXCLUDE_MODULES}
 script:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
   - mvn test -B ${MVN_EXCLUDE_MODULES}
+after_success:
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report ${MVN_EXCLUDE_MODULES}

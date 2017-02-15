@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.entities.constants;
 
 /**
@@ -19,6 +28,7 @@ public class Inputs {
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PREFIX = "prefix";
         public static final String QUERY_PARAMS = "queryParams";
         public static final String VERSION = "version";
     }
@@ -158,6 +168,16 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS = "networkInterfaceAssociatePublicIpAddress";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
         public static final String SUBNET_IDS_STRING = "subnetIdsString";
+    }
+
+    public static class StorageInputs {
+        public static final String BUCKET_NAME = "bucketName";
+        public static final String CONTINUATION_TOKEN = "continuationToken";
+        public static final String ENCODING_TYPE = "encodingType";
+        public static final String FETCH_OWNER = "fetchOwner";
+        public static final String MAX_KEYS = "maxKeys";
+        public static final String PREFIX = "prefix";
+        public static final String START_AFTER = "startAfter";
     }
 
     public static class VolumeInputs {

@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.actions.instances;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -13,6 +22,8 @@ import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
@@ -35,7 +46,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInp
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.INSTANCE_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_RESULTS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.NEXT_TOKEN;
-import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -64,11 +74,11 @@ public class DescribeInstancesAction {
      *                           will be used.
      *                           Default: ""
      * @param proxyPort          Optional - proxy server port. You must either specify values for both
-     *                           <proxyHost> and <proxyPort> inputs or leave them both empty.
+     *                           proxyHost and proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername>
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername
      *                           input value.
      *                           Default: ""
      * @param headers            Optional - string containing the headers to use for the request separated
@@ -93,7 +103,7 @@ public class DescribeInstancesAction {
      *                           Default: ""
      * @param filterValuesString Optional - String that contains one or more values that represents filters values.
      *                           For a complete list of valid filters see: http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstances.html
-     *                           Example of filters values for the above <filterNamesString> input: "m1.small|m1.large,attached,true"
+     *                           Example of filters values for the above filterNamesString input: "m1.small|m1.large,attached,true"
      *                           Note that "m1.small|m1.large" represents values for "instance-type" and are separated
      *                           by the enforced "|" symbol
      *                           Default (describes all your instances): ""
@@ -109,7 +119,7 @@ public class DescribeInstancesAction {
      *                           there are no more results to return.
      *                           Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Describe Instances",
             outputs = {
@@ -145,7 +155,7 @@ public class DescribeInstancesAction {
             version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

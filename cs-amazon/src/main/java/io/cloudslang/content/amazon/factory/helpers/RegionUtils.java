@@ -1,13 +1,27 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.aws.AvailabilityZoneState;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getArrayWithoutDuplicateEntries;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getQueryParamsSpecificString;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.validateAgainstDifferentArraysLength;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REGION_NAME;
@@ -30,10 +44,9 @@ public class RegionUtils {
 
     public Map<String, String> getDescribeAvailabilityZonesQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
-        String[] zonesArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getAvailabilityZonesString(),
+        String[] zonesArray = getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getAvailabilityZonesString(),
                 ZONE_NAMES_STRING, wrapper.getCommonInputs().getDelimiter());
         setSpecificQueryParamsMap(queryParamsMap, zonesArray, ZONE_NAME);
 
@@ -45,10 +58,9 @@ public class RegionUtils {
 
     public Map<String, String> getDescribeRegionsQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
-        String[] regionsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getRegionsString(),
+        String[] regionsArray = getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getRegionsString(),
                 REGIONS_STRING, wrapper.getCommonInputs().getDelimiter());
         setSpecificQueryParamsMap(queryParamsMap, regionsArray, REGION_NAME);
 
@@ -61,23 +73,22 @@ public class RegionUtils {
     private void setSpecificQueryParamsMap(Map<String, String> queryParamsMap, String[] inputArray, String specificString) {
         if (isNotEmpty(inputArray)) {
             for (int index = START_INDEX; index < inputArray.length; index++) {
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(specificString, index), inputArray[index]);
+                queryParamsMap.put(getQueryParamsSpecificString(specificString, index), inputArray[index]);
             }
         }
     }
 
     private void setFilters(Map<String, String> queryParamsMap, String keyFiltersString, String valueFiltersString, String delimiter) {
-        String[] keyFiltersStringArray = InputsUtil.getStringsArray(keyFiltersString, EMPTY, delimiter);
-        String[] valueFiltersStringArray = InputsUtil.getStringsArray(valueFiltersString, EMPTY, delimiter);
-        InputsUtil.validateAgainstDifferentArraysLength(keyFiltersStringArray, valueFiltersStringArray, KEY_FILTERS_STRING,
-                VALUE_FILTERS_STRING);
+        String[] keyFiltersStringArray = getStringsArray(keyFiltersString, EMPTY, delimiter);
+        String[] valueFiltersStringArray = getStringsArray(valueFiltersString, EMPTY, delimiter);
+        validateAgainstDifferentArraysLength(keyFiltersStringArray, valueFiltersStringArray, KEY_FILTERS_STRING, VALUE_FILTERS_STRING);
 
         if (isNotEmpty(keyFiltersStringArray) && isNotEmpty(valueFiltersStringArray)) {
             for (int index = START_INDEX; index < keyFiltersStringArray.length; index++) {
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(NAME, index), keyFiltersStringArray[index]);
+                queryParamsMap.put(getQueryParamsSpecificString(NAME, index), keyFiltersStringArray[index]);
                 String paramValue = STATE.equals(keyFiltersStringArray[index]) ?
                         AvailabilityZoneState.getValue(valueFiltersStringArray[index]) : valueFiltersStringArray[index];
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUES, index), paramValue);
+                queryParamsMap.put(getQueryParamsSpecificString(VALUES, index), paramValue);
             }
         }
     }

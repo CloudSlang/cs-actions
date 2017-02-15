@@ -6,3 +6,5 @@ target/
 *.ipr
 *.iml
 .*
+!/.codeclimate.yml
+!/.coveralls.yml

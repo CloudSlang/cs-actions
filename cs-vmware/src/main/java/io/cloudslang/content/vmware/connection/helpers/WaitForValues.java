@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.vmware.connection.helpers;
 
 import com.vmware.vim25.HttpNfcLeaseState;
@@ -42,7 +51,7 @@ public class WaitForValues {
      * Handle Updates for a single object. waits till expected values of
      * properties to check are reached Destroys the ObjectFilter when done.
      *
-     * @param objMor         MOR of the Object to wait for</param>
+     * @param objMor         MOR of the Object to wait for param
      * @param filterProps    Properties list to filter
      * @param endWaitProps   Properties list to check for expected values these be properties
      *                       of a property in the filter properties list
@@ -81,8 +90,8 @@ public class WaitForValues {
             version = updateset.getVersion();
             for (PropertyFilterUpdate filtup : updateset.getFilterSet()) {
                 for (ObjectUpdate objup : filtup.getObjectSet()) {
-                    if (objup.getKind() == ObjectUpdateKind.MODIFY || objup.getKind() == ObjectUpdateKind.ENTER
-                            || objup.getKind() == ObjectUpdateKind.LEAVE) {
+                    if (objup.getKind() == ObjectUpdateKind.MODIFY || objup.getKind() == ObjectUpdateKind.ENTER ||
+                            objup.getKind() == ObjectUpdateKind.LEAVE) {
                         for (PropertyChange propchg : objup.getChangeSet()) {
                             updateValues(endWaitProps, endValues, propchg);
                             updateValues(filterProps, filterValues, propchg);
@@ -136,17 +145,17 @@ public class WaitForValues {
     }
 
     private PropertyFilterSpec propertyFilterSpec(ManagedObjectReference objmor, String[] filterProps) {
-        ObjectSpec oSpec = new ObjectSpec();
-        oSpec.setObj(objmor);
-        oSpec.setSkip(false);
+        ObjectSpec objSpec = new ObjectSpec();
+        objSpec.setObj(objmor);
+        objSpec.setSkip(false);
 
-        PropertySpec pSpec = new PropertySpec();
-        pSpec.getPathSet().addAll(Arrays.asList(filterProps));
-        pSpec.setType(objmor.getType());
+        PropertySpec propSpec = new PropertySpec();
+        propSpec.getPathSet().addAll(Arrays.asList(filterProps));
+        propSpec.setType(objmor.getType());
 
         PropertyFilterSpec spec = new PropertyFilterSpec();
-        spec.getObjectSet().add(oSpec);
-        spec.getPropSet().add(pSpec);
+        spec.getObjectSet().add(objSpec);
+        spec.getPropSet().add(propSpec);
 
         return spec;
     }

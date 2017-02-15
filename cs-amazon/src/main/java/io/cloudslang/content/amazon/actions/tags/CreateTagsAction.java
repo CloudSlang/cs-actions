@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.actions.tags;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -11,13 +20,14 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.TAGS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.TAGS_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.CREATE_TAGS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -57,12 +67,12 @@ public class CreateTagsAction {
      *                          Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost         Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                          Default: ""
-     * @param proxyPort         Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                          <proxyPort> inputs or leave them both empty.
+     * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and
+     *                          proxyPort inputs or leave them both empty.
      *                          Default: ""
      * @param proxyUsername     Optional - proxy server user name.
      *                          Default: ""
-     * @param proxyPassword     Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
      *                          Default: ""
      * @param headers           Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                          The header name-value pair will be separated by ":".
@@ -98,7 +108,7 @@ public class CreateTagsAction {
      *                          above example: "Tagged from API call,Not relevant,Testing,For testing purposes"
      *                          Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Create Tags",
             outputs = {
@@ -128,10 +138,10 @@ public class CreateTagsAction {
                                        @Param(value = KEY_TAGS_STRING, required = true) String keyTagsString,
                                        @Param(value = VALUE_TAGS_STRING, required = true) String valueTagsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, TAGS_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, TAGS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

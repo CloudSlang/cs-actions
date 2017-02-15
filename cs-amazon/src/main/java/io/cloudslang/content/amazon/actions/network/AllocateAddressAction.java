@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.actions.network;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -11,9 +20,10 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.ELASTIC_IP_DEFAULT_API_VERSION;
@@ -49,11 +59,11 @@ public class AllocateAddressAction {
      * @param credential    Secret access key associated with your Amazon AWS or IAM account.
      *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
-     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                      <proxyPort> inputs or leave them both empty.
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and
+     *                      proxyPort inputs or leave them both empty.
      * @param proxyUsername Optional - proxy server user name.
      *                      Default: ""
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
      * @param version       Optional - Version of the web service to made the call against it.
      *                      Example: "2016-11-15"
      *                      Default: "2016-11-15"
@@ -73,7 +83,7 @@ public class AllocateAddressAction {
      *                      Valid values: "standard", "vpc"
      *                      Default: "standard"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Allocate Address",
             outputs = {
@@ -99,10 +109,10 @@ public class AllocateAddressAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = DOMAIN) String domain) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, ELASTIC_IP_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, ELASTIC_IP_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

@@ -1,9 +1,19 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.azure.actions.storage;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.azure.entities.StorageInputs;
 import io.cloudslang.content.azure.services.StorageServiceImpl;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utils.NumberUtilities;
@@ -20,11 +30,13 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PA
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
+import static io.cloudslang.content.azure.utils.Constants.DEFAULT_TIMEOUT;
 import static io.cloudslang.content.azure.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyStorageInputs;
 import static io.cloudslang.content.azure.utils.StorageInputNames.STORAGE_ACCOUNT;
 import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.KEY;
+import static io.cloudslang.content.azure.utils.StorageInputNames.TIMEOUT;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -48,9 +60,10 @@ public class ListBlobs {
      *                       Default: '8080'
      * @param proxyUsername  User name used when connecting to the proxy
      * @param proxyPassword  The proxy server password associated with the <proxyUsername> input value
+     * @param timeout        The time for the operation to wait for a response
      * @return All the blobs in the container
      */
-    @Action(name = "Get the authorization token for Azure",
+    @Action(name = "List all Blobs within a Container",
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),
@@ -66,20 +79,34 @@ public class ListBlobs {
                                        @Param(value = PROXY_HOST) String proxyHost,
                                        @Param(value = PROXY_PORT) String proxyPort,
                                        @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword) {
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = TIMEOUT) String timeout) {
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
-        final List<String> exceptionMessages = verifyStorageInputs(storageAccount, key, containerName, proxyPort);
+        timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
+
+        final List<String> exceptionMessages = verifyStorageInputs(storageAccount, key, containerName, proxyPort, timeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         final int proxyPortInt = NumberUtilities.toInteger(proxyPort);
+        final int timeoutInt = NumberUtilities.toInteger(timeout);
 
+        final StorageInputs storageInputs = StorageInputs.builder()
+                .storageAccount(storageAccount)
+                .key(key)
+                .containerName(containerName)
+                .proxyHost(proxyHost)
+                .proxyPort(proxyPortInt)
+                .proxyUsername(proxyUsername)
+                .proxyPassword(proxyPassword)
+                .timeout(timeoutInt)
+                .build();
         try {
-            return getSuccessResultsMap(StorageServiceImpl.listBlobs(storageAccount, key, containerName, proxyHost, proxyPortInt, proxyUsername, proxyPassword));
+            return getSuccessResultsMap(StorageServiceImpl.listBlobs(storageInputs));
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

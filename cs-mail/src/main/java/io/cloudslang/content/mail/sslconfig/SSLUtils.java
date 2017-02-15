@@ -1,6 +1,19 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.mail.sslconfig;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -26,7 +39,9 @@ public class SSLUtils {
             is = url.openStream();
             keystore.load(is, password != null ? password.toCharArray() : null);
         } finally {
-            if (is != null) is.close();
+            if (is != null) {
+                is.close();
+            }
         }
         return keystore;
     }

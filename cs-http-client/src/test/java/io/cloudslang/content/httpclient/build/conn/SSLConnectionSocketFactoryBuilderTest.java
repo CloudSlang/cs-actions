@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -7,7 +7,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-
 package io.cloudslang.content.httpclient.build.conn;
 
 import org.apache.http.conn.ssl.*;
@@ -102,6 +101,8 @@ public class SSLConnectionSocketFactoryBuilderTest {
     public void buildWithTrustAllRoots() throws Exception {
         builder = new SSLConnectionSocketFactoryBuilder();
         builder.setTrustAllRoots("true");
+        builder.setKeystore(System.getProperty("java.home") + "/lib/security/cacerts");
+        builder.setKeystorePassword("changeit");
         mockStatic(SSLContexts.class);
 
         when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);

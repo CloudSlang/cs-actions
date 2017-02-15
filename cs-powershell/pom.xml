@@ -61,6 +61,38 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <!--License checker for build-->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <header>${project.basedir}/license.template</header>
+                    <headerDefinitions>
+                        <headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>
+                    </headerDefinitions>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <!--Pass arguments using ${var} syntax in license.template file-->
+                    <properties>
+                        <copyright.year>2017</copyright.year>
+                    </properties>
+                    <!--Custom mapping for java extensions-->
+                    <useDefaultMapping>false</useDefaultMapping>
+                    <mapping>
+                        <java>cs-actions-java-header</java>
+                    </mapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>

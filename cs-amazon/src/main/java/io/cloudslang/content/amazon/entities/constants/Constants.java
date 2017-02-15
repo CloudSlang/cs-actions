@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.entities.constants;
 
 /**
@@ -8,6 +17,7 @@ public class Constants {
     public static class Apis {
         public static final String EC2_API = "ec2";
         public static final String LOAD_BALANCING_API = "elasticloadbalancing";
+        public static final String S3_API = "s3";
     }
 
     public static class DefaultApiVersion {
@@ -18,6 +28,7 @@ public class Constants {
         public static final String NETWORK_DEFAULT_API_VERSION = "2016-11-15";
         public static final String REGIONS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String SNAPSHOTS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String STORAGE_DEFAULT_API_VERSION = "2006-03-01";
         public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
     }
@@ -44,8 +55,9 @@ public class Constants {
     }
 
     public static class Values {
-        public static final int START_INDEX = 0;
+        public static final int DEFAULT_MAX_KEYS = 1000;
         public static final int ONE = 1;
+        public static final int START_INDEX = 0;
     }
 
     public static class AwsParams {
@@ -146,5 +158,9 @@ public class Constants {
     public static class LoadBalancingQueryApiActions {
         public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
         public static final String DELETE_LOAD_BALANCER = "DeleteLoadBalancer";
+    }
+
+    public static class S3QueryApiActions {
+        public static final String GET_BUCKET = "GET Bucket";
     }
 }

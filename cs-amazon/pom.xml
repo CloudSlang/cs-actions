@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.9-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Java actions for amazon integration</description>
@@ -72,6 +72,41 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- Checkstyle plugin, should be run only locally -->
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle-for-java-sources</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>false</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <maxAllowedViolations>18</maxAllowedViolations>
+                            <logViolationsToConsole>true</logViolationsToConsole>
+                            <violationSeverity>warning</violationSeverity>
+                            <includeResources>false</includeResources>
+                            <includeTestResources>false</includeTestResources>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        &lt;!&ndash; Do not update this version because it is not compatible with java 7 &ndash;&gt;
+                        <version>6.19</version>
+                    </dependency>
+                </dependencies>
+            </plugin>-->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -79,6 +114,38 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+            </plugin>
+            <!--License checker for build-->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <header>${project.basedir}/license.template</header>
+                    <headerDefinitions>
+                        <headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>
+                    </headerDefinitions>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <!--Pass arguments using ${var} syntax in license.template file-->
+                    <properties>
+                        <copyright.year>2017</copyright.year>
+                    </properties>
+                    <!--Custom mapping for java extensions-->
+                    <useDefaultMapping>false</useDefaultMapping>
+                    <mapping>
+                        <java>cs-actions-java-header</java>
+                    </mapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

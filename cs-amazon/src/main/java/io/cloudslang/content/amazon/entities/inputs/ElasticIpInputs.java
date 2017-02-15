@@ -1,6 +1,16 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidIPv4Address;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 
@@ -51,17 +61,17 @@ public class ElasticIpInputs {
         }
 
         public Builder withPublicIp(String inputValue) {
-            publicIp = InputsUtil.getValidIPv4Address(inputValue);
+            publicIp = getValidIPv4Address(inputValue);
             return this;
         }
 
         public Builder withPrivateIpAddress(String inputValue) {
-            privateIpAddress = InputsUtil.getValidIPv4Address(inputValue);
+            privateIpAddress = getValidIPv4Address(inputValue);
             return this;
         }
 
         public Builder withPrivateIpAddressesString(String inputValue) {
-            privateIpAddressesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            privateIpAddressesString = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 

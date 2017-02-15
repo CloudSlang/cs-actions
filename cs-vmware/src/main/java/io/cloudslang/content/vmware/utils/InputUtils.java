@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.vmware.utils;
 
 import io.cloudslang.content.vmware.constants.Constants;
@@ -12,7 +21,6 @@ import java.net.URL;
 import java.util.Locale;
 
 import static io.cloudslang.content.utils.StringUtilities.isBlank;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
 import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
 
 /**
@@ -50,8 +58,8 @@ public class InputUtils {
         if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation()) && vmInputs.getLongVmDiskSize() <= 0L) {
             throw new RuntimeException(ErrorMessages.INVALID_VM_DISK_SIZE);
         }
-        if (Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation())
-                && Constants.EMPTY.equals(vmInputs.getUpdateValue())) {
+        if (Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()) &&
+                Constants.EMPTY.equals(vmInputs.getUpdateValue())) {
             throw new RuntimeException("The [" + vmInputs.getUpdateValue() + "] is not a valid disk label.");
         }
     }
@@ -108,8 +116,8 @@ public class InputUtils {
     }
 
     private static boolean isValidUpdateOperation(VmInputs vmInputs) {
-        return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())
-                || Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
+        return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation()) ||
+                Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
     }
 
     public static Locale getLocale(String localeLang, String localeCountry) throws Exception {

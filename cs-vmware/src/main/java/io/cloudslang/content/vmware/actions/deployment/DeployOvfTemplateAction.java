@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.vmware.actions.deployment;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -147,7 +156,8 @@ public class DeployOvfTemplateAction {
             Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
             Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
 
-            new DeployOvfTemplateService(InputUtils.getBooleanInput(parallel, true)).deployOvfTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);
+            new DeployOvfTemplateService(InputUtils.getBooleanInput(parallel, true))
+                    .deployOvfTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);
             return OutputUtilities.getSuccessResultsMap(SUCCESSFULLY_DEPLOYED);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);

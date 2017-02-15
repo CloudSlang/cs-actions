@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.actions.network;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -12,9 +21,10 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
@@ -41,8 +51,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 public class DetachNetworkInterfaceAction {
     /**
      * Detaches a network interface from an instance.
-     * Note: The set of: <attachmentId> and <force> are mutually exclusive with <queryParams> input.
-     * Please provide values EITHER FOR BOTH: <attachmentId> and <force> inputs OR FOR <queryParams> input.
+     * Note: The set of: attachmentId and force are mutually exclusive with queryParams input.
+     * Please provide values EITHER FOR BOTH: attachmentId and force inputs OR FOR queryParams input.
      * Note: As with all Amazon EC2 operations, the results might not appear immediately.
      * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
      * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
@@ -55,12 +65,12 @@ public class DetachNetworkInterfaceAction {
      *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                      Default: ""
-     * @param proxyPort     Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                      <proxyPort> inputs or leave them both empty.
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and
+     *                      proxyPort inputs or leave them both empty.
      *                      Default: ""
      * @param proxyUsername Optional - proxy server user name.
      *                      Default: ""
-     * @param proxyPassword Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
      *                      Default: ""
      * @param headers       Optional - string containing the headers to use for the request separated by new line
      *                      (CRLF). The header name-value pair will be separated by ":".
@@ -82,7 +92,7 @@ public class DetachNetworkInterfaceAction {
      *                      Example: "2016-11-15"
      *                      Default: "2016-11-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Detach Network Interface",
             outputs = {
@@ -109,10 +119,10 @@ public class DetachNetworkInterfaceAction {
                                        @Param(value = ATTACHMENT_ID, required = true) String attachmentId,
                                        @Param(value = FORCE_DETACH) String forceDetach) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.azure.services;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
@@ -6,6 +15,7 @@ import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
+import io.cloudslang.content.azure.entities.StorageInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,19 +30,16 @@ import static io.cloudslang.content.azure.utils.HttpUtils.getProxy;
  */
 public final class StorageServiceImpl {
     @NotNull
-    public static String createContainer(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
-                                         @NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUsername,
-                                         @NotNull final String proxyPassword) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
-        final CloudBlobContainer container = blobClient.getContainerReference(containerName);
+    public static String createContainer(@NotNull final StorageInputs inputs) throws Exception {
+        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
+        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
         container.create();
-        return containerName;
+        return inputs.getContainerName();
     }
 
     @NotNull
-    public static String listContainers(@NotNull final String accountName, @NotNull final String key, @NotNull final String proxyHost,
-                                        final int proxyPort, @NotNull final String proxyUsername, @NotNull final String proxyPassword) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
+    public static String listContainers(@NotNull final StorageInputs inputs) throws Exception {
+        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
         final List<String> containerList = new ArrayList<>();
         for (final CloudBlobContainer blobItem : blobClient.listContainers()) {
             containerList.add(blobItem.getName());
@@ -41,21 +48,17 @@ public final class StorageServiceImpl {
     }
 
     @NotNull
-    public static String deleteContainer(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
-                                         @NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUsername,
-                                         @NotNull final String proxyPassword) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
-        final CloudBlobContainer container = blobClient.getContainerReference(containerName);
+    public static String deleteContainer(@NotNull final StorageInputs inputs) throws Exception {
+        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
+        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
         container.delete();
-        return containerName;
+        return inputs.getContainerName();
     }
 
     @NotNull
-    public static String listBlobs(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
-                                   @NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUsername,
-                                   @NotNull final String proxyPassword) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
-        final CloudBlobContainer container = blobClient.getContainerReference(containerName);
+    public static String listBlobs(@NotNull final StorageInputs inputs) throws Exception {
+        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
+        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
         final List<String> blobList = new ArrayList<>();
         for (final ListBlobItem blobItem : container.listBlobs()) {
             final String path = blobItem.getUri().getPath();
@@ -65,22 +68,22 @@ public final class StorageServiceImpl {
     }
 
     @NotNull
-    public static String deleteBlob(@NotNull final String accountName, @NotNull final String key, @NotNull final String containerName,
-                                    @NotNull final String blobName, @NotNull final String proxyHost, final int proxyPort,
-                                    @NotNull final String proxyUsername, @NotNull final String proxyPassword) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(accountName, key, proxyHost, proxyPort, proxyUsername, proxyPassword);
-        final CloudBlobContainer container = blobClient.getContainerReference(containerName);
-        final CloudBlockBlob blob = container.getBlockBlobReference(blobName);
+    public static String deleteBlob(@NotNull final StorageInputs inputs) throws Exception {
+        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
+        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
+        final CloudBlockBlob blob = container.getBlockBlobReference(inputs.getBlobName());
         blob.delete();
-        return blobName;
+        return inputs.getBlobName();
     }
 
     @NotNull
-    public static CloudBlobClient getCloudBlobClient(@NotNull final String accountName, @NotNull final String key, @NotNull final String proxyHost,
-                                                      final int proxyPort, @NotNull final String proxyUsername, @NotNull final String proxyPassword) throws Exception {
-        final String storageConnectionString = String.format(STORAGE_AUTH_ENDPOINT, accountName, key);
-        OperationContext.setDefaultProxy(getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword));
-        return CloudStorageAccount.parse(storageConnectionString)
-                .createCloudBlobClient();
+    public static CloudBlobClient getCloudBlobClient(@NotNull final StorageInputs inputs) throws Exception {
+        final String storageConnectionString = String.format(STORAGE_AUTH_ENDPOINT, inputs.getStorageAccount(), inputs.getKey());
+        OperationContext.setDefaultProxy(getProxy(inputs.getProxyHost(), inputs.getProxyPort(), inputs.getProxyUsername(), inputs.getProxyPassword()));
+        final CloudBlobClient client = CloudStorageAccount.parse(storageConnectionString).createCloudBlobClient();
+        if (inputs.getTimeout() != 0) {
+            client.getDefaultRequestOptions().setTimeoutIntervalInMs(inputs.getTimeout());
+        }
+        return client;
     }
 }

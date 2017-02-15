@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.vmware.actions.vm;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -36,7 +45,7 @@ public class GetVMDetails {
      *                           to see how to obtain a valid vCenter certificate
      * @param virtualMachineName the name of the targeted virtual machine to retrieve the details for
      * @return resultMap with String as key and value that contains returnCode of the operation, a JSON formatted string
-     * that contains details of the virtual machine or failure message and the exception if there is one
+     *         that contains details of the virtual machine or failure message and the exception if there is one
      */
     @Action(name = "Get VM Details",
             outputs = {

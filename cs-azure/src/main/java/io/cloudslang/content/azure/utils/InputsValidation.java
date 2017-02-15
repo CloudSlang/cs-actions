@@ -1,5 +1,15 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.azure.utils;
 
+import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +28,7 @@ import static io.cloudslang.content.azure.utils.Constants.EXCEPTION_INVALID_PROX
 import static io.cloudslang.content.azure.utils.Constants.EXCEPTION_NULL_EMPTY;
 import static io.cloudslang.content.azure.utils.StorageInputNames.BLOB_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
+import static io.cloudslang.content.azure.utils.StorageInputNames.TIMEOUT;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 
 /**
@@ -25,24 +36,25 @@ import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
  */
 public final class InputsValidation {
     @NotNull
-    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String proxyPort) {
+    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String proxyPort, @Nullable final String timeout) {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyNotNullOrEmpty(exceptionMessages, accountName, IDENTIFIER);
         addVerifyNotNullOrEmpty(exceptionMessages, key, PRIMARY_OR_SECONDARY_KEY);
+        addVerifyNotNullOrEmpty(exceptionMessages, timeout, TIMEOUT);
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         return exceptionMessages;
     }
 
     @NotNull
-    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String containerName, @Nullable final String proxyPort) {
-        final List<String> exceptionMessages = verifyStorageInputs(accountName, key, proxyPort);
+    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String containerName, @Nullable final String proxyPort, @Nullable final String timeout) {
+        final List<String> exceptionMessages = verifyStorageInputs(accountName, key, proxyPort, timeout);
         addVerifyNotNullOrEmpty(exceptionMessages, containerName, CONTAINER_NAME);
         return exceptionMessages;
     }
 
     @NotNull
-    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String containerName, @Nullable final String proxyPort, @Nullable final String blobName) {
-        final List<String> exceptionMessages = verifyStorageInputs(accountName, key, containerName, proxyPort);
+    public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String containerName, @Nullable final String proxyPort, @Nullable final String blobName, @Nullable final String timeout) {
+        final List<String> exceptionMessages = verifyStorageInputs(accountName, key, containerName, proxyPort, timeout);
         addVerifyNotNullOrEmpty(exceptionMessages, blobName, BLOB_NAME);
         return exceptionMessages;
     }
@@ -86,6 +98,16 @@ public final class InputsValidation {
         if (StringUtilities.isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValidIpPort(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (StringUtilities.isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!NumberUtilities.isValidInt(input)) {
             exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
         }
         return exceptions;

@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.mail.sslconfig;
 
 import junit.framework.Assert;
@@ -11,7 +20,11 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -20,7 +33,10 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by persdana on 11/7/2014.
@@ -52,18 +68,20 @@ public class SSLUtilsTest {
         PowerMockito.mockStatic(KeyStore.class);
         PowerMockito.doReturn(keystoreMock).when(KeyStore.class, "getInstance", "jks");
 
-//        Mockito.doNothing().when(isMock).close(); //error
+        //Mockito.doNothing().when(isMock).close(); //error
 
         KeyStore result = SSLUtils.createKeyStore(urlMock, password);
 
         Assert.assertNull(result);
-//        Mockito.verify(isMock).close();   //error
-//        Mockito.verify(urlMock).openStream(); //error
-        //Mockito.verify(keystoreMock).load(isMock, password != null ? password.toCharArray() : null); //cannot verify/stub final method
+        //Mockito.verify(isMock).close();   //error
+        //Mockito.verify(urlMock).openStream(); //error
+        //Mockito.verify(keystoreMock).load(isMock, password != null ? password.toCharArray() : null);
+        // cannot verify/stub final method
     }
 
     @Test
-    public void testCreateKeyStoreWithNullURL() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+    public void testCreateKeyStoreWithNullUrl()
+            throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
         final URL url = null;
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage(NULL_URL_EXCEPTION_MESSAGE);

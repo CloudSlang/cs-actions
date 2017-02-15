@@ -1,8 +1,17 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
-
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 /**
@@ -126,12 +135,12 @@ public class VolumeInputs {
         }
 
         public Builder withEncrypted(String inputValue) {
-            encrypted = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            encrypted = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
         public Builder withForce(String inputValue) {
-            force = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+            force = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 

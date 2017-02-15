@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.mail.sslconfig;
 
 import javax.net.ssl.TrustManager;
@@ -19,7 +28,9 @@ public class EasyX509TrustManager implements X509TrustManager {
         TrustManagerFactory factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         factory.init((KeyStore) null);
         TrustManager[] trustManagers = factory.getTrustManagers();
-        if (trustManagers.length == 0) throw new NoSuchAlgorithmException("SunX509 trust manager not supported");
+        if (trustManagers.length == 0) {
+            throw new NoSuchAlgorithmException("SunX509 trust manager not supported");
+        }
         this.standardTrustManager = (X509TrustManager) trustManagers[0];
     }
 
@@ -32,7 +43,9 @@ public class EasyX509TrustManager implements X509TrustManager {
     }
 
     public X509Certificate[] getAcceptedIssuers() {
-        if (standardTrustManager != null) return standardTrustManager.getAcceptedIssuers();
+        if (standardTrustManager != null) {
+            return standardTrustManager.getAcceptedIssuers();
+        }
         return new X509Certificate[]{};
     }
 }
