@@ -68,11 +68,6 @@ public class SQLCommandService {
                         sqlInputs.getlRows().clear();
                         int colCount = rsMtd.getColumnCount();
 
-                        final String columnLabel = rsMtd.getColumnLabel(colCount);
-                        if (columnLabel != null && columnLabel.equalsIgnoreCase("ROWSTAT") && SQLUtils.trimRowstat(sqlInputs.getDbUrl(), sqlInputs.getTrimRowstat())) {
-                            colCount -= 1;
-                        }
-
                         if (sqlInputs.getSqlCommand().trim().toLowerCase().startsWith("dbcc")) {
                             while (rs.next()) {
                                 if (colCount >= 4) {

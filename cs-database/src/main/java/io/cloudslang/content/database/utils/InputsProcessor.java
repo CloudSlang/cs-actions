@@ -50,7 +50,6 @@ public class InputsProcessor {
             sqlInputs.setAuthenticationType(null);
             sqlInputs.setDbUrl(null);
             sqlInputs.setDbClass(null);
-            sqlInputs.setTrimRowstat("true");
             sqlInputs.setNetcool(false);
             sqlInputs.setlRowsFiles(new ArrayList<List<String>>());
             sqlInputs.setlRowsNames(new ArrayList<List<String>>());

@@ -135,6 +135,8 @@ public class SQLQuery {
         sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
         sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
         sqlInputs.setIgnoreCase(ignoreCaseBool);
+        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
+
 
         try {
 
@@ -145,7 +147,6 @@ public class SQLQuery {
 
             if (globalMap.containsKey(aKey)) {
                 sqlInputs.setlRows(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
-                sqlInputs.setStrColumns(getStrColumns(globalSessionObject, sqlInputs.getStrKeyCol()));
             } else {
                 SQLQueryService.executeSqlQuery(sqlInputs);
             }
@@ -167,6 +168,8 @@ public class SQLQuery {
                 result.put(RETURN_RESULT, NO_MORE);
                 result.put(ROWS_LEFT, ZERO);
                 result.put(RETURN_CODE, DBReturnCodes.NO_MORE);
+
+                globalMap.put(aKey, null);
             }
 
             return result;

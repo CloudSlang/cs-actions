@@ -38,21 +38,6 @@ public class SQLUtils {
         }
     }
 
-    public static boolean trimRowstat(String dbUrl, String trimRowstat) {
-        //trim the last(ROWSTAT) column for MSSQL
-        //for more info see OO bug #8886 and jTDS bug #1329765
-        boolean trim = false;
-        if (dbUrl == null) {
-            return false;
-        }
-        if (dbUrl.trim().toLowerCase().startsWith(Constants.MSSQL_URL.toLowerCase())) {
-            if ((trimRowstat == null) || (trimRowstat.trim().equalsIgnoreCase("true"))) {
-                trim = true;
-            }
-        }
-        return trim;
-    }
-
     public static String processNullTerminatedString(final String value) {
         if (isEmpty(value)) {
             return "null";

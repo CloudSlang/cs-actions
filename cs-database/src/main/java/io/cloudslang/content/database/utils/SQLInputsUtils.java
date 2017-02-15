@@ -37,7 +37,9 @@ public class SQLInputsUtils {
     private static final Map<String, Class<? extends SqlDatabase>> dbTypesClass = getTypesOfDatabase();
     private static final Map<String, DBType> dbTypesToEnum = getTypesEnum();
 
-
+    public static boolean checkIsNetcool(@NotNull final String dbType) {
+        return dbType.equalsIgnoreCase(NETCOOL_DB_TYPE);
+    }
 
     @NotNull
     public static GlobalSessionObject<Map<String, Object>> getOrDefaultGlobalSessionObj(final GlobalSessionObject<Map<String, Object>> globalSessionObject) {

@@ -97,33 +97,33 @@ public class SQLScript {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        final SQLInputs mySqlInputs = new SQLInputs();
-        mySqlInputs.setDbServer(dbServerName);
-        mySqlInputs.setDbType(getDbType(dbType));
-        mySqlInputs.setUsername(username);
-        mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(instance);
-        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
-        mySqlInputs.setAuthenticationType(authenticationType);
-        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        mySqlInputs.setStrDelim(defaultIfEmpty(delimiter, SEMI_COLON)); //todo not ok
-        mySqlInputs.setSqlCommands(getSqlCommands(sqlCommands, scriptFileName, mySqlInputs.getStrDelim()));
-        mySqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
-        mySqlInputs.setTrustStore(trustStore);
-        mySqlInputs.setTrustStorePassword(trustStorePassword);
-        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetType(resultSetType));
-        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
-
+        final SQLInputs sqlInputs = new SQLInputs();
+        sqlInputs.setDbServer(dbServerName);
+        sqlInputs.setDbType(getDbType(dbType));
+        sqlInputs.setUsername(username);
+        sqlInputs.setPassword(password);
+        sqlInputs.setInstance(instance);
+        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
+        sqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
+        sqlInputs.setAuthenticationType(authenticationType);
+        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
+        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
+        sqlInputs.setStrDelim(defaultIfEmpty(delimiter, SEMI_COLON)); //todo not ok
+        sqlInputs.setSqlCommands(getSqlCommands(sqlCommands, scriptFileName, sqlInputs.getStrDelim()));
+        sqlInputs.setTrustAllRoots(BooleanUtilities.toBoolean(trustAllRoots));
+        sqlInputs.setTrustStore(trustStore);
+        sqlInputs.setTrustStorePassword(trustStorePassword);
+        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
+        sqlInputs.setResultSetType(getResultSetType(resultSetType));
+        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
 
         try {
-            final List<String> commands = mySqlInputs.getSqlCommands();
+            final List<String> commands = sqlInputs.getSqlCommands();
             if (!commands.isEmpty()) {
-                final String res = SQLScriptService.executeSqlScript(commands, mySqlInputs);
+                final String res = SQLScriptService.executeSqlScript(commands, sqlInputs);
                 final Map<String, String> result = getSuccessResultsMap(res);
-                result.put(UPDATE_COUNT, String.valueOf(mySqlInputs.getiUpdateCount()));
+                result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
                 return result;
             }
             return getFailureResultsMap(NO_SQL_COMMAND);

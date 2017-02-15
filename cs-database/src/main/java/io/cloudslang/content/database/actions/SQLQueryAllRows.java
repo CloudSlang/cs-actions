@@ -98,30 +98,31 @@ public class SQLQueryAllRows {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        SQLInputs mySqlInputs = new SQLInputs();
-        mySqlInputs.setDbServer(dbServerName);
-        mySqlInputs.setDbType(getDbType(dbType));
-        mySqlInputs.setUsername(username);
-        mySqlInputs.setPassword(password);
-        mySqlInputs.setInstance(instance);
-        mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-        mySqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
-        mySqlInputs.setAuthenticationType(authenticationType);
-        mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-        mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-        mySqlInputs.setSqlCommand(command);
-        mySqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
-        mySqlInputs.setTrustStore(trustStore);
-        mySqlInputs.setTrustStorePassword(trustStorePassword);
-        mySqlInputs.setColDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER));
-        mySqlInputs.setRowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE));
-        mySqlInputs.setTimeout(toInteger(timeout));
-        mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-        mySqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, mySqlInputs.getDbType()));
-        mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+        SQLInputs sqlInputs = new SQLInputs();
+        sqlInputs.setDbServer(dbServerName);
+        sqlInputs.setDbType(getDbType(dbType));
+        sqlInputs.setUsername(username);
+        sqlInputs.setPassword(password);
+        sqlInputs.setInstance(instance);
+        sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
+        sqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
+        sqlInputs.setAuthenticationType(authenticationType);
+        sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
+        sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
+        sqlInputs.setSqlCommand(command);
+        sqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
+        sqlInputs.setTrustStore(trustStore);
+        sqlInputs.setTrustStorePassword(trustStorePassword);
+        sqlInputs.setColDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER));
+        sqlInputs.setRowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE));
+        sqlInputs.setTimeout(toInteger(timeout));
+        sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
+        sqlInputs.setResultSetType(getResultSetTypeForDbType(resultSetType, sqlInputs.getDbType()));
+        sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+        sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
 
         try {
-            final String queryResult = SQLQueryAllRowsService.execQueryAllRows(mySqlInputs);
+            final String queryResult = SQLQueryAllRowsService.execQueryAllRows(sqlInputs);
             return OutputUtilities.getSuccessResultsMap(queryResult);
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);

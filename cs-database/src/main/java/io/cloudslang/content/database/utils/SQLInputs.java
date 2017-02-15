@@ -23,7 +23,6 @@ public class SQLInputs {
     private int dbPort;
     private String dbType;
     private String key;
-    private String strKeyCol;
     private String username;
     private String password;
     private String authenticationType;
@@ -32,7 +31,6 @@ public class SQLInputs {
     private int timeout;
     private String dbUrl;  //the final dbUrl that was used to connect to the database
     private String dbClass;
-    private String trimRowstat = "true";
     private boolean isNetcool = false; // needs to be visible for SQLQueryTabular to do check
     private List<List<String>> lRowsFiles = new ArrayList<>();
     private List<List<String>> lRowsNames = new ArrayList<>();
@@ -142,15 +140,6 @@ public class SQLInputs {
         this.key = key;
     }
 
-    public String getStrKeyCol() {
-        return strKeyCol;
-    }
-
-    public void setStrKeyCol(String strKeyCol) {
-        this.strKeyCol = strKeyCol;
-    }
-
-
     public String getUsername() {
         return username;
     }
@@ -205,14 +194,6 @@ public class SQLInputs {
 
     public void setDbClass(String dbClass) {
         this.dbClass = dbClass;
-    }
-
-    public String getTrimRowstat() {
-        return trimRowstat;
-    }
-
-    public void setTrimRowstat(String trimRowstat) {
-        this.trimRowstat = trimRowstat;
     }
 
     public boolean isNetcool() {

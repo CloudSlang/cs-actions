@@ -30,34 +30,6 @@ public class SQLUtilsTest {
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
-    public void testTrimRowStat() {
-        boolean trimRowstat = SQLUtils.trimRowstat(CUSTOM_URL, "true");
-
-        assertFalse(trimRowstat);
-
-        trimRowstat = SQLUtils.trimRowstat(CUSTOM_URL, "false");
-        assertFalse(trimRowstat);
-
-        trimRowstat = SQLUtils.trimRowstat(Constants.MSSQL_URL, "false");
-        assertFalse(trimRowstat);
-
-        trimRowstat = SQLUtils.trimRowstat(Constants.MSSQL_URL, "true");
-        assertTrue(trimRowstat);
-
-        trimRowstat = SQLUtils.trimRowstat(null, null);
-        assertFalse(trimRowstat);
-
-        trimRowstat = SQLUtils.trimRowstat(null, "true");
-        assertFalse(trimRowstat);
-
-        trimRowstat = SQLUtils.trimRowstat(Constants.MSSQL_URL, null);
-        assertTrue(trimRowstat);
-
-        trimRowstat = SQLUtils.trimRowstat(CUSTOM_URL, null);
-        assertFalse(trimRowstat);
-    }
-
-    @Test
     public void testProcessNullTerminatedString() {
         String value = SQLUtils.processNullTerminatedString("\0");
         assertEquals("null", value);

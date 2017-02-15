@@ -96,48 +96,49 @@ public class SQLCommand {
         }
 
         try {
-            SQLInputs mySqlInputs = new SQLInputs();
-            mySqlInputs.setDbServer(dbServerName);
-            mySqlInputs.setDbType(getDbType(dbType));
-            mySqlInputs.setUsername(username);
-            mySqlInputs.setPassword(password);
-            mySqlInputs.setInstance(instance);
-            mySqlInputs.setDbPort(getOrDefaultDBPort(dbPort, mySqlInputs.getDbType()));
-            mySqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
-            mySqlInputs.setAuthenticationType(authenticationType);
-            mySqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
-            mySqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
-            mySqlInputs.setSqlCommand(command);
-            mySqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
-            mySqlInputs.setTrustStore(trustStore);
-            mySqlInputs.setTrustStorePassword(trustStorePassword);
-            mySqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
-            mySqlInputs.setResultSetType(getResultSetType(resultSetType));
-            mySqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+            SQLInputs sqlInputs = new SQLInputs();
+            sqlInputs.setDbServer(dbServerName);
+            sqlInputs.setDbType(getDbType(dbType));
+            sqlInputs.setUsername(username);
+            sqlInputs.setPassword(password);
+            sqlInputs.setInstance(instance);
+            sqlInputs.setDbPort(getOrDefaultDBPort(dbPort, sqlInputs.getDbType()));
+            sqlInputs.setDbName(defaultIfEmpty(databaseName, EMPTY));
+            sqlInputs.setAuthenticationType(authenticationType);
+            sqlInputs.setDbClass(defaultIfEmpty(dbClass, EMPTY));
+            sqlInputs.setDbUrl(defaultIfEmpty(dbURL, EMPTY));
+            sqlInputs.setSqlCommand(command);
+            sqlInputs.setTrustAllRoots(toBoolean(trustAllRoots));
+            sqlInputs.setTrustStore(trustStore);
+            sqlInputs.setTrustStorePassword(trustStorePassword);
+            sqlInputs.setDatabasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY));
+            sqlInputs.setResultSetType(getResultSetType(resultSetType));
+            sqlInputs.setResultSetConcurrency(getResultSetConcurrency(resultSetConcurrency));
+            sqlInputs.setNetcool(checkIsNetcool(sqlInputs.getDbType()));
 
-            String res = SQLCommandService.executeSqlCommand(mySqlInputs);
+            String res = SQLCommandService.executeSqlCommand(sqlInputs);
 
             String outputText = "";
 
-            if (ORACLE_DB_TYPE.equalsIgnoreCase(mySqlInputs.getDbType()) &&
-                    mySqlInputs.getSqlCommand().toLowerCase().contains(DBMS_OUTPUT)) {
+            if (ORACLE_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType()) &&
+                    sqlInputs.getSqlCommand().toLowerCase().contains(DBMS_OUTPUT)) {
                 if (isNoneEmpty(res)) {
                     outputText = res;
                 }
                 res = "Command completed successfully";
-            } else if (mySqlInputs.getlRows().size() == 0 && mySqlInputs.getiUpdateCount() != -1) {
-                outputText = String.valueOf(mySqlInputs.getiUpdateCount()) + " row(s) affected";
-            } else if (mySqlInputs.getlRows().size() == 0 && mySqlInputs.getiUpdateCount() == -1) {
+            } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() != -1) {
+                outputText = String.valueOf(sqlInputs.getiUpdateCount()) + " row(s) affected";
+            } else if (sqlInputs.getlRows().size() == 0 && sqlInputs.getiUpdateCount() == -1) {
                 outputText = "The command has no results!";
-                if (mySqlInputs.getSqlCommand().toUpperCase().contains(SET_NOCOUNT_ON)) {
+                if (sqlInputs.getSqlCommand().toUpperCase().contains(SET_NOCOUNT_ON)) {
                     outputText = res;
                 }
             } else {
-                outputText = StringUtilities.join(mySqlInputs.getlRows(), NEW_LINE);
+                outputText = StringUtilities.join(sqlInputs.getlRows(), NEW_LINE);
             }
 
             final Map<String, String> result = getSuccessResultsMap(res);
-            result.put(UPDATE_COUNT, String.valueOf(mySqlInputs.getiUpdateCount()));
+            result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getiUpdateCount()));
             result.put(OUTPUT_TEXT, outputText);
             return result;
         } catch (Exception e) {
