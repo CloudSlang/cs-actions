@@ -16,6 +16,8 @@ public class FilterUtils {
     public static final String EQUALS = "=";
     public static final String INVALID_INPUT_FOR_FILTER_TAG_FORMAT = "Invalid input [%s] for input filterTag.";
     public static final String TAG_NAME_FORMAT = "tag:%s";
+    public static final String FILTER_NAME_FORMAT = "Filter.%d.Name";
+    public static final String FILTER_VALUE_FORMAT = "Filter.%d.Value.%d";
 
     public static List<String> stringToList(final String string, final String delimiter) {
         final String[] splitString = StringUtils.split(string, delimiter);
@@ -23,11 +25,11 @@ public class FilterUtils {
     }
 
     public static String getFilterNameKey(int index) {
-        return String.format("Filter.%d.Name", index + 1);
+        return String.format(FILTER_NAME_FORMAT, index + 1);
     }
 
     public static String getFilterValueKey(int index, int counter) {
-        return String.format("Filter.%d.Value.%d", index + 1, counter + 1);
+        return String.format(FILTER_VALUE_FORMAT, index + 1, counter + 1);
     }
 
 

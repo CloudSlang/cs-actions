@@ -24,6 +24,7 @@ public enum VolumeStatus {
     DELETED("deleted"),
     ERROR("error");
 
+    public static final String INVALID_STATUS_VALUE_FORMAT = "Invalid status value: [%s]. Valid values: creating, available, in-use, deleting, deleted, error.";
     private final String key;
 
     VolumeStatus(String key) {
@@ -45,6 +46,6 @@ public enum VolumeStatus {
             }
         }
 
-        throw new RuntimeException("Invalid status value: [" + input + "]. Valid values: creating, available, in-use, deleting, deleted, error.");
+        throw new RuntimeException(String.format(INVALID_STATUS_VALUE_FORMAT, input));
     }
 }

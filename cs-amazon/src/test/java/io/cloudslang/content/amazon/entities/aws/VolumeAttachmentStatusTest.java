@@ -9,7 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
-import io.cloudslang.content.amazon.entities.aws.VolumeAttachmentStatus;
 import org.junit.Test;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
@@ -26,7 +25,7 @@ public class VolumeAttachmentStatusTest {
     private static final String ATTACHED = "attached";
     private static final String DETACHING = "detaching";
     private static final String DETACHED = "detached";
-    private static final String RANDOM_STRING = "randomString";
+    private static final String WRONG_VALUE = "wrongValue";
 
     @Test
     public void volumeAttachmentStatusTest() {
@@ -40,6 +39,6 @@ public class VolumeAttachmentStatusTest {
 
     @Test(expected = RuntimeException.class)
     public void volumeAttachmentStatusTestException() {
-        VolumeAttachmentStatus.getValue(RANDOM_STRING);
+        VolumeAttachmentStatus.getValue(WRONG_VALUE);
     }
 }

@@ -31,6 +31,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -264,10 +266,12 @@ public class QueryApiExecutorTest {
                 .withMaxResults("10")
                 .withNextToken("token")
                 .build();
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withNewFilter(VolumeFilter.STATUS, "in-use")
-                .build();
-        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs, filterInputs);
+        final FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter(VolumeFilter.STATUS, "in-use,available")
+                .withNewFilter(VolumeFilter.SIZE, "50");
+        processTagFilter("TEST=testTag", COMMA_DELIMITER, filterInputsBuilder);
+        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs, filterInputsBuilder.build());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeVolumes")));
@@ -854,6 +858,14 @@ public class QueryApiExecutorTest {
             case "DescribeVolumes":
                 queryParamsMap.put("Filter.1.Name", "status");
                 queryParamsMap.put("Filter.1.Value.1", "in-use");
+                queryParamsMap.put("Filter.1.Value.2", "available");
+                queryParamsMap.put("Filter.2.Name", "size");
+                queryParamsMap.put("Filter.2.Value.1", "50");
+                queryParamsMap.put("Filter.3.Name", "tag:TEST");
+                queryParamsMap.put("Filter.3.Value.1", "testTag");
+                queryParamsMap.put("VolumeId.1", "1");
+                queryParamsMap.put("VolumeId.2", "2");
+                queryParamsMap.put("VolumeId.3", "3");
                 queryParamsMap.put("MaxResults", "10");
                 queryParamsMap.put("NextToken", "token");
                 break;

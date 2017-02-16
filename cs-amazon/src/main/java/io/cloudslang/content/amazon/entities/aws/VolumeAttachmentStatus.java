@@ -22,6 +22,8 @@ public enum VolumeAttachmentStatus {
     DETACHING,
     DETACHED;
 
+    public static final String INVALID_ATTACHMENT_STATUS_VALUE_FORMAT = "Invalid attachment.status value: [%s]. Valid values: attaching, attached, detaching, detached.";
+
     public static String getValue(String input) {
         if (isBlank(input)) {
             return NOT_RELEVANT;
@@ -33,7 +35,6 @@ public enum VolumeAttachmentStatus {
             }
         }
 
-        throw new RuntimeException("Invalid attachment.status value: [" + input + "]. Valid values: attaching, attached, " +
-                "detaching, detached.");
+        throw new RuntimeException(String.format(INVALID_ATTACHMENT_STATUS_VALUE_FORMAT, input));
     }
 }
