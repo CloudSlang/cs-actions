@@ -259,42 +259,4 @@ public class DescribeVolumesAction {
             return ExceptionProcessor.getExceptionResult(e);
         }
     }
-
-    // todo remove this
-    public static void main(String[] args) {
-        final DescribeVolumesAction describeVolumesAction = new DescribeVolumesAction();
-        final Map<String, String> result = describeVolumesAction.execute(
-                "",
-                "AKIAIDLBIEGO4QANHPEA",
-                "2yr0Q8Q7b2S5zT0i7hMAgzWQFXDkW9pxdiXT+D1o",
-                "web-proxy.corp.hpecorp.net",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "2016-12-02T10:28:20.000Z",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "A=a,B=b",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-        );
-        System.out.println(result.get(RETURN_RESULT));
-    }
 }

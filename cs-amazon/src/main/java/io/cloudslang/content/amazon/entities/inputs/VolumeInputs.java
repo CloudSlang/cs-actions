@@ -83,6 +83,10 @@ public class VolumeInputs {
         return nextToken;
     }
 
+    public String getVolumeIdsString() {
+        return volumeIdsString;
+    }
+
     public static class Builder {
         private String snapshotId;
         private String size;

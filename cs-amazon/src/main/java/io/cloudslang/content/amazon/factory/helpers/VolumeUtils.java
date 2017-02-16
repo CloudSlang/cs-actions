@@ -11,16 +11,20 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.validators.VolumesFilterValidator;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.VOLUME_IDS_STRING;
 import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.getFiltersQueryMap;
-import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
-import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.amazon.utils.InputsUtil.*;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -28,16 +32,13 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * 9/9/2016.
  */
 public class VolumeUtils {
-    private static final String ATTACHMENT_STATUS_FILTER = "attachment.status";
-    private static final String STATUS_FILTER = "status";
-    private static final String VOLUME_TYPE_FILTER = "volume-type";
-    private static final String NOT_RELEVANT_KEY_STRING = "-1";
     private static final String AVAILABILITY_ZONE = "AvailabilityZone";
     private static final String DEVICE = "Device";
     private static final String KMS_KEY_ID = "KmsKeyId";
     private static final String SIZE = "Size";
     private static final String NEXT_TOKEN = "NextToken";
     private static final String MAX_RESULTS = "MaxResults";
+    public static final String VOLUME_ID_FORMAT = "VolumeId.%s";
 
     public Map<String, String> getAttachVolumeQueryParamsMap(InputsWrapper wrapper) {
         return getAttachOrDetachVolumeCommonQueryParamsMap(wrapper);
@@ -89,9 +90,25 @@ public class VolumeUtils {
         final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), volumesFilterValidator);
         queryParamsMap.putAll(filterQueryMap);
 
+        final Map<String, String> volumedIdsQueryMap = getVolumedIdsQueryMap(wrapper);
+        queryParamsMap.putAll(volumedIdsQueryMap);
+
         return queryParamsMap;
     }
 
+    private Map<String, String> getVolumedIdsQueryMap(InputsWrapper wrapper) {
+        final String[] volumeIds = getArrayWithoutDuplicateEntries(wrapper.getVolumeInputs().getVolumeIdsString(),
+                VOLUME_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
+        final Map<String, String> volumeIdsQueryMap = new HashMap<>();
+        if (isNotEmpty(volumeIds)) {
+            final List<String> volumeIdsList = Arrays.asList(volumeIds);
+            for (String id : volumeIdsList) {
+                final String key = String.format(VOLUME_ID_FORMAT, volumeIdsList.indexOf(id) + 1);
+                setOptionalMapEntry(volumeIdsQueryMap, key, id, StringUtils.isNotEmpty(id));
+            }
+        }
+        return volumeIdsQueryMap;
+    }
 
     private Map<String, String> getAttachOrDetachVolumeCommonQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
