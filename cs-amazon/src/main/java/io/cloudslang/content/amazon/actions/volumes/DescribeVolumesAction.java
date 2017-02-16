@@ -119,11 +119,11 @@ public class DescribeVolumesAction {
      *                                            Example: "50"
      *                                            Default: ""
      * @param filterSnapshotId                    Optional - The snapshot from which the volume was created.
-     *                                            Example: ""
+     *                                            Example: "snap-1234567890abcdef0"
      *                                            Default: ""
      * @param filterStatus                        Optional - The status of the volume.
      *                                            Valid values: creating | available | in-use | deleting | deleted | error
-     *                                            Default: "snap-1234567890abcdef0"
+     *                                            Default: ""
      * @param filterTag                           Optional - The key/value combination of a tag assigned to the resource.
      *                                            Example: "tagKey=tagValue"
      *                                            Default: ""
