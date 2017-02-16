@@ -1,6 +1,7 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.Filter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.stringToL
 public class FilterInputs {
     private final List<Filter> filterMap;
 
-    private FilterInputs(final Builder builder) {
+    private FilterInputs(@NotNull final Builder builder) {
         filterMap = new ArrayList<>(builder.filterMap);
     }
 
@@ -30,21 +31,24 @@ public class FilterInputs {
             filterMap = new ArrayList<>();
         }
 
-        public Builder withFilter(final Filter filter) {
+        @NotNull
+        public Builder withFilter(@NotNull final Filter filter) {
             filterMap.add(filter);
             return this;
         }
 
-        public Builder withNewFilter(final String filterName, final String filterValues) {
+        @NotNull
+        public Builder withNewFilter(@NotNull final String filterName, @NotNull final String filterValues) {
             final Filter filter = new Filter(filterName, stringToList(filterValues, delimiter));
             return withFilter(filter);
         }
 
+        @NotNull
         public FilterInputs build() {
             return new FilterInputs(this);
         }
 
-        public Builder withDelimiter(String delimiter) {
+        public Builder withDelimiter(@NotNull final String delimiter) {
             this.delimiter = delimiter;
             return this;
         }

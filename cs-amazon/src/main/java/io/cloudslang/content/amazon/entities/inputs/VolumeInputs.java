@@ -10,6 +10,7 @@
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -104,52 +105,52 @@ public class VolumeInputs {
             return new VolumeInputs(this);
         }
 
-        public Builder withSnapshotId(String inputValue) {
+        public Builder withSnapshotId(@NotNull final String inputValue) {
             snapshotId = inputValue;
             return this;
         }
 
-        public Builder withSize(String inputValue) {
+        public Builder withSize(@NotNull final String inputValue) {
             size = inputValue;
             return this;
         }
 
-        public Builder withIops(String inputValue) {
+        public Builder withIops(@NotNull final String inputValue) {
             iops = isBlank(inputValue) ? NOT_RELEVANT : inputValue;
             return this;
         }
 
-        public Builder withDeviceName(String inputValue) {
+        public Builder withDeviceName(@NotNull final String inputValue) {
             deviceName = inputValue;
             return this;
         }
 
-        public Builder withDescription(String inputValue) {
+        public Builder withDescription(@NotNull final String inputValue) {
             description = inputValue;
             return this;
         }
 
-        public Builder withEncrypted(String inputValue) {
+        public Builder withEncrypted(@NotNull final String inputValue) {
             encrypted = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
-        public Builder withForce(String inputValue) {
+        public Builder withForce(@NotNull final String inputValue) {
             force = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
-        public Builder withMaxResults(String inputValue) {
+        public Builder withMaxResults(@NotNull final String inputValue) {
             maxResults = InputsUtil.getMaxResultsCount(inputValue);
             return this;
         }
 
-        public Builder withNextToken(String inputValue) {
+        public Builder withNextToken(@NotNull final String inputValue) {
             nextToken = inputValue;
             return this;
         }
 
-        public Builder withVolumeIdsString(String inputValue) {
+        public Builder withVolumeIdsString(@NotNull final String inputValue) {
             volumeIdsString = inputValue;
             return this;
         }

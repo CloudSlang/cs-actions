@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
+import org.jetbrains.annotations.NotNull;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -35,12 +37,12 @@ public enum VolumeStatus {
         return key;
     }
 
-    public static String getValue(String input) {
+    public static String getValue(@NotNull final String input) {
         if (isBlank(input)) {
             return NOT_RELEVANT;
         }
 
-        for (VolumeStatus volumeStatus : VolumeStatus.values()) {
+        for (final VolumeStatus volumeStatus : VolumeStatus.values()) {
             if (volumeStatus.getKey().equalsIgnoreCase(input)) {
                 return volumeStatus.getKey().toLowerCase();
             }

@@ -11,6 +11,7 @@ package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
+import org.jetbrains.annotations.NotNull;
 
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
@@ -182,7 +183,7 @@ public class InputsWrapper {
         return filterInputs;
     }
 
-    public void setFilterInputs(FilterInputs filterInputs) {
+    public void setFilterInputs(@NotNull final FilterInputs filterInputs) {
         this.filterInputs = filterInputs;
     }
 

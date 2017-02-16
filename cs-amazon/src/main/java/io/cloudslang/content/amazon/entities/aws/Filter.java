@@ -1,5 +1,8 @@
 package io.cloudslang.content.amazon.entities.aws;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -26,16 +29,23 @@ public class Filter {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         Filter filter = (Filter) o;
 
-        return name.equals(filter.name);
+        return new EqualsBuilder()
+                .append(name, filter.name)
+                .append(values, filter.values)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(name)
+                .append(values)
+                .toHashCode();
     }
 
     @Override

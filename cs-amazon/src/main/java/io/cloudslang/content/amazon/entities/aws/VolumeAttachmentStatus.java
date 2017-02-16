@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
+import org.jetbrains.annotations.NotNull;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -24,12 +26,12 @@ public enum VolumeAttachmentStatus {
 
     public static final String INVALID_ATTACHMENT_STATUS_VALUE_FORMAT = "Invalid attachment.status value: [%s]. Valid values: attaching, attached, detaching, detached.";
 
-    public static String getValue(String input) {
+    public static String getValue(@NotNull final String input) {
         if (isBlank(input)) {
             return NOT_RELEVANT;
         }
 
-        for (VolumeAttachmentStatus volumeAttachmentStatus : VolumeAttachmentStatus.values()) {
+        for (final VolumeAttachmentStatus volumeAttachmentStatus : VolumeAttachmentStatus.values()) {
             if (volumeAttachmentStatus.name().equalsIgnoreCase(input)) {
                 return volumeAttachmentStatus.name().toLowerCase();
             }

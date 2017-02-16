@@ -16,27 +16,30 @@ import java.util.Map;
  * 2/15/2017.
  */
 public class FilterUtils {
-    public static final String EQUALS = "=";
-    public static final String INVALID_INPUT_FOR_FILTER_TAG_FORMAT = "Invalid input [%s] for input filterTag.";
-    public static final String TAG_NAME_FORMAT = "tag:%s";
-    public static final String FILTER_NAME_FORMAT = "Filter.%d.Name";
-    public static final String FILTER_VALUE_FORMAT = "Filter.%d.Value.%d";
+    private static final String EQUALS = "=";
+    private static final String INVALID_INPUT_FOR_FILTER_TAG_FORMAT = "Invalid input [%s] for input filterTag.";
+    private static final String TAG_NAME_FORMAT = "tag:%s";
+    private static final String FILTER_NAME_FORMAT = "Filter.%d.Name";
+    private static final String FILTER_VALUE_FORMAT = "Filter.%d.Value.%d";
 
-    public static List<String> stringToList(final String string, final String delimiter) {
+    @NotNull
+    public static List<String> stringToList(@NotNull final String string, @NotNull final String delimiter) {
         final String[] splitString = StringUtils.split(string, delimiter);
         return Arrays.asList(splitString);
     }
 
+    @NotNull
     public static String getFilterNameKey(int index) {
         return String.format(FILTER_NAME_FORMAT, index + 1);
     }
 
+    @NotNull
     public static String getFilterValueKey(int index, int counter) {
         return String.format(FILTER_VALUE_FORMAT, index + 1, counter + 1);
     }
 
-
-    public static Map<String, String> getFiltersQueryMap(final FilterInputs filterInputs, final FilterValidator validator) {
+    @NotNull
+    public static Map<String, String> getFiltersQueryMap(@NotNull final FilterInputs filterInputs, @NotNull final FilterValidator validator) {
         final Map<String, String> filtersQueryMap = new HashMap<>();
         for (final Filter filter : filterInputs.getFilterList()) {
             final Map<String, String> filterQueryMap = getFilterQueryMap(filter,
@@ -46,7 +49,8 @@ public class FilterUtils {
         return filtersQueryMap;
     }
 
-    public static Map<String, String> getFilterQueryMap(final Filter filter, int index, final FilterValidator validator) {
+    @NotNull
+    public static Map<String, String> getFilterQueryMap(@NotNull final Filter filter, int index, @NotNull final FilterValidator validator) {
         final Map<String, String> filterQueryMap = new HashMap<>();
         filterQueryMap.put(getFilterNameKey(index), filter.getName());
         for (final String value : filter.getValues()) {

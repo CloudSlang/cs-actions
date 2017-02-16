@@ -12,6 +12,7 @@ package io.cloudslang.content.amazon.factory.helpers;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.validators.VolumesFilterValidator;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -76,7 +77,8 @@ public class VolumeUtils {
         return queryParamsMap;
     }
 
-    public Map<String, String> getDescribeVolumesQueryParamsMap(InputsWrapper wrapper) {
+    @NotNull
+    public Map<String, String> getDescribeVolumesQueryParamsMap(@NotNull final InputsWrapper wrapper) {
         final Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
@@ -96,7 +98,8 @@ public class VolumeUtils {
         return queryParamsMap;
     }
 
-    private Map<String, String> getVolumedIdsQueryMap(InputsWrapper wrapper) {
+    @NotNull
+    private Map<String, String> getVolumedIdsQueryMap(@NotNull final InputsWrapper wrapper) {
         final String[] volumeIds = getArrayWithoutDuplicateEntries(wrapper.getVolumeInputs().getVolumeIdsString(),
                 VOLUME_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
         final Map<String, String> volumeIdsQueryMap = new HashMap<>();
