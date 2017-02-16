@@ -77,7 +77,7 @@ public class VolumeUtils {
     }
 
     public Map<String, String> getDescribeVolumesQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = new HashMap<>();
+        final Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getVolumeInputs().getMaxResults(),
@@ -85,7 +85,7 @@ public class VolumeUtils {
         setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getVolumeInputs().getNextToken(),
                 isNotBlank(wrapper.getVolumeInputs().getNextToken()));
 
-        VolumesFilterValidator volumesFilterValidator = new VolumesFilterValidator();
+        final VolumesFilterValidator volumesFilterValidator = new VolumesFilterValidator();
 
         final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), volumesFilterValidator);
         queryParamsMap.putAll(filterQueryMap);
@@ -102,7 +102,7 @@ public class VolumeUtils {
         final Map<String, String> volumeIdsQueryMap = new HashMap<>();
         if (isNotEmpty(volumeIds)) {
             final List<String> volumeIdsList = Arrays.asList(volumeIds);
-            for (String id : volumeIdsList) {
+            for (final String id : volumeIdsList) {
                 final String key = String.format(VOLUME_ID_FORMAT, volumeIdsList.indexOf(id) + 1);
                 setOptionalMapEntry(volumeIdsQueryMap, key, id, StringUtils.isNotEmpty(id));
             }

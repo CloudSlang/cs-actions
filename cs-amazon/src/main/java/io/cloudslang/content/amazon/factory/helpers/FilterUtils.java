@@ -6,7 +6,10 @@ import io.cloudslang.content.amazon.entities.validators.FilterValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sandorr
@@ -48,9 +51,6 @@ public class FilterUtils {
         filterQueryMap.put(getFilterNameKey(index), filter.getName());
         for (final String value : filter.getValues()) {
             final String key = getFilterValueKey(index, filter.getValues().indexOf(value));
-            if (Objects.equals(filter.getName(), "tag")) {
-                System.out.println(filter.getValues());
-            }
             filterQueryMap.put(key, validator.getFilterValue(filter.getName(), value));
         }
         return filterQueryMap;
