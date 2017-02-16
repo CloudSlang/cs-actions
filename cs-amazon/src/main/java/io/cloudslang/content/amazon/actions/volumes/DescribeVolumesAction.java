@@ -38,11 +38,11 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_RESULTS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.NEXT_TOKEN;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS;
 import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.tuple.ImmutablePair.of;
 
@@ -105,7 +105,7 @@ public class DescribeVolumesAction {
      *                                            Example: "i-468cisID"
      *                                            Default: ""
      * @param filterAttachmentStatus              Optional - The attachment state.
-     *                                            Valid Values: attaching | attached | detaching | detached
+     *                                            Valid values: attaching | attached | detaching | detached
      *                                            Default: ""
      * @param filterAvailabilityZone              Optional - The Availability Zone in which the volume was created.
      *                                            Example: "us-east-xx"
@@ -119,11 +119,11 @@ public class DescribeVolumesAction {
      *                                            Example: "50"
      *                                            Default: ""
      * @param filterSnapshotId                    Optional - The snapshot from which the volume was created.
-     *                                            Example: "
+     *                                            Example: ""
      *                                            Default: ""
      * @param filterStatus                        Optional - The status of the volume.
-     *                                            Valid Values: creating | available | in-use | deleting | deleted | error
-     *                                            Default: ""
+     *                                            Valid values: creating | available | in-use | deleting | deleted | error
+     *                                            Default: "snap-1234567890abcdef0"
      * @param filterTag                           Optional - The key/value combination of a tag assigned to the resource.
      *                                            Example: "tagKey=tagValue"
      *                                            Default: ""
@@ -140,6 +140,7 @@ public class DescribeVolumesAction {
      *                                            This filter is independent of the filterTagKey filter.
      *                                            Example: "tagValue"
      * @param filterVolumeId                      Optional - The volume ID.
+     *                                            Example: "vol-049df61146c4d7901"
      *                                            Default: ""
      * @param filterVolumeType                    Optional - The Amazon EBS volume type.
      *                                            Valid values: gp2 | io1 | st1 | sc1 | standard
