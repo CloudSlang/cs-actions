@@ -168,6 +168,42 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS = "networkInterfaceAssociatePublicIpAddress";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
         public static final String SUBNET_IDS_STRING = "subnetIdsString";
+        public static final String FILTER_ADDRESSES_PRIVATE_IP_ADDRESS = "filterAddressesPrivateIpAddress";
+        public static final String FILTER_ADDRESSES_PRIMARY = "filterAddressesPrimary";
+        public static final String FILTER_ADDRESSES_ASSOCIATION_PUBLIC_IP = "filterAddressesAssociationPublicIp";
+        public static final String FILTER_ADDRESSES_ASSOCIATION_OWNER_ID = "filterAddressesAssociationOwnerId";
+        public static final String FILTER_ASSOCIATION_ASSOCIATION_ID = "filterAssociationAssociationId";
+        public static final String FILTER_ASSOCIATION_ALLOCATION_ID = "filterAssociationAllocationId";
+        public static final String FILTER_ASSOCIATION_IP_OWNER_ID = "filterAssociationIpOwnerId";
+        public static final String FILTER_ASSOCIATION_PUBLIC_IP = "filterAssociationPublicIp";
+        public static final String FILTER_ASSOCIATION_PUBLIC_DNS_NAME = "filterAssociationPublicDnsName";
+        public static final String FILTER_ATTACHMENT_ATTACHMENT_ID = "filterAttachmentAttachmentId";
+        public static final String FILTER_ATTACHMENT_ATTACH_TIME = "filterAttachmentAttachTime";
+        public static final String FILTER_ATTACHMENT_DELETE_ON_TERMINATION = "filterAttachmentDeleteOnTermination";
+        public static final String FILTER_ATTACHMENT_DEVICE_INDEX = "filterAttachmentDeviceIndex";
+        public static final String FILTER_ATTACHMENT_INSTANCE_ID = "filterAttachmentInstanceId";
+        public static final String FILTER_ATTACHMENT_INSTANCE_OWNER_ID = "filterAttachmentInstanceOwnerId";
+        public static final String FILTER_ATTACHMENT_NAT_GATEWAY_ID = "filterAttachmentNatGatewayId";
+        public static final String FILTER_ATTACHMENT_STATUS = "filterAttachmentStatus";
+        public static final String FILTER_AVAILABILITY_ZONE = "filterAvailabilityZone";
+        public static final String FILTER_DESCRIPTION = "filterDescription";
+        public static final String FILTER_GROUP_ID = "filterGroupId";
+        public static final String FILTER_GROUP_NAME = "filterGroupName";
+        public static final String FILTER_IPV6_ADDRESSES_IPV6_ADDRESS = "filterIpv6AddressesIpv6Address";
+        public static final String FILTER_MAC_ADDRESS = "filterMacAddress";
+        public static final String FILTER_NETWORK_INTERFACE_ID = "filterNetworkInterfaceId";
+        public static final String FILTER_OWNER_ID = "filterOwnerId";
+        public static final String FILTER_PRIVATE_IP_ADDRESS = "filterPrivateIpAddress";
+        public static final String FILTER_PRIVATE_DNS_NAME = "filterPrivateDnsName";
+        public static final String FILTER_REQUESTER_ID = "filterRequesterId";
+        public static final String FILTER_REQUESTER_MANAGED = "filterRequesterManaged";
+        public static final String FILTER_SOURCE_DESK_CHECK = "filterSourceDeskCheck";
+        public static final String FILTER_STATUS = "filterStatus";
+        public static final String FILTER_SUBNET_ID = "filterSubnetId";
+        public static final String FILTER_TAG = "filterTag";
+        public static final String FILTER_TAG_KEY = "filterTagKey";
+        public static final String FILTER_TAG_VALUE = "filterTagValue";
+        public static final String FILTER_VPC_ID = "filterVpcId";
     }
 
     public static class StorageInputs {

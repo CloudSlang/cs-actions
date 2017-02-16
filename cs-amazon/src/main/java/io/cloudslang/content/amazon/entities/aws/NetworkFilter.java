@@ -10,6 +10,7 @@
 package io.cloudslang.content.amazon.entities.aws;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public enum NetworkFilter {
@@ -51,6 +52,14 @@ public enum NetworkFilter {
     TAG_VALUE("tag-value"),
     VPC_ID("vpc-id");
 
+    private static final String INVALID_FORMAT = "Invalid filter value: [%s]. Valid values are: addresses.private-ip-address | " +
+            "addresses.primary | addresses.association.public-ip | addresses.association.owner-id | " +
+            "association.association-id | association.allocation-id | association.ip-owner-id | association.public-ip | " +
+            "association.public-dns-name | attachment.attachment-id | attachment.attach.time | attachment.delete-on-termination | " +
+            "attachment.device-index | attachment.instance-id | attachment.instance-owner-id | attachment.nat-gateway-id | " +
+            "attachment.status | availability-zone | description | group-id | group-name | ipv6-addresses.ipv6-address | " +
+            "mac-address | network-interface-id | owner-id | private-ip-address | private-dns-name | requester-id | " +
+            "requester-managed | source-desk-check | status | subnet-id | tag | tag-key | tag-value | vpc-id";
     private final String value;
 
     NetworkFilter(String value) {
@@ -72,13 +81,6 @@ public enum NetworkFilter {
             }
         }
 
-        throw new IllegalArgumentException("Invalid filter value: [" + input + "]. Valid values are: addresses.private-ip-address | " +
-                "addresses.primary | addresses.association.public-ip | addresses.association.owner-id | " +
-                "association.association-id | association.allocation-id | association.ip-owner-id | association.public-ip | " +
-                "association.public-dns-name | attachment.attachment-id | attachment.attach.time | attachment.delete-on-termination | " +
-                "attachment.device-index | attachment.instance-id | attachment.instance-owner-id | attachment.nat-gateway-id | " +
-                "attachment.status | availability-zone | description | group-id | group-name | ipv6-addresses.ipv6-address | " +
-                "mac-address | network-interface-id | owner-id | private-ip-address | private-dns-name | requester-id | " +
-                "requester-managed | source-desk-check | status | subnet-id | tag | tag-key | tag-value | vpc-id");
+        throw new IllegalArgumentException(format(INVALID_FORMAT, input));
     }
 }

@@ -55,6 +55,7 @@ import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParams
 import static io.cloudslang.content.amazon.utils.InputsUtil.setNetworkInterfaceSpecificQueryParams;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
 import static io.cloudslang.content.amazon.utils.InputsUtil.validateAgainstDifferentArraysLength;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -74,6 +75,9 @@ public class NetworkUtils {
     private static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "SecondaryPrivateIpAddressCount";
     private static final String SUBNET_ID = "SubnetId";
     public static final String ATTACHMENT_STATUS = "attachment.status";
+    public static final String NOT_RELEVANT_KEY = "-1";
+    public static final String FILTER_VALUE_KEY_FORMAT = "%s%s%d%s%s%s%d";
+    public static final String FILTER_NAME_KEY_FORMAT = "%s%s%d%s%s";
 
     public Map<String, String> getAssociateAddressQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
@@ -305,10 +309,10 @@ public class NetworkUtils {
         if (isNotEmpty(valuesArray)) {
             for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
                 if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
-                        || !"-1".equals(getFilterValue(filterName, valuesArray[counter]))) {
+                        || !NOT_RELEVANT_KEY.equals(getFilterValue(filterName, valuesArray[counter]))) {
                     queryParamsMap.put(getFilterValueKey(index, counter), getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                     if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter])) ||
-                            !"-1".equals(getFilterValue(filterName, valuesArray[counter]))) {
+                            !NOT_RELEVANT_KEY.equals(getFilterValue(filterName, valuesArray[counter]))) {
                         queryParamsMap.put(getFilterValueKey(index, counter),
                                 getFilterValue(filterName, valuesArray[counter].toLowerCase()));
                     }
@@ -327,11 +331,11 @@ public class NetworkUtils {
     }
     
     private String getFilterNameKey(int index) {
-        return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
+        return format(FILTER_NAME_KEY_FORMAT, FILTER, DOT, (index + ONE), DOT, NAME);
     }
 
     private String getFilterValueKey(int index, int counter) {
-        return FILTER + DOT + valueOf(index + ONE) + DOT + VALUE + DOT + valueOf(counter + ONE);
+        return format(FILTER_VALUE_KEY_FORMAT, FILTER, DOT, (index + ONE), DOT, VALUE, DOT, (counter + ONE));
     }
 
     private void setDescribeNetworkInterfacesFilters(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
