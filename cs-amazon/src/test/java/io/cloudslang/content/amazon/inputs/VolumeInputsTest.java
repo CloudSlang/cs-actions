@@ -36,8 +36,6 @@ public class VolumeInputsTest {
                 .withDescription(DESCRIPTION)
                 .withDeviceName(DEVICE_NAME)
                 .withEncrypted(BooleanUtils.toStringTrueFalse(true))
-                .withFilterNamesString(EMPTY)
-                .withFilterValuesString(EMPTY)
                 .withForce(BooleanUtils.toStringTrueFalse(false))
                 .withIops(EMPTY)
                 .withMaxResults(String.valueOf(MAX_RESULTS))
@@ -47,8 +45,6 @@ public class VolumeInputsTest {
 
         assertEquals(DESCRIPTION, volumeInputs.getDescription());
         assertEquals(DEVICE_NAME, volumeInputs.getDeviceName());
-        assertEquals(EMPTY, volumeInputs.getFilterNamesString());
-        assertEquals(EMPTY, volumeInputs.getFilterValuesString());
         assertEquals(NOT_RELEVANT, volumeInputs.getIops());
         assertEquals(EMPTY, volumeInputs.getNextToken());
 

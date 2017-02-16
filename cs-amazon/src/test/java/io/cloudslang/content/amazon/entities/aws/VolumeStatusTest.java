@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.amazon.entities;
+package io.cloudslang.content.amazon.entities.aws;
 
 import io.cloudslang.content.amazon.entities.aws.VolumeStatus;
 import org.junit.Test;

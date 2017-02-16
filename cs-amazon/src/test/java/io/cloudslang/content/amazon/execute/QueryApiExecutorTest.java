@@ -10,6 +10,7 @@
 package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
+import io.cloudslang.content.amazon.entities.aws.VolumeFilter;
 import io.cloudslang.content.amazon.entities.inputs.*;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
@@ -259,12 +260,14 @@ public class QueryApiExecutorTest {
     @Test
     public void testDescribeVolumes() throws Exception {
         final VolumeInputs volumeInputs = new VolumeInputs.Builder()
-                .withFilterNamesString("status")
-                .withFilterValuesString("in-use")
+                .withVolumeIdsString("1,2,3")
                 .withMaxResults("10")
                 .withNextToken("token")
                 .build();
-        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs);
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withNewFilter(VolumeFilter.STATUS, "in-use")
+                .build();
+        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs, filterInputs);
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeVolumes")));
@@ -736,7 +739,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private Map<String, String> getS3QueryParamsmap(String action){
+    private Map<String, String> getS3QueryParamsmap(String action) {
         Map<String, String> s3QueryParamsMap = new HashMap<>();
         switch (action) {
             case "GET Bucket":

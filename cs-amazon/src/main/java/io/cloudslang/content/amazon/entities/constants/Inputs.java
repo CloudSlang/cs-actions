@@ -188,5 +188,22 @@ public class Inputs {
         public static final String SIZE = "size";
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
         public static final String SNAPSHOT_ID = "snapshotId";
+        public static final String VOLUME_IDS_STRING = "volumeIdsString";
+        public static final String FILTER_ATTACHMENT_ATTACH_TIME = "filterAttachmentAttachTime";
+        public static final String FILTER_ATTACHMENT_DELETE_ON_TERMINATION = "filterAttachmentDeleteOnTermination";
+        public static final String FILTER_ATTACHMENT_DEVICE = "filterAttachmentDevice";
+        public static final String FILTER_ATTACHMENT_INSTANCE_ID = "filterAttachmentInstanceId";
+        public static final String FILTER_ATTACHMENT_STATUS = "filterAttachmentStatus";
+        public static final String FILTER_AVAILABILITY_ZONE = "filterAvailabilityZone";
+        public static final String FILTER_CREATE_TIME = "filterCreateTime";
+        public static final String FILTER_ENCRYPTED = "filterEncrypted";
+        public static final String FILTER_SIZE = "filterSize";
+        public static final String FILTER_SNAPSHOT_ID = "filterSnapshotId";
+        public static final String FILTER_STATUS = "filterStatus";
+        public static final String FILTER_TAG = "filterTag";
+        public static final String FILTER_TAG_KEY = "filterTagKey";
+        public static final String FILTER_TAG_VALUE = "filterTagValue";
+        public static final String FILTER_VOLUME_ID = "filterVolumeId";
+        public static final String FILTER_VOLUME_TYPE = "filterVolumeType";
     }
 }

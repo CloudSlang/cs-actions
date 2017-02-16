@@ -9,12 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.factory.helpers;
 
-import io.cloudslang.content.amazon.entities.aws.VolumeAttachmentStatus;
-import io.cloudslang.content.amazon.entities.aws.VolumeFilter;
-import io.cloudslang.content.amazon.entities.aws.VolumeStatus;
-import io.cloudslang.content.amazon.entities.aws.VolumeType;
-import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.entities.validators.VolumesFilterValidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,13 +18,11 @@ import java.util.Map;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.*;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_NAMES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.FILTER_VALUES_STRING;
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.getFiltersQueryMap;
 import static io.cloudslang.content.amazon.utils.InputsUtil.*;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.replace;
 
 /**
  * Created by Mihai Tusa.
@@ -91,7 +85,10 @@ public class VolumeUtils {
         setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getVolumeInputs().getNextToken(),
                 isNotBlank(wrapper.getVolumeInputs().getNextToken()));
 
-        setDescribeVolumesQueryParamsFilter(queryParamsMap, wrapper);
+        VolumesFilterValidator volumesFilterValidator = new VolumesFilterValidator();
+
+        final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), volumesFilterValidator);
+        queryParamsMap.putAll(filterQueryMap);
 
         return queryParamsMap;
     }
@@ -107,52 +104,4 @@ public class VolumeUtils {
         return queryParamsMap;
     }
 
-    private void setDescribeVolumesQueryParamsFilter(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        final String[] filterNamesArray = getArrayWithoutDuplicateEntries(wrapper.getVolumeInputs().getFilterNamesString(),
-                FILTER_NAMES_STRING, wrapper.getCommonInputs().getDelimiter());
-        final String[] filterValuesArray = getStringsArray(wrapper.getVolumeInputs().getFilterValuesString(), EMPTY,
-                wrapper.getCommonInputs().getDelimiter());
-        validateAgainstDifferentArraysLength(filterNamesArray, filterValuesArray, FILTER_NAMES_STRING, FILTER_VALUES_STRING);
-        if (isNotEmpty(filterNamesArray) && isNotEmpty(filterValuesArray)) {
-            for (int index = START_INDEX; index < filterNamesArray.length; index++) {
-                String filterName = VolumeFilter.getVolumeFilter(filterNamesArray[index]);
-                queryParamsMap.put(getFilterNameKey(index), filterName);
-                setFilterValues(queryParamsMap, filterName, filterValuesArray[index], index);
-            }
-        }
-    }
-
-    private void setFilterValues(Map<String, String> queryParamsMap, String filterName, String filterValues, int index) {
-        String[] valuesArray = getStringsArray(filterValues, Constants.Miscellaneous.EMPTY, PIPE_DELIMITER);
-        if (isNotEmpty(valuesArray)) {
-            for (int counter = START_INDEX; counter < valuesArray.length; counter++) {
-                if (!NOT_RELEVANT.equalsIgnoreCase(getFilterValue(filterName, valuesArray[counter]))
-                        || !NOT_RELEVANT_KEY_STRING.equals(getFilterValue(filterName, valuesArray[counter]))) {
-                    queryParamsMap.put(getFilterValueKey(index, counter),
-                            getFilterValue(filterName, valuesArray[counter].toLowerCase()));
-                }
-            }
-        }
-    }
-
-    private String getFilterValue(String filterName, String filterValue) {
-        switch (filterName) {
-            case ATTACHMENT_STATUS_FILTER:
-                return VolumeAttachmentStatus.getValue(filterValue);
-            case STATUS_FILTER:
-                return VolumeStatus.getValue(filterValue);
-            case VOLUME_TYPE_FILTER:
-                return VolumeType.getValue(filterValue);
-            default:
-                return filterValue;
-        }
-    }
-
-    private String getFilterNameKey(int index) {
-        return FILTER + DOT + String.valueOf(index + ONE) + DOT + NAME;
-    }
-
-    private String getFilterValueKey(int index, int counter) {
-        return FILTER + DOT + String.valueOf(index + ONE) + DOT + VALUE + DOT + String.valueOf(counter + ONE);
-    }
 }

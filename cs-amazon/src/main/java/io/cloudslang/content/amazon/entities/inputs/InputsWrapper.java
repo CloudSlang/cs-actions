@@ -33,6 +33,7 @@ public class InputsWrapper {
     private NetworkInputs networkInputs;
     private StorageInputs storageInputs;
     private VolumeInputs volumeInputs;
+    private FilterInputs filterInputs;
 
     private final String apiService;
     private final String requestUri;
@@ -175,6 +176,14 @@ public class InputsWrapper {
 
     public String getQueryParams() {
         return queryParams;
+    }
+
+    public FilterInputs getFilterInputs() {
+        return filterInputs;
+    }
+
+    public void setFilterInputs(FilterInputs filterInputs) {
+        this.filterInputs = filterInputs;
     }
 
     public static class Builder {
