@@ -9,12 +9,19 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
+import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -148,6 +155,18 @@ public class SQLUtilsTest {
             }
         };
         SQLUtils.processLoadException(sqlException);
+    }
+
+    @Test
+    public void getStrColumnsValid() throws Exception {
+        final String aKey = "aKey";
+
+        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final Map<String, Object> stringMap = new HashMap<>();
+        stringMap.put(aKey, aKey);
+        globalSessionObject.setResource(new SQLSessionResource(stringMap));
+
+        assertThat(getStrColumns(globalSessionObject, aKey), is(aKey));
     }
 
 }

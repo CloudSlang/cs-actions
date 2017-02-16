@@ -14,6 +14,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by victor on 13.01.2017.
@@ -46,14 +50,12 @@ public class Format {
      * @throws SQLException
      */
     private static String getColumn(ResultSet rs, int col, boolean checkNullTermination) throws SQLException {
-
-        String value = rs.getString(col);
-        if (value != null) {
-            if (checkNullTermination) {
-                value = processNullTerminatedString(value);
-            }
-        } else {
-            value = "null";
+        final String value = rs.getString(col);
+        if (value == null) {
+            return "null";
+        }
+        if (checkNullTermination) {
+            return processNullTerminatedString(value);
         }
         return value;
     }
@@ -69,20 +71,17 @@ public class Format {
      * @return a String without a trailing '\0' character.
      */
     public static String processNullTerminatedString(String s) {
-        String returnValue = s;
-
         char[] charArray = s.toCharArray();
-
         // Case 1: Empty null terminated String
         if (charArray.length == 1 && (int) charArray[0] <= 0) {
             return "null";
-        } else { // Case 2: Non-empty null terminated String
-            // Strip trailing '\0' character if any
-            if ((int) charArray[charArray.length - 1] <= 0)
-                returnValue = s.substring(0, s.length() - 1);
         }
-
-        return returnValue;
+        // Case 2: Non-empty null terminated String
+        // Strip trailing '\0' character if any
+        if ((int) charArray[charArray.length - 1] <= 0) {
+            return s.substring(0, s.length() - 1);
+        }
+        return s;
     }
 
 
@@ -104,8 +103,7 @@ public class Format {
         int[] headerSz = new int[nCols]; // Note: Eclipse has a friendly getDisplaySizes() function
         int maxWidth = 1; // maximum column width - initially set at 1 to prevent an edge case
 
-        ArrayList<String[]> rows = new ArrayList<>(); // columns
-        int rowCount = 0;
+        List<String[]> rows = new ArrayList<>(); // columns
         // This is fairly space intensive because we don't want to turn this into an O^2(n) problem
         // instead of a O(n) problem. It's O(n) space but with a k of 2, and same with space.
         // Ugh, stupid time-memory tradeoffs
@@ -125,7 +123,6 @@ public class Format {
                 row[colN] = colVal;
             }
             rows.add(row);
-            rowCount++;
         }
         // column widths set, now start populating the string builder
         StringBuilder resultSb = new StringBuilder(headers.length * maxWidth / 2);
@@ -135,14 +132,14 @@ public class Format {
             for (int count = 0; count < headerSz[colheader] - headers[colheader].length() + colPadding; count++)
                 resultSb.append(" ");
         }
-        resultSb.append("\n");
+        resultSb.append(NEW_LINE);
         for (int colheader = 0; colheader < nCols; colheader++) {
             for (int count = 0; count < headerSz[colheader]; count++)
                 resultSb.append("-");
             for (int count = 0; count < colPadding; count++)
                 resultSb.append(" ");
         }
-        resultSb.append("\n");
+        resultSb.append(NEW_LINE);
         // now append the data itself
         for (String[] row : rows) {
             for (int col = 0; col < nCols; col++) {
@@ -150,7 +147,7 @@ public class Format {
                 for (int padIdx = 0; padIdx < headerSz[col] - row[col].length() + colPadding; padIdx++)
                     resultSb.append(" ");
             }
-            resultSb.append("\n");
+            resultSb.append(NEW_LINE);
         }
 
         return resultSb.toString();
@@ -167,20 +164,17 @@ public class Format {
     public static String resultSetToDelimitedColsAndRows(ResultSet resultSet, boolean checkNullTermination, String colDelimiter, String rowDelimiter) throws SQLException {
 //        assert (resultSet != null);
 
-        StringBuilder delimitedResult = new StringBuilder();
+        final StringBuilder delimitedResult = new StringBuilder();
         if (resultSet != null) {
-            ResultSetMetaData md = resultSet.getMetaData();
-            int nCols = md.getColumnCount();
+            final int nCols = resultSet.getMetaData()
+                    .getColumnCount();
             // populate rows and cols
             while (resultSet.next()) {
                 for (int colN = 0; colN < nCols; colN++) {
-                    String colVal = getColumn(resultSet, colN + 1, checkNullTermination);
-                    if (colN == 0) {
-                        delimitedResult.append(colVal);
-                    } else {
-                        delimitedResult.append(colDelimiter)
-                                .append(colVal);
+                    if (colN != 0) {
+                        delimitedResult.append(colDelimiter);
                     }
+                    delimitedResult.append(getColumn(resultSet, colN + 1, checkNullTermination));
                 }
                 delimitedResult.append(rowDelimiter);
             }
@@ -188,12 +182,10 @@ public class Format {
 
         //If a multi-char delimiter is used, removing the last character is not enough
         int length = rowDelimiter.length();
-        String delimitedResultString;
-        if ((delimitedResult.length() - length) >= 0)
-            delimitedResultString = delimitedResult.substring(0, delimitedResult.length() - length);
-        else
-            delimitedResultString = "";
-        return delimitedResultString;
+        if ((delimitedResult.length() - length) >= 0) {
+            return delimitedResult.substring(0, delimitedResult.length() - length);
+        }
+        return EMPTY;
     }
 
 }

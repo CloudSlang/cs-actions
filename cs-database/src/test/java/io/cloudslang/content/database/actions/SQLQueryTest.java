@@ -9,21 +9,43 @@
  *******************************************************************************/
 package io.cloudslang.content.database.actions;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.database.constants.DBResponseNames;
+import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.database.utils.SQLInputsUtils;
+import io.cloudslang.content.database.utils.SQLSessionResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.constants.DBReturnCodes.NO_MORE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Created by victor on 13.02.2017.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({SQLQuery.class, SQLInputsUtils.class})
 public class SQLQueryTest {
+
+    @Spy
+    private final SQLQuery sqlQuery = new SQLQuery();
+
     @Test
     public void executeFailValidation() throws Exception {
         final Map<String, String> resultMap = new SQLQuery().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
@@ -35,6 +57,27 @@ public class SQLQueryTest {
                 "database input is empty.\n" +
                 "trustStore or trustStorePassword is mandatory if trustAllRoots is false\n" +
                 "command input is empty."));
+    }
+
+    @Test
+    public void executeSuccess() throws Exception {
+        final String aKey = "akey";
+        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final Map<String, Object> stringMap = new HashMap<>();
+        stringMap.put(aKey, aKey);
+        globalSessionObject.setResource(new SQLSessionResource(stringMap));
+
+        mockStatic(SQLInputsUtils.class);
+        when(SQLInputsUtils.getSqlKey(any(SQLInputs.class))).thenReturn(aKey);
+
+
+        when(SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class))).thenReturn(globalSessionObject);
+        final Map<String, String> resultMap = sqlQuery.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
+                AUTH_SQL, EMPTY, EMPTY, "something","true",  EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, FALSE, globalSessionObject);
+
+        verifyStatic();
+        assertThat(resultMap.get(RETURN_CODE), is(NO_MORE));
+        assertThat(resultMap.get(RETURN_RESULT), is(DBResponseNames.NO_MORE));
     }
 
 }

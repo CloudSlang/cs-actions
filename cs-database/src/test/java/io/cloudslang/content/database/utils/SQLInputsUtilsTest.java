@@ -50,7 +50,6 @@ public class SQLInputsUtilsTest {
         assertFalse(checkIsNetcool(MYSQL_DB_TYPE));
         assertFalse(checkIsNetcool(ORACLE_DB_TYPE));
         assertFalse(checkIsNetcool(CUSTOM_DB_TYPE));
-
     }
 
     @Test

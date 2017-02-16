@@ -9,21 +9,38 @@
  *******************************************************************************/
 package io.cloudslang.content.database.actions;
 
+import io.cloudslang.content.database.services.SQLQueryTabularService;
+import io.cloudslang.content.database.utils.SQLInputs;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Created by victor on 13.02.2017.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({SQLQueryTabular.class, SQLQueryTabularService.class})
 public class SQLQueryTabularTest {
+
+    @Spy
+    private final SQLQueryTabular sqlQueryTabular = new SQLQueryTabular();
+
     @Test
     public void executeFailValidation() throws Exception {
         final Map<String, String> resultMap = new SQLQueryTabular().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
@@ -37,4 +54,18 @@ public class SQLQueryTabularTest {
                 "command input is empty."));
     }
 
+    @Test
+    public void executeSuccess() throws Exception {
+        final String res = "result";
+
+        mockStatic(SQLQueryTabularService.class);
+        when(SQLQueryTabularService.execSqlQueryTabular(any(SQLInputs.class))).thenReturn(res);
+
+        final Map<String, String> resultMap = sqlQueryTabular.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
+                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+
+        verifyStatic();
+        assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
+        assertThat(resultMap.get(RETURN_RESULT), is(res));
+    }
 }
