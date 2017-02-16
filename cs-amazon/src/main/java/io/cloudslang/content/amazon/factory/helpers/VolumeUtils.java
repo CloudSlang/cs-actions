@@ -16,13 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.getFiltersQueryMap;
-import static io.cloudslang.content.amazon.utils.InputsUtil.*;
-import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.replace;
 
 /**
  * Created by Mihai Tusa.

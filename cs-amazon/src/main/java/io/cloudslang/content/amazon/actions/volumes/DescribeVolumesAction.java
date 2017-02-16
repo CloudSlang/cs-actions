@@ -30,9 +30,9 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.VOLUMES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_VOLUMES;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_RESULTS;
@@ -40,6 +40,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInp
 import static io.cloudslang.content.amazon.entities.constants.Inputs.VolumeInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS;
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -52,9 +53,9 @@ import static org.apache.commons.lang3.tuple.ImmutablePair.of;
 public class DescribeVolumesAction {
     /**
      * Describes one or more volumes.
-     * Note : If you are describing a long list of volumes, you can paginate the output to make the list more manageable.
+     * Note: If you are describing a long list of volumes, you can paginate the output to make the list more manageable.
      * The maxResults parameter sets the maximum number of results returned in a single page.
-     * If the list of results exceeds your MaxResults value, then that number of results is returned along with a
+     * If the list of results exceeds your maxResults value, then that number of results is returned along with a
      * nextToken value that can be passed to a subsequent DescribeVolumes operation to retrieve the remaining results.
      *
      * @param endpoint                            Endpoint to which request will be sent.
@@ -90,24 +91,59 @@ public class DescribeVolumesAction {
      *                                            Example: "2016-11-15"
      *                                            Default: "2016-11-15"
      * @param delimiter                           Optional - Delimiter that will be used.
+     *                                            Default: ","
      * @param filterAttachmentAttachTime          Optional - The time stamp when the attachment initiated.
+     *                                            Example: "2016-12-02T10:28:20.000Z"
+     *                                            Default: ""
      * @param filterAttachmentDeleteOnTermination Optional -  Whether the volume is deleted on instance termination.
+     *                                            Valid values: true | false
+     *                                            Default: ""
      * @param filterAttachmentDevice              Optional - The device name that is exposed to the instance.
-     *                                            Example : "/dev/sda1"
+     *                                            Example: "/dev/sda1"
+     *                                            Default: ""
      * @param filterAttachmentInstanceId          Optional - The ID of the instance the volume is attached to.
+     *                                            Example: "i-468cisID"
+     *                                            Default: ""
      * @param filterAttachmentStatus              Optional - The attachment state.
-     *                                            Valid Values : attaching | attached | detaching | detached
+     *                                            Valid Values: attaching | attached | detaching | detached
+     *                                            Default: ""
      * @param filterAvailabilityZone              Optional - The Availability Zone in which the volume was created.
+     *                                            Example: "us-east-xx"
+     *                                            Default: ""
      * @param filterCreateTime                    Optional - The time stamp when the volume was created.
+     *                                            Default: ""
      * @param filterEncrypted                     Optional - The encryption status of the volume.
+     *                                            Valid values: true | false
+     *                                            Default: ""
      * @param filterSize                          Optional - The size of the volume, in GiB.
-     * @param filterSnapshotId                    Optional -
-     * @param filterStatus                        Optional -
-     * @param filterTag                           Optional -
-     * @param filterTagKey                        Optional -
-     * @param filterTagValue                      Optional -
-     * @param filterVolumeId                      Optional -
-     * @param filterVolumeType                    Optional -
+     *                                            Example: "50"
+     *                                            Default: ""
+     * @param filterSnapshotId                    Optional - The snapshot from which the volume was created.
+     *                                            Example: "
+     *                                            Default: ""
+     * @param filterStatus                        Optional - The status of the volume.
+     *                                            Valid Values: creating | available | in-use | deleting | deleted | error
+     *                                            Default: ""
+     * @param filterTag                           Optional - The key/value combination of a tag assigned to the resource.
+     *                                            Example: "tagKey=tagValue"
+     *                                            Default: ""
+     * @param filterTagKey                        Optional - The key of a tag assigned to the resource. This filter is
+     *                                            independent of the filterTagValue filter. For example, if you use both
+     *                                            the filter filterTagKey="Purpose" and the filter filterTagValue="X",
+     *                                            you get any resources assigned both the tag key Purpose (regardless of what the tag's value is),
+     *                                            and the tag value X (regardless of what the tag's key is).
+     *                                            Note: If you want to list only resources where Purpose is X,
+     *                                            see the filterTag filter.
+     *                                            Example: "tagKey"
+     *                                            Default: ""
+     * @param filterTagValue                      Optional - The value of a tag assigned to the resource.
+     *                                            This filter is independent of the filterTagKey filter.
+     *                                            Example: "tagValue"
+     * @param filterVolumeId                      Optional - The volume ID.
+     *                                            Default: ""
+     * @param filterVolumeType                    Optional - The Amazon EBS volume type.
+     *                                            Valid values: gp2 | io1 | st1 | sc1 | standard
+     *                                            Default: ""
      * @param maxResults                          Optional - The maximum number of results to return in a single call. To retrieve the
      *                                            remaining results, make another call with the returned NextToken value. This value can
      *                                            be between 5 and 1000. You cannot specify this parameter and the tag filters in the same call.
@@ -160,6 +196,7 @@ public class DescribeVolumesAction {
                                        @Param(value = NEXT_TOKEN) String nextToken) {
         try {
             version = getDefaultStringInput(version, VOLUMES_DEFAULT_API_VERSION);
+            delimiter = getDefaultStringInput(delimiter, COMMA_DELIMITER);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)
@@ -198,7 +235,6 @@ public class DescribeVolumesAction {
                     of(VolumeFilter.SIZE, filterSize),
                     of(VolumeFilter.SNAPSHOT_ID, filterSnapshotId),
                     of(VolumeFilter.STATUS, filterStatus),
-                    of(VolumeFilter.TAG, filterTag),
                     of(VolumeFilter.TAG_KEY, filterTagKey),
                     of(VolumeFilter.TAG_VALUE, filterTagValue),
                     of(VolumeFilter.VOLUME_ID, filterVolumeId),
@@ -211,6 +247,11 @@ public class DescribeVolumesAction {
                     filterInputsBuilder.withNewFilter(filterPair.getLeft(), filterPair.getRight());
                 }
             }
+
+            if (isNotEmpty(filterTag)) {
+                processTagFilter(filterTag, delimiter, filterInputsBuilder);
+            }
+
             final FilterInputs filterInputs = filterInputsBuilder.build();
 
             return new QueryApiExecutor().execute(commonInputs, volumeInputs, filterInputs);
@@ -219,8 +260,7 @@ public class DescribeVolumesAction {
         }
     }
 
-
-
+    // todo remove this
     public static void main(String[] args) {
         final DescribeVolumesAction describeVolumesAction = new DescribeVolumesAction();
         final Map<String, String> result = describeVolumesAction.execute(
@@ -236,18 +276,18 @@ public class DescribeVolumesAction {
                 "",
                 "",
                 "",
-                "",
-                "",
-                "",
-                "",
-                "a",
-                "a",
-                "a",
+                "2016-12-02T10:28:20.000Z",
                 "",
                 "",
                 "",
                 "",
                 "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "A=a,B=b",
                 "",
                 "",
                 "",
