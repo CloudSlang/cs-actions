@@ -68,6 +68,8 @@ class Ec2QueryParamsMapBuilder {
                 return new NetworkUtils().getDescribeNetworkInterfacesQueryParamsMap(wrapper);
             case DESCRIBE_REGIONS:
                 return new RegionUtils().getDescribeRegionsQueryParamsMap(wrapper);
+            case DESCRIBE_VOLUMES:
+                return new VolumeUtils().getDescribeVolumesQueryParamsMap(wrapper);
             case DEREGISTER_IMAGE:
                 return new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
             case DETACH_NETWORK_INTERFACE:

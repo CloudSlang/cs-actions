@@ -275,6 +275,25 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeVolumes() throws Exception {
+        final VolumeInputs volumeInputs = new VolumeInputs.Builder()
+                .withVolumeIdsString("1,2,3")
+                .withMaxResults("10")
+                .withNextToken("token")
+                .build();
+        final FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter(VolumeFilter.STATUS, "in-use,available")
+                .withNewFilter(VolumeFilter.SIZE, "50");
+        processTagFilter("TEST=testTag", COMMA_DELIMITER, filterInputsBuilder);
+        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs, filterInputsBuilder.build());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeVolumes")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDescribeInstances() throws Exception {
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS), getDescribeInstancesInputs());
 
@@ -770,7 +789,7 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private Map<String, String> getS3QueryParamsmap(String action){
+    private Map<String, String> getS3QueryParamsmap(String action) {
         Map<String, String> s3QueryParamsMap = new HashMap<>();
         switch (action) {
             case "GET Bucket":
@@ -881,6 +900,20 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Size", "10");
                 queryParamsMap.put("SnapshotId", "snap-id");
                 queryParamsMap.put("AvailabilityZone", "us-east-1d");
+                break;
+            case "DescribeVolumes":
+                queryParamsMap.put("Filter.1.Name", "status");
+                queryParamsMap.put("Filter.1.Value.1", "in-use");
+                queryParamsMap.put("Filter.1.Value.2", "available");
+                queryParamsMap.put("Filter.2.Name", "size");
+                queryParamsMap.put("Filter.2.Value.1", "50");
+                queryParamsMap.put("Filter.3.Name", "tag:TEST");
+                queryParamsMap.put("Filter.3.Value.1", "testTag");
+                queryParamsMap.put("VolumeId.1", "1");
+                queryParamsMap.put("VolumeId.2", "2");
+                queryParamsMap.put("VolumeId.3", "3");
+                queryParamsMap.put("MaxResults", "10");
+                queryParamsMap.put("NextToken", "token");
                 break;
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
