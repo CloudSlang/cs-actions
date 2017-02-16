@@ -108,7 +108,7 @@ public class SQLScript {
                 .dbPort(getOrDefaultDBPort(dbPort, dbType))
                 .dbName(defaultIfEmpty(databaseName, EMPTY))
                 .authenticationType(authenticationType)
-                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .strDelim(delimiter)
                 .sqlCommands(getSqlCommands(sqlCommands, scriptFileName, delimiter))

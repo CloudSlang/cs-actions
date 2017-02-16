@@ -9,22 +9,19 @@
  *******************************************************************************/
 package io.cloudslang.content.database.services.databases;
 
-import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBOtherValues.BACK_SLASH;
+import static io.cloudslang.content.database.constants.DBOtherValues.SQLSERVER_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
-import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static junit.framework.Assert.assertEquals;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 

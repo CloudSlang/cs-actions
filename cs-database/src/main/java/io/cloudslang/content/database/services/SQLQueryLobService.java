@@ -29,8 +29,7 @@ import static org.apache.commons.io.FileUtils.*;
  */
 public class SQLQueryLobService {
 
-    public static boolean executeSqlQueryLob(SQLInputs sqlInputs) throws
-            Exception {
+    public static boolean executeSqlQueryLob(SQLInputs sqlInputs) throws Exception {
         if (StringUtils.isEmpty(sqlInputs.getSqlCommand())) {
             throw new Exception("command input is empty.");
         }

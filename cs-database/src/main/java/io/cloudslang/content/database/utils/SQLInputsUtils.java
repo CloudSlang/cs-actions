@@ -34,11 +34,23 @@ public class SQLInputsUtils {
     static final Map<String, Integer> CONCUR_VALUES = createConcurValues();
     static final Map<String, Integer> TYPE_VALUES = createTypeValues();
     static final Map<String, Integer> DB_PORTS = createDBPortValues();
+    static final Map<String, String> DB_ClASSES = createDBClassValues();
     private static final Map<String, Class<? extends SqlDatabase>> dbTypesClass = getTypesOfDatabase();
     private static final Map<String, DBType> dbTypesToEnum = getTypesEnum();
 
     public static boolean checkIsNetcool(@NotNull final String dbType) {
         return dbType.equalsIgnoreCase(NETCOOL_DB_TYPE);
+    }
+
+    @NotNull
+    public static String getOrDefaultDBClass(final String dbClass, final String dbType) {
+        if (isNoneEmpty(dbClass)) {
+            return dbClass;
+        }
+        if (isValidDbType(dbType)) {
+            return DB_ClASSES.get(dbType);
+        }
+        return EMPTY;
     }
 
     @NotNull
@@ -180,17 +192,31 @@ public class SQLInputsUtils {
     }
 
     @NotNull
-    private static Map<String, Integer> createDBPortValues() {
-        final Map<String, Integer> concurValues = new HashMap<>();
-        concurValues.put(ORACLE_DB_TYPE, DEFAULT_PORT_ORACLE);
-        concurValues.put(MSSQL_DB_TYPE, DEFAULT_PORT_MSSQL);
-        concurValues.put(SYBASE_DB_TYPE, DEFAULT_PORT_SYBASE);
-        concurValues.put(NETCOOL_DB_TYPE, DEFAULT_PORT_NETCOOL);
-        concurValues.put(DB2_DB_TYPE, DEFAULT_PORT_DB2);
-        concurValues.put(MYSQL_DB_TYPE, DEFAULT_PORT_MYSQL);
-        concurValues.put(POSTGRES_DB_TYPE, DEFAULT_PORT_PSQL);
-        concurValues.put(CUSTOM_DB_TYPE, DEFAULT_PORT_CUSTOM);
+    private static Map<String, String> createDBClassValues() {
+        final Map<String, String> concurValues = new HashMap<>();
+        concurValues.put(ORACLE_DB_TYPE, ORACLE_JDBC_DRIVER);
+        concurValues.put(MSSQL_DB_TYPE, SQLSERVER_JDBC_DRIVER);
+        concurValues.put(SYBASE_DB_TYPE, SYBASE_JTDS_DRIVER);
+        concurValues.put(NETCOOL_DB_TYPE, NETCOOL_DRIVER);
+        concurValues.put(DB2_DB_TYPE, DB2_DRIVER);
+        concurValues.put(MYSQL_DB_TYPE, MYSQL_JDBC_DRIVER);
+        concurValues.put(POSTGRES_DB_TYPE, POSTGRESQL_DRIVER);
+        concurValues.put(CUSTOM_DB_TYPE, EMPTY);
         return concurValues;
+    }
+
+    @NotNull
+    private static Map<String, Integer> createDBPortValues() {
+        final Map<String, Integer> dbPortsValues = new HashMap<>();
+        dbPortsValues.put(ORACLE_DB_TYPE, DEFAULT_PORT_ORACLE);
+        dbPortsValues.put(MSSQL_DB_TYPE, DEFAULT_PORT_MSSQL);
+        dbPortsValues.put(SYBASE_DB_TYPE, DEFAULT_PORT_SYBASE);
+        dbPortsValues.put(NETCOOL_DB_TYPE, DEFAULT_PORT_NETCOOL);
+        dbPortsValues.put(DB2_DB_TYPE, DEFAULT_PORT_DB2);
+        dbPortsValues.put(MYSQL_DB_TYPE, DEFAULT_PORT_MYSQL);
+        dbPortsValues.put(POSTGRES_DB_TYPE, DEFAULT_PORT_PSQL);
+        dbPortsValues.put(CUSTOM_DB_TYPE, DEFAULT_PORT_CUSTOM);
+        return dbPortsValues;
     }
 
     @NotNull

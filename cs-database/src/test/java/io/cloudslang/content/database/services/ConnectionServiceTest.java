@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static io.cloudslang.content.database.utils.Constants.SQLSERVER_JDBC_DRIVER;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -54,6 +53,7 @@ public class ConnectionServiceTest {
 
     @Mock
     private DBConnectionManager dbConnectionManagerMock;
+
     @Mock
     private Connection connectionMock;
 

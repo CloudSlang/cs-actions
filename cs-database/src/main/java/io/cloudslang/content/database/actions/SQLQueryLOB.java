@@ -123,7 +123,7 @@ public class SQLQueryLOB {
                 .dbPort(getOrDefaultDBPort(dbPort, dbType))
                 .dbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), true))
                 .authenticationType(authenticationType)
-                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
                 .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))

@@ -11,6 +11,13 @@ package io.cloudslang.content.database.actions;
 
 import org.junit.Test;
 
+import java.util.Map;
+
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -19,7 +26,15 @@ import static org.junit.Assert.*;
 public class SQLQueryLOBTest {
     @Test
     public void execute() throws Exception {
-
+        final Map<String, String> resultMap = new SQLQueryLOB().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, null);
+        assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
+        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\n" +
+                "username input is empty.\n" +
+                "password input is empty.\n" +
+                "database input is empty.\n" +
+                "trustStore or trustStorePassword is mandatory if trustAllRoots is false\n" +
+                "command input is empty."));
     }
 
 }

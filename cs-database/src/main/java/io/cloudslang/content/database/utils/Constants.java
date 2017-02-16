@@ -26,7 +26,6 @@ public class Constants {
     public static final String MSSQL_URL = "jdbc:sqlserver://";
     public static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
     public static final String JTDS_JDBC_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
-    public static final String SQLSERVER_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     public static final String ENCRYPT = "encrypt";
 
     public static final String EQUALS = "=";

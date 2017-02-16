@@ -121,7 +121,7 @@ public class SQLQuery {
                 .dbPort(getOrDefaultDBPort(dbPort, dbType))
                 .dbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), ignoreCaseBool))
                 .authenticationType(authenticationType)
-                .dbClass(defaultIfEmpty(dbClass, EMPTY))
+                .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
                 .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
