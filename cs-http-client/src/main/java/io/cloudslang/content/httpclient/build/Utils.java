@@ -87,7 +87,7 @@ public class Utils {
 
         try {
             portNumber = Integer.parseInt(portStringValue);
-            if ((portNumber < 0) && (portNumber != -1)) {
+            if ((portNumber <= 0) && (portNumber != -1)) {
                 throw new IllegalArgumentException(exceptionMessageBuilder.toString());
             }
         } catch (NumberFormatException e) {
