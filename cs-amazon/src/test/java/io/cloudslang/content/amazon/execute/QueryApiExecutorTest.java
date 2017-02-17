@@ -10,10 +10,12 @@
 package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
+import io.cloudslang.content.amazon.entities.aws.VolumeFilter;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
 import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.amazon.entities.inputs.FilterInputs;
 import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
@@ -41,6 +43,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
+import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.eq;
@@ -338,33 +342,34 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeNetworkInterfacesWithSuccess() throws Exception {
-        InstanceInputs instanceInputs = new InstanceInputs.Builder()
-                .withFilterNamesString("status,attachment.status")
-                .withFilterValuesString("in-use|available,attaching|attached|detaching|detached")
-                .build();
-
         NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .withNetworkInterfaceId("eni-12345678,eni-87654321")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), instanceInputs, networkInputs);
+        FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter("status", "in-use,available")
+                .withNewFilter("attachment.status", "attaching,attached,detaching,detached")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs);
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeNetworkInterfacesSuccess")));
     }
 
     @Test
     public void testDescribeNetworkInterfacesWithWrongStatus() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid attachment status value: [WRONG]. Valid values: attaching, attached, detaching, detached.");
-
-        InstanceInputs instanceInputs = new InstanceInputs.Builder()
-                .withFilterNamesString("attachment.status")
-                .withFilterValuesString("WRONG")
-                .build();
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized networkInterfaceAttachmentStatus value: [WRONG]. Valid values are: attaching, attached, detaching, detached.");
 
         NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), instanceInputs, networkInputs);
+        FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter("attachment.status", "WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs);
     }
 
     @Test

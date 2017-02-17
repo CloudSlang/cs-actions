@@ -15,12 +15,17 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.amazon.entities.aws.NetworkFilter;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
+import io.cloudslang.content.amazon.entities.inputs.FilterInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
 import io.cloudslang.content.constants.ReturnCodes;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
@@ -64,8 +69,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_MAC_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_NETWORK_INTERFACE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_OWNER_ID;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_PRIVATE_DNS_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_REQUESTER_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_REQUESTER_MANAGED;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_SOURCE_DESK_CHECK;
@@ -76,56 +81,53 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_TAG_VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_VPC_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.xml.utils.Constants.ResponseNames.FAILURE;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.tuple.ImmutablePair.of;
 
 /**
- * Created by Mihai Tusa.
+ * Created by Tirla Alin.
  * 9/5/2016.
  */
 public class DescribeNetworkInterfacesAction {
-
-    public static void main(String[] args) {
-        DescribeNetworkInterfacesAction networkInterfaceAction = new DescribeNetworkInterfacesAction();
-        Map<String, String> execute = networkInterfaceAction.execute("", "AKIAIFGN4KVGZHJD5UOQ", "yg3C+v2PwI//obybvKza6zJraEZimjqMlvvmNmkp",
-                "web-proxy.bbn.hpecorp.net", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "eni-8fb2b365");
-        for (Map.Entry<String, String> entry : execute.entrySet()) {
-            System.out.println(entry.getKey() + "\n" + entry.getValue());
-        }
-    }
 
     /**
      * Describes one or more of your network interfaces.
      *
      * @param endpoint                              Optional - Endpoint to which request will be sent.
      *                                              Default: "https://ec2.amazonaws.com"
-     * @param identity                              ID of the secret access key associated with your Amazon AWS or IAM account.
+     * @param identity                              ID of the secret access key associated with your Amazon AWS or
+     *                                              IAM account.
      *                                              Example: "AKIAIOSFODNN7EXAMPLE"
      * @param credential                            Secret access key associated with your Amazon AWS or IAM account.
      *                                              Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-     * @param proxyHost                             Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
-     * @param proxyPort                             Optional - proxy server port. You must either specify values for both proxyHost and
-     *                                              proxyPort inputs or leave them both empty.
+     * @param proxyHost                             Optional - proxy server used to connect to Amazon API. If empty no
+     *                                              proxy will be used.
+     * @param proxyPort                             Optional - proxy server port. You must either specify values for both
+     *                                              proxyHost and proxyPort inputs or leave them both empty.
      * @param proxyUsername                         Optional - proxy server user name.
      *                                              Default: ""
-     * @param proxyPassword                         Optional - proxy server password associated with the proxyUsername input value.
+     * @param proxyPassword                         Optional - proxy server password associated with the proxyUsername
+     *                                              input value.
      * @param version                               Optional - Version of the web service to made the call against it.
      *                                              Example: "2016-11-15"
      *                                              Default: "2016-11-15"
-     * @param headers                               Optional - string containing the headers to use for the request separated by new line
-     *                                              (CRLF). The header name-value pair will be separated by ":"
+     * @param headers                               Optional - string containing the headers to use for the request
+     *                                              separated by new line (CRLF). The header name-value pair will be
+     *                                              separated by ":"
      *                                              Format: Conforming with HTTP standard for headers (RFC 2616)
      *                                              Examples: "Accept:text/plain"
      *                                              Default: ""
-     * @param queryParams                           Optional - string containing query parameters that will be appended to the URL. The names
-     *                                              and the values must not be URL encoded because if they are encoded then a double encoded
-     *                                              will occur. The separator between name-value pairs is "&" symbol. The query name will be
+     * @param queryParams                           Optional - string containing query parameters that will be appended
+     *                                              to the URL. The names and the values must not be URL encoded because
+     *                                              if they are encoded then a double encoded will occur. The separator
+     *                                              between name-value pairs is "&" symbol. The query name will be
      *                                              separated from query value by "="
      *                                              Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
      *                                              Default: ""
@@ -295,8 +297,61 @@ public class DescribeNetworkInterfacesAction {
                     .withNetworkInterfaceId(networkInterfaceId)
                     .build();
 
+            final List<ImmutablePair<String, String>> filterPairs = Arrays.asList(
+                    of(NetworkFilter.ADDRESSES_ASSOCIATION_OWNER_ID, filterAttachmentAttachTime),
+                    of(NetworkFilter.ADDRESSES_PRIVATE_IP_ADDRESS, filterAddressesPrivateIpAddress),
+                    of(NetworkFilter.ADDRESSES_PRIMARY, filterAddressesPrimary),
+                    of(NetworkFilter.ADDRESSES_ASSOCIATION_PUBLIC_IP, filterAddressesAssociationPublicIp),
+                    of(NetworkFilter.ADDRESSES_ASSOCIATION_OWNER_ID, filterAddressesAssociationOwnerId),
+                    of(NetworkFilter.ASSOCIATION_ASSOCIATION_ID, filterAssociationAssociationId),
+                    of(NetworkFilter.ASSOCIATION_ALLOCATION_ID, filterAssociationAllocationId),
+                    of(NetworkFilter.ASSOCIATION_IP_OWNER_ID, filterAssociationIpOwnerId),
+                    of(NetworkFilter.ASSOCIATION_PUBLIC_IP, filterAssociationPublicIp),
+                    of(NetworkFilter.ASSOCIATION_PUBLIC_DNS_NAME, filterAssociationPublicDnsName),
+                    of(NetworkFilter.ATTACHMENT_ATTACHMENT_ID, filterAttachmentAttachmentId),
+                    of(NetworkFilter.ATTACHMENT_ATTACH_TIME, filterAttachmentAttachTime),
+                    of(NetworkFilter.ATTACHMENT_DELETE_ON_TERMINATION, filterAttachmentDeleteOnTermination),
+                    of(NetworkFilter.ATTACHMENT_DEVICE_INDEX, filterAttachmentDeviceIndex),
+                    of(NetworkFilter.ATTACHMENT_INSTANCE_ID, filterAttachmentInstanceId),
+                    of(NetworkFilter.ATTACHMENT_INSTANCE_OWNER_ID, filterAttachmentInstanceOwnerId),
+                    of(NetworkFilter.ATTACHMENT_NAT_GATEWAY_ID, filterAttachmentNatGatewayId),
+                    of(NetworkFilter.ATTACHMENT_STATUS, filterAttachmentStatus),
+                    of(NetworkFilter.AVAILABILITY_ZONE, filterAvailabilityZone),
+                    of(NetworkFilter.DESCRIPTION, filterDescription),
+                    of(NetworkFilter.GROUP_ID, filterGroupId),
+                    of(NetworkFilter.GROUP_NAME, filterGroupName),
+                    of(NetworkFilter.IPV6_ADDRESSES_IPV6_ADDRESS, filterIpv6AddressesIpv6Address),
+                    of(NetworkFilter.MAC_ADDRESS, filterMacAddress),
+                    of(NetworkFilter.NETWORK_INTERFACE_ID, filterNetworkInterfaceId),
+                    of(NetworkFilter.OWNER_ID, filterOwnerId),
+                    of(NetworkFilter.PRIVATE_IP_ADDRESS, filterPrivateIpAddress),
+                    of(NetworkFilter.PRIVATE_DNS_NAME, filterPrivateDnsName),
+                    of(NetworkFilter.REQUESTER_ID, filterRequesterId),
+                    of(NetworkFilter.REQUESTER_MANAGED, filterRequesterManaged),
+                    of(NetworkFilter.SOURCE_DESK_CHECK, filterSourceDeskCheck),
+                    of(NetworkFilter.STATUS, filterStatus),
+                    of(NetworkFilter.SUBNET_ID, filterSubnetId),
+                    of(NetworkFilter.TAG_KEY, filterTagKey),
+                    of(NetworkFilter.TAG_VALUE, filterTagValue),
+                    of(NetworkFilter.VPC_ID, filterVpcId)
+            );
 
-            return new QueryApiExecutor().execute(commonInputs, networkInputs);
+            FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
+                    .withDelimiter(commonInputs.getDelimiter());
+
+            for (ImmutablePair<String, String> filterPair : filterPairs) {
+                if (isNotEmpty(filterPair.getRight())) {
+                    filterInputsBuilder.withNewFilter(filterPair.getLeft(), filterPair.getRight());
+                }
+            }
+
+            if (isNotEmpty(filterTag)) {
+                processTagFilter(filterTag, commonInputs.getDelimiter(), filterInputsBuilder);
+            }
+
+            FilterInputs filterInputs = filterInputsBuilder.build();
+
+            return new QueryApiExecutor().execute(commonInputs, networkInputs, filterInputs);
         } catch (Exception exception) {
             return ExceptionProcessor.getExceptionResult(exception);
         }
