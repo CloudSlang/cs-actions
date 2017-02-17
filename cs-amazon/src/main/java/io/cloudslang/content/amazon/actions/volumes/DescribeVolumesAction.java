@@ -241,8 +241,10 @@ public class DescribeVolumesAction {
                     of(VolumeFilter.VOLUME_ID, filterVolumeId),
                     of(VolumeFilter.VOLUME_TYPE, filterVolumeType)
             );
+
             final FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
                     .withDelimiter(delimiter);
+
             for (ImmutablePair<String, String> filterPair : filterPairs) {
                 if (isNotEmpty(filterPair.getRight())) {
                     filterInputsBuilder.withNewFilter(filterPair.getLeft(), filterPair.getRight());

@@ -64,6 +64,8 @@ class Ec2QueryParamsMapBuilder {
                 return new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
             case DESCRIBE_INSTANCES:
                 return new InstanceUtils().getDescribeInstancesQueryParamsMap(wrapper);
+            case DESCRIBE_NETWORK_INTERFACES:
+                return new NetworkUtils().getDescribeNetworkInterfacesQueryParamsMap(wrapper);
             case DESCRIBE_REGIONS:
                 return new RegionUtils().getDescribeRegionsQueryParamsMap(wrapper);
             case DESCRIBE_VOLUMES:
