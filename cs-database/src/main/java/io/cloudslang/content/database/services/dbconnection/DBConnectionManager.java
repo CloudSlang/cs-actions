@@ -377,7 +377,7 @@ public class DBConnectionManager {
      */
     private PooledDataSourceProvider getProvider(String aDbmsPoolKey) {
         PooledDataSourceProvider retProvider;
-        //TODO: now we only has one provider, later should use that key to find
+        //now we only has one provider, later should use that key to find
         //what type of db and find provider since first part of that key is dbType
         String providerName = C3P0PooledDataSourceProvider.C3P0_DATASOURCE_PROVIDER_NAME;
 

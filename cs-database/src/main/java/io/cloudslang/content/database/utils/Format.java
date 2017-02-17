@@ -64,7 +64,7 @@ public class Format {
      * Chop off '\0' character if present in a String.
      * <p/>
      * This only removes 1 trailing '\0' (null) character.
-     * TODO: rename to match @see replaceInvalidXMLCharacters
+     * TO DO: rename to match @see replaceInvalidXMLCharacters
      * Only caller: com.opsware.pas.content.commons.util.sql.Format
      *
      * @param s String that may have a null character at the end

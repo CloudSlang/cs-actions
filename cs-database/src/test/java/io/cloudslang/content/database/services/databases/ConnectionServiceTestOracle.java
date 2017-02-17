@@ -65,7 +65,6 @@ public class ConnectionServiceTestOracle {
     @Before
     public void beforeTest() throws Exception {
         sqlInputs = SQLInputs.builder().build();
-//        connectionServiceSpy = new ConnectionService();
         InputsProcessor.init(sqlInputs);
 
         mockStatic(DBConnectionManager.class);
