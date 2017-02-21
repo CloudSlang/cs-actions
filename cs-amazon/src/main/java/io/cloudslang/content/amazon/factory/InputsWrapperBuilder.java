@@ -71,6 +71,8 @@ public class InputsWrapperBuilder {
                     wrapper.setStorageInputs((StorageInputs) builder);
                 } else if (builder instanceof VolumeInputs) {
                     wrapper.setVolumeInputs((VolumeInputs) builder);
+                } else if (builder instanceof FilterInputs) {
+                    wrapper.setFilterInputs((FilterInputs) builder);
                 } else {
                     throw new RuntimeException(UNKNOWN_BUILDER_TYPE);
                 }
