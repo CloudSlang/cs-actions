@@ -9,8 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.build.auth;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.httpclient.build.Utils;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.utils.UrlEncoderUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -99,7 +99,7 @@ public class AuthSchemeProviderLookupBuilder {
                     });
                     break;
                 case "BASIC":
-                    registryBuilder.register(AuthSchemes.BASIC, new BasicSchemeFactory(Charset.forName(Utils.DEFAULT_CHARACTER_SET)));
+                    registryBuilder.register(AuthSchemes.BASIC, new BasicSchemeFactory(Charset.forName(UrlEncoderUtils.DEFAULT_CHARACTER_SET)));
                     String value = username + ":" + password;
                     byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
                     headers.add(new BasicHeader("Authorization", "Basic " + new String(encodedValue)));

@@ -9,7 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.utils.UrlEncoderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 
@@ -69,9 +70,9 @@ public class URIBuilder {
         if (!StringUtils.isEmpty(queryParams)) {
             try {
                 if (bEncodeQueryParamsAsForm) {
-                    uriBuilder.addParameters((List<NameValuePair>) Utils.urlEncodeMultipleParams(queryParams, bEncodeQueryParams));
+                    uriBuilder.addParameters((List<NameValuePair>) UrlEncoderUtils.urlEncodeMultipleParams(queryParams, bEncodeQueryParams));
                 } else {
-                    uriBuilder.setCustomQuery(Utils.urlEncodeQueryParams(queryParams, bEncodeQueryParams));
+                    uriBuilder.setCustomQuery(UrlEncoderUtils.urlEncodeQueryParams(queryParams, bEncodeQueryParams));
                 }
             } catch (IllegalArgumentException ie) {
                 throw new IllegalArgumentException(

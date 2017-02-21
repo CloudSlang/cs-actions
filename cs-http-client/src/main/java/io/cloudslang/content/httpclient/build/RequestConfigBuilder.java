@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.build;
 
+import io.cloudslang.content.httpclient.utils.UrlEncoderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -57,7 +58,7 @@ public class RequestConfigBuilder {
         HttpHost proxy = null;
         final int proxyPortNumber;
         if (proxyHost != null && !proxyHost.isEmpty()) {
-            proxyPortNumber = Utils.validatePortNumber(proxyPort);
+            proxyPortNumber = UrlEncoderUtils.validatePortNumber(proxyPort);
             proxy = new HttpHost(proxyHost, proxyPortNumber);
         }
         int connectionTimeout = Integer.parseInt(this.connectionTimeout);

@@ -9,7 +9,6 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.consume;
 
-import io.cloudslang.content.httpclient.CSHttpClient;
 import org.apache.http.HttpHost;
 import org.apache.http.client.utils.URIUtils;
 
@@ -17,6 +16,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.FINAL_LOCATION;
 
 public class FinalLocationConsumer {
     private URI uri;
@@ -44,9 +45,9 @@ public class FinalLocationConsumer {
             location = URIUtils.resolve(uri, targetHost, redirectLocations);
         } catch (URISyntaxException e) {
             //this is not a fatal error
-            throw new IllegalArgumentException("could not determine '" + CSHttpClient.FINAL_LOCATION
+            throw new IllegalArgumentException("could not determine '" + FINAL_LOCATION
                     + "': " + e.getMessage(), e);
         }
-        returnResult.put(CSHttpClient.FINAL_LOCATION, location.toASCIIString());
+        returnResult.put(FINAL_LOCATION, location.toASCIIString());
     }
 }

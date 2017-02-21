@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;

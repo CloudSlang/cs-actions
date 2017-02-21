@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.httpclient;
+package io.cloudslang.content.httpclient.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -17,11 +17,72 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientServiceImpl;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.AUTH_TYPE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.BODY;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CHUNKED_REQUEST_ENTITY;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONTENT_TYPE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.FOLLOW_REDIRECTS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.FORM_PARAMS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.FORM_PARAMS_ARE_URLENCODED;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.HEADERS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_CONFIG_FILE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_LOGIN_CONFIG_FILE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_SKIP_PORT_CHECK;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.METHOD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.MULTIPART_BODIES;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.MULTIPART_BODIES_CONTENT_TYPE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.MULTIPART_FILES;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.MULTIPART_FILES_CONTENT_TYPE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.MULTIPART_VALUES_ARE_URLENCODED;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PREEMPTIVE_AUTH;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.QUERY_PARAMS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.QUERY_PARAMS_ARE_FORM_ENCODED;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.QUERY_PARAMS_ARE_URLENCODED;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.REQUEST_CHARACTER_SET;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SESSION_CONNECTION_POOL;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SESSION_COOKIES;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.URL;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USERNAME;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.EXCEPTION;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.FAILURE;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.FAILURE_RETURN_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.FINAL_LOCATION;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.REASON_PHRASE;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.RESPONSE_HEADERS;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.RETURN_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.RETURN_RESULT;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.SUCCESS;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.SUCCESS_RETURN_CODE;
+import static org.apache.http.params.CoreProtocolPNames.PROTOCOL_VERSION;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,15 +93,16 @@ public class HttpClientAction {
 
     /**
      * This operation does an http request and a parsing of the response.
-     * It provides features like: http autentication, http secure, connection pool, cookies, proxy.
-     * To acomplish this it uses the third parties from Apache: HttpClient 4.3, HttpCore 4.3.
+     * It provides features like: http authentication, http secure, connection pool, cookies, proxy.
+     * To accomplish this it uses the third parties from Apache: HttpClient 4.3, HttpCore 4.3.
      * It also uses the JCIFS library from the Samba for the 'NTLM' authentication.
      * <p/>
      * <br><b>For more info about http client operations see the <i>org.cloudslang.content.httpclient</i> package description.</b>
      *
-     * @param url                                The web address to make the request to. This must be a standard URL as specified in RFC 3986. This is a required input.
-     *                                           <br>Format: scheme://domain:port/path?query_string#fragment_id.
-     *                                           <br>Examples: https://[fe80::1260:4bff:fe49:42fc]:8080/my/path?key1=val1&key2=val2#my_fragment
+     * @param url                                The web address to make the request to. This must be a standard URL as
+     *                                           specified in RFC 3986. This is a required input.
+     *                                           Format: scheme://domain:port/path?query_string#fragment_id.
+     *                                           Example: https://[fe80::1260:4bff:fe49:42fc]:8080/my/path?key1=val1&key2=val2#my_fragment
      * @param authType                           The type of authentication used by this operation when trying to execute the request on the target server.
      *                                           The authentication is not preemptive: a plain request not including authentication info
      *                                           will be made and only when the server responds with a 'WWW-Authenticate' header the client will
@@ -48,14 +110,19 @@ public class HttpClientAction {
      *                                           the request will work nevertheless. Then client cannot choose the authentication method and there
      *                                           is no fallback so you have to know which one you need. If the web application and proxy use
      *                                           different authentication types, these must be specified like in the Example model.
-     *                                           <br>Default value: basic. Valid values: basic, digest, ntlm, kerberos, any, anonymous, "" or a list of valid values separated by comma.
+     *                                           Valid values: basic, digest, ntlm, Kerberos, any, anonymous, "" or a list of valid values separated by comma.
+     *                                           Default value: basic.
      * @param preemptiveAuth                     If this field is 'true' authentication info will be sent in the first request.
      *                                           If this is 'false' a request with no authentication info will be made and if server responds
      *                                           with 401 and a header like WWW-Authenticate: Basic realm="myRealm" only then the authentication
-     *                                           info will be sent. Default value: true. Valid values: true, false
-     * @param username                           The user name used for authentication. For NTLM authentication, the required format is 'domain\\user'
-     *                                           and if you only specify the 'user' it will append a dot like '.\\user' so that a local user on the
-     *                                           target machine can be used. In order for all authentication schemes to work (except Kerberos) username is required.
+     *                                           info will be sent.
+     *                                           Valid values: true, false
+     *                                           Default value: true.
+     * @param username                           The user name used for authentication. For NTLM authentication,
+     *                                           the required format is 'domain\\user' and if you only specify the 'user'
+     *                                           it will append a dot like '.\\user' so that a local user on the target
+     *                                           machine can be used. In order for all authentication schemes to work
+     *                                           (except Kerberos) username is required.
      * @param password                           The password used for authentication.
      * @param kerberosConfFile                   A krb5.conf file with content similar to the one in the examples
      *                                           (where you replace CONTOSO.COM with your domain and 'ad.contoso.com' with your kdc FQDN).
@@ -84,21 +151,30 @@ public class HttpClientAction {
      * @param trustKeystore                      The pathname of the Java TrustStore file. This contains certificates from other parties
      *                                           that you expect to communicate with, or from Certificate Authorities that you trust to
      *                                           identify other parties.  If the protocol (specified by the 'url') is not 'https' or if
-     *                                           trustAllRoots is 'true' this input is ignored. Default value: <OO_Home>/java/lib/security/cacerts. Format: Java KeyStore (JKS)
+     *                                           trustAllRoots is 'true' this input is ignored.
+     *                                           Format: Java KeyStore (JKS)
+     *                                           Default value: <OO_Home>/java/lib/security/cacerts.
      * @param trustPassword                      The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty,
-     *                                           trustPassword default will be supplied. Default value: changeit
+     *                                           trustPassword default will be supplied.
+     *                                           Default value: changeit
      * @param keystore                           The pathname of the Java KeyStore file. You only need this if the server requires client authentication.
      *                                           If the protocol (specified by the 'url') is not 'https' or if trustAllRoots is 'true' this input is ignored.
-     *                                           <br>Default value: <OO_Home>/java/lib/security/cacerts. Format: Java KeyStore (JKS)
+     *                                           Format: Java KeyStore (JKS)
+     *                                           Default value: <OO_Home>/java/lib/security/cacerts.
      * @param keystorePassword                   The password associated with the KeyStore file. If trustAllRoots is false and keystore
-     *                                           is empty, keystorePassword default will be supplied. Default value: changeit
+     *                                           is empty, keystorePassword default will be supplied.
+     *                                           Default value: changeit
      * @param connectTimeout                     The time to wait for a connection to be established, in seconds.
-     *                                           A timeout value of '0' represents an infinite timeout. Default value: 0
+     *                                           A timeout value of '0' represents an infinite timeout.
+     *                                           Default value: 0
      * @param socketTimeout                      The timeout for waiting for data (a maximum period inactivity between two consecutive data packets),
-     *                                           in seconds. A socketTimeout value of '0' represents an infinite timeout. Default value: 0.
+     *                                           in seconds. A socketTimeout value of '0' represents an infinite timeout.
+     *                                           Default value: 0.
      * @param useCookies                         Specifies whether to enable cookie tracking or not. Cookies are stored between consecutive calls
      *                                           in a serializable session object therefore they will be available on a branch level.
-     *                                           If you specify a non-boolean value, the default value is used. Default value: true. Valid values: true, false
+     *                                           If you specify a non-boolean value, the default value is used.
+     *                                           Valid values: true, false
+     *                                           Default value: true.
      * @param keepAlive                          Specifies whether to create a shared connection that will be used in subsequent calls.
      *                                           If keepAlive is false, the already open connection will be used and after execution it will close it.
      *                                           The operation will use a connection pool stored in a GlobalSessionObject that will be available throughout
@@ -232,69 +308,72 @@ public class HttpClientAction {
      */
     @Action(name = "Http Client",
             outputs = {
-                    @Output(CSHttpClient.EXCEPTION),
-                    @Output(CSHttpClient.STATUS_CODE),
-                    @Output(CSHttpClient.FINAL_LOCATION),
-                    @Output(CSHttpClient.RESPONSE_HEADERS),
-                    @Output(CSHttpClient.PROTOCOL_VERSION),
-                    @Output(CSHttpClient.REASON_PHRASE),
-                    @Output("returnCode"),
-                    @Output("returnResult")
+                    @Output(EXCEPTION),
+                    @Output(STATUS_CODE),
+                    @Output(FINAL_LOCATION),
+                    @Output(RESPONSE_HEADERS),
+                    @Output(PROTOCOL_VERSION),
+                    @Output(REASON_PHRASE),
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT)
             },
             responses = {
-                    @Response(text = "success", field = "returnCode", value = "0", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = "failure", field = "returnCode", value = "-1", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = SUCCESS_RETURN_CODE,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = FAILURE_RETURN_CODE,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(
-            @Param(value = HttpClientInputs.URL, required = true) String url,
-            @Param(HttpClientInputs.AUTH_TYPE) String authType,
-            @Param(HttpClientInputs.PREEMPTIVE_AUTH) String preemptiveAuth,
-            @Param(HttpClientInputs.USERNAME) String username,
-            @Param(HttpClientInputs.PASSWORD) String password,
-            @Param(HttpClientInputs.KERBEROS_CONFIG_FILE) String kerberosConfFile,
-            @Param(HttpClientInputs.KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
-            @Param(HttpClientInputs.KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
-            @Param(HttpClientInputs.PROXY_HOST) String proxyHost,
-            @Param(HttpClientInputs.PROXY_PORT) String proxyPort,
-            @Param(HttpClientInputs.PROXY_USERNAME) String proxyUsername,
-            @Param(HttpClientInputs.PROXY_PASSWORD) String proxyPassword,
-            @Param(HttpClientInputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(HttpClientInputs.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
-            @Param(HttpClientInputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(HttpClientInputs.TRUST_PASSWORD) String trustPassword,
-            @Param(HttpClientInputs.KEYSTORE) String keystore,
-            @Param(HttpClientInputs.KEYSTORE_PASSWORD) String keystorePassword,
-            @Param(HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
-            @Param(HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
-            @Param(HttpClientInputs.USE_COOKIES) String useCookies,
-            @Param(HttpClientInputs.KEEP_ALIVE) String keepAlive,
-            @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoot,
-            @Param(HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(HttpClientInputs.HEADERS) String headers,
-            @Param(HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
-            @Param(HttpClientInputs.DESTINATION_FILE) String destinationFile,
-            @Param(HttpClientInputs.FOLLOW_REDIRECTS) String followRedirects,
-            @Param(HttpClientInputs.QUERY_PARAMS) String queryParams,
-            @Param(HttpClientInputs.QUERY_PARAMS_ARE_URLENCODED) String queryParamsAreURLEncoded,
-            @Param(HttpClientInputs.QUERY_PARAMS_ARE_FORM_ENCODED) String queryParamsAreFormEncoded,
-            @Param(HttpClientInputs.FORM_PARAMS) String formParams,
-            @Param(HttpClientInputs.FORM_PARAMS_ARE_URLENCODED) String formParamsAreURLEncoded,
-            @Param(HttpClientInputs.SOURCE_FILE) String sourceFile,
-            @Param(HttpClientInputs.BODY) String body,
-            @Param(HttpClientInputs.CONTENT_TYPE) String contentType,
-            @Param(HttpClientInputs.REQUEST_CHARACTER_SET) String requestCharacterSet,
-            @Param(HttpClientInputs.MULTIPART_BODIES) String multipartBodies,
-            @Param(HttpClientInputs.MULTIPART_BODIES_CONTENT_TYPE) String multipartBodiesContentType,
-            @Param(HttpClientInputs.MULTIPART_FILES) String multipartFiles,
-            @Param(HttpClientInputs.MULTIPART_FILES_CONTENT_TYPE) String multipartFilesContentType,
-            @Param(HttpClientInputs.MULTIPART_VALUES_ARE_URLENCODED) String multipartValuesAreURLEncoded,
-            @Param(HttpClientInputs.CHUNKED_REQUEST_ENTITY) String chunkedRequestEntity,
-            @Param(value = HttpClientInputs.METHOD, required = true) String method,
-            @Param(HttpClientInputs.SESSION_COOKIES) SerializableSessionObject httpClientCookieSession,
-            @Param(HttpClientInputs.SESSION_CONNECTION_POOL) GlobalSessionObject httpClientPoolingConnectionManager) {
 
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
+    public Map<String, String> execute(
+            @Param(value = URL, required = true) String url,
+            @Param(AUTH_TYPE) String authType,
+            @Param(PREEMPTIVE_AUTH) String preemptiveAuth,
+            @Param(USERNAME) String username,
+            @Param(value = PASSWORD, encrypted = true) String password,
+            @Param(KERBEROS_CONFIG_FILE) String kerberosConfFile,
+            @Param(KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
+            @Param(KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
+            @Param(PROXY_HOST) String proxyHost,
+            @Param(PROXY_PORT) String proxyPort,
+            @Param(PROXY_USERNAME) String proxyUsername,
+            @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+            @Param(TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
+            @Param(TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(KEYSTORE) String keystore,
+            @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
+            @Param(CONNECT_TIMEOUT) String connectTimeout,
+            @Param(SOCKET_TIMEOUT) String socketTimeout,
+            @Param(USE_COOKIES) String useCookies,
+            @Param(KEEP_ALIVE) String keepAlive,
+            @Param(CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoot,
+            @Param(CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
+            @Param(HEADERS) String headers,
+            @Param(RESPONSE_CHARACTER_SET) String responseCharacterSet,
+            @Param(DESTINATION_FILE) String destinationFile,
+            @Param(FOLLOW_REDIRECTS) String followRedirects,
+            @Param(QUERY_PARAMS) String queryParams,
+            @Param(QUERY_PARAMS_ARE_URLENCODED) String queryParamsAreURLEncoded,
+            @Param(QUERY_PARAMS_ARE_FORM_ENCODED) String queryParamsAreFormEncoded,
+            @Param(FORM_PARAMS) String formParams,
+            @Param(FORM_PARAMS_ARE_URLENCODED) String formParamsAreURLEncoded,
+            @Param(SOURCE_FILE) String sourceFile,
+            @Param(BODY) String body,
+            @Param(CONTENT_TYPE) String contentType,
+            @Param(REQUEST_CHARACTER_SET) String requestCharacterSet,
+            @Param(MULTIPART_BODIES) String multipartBodies,
+            @Param(MULTIPART_BODIES_CONTENT_TYPE) String multipartBodiesContentType,
+            @Param(MULTIPART_FILES) String multipartFiles,
+            @Param(MULTIPART_FILES_CONTENT_TYPE) String multipartFilesContentType,
+            @Param(MULTIPART_VALUES_ARE_URLENCODED) String multipartValuesAreURLEncoded,
+            @Param(CHUNKED_REQUEST_ENTITY) String chunkedRequestEntity,
+            @Param(value = METHOD, required = true) String method,
+            @Param(SESSION_COOKIES) SerializableSessionObject httpClientCookieSession,
+            @Param(SESSION_CONNECTION_POOL) GlobalSessionObject httpClientPoolingConnectionManager) {
+
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(url);
         httpClientInputs.setAuthType(authType);
         httpClientInputs.setPreemptiveAuth(preemptiveAuth);
@@ -345,7 +424,7 @@ public class HttpClientAction {
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
 
         try {
-            return new CSHttpClient().execute(httpClientInputs);
+            return new HttpClientServiceImpl().execute(httpClientInputs);
         } catch (Exception e) {
             return exceptionResult(e.getMessage(), e);
         }

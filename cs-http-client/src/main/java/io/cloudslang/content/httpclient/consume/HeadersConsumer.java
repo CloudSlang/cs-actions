@@ -9,10 +9,11 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.consume;
 
-import io.cloudslang.content.httpclient.CSHttpClient;
 import org.apache.http.Header;
 
 import java.util.Map;
+
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.RESPONSE_HEADERS;
 
 public class HeadersConsumer {
     private Header[] headers;
@@ -32,6 +33,6 @@ public class HeadersConsumer {
                 result.delete(result.length() - 2, result.length());
             }
         }
-        returnResult.put(CSHttpClient.RESPONSE_HEADERS, result.toString());
+        returnResult.put(RESPONSE_HEADERS, result.toString());
     }
 }
