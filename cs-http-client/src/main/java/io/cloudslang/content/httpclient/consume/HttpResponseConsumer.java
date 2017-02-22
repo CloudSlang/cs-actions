@@ -9,8 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.consume;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.httpclient.CSHttpClient;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
@@ -22,6 +21,8 @@ import org.apache.http.message.BasicHeaderValueParser;
 import java.io.*;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
+
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.RETURN_RESULT;
 
 /**
  * Created with IntelliJ IDEA.
@@ -78,7 +79,7 @@ public class HttpResponseConsumer {
             } catch (UnsupportedCharsetException e) {
                 throw new IllegalArgumentException("Could not parse responseCharacterSet. " + e.getMessage(), e);
             }
-            result.put(CSHttpClient.RETURN_RESULT, document);
+            result.put(RETURN_RESULT, document);
         } else {
             consumeToDestinationFile();
         }

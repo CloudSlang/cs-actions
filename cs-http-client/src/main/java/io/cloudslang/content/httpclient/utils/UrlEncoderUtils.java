@@ -7,9 +7,11 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.httpclient.build;
+package io.cloudslang.content.httpclient.utils;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.build.RequestConfigBuilder;
+import io.cloudslang.content.httpclient.build.UrlEncodeException;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -23,7 +25,7 @@ import java.util.List;
  * User: davidmih, ioanvranauhp
  * Date: 9/9/14
  */
-public class Utils {
+public class UrlEncoderUtils {
 
     public static final String DEFAULT_CHARACTER_SET = "UTF-8";
 
@@ -70,10 +72,13 @@ public class Utils {
     }
 
     /**
-     * Checks if a given value represents a valid port number and returns an int value representing that port number otherwise throws an exception when an invalid port value is provided.
+     * Checks if a given value represents a valid port number and returns an int value representing that port number
+     * otherwise throws an exception when an invalid port value is provided.
      * Valid port values: -1 and integer numbers greater than 0.
-     * Although network specifications state that port values need to be 16-bit unsigned integers, the value '-1' is considered valid by some party components.
-     * Example: For the Apache HttpHost class, which is used in {@link RequestConfigBuilder#buildRequestConfig()} , the value '-1' indicates the scheme default port.
+     * Although network specifications state that port values need to be 16-bit unsigned integers,
+     * the value '-1' is considered valid by some party components.
+     * Example: For the Apache HttpHost class, which is used in {@link RequestConfigBuilder#buildRequestConfig()} ,
+     *          the value '-1' indicates the scheme default port.
      *
      * @param portStringValue String value representing the port number;
      * @return int value representing a valid port number

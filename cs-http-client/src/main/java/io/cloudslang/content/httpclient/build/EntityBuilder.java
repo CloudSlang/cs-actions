@@ -9,7 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.utils.UrlEncoderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -156,7 +157,7 @@ public class EntityBuilder {
     private List<? extends NameValuePair> getNameValuePairs(String theInput, boolean encode, String constInput, String constEncode) {
         List<? extends NameValuePair> list;
         try {
-            list = Utils.urlEncodeMultipleParams(theInput, encode);
+            list = UrlEncoderUtils.urlEncodeMultipleParams(theInput, encode);
         } catch (UrlEncodeException e) {
             throw new UrlEncodeException(constEncode +
                     " is 'false' but " + constInput + " are not properly encoded. "

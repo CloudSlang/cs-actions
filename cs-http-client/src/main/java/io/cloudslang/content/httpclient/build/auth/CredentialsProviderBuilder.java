@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.httpclient.build.auth;
 
-import io.cloudslang.content.httpclient.build.Utils;
+import io.cloudslang.content.httpclient.utils.UrlEncoderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -106,7 +106,7 @@ public class CredentialsProviderBuilder {
         if (!StringUtils.isEmpty(proxyUsername)) {
             int intProxyPort = 8080;
             if (!StringUtils.isEmpty(proxyPort)) {
-                intProxyPort = Utils.validatePortNumber(proxyPort);
+                intProxyPort = UrlEncoderUtils.validatePortNumber(proxyPort);
             }
             credentialsProvider.setCredentials(new AuthScope(proxyHost, intProxyPort),
                     new UsernamePasswordCredentials(proxyUsername, proxyPassword));

@@ -11,6 +11,9 @@ package io.cloudslang.content.httpclient;
 
 
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.httpclient.components.HttpComponents;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientServiceImpl;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -38,10 +41,11 @@ import static org.mockito.Mockito.times;
  * Date: 10/16/2015
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class})
-public class CSHttpClientTest {
+@PrepareForTest({HttpClientServiceImpl.class})
 
-    private CSHttpClient csHttpClient;
+public class HttpClientServiceImplTest {
+
+    private HttpClientServiceImpl httpClientServiceImpl;
     @Mock
     private HttpClientInputs httpClientInputs;
     @Mock
@@ -71,12 +75,12 @@ public class CSHttpClientTest {
 
     @Before
     public void setUp() throws Exception {
-        csHttpClient = PowerMockito.spy(new CSHttpClient());
+        httpClientServiceImpl = PowerMockito.spy(new HttpClientServiceImpl());
 
-        PowerMockito.doNothing().when(csHttpClient, "initSessionsObjects", httpClientInputs);
-        PowerMockito.doReturn(httpComponents).when(csHttpClient, "buildHttpComponents", httpClientInputs);
-        PowerMockito.doReturn(httpResponse).when(csHttpClient, "execute", closeableHttpClient, httpRequestBase, httpClientContext);
-        PowerMockito.doReturn(result).when(csHttpClient, "parseResponse", httpResponse, responseCharacterSet, destinationFile,
+        PowerMockito.doNothing().when(httpClientServiceImpl, "initSessionsObjects", httpClientInputs);
+        PowerMockito.doReturn(httpComponents).when(httpClientServiceImpl, "buildHttpComponents", httpClientInputs);
+        PowerMockito.doReturn(httpResponse).when(httpClientServiceImpl, "execute", closeableHttpClient, httpRequestBase, httpClientContext);
+        PowerMockito.doReturn(result).when(httpClientServiceImpl, "parseResponse", httpResponse, responseCharacterSet, destinationFile,
                 uri, httpClientContext, cookieStore, serializableSessionObject);
 
         PowerMockito.when(httpComponents.getHttpRequestBase()).thenReturn(httpRequestBase);
@@ -94,7 +98,7 @@ public class CSHttpClientTest {
     @Test
     public void executeKeepAliveTrue() {
         PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("true");
-        Map<String, String> result1 = csHttpClient.execute(httpClientInputs);
+        Map<String, String> result1 = httpClientServiceImpl.execute(httpClientInputs);
         assertEquals(result, result1);
         Mockito.verify(httpRequestBase, times(1)).releaseConnection();
     }
@@ -102,7 +106,7 @@ public class CSHttpClientTest {
     @Test
     public void executeKeepAliveFalse() throws IOException {
         PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("false");
-        Map<String, String> result1 = csHttpClient.execute(httpClientInputs);
+        Map<String, String> result1 = httpClientServiceImpl.execute(httpClientInputs);
         assertEquals(result, result1);
         Mockito.verify(httpResponse, times(1)).close();
         Mockito.verify(httpRequestBase, times(1)).releaseConnection();

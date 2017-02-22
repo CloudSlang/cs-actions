@@ -7,10 +7,11 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.httpclient;
+package io.cloudslang.content.httpclient.services;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.httpclient.components.HttpComponents;
 import io.cloudslang.content.httpclient.build.*;
 import io.cloudslang.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
@@ -21,6 +22,7 @@ import io.cloudslang.content.httpclient.consume.FinalLocationConsumer;
 import io.cloudslang.content.httpclient.consume.HeadersConsumer;
 import io.cloudslang.content.httpclient.consume.HttpResponseConsumer;
 import io.cloudslang.content.httpclient.consume.StatusConsumer;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.execute.HttpClientExecutor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
@@ -47,22 +49,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.RETURN_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientOutputs.SUCCESS;
+
 /**
  * Created with IntelliJ IDEA.
  * User: davidmih
  * Date: 7/15/14
  */
-public class CSHttpClient {
-    public static final String RETURN_CODE = "returnCode";
-    public static final String SUCCESS = "0";
-    //outputs
-    public static final String RETURN_RESULT = "returnResult";
-    public static final String EXCEPTION = "exception";
-    public static final String STATUS_CODE = "statusCode";
-    public static final String FINAL_LOCATION = "finalLocation";
-    public static final String RESPONSE_HEADERS = "responseHeaders";
-    public static final String PROTOCOL_VERSION = "protocolVersion";
-    public static final String REASON_PHRASE = "reasonPhrase";
+public class HttpClientServiceImpl {
 
     private CookieStoreBuilder cookieStoreBuilder;
     private AuthSchemeProviderLookupBuilder authSchemeProviderLookupBuilder;
