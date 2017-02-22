@@ -242,4 +242,11 @@ public class Inputs {
         public static final String FILTER_VOLUME_ID = "filterVolumeId";
         public static final String FILTER_VOLUME_TYPE = "filterVolumeType";
     }
+
+    public static class TagsInputs {
+        public static final String FILTER_KEY = "filterKey";
+        public static final String FILTER_RESOURCE_ID = "filterResourceId";
+        public static final String FILTER_RESOURCE_TYPE = "filterResourceType";
+        public static final String FILTER_VALUE = "filterValue";
+    }
 }

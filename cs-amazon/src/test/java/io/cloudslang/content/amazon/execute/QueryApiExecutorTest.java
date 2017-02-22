@@ -64,6 +64,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
+    public static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -378,6 +379,25 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeRegions")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeTagsWithSuccess() throws Exception {
+        FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter("key", "myKey")
+                .withNewFilter("resource-id", "myReId,myReId2")
+                .withNewFilter("resource-type", ALL_RESOURCE_TYPES)
+                .withNewFilter("value", "val1,val2")
+                .withMaxResults("5")
+                .withNextToken("myToken")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeTagsSuccess")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -1057,6 +1077,37 @@ public class QueryApiExecutorTest {
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");
                 queryParamsMap.put("RegionName.2", "eu-central-1");
+                break;
+            case "DescribeTagsSuccess":
+                queryParamsMap.put("Action", "DescribeTags");
+                queryParamsMap.put("Filter.1.Name", "key");
+                queryParamsMap.put("Filter.1.Value.1", "myKey");
+                queryParamsMap.put("Filter.2.Name", "resource-id");
+                queryParamsMap.put("Filter.2.Value.1", "myReId");
+                queryParamsMap.put("Filter.2.Value.2", "myReId2");
+                queryParamsMap.put("Filter.3.Name", "resource-type");
+                queryParamsMap.put("Filter.3.Value.1", "customer-gateway");
+                queryParamsMap.put("Filter.3.Value.3", "image");
+                queryParamsMap.put("Filter.3.Value.2", "dhcp-options");
+                queryParamsMap.put("Filter.3.Value.5", "internet-gateway");
+                queryParamsMap.put("Filter.3.Value.4", "instance");
+                queryParamsMap.put("Filter.3.Value.6", "network-acl");
+                queryParamsMap.put("Filter.3.Value.7", "network-interface");
+                queryParamsMap.put("Filter.3.Value.8", "reserved-instances");
+                queryParamsMap.put("Filter.3.Value.9", "route-table");
+                queryParamsMap.put("Filter.3.Value.10", "security-group");
+                queryParamsMap.put("Filter.3.Value.11", "snapshot");
+                queryParamsMap.put("Filter.3.Value.12", "spot-instances-request");
+                queryParamsMap.put("Filter.3.Value.13", "subnet");
+                queryParamsMap.put("Filter.3.Value.14", "volume");
+                queryParamsMap.put("Filter.3.Value.15", "vpc");
+                queryParamsMap.put("Filter.3.Value.16", "vpn-connection");
+                queryParamsMap.put("Filter.3.Value.17", "vpn-gateway");
+                queryParamsMap.put("Filter.4.Name", "value");
+                queryParamsMap.put("Filter.4.Value.1", "val1");
+                queryParamsMap.put("Filter.4.Value.2", "val2");
+                queryParamsMap.put("MaxResults", "5");
+                queryParamsMap.put("NextToken", "myToken");
                 break;
             case "ModifyImageAttribute":
                 queryParamsMap.put("Attribute", "launchPermission");
