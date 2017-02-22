@@ -15,6 +15,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by ioanvranauhp
@@ -67,5 +68,25 @@ public class UtilsTest {
         encodeQueryParams = Utils.urlEncodeMultipleParams(queryParams, false);
         assertEquals("p ar am 1", encodeQueryParams.get(0).getName());
         assertEquals("The st ring @foo-bar", encodeQueryParams.get(0).getValue());
+    }
+
+    @Test
+    public void testValidatePortNumberValidValue() {
+        String portStringValue = "821";
+        final int portNumber;
+        portNumber = Integer.parseInt(portStringValue);
+        assertEquals(portNumber, Utils.validatePortNumber(portStringValue));
+    }
+
+    @Test
+    public void testValidatePortNumberInvalidValue() {
+        String portStringValue = "-12";
+        boolean thrown = false;
+        try {
+            Utils.validatePortNumber(portStringValue);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
     }
 }
