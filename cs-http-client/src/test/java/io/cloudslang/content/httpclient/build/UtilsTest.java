@@ -15,7 +15,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by ioanvranauhp
@@ -78,15 +77,9 @@ public class UtilsTest {
         assertEquals(portNumber, Utils.validatePortNumber(portStringValue));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidatePortNumberInvalidValue() {
         String portStringValue = "0";
-        boolean thrown = false;
-        try {
-            Utils.validatePortNumber(portStringValue);
-        } catch (IllegalArgumentException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
+        Utils.validatePortNumber(portStringValue);
     }
 }
