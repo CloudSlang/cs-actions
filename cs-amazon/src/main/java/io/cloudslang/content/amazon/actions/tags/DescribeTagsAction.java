@@ -182,7 +182,7 @@ public class DescribeTagsAction {
                     of(VALUE, filterValue)
             );
 
-            FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
+            final FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
                     .withDelimiter(commonInputs.getDelimiter())
                     .withMaxResults(maxResults)
                     .withNextToken(nextToken);
@@ -193,7 +193,7 @@ public class DescribeTagsAction {
                 }
             }
 
-            FilterInputs filterInputs = filterInputsBuilder.build();
+            final FilterInputs filterInputs = filterInputsBuilder.build();
 
             return new QueryApiExecutor().execute(commonInputs, filterInputs);
         } catch (Exception exception) {

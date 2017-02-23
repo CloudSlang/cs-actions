@@ -11,6 +11,7 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.validators.TagFilterValidator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -92,8 +93,9 @@ public class TagUtils {
         }
     }
 
-    public Map<String, String> getDescribeTagsQueryParamsMap(InputsWrapper wrapper) {
-        Map<String, String> queryParamsMap = new HashMap<>();
+    @NotNull
+    public Map<String, String> getDescribeTagsQueryParamsMap(@NotNull InputsWrapper wrapper) {
+        final Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getFilterInputs().getMaxResults(),
@@ -101,9 +103,9 @@ public class TagUtils {
         setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getFilterInputs().getNextToken(),
                 isNotBlank(wrapper.getFilterInputs().getNextToken()));
 
-        TagFilterValidator tagFilterValidator = new TagFilterValidator();
+        final TagFilterValidator tagFilterValidator = new TagFilterValidator();
 
-        Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), tagFilterValidator);
+        final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), tagFilterValidator);
         queryParamsMap.putAll(filterQueryMap);
 
         return queryParamsMap;

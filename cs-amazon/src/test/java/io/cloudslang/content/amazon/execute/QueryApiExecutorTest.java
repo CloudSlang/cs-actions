@@ -343,11 +343,11 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeNetworkInterfacesWithSuccess() throws Exception {
-        NetworkInputs networkInputs = new NetworkInputs.Builder()
+        final NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .withNetworkInterfaceId("eni-12345678,eni-87654321")
                 .build();
 
-        FilterInputs filterInputs = new FilterInputs.Builder()
+        final FilterInputs filterInputs = new FilterInputs.Builder()
                 .withDelimiter(COMMA_DELIMITER)
                 .withNewFilter("status", "in-use,available")
                 .withNewFilter("attachment.status", "attaching,attached,detaching,detached")
@@ -384,7 +384,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeTagsWithSuccess() throws Exception {
-        FilterInputs filterInputs = new FilterInputs.Builder()
+        final FilterInputs filterInputs = new FilterInputs.Builder()
                 .withDelimiter(COMMA_DELIMITER)
                 .withNewFilter("key", "myKey")
                 .withNewFilter("resource-id", "myReId,myReId2")
@@ -399,6 +399,72 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeTagsSuccess")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeTagsWithWrongResourceType() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withNewFilter("resource-type", "WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsLessThanAccepted() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 4 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("4")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsGreaterThanAccepted() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 1001 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("1001")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsNegative() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 0 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("0")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsDouble() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: 6.7 input must be integer.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("6.7")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsString() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: WRONG input must be integer.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
     }
 
     @Test

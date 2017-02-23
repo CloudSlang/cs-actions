@@ -336,7 +336,7 @@ public class DescribeNetworkInterfacesAction {
                     of(NetworkFilter.VPC_ID, filterVpcId)
             );
 
-            FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
+            final FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
                     .withDelimiter(commonInputs.getDelimiter());
 
             for (ImmutablePair<String, String> filterPair : filterPairs) {
@@ -349,7 +349,7 @@ public class DescribeNetworkInterfacesAction {
                 processTagFilter(filterTag, commonInputs.getDelimiter(), filterInputsBuilder);
             }
 
-            FilterInputs filterInputs = filterInputsBuilder.build();
+            final FilterInputs filterInputs = filterInputsBuilder.build();
 
             return new QueryApiExecutor().execute(commonInputs, networkInputs, filterInputs);
         } catch (Exception exception) {
