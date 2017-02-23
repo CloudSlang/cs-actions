@@ -80,7 +80,7 @@ public class UtilsTest {
 
     @Test
     public void testValidatePortNumberInvalidValue() {
-        String portStringValue = "-12";
+        String portStringValue = "0";
         boolean thrown = false;
         try {
             Utils.validatePortNumber(portStringValue);
