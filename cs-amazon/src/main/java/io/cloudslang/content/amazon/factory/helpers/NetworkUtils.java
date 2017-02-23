@@ -11,6 +11,7 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.validators.NetworkFilterValidator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -291,15 +292,15 @@ public class NetworkUtils {
         }
     }
 
-
-    public Map<String, String> getDescribeNetworkInterfacesQueryParamsMap(InputsWrapper wrapper) throws Exception {
-        Map<String, String> queryParamsMap = new LinkedHashMap<>();
+    @NotNull
+    public Map<String, String> getDescribeNetworkInterfacesQueryParamsMap(@NotNull InputsWrapper wrapper) throws Exception {
+        final Map<String, String> queryParamsMap = new LinkedHashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
-        List<String> networkInterfaceIds = getStringsList(wrapper.getNetworkInputs().getNetworkInterfaceId(), wrapper.getCommonInputs().getDelimiter());
+        final List<String> networkInterfaceIds = getStringsList(wrapper.getNetworkInputs().getNetworkInterfaceId(), wrapper.getCommonInputs().getDelimiter());
         putCollectionInQueryMap(queryParamsMap, NETWORK_INTERFACE_ID, networkInterfaceIds);
 
-        Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), new NetworkFilterValidator());
+        final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), new NetworkFilterValidator());
         queryParamsMap.putAll(filterQueryMap);
 
         return queryParamsMap;

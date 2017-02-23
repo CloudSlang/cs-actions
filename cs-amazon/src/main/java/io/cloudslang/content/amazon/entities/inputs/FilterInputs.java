@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.stringToList;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getMaxResultsCount;
 
 /**
  * Created by sandorr
@@ -23,18 +24,32 @@ import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.stringToL
  */
 public class FilterInputs {
     private final List<Filter> filterMap;
+    private final String maxResults;
+    private final String nextToken;
 
     private FilterInputs(@NotNull final Builder builder) {
         filterMap = new ArrayList<>(builder.filterMap);
+        maxResults = builder.maxResults;
+        nextToken = builder.nextToken;
     }
 
     public List<Filter> getFilterList() {
         return filterMap;
     }
 
+    public String getMaxResults() {
+        return maxResults;
+    }
+
+    public String getNextToken() {
+        return nextToken;
+    }
+
     public static class Builder {
         private List<Filter> filterMap;
         private String delimiter;
+        private String maxResults;
+        private String nextToken;
 
         public Builder() {
             filterMap = new ArrayList<>();
@@ -59,6 +74,16 @@ public class FilterInputs {
 
         public Builder withDelimiter(@NotNull final String delimiter) {
             this.delimiter = delimiter;
+            return this;
+        }
+
+        public Builder withMaxResults(@NotNull final String maxResults) {
+            this.maxResults = getMaxResultsCount(maxResults);
+            return this;
+        }
+
+        public Builder withNextToken(@NotNull final String nextToken) {
+            this.nextToken = nextToken;
             return this;
         }
     }
