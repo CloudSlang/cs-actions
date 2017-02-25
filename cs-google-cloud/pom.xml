@@ -130,6 +130,7 @@
                     </headerDefinitions>
                     <includes>
                         <include>**/*.java</include>
+                        <include>**/*.scala</include>
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
@@ -244,11 +245,56 @@
     </profiles>
 
     <dependencies>
+        <!-- Scala dependency -->
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>2.11.8</version>
         </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-xml_2.11</artifactId>
+            <version>1.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-parser-combinators_2.11</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
+        <!-- Google cloud api -->
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-compute</artifactId>
+            <version>v1-rev135-1.22.0</version>
+        </dependency>
+
+        <!-- Utils -->
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>0.0.3</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2-core_2.11</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2-mock_2.11</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2-junit_2.11</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+
+
     </dependencies>
 
 </project>
