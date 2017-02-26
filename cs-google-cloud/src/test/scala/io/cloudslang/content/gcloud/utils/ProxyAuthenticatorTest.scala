@@ -1,5 +1,6 @@
 package io.cloudslang.content.gcloud.utils
 
+import io.cloudslang.content.gcloud.utils.HttpTransportUtils.ProxyAuthenticator
 import org.junit.Test
 import org.specs2.matcher.JUnitMustMatchers
 

@@ -8,10 +8,10 @@ import org.specs2.matcher.JUnitShouldMatchers
 /**
   * Created by victor on 2/25/17.
   */
-class JsonFactoryTest extends JUnitShouldMatchers {
+class JsonFactoryUtilsTest extends JUnitShouldMatchers {
 
   @Test
   def defaultJacksonFactoryDefault(): Unit = {
-    JsonFactory.getDefaultJacksonFactory shouldEqual JacksonFactory.getDefaultInstance
+    JsonFactoryUtils.getDefaultJacksonFactory shouldEqual JacksonFactory.getDefaultInstance
   }
 }

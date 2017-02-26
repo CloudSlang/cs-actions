@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils.EMPTY
 /**
   * Created by victor on 2/25/17.
   */
-object HttpTransport {
+object HttpTransportUtils {
 
   def getNetHttpTransport(proxyHost: Option[String] = None, proxyPort: Int = 80, proxyUser: Option[String] = None, proxyPassword: String = EMPTY): NetHttpTransport =
     new NetHttpTransport.Builder()
@@ -27,8 +27,9 @@ object HttpTransport {
         }
         new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort))
     }
+
+  case class ProxyAuthenticator(user: String, password: String) extends Authenticator {
+    override def getPasswordAuthentication = new PasswordAuthentication(user, password.toCharArray)
+  }
 }
 
-case class ProxyAuthenticator(user: String, password: String) extends Authenticator {
-  override def getPasswordAuthentication = new PasswordAuthentication(user, password.toCharArray)
-}
