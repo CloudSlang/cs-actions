@@ -73,7 +73,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_REQUESTER_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_REQUESTER_MANAGED;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_SOURCE_DESK_CHECK;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_SOURCE_DEST_CHECK;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_STATUS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_SUBNET_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.FILTER_TAG;
@@ -181,7 +181,7 @@ public class DescribeNetworkInterfacesAction {
      * @param filterRequesterManaged                Optional - Indicates whether the network interface is being managed
      *                                              by an AWS service (for example, AWS Management Console, Auto Scaling,
      *                                              and so on).
-     * @param filterSourceDeskCheck                 Optional - Indicates whether the network interface performs
+     * @param filterSourceDestCheck                 Optional - Indicates whether the network interface performs
      *                                              source/destination checking. A value of true means checking is
      *                                              enabled, and false means checking is disabled. The value must be
      *                                              false for the network interface to perform network address
@@ -263,7 +263,7 @@ public class DescribeNetworkInterfacesAction {
                                        @Param(value = FILTER_PRIVATE_DNS_NAME) String filterPrivateDnsName,
                                        @Param(value = FILTER_REQUESTER_ID) String filterRequesterId,
                                        @Param(value = FILTER_REQUESTER_MANAGED) String filterRequesterManaged,
-                                       @Param(value = FILTER_SOURCE_DESK_CHECK) String filterSourceDeskCheck,
+                                       @Param(value = FILTER_SOURCE_DEST_CHECK) String filterSourceDestCheck,
                                        @Param(value = FILTER_STATUS) String filterStatus,
                                        @Param(value = FILTER_SUBNET_ID) String filterSubnetId,
                                        @Param(value = FILTER_TAG) String filterTag,
@@ -328,7 +328,7 @@ public class DescribeNetworkInterfacesAction {
                     of(NetworkFilter.PRIVATE_DNS_NAME, filterPrivateDnsName),
                     of(NetworkFilter.REQUESTER_ID, filterRequesterId),
                     of(NetworkFilter.REQUESTER_MANAGED, filterRequesterManaged),
-                    of(NetworkFilter.SOURCE_DESK_CHECK, filterSourceDeskCheck),
+                    of(NetworkFilter.SOURCE_DEST_CHECK, filterSourceDestCheck),
                     of(NetworkFilter.STATUS, filterStatus),
                     of(NetworkFilter.SUBNET_ID, filterSubnetId),
                     of(NetworkFilter.TAG_KEY, filterTagKey),

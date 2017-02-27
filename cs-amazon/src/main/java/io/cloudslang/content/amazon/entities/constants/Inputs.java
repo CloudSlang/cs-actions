@@ -197,7 +197,7 @@ public class Inputs {
         public static final String FILTER_PRIVATE_DNS_NAME = "filterPrivateDnsName";
         public static final String FILTER_REQUESTER_ID = "filterRequesterId";
         public static final String FILTER_REQUESTER_MANAGED = "filterRequesterManaged";
-        public static final String FILTER_SOURCE_DESK_CHECK = "filterSourceDeskCheck";
+        public static final String FILTER_SOURCE_DEST_CHECK = "filterSourceDestCheck";
         public static final String FILTER_STATUS = "filterStatus";
         public static final String FILTER_SUBNET_ID = "filterSubnetId";
         public static final String FILTER_TAG = "filterTag";
