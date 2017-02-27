@@ -17,4 +17,5 @@ object GoogleAuth {
   def fromJsonWithScopes(fileinputStream: InputStream, transport: HttpTransport, jsonFactory: JsonFactory, scopes: List[String]): Credential =
     GoogleCredential.fromStream(fileinputStream, transport, jsonFactory)
       .createScoped(scopes)
+
 }
