@@ -406,6 +406,7 @@ public class QueryApiExecutorTest {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway");
 
         final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(",")
                 .withNewFilter("resource-type", "WRONG")
                 .build();
 
