@@ -1,6 +1,6 @@
 package io.cloudslang.content.gcloud.services.compute.instances
 
-`import com.google.api.client.auth.oauth2.Credential
+import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model._

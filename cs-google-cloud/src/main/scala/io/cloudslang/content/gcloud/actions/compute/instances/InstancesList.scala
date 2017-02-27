@@ -1,6 +1,6 @@
 package io.cloudslang.content.gcloud.actions.compute.instances
 
-import java.io.FileInputStream
+import java.nio.charset.StandardCharsets
 import java.util
 
 import com.google.api.services.compute.ComputeScopes
@@ -10,7 +10,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities, OutputUtilities}
+import io.cloudslang.content.utils.{BooleanUtilities, OutputUtilities}
+import org.apache.commons.io.IOUtils
 
 /**
   * Created by victor on 27.02.2017.
@@ -35,18 +36,31 @@ class InstancesList {
               @Param(value = "proxyUsername") proxyUsername: String,
               @Param(value = "proxyPassword", encrypted = true) proxyPassword: String,
               @Param(value = "prettyPrint") prettyPrintStr: String,
-              jsonToken: String): util.Map[String, String] = {
+              @Param(value = "", encrypted = true) jsonToken: String): util.Map[String, String] = {
     try {
-      val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
+//      val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
+      val httpTransport = HttpTransportUtils.getNetHttpTransport()
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
-      val credential = GoogleAuth.fromJsonWithScopes(new FileInputStream(jsonToken), httpTransport, jsonFactory, List(ComputeScopes.COMPUTE_READONLY))
+      val credential = GoogleAuth.fromJsonWithScopes(IOUtils.toInputStream(jsonToken, StandardCharsets.UTF_8), httpTransport, jsonFactory, List(ComputeScopes.COMPUTE_READONLY), timeout = 1999999)
+
+      credential.refreshToken()
+      val accessToken = credential.getAccessToken
+
+      val theToken = GoogleAuth.fromAccessToken(accessToken)
+
+      theToken.refreshToken()
+      val accessToken2 = theToken.getAccessToken
+
+      val theToken2 = GoogleAuth.fromAccessToken(accessToken2)
 
       val prettyPrint = BooleanUtilities.toBoolean(prettyPrintStr)
 
       val instanceDelimiter = if (prettyPrint) "\n" else ","
 
-      val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone)
+      val resultList2 = InstanceService.list(httpTransport, jsonFactory, theToken2, projectId, zone)
+
+      val resultList = InstanceService.list(httpTransport, jsonFactory, theToken2, projectId, zone)
         .map { instance: Instance =>
           if (prettyPrint) {
             instance.toPrettyString
