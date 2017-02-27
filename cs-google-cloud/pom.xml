@@ -271,6 +271,11 @@
 
         <!-- Utils -->
         <dependency>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+            <version>1.10.6</version>
+        </dependency>
+        <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
             <version>0.0.3</version>

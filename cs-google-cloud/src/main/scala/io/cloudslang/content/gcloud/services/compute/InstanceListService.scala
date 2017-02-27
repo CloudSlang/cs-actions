@@ -16,15 +16,15 @@ object InstanceListService {
 
   def main(args: Array[String]): Unit = {
 
-    val project = ""
-    val zone = ""
-    val jsonToken = ""
+    val project = "cogent-range-159508"
+    val zone = "europe-west1-d"
+    val jsonToken = "/home/victor/Desktop/My First Project-af6900eca363.json"
 
-    val httpTransport = HttpTransportUtils.getNetHttpTransport()
+    val httpTransport = HttpTransportUtils.getNetHttpTransport(Some("web-proxy.corp.hpecorp.net"), 8080)
     val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
     val credential = GoogleAuth.fromJsonWithScopes(new FileInputStream(jsonToken),
-      httpTransport, jsonFactory, List(ComputeScopes.COMPUTE))
+      httpTransport, jsonFactory, List(ComputeScopes.COMPUTE_READONLY))
 
     val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
     val request = computeInstances.list(project, zone)

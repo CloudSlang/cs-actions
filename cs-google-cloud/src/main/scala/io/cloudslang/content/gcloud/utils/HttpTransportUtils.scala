@@ -19,17 +19,17 @@ object HttpTransportUtils {
       .build()
 
   def getProxy(proxyHostOpt: Option[String], proxyPort: Int, proxyUserOpt: Option[String], proxyPassword: String): Proxy = proxyHostOpt match {
-      case None => Proxy.NO_PROXY
-      case Some(proxyHost) => proxyUserOpt match {
-          case Some(proxyUser) =>
-            Authenticator.setDefault(ProxyAuthenticator(proxyUser, proxyPassword))
-          case None => Unit
-        }
-        new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort))
-    }
+    case None => Proxy.NO_PROXY
+    case Some(proxyHost) =>
+      proxyUserOpt match {
+        case None => Unit
+        case Some(proxyUser) =>
+          Authenticator.setDefault(ProxyAuthenticator(proxyUser, proxyPassword))
+      }
+      new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort))
+  }
 
   case class ProxyAuthenticator(user: String, password: String) extends Authenticator {
     override def getPasswordAuthentication = new PasswordAuthentication(user, password.toCharArray)
   }
 }
-
