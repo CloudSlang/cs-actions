@@ -1,6 +1,6 @@
 package io.cloudslang.content.gcloud.utils
 
-import io.cloudslang.content.utils.BooleanUtilities
+import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
 import io.cloudslang.content.utils.OtherUtilities.isValidIpPort
 
 /**
@@ -11,6 +11,7 @@ object InputValidator {
 
   val INVALID_PORT = "Invalid port value!"
   val INVALID_BOOLEAN = "Invalid value for prettyPrint input!"
+  val INVALID_NON_NEGATIVE_INTEGER = "Invalid non-negative integer!"
 
   def validateProxyPort: (String) => Stream[String] = validate(_, InputNames.PROXY_PORT) { value =>
     if (!isValidIpPort(value)) Some(INVALID_PORT) else None
@@ -24,5 +25,9 @@ object InputValidator {
 
   def validateBoolean: (String, String) => Stream[String] = validate(_, _) { value =>
     if (!BooleanUtilities.isValid(value)) Some(INVALID_BOOLEAN) else None
+  }
+
+  def validateNonNegativeInteger: (String, String) => Stream[String] = validate(_, _) { value =>
+    if (!NumberUtilities.isValidInt(value, 0, Int.MaxValue)) Some(INVALID_NON_NEGATIVE_INTEGER) else None
   }
 }
