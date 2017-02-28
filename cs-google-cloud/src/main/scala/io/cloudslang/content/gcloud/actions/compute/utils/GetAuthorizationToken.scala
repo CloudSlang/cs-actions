@@ -7,6 +7,7 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.utils.InputNames._
+import io.cloudslang.content.gcloud.utils.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.{NumberUtilities, OutputUtilities}
 import org.apache.commons.io.IOUtils
@@ -40,8 +41,12 @@ class GetAuthorizationToken {
               @Param(value = PROXY_PORT) proxyPort: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String): util.Map[String, String] = {
+
+    val proxyHostOpt = verifyEmpty(proxyHost)
+    val proxyUsernameOpt = verifyEmpty(proxyUsername)
+
     try {
-      val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
+      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, NumberUtilities.toInteger(proxyPort), proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
       val timeout = NumberUtilities.toInteger(timeoutStr)

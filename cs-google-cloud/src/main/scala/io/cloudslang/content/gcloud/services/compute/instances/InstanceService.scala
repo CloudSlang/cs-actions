@@ -23,11 +23,7 @@ object InstanceService {
     do {
       response = request.execute()
       if (response.getItems != null) {
-
         instances ++= response.getItems
-
-        response.getItems.foreach { (i: Instance) => println(i.getName) }
-
         request.setPageToken(response.getNextPageToken)
       }
     } while (response.getNextPageToken != null)

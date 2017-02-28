@@ -11,6 +11,7 @@ import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.actions.compute.utils.GetAuthorizationToken
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.InputNames._
+import io.cloudslang.content.gcloud.utils.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.InputValidator.validate
 import io.cloudslang.content.gcloud.utils._
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities, OutputUtilities}
@@ -43,6 +44,11 @@ class InstanceGet {
               @Param(value = PROXY_USERNAME) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
               @Param(value = PRETTY_PRINT) prettyPrintString: String): util.Map[String, String] = {
+
+    val proxyHostOpt = verifyEmpty(proxyHost)
+    val proxyUsernameOpt = verifyEmpty(proxyUsername)
+
+
     try {
       val validationStream = validate(proxyPort)(Option.apply) ++
         validate(proxyHost)(Option.apply)
@@ -50,7 +56,7 @@ class InstanceGet {
       val validationResult = validationStream.mkString("\n")
       println(validationResult)
 
-      val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
+      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, NumberUtilities.toInteger(proxyPort), proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
