@@ -8,5 +8,6 @@ import io.cloudslang.content.constants.BooleanValues
 object DefaultValues {
   final val DEFAULT_PRETTY_PRINT = BooleanValues.TRUE
   final val DEFAULT_PROXY_PORT = "80"
+  final val DEFAULT_PROXY_PASSWORD = ""
 
 }
