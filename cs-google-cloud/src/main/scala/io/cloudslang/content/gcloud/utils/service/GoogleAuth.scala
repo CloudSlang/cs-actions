@@ -1,4 +1,4 @@
-package io.cloudslang.content.gcloud.utils
+package io.cloudslang.content.gcloud.utils.service
 
 import java.io.InputStream
 

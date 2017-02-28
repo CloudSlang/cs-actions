@@ -1,7 +1,7 @@
-package io.cloudslang.content.gcloud.utils
+package io.cloudslang.content.gcloud.utils.action
 
-import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
 import io.cloudslang.content.utils.OtherUtilities.isValidIpPort
+import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
 
 /**
   * Created by sandorr 

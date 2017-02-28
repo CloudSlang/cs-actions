@@ -6,5 +6,7 @@ package io.cloudslang.content.gcloud.utils
 object Constants {
   val NEW_LINE = "\n"
   val COMMA = ","
+  val SQR_LEFT_BRACKET = "["
+  val SQR_RIGHT_BRACKET = "]"
 
 }

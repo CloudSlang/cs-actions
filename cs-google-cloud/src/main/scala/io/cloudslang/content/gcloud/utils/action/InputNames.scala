@@ -1,4 +1,4 @@
-package io.cloudslang.content.gcloud.utils
+package io.cloudslang.content.gcloud.utils.action
 
 /**
   * Created by victor on 28.02.2017.

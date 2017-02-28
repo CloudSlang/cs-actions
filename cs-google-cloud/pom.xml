@@ -76,7 +76,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -302,8 +301,6 @@
             <artifactId>specs2-junit_2.11</artifactId>
             <version>3.8.8</version>
         </dependency>
-
-
 
     </dependencies>
 

@@ -7,11 +7,12 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
-import io.cloudslang.content.gcloud.utils.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
-import io.cloudslang.content.gcloud.utils.InputNames._
-import io.cloudslang.content.gcloud.utils.InputUtils.verifyEmpty
-import io.cloudslang.content.gcloud.utils.InputValidator.{validateBoolean, validateProxyPort}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.gcloud.utils.action.InputNames._
+import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
+import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
 import io.cloudslang.content.gcloud.utils._
+import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}

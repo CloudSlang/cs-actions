@@ -3,16 +3,15 @@ package io.cloudslang.content.gcloud.actions.compute.utils
 import java.nio.charset.StandardCharsets
 import java.util
 
-import com.google.api.services.compute.ComputeScopes
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
-import io.cloudslang.content.gcloud.utils.DefaultValues.{DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER, DEFAULT_TIMEOUT}
-import io.cloudslang.content.gcloud.utils.InputNames._
-import io.cloudslang.content.gcloud.utils.InputUtils.verifyEmpty
-import io.cloudslang.content.gcloud.utils.InputValidator.{validateNonNegativeInteger, validateProxyPort}
-import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER, DEFAULT_TIMEOUT}
+import io.cloudslang.content.gcloud.utils.action.InputNames._
+import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
+import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateNonNegativeInteger, validateProxyPort}
+import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.io.IOUtils

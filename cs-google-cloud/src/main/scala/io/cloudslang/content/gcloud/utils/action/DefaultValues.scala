@@ -1,4 +1,4 @@
-package io.cloudslang.content.gcloud.utils
+package io.cloudslang.content.gcloud.utils.action
 
 import io.cloudslang.content.constants.BooleanValues
 import io.cloudslang.content.gcloud.utils.Constants.COMMA

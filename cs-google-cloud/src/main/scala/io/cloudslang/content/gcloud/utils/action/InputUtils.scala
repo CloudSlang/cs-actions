@@ -1,4 +1,4 @@
-package io.cloudslang.content.gcloud.utils
+package io.cloudslang.content.gcloud.utils.action
 
 import org.apache.commons.lang3.StringUtils.isEmpty
 

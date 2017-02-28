@@ -19,7 +19,6 @@ object InstanceService {
 
     var instances: List[Instance] = List()
     var response: InstanceList = null
-
     do {
       response = request.execute()
       if (response.getItems != null) {
@@ -31,9 +30,9 @@ object InstanceService {
     instances
   }
 
-  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance = {
-    val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
-    val request = computeInstances.get(project, zone, instanceName)
-    request.execute()
-  }
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .get(project, zone, instanceName)
+      .execute()
+
 }
