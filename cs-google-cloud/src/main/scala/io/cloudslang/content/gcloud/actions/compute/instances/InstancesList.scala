@@ -9,7 +9,8 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
-import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.gcloud.utils.InputNames.{ACCESS_TOKEN, PROJECT_ID, ZONE}
+import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, InputNames, JsonFactoryUtils}
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities, OutputUtilities}
 import org.apache.commons.io.IOUtils
 
@@ -29,9 +30,9 @@ class InstancesList {
       new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
-  def execute(@Param(value = "projectId", required = true) projectId: String,
-              @Param(value = "zone", required = true) zone: String,
-              @Param(value = "accessToken", encrypted = true) accessToken: String,
+  def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
+              @Param(value = ZONE, required = true) zone: String,
+              @Param(value = ACCESS_TOKEN, encrypted = true) accessToken: String,
               @Param(value = "proxyHost") proxyHost: String,
               @Param(value = "proxyPort") proxyPort: String,
               @Param(value = "proxyUsername") proxyUsername: String,
