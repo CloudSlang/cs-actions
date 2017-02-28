@@ -1,12 +1,14 @@
 package io.cloudslang.content.gcloud.actions.compute.instances
 
 import java.io.FileInputStream
+import java.util
 
 import com.google.api.services.compute.ComputeScopes
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
+import io.cloudslang.content.gcloud.utils.InputValidator.validate
 import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities, OutputUtilities}
 
@@ -29,18 +31,29 @@ class InstanceGet {
   def execute(@Param(value = "projectId", required = true) projectId: String,
               @Param(value = "zone", required = true) zone: String,
               @Param(value = "instanceName", required = true) instanceName: String,
+              @Param(value = "accessToken") accessToken: String,
               @Param(value = "proxyHost") proxyHost: String,
               @Param(value = "proxyPort") proxyPort: String,
               @Param(value = "proxyUsername") proxyUsername: String,
               @Param(value = "proxyPassword", encrypted = true) proxyPassword: String,
-              @Param(value = "prettyPrint") prettyPrintString: String
-             ): java.util.Map[String, String] = {
+              @Param(value = "prettyPrint") prettyPrintString: String): util.Map[String, String] = {
     try {
+      val validationStream = validate(proxyPort, Option.apply) ++
+        validate(proxyHost, Option.apply)
+
+      val validationResult = validationStream.mkString("\n")
+      println(validationResult)
+
       val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
-      val jsonPath = ""
-      val credential = GoogleAuth.fromJsonWithScopes(new FileInputStream(jsonPath), httpTransport, jsonFactory, List(ComputeScopes.COMPUTE_READONLY))
+      // todo remove this
+      val jsonToken = "C:\\Users\\sandorr\\gauth\\My First Project-49c94d082fa6.json"
+      val credentialGenerator = GoogleAuth.fromJsonWithScopes(new FileInputStream(jsonToken), httpTransport, jsonFactory, List(ComputeScopes.COMPUTE_READONLY), timeout = 1999999)
+      credentialGenerator.refreshToken()
+      val accessToken = credentialGenerator.getAccessToken
+
+      val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val prettyPrint = BooleanUtilities.toBoolean(prettyPrintString, false)
 
@@ -55,16 +68,17 @@ class InstanceGet {
 }
 
 object Main {
-  def main(): Unit = {
+  def main(args: Array[String]): Unit = {
     val instanceGet = new InstanceGet()
     val resultMap = instanceGet.execute(projectId = "cogent-range-159508",
       zone = "europe-west1-d",
       instanceName = "instance-1",
+      accessToken = "",
       proxyHost = "web-proxy.corp.hpecorp.net",
       proxyPort = "8080",
       proxyUsername = "",
       proxyPassword = "",
       prettyPrintString = "true")
-    println(resultMap)
+    println(resultMap.get(OutputNames.RETURN_RESULT))
   }
 }
