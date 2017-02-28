@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.utils.InputNames._
-import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, InputNames, JsonFactoryUtils}
+import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.{NumberUtilities, OutputUtilities}
 import org.apache.commons.io.IOUtils
 
@@ -21,7 +21,7 @@ class GetAuthorizationToken {
   scopes: see https://developers.google.com/identity/protocols/googlescopes#computev1
    */
 
-  @Action(name = "List Instances",
+  @Action(name = "Get the authorization token for Google",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
       new Output(OutputNames.RETURN_RESULT),

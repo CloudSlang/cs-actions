@@ -46,7 +46,7 @@ class InstancesList {
       val instanceDelimiter = if (prettyPrint) "\n" else ","
 
       val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone)
-        .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString}
+        .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString }
         .mkString("[", instanceDelimiter, "]")
       OutputUtilities.getSuccessResultsMap(resultList)
     } catch {
