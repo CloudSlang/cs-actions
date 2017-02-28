@@ -14,8 +14,7 @@ import io.cloudslang.content.gcloud.utils.InputValidator.{validateBoolean, valid
 import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
-import io.cloudslang.content.utils.OutputUtilities
-import io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap
+import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.defaultIfEmpty
 
 /**
@@ -71,9 +70,9 @@ class InstancesList {
       val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone)
         .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString }
         .mkString("[", instanceDelimiter, "]")
-      OutputUtilities.getSuccessResultsMap(resultList)
+      getSuccessResultsMap(resultList)
     } catch {
-      case e: Throwable => OutputUtilities.getFailureResultsMap(e)
+      case e: Throwable => getFailureResultsMap(e)
     }
   }
 }

@@ -13,8 +13,7 @@ import io.cloudslang.content.gcloud.utils.InputValidator.{validateBoolean, valid
 import io.cloudslang.content.gcloud.utils._
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
-import io.cloudslang.content.utils.OutputUtilities
-import io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap
+import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.defaultIfEmpty
 
 /**
@@ -69,9 +68,9 @@ class InstanceGet {
       val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
       val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
 
-      OutputUtilities.getSuccessResultsMap(resultString)
+      getSuccessResultsMap(resultString)
     } catch {
-      case e: Throwable => OutputUtilities.getFailureResultsMap(e)
+      case e: Throwable => getFailureResultsMap(e)
     }
   }
 }

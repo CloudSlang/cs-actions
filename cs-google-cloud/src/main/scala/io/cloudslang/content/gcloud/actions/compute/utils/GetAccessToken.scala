@@ -11,9 +11,9 @@ import io.cloudslang.content.gcloud.utils.InputNames._
 import io.cloudslang.content.gcloud.utils.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.InputValidator.validateProxyPort
 import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.utils.NumberUtilities
 import io.cloudslang.content.utils.NumberUtilities.toInteger
-import io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap
-import io.cloudslang.content.utils.{NumberUtilities, OutputUtilities}
+import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils.defaultIfEmpty
 
@@ -70,9 +70,9 @@ class GetAccessToken {
         httpTransport, jsonFactory, scopes.split(scopesDel), timeout = timeout)
       val accessToken = GoogleAuth.getAccessTokenFromCredentials(credential)
 
-      OutputUtilities.getSuccessResultsMap(accessToken)
+      getSuccessResultsMap(accessToken)
     } catch {
-      case e: Throwable => OutputUtilities.getFailureResultsMap(e)
+      case e: Throwable => getFailureResultsMap(e)
     }
   }
 }
