@@ -6,7 +6,8 @@ import java.util
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.gcloud.utils.InputNames._
+import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, InputNames, JsonFactoryUtils}
 import io.cloudslang.content.utils.{NumberUtilities, OutputUtilities}
 import org.apache.commons.io.IOUtils
 
@@ -31,14 +32,15 @@ class GetAuthorizationToken {
       new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
-  def execute(@Param(value = "jsonToken", required = true, encrypted = true) jsonToken: String,
-              @Param(value = "timeout") timeoutStr: String,
-              @Param(value = "scopes") scopes: String,
-              @Param(value = "scopesDelimiter") scopesDel: String,
-              @Param(value = "proxyHost") proxyHost: String,
-              @Param(value = "proxyPort") proxyPort: String,
-              @Param(value = "proxyUsername") proxyUsername: String,
-              @Param(value = "proxyPassword", encrypted = true) proxyPassword: String): util.Map[String, String] = {
+  def execute(@Param(value = JSON_TOKEN, required = true, encrypted = true) jsonToken: String,
+              @Param(value = TIMEOUT) timeoutStr: String,
+              @Param(value = SCOPES) scopes: String,
+              @Param(value = SCOPES_DELIMITER) scopesDel: String,
+              @Param(value = PROXY_HOST) proxyHost: String,
+              @Param(value = PROXY_PORT) proxyPort: String,
+              @Param(value = PROXY_USERNAME) proxyUsername: String,
+              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
+              @Param(value = PRETTY_PRINT) prettyPrintStr: String): util.Map[String, String] = {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
