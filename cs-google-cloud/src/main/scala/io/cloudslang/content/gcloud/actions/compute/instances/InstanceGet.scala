@@ -6,6 +6,7 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
+import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.InputNames._
 import io.cloudslang.content.gcloud.utils.InputUtils.verifyEmpty
@@ -54,7 +55,7 @@ class InstanceGet {
       validateBoolean(prettyPrintStr, PRETTY_PRINT)
 
     if (validationStream.nonEmpty) {
-      return getFailureResultsMap(validationStream.mkString("\n"))
+      return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
 
     val proxyPort = toInteger(proxyPortStr)
