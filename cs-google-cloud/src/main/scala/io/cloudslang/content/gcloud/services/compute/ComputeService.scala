@@ -13,5 +13,4 @@ object ComputeService {
 
   def instancesService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential): Compute#Instances =
     new Compute(httpTransport, jsonFactory, credential).instances()
-
 }

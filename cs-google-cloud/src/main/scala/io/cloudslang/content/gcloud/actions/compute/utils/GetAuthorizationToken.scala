@@ -1,22 +1,24 @@
-package io.cloudslang.content.gcloud.actions.compute.instances
+package io.cloudslang.content.gcloud.actions.compute.utils
 
 import java.nio.charset.StandardCharsets
 import java.util
 
-import com.google.api.services.compute.ComputeScopes
-import com.google.api.services.compute.model.Instance
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities, OutputUtilities}
+import io.cloudslang.content.utils.{NumberUtilities, OutputUtilities}
 import org.apache.commons.io.IOUtils
 
 /**
-  * Created by victor on 27.02.2017.
+  * Created by victor on 28.02.2017.
   */
-class InstancesList {
+class GetAuthorizationToken {
+
+
+  /*
+  scopes: see https://developers.google.com/identity/protocols/googlescopes#computev1
+   */
 
   @Action(name = "List Instances",
     outputs = Array(
@@ -29,28 +31,25 @@ class InstancesList {
       new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
-  def execute(@Param(value = "projectId", required = true) projectId: String,
-              @Param(value = "zone", required = true) zone: String,
-              @Param(value = "accessToken", encrypted = true) accessToken: String,
+  def execute(@Param(value = "jsonToken", required = true, encrypted = true) jsonToken: String,
+              @Param(value = "timeout") timeoutStr: String,
+              @Param(value = "scopes") scopes: String,
+              @Param(value = "scopesDelimiter") scopesDel: String,
               @Param(value = "proxyHost") proxyHost: String,
               @Param(value = "proxyPort") proxyPort: String,
               @Param(value = "proxyUsername") proxyUsername: String,
-              @Param(value = "proxyPassword", encrypted = true) proxyPassword: String,
-              @Param(value = "prettyPrint") prettyPrintStr: String): util.Map[String, String] = {
+              @Param(value = "proxyPassword", encrypted = true) proxyPassword: String): util.Map[String, String] = {
     try {
-      val credential = GoogleAuth.fromAccessToken(accessToken)
-
-      val prettyPrint = BooleanUtilities.toBoolean(prettyPrintStr)
-
       val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
-      val instanceDelimiter = if (prettyPrint) "\n" else ","
+      val timeout = NumberUtilities.toInteger(timeoutStr)
 
-      val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone)
-        .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString}
-        .mkString("[", instanceDelimiter, "]")
-      OutputUtilities.getSuccessResultsMap(resultList)
+      val credential = GoogleAuth.fromJsonWithScopes(IOUtils.toInputStream(jsonToken, StandardCharsets.UTF_8),
+        httpTransport, jsonFactory, scopes.split(scopesDel), timeout = timeout)
+      val accessToken = GoogleAuth.getAccessTokenFromCredentials(credential)
+
+      OutputUtilities.getSuccessResultsMap(accessToken)
     } catch {
       case e: Throwable => OutputUtilities.getFailureResultsMap(e)
     }
