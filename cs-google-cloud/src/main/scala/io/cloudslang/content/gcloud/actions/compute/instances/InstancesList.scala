@@ -59,7 +59,6 @@ class InstancesList {
     val proxyPort = toInteger(proxyPortStr)
     val prettyPrint = toBoolean(prettyPrintStr)
 
-
     try {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
