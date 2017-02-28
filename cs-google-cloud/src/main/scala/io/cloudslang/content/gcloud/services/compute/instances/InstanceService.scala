@@ -53,4 +53,9 @@ object InstanceService {
     instances
   }
 
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance = {
+    val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
+    val request = computeInstances.get(project, zone, instanceName)
+    request.execute()
+  }
 }
