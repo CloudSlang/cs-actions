@@ -10,7 +10,7 @@ import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
 object InputValidator {
 
   val INVALID_PORT = "Invalid port value!"
-  val INVALID_BOOLEAN = "Invalid value for prettyPrint input!"
+  val INVALID_BOOLEAN = "Invalid boolean value!"
   val INVALID_NON_NEGATIVE_INTEGER = "Invalid non-negative integer!"
 
   def validateProxyPort: (String) => Stream[String] = validate(_, InputNames.PROXY_PORT) { value =>
