@@ -1,6 +1,7 @@
 package io.cloudslang.content.gcloud.actions.compute.instances
 
-import java.io.FileInputStream
+import java.io.{File, FileInputStream}
+import java.nio.charset.StandardCharsets
 import java.util
 
 import com.google.api.services.compute.ComputeScopes
@@ -9,9 +10,13 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.actions.compute.utils.GetAuthorizationToken
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
+import io.cloudslang.content.gcloud.utils.InputNames._
 import io.cloudslang.content.gcloud.utils.InputValidator.validate
-import io.cloudslang.content.gcloud.utils.{GoogleAuth, HttpTransportUtils, InputValidator, JsonFactoryUtils}
+import io.cloudslang.content.gcloud.utils._
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities, OutputUtilities}
+import org.apache.commons.io.IOUtils
+
+import scala.collection.JavaConversions._
 
 /**
   * Created by sandorr 
@@ -29,15 +34,15 @@ class InstanceGet {
       new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
-  def execute(@Param(value = "projectId", required = true) projectId: String,
-              @Param(value = "zone", required = true) zone: String,
-              @Param(value = "instanceName", required = true) instanceName: String,
-              @Param(value = "accessToken") accessToken: String,
-              @Param(value = "proxyHost") proxyHost: String,
-              @Param(value = "proxyPort") proxyPort: String,
-              @Param(value = "proxyUsername") proxyUsername: String,
-              @Param(value = "proxyPassword", encrypted = true) proxyPassword: String,
-              @Param(value = "prettyPrint") prettyPrintString: String): util.Map[String, String] = {
+  def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
+              @Param(value = ZONE, required = true) zone: String,
+              @Param(value = INSTANCE_NAME, required = true) instanceName: String,
+              @Param(value = ACCESS_TOKEN) accessToken: String,
+              @Param(value = PROXY_HOST) proxyHost: String,
+              @Param(value = PROXY_PORT) proxyPort: String,
+              @Param(value = PROXY_USERNAME) proxyUsername: String,
+              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
+              @Param(value = PRETTY_PRINT) prettyPrintString: String): util.Map[String, String] = {
     try {
       val validationStream = validate(proxyPort)(Option.apply) ++
         validate(proxyHost)(Option.apply)
@@ -59,35 +64,5 @@ class InstanceGet {
     } catch {
       case e: Throwable => OutputUtilities.getFailureResultsMap(e)
     }
-  }
-}
-
-object Main {
-  def main(args: Array[String]): Unit = {
-    val jsonToken = ""
-
-    val getAuthorizationToken = new GetAuthorizationToken
-    val authTokenMap = getAuthorizationToken.execute(
-      jsonToken,
-      timeoutStr = "99999",
-      ComputeScopes.COMPUTE_READONLY,
-      scopesDel = ",",
-      proxyHost = "web-proxy.corp.hpecorp.net",
-      proxyPort = "8080",
-      proxyUsername = "",
-      proxyPassword = ""
-    )
-
-    val instanceGet = new InstanceGet()
-    val resultMap = instanceGet.execute(projectId = "cogent-range-159508",
-      zone = "europe-west1-d",
-      instanceName = "instance-1",
-      accessToken = authTokenMap.get(OutputNames.RETURN_RESULT),
-      proxyHost = "web-proxy.corp.hpecorp.net",
-      proxyPort = "8080",
-      proxyUsername = "",
-      proxyPassword = "",
-      prettyPrintString = "true")
-    println(resultMap.get(OutputNames.RETURN_RESULT))
   }
 }

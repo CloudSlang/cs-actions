@@ -16,5 +16,5 @@ object InputNames {
   final val TIMEOUT = "timeout"
   final val SCOPES = "scopes"
   final val SCOPES_DELIMITER = "scopesDelimiter"
-
+  final val INSTANCE_NAME = "instanceName"
 }

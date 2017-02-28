@@ -39,8 +39,7 @@ class GetAuthorizationToken {
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPort: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
-              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
-              @Param(value = PRETTY_PRINT) prettyPrintStr: String): util.Map[String, String] = {
+              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String): util.Map[String, String] = {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(Option(proxyHost), NumberUtilities.toInteger(proxyPort), Option(proxyUsername), proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
