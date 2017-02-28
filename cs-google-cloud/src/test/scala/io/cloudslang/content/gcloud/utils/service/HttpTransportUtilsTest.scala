@@ -1,9 +1,8 @@
-package io.cloudslang.content.gcloud.utils
+package io.cloudslang.content.gcloud.utils.service
 
 import java.net.{InetSocketAddress, Proxy}
 
 import com.google.api.client.http.javanet.NetHttpTransport
-import io.cloudslang.content.gcloud.utils.service.HttpTransportUtils
 import org.junit.Test
 import org.specs2.matcher.JUnitShouldMatchers
 import org.specs2.mock.MockitoMocker

@@ -1,10 +1,5 @@
-package io.cloudslang.content.gcloud.utils
+package io.cloudslang.content.gcloud.utils.service
 
-import java.io.FileInputStream
-
-import com.google.api.client.http.HttpTransport
-import com.google.api.client.json.JsonFactory
-import com.google.api.services.compute.ComputeScopes
 import org.junit.Test
 import org.specs2.matcher.JUnitShouldMatchers
 import org.specs2.mock.Mockito
