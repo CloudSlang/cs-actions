@@ -1,17 +1,16 @@
-package io.cloudslang.content.gcloud.actions.compute.instances
+package io.cloudslang.content.gcloud.actions.compute.operations
 
 import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
+import io.cloudslang.content.gcloud.services.compute.operations.ZoneOperationService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
-import io.cloudslang.content.gcloud.utils._
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
@@ -19,12 +18,12 @@ import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuc
 import org.apache.commons.lang3.StringUtils.defaultIfEmpty
 
 /**
-  * Created by sandorr
-  * 2/27/2017.
+  * Created by sandorr 
+  * 3/1/2017.
   */
-class InstanceGet {
+class ZoneOperationsGet {
 
-  @Action(name = "Get Instance",
+  @Action(name = "Get ZoneOperation",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
       new Output(OutputNames.RETURN_RESULT),
@@ -37,7 +36,7 @@ class InstanceGet {
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
               @Param(value = ZONE, required = true) zone: String,
-              @Param(value = INSTANCE_NAME, required = true) instanceName: String,
+              @Param(value = ZONE_OPERATION_NAME, required = true) zoneOperationsName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
@@ -67,8 +66,8 @@ class InstanceGet {
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-      val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
+      val operation = ZoneOperationService.get(httpTransport, jsonFactory, credential, projectId, zone, zoneOperationsName)
+      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
       getSuccessResultsMap(resultString)
     } catch {

@@ -21,9 +21,9 @@ import org.apache.commons.lang3.StringUtils.defaultIfEmpty
   * Created by sandorr
   * 2/27/2017.
   */
-class InstanceDelete {
+class InstancesGet {
 
-  @Action(name = "Delete Instance",
+  @Action(name = "Get Instance",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
       new Output(OutputNames.RETURN_RESULT),
@@ -66,8 +66,8 @@ class InstanceDelete {
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = InstanceService.delete(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
+      val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+      val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
 
       getSuccessResultsMap(resultString)
     } catch {
