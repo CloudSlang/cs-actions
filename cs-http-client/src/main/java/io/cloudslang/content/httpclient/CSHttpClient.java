@@ -38,6 +38,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
@@ -234,6 +235,8 @@ public class CSHttpClient {
         } else {
             httpClientBuilder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
         }
+
+        httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
 
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 
