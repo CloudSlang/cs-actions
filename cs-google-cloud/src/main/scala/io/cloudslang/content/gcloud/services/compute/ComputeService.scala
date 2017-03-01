@@ -11,6 +11,8 @@ import com.google.api.services.compute.Compute
   */
 object ComputeService {
 
-  def instancesService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential): Compute#Instances =
-    new Compute(httpTransport, jsonFactory, credential).instances()
+  private def computeService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential): Compute =  new Compute(httpTransport, jsonFactory, credential)
+
+  def instancesService: (HttpTransport, JsonFactory, Credential) => Compute#Instances = computeService(_, _, _).instances()
+  def zoneOperationsService: (HttpTransport, JsonFactory, Credential) => Compute#ZoneOperations = computeService(_, _, _).zoneOperations()
 }
