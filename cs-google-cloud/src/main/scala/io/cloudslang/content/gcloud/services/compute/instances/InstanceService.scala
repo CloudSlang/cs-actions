@@ -15,6 +15,7 @@ object InstanceService {
 
   def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String): List[Instance] = {
     val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
+    ComputeService.in
     val request = computeInstances.list(project, zone)
 
     var instances: List[Instance] = List()
@@ -35,4 +36,11 @@ object InstanceService {
       .get(project, zone, instanceName)
       .execute()
 
+
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance): Operation = {
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .insert(project, zone, instance)
+      .execute()
+
+  }
 }
