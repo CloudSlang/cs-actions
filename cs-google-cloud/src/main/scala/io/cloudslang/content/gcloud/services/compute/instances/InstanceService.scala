@@ -36,7 +36,7 @@ object InstanceService {
       .execute()
 
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance): Operation = {
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .insert(project, zone, instance)
       .execute()
