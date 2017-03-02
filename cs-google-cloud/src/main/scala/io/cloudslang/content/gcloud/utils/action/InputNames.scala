@@ -15,7 +15,7 @@ object InputNames {
   final val PRETTY_PRINT = "prettyPrint"
   final val TIMEOUT = "timeout"
   final val SCOPES = "scopes"
-  final val SCOPES_DELIMITER = "scopesDelimiter"
+  final val DELIMITER = "delimiter"
   final val INSTANCE_NAME = "instanceName"
   final val ITEMS_KEYS_LIST = "itemsKeysList"
   final val ITEMS_VALUES_LIST = "itemsValuesList"

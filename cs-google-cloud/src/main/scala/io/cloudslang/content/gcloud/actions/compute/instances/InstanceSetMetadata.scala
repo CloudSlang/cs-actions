@@ -82,7 +82,7 @@ class InstanceSetMetadata {
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
               @Param(value = ITEMS_KEYS_LIST) itemsKeysList: String,
               @Param(value = ITEMS_VALUES_LIST) itemsValuesList: String,
-              @Param(value = SCOPES_DELIMITER) delimiterInp: String,
+              @Param(value = DELIMITER) delimiterInp: String,
               @Param(value = PROXY_HOST) proxyHostInp: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsernameInp: String,

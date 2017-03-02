@@ -40,7 +40,7 @@ class GetAccessToken {
   )
   def execute(@Param(value = JSON_TOKEN, required = true, encrypted = true) jsonToken: String,
               @Param(value = SCOPES, required = true) scopes: String,
-              @Param(value = SCOPES_DELIMITER) scopesDelInp: String,
+              @Param(value = DELIMITER) scopesDelInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
