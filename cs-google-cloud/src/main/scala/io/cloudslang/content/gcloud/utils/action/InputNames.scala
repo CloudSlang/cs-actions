@@ -17,8 +17,6 @@ object InputNames {
   final val SCOPES = "scopes"
   final val SCOPES_DELIMITER = "scopesDelimiter"
   final val INSTANCE_NAME = "instanceName"
-  final val FINGERPRINT = "fingerprint"
-  final val KIND = "kind"
   final val ITEMS_KEYS_LIST = "itemsKeysList"
   final val ITEMS_VALUES_LIST = "itemsValuesList"
 }
