@@ -50,4 +50,14 @@ object InstanceService {
       .reset(project, zone, instanceName)
       .execute()
 
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance): Operation =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .insert(project, zone, instance)
+      .execute()
+
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .delete(project, zone, instanceName)
+      .execute()
+
 }

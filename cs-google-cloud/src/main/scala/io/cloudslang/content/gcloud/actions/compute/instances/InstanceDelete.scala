@@ -2,26 +2,30 @@ package io.cloudslang.content.gcloud.actions.compute.instances
 
 import java.util
 
+import com.google.api.services.compute.ComputeScopes
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
+import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
-import io.cloudslang.content.gcloud.utils.Constants._
-import io.cloudslang.content.gcloud.utils.action.DefaultValues._
+import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
-import io.cloudslang.content.gcloud.utils.action.InputUtils._
-import io.cloudslang.content.gcloud.utils.action.InputValidator._
+import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
+import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.BooleanUtilities._
-import io.cloudslang.content.utils.NumberUtilities._
-import io.cloudslang.content.utils.OutputUtilities._
-import org.apache.commons.lang3.StringUtils._
+import io.cloudslang.content.utils.BooleanUtilities.toBoolean
+import io.cloudslang.content.utils.NumberUtilities.toInteger
+import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
+import org.apache.commons.lang3.StringUtils.defaultIfEmpty
 
 /**
-  * Created by pinteae on 3/1/2017.
+  * Created by sandorr
+  * 2/27/2017.
   */
-class StartInstance {
-  @Action(name = "Start Instance",
+class InstanceDelete {
+
+  @Action(name = "Delete Instance",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
       new Output(OutputNames.RETURN_RESULT),
@@ -64,20 +68,12 @@ class StartInstance {
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val instance = InstanceService.start(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-      val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
+      val operation = InstanceService.delete(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
       getSuccessResultsMap(resultString)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
   }
-
- /* def main(args: Array[String]): Unit = {
-    val startInstance : StartInstance = new StartInstance();
-    startInstance.execute(
-      projectId = "",
-    )
-
-  }*/
 }
