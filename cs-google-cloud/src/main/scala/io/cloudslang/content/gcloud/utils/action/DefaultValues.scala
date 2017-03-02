@@ -8,7 +8,7 @@ import io.cloudslang.content.gcloud.utils.Constants.COMMA
   */
 object DefaultValues {
   final val DEFAULT_PRETTY_PRINT = BooleanValues.TRUE
-  final val DEFAULT_PROXY_PORT = "80"
+  final val DEFAULT_PROXY_PORT = "8080"
   final val DEFAULT_PROXY_PASSWORD = ""
   final val DEFAULT_SCOPES_DELIMITER = COMMA
   final val DEFAULT_TIMEOUT = "600"

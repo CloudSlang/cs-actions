@@ -53,7 +53,7 @@ class InstanceSetMetadata {
     *                          be used.
     *                          Default: ""
     * @param proxyPortInp      Optional - proxy server port.
-    *                          Default: "80"
+    *                          Default: "8080"
     * @param proxyUsernameInp  Optional - proxy server user name.
     *                          Default: ""
     * @param proxyPasswordInp  Optional - proxy server password associated with the proxyUsername input value.
