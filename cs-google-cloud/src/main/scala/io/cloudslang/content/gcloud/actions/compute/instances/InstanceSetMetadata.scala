@@ -6,7 +6,7 @@ import com.google.api.services.compute.model.Metadata.Items
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.constants.OutputNames.{RETURN_CODE, RETURN_RESULT, EXCEPTION}
+import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER}

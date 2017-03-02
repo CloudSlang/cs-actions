@@ -30,7 +30,8 @@ class InstanceDelete {
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
       new Output(OutputNames.RETURN_RESULT),
-      new Output(OutputNames.EXCEPTION)
+      new Output(OutputNames.EXCEPTION),
+      new Output(ZONE_OPERATION_NAME)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
