@@ -8,5 +8,4 @@ object Constants {
   val COMMA = ","
   val SQR_LEFT_BRACKET = "["
   val SQR_RIGHT_BRACKET = "]"
-
 }

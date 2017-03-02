@@ -11,8 +11,8 @@ import io.cloudslang.content.gcloud.services.compute.ComputeService
   * 3/1/2017.
   */
 object ZoneOperationService {
-  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, operationName: String): Operation =
     ComputeService.zoneOperationsService(httpTransport, jsonFactory, credential)
-      .get(project, zone, instanceName)
+      .get(project, zone, operationName)
       .execute()
 }
