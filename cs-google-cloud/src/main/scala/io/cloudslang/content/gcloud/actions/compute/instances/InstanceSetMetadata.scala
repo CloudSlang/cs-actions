@@ -20,7 +20,7 @@ import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.StringUtils.defaultIfEmpty
-import io.cloudslang.content.gcloud.utils.action.OutputNames.ZONE_OPERATION_NAME
+import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 
 import scala.collection.JavaConversions._
 
