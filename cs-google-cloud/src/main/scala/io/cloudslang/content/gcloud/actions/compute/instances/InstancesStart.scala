@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils._
 /**
   * Created by pinteae on 3/1/2017.
   */
-class StartInstance {
+class InstancesStart {
   @Action(name = "Start Instance",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
@@ -71,16 +71,5 @@ class StartInstance {
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
-  }
-
-  def main(args: Array[String]): Unit = {
-    val startInstance : StartInstance = new StartInstance();
-    println(startInstance.execute(
-      projectId = "cogent-range-159508",
-      zone = "europe-west1-d",
-      instanceName = "dummy-instance",
-      accessToken = 
-    ));
-
   }
 }
