@@ -19,4 +19,5 @@ object InputNames {
   final val INSTANCE_NAME = "instanceName"
   final val ITEMS_KEYS_LIST = "itemsKeysList"
   final val ITEMS_VALUES_LIST = "itemsValuesList"
+  final val ZONE_OPERATION_NAME = "zoneOperationName"
 }
