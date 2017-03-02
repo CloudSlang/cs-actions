@@ -17,4 +17,5 @@ object InputNames {
   final val SCOPES = "scopes"
   final val SCOPES_DELIMITER = "scopesDelimiter"
   final val INSTANCE_NAME = "instanceName"
+  final val ZONE_OPERATION_NAME = "zoneOperationName"
 }
