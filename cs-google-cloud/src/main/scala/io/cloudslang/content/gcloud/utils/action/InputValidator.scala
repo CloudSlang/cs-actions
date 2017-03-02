@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils
 object InputValidator {
 
   val INVALID_PORT = "Invalid port value!"
-  val INVALID_BOOLEAN = "Invalid value for prettyPrint input!"
+  val INVALID_BOOLEAN = "Invalid boolean value!"
   val INVALID_NON_NEGATIVE_INTEGER = "Invalid non-negative integer!"
   val INVALID_PAIRED_LISTS_LENGTH = "Paired lists must have the same length!"
 
