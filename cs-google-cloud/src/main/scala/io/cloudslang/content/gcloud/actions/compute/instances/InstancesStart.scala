@@ -45,7 +45,7 @@ class InstancesStart {
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-    val proxyPassword = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
+    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
@@ -59,7 +59,7 @@ class InstancesStart {
     val prettyPrint = toBoolean(prettyPrintStr)
 
     try {
-      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
+      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPasswordStr)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
