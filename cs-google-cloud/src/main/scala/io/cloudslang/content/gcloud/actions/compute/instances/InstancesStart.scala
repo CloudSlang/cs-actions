@@ -8,6 +8,7 @@ import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants._
 import io.cloudslang.content.gcloud.utils.action.DefaultValues._
+import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils._
 import io.cloudslang.content.gcloud.utils.action.InputValidator._
@@ -16,6 +17,8 @@ import io.cloudslang.content.utils.BooleanUtilities._
 import io.cloudslang.content.utils.NumberUtilities._
 import io.cloudslang.content.utils.OutputUtilities._
 import org.apache.commons.lang3.StringUtils._
+
+import scala.collection.JavaConversions._
 
 /**
   * Created by pinteae on 3/1/2017.
@@ -64,10 +67,10 @@ class InstancesStart {
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val instance = InstanceService.start(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-      val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
+      val operation = InstanceService.start(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
-      getSuccessResultsMap(resultString)
+      getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> operation.getName)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
