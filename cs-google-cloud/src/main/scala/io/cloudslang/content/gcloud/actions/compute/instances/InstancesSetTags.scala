@@ -34,26 +34,22 @@ class InstancesSetTags {
     * as a JSON object, that can be used to retrieve the status and progress of the ZoneOperation, using the
     * ZoneOperationsGet operation.
     *
-    * @param projectId        Google Cloud project name.
+    * @param projectId        Google Cloud project id.
     *                         Example: "example-project-a"
-    * @param zone             The name of the zone in which the instance lives.
+    * @param zone             The name of the zone where the Instance resource is located.
     *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
     * @param instanceName     Name of the Instance resource to set the tags to.
     *                         Example: "operation-1234"
     * @param tagsListInp      List of tags, separated by the <tagsDelimiterInp> delimiter.
     * @param tagsDelimiterInp Delimiter used for the list of tags from <tagsListInp> param.
     *                         Default: ","
-    * @param accessToken      The access token returned by the GetAccessToken operation, with at least one of the
-    *                         following scopes: "https://www.googleapis.com/auth/compute",
-    *                         "https://www.googleapis.com/auth/cloud-platform".
+    * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
+    *                         following scope: "https://www.googleapis.com/auth/compute".
     * @param proxyHost        Optional - Proxy server used to access the provider services.
-    *                         Default: ""
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
-    *                         Default: ""
     * @param proxyPasswordInp Optional - Proxy server password associated with the proxy_username input value.
-    *                         Default: ""
     * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
     *                         Default: "true"
     * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName
@@ -99,13 +95,14 @@ class InstancesSetTags {
 
     val proxyPort = toInteger(proxyPortStr)
     val prettyPrint = toBoolean(prettyPrintStr)
-    val tags = new Tags().setItems(toList(tagsList, tagsDelimiter))
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
+
+      val tags = new Tags().setItems(toList(tagsList, tagsDelimiter))
 
       val operation = InstanceService.setTags(httpTransport, jsonFactory, credential, projectId, zone, instanceName, tags)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
