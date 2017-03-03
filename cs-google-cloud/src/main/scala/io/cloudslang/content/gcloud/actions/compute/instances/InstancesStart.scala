@@ -43,7 +43,7 @@ class InstancesStart {
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
-    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
     * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
     *                         Default: "true"
     * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName

@@ -1,4 +1,4 @@
-package io.cloudslang.content.gcloud.actions.compute.operations
+package io.cloudslang.content.gcloud.actions.compute.networks
 
 import java.util
 
@@ -6,10 +6,9 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.services.compute.operations.ZoneOperationService
+import io.cloudslang.content.gcloud.services.compute.networks.NetworkService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
-import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.STATUS
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
@@ -19,40 +18,37 @@ import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.defaultIfEmpty
 
-import scala.collection.JavaConversions._
-
 /**
-  * Created by sandorr 
-  * 3/1/2017.
+  * Created by victor on 3/3/17.
   */
-class ZoneOperationsGet {
+class NetworksGet {
+
 
   /**
-    * This operation can be used to retrieve a ZoneOperation resource, as JSON object.
+    * This operation can be used to retrieve a Network resource, as JSON object.
     *
-    * @param projectId         Google Cloud project id.
-    *                          Example: "example-project-a"
-    * @param zone              The name of the zone where the Instance resource is located.
-    *                          Examples: "us-central1-a", "us-central1-b", "us-central1-c"
-    * @param zoneOperationName Name of the ZoneOperation resource to return.
-    *                          Example: "operation-1234"
-    * @param accessToken       The access token returned by the GetAccessToken operation, with at least the
-    *                          following scope: "https://www.googleapis.com/auth/compute.readonly".
-    * @param proxyHost         Optional - Proxy server used to access the provider services.
-    * @param proxyPortInp      Optional - Proxy server port used to access the provider services.
-    *                          Default: "8080"
-    * @param proxyUsername     Optional - Proxy server user name.
-    * @param proxyPasswordInp  Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @param prettyPrintInp    Optional - Whether to format the resulting JSON.
-    *                          Default: "true"
-    * @return a map containing a ZoneOperation resource as returnResult, and it's status
+    * @param projectId        Google Cloud project id.
+    *                         Example: "example-project-a"
+    * @param networkName      Name of the network resource to return.
+    *                         Example: "default"
+    * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
+    *                         following scope: "https://www.googleapis.com/auth/compute.readonly".
+    * @param proxyHost        Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                         be used.
+    * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
+    *                         Valid values: "true", "false"
+    *                         Default: "true"
+    * @return a map containing a Network resource as returnResult
     */
-  @Action(name = "Get ZoneOperation",
+  @Action(name = "Get Network",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
-      new Output(EXCEPTION),
-      new Output(STATUS)
+      new Output(EXCEPTION)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -60,8 +56,7 @@ class ZoneOperationsGet {
     )
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
-              @Param(value = ZONE, required = true) zone: String,
-              @Param(value = ZONE_OPERATION_NAME, required = true) zoneOperationName: String,
+              @Param(value = NETWORK_NAME, required = true) networkName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
@@ -91,10 +86,10 @@ class ZoneOperationsGet {
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = ZoneOperationService.get(httpTransport, jsonFactory, credential, projectId, zone, zoneOperationName)
-      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
+      val network = NetworkService.get(httpTransport, jsonFactory, credential, projectId, networkName)
+      val resultString = if (prettyPrint) network.toPrettyString else network.toString
 
-      getSuccessResultsMap(resultString) + (STATUS -> operation.getStatus)
+      getSuccessResultsMap(resultString)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }

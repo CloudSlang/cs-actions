@@ -11,7 +11,6 @@ import io.cloudslang.content.gcloud.utils.Constants._
 import io.cloudslang.content.gcloud.utils.action.DefaultValues._
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
-import io.cloudslang.content.gcloud.utils.action.InputUtils
 import io.cloudslang.content.gcloud.utils.action.InputUtils._
 import io.cloudslang.content.gcloud.utils.action.InputValidator._
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
@@ -44,7 +43,7 @@ class InstancesRestart {
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
-    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
     * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
     *                         Default: "true"
     * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName

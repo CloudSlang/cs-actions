@@ -33,14 +33,14 @@ class InstancesList {
     *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
     * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
     *                         following scope: "https://www.googleapis.com/auth/compute.readonly".
-    * @param proxyHost        Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
+    * @param proxyHost        Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
     *                         be used.
-    * @param proxyPortInp     Optional - proxy server port. You must either specify values for both proxyHost and
+    * @param proxyPortInp     Optional - Proxy server port. You must either specify values for both proxyHost and
     *                         proxyPort inputs or leave them both empty.
     *                         Default: "8080"
-    * @param proxyUsername    Optional - proxy server user name.
-    * @param proxyPasswordInp Optional - proxy server password associated with the proxyUsername input value.
-    * @param prettyPrintInp   Optional - whether to format (pretty print) the resulting json.
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
     *                         Valid values: "true", "false"
     *                         Default: "true"
     * @return a map containing the list of Instance resources as returnResult

@@ -13,10 +13,9 @@ import scala.collection.JavaConversions._
   */
 object DiskService {
 
-
   def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String): List[Disk] = {
-    val computeInstances = ComputeService.disksService(httpTransport, jsonFactory, credential)
-    val request = computeInstances.list(project, zone)
+    val computeDisks = ComputeService.disksService(httpTransport, jsonFactory, credential)
+    val request = computeDisks.list(project, zone)
 
     var disks: List[Disk] = List()
     var response: DiskList = null
@@ -36,10 +35,13 @@ object DiskService {
       .get(project, zone, diskName)
       .execute()
 
-
   def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, disk: Disk): Operation =
     ComputeService.disksService(httpTransport, jsonFactory, credential)
       .insert(project, zone, disk)
       .execute()
 
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, diskName: String): Operation =
+    ComputeService.disksService(httpTransport, jsonFactory, credential)
+      .delete(project, zone, diskName)
+      .execute()
 }

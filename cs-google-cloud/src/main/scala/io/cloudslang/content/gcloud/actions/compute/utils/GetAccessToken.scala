@@ -27,11 +27,11 @@ class GetAccessToken {
     *
     * @param jsonToken        Content of the Google Cloud service account JSON.
     * @param scopes           Scopes that you might need to request to access Google Compute APIs, depending on the level of access
-    *                         you need. One or more scopes may be specified delimited by the scopes_delimiter.
+    *                         you need. One or more scopes may be specified delimited by the <scopesDelimiter>.
     *                         Example: 'https://www.googleapis.com/auth/compute.readonly'
     *                         Note: It is recommended to use the minimum necessary scope in order to perform the requests.
     *                         For a full list of scopes see https://developers.google.com/identity/protocols/googlescopes#computev1
-    * @param scopesDelInp     Optional - Delimiter that will be used for the scopes input.
+    * @param scopesDelInp     Optional - Delimiter that will be used for the <scopes> input.
     *                         Default: ","
     * @param timeoutInp       Optional - Timeout of the resulting access token, in seconds.
     *                         Default: "600"
@@ -39,7 +39,7 @@ class GetAccessToken {
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
-    * @param proxyPasswordInp Optional - Proxy server password associated with the proxy_username input value.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
     * @return a map containing an access token as returnResult
     */
 

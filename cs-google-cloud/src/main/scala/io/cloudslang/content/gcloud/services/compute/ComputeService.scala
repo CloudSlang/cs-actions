@@ -16,4 +16,5 @@ object ComputeService {
   def instancesService: (HttpTransport, JsonFactory, Credential) => Compute#Instances = computeService(_, _, _).instances()
   def zoneOperationsService: (HttpTransport, JsonFactory, Credential) => Compute#ZoneOperations = computeService(_, _, _).zoneOperations()
   def disksService: (HttpTransport, JsonFactory, Credential) => Compute#Disks = computeService(_, _, _).disks()
+  def networksService: (HttpTransport, JsonFactory, Credential) => Compute#Networks = computeService(_, _, _).networks()
 }
