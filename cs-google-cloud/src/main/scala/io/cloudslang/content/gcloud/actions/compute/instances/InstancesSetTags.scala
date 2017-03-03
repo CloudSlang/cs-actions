@@ -99,11 +99,9 @@ class InstancesSetTags {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val tags = new Tags().setItems(toList(tagsList, tagsDelimiter))
-
       val operation = InstanceService.setTags(httpTransport, jsonFactory, credential, projectId, zone, instanceName, tags)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
