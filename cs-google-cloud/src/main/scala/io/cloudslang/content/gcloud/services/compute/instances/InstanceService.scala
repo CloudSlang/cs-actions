@@ -60,4 +60,15 @@ object InstanceService {
       .delete(project, zone, instanceName)
       .execute()
 
+  def setTags(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, tags: Tags): Operation = {
+    val instanceTagFingerprint = get(httpTransport, jsonFactory, credential, project, zone, instanceName)
+      .getTags.getFingerprint
+
+    tags.setFingerprint(instanceTagFingerprint)
+
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .setTags(project, zone, instanceName, tags)
+      .execute()
+  }
+
 }
