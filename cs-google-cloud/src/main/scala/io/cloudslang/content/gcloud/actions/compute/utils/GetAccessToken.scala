@@ -36,15 +36,11 @@ class GetAccessToken {
     * @param timeoutInp       Optional - Timeout of the resulting access token, in seconds.
     *                         Default: "600"
     * @param proxyHost        Optional - Proxy server used to access the provider services.
-    *                         Default: ""
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
-    *                         Default: ""
     * @param proxyPasswordInp Optional - Proxy server password associated with the proxy_username input value.
-    *                         Default: ""
-    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-    *         operation, name of the created ZoneOperation, or failure message and the exception if there is one
+    * @return a map containing an access token as returnResult
     */
 
   @Action(name = "Get the access token for Google Cloud",

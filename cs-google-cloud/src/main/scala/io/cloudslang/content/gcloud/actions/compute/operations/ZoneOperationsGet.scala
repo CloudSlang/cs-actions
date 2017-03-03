@@ -30,28 +30,22 @@ class ZoneOperationsGet {
   /**
     * This operation can be used to retrieve a ZoneOperation resource, as JSON object.
     *
-    * @param projectId         Google Cloud project name.
+    * @param projectId         Google Cloud project id.
     *                          Example: "example-project-a"
-    * @param zone              The name of the zone in which the instance lives.
+    * @param zone              The name of the zone where the Instance resource is located.
     *                          Examples: "us-central1-a", "us-central1-b", "us-central1-c"
     * @param zoneOperationName Name of the ZoneOperation resource to return.
     *                          Example: "operation-1234"
-    * @param accessToken       The access token returned by the GetAccessToken operation, with at least one of the
-    *                          following scopes: "https://www.googleapis.com/auth/compute.readonly",
-    *                          "https://www.googleapis.com/auth/compute",
-    *                          "https://www.googleapis.com/auth/cloud-platform".
+    * @param accessToken       The access token returned by the GetAccessToken operation, with at least the
+    *                          following scope: "https://www.googleapis.com/auth/compute.readonly".
     * @param proxyHost         Optional - Proxy server used to access the provider services.
-    *                          Default: ""
     * @param proxyPortInp      Optional - Proxy server port used to access the provider services.
     *                          Default: "8080"
     * @param proxyUsername     Optional - Proxy server user name.
-    *                          Default: ""
     * @param proxyPasswordInp  Optional - Proxy server password associated with the proxy_username input value.
-    *                          Default: ""
     * @param prettyPrintInp    Optional - Whether to format the resulting JSON.
     *                          Default: "true"
-    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-    *         operation, status of the ZoneOperation, or failure message and the exception if there is one
+    * @return a map containing a ZoneOperation resource as returnResult, and it's status
     */
   @Action(name = "Get ZoneOperation",
     outputs = Array(
