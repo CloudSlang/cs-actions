@@ -89,7 +89,6 @@ class InstancesStart {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPasswordStr)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val operation = InstanceService.start(httpTransport, jsonFactory, credential, projectId, zone, instanceName)

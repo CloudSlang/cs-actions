@@ -10,6 +10,7 @@ import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants._
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
+import io.cloudslang.content.gcloud.utils.action.InputUtils._
 import io.cloudslang.content.gcloud.utils.action.InputValidator._
 import io.cloudslang.content.gcloud.utils.action.{DefaultValues, InputUtils}
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
@@ -69,8 +70,8 @@ class InstancesStop {
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
-    val proxyHostOpt = InputUtils.verifyEmpty(proxyHost)
-    val proxyUsernameOpt = InputUtils.verifyEmpty(proxyUsername)
+    val proxyHostOpt = verifyEmpty(proxyHost)
+    val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DefaultValues.DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, DefaultValues.DEFAULT_PROXY_PASSWORD)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DefaultValues.DEFAULT_PRETTY_PRINT)
@@ -88,7 +89,6 @@ class InstancesStop {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPasswordStr)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val operation = InstanceService.stop(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
