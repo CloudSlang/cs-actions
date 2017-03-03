@@ -26,6 +26,28 @@ import scala.collection.JavaConversions._
   */
 class InstancesRestart {
 
+  /**
+    * This operation can be used to restart an Instance resource. The operation returns a ZoneOperation resource as a
+    * JSON object, that can be used to retrieve the status and progress of the ZoneOperation, using the
+    * ZoneOperationsGet operation.
+    *
+    * @param projectId        Google Cloud project id.
+    *                         Example: "example-project-a"
+    * @param zone             The name of the zone where the Instance resource is located.
+    *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param instanceName     Name of the Instance resource to delete.
+    *                         Example: "operation-1234"
+    * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
+    *                         following scope: "https://www.googleapis.com/auth/compute".
+    * @param proxyHost        Optional - Proxy server used to access the provider services.
+    * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
+    *                         Default: "true"
+    * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName
+    */
   @Action(name = "Restart Instance",
     outputs = Array(
       new Output(RETURN_CODE),
