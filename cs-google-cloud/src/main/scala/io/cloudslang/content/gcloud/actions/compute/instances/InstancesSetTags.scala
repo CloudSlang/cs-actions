@@ -40,7 +40,7 @@ class InstancesSetTags {
     *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
     * @param instanceName     Name of the Instance resource to set the tags to.
     *                         Example: "operation-1234"
-    * @param tagsListInp      List of tags, separated by the <tagsDeimiterInp> delimiter.
+    * @param tagsListInp      List of tags, separated by the <tagsDelimiterInp> delimiter.
     * @param tagsDelimiterInp Delimiter used for the list of tags from <tagsListInp> param.
     *                         Default: ","
     * @param accessToken      The access token returned by the GetAccessToken operation, with at least one of the
