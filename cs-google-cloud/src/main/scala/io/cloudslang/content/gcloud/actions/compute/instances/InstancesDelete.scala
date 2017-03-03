@@ -24,8 +24,35 @@ import scala.collection.JavaConversions._
   * Created by sandorr
   * 2/27/2017.
   */
-class InstanceDelete {
+class InstancesDelete {
 
+  /**
+    * This operation can be used to delete an Instance resource. The operation returns a ZoneOperation resource as a
+    * JSON object, that can be used to retrieve the status and progress of the ZoneOperation, using the
+    * ZoneOperationsGet operation.
+    *
+    * @param projectId        Google Cloud project name.
+    *                         Example: "example-project-a"
+    * @param zone             The name of the zone in which the instance lives.
+    *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param instanceName     Name of the Instance resource to delete.
+    *                         Example: "operation-1234"
+    * @param accessToken      The access token returned by the GetAccessToken operation, with at least one of the
+    *                         following scopes: "https://www.googleapis.com/auth/compute",
+    *                         "https://www.googleapis.com/auth/cloud-platform".
+    * @param proxyHost        Optional - Proxy server used to access the provider services.
+    *                         Default: ""
+    * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - Proxy server user name.
+    *                         Default: ""
+    * @param proxyPasswordInp Optional - Proxy server password associated with the proxy_username input value.
+    *                         Default: ""
+    * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
+    *                         Default: "true"
+    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+    *         operation, name of the created ZoneOperation, or failure message and the exception if there is one
+    */
   @Action(name = "Delete Instance",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),

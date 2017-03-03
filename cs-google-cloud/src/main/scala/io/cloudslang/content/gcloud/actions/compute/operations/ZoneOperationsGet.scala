@@ -28,24 +28,27 @@ import scala.collection.JavaConversions._
 class ZoneOperationsGet {
 
   /**
-    * Gets a ZoneOperation object, in JSON format.
+    * This operation can be used to retrieve a ZoneOperation resource, as JSON object.
     *
-    * @param projectId         Name of the Google Cloud project.
-    * @param zone              Name of the zone for this request.
+    * @param projectId         Google Cloud project name.
+    *                          Example: "example-project-a"
+    * @param zone              The name of the zone in which the instance lives.
+    *                          Examples: "us-central1-a", "us-central1-b", "us-central1-c"
     * @param zoneOperationName Name of the ZoneOperation resource to return.
-    * @param accessToken       The access token from GetAccessToken.
-    * @param proxyHost         Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
-    *                          be used.
+    *                          Example: "operation-1234"
+    * @param accessToken       The access token returned by the GetAccessToken operation, with at least one of the
+    *                          following scopes: "https://www.googleapis.com/auth/compute.readonly",
+    *                          "https://www.googleapis.com/auth/compute",
+    *                          "https://www.googleapis.com/auth/cloud-platform".
+    * @param proxyHost         Optional - Proxy server used to access the provider services.
     *                          Default: ""
-    * @param proxyPortInp      Optional - proxy server port. You must either specify values for both proxyHost and
-    *                          proxyPort inputs or leave them both empty.
+    * @param proxyPortInp      Optional - Proxy server port used to access the provider services.
+    *                          Default: "8080"
+    * @param proxyUsername     Optional - Proxy server user name.
     *                          Default: ""
-    * @param proxyUsername     Optional - proxy server user name.
+    * @param proxyPasswordInp  Optional - Proxy server password associated with the proxy_username input value.
     *                          Default: ""
-    * @param proxyPasswordInp  Optional - proxy server password associated with the proxyUsername input value.
-    *                          Default: ""
-    * @param prettyPrintInp    Optional - whether to format (pretty print) the resulting json.
-    *                          Valid values: "true", "false"
+    * @param prettyPrintInp    Optional - Whether to format the resulting JSON.
     *                          Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation, or failure message and the exception if there is one
@@ -54,7 +57,8 @@ class ZoneOperationsGet {
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
-      new Output(EXCEPTION)
+      new Output(EXCEPTION),
+      new Output(STATUS)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),

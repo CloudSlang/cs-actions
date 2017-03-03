@@ -24,6 +24,35 @@ import org.apache.commons.lang3.StringUtils.defaultIfEmpty
   */
 class InstancesGet {
 
+  /**
+    * This operation can be used to retrieve an instance resource, as JSON object.
+    *
+    * @param projectId        Google Cloud project name
+    *                         Example: "example-project-a"
+    * @param zone             The name of the zone in which the instance lives.
+    *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param instanceName     Name of the instance resource to return.
+    *                         Example: "instance-1234"
+    * @param accessToken      The access token returned by the get_access_token operation, with at least one of the
+    *                         following scopes: "https://www.googleapis.com/auth/compute.readonly",
+    *                         "https://www.googleapis.com/auth/compute",
+    *                         "https://www.googleapis.com/auth/cloud-platform".
+    * @param proxyHost        Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                         be used.
+    *                         Default: ""
+    * @param proxyPortInp     Optional - proxy server port. You must either specify values for both proxyHost and
+    *                         proxyPort inputs or leave them both empty.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - proxy server user name.
+    *                         Default: ""
+    * @param proxyPasswordInp Optional - proxy server password associated with the proxyUsername input value.
+    *                         Default: ""
+    * @param prettyPrintInp   Optional - whether to format (pretty print) the resulting json.
+    *                         Valid values: "true", "false"
+    *                         Default: "true"
+    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+    *         operation, status of the ZoneOperation, or failure message and the exception if there is one
+    */
   @Action(name = "Get Instance",
     outputs = Array(
       new Output(RETURN_CODE),
