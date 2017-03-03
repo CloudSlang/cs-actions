@@ -35,6 +35,20 @@ object InstanceService {
       .get(project, zone, instanceName)
       .execute()
 
+  def start(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .start(project, zone, instanceName)
+      .execute()
+
+  def stop(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .stop(project, zone, instanceName)
+      .execute()
+
+  def restart(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .reset(project, zone, instanceName)
+      .execute()
 
   def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
@@ -45,5 +59,16 @@ object InstanceService {
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .delete(project, zone, instanceName)
       .execute()
+
+  def setTags(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, tags: Tags): Operation = {
+    val instanceTagFingerprint = get(httpTransport, jsonFactory, credential, project, zone, instanceName)
+      .getTags.getFingerprint
+
+    tags.setFingerprint(instanceTagFingerprint)
+
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .setTags(project, zone, instanceName, tags)
+      .execute()
+  }
 
 }
