@@ -22,10 +22,26 @@ import org.apache.commons.lang3.StringUtils.defaultIfEmpty
   */
 class GetAccessToken {
 
-
-  /*
-  scopes: see https://developers.google.com/identity/protocols/googlescopes#computev1
-   */
+  /**
+    * This operation can be used to retrieve an access token to be used in subsequent google compute operations.
+    *
+    * @param jsonToken        Content of the Google Cloud service account JSON.
+    * @param scopes           Scopes that you might need to request to access Google Compute APIs, depending on the level of access
+    *                         you need. One or more scopes may be specified delimited by the scopes_delimiter.
+    *                         Example: 'https://www.googleapis.com/auth/compute.readonly'
+    *                         Note: It is recommended to use the minimum necessary scope in order to perform the requests.
+    *                         For a full list of scopes see https://developers.google.com/identity/protocols/googlescopes#computev1
+    * @param scopesDelInp     Optional - Delimiter that will be used for the scopes input.
+    *                         Default: ","
+    * @param timeoutInp       Optional - Timeout of the resulting access token, in seconds.
+    *                         Default: "600"
+    * @param proxyHost        Optional - Proxy server used to access the provider services.
+    * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the proxy_username input value.
+    * @return a map containing an access token as returnResult
+    */
 
   @Action(name = "Get the access token for Google Cloud",
     outputs = Array(

@@ -8,7 +8,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
-import io.cloudslang.content.gcloud.utils.Constants.{COMMA, NEW_LINE, SQR_LEFT_BRACKET, SQR_RIGHT_BRACKET}
+import io.cloudslang.content.gcloud.utils.Constants._
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
@@ -24,6 +24,27 @@ import org.apache.commons.lang3.StringUtils.defaultIfEmpty
   */
 class InstancesList {
 
+  /**
+    * This operation can be used to retrieve the list of instance resource, as JSON array.
+    *
+    * @param projectId        Google Cloud project id.
+    *                         Example: "example-project-a"
+    * @param zone             The name of the zone where the Instance resource is located.
+    *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
+    *                         following scope: "https://www.googleapis.com/auth/compute.readonly".
+    * @param proxyHost        Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                         be used.
+    * @param proxyPortInp     Optional - proxy server port. You must either specify values for both proxyHost and
+    *                         proxyPort inputs or leave them both empty.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - proxy server user name.
+    * @param proxyPasswordInp Optional - proxy server password associated with the proxyUsername input value.
+    * @param prettyPrintInp   Optional - whether to format (pretty print) the resulting json.
+    *                         Valid values: "true", "false"
+    *                         Default: "true"
+    * @return a map containing the list of Instance resources as returnResult
+    */
   @Action(name = "List Instances",
     outputs = Array(
       new Output(RETURN_CODE),
@@ -66,7 +87,7 @@ class InstancesList {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
 
-      val instanceDelimiter = if (prettyPrint) NEW_LINE else COMMA
+      val instanceDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
       val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone)
         .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString }
