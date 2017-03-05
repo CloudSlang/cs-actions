@@ -59,6 +59,8 @@ class DisksList {
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
+              @Param(value = FILTER) filter: String,
+              @Param(value = ORDER_BY) orderBy: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -67,6 +69,8 @@ class DisksList {
 
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
+    val filterOpt = verifyEmpty(filter)
+    val orderByOpt = verifyEmpty(orderBy)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
@@ -89,7 +93,7 @@ class DisksList {
 
       val disksDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
-      val resultList = DiskService.list(httpTransport, jsonFactory, credential, projectId, zone)
+      val resultList = DiskService.list(httpTransport, jsonFactory, credential, projectId, zone, filterOpt, orderByOpt)
         .map { disk: Disk => if (prettyPrint) disk.toPrettyString else disk.toString }
         .mkString(SQR_LEFT_BRACKET, disksDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)

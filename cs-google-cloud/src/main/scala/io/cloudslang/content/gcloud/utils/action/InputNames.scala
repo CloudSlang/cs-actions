@@ -31,4 +31,6 @@ object InputNames {
   final val DISK_ENCRYPTION_KEY = "diskEncryptionKey"
   final val SNAPSHOT_IMAGE = "snapshotImage"
   final val DISK_TYPE = "diskType"
+  final val FILTER = "filter"
+  final val ORDER_BY = "orderBy"
 }

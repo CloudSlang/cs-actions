@@ -13,9 +13,13 @@ import scala.collection.JavaConversions._
   */
 object InstanceService {
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String): List[Instance] = {
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+           filterOpt: Option[String], orderByOpt: Option[String]): List[Instance] = {
     val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
     val request = computeInstances.list(project, zone)
+
+    filterOpt.foreach { filter => request.setFilter(filter) }
+    orderByOpt.foreach { orderBy => request.setOrderBy(orderBy) }
 
     var instances: List[Instance] = List()
     var response: InstanceList = null

@@ -13,9 +13,13 @@ import scala.collection.JavaConversions._
   */
 object DiskService {
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String): List[Disk] = {
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+           filterOpt: Option[String], orderByOpt: Option[String]): List[Disk] = {
     val computeDisks = ComputeService.disksService(httpTransport, jsonFactory, credential)
     val request = computeDisks.list(project, zone)
+
+    filterOpt.foreach { filter => request.setFilter(filter) }
+    orderByOpt.foreach { orderBy => request.setOrderBy(orderBy) }
 
     var disks: List[Disk] = List()
     var response: DiskList = null

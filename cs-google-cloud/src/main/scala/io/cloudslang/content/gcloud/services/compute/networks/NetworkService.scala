@@ -13,9 +13,13 @@ import scala.collection.JavaConversions._
   */
 object NetworkService {
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String): List[Network] = {
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, filterOpt: Option[String],
+           orderByOpt: Option[String]): List[Network] = {
     val computeNetworks = ComputeService.networksService(httpTransport, jsonFactory, credential)
     val request = computeNetworks.list(project)
+
+    filterOpt.foreach { filter => request.setFilter(filter) }
+    orderByOpt.foreach { orderBy => request.setOrderBy(orderBy) }
 
     var networks: List[Network] = List()
     var response: NetworkList = null

@@ -58,6 +58,8 @@ class InstancesList {
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
               @Param(value = ZONE, required = true) zone: String,
+              @Param(value = FILTER) filter: String,
+              @Param(value = ORDER_BY) orderBy: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
@@ -65,6 +67,8 @@ class InstancesList {
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
+    val filterOpt = verifyEmpty(filter)
+    val orderByOpt = verifyEmpty(orderBy)
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
@@ -89,7 +93,7 @@ class InstancesList {
 
       val instanceDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
-      val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone)
+      val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone, filterOpt, orderByOpt)
         .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString }
         .mkString(SQR_LEFT_BRACKET, instanceDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
