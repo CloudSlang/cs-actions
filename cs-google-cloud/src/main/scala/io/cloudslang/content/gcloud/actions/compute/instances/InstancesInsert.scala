@@ -9,7 +9,7 @@ import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.disks.DiskService
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
-import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
@@ -17,9 +17,10 @@ import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
-import org.apache.commons.lang3.StringUtils.defaultIfEmpty
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+
 /**
   * Created by victor on 01.03.2017.
   */
@@ -49,7 +50,7 @@ class InstancesInsert {
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-    val proxyPassword = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
+    val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
@@ -77,16 +78,14 @@ class InstancesInsert {
       print(bootDisk)
 
 
-
       val instance = new Instance()
         .setName("my-instance")
-          .setMachineType("projects/cogent-range-159508/zones/europe-west1-d/machineTypes/f1-micro")
+        .setMachineType("projects/cogent-range-159508/zones/europe-west1-d/machineTypes/f1-micro")
         .setDisks(List(new AttachedDisk()
           .setBoot(true)
           .setAutoDelete(true)
           .setSource(bootDisk.getTargetLink)
-          .setType("PERSISTENT")
-        ))
+          .setType("PERSISTENT")))
         .setNetworkInterfaces(List(new NetworkInterface()
           .setName("nic0")
           .setNetwork("projects/cogent-range-159508/global/networks/default")))

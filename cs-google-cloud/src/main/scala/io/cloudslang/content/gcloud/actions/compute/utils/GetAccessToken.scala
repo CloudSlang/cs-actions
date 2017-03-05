@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
-import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER, DEFAULT_TIMEOUT}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER, DEFAULT_TIMEOUT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateNonNegativeInteger, validateProxyPort}
@@ -15,7 +15,7 @@ import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang3.StringUtils.defaultIfEmpty
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 /**
   * Created by victor on 28.02.2017.
@@ -66,7 +66,7 @@ class GetAccessToken {
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-    val proxyPassword = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
+    val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val scopesDel = defaultIfEmpty(scopesDelInp, DEFAULT_SCOPES_DELIMITER)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_TIMEOUT)
 

@@ -17,7 +17,7 @@ import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.BooleanUtilities._
 import io.cloudslang.content.utils.NumberUtilities._
 import io.cloudslang.content.utils.OutputUtilities._
-import org.apache.commons.lang3.StringUtils._
+import org.apache.commons.lang3.StringUtils.{EMPTY, _}
 
 import scala.collection.JavaConversions._
 
@@ -72,7 +72,7 @@ class InstancesRestart {
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
+    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++

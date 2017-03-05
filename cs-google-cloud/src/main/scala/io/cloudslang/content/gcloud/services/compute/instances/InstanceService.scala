@@ -30,11 +30,6 @@ object InstanceService {
     instances
   }
 
-  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
-      .get(project, zone, instanceName)
-      .execute()
-
   def start(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .start(project, zone, instanceName)
@@ -70,5 +65,10 @@ object InstanceService {
       .setTags(project, zone, instanceName, tags)
       .execute()
   }
+
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .get(project, zone, instanceName)
+      .execute()
 
 }

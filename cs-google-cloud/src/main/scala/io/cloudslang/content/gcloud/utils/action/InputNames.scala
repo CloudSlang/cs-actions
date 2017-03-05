@@ -22,4 +22,13 @@ object InputNames {
   final val ZONE_OPERATION_NAME = "zoneOperationName"
   final val TAGS_LIST = "tagsList"
   final val TAGS_DELIMITER = "tagsDelimiter"
+  final val DISK_SIZE = "diskSize"
+  final val DISK_DESCRIPTION = "diskDescription"
+  final val LICENSES = "licensesList"
+  final val LICENSES_DELIMITER = "licensesDelimiter"
+  final val SOURCE_IMAGE = "sourceImage"
+  final val IMAGE_ENCRYPTION_KEY = "imageEncryptionKey"
+  final val DISK_ENCRYPTION_KEY = "diskEncryptionKey"
+  final val SNAPSHOT_IMAGE = "snapshotImage"
+  final val DISK_TYPE = "diskType"
 }

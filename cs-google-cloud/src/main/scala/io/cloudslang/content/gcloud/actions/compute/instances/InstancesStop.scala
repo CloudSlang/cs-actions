@@ -8,7 +8,7 @@ import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants._
-import io.cloudslang.content.gcloud.utils.action.DefaultValues
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils._
@@ -17,7 +17,7 @@ import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.BooleanUtilities._
 import io.cloudslang.content.utils.NumberUtilities._
 import io.cloudslang.content.utils.OutputUtilities._
-import org.apache.commons.lang3.StringUtils._
+import org.apache.commons.lang3.StringUtils.{EMPTY, _}
 
 import scala.collection.JavaConversions._
 
@@ -72,9 +72,9 @@ class InstancesStop {
 
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
-    val proxyPortStr = defaultIfEmpty(proxyPortInp, DefaultValues.DEFAULT_PROXY_PORT)
-    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, DefaultValues.DEFAULT_PROXY_PASSWORD)
-    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DefaultValues.DEFAULT_PRETTY_PRINT)
+    val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
+    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, EMPTY)
+    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT)
