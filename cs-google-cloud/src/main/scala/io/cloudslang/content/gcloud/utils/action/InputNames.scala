@@ -20,4 +20,6 @@ object InputNames {
   final val ITEMS_KEYS_LIST = "itemsKeysList"
   final val ITEMS_VALUES_LIST = "itemsValuesList"
   final val ZONE_OPERATION_NAME = "zoneOperationName"
+  final val TAGS_LIST = "tagsList"
+  final val TAGS_DELIMITER = "tagsDelimiter"
 }

@@ -4,7 +4,8 @@ import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
+import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
+import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
@@ -24,18 +25,40 @@ import scala.collection.JavaConversions._
   * Created by sandorr
   * 2/27/2017.
   */
-class InstanceDelete {
+class InstancesDelete {
 
+  /**
+    * This operation can be used to delete an Instance resource. The operation returns a ZoneOperation resource as a
+    * JSON object, that can be used to retrieve the status and progress of the ZoneOperation, using the
+    * ZoneOperationsGet operation.
+    *
+    * @param projectId        Google Cloud project id.
+    *                         Example: "example-project-a"
+    * @param zone             The name of the zone where the Instance resource is located.
+    *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param instanceName     Name of the Instance resource to delete.
+    *                         Example: "operation-1234"
+    * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
+    *                         following scope: "https://www.googleapis.com/auth/compute".
+    * @param proxyHost        Optional - Proxy server used to access the provider services.
+    * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
+    *                         Default: "true"
+    * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName
+    */
   @Action(name = "Delete Instance",
     outputs = Array(
-      new Output(OutputNames.RETURN_CODE),
-      new Output(OutputNames.RETURN_RESULT),
-      new Output(OutputNames.EXCEPTION),
+      new Output(RETURN_CODE),
+      new Output(RETURN_RESULT),
+      new Output(EXCEPTION),
       new Output(ZONE_OPERATION_NAME)
     ),
     responses = Array(
-      new Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-      new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+      new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+      new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
