@@ -9,6 +9,7 @@ import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.disks.{DiskController, DiskService}
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues._
+import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.action.InputValidator._
@@ -22,11 +23,12 @@ import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
   * Created by victor on 3/3/17.
   */
 class DisksInsert {
-  @Action(name = "Insert Instance",
+  @Action(name = "Insert Disk",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
       new Output(OutputNames.RETURN_RESULT),
-      new Output(OutputNames.EXCEPTION)
+      new Output(OutputNames.EXCEPTION),
+      new Output(ZONE_OPERATION_NAME)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),

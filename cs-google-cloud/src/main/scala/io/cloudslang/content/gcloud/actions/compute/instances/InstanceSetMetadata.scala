@@ -31,35 +31,35 @@ class InstanceSetMetadata {
   /**
     * Sets metadata for the specified instance to the data provided to the operation. Can be used as a delete metadata as well.
     *
-    * @param projectId         Name of the Google Cloud project.
-    * @param zone              Name of the zone for this request.
-    * @param instanceName      Name of the instance scoping this request as seen in the google cloud console
-    * @param accessToken       The access token from GetAccessToken.
-    * @param itemsKeysList     Optional - key for the metadata entry. Keys must conform to the following regexp: [a-zA-Z0-9-_]+,
-    *                          and be less than 128 bytes in length. This is reflected as part of a URL in the metadata
-    *                          server. Additionally, to avoid ambiguity, keys must not conflict with any other metadata
-    *                          keys for the project. The length of the itemsKeysList must be equal with the length of
-    *                          the itemsValuesList.
-    *                          Default: ""
-    * @param itemsValuesList   Optional - value for the metadata entry. These are free-form strings, and only have meaning as
-    *                          interpreted by the image running in the instance. The only restriction placed on values
-    *                          is that their size must be less than or equal to 32768 bytes. The length of the
-    *                          itemsKeysList must be equal with the length of the itemsValuesList.
-    *                          Default: ""
-    * @param itemsDelimiterInp The delimiter to split the items_keys_list and items_values_list
-    *                          Default: ','
-    * @param proxyHostInp      Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
-    *                          be used.
-    *                          Default: ""
-    * @param proxyPortInp      Optional - proxy server port.
-    *                          Default: "8080"
-    * @param proxyUsernameInp  Optional - proxy server user name.
-    *                          Default: ""
-    * @param proxyPasswordInp  Optional - proxy server password associated with the proxyUsername input value.
-    *                          Default: ""
-    * @param prettyPrintInp    Optional - whether to format (pretty print) the resulting json.
-    *                          Valid values: "true", "false"
-    *                          Default: "true"
+    * @param projectId          Name of the Google Cloud project.
+    * @param zone               Name of the zone for this request.
+    * @param instanceName       Name of the instance scoping this request as seen in the google cloud console
+    * @param accessToken        The access token from GetAccessToken.
+    * @param itemsKeysListInp   Optional - key for the metadata entry. Keys must conform to the following regexp: [a-zA-Z0-9-_]+,
+    *                           and be less than 128 bytes in length. This is reflected as part of a URL in the metadata
+    *                           server. Additionally, to avoid ambiguity, keys must not conflict with any other metadata
+    *                           keys for the project. The length of the itemsKeysList must be equal with the length of
+    *                           the itemsValuesList.
+    *                           Default: ""
+    * @param itemsValuesListInp Optional - value for the metadata entry. These are free-form strings, and only have meaning as
+    *                           interpreted by the image running in the instance. The only restriction placed on values
+    *                           is that their size must be less than or equal to 32768 bytes. The length of the
+    *                           itemsKeysList must be equal with the length of the itemsValuesList.
+    *                           Default: ""
+    * @param itemsDelimiterInp  The delimiter to split the items_keys_list and items_values_list
+    *                           Default: ','
+    * @param proxyHostInp       Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                           be used.
+    *                           Default: ""
+    * @param proxyPortInp       Optional - proxy server port.
+    *                           Default: "8080"
+    * @param proxyUsernameInp   Optional - proxy server user name.
+    *                           Default: ""
+    * @param proxyPasswordInp   Optional - proxy server password associated with the proxyUsername input value.
+    *                           Default: ""
+    * @param prettyPrintInp     Optional - whether to format (pretty print) the resulting json.
+    *                           Valid values: "true", "false"
+    *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation, or failure message and the exception if there is one
     */
@@ -111,7 +111,8 @@ class InstanceSetMetadata {
         .map { case (key, value) =>
           new Items()
             .setKey(key)
-            .setValue(value)}
+            .setValue(value)
+        }
         .toList
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, toInteger(proxyPortStr), proxyUsernameOpt, proxyPassword)

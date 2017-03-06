@@ -17,7 +17,7 @@ import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.BooleanUtilities._
 import io.cloudslang.content.utils.NumberUtilities._
 import io.cloudslang.content.utils.OutputUtilities._
-import org.apache.commons.lang3.StringUtils.{EMPTY, _}
+import org.apache.commons.lang3.StringUtils._
 
 import scala.collection.JavaConversions._
 

@@ -2,15 +2,11 @@ package io.cloudslang.content.gcloud.actions.compute.instances
 
 import java.util
 
-import com.google.api.services.compute.ComputeScopes
-import com.google.api.services.compute.model.{AttachedDisk, Disk, Instance, NetworkInterface}
+import com.google.api.services.compute.model.Instance
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
-import io.cloudslang.content.gcloud.services.compute.disks.{DiskController, DiskService}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
-import io.cloudslang.content.gcloud.services.compute.operations.ZoneOperationService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
@@ -21,8 +17,6 @@ import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
-
-import scala.collection.JavaConversions._
 
 /**
   * Created by victor on 01.03.2017.
