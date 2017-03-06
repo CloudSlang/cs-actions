@@ -2,12 +2,15 @@ package io.cloudslang.content.gcloud.actions.compute.instances
 
 import java.util
 
+import com.google.api.services.compute.ComputeScopes
 import com.google.api.services.compute.model.{AttachedDisk, Disk, Instance, NetworkInterface}
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.services.compute.disks.DiskService
+import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
+import io.cloudslang.content.gcloud.services.compute.disks.{DiskController, DiskService}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
+import io.cloudslang.content.gcloud.services.compute.operations.ZoneOperationService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
@@ -69,26 +72,7 @@ class InstancesInsert {
 
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val bootDisk = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, new Disk()
-        .setName("dummy")
-        .setSizeGb(10L)
-        .setType("projects/cogent-range-159508/zones/europe-west1-d/diskTypes/pd-standard")
-        .setZone("projects/cogent-range-159508/zones/europe-west1-d"))
-
-      print(bootDisk)
-
-
       val instance = new Instance()
-        .setName("my-instance")
-        .setMachineType("projects/cogent-range-159508/zones/europe-west1-d/machineTypes/f1-micro")
-        .setDisks(List(new AttachedDisk()
-          .setBoot(true)
-          .setAutoDelete(true)
-          .setSource(bootDisk.getTargetLink)
-          .setType("PERSISTENT")))
-        .setNetworkInterfaces(List(new NetworkInterface()
-          .setName("nic0")
-          .setNetwork("projects/cogent-range-159508/global/networks/default")))
 
 
       val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance)

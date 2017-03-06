@@ -3,8 +3,10 @@ package io.cloudslang.content.gcloud.services.compute.instances
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
+import com.google.api.services.compute.model.Metadata.Items
 import com.google.api.services.compute.model._
 import io.cloudslang.content.gcloud.services.compute.ComputeService
+import org.apache.commons.lang3.StringUtils
 
 import scala.collection.JavaConversions._
 
@@ -74,5 +76,14 @@ object InstanceService {
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .get(project, zone, instanceName)
       .execute()
+
+  def setMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, items: List[Items]): Operation = {
+    val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
+    val metadata = get(httpTransport, jsonFactory, credential, project, zone, instanceName).getMetadata.setItems(items)
+
+    val request = computeInstances.setMetadata(project, zone, instanceName, metadata)
+
+    request.execute()
+  }
 
 }

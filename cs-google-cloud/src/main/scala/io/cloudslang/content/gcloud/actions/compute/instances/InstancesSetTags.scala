@@ -9,7 +9,7 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.{COMMA, NEW_LINE}
-import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_TAGS_DELIMITER}
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
@@ -84,7 +84,7 @@ class InstancesSetTags {
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
     val tagsList = defaultIfEmpty(tagsListInp, EMPTY)
-    val tagsDelimiter = defaultIfEmpty(tagsDelimiterInp, COMMA)
+    val tagsDelimiter = defaultIfEmpty(tagsDelimiterInp, DEFAULT_TAGS_DELIMITER)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT)

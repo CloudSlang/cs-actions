@@ -1,7 +1,10 @@
 package io.cloudslang.content.gcloud.utils.action
 
+import io.cloudslang.content.constants.OtherValues
+import io.cloudslang.content.utils.CollectionUtilities.toList
 import io.cloudslang.content.utils.OtherUtilities.isValidIpPort
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
+import org.apache.commons.lang3.StringUtils
 
 /**
   * Created by sandorr 
@@ -12,6 +15,7 @@ object InputValidator {
   val INVALID_PORT = "Invalid port value!"
   val INVALID_BOOLEAN = "Invalid boolean value!"
   val INVALID_NON_NEGATIVE_INTEGER = "Invalid non-negative integer!"
+  val INVALID_PAIRED_LISTS_LENGTH = "Paired lists must have the same length!"
   val INVALID_DISK_SIZE = "Invalid diskSize, the size has an integer >= 10!"
 
   def validate(inputValue: String, inputName: String)(validator: (String) => Option[String]): Stream[String] =
@@ -36,4 +40,13 @@ object InputValidator {
     if (NumberUtilities.isValidInt(value, 10, Int.MaxValue)) None else Some(INVALID_DISK_SIZE)
   }
 
+  def validatePairedLists(list1: String, list2: String, delimiter: String): String = {
+    val firstLength = toList(list1, delimiter).size()
+    val secondLength = toList(list2, delimiter).size()
+    if (firstLength != secondLength) {
+      INVALID_PAIRED_LISTS_LENGTH
+    } else {
+      OtherValues.EMPTY_STRING
+    }
+  }
 }

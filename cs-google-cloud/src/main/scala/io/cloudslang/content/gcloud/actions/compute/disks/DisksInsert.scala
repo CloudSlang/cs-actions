@@ -44,7 +44,7 @@ class DisksInsert {
               @Param(value = SOURCE_IMAGE) sourceImage: String,
               @Param(value = SNAPSHOT_IMAGE) snapshotImage: String,
               @Param(value = IMAGE_ENCRYPTION_KEY) imageEncryptionKey: String,
-              @Param(value = DISK_TYPE) diskTypeInp: String,
+              @Param(value = DISK_TYPE, required = true) diskType: String,
               @Param(value = DISK_ENCRYPTION_KEY) diskEncryptionKey: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
@@ -58,7 +58,6 @@ class DisksInsert {
     val snapshotImageOpt = verifyEmpty(snapshotImage)
     val imageEncryptionKeyOpt = verifyEmpty(imageEncryptionKey)
     val diskEncryptionKeyOpt = verifyEmpty(diskEncryptionKey)
-    val diskType = defaultIfEmpty(diskTypeInp, DEFAULT_DISK_TYPE)
     val diskDescription = defaultIfEmpty(diskDescriptionInp, EMPTY)
     val diskSizeStr = defaultIfEmpty(diskSizeInp, DEFAULT_DISK_SIZE)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
