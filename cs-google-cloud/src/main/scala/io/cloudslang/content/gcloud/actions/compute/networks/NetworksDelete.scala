@@ -86,7 +86,6 @@ class NetworksDelete {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val operation = NetworkService.delete(httpTransport, jsonFactory, credential, projectId, networkName)

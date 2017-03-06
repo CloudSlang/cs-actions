@@ -63,11 +63,9 @@ class InstancesInsert {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val instance = new Instance()
-
 
       val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString

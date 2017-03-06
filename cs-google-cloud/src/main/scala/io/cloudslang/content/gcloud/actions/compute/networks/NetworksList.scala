@@ -81,10 +81,9 @@ class NetworksList {
     val prettyPrint = toBoolean(prettyPrintStr)
 
     try {
-      val credential = GoogleAuth.fromAccessToken(accessToken)
-
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val networkDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 

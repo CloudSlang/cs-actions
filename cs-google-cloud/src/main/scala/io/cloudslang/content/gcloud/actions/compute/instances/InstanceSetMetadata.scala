@@ -105,7 +105,6 @@ class InstanceSetMetadata {
     }
 
     try {
-
       val items = toList(itemsKeysList, itemsDelimiter)
         .zip(toList(itemsValuesList, itemsDelimiter))
         .map { case (key, value) =>
@@ -117,7 +116,6 @@ class InstanceSetMetadata {
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, toInteger(proxyPortStr), proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val result = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items)

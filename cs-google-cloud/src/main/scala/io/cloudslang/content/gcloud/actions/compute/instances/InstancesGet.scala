@@ -86,7 +86,6 @@ class InstancesGet {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)

@@ -86,6 +86,7 @@ class GetAccessToken {
 
       val credential = GoogleAuth.fromJsonWithScopes(IOUtils.toInputStream(jsonToken, StandardCharsets.UTF_8),
         httpTransport, jsonFactory, scopes.split(scopesDel), timeout)
+
       val accessToken = GoogleAuth.getAccessTokenFromCredentials(credential)
 
       getSuccessResultsMap(accessToken)

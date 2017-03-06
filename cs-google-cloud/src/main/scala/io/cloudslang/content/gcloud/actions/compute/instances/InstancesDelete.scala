@@ -90,7 +90,6 @@ class InstancesDelete {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val operation = InstanceService.delete(httpTransport, jsonFactory, credential, projectId, zone, instanceName)

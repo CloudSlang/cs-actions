@@ -19,6 +19,7 @@ import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
+import scala.collection.JavaConversions._
 /**
   * Created by victor on 3/3/17.
   */
@@ -98,10 +99,10 @@ class DisksInsert {
         licensesDel = licensesDel,
         diskSize = diskSize)
 
-      val bootDisk = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk)
-      val resultString = if (prettyPrint) bootDisk.toPrettyString else bootDisk.toString
+      val operation = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk)
+      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
-      getSuccessResultsMap(resultString)
+      getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> operation.getName)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }

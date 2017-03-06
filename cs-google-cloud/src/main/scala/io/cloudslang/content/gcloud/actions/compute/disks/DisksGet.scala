@@ -85,7 +85,6 @@ class DisksGet {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
