@@ -5,22 +5,21 @@ import java.util
 import com.google.api.services.compute.model.Metadata.Items
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
+import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
-import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_ITEMS_DELIMITER, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.gcloud.utils.action.InputValidator.validateProxyPort
-import io.cloudslang.content.gcloud.utils.action.InputValidator.validatePairedLists
+import io.cloudslang.content.gcloud.utils.action.InputValidator.{validatePairedLists, validateProxyPort}
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
+import io.cloudslang.content.utils.CollectionUtilities.toList
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
-import org.apache.commons.lang3.StringUtils
-import org.apache.commons.lang3.StringUtils.defaultIfEmpty
-import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
 
@@ -32,35 +31,35 @@ class InstanceSetMetadata {
   /**
     * Sets metadata for the specified instance to the data provided to the operation. Can be used as a delete metadata as well.
     *
-    * @param projectId         Name of the Google Cloud project.
-    * @param zone              Name of the zone for this request.
-    * @param instanceName      Name of the instance scoping this request as seen in the google cloud console
-    * @param accessToken       The access token from GetAccessToken.
-    * @param itemsKeysList     Optional - key for the metadata entry. Keys must conform to the following regexp: [a-zA-Z0-9-_]+,
-    *                          and be less than 128 bytes in length. This is reflected as part of a URL in the metadata
-    *                          server. Additionally, to avoid ambiguity, keys must not conflict with any other metadata
-    *                          keys for the project. The length of the itemsKeysList must be equal with the length of
-    *                          the itemsValuesList.
-    *                          Default: ""
-    * @param itemsValuesList   Optional - value for the metadata entry. These are free-form strings, and only have meaning as
-    *                          interpreted by the image running in the instance. The only restriction placed on values
-    *                          is that their size must be less than or equal to 32768 bytes. The length of the
-    *                          itemsKeysList must be equal with the length of the itemsValuesList.
-    *                          Default: ""
-    * @param delimiterInp      The delimiter to split the items_keys_list and items_values_list
-    *                          Default: ','
-    * @param proxyHostInp      Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
-    *                          be used.
-    *                          Default: ""
-    * @param proxyPortInp      Optional - proxy server port.
-    *                          Default: "8080"
-    * @param proxyUsernameInp  Optional - proxy server user name.
-    *                          Default: ""
-    * @param proxyPasswordInp  Optional - proxy server password associated with the proxyUsername input value.
-    *                          Default: ""
-    * @param prettyPrintInp    Optional - whether to format (pretty print) the resulting json.
-    *                          Valid values: "true", "false"
-    *                          Default: "true"
+    * @param projectId          Name of the Google Cloud project.
+    * @param zone               Name of the zone for this request.
+    * @param instanceName       Name of the instance scoping this request as seen in the google cloud console
+    * @param accessToken        The access token from GetAccessToken.
+    * @param itemsKeysListInp   Optional - key for the metadata entry. Keys must conform to the following regexp: [a-zA-Z0-9-_]+,
+    *                           and be less than 128 bytes in length. This is reflected as part of a URL in the metadata
+    *                           server. Additionally, to avoid ambiguity, keys must not conflict with any other metadata
+    *                           keys for the project. The length of the itemsKeysList must be equal with the length of
+    *                           the itemsValuesList.
+    *                           Default: ""
+    * @param itemsValuesListInp Optional - value for the metadata entry. These are free-form strings, and only have meaning as
+    *                           interpreted by the image running in the instance. The only restriction placed on values
+    *                           is that their size must be less than or equal to 32768 bytes. The length of the
+    *                           itemsKeysList must be equal with the length of the itemsValuesList.
+    *                           Default: ""
+    * @param itemsDelimiterInp  The delimiter to split the items_keys_list and items_values_list
+    *                           Default: ','
+    * @param proxyHostInp       Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                           be used.
+    *                           Default: ""
+    * @param proxyPortInp       Optional - proxy server port.
+    *                           Default: "8080"
+    * @param proxyUsernameInp   Optional - proxy server user name.
+    *                           Default: ""
+    * @param proxyPasswordInp   Optional - proxy server password associated with the proxyUsername input value.
+    *                           Default: ""
+    * @param prettyPrintInp     Optional - whether to format (pretty print) the resulting json.
+    *                           Valid values: "true", "false"
+    *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation, or failure message and the exception if there is one
     */
@@ -80,38 +79,43 @@ class InstanceSetMetadata {
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
-              @Param(value = ITEMS_KEYS_LIST) itemsKeysList: String,
-              @Param(value = ITEMS_VALUES_LIST) itemsValuesList: String,
-              @Param(value = DELIMITER) delimiterInp: String,
+              @Param(value = ITEMS_KEYS_LIST) itemsKeysListInp: String,
+              @Param(value = ITEMS_VALUES_LIST) itemsValuesListInp: String,
+              @Param(value = ITEMS_DELIMITER) itemsDelimiterInp: String,
               @Param(value = PROXY_HOST) proxyHostInp: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsernameInp: String,
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
+    val proxyHostOpt = verifyEmpty(proxyHostInp)
+    val proxyUsernameOpt = verifyEmpty(proxyUsernameInp)
+    val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
+    val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
+    val itemsKeysList = defaultIfEmpty(itemsKeysListInp, EMPTY)
+    val itemsValuesList = defaultIfEmpty(itemsValuesListInp, EMPTY)
+    val itemsDelimiter = defaultIfEmpty(itemsDelimiterInp, DEFAULT_ITEMS_DELIMITER)
+    val prettyPrint = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
+
+    val validationStream = validateProxyPort(proxyPortStr) ++
+      validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter)
+
+    if (validationStream.nonEmpty) {
+      return getFailureResultsMap(validationStream.mkString(NEW_LINE))
+    }
+
     try {
-      val delimiter = defaultIfEmpty(delimiterInp, DEFAULT_SCOPES_DELIMITER)
+      val items = toList(itemsKeysList, itemsDelimiter)
+        .zip(toList(itemsValuesList, itemsDelimiter))
+        .map { case (key, value) =>
+          new Items()
+            .setKey(key)
+            .setValue(value)
+        }
+        .toList
 
-      val proxyHost = verifyEmpty(proxyHostInp)
-      val proxyUsername = verifyEmpty(proxyUsernameInp)
-      val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-      val proxyPassword = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
-      val prettyPrint = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-
-      val validationStream = validateProxyPort(proxyPortStr) ++
-        validatePairedLists(itemsKeysList, itemsValuesList, delimiter)
-
-      if (validationStream.nonEmpty) {
-        return getFailureResultsMap(validationStream.mkString(NEW_LINE))
-      }
-
-      val items = StringUtils.split(itemsKeysList, delimiter).zip(StringUtils.split(itemsValuesList, delimiter)).map {
-        case (key, value) => new Items().setKey(key).setValue(value)
-      }.toList
-
-      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHost, toInteger(proxyPortStr), proxyUsername, proxyPassword)
+      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, toInteger(proxyPortStr), proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val result = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items)

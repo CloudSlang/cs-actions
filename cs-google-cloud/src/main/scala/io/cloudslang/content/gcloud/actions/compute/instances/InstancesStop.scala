@@ -8,11 +8,11 @@ import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants._
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils._
 import io.cloudslang.content.gcloud.utils.action.InputValidator._
-import io.cloudslang.content.gcloud.utils.action.{DefaultValues, InputUtils}
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities._
 import io.cloudslang.content.utils.NumberUtilities._
@@ -43,7 +43,7 @@ class InstancesStop {
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
-    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
     * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
     *                         Default: "true"
     * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName
@@ -72,9 +72,9 @@ class InstancesStop {
 
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
-    val proxyPortStr = defaultIfEmpty(proxyPortInp, DefaultValues.DEFAULT_PROXY_PORT)
-    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, DefaultValues.DEFAULT_PROXY_PASSWORD)
-    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DefaultValues.DEFAULT_PRETTY_PRINT)
+    val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
+    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, EMPTY)
+    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT)

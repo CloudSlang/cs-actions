@@ -9,7 +9,7 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants._
-import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
@@ -17,7 +17,7 @@ import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
-import org.apache.commons.lang3.StringUtils.defaultIfEmpty
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 /**
   * Created by victor on 27.02.2017.
@@ -33,14 +33,14 @@ class InstancesList {
     *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
     * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
     *                         following scope: "https://www.googleapis.com/auth/compute.readonly".
-    * @param proxyHost        Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
+    * @param proxyHost        Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
     *                         be used.
-    * @param proxyPortInp     Optional - proxy server port. You must either specify values for both proxyHost and
+    * @param proxyPortInp     Optional - Proxy server port. You must either specify values for both proxyHost and
     *                         proxyPort inputs or leave them both empty.
     *                         Default: "8080"
-    * @param proxyUsername    Optional - proxy server user name.
-    * @param proxyPasswordInp Optional - proxy server password associated with the proxyUsername input value.
-    * @param prettyPrintInp   Optional - whether to format (pretty print) the resulting json.
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
     *                         Valid values: "true", "false"
     *                         Default: "true"
     * @return a map containing the list of Instance resources as returnResult
@@ -58,6 +58,8 @@ class InstancesList {
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
               @Param(value = ZONE, required = true) zone: String,
+              @Param(value = FILTER) filter: String,
+              @Param(value = ORDER_BY) orderBy: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
@@ -65,10 +67,12 @@ class InstancesList {
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
+    val filterOpt = verifyEmpty(filter)
+    val orderByOpt = verifyEmpty(orderBy)
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-    val proxyPassword = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
+    val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
@@ -82,14 +86,13 @@ class InstancesList {
     val prettyPrint = toBoolean(prettyPrintStr)
 
     try {
-      val credential = GoogleAuth.fromAccessToken(accessToken)
-
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val instanceDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
-      val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone)
+      val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone, filterOpt, orderByOpt)
         .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString }
         .mkString(SQR_LEFT_BRACKET, instanceDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)

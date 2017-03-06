@@ -32,4 +32,5 @@ object HttpTransportUtils {
   case class ProxyAuthenticator(user: String, password: String) extends Authenticator {
     override def getPasswordAuthentication = new PasswordAuthentication(user, password.toCharArray)
   }
+
 }

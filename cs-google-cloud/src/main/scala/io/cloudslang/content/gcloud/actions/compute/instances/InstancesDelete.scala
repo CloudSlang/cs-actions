@@ -8,7 +8,7 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
-import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PASSWORD, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
@@ -17,7 +17,7 @@ import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
-import org.apache.commons.lang3.StringUtils.defaultIfEmpty
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
 
@@ -44,7 +44,7 @@ class InstancesDelete {
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
-    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
     * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
     *                         Default: "true"
     * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName
@@ -74,7 +74,7 @@ class InstancesDelete {
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-    val proxyPassword = defaultIfEmpty(proxyPasswordInp, DEFAULT_PROXY_PASSWORD)
+    val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
@@ -90,7 +90,6 @@ class InstancesDelete {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
-
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val operation = InstanceService.delete(httpTransport, jsonFactory, credential, projectId, zone, instanceName)

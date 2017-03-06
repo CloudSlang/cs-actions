@@ -15,9 +15,13 @@ import scala.collection.JavaConversions._
   */
 object InstanceService {
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String): List[Instance] = {
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+           filterOpt: Option[String], orderByOpt: Option[String]): List[Instance] = {
     val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
     val request = computeInstances.list(project, zone)
+
+    filterOpt.foreach { filter => request.setFilter(filter) }
+    orderByOpt.foreach { orderBy => request.setOrderBy(orderBy) }
 
     var instances: List[Instance] = List()
     var response: InstanceList = null
@@ -31,11 +35,6 @@ object InstanceService {
 
     instances
   }
-
-  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
-      .get(project, zone, instanceName)
-      .execute()
 
   def start(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
@@ -72,6 +71,11 @@ object InstanceService {
       .setTags(project, zone, instanceName, tags)
       .execute()
   }
+
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .get(project, zone, instanceName)
+      .execute()
 
   def setMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, items: List[Items]): Operation = {
     val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
