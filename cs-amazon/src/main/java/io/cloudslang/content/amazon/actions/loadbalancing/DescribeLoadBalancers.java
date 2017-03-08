@@ -156,11 +156,4 @@ public class DescribeLoadBalancers {
             return ExceptionProcessor.getExceptionResult(exception);
         }
     }
-
-    public static void main(String[] args) {
-        DescribeLoadBalancers action = new DescribeLoadBalancers();
-        Map<String, String> results = action.execute("", "AKIAJ2ME2PSKGPBI4KSA", "RzO65IPfk4aPr6U3fwxNujSLXbL3eoJHWULZ9mGI",
-                "", "", "", "", "", "", "", "", "", "", "", "");
-        System.out.println(results.get("returnResult"));
-    }
 }
