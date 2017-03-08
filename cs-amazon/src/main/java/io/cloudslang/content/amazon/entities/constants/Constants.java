@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.constants;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
+
 /**
  * Created by Mihai Tusa.
  * 5/4/2016.
@@ -78,6 +80,7 @@ public class Constants {
         public static final String FILTER = "Filter";
         public static final String FILTER_NAME = "Filter.%d.Name";
         public static final String FILTER_VALUE = "Filter.%d.Value";
+        public static final String FIXED_PREFIX = DOT + "member" + DOT;
         public static final String FORCE = "Force";
         public static final String HEADER_DELIMITER = "\\r?\\n";
         public static final String HTTP_CLIENT_METHOD_GET = "GET";
@@ -160,6 +163,7 @@ public class Constants {
     public static class LoadBalancingQueryApiActions {
         public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
         public static final String DELETE_LOAD_BALANCER = "DeleteLoadBalancer";
+        public static final String DESCRIBE_LOAD_BALANCERS = "DescribeLoadBalancers";
     }
 
     public static class S3QueryApiActions {

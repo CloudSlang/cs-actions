@@ -152,11 +152,20 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testDeleteLoadBalancer() throws Exception {
+    public void testDeleteLoadBalancers() throws Exception {
         toTest.execute(getCommonInputsForLoadBalancers("DeleteLoadBalancer", HEADERS), getLoadBalancerInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteLoadBalancer")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeLoadBalancer() throws Exception {
+        toTest.execute(getCommonInputsForLoadBalancers("DescribeLoadBalancers", HEADERS), getLoadBalancerInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeLoadBalancers")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -878,6 +887,10 @@ public class QueryApiExecutorTest {
                 .withLoadBalancerName("testLB")
                 .withScheme("internal")
                 .withLoadBalancerArn("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188")
+                .withMemberNamesString("testLB1,testLB2,testLB3,testLB4,testLB5")
+                .withPageSize("123")
+                .withMarker("somethingHere")
+                .withArnsString("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9111,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9222,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9333,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9444,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9555")
                 .build();
     }
 
@@ -945,6 +958,21 @@ public class QueryApiExecutorTest {
                 break;
             case "DeleteLoadBalancer":
                 queryParamsMap.put("LoadBalancerArn", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188");
+                break;
+            case "DescribeLoadBalancers":
+                queryParamsMap.put("LoadBalancerArns.member.1", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9111");
+                queryParamsMap.put("LoadBalancerArns.member.2", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9222");
+                queryParamsMap.put("LoadBalancerArns.member.3", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9333");
+                queryParamsMap.put("LoadBalancerArns.member.4", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9444");
+                queryParamsMap.put("LoadBalancerArns.member.5", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9555");
+                queryParamsMap.put("Marker", "somethingHere");
+                queryParamsMap.put("Names.member.1", "testLB1");
+                queryParamsMap.put("Names.member.2", "testLB2");
+                queryParamsMap.put("Names.member.3", "testLB3");
+                queryParamsMap.put("Names.member.4", "testLB4");
+                queryParamsMap.put("Names.member.5", "testLB5");
+                queryParamsMap.put("Names.member.5", "testLB5");
+                queryParamsMap.put("PageSize", "123");
                 break;
             case "CreateNetworkInterface":
                 queryParamsMap.put("SubnetId", "subnet-abcdef12");
