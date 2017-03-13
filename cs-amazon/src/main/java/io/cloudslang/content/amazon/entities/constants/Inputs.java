@@ -158,6 +158,7 @@ public class Inputs {
     }
 
     public static class NetworkInputs {
+        public static final String AMAZON_PROVIDED_IPV6_CIDR_BLOCK = "amazonProvidedIpv6CidrBlock";
         public static final String CIDR_BLOCK = "cidrBlock";
         public static final String DEVICE_INDEX = "deviceIndex";
         public static final String FORCE_DETACH = "forceDetach";

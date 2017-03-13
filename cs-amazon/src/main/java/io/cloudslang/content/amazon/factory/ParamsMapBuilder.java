@@ -50,7 +50,7 @@ public class ParamsMapBuilder {
                     throw new RuntimeException(UNSUPPORTED_AWS_API);
             }
         } else {
-            queryParamsMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), wrapper.getCommonInputs().getQueryParams(), AMPERSAND, EQUAL, false);
+            queryParamsMap = getHeadersOrQueryParamsMap(new HashMap<>(), wrapper.getCommonInputs().getQueryParams(), AMPERSAND, EQUAL, false);
         }
 
         return queryParamsMap;

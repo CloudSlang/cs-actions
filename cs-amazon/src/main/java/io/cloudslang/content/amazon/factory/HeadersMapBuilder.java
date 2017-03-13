@@ -33,8 +33,8 @@ public class HeadersMapBuilder {
     }
 
     public static Map<String, String> getHeadersMap(InputsWrapper wrapper) {
-        Map<String, String> headersMap = isBlank(wrapper.getCommonInputs().getHeaders()) ? new HashMap<String, String>() :
-                getHeadersOrQueryParamsMap(new HashMap<String, String>(), wrapper.getCommonInputs().getHeaders(), HEADER_DELIMITER, COLON, true);
+        Map<String, String> headersMap = isBlank(wrapper.getCommonInputs().getHeaders()) ? new HashMap<>() :
+                getHeadersOrQueryParamsMap(new HashMap<>(), wrapper.getCommonInputs().getHeaders(), HEADER_DELIMITER, COLON, true);
 
         switch (wrapper.getCommonInputs().getApiService()) {
             case S3_API:

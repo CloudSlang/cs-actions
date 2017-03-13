@@ -46,7 +46,7 @@ public class FilterInputs {
     }
 
     public static class Builder {
-        private List<Filter> filterMap;
+        private final List<Filter> filterMap;
         private String delimiter;
         private String maxResults;
         private String nextToken;
