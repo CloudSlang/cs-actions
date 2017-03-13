@@ -56,24 +56,19 @@ public class DescribeLoadBalancers {
      * @param credential        Secret access key associated with your Amazon AWS or IAM account.
      *                          Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost         Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
-     *                          Default: ""
      * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and proxyPort
      *                          inputs or leave them both empty.
-     *                          Default: ""
      * @param proxyUsername     Optional - proxy server user name.
-     *                          Default: ""
      * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
      * @param headers           Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                          The header name-value pair will be separated by ":"
      *                          Format: Conforming with HTTP standard for headers (RFC 2616)
      *                          Examples: "Accept:text/plain"
-     *                          Default: ""
      * @param queryParams       Optional - string containing query parameters that will be appended to the URL.
      *                          The names and the values must not be URL encoded because if they are encoded then a double
      *                          encoded will occur. The separator between name-value pairs is "&" symbol. The query name
      *                          will be separated from query value by "="
      *                          Examples: "parameterName1=parameterValue1&parameterName2=parameterValue2"
-     *                          Default: ""
      * @param version           Optional - Version of the web service to made the call against it.
      *                          Example: "2015-12-01"
      *                          Default: "2015-12-01"
@@ -84,11 +79,8 @@ public class DescribeLoadBalancers {
      *                          (ARN) of the load balancers separated by the delimiter. You can specify up to 20 load
      *                          balancers in a single call.
      *                          Example: "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188,arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9189"
-     *                          Default: ""
      * @param marker            Optional - marker for the next set of results. This marker is received from a previous call.
-     *                          Default: ""
      * @param memberNamesString Optional - names of the load balancers to retrieve details for.
-     *                          Default: ""
      * @param pageSize          Optional - maximum number of results to return with this call.
      *                          Valid range: Minimum value of 1. Maximum value of 400.
      *                          Default: "1"
