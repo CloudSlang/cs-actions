@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.factory.helpers;
 
+import io.cloudslang.content.amazon.entities.aws.Tenancy;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.validators.NetworkFilterValidator;
 import org.jetbrains.annotations.NotNull;
@@ -145,6 +146,7 @@ public class NetworkUtils {
 
         setOptionalMapEntry(queryParamsMap, AMAZON_PROVIDED_IPV6_CIDR_BLOCK, valueOf(wrapper.getNetworkInputs().isAmazonProvidedIpv6CidrBlock()),
                 Boolean.TRUE == wrapper.getNetworkInputs().isAmazonProvidedIpv6CidrBlock());
+        setOptionalMapEntry(queryParamsMap, INSTANCE_TENANCY, Tenancy.DEFAULT.name().toLowerCase(), NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getTenancy()));
         setOptionalMapEntry(queryParamsMap, INSTANCE_TENANCY, wrapper.getInstanceInputs().getTenancy(),
                 (!NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getTenancy()) && !HOST.equalsIgnoreCase(wrapper.getInstanceInputs().getTenancy())));
 
