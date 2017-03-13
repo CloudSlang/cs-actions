@@ -121,8 +121,8 @@ public class ComputeSignatureV4 {
                                        @Param(value = SECURITY_TOKEN) String securityToken,
                                        @Param(value = PREFIX) String prefix) {
         try {
-            Map<String, String> headersMap = getHeadersOrQueryParamsMap(new HashMap<>(), headers, HEADER_DELIMITER, COLON, true);
-            Map<String, String> queryParamsMap = getHeadersOrQueryParamsMap(new HashMap<>(), queryParams, AMPERSAND, EQUAL, false);
+            Map<String, String> headersMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), headers, HEADER_DELIMITER, COLON, true);
+            Map<String, String> queryParamsMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), queryParams, AMPERSAND, EQUAL, false);
 
             CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, amazonApi, prefix)
