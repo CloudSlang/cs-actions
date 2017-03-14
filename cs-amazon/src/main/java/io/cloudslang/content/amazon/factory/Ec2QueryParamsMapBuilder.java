@@ -58,6 +58,8 @@ class Ec2QueryParamsMapBuilder {
                 return new NetworkUtils().getDeleteSubnetQueryParamsMap(wrapper);
             case DELETE_VOLUME:
                 return new VolumeUtils().getDeleteVolumeQueryParamsMap(wrapper);
+            case DELETE_VPC:
+                return new NetworkUtils().getDeleteVpcQueryParamsMap(wrapper);
             case DESCRIBE_AVAILABILITY_ZONES:
                 return new RegionUtils().getDescribeAvailabilityZonesQueryParamsMap(wrapper);
             case DESCRIBE_IMAGES:

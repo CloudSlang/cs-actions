@@ -271,6 +271,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDeleteVpc() throws Exception {
+        toTest.execute(getCommonInputs("DeleteVpc", HEADERS), getCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteVpc")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDeregisterImage() throws Exception {
         toTest.execute(getCommonInputs("DeregisterImage", HEADERS), getImageCustomInputs());
 
@@ -1061,6 +1070,9 @@ public class QueryApiExecutorTest {
                 break;
             case "DeleteVolume":
                 queryParamsMap.put("VolumeId", "v-12345678");
+                break;
+            case "DeleteVpc":
+                queryParamsMap.put("VpcId", "vpc-1a2b3c4d");
                 break;
             case "DeregisterImage":
                 queryParamsMap.put("ImageId", "ami-abcd1234");
