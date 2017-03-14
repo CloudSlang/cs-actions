@@ -16,31 +16,36 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.utils.InputsUtil.getArrayWithoutDuplicateEntries;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidDelimiter;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getValidKeyOrValueTag;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidPageSizeInt;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setTypicalQueryParams;
 import static io.cloudslang.content.amazon.utils.InputsUtil.validateAgainstDifferentArraysLength;
 
+import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FIXED_PREFIX;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUPS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNETS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.MEMBER;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUPS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNETS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.ARNS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.MEMBER_NAMES_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SUBNET_IDS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
 
 /**
  * Created by TusaM
@@ -48,9 +53,13 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
  */
 public class LoadBalancingUtils {
     private static final String LOAD_BALANCER_ARN = "LoadBalancerArn";
-    private static final String NAME = "Name";
-    private static final String REGEX = "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$";
+    private static final String LOAD_BALANCER_ARNS = "LoadBalancerArns";
+    private static final String DELIMITER_REGEX = "[^:\\-\\/]";
+    private static final String MARKER = "Marker";
+    private static final String NAMES = "Names";
+    private static final String PAGE_SIZE = "PageSize";
     private static final String SCHEME = "Scheme";
+    private static final String TAG_REGEX = "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$";
     private static final String TAGS = "Tags";
 
     private static final int KEY_TAG_LENGTH_CONSTRAIN = 128;
@@ -59,13 +68,17 @@ public class LoadBalancingUtils {
     public Map<String, String> getCreateLoadBalancerQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
         queryParamsMap.put(NAME, wrapper.getLoadBalancerInputs().getLoadBalancerName());
 
         setOptionalMapEntry(queryParamsMap, SCHEME, wrapper.getLoadBalancerInputs().getScheme(),
                 Scheme.INTERNAL.name().equalsIgnoreCase(wrapper.getLoadBalancerInputs().getScheme()));
 
-        setSubnetIdQueryParams(queryParamsMap, wrapper);
-        setSecurityGroupQueryParams(queryParamsMap, wrapper);
+        setTypicalQueryParams(queryParamsMap, wrapper.getNetworkInputs().getSubnetIdsString(), SUBNET_IDS_STRING,
+                SUBNETS + FIXED_PREFIX, wrapper.getCommonInputs().getDelimiter());
+        setTypicalQueryParams(queryParamsMap, wrapper.getIamInputs().getSecurityGroupIdsString(), SECURITY_GROUP_IDS_STRING,
+                SECURITY_GROUPS + FIXED_PREFIX, wrapper.getCommonInputs().getDelimiter());
+
         setKeyAndValueTag(queryParamsMap, wrapper);
 
         return queryParamsMap;
@@ -79,22 +92,23 @@ public class LoadBalancingUtils {
         return queryParamsMap;
     }
 
-    private void setSubnetIdQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        String[] subnetIdsArray = getArrayWithoutDuplicateEntries(wrapper.getNetworkInputs().getSubnetIdsString(),
-                SUBNET_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
-        for (int index = START_INDEX; index < subnetIdsArray.length; index++) {
-            queryParamsMap.put(SUBNETS + DOT + MEMBER + DOT + String.valueOf(index + ONE), subnetIdsArray[index]);
-        }
-    }
+    public Map<String, String> getDescribeLoadBalancersQueryParamsMap(InputsWrapper wrapper) {
+        String delimiter = getValidDelimiter(wrapper.getCommonInputs().getDelimiter(), DELIMITER_REGEX);
+        int pageSize = getValidPageSizeInt(wrapper.getLoadBalancerInputs().getPageSize());
 
-    private void setSecurityGroupQueryParams(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
-        String[] securityGroupsArray = getArrayWithoutDuplicateEntries(wrapper.getIamInputs().getSecurityGroupIdsString(),
-                SECURITY_GROUP_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
-        if (isNotEmpty(securityGroupsArray)) {
-            for (int index = START_INDEX; index < securityGroupsArray.length; index++) {
-                queryParamsMap.put(SECURITY_GROUPS + DOT + MEMBER + DOT + String.valueOf(index + ONE), securityGroupsArray[index]);
-            }
-        }
+        Map<String, String> queryParamsMap = new HashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        setTypicalQueryParams(queryParamsMap, wrapper.getLoadBalancerInputs().getArnsString(), ARNS_STRING,
+                LOAD_BALANCER_ARNS + FIXED_PREFIX, delimiter);
+        setTypicalQueryParams(queryParamsMap, wrapper.getLoadBalancerInputs().getMemberNamesString(), MEMBER_NAMES_STRING,
+                NAMES + FIXED_PREFIX, delimiter);
+
+        setOptionalMapEntry(queryParamsMap, MARKER, wrapper.getLoadBalancerInputs().getMarker(),
+                isNotBlank(wrapper.getLoadBalancerInputs().getMarker()));
+        setOptionalMapEntry(queryParamsMap, PAGE_SIZE, valueOf(pageSize), pageSize > ONE);
+
+        return queryParamsMap;
     }
 
     private void setKeyAndValueTag(Map<String, String> queryParamsMap, InputsWrapper wrapper) {
@@ -105,13 +119,13 @@ public class LoadBalancingUtils {
         if (isNotEmpty(keyTagsArray) && isNotEmpty(valueTagsArray)) {
             validateAgainstDifferentArraysLength(keyTagsArray, valueTagsArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
             for (int index = START_INDEX; index < keyTagsArray.length; index++) {
-                String currentTag = getValidKeyOrValueTag(keyTagsArray[index], REGEX, true, isBlank(keyTagsArray[index]), true,
+                String currentTag = getValidKeyOrValueTag(keyTagsArray[index], TAG_REGEX, true, isBlank(keyTagsArray[index]), true,
                         KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
-                queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + KEY, currentTag);
+                queryParamsMap.put(TAGS + FIXED_PREFIX + valueOf(index + ONE) + DOT + KEY, currentTag);
 
-                String currentValue = getValidKeyOrValueTag(valueTagsArray[index], REGEX, false, false, true,
+                String currentValue = getValidKeyOrValueTag(valueTagsArray[index], TAG_REGEX, false, false, true,
                         KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
-                queryParamsMap.put(TAGS + DOT + MEMBER + DOT + String.valueOf(index + ONE) + DOT + VALUE, currentValue);
+                queryParamsMap.put(TAGS + FIXED_PREFIX + valueOf(index + ONE) + DOT + VALUE, currentValue);
             }
         }
     }
