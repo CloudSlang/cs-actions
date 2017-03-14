@@ -101,6 +101,8 @@ public final class InputsUtil {
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
     private static final int MINIMUM_MAX_RESULTS = 5;
     private static final int MAXIMUM_MAX_RESULTS = 1000;
+    private static final int MAXIMUM_NETMASK_VALUE = 16;
+    private static final int MINIMUM_NETMASK_VALUE = 28;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
     private static final int PAGE_SIZE_MAX_VALUE = 400;
@@ -420,6 +422,7 @@ public final class InputsUtil {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid CIDR notation.");
         }
         getValidIPv4Address(input.substring(START_INDEX, indexOf(input, SCOPE_SEPARATOR)));
+        validateNetmask(input);
 
         return input;
     }
@@ -519,6 +522,13 @@ public final class InputsUtil {
                 currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 currentArray[index], currentArray.length > START_INDEX);
+    }
+
+    private static void validateNetmask(String input) {
+        int netmaskIndex = indexOf(input, SCOPE_SEPARATOR) + ONE;
+        String netmask = input.substring(netmaskIndex);
+        getValidInt(netmask, MAXIMUM_NETMASK_VALUE, MINIMUM_NETMASK_VALUE, getValidationException("netmask value [" + input + "]", true),
+                getValidationException("netmask value [" + input + "]", false));
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {

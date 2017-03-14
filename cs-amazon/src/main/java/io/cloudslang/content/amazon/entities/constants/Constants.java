@@ -131,6 +131,7 @@ public class Constants {
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
         public static final String CREATE_SUBNET = "CreateSubnet";
+        public static final String CREATE_VPC = "CreateVpc";
         public static final String CREATE_TAGS = "CreateTags";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";

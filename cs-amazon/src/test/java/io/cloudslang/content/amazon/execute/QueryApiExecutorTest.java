@@ -64,7 +64,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
-    public static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
+    private static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -222,6 +222,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateVolume")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testCreateVpc() throws Exception {
+        toTest.execute(getCommonInputs("CreateVpc", HEADERS), getDescribeInstancesInputs(), getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateVpc")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -863,6 +872,7 @@ public class QueryApiExecutorTest {
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
                 .withSecondaryPrivateIpAddressCount("3")
                 .withCidrBlock("10.0.1.0/24")
+                .withAmazonProvidedIpv6CidrBlock("true")
                 .build();
     }
 
@@ -1020,6 +1030,11 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Size", "10");
                 queryParamsMap.put("SnapshotId", "snap-id");
                 queryParamsMap.put("AvailabilityZone", "us-east-1d");
+                break;
+            case "CreateVpc":
+                queryParamsMap.put("AmazonProvidedIpv6CidrBlock", "true");
+                queryParamsMap.put("CidrBlock", "10.0.1.0/24");
+                queryParamsMap.put("InstanceTenancy", "default");
                 break;
             case "DescribeVolumes":
                 queryParamsMap.put("Filter.1.Name", "status");
@@ -1408,6 +1423,7 @@ public class QueryApiExecutorTest {
                 .withInstanceIdsString("instance1,instance2,instance3")
                 .withMaxResults("10")
                 .withNextToken("token")
+                .withTenancy("")
                 .build();
     }
 }

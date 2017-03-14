@@ -48,6 +48,8 @@ class Ec2QueryParamsMapBuilder {
                 return new TagUtils().getCreateTagsQueryParamsMap(wrapper);
             case CREATE_VOLUME:
                 return new VolumeUtils().getCreateVolumeQueryParamsMap(wrapper);
+            case CREATE_VPC:
+                return new NetworkUtils().getCreateVpcQueryParamsMap(wrapper);
             case DELETE_NETWORK_INTERFACE:
                 return new NetworkUtils().getDeleteNetworkInterfaceQueryParamsMap(wrapper);
             case DELETE_SNAPSHOT:
