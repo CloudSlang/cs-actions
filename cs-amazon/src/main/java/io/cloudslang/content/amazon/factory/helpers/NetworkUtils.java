@@ -71,6 +71,7 @@ public class NetworkUtils {
     private static final String PRIVATE_IP_ADDRESSES = "PrivateIpAddresses";
     private static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "SecondaryPrivateIpAddressCount";
     private static final String SUBNET_ID = "SubnetId";
+    private static final String VPC_ID = "VpcId";
 
     @NotNull
     public Map<String, String> getAssociateAddressQueryParamsMap(@NotNull InputsWrapper wrapper) {
@@ -167,6 +168,15 @@ public class NetworkUtils {
         Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(SUBNET_ID, wrapper.getCustomInputs().getSubnetId());
+
+        return queryParamsMap;
+    }
+
+    @NotNull
+    public Map<String, String> getDeleteVpcQueryParamsMap(@NotNull InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new HashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        queryParamsMap.put(VPC_ID, wrapper.getCustomInputs().getVpcId());
 
         return queryParamsMap;
     }

@@ -90,7 +90,6 @@ public class Constants {
         public static final String KEY = "Key";
         public static final String LAUNCH_PERMISSION = "launchPermission";
         public static final String LISTENERS = "Listeners";
-        public static final String MEMBER = "member";
         public static final String NAME = "Name";
         public static final String NO_REBOOT = "NoReboot";
         public static final String NETWORK_INTERFACE = "NetworkInterface";
@@ -138,6 +137,7 @@ public class Constants {
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
         public static final String DELETE_SUBNET = "DeleteSubnet";
         public static final String DELETE_VOLUME = "DeleteVolume";
+        public static final String DELETE_VPC = "DeleteVpc";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_AVAILABILITY_ZONES = "DescribeAvailabilityZones";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
