@@ -37,7 +37,9 @@ public class MSSqlDatabase implements SqlDatabase {
 
     public static String addSslEncryptionToConnection(boolean trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
         final StringBuilder dbUrlBuilder = new StringBuilder(dbUrlMSSQL);
-        dbUrlBuilder.append(SEMI_COLON + ENCRYPT + EQUALS)
+        dbUrlBuilder.append(SEMI_COLON)
+                .append(ENCRYPT)
+                .append(EQUALS)
                 .append(TRUE)
                 .append(SEMI_COLON)
                 .append(TRUST_SERVER_CERTIFICATE)

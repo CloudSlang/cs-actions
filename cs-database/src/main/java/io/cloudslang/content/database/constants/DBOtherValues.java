@@ -54,6 +54,9 @@ public class DBOtherValues {
     public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
     public static final String POSTGRESQL_DRIVER = "org.postgresql.Driver";
 
+    public static final String KEY_COLUMNS = "%s - Columns";
+    public static final String KEY_FILES = "%s - Files";
+    public static final String KEY_CLOB_NAMES = "%s - CLOBNames";
+    public static final String KEY_SKIP = "%s - Skip";
 
-    //    NO_RESULT_SET(-1000000, "NO_RESULT_SET");
 }

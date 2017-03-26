@@ -56,7 +56,7 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
     //hanging
     //set default 20 seconds
     private final static String C3P0_CHECKOUT_TIMEOUT_NAME = "checkoutTimeout";
-    //deal with failure connection, there is a problem in c3p0, it will keeps
+    //deal with failure connection, there is a problem in c3p0, it will keep
     //trying to getConneciton on its own if the connection fails. set this to
     //be true to clean the pool, so it won't keep trying
     private final static String C3P0_BREAK_AFTERACQUIREFAILURE_NAME = "breakAfterAcquireFailure";
@@ -101,16 +101,13 @@ public class C3P0PooledDataSourceProvider extends PooledDataSourceProvider {
      * @throws SQLException
      */
     public DataSource openPooledDataSource(DBType aDbType, String aDbUrl, String aUsername, String aPassword) throws SQLException {
-        DataSource retPooledDS;
-
-        DataSource unPooledDS = DataSources.unpooledDataSource(aDbUrl, aUsername, aPassword);
+        
+        final DataSource unPooledDS = DataSources.unpooledDataSource(aDbUrl, aUsername, aPassword);
 
         //override the default properties with ours
-        Map<String, String> props = this.getPoolingProperties(aDbType);
+        final Map<String, String> props = this.getPoolingProperties(aDbType);
 
-        retPooledDS = DataSources.pooledDataSource(unPooledDS, props);
-
-        return retPooledDS;
+        return DataSources.pooledDataSource(unPooledDS, props);
 
     }
 

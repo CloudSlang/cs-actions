@@ -49,6 +49,7 @@ import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSes
 import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -143,10 +144,10 @@ public class SQLQueryLOB {
 
             final String aKey = SQLInputsUtils.getSqlKey(sqlInputs);
 
-            final String strKeyCol = aKey + " - Columns";
-            final String strKeyFiles = aKey + " - Files";
-            final String strKeyNames = aKey + " - CLOBNames";
-            final String strKeySkip = aKey + " - Skip";
+            final String strKeyCol = format(KEY_COLUMNS, aKey);
+            final String strKeyFiles = format(KEY_FILES, aKey);
+            final String strKeyNames = format(KEY_CLOB_NAMES, aKey);
+            final String strKeySkip = format(KEY_SKIP, aKey);
 
             globalSessionObject = getOrDefaultGlobalSessionObj(globalSessionObject);
 
