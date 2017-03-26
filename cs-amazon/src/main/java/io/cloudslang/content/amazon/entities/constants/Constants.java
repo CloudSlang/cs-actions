@@ -17,6 +17,7 @@ public class Constants {
     public static class Apis {
         public static final String EC2_API = "ec2";
         public static final String LOAD_BALANCING_API = "elasticloadbalancing";
+        public static final String S3_API = "s3";
     }
 
     public static class DefaultApiVersion {
@@ -27,6 +28,7 @@ public class Constants {
         public static final String NETWORK_DEFAULT_API_VERSION = "2016-11-15";
         public static final String REGIONS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String SNAPSHOTS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String STORAGE_DEFAULT_API_VERSION = "2006-03-01";
         public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
     }
@@ -53,8 +55,9 @@ public class Constants {
     }
 
     public static class Values {
-        public static final int START_INDEX = 0;
+        public static final int DEFAULT_MAX_KEYS = 1000;
         public static final int ONE = 1;
+        public static final int START_INDEX = 0;
     }
 
     public static class AwsParams {
@@ -137,6 +140,8 @@ public class Constants {
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
         public static final String DESCRIBE_INSTANCES = "DescribeInstances";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
+        public static final String DESCRIBE_NETWORK_INTERFACES = "DescribeNetworkInterfaces";
+        public static final String DESCRIBE_VOLUMES = "DescribeVolumes";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
@@ -154,5 +159,9 @@ public class Constants {
     public static class LoadBalancingQueryApiActions {
         public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
         public static final String DELETE_LOAD_BALANCER = "DeleteLoadBalancer";
+    }
+
+    public static class S3QueryApiActions {
+        public static final String GET_BUCKET = "GET Bucket";
     }
 }

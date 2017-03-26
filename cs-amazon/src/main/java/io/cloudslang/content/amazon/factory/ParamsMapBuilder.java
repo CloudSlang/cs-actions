@@ -10,15 +10,17 @@
 package io.cloudslang.content.amazon.factory;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getHeadersOrQueryParamsMap;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
@@ -42,12 +44,13 @@ public class ParamsMapBuilder {
                     return Ec2QueryParamsMapBuilder.getEc2QueryParamsMap(wrapper);
                 case LOAD_BALANCING_API:
                     return LoadBalancingQueryParamsMapBuilder.getLoadBalancingQueryParamsMap(wrapper);
+                case S3_API:
+                    return S3QueryParamsMapBuilder.getS3QueryParamsMap(wrapper);
                 default:
                     throw new RuntimeException(UNSUPPORTED_AWS_API);
             }
         } else {
-            queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
-                    wrapper.getCommonInputs().getQueryParams(), AMPERSAND, EQUAL, false);
+            queryParamsMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), wrapper.getCommonInputs().getQueryParams(), AMPERSAND, EQUAL, false);
         }
 
         return queryParamsMap;

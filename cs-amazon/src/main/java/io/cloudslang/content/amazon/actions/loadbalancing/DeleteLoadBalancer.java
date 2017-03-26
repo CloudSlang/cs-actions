@@ -19,17 +19,17 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.DELETE_LOAD_BALANCER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -40,13 +40,10 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.LOAD_BALANCER_ARN;
-
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
@@ -119,10 +116,10 @@ public class DeleteLoadBalancer {
                                        @Param(value = VERSION) String version,
                                        @Param(value = LOAD_BALANCER_ARN, required = true) String loadBalancerArn) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, LOAD_BALANCING_API)
+                    .withEndpoint(endpoint, LOAD_BALANCING_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

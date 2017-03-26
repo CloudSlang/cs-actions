@@ -9,8 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 
 /**
  * Created by Mihai Tusa.
@@ -37,7 +37,6 @@ public enum NetworkInterfaceStatus {
             }
         }
 
-        throw new RuntimeException("Unrecognized network interface status value: [" + input + "]. " +
-                "Valid values are: available, in-use.");
+        throw new RuntimeException("Unrecognized network interface status value: [" + input + "]. Valid values are: available, in-use.");
     }
 }

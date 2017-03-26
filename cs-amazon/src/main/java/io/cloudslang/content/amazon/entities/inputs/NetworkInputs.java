@@ -9,15 +9,14 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidCidrNotation;
 
 /**
  * Created by Mihai Tusa.
  * 6/7/2016.
  */
 public class NetworkInputs {
-    private static final int MINIMUM_PRIVATE_SECONDARY_IP_ADDRESSES_COUNT = 2;
-
     private final String cidrBlock;
     private final String deviceIndex;
     private final String networkInterfaceDescription;
@@ -109,7 +108,7 @@ public class NetworkInputs {
         }
 
         public Builder withCidrBlock(String inputValue) {
-            cidrBlock = InputsUtil.getValidCidrNotation(inputValue);
+            cidrBlock = getValidCidrNotation(inputValue);
             return this;
         }
 
@@ -159,7 +158,7 @@ public class NetworkInputs {
         }
 
         public Builder withForceDetach(String inputValue) {
-            forceDetach = InputsUtil.getEnforcedBooleanCondition(inputValue, Boolean.FALSE);
+            forceDetach = getEnforcedBooleanCondition(inputValue, Boolean.FALSE);
             return this;
         }
     }
