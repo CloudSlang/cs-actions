@@ -10,29 +10,32 @@
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.entities.validators.TagFilterValidator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
-
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.RESOURCE_ID;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.RESOURCE_IDS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.getFiltersQueryMap;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getArrayWithoutDuplicateEntries;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getQueryParamsSpecificString;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getValidKeyOrValueTag;
 import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
 import static io.cloudslang.content.amazon.utils.InputsUtil.validateAgainstDifferentArraysLength;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.RESOURCE_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.RESOURCE_IDS_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by TusaM
@@ -45,6 +48,8 @@ public class TagUtils {
     private static final int KEY_TAG_LENGTH_CONSTRAIN = 127;
     private static final int MAXIMUM_TAGS_ALLOWED = 50;
     private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
+    private static final String NEXT_TOKEN = "NextToken";
+    private static final String MAX_RESULTS = "MaxResults";
 
     public Map<String, String> getCreateTagsQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -86,5 +91,23 @@ public class TagUtils {
                 queryParamsMap.put(getQueryParamsSpecificString(VALUE, index), currentValue);
             }
         }
+    }
+
+    @NotNull
+    public Map<String, String> getDescribeTagsQueryParamsMap(@NotNull InputsWrapper wrapper) {
+        final Map<String, String> queryParamsMap = new HashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getFilterInputs().getMaxResults(),
+                !NOT_RELEVANT.equalsIgnoreCase(wrapper.getFilterInputs().getMaxResults()));
+        setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getFilterInputs().getNextToken(),
+                isNotBlank(wrapper.getFilterInputs().getNextToken()));
+
+        final TagFilterValidator tagFilterValidator = new TagFilterValidator();
+
+        final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), tagFilterValidator);
+        queryParamsMap.putAll(filterQueryMap);
+
+        return queryParamsMap;
     }
 }

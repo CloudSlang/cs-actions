@@ -152,12 +152,17 @@ public class Inputs {
     }
 
     public static class LoadBalancerInputs {
+        public static final String ARNS_STRING = "arnsString";
         public static final String LOAD_BALANCER_ARN = "loadBalancerArn";
         public static final String LOAD_BALANCER_NAME = "loadBalancerName";
+        public static final String MARKER = "marker";
+        public static final String MEMBER_NAMES_STRING = "memberNamesString";
+        public static final String PAGE_SIZE = "pageSize";
         public static final String SCHEME = "schema";
     }
 
     public static class NetworkInputs {
+        public static final String AMAZON_PROVIDED_IPV6_CIDR_BLOCK = "amazonProvidedIpv6CidrBlock";
         public static final String CIDR_BLOCK = "cidrBlock";
         public static final String DEVICE_INDEX = "deviceIndex";
         public static final String FORCE_DETACH = "forceDetach";
@@ -197,7 +202,7 @@ public class Inputs {
         public static final String FILTER_PRIVATE_DNS_NAME = "filterPrivateDnsName";
         public static final String FILTER_REQUESTER_ID = "filterRequesterId";
         public static final String FILTER_REQUESTER_MANAGED = "filterRequesterManaged";
-        public static final String FILTER_SOURCE_DESK_CHECK = "filterSourceDeskCheck";
+        public static final String FILTER_SOURCE_DEST_CHECK = "filterSourceDestCheck";
         public static final String FILTER_STATUS = "filterStatus";
         public static final String FILTER_SUBNET_ID = "filterSubnetId";
         public static final String FILTER_TAG = "filterTag";
@@ -241,5 +246,12 @@ public class Inputs {
         public static final String FILTER_TAG_VALUE = "filterTagValue";
         public static final String FILTER_VOLUME_ID = "filterVolumeId";
         public static final String FILTER_VOLUME_TYPE = "filterVolumeType";
+    }
+
+    public static class TagsInputs {
+        public static final String FILTER_KEY = "filterKey";
+        public static final String FILTER_RESOURCE_ID = "filterResourceId";
+        public static final String FILTER_RESOURCE_TYPE = "filterResourceType";
+        public static final String FILTER_VALUE = "filterValue";
     }
 }

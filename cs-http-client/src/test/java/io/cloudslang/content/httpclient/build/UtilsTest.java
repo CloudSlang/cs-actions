@@ -68,4 +68,18 @@ public class UtilsTest {
         assertEquals("p ar am 1", encodeQueryParams.get(0).getName());
         assertEquals("The st ring @foo-bar", encodeQueryParams.get(0).getValue());
     }
+
+    @Test
+    public void testValidatePortNumberValidValue() {
+        String portStringValue = "821";
+        final int portNumber;
+        portNumber = Integer.parseInt(portStringValue);
+        assertEquals(portNumber, Utils.validatePortNumber(portStringValue));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidatePortNumberInvalidValue() {
+        String portStringValue = "0";
+        Utils.validatePortNumber(portStringValue);
+    }
 }

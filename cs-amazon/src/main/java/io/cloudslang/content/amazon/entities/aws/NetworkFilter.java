@@ -39,7 +39,7 @@ public class NetworkFilter {
     public static final String PRIVATE_DNS_NAME = "private-dns-name";
     public static final String REQUESTER_ID = "requester-id";
     public static final String REQUESTER_MANAGED = "requester-managed";
-    public static final String SOURCE_DESK_CHECK = "source-desk-check";
+    public static final String SOURCE_DEST_CHECK = "source-dest-check";
     public static final String STATUS = "status";
     public static final String SUBNET_ID = "subnet-id";
     public static final String TAG_KEY = "tag-key";

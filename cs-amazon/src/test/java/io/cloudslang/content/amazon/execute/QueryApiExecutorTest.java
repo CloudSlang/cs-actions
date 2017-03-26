@@ -64,6 +64,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
+    private static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -151,11 +152,20 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testDeleteLoadBalancer() throws Exception {
+    public void testDeleteLoadBalancers() throws Exception {
         toTest.execute(getCommonInputsForLoadBalancers("DeleteLoadBalancer", HEADERS), getLoadBalancerInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteLoadBalancer")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeLoadBalancer() throws Exception {
+        toTest.execute(getCommonInputsForLoadBalancers("DescribeLoadBalancers", HEADERS), getLoadBalancerInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeLoadBalancers")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -216,6 +226,15 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateVpc() throws Exception {
+        toTest.execute(getCommonInputs("CreateVpc", HEADERS), getDescribeInstancesInputs(), getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateVpc")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDeleteNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS), getCustomInputs(), getNetworkInputs(true));
 
@@ -248,6 +267,15 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteVolume")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDeleteVpc() throws Exception {
+        toTest.execute(getCommonInputs("DeleteVpc", HEADERS), getCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteVpc")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -342,11 +370,11 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeNetworkInterfacesWithSuccess() throws Exception {
-        NetworkInputs networkInputs = new NetworkInputs.Builder()
+        final NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .withNetworkInterfaceId("eni-12345678,eni-87654321")
                 .build();
 
-        FilterInputs filterInputs = new FilterInputs.Builder()
+        final FilterInputs filterInputs = new FilterInputs.Builder()
                 .withDelimiter(COMMA_DELIMITER)
                 .withNewFilter("status", "in-use,available")
                 .withNewFilter("attachment.status", "attaching,attached,detaching,detached")
@@ -379,6 +407,92 @@ public class QueryApiExecutorTest {
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeRegions")));
         runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeTagsWithSuccess() throws Exception {
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter("key", "myKey")
+                .withNewFilter("resource-id", "myReId,myReId2")
+                .withNewFilter("resource-type", ALL_RESOURCE_TYPES)
+                .withNewFilter("value", "val1,val2")
+                .withMaxResults("5")
+                .withNextToken("myToken")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeTagsSuccess")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeTagsWithWrongResourceType() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(",")
+                .withNewFilter("resource-type", "WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsLessThanAccepted() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 4 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("4")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsGreaterThanAccepted() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 1001 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("1001")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsNegative() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 0 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("0")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsDouble() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: 6.7 input must be integer.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("6.7")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsString() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: WRONG input must be integer.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
     }
 
     @Test
@@ -767,6 +881,7 @@ public class QueryApiExecutorTest {
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
                 .withSecondaryPrivateIpAddressCount("3")
                 .withCidrBlock("10.0.1.0/24")
+                .withAmazonProvidedIpv6CidrBlock("true")
                 .build();
     }
 
@@ -791,6 +906,10 @@ public class QueryApiExecutorTest {
                 .withLoadBalancerName("testLB")
                 .withScheme("internal")
                 .withLoadBalancerArn("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188")
+                .withMemberNamesString("testLB1,testLB2,testLB3,testLB4,testLB5")
+                .withPageSize("123")
+                .withMarker("somethingHere")
+                .withArnsString("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9111,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9222,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9333,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9444,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9555")
                 .build();
     }
 
@@ -859,6 +978,21 @@ public class QueryApiExecutorTest {
             case "DeleteLoadBalancer":
                 queryParamsMap.put("LoadBalancerArn", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188");
                 break;
+            case "DescribeLoadBalancers":
+                queryParamsMap.put("LoadBalancerArns.member.1", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9111");
+                queryParamsMap.put("LoadBalancerArns.member.2", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9222");
+                queryParamsMap.put("LoadBalancerArns.member.3", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9333");
+                queryParamsMap.put("LoadBalancerArns.member.4", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9444");
+                queryParamsMap.put("LoadBalancerArns.member.5", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9555");
+                queryParamsMap.put("Marker", "somethingHere");
+                queryParamsMap.put("Names.member.1", "testLB1");
+                queryParamsMap.put("Names.member.2", "testLB2");
+                queryParamsMap.put("Names.member.3", "testLB3");
+                queryParamsMap.put("Names.member.4", "testLB4");
+                queryParamsMap.put("Names.member.5", "testLB5");
+                queryParamsMap.put("Names.member.5", "testLB5");
+                queryParamsMap.put("PageSize", "123");
+                break;
             case "CreateNetworkInterface":
                 queryParamsMap.put("SubnetId", "subnet-abcdef12");
                 queryParamsMap.put("Description", "anything in here");
@@ -906,6 +1040,11 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("SnapshotId", "snap-id");
                 queryParamsMap.put("AvailabilityZone", "us-east-1d");
                 break;
+            case "CreateVpc":
+                queryParamsMap.put("AmazonProvidedIpv6CidrBlock", "true");
+                queryParamsMap.put("CidrBlock", "10.0.1.0/24");
+                queryParamsMap.put("InstanceTenancy", "default");
+                break;
             case "DescribeVolumes":
                 queryParamsMap.put("Filter.1.Name", "status");
                 queryParamsMap.put("Filter.1.Value.1", "in-use");
@@ -931,6 +1070,9 @@ public class QueryApiExecutorTest {
                 break;
             case "DeleteVolume":
                 queryParamsMap.put("VolumeId", "v-12345678");
+                break;
+            case "DeleteVpc":
+                queryParamsMap.put("VpcId", "vpc-1a2b3c4d");
                 break;
             case "DeregisterImage":
                 queryParamsMap.put("ImageId", "ami-abcd1234");
@@ -1057,6 +1199,37 @@ public class QueryApiExecutorTest {
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");
                 queryParamsMap.put("RegionName.2", "eu-central-1");
+                break;
+            case "DescribeTagsSuccess":
+                queryParamsMap.put("Action", "DescribeTags");
+                queryParamsMap.put("Filter.1.Name", "key");
+                queryParamsMap.put("Filter.1.Value.1", "myKey");
+                queryParamsMap.put("Filter.2.Name", "resource-id");
+                queryParamsMap.put("Filter.2.Value.1", "myReId");
+                queryParamsMap.put("Filter.2.Value.2", "myReId2");
+                queryParamsMap.put("Filter.3.Name", "resource-type");
+                queryParamsMap.put("Filter.3.Value.1", "customer-gateway");
+                queryParamsMap.put("Filter.3.Value.3", "image");
+                queryParamsMap.put("Filter.3.Value.2", "dhcp-options");
+                queryParamsMap.put("Filter.3.Value.5", "internet-gateway");
+                queryParamsMap.put("Filter.3.Value.4", "instance");
+                queryParamsMap.put("Filter.3.Value.6", "network-acl");
+                queryParamsMap.put("Filter.3.Value.7", "network-interface");
+                queryParamsMap.put("Filter.3.Value.8", "reserved-instances");
+                queryParamsMap.put("Filter.3.Value.9", "route-table");
+                queryParamsMap.put("Filter.3.Value.10", "security-group");
+                queryParamsMap.put("Filter.3.Value.11", "snapshot");
+                queryParamsMap.put("Filter.3.Value.12", "spot-instances-request");
+                queryParamsMap.put("Filter.3.Value.13", "subnet");
+                queryParamsMap.put("Filter.3.Value.14", "volume");
+                queryParamsMap.put("Filter.3.Value.15", "vpc");
+                queryParamsMap.put("Filter.3.Value.16", "vpn-connection");
+                queryParamsMap.put("Filter.3.Value.17", "vpn-gateway");
+                queryParamsMap.put("Filter.4.Name", "value");
+                queryParamsMap.put("Filter.4.Value.1", "val1");
+                queryParamsMap.put("Filter.4.Value.2", "val2");
+                queryParamsMap.put("MaxResults", "5");
+                queryParamsMap.put("NextToken", "myToken");
                 break;
             case "ModifyImageAttribute":
                 queryParamsMap.put("Attribute", "launchPermission");
@@ -1262,6 +1435,7 @@ public class QueryApiExecutorTest {
                 .withInstanceIdsString("instance1,instance2,instance3")
                 .withMaxResults("10")
                 .withNextToken("token")
+                .withTenancy("")
                 .build();
     }
 }

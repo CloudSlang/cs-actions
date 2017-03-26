@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.constants;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
+
 /**
  * Created by Mihai Tusa.
  * 5/4/2016.
@@ -78,6 +80,7 @@ public class Constants {
         public static final String FILTER = "Filter";
         public static final String FILTER_NAME = "Filter.%d.Name";
         public static final String FILTER_VALUE = "Filter.%d.Value";
+        public static final String FIXED_PREFIX = DOT + "member" + DOT;
         public static final String FORCE = "Force";
         public static final String HEADER_DELIMITER = "\\r?\\n";
         public static final String HTTP_CLIENT_METHOD_GET = "GET";
@@ -87,7 +90,6 @@ public class Constants {
         public static final String KEY = "Key";
         public static final String LAUNCH_PERMISSION = "launchPermission";
         public static final String LISTENERS = "Listeners";
-        public static final String MEMBER = "member";
         public static final String NAME = "Name";
         public static final String NO_REBOOT = "NoReboot";
         public static final String NETWORK_INTERFACE = "NetworkInterface";
@@ -128,12 +130,14 @@ public class Constants {
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
         public static final String CREATE_SUBNET = "CreateSubnet";
+        public static final String CREATE_VPC = "CreateVpc";
         public static final String CREATE_TAGS = "CreateTags";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
         public static final String DELETE_SUBNET = "DeleteSubnet";
         public static final String DELETE_VOLUME = "DeleteVolume";
+        public static final String DELETE_VPC = "DeleteVpc";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_AVAILABILITY_ZONES = "DescribeAvailabilityZones";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
@@ -141,6 +145,7 @@ public class Constants {
         public static final String DESCRIBE_INSTANCES = "DescribeInstances";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
         public static final String DESCRIBE_NETWORK_INTERFACES = "DescribeNetworkInterfaces";
+        public static final String DESCRIBE_TAGS = "DescribeTags";
         public static final String DESCRIBE_VOLUMES = "DescribeVolumes";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";
@@ -159,6 +164,7 @@ public class Constants {
     public static class LoadBalancingQueryApiActions {
         public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
         public static final String DELETE_LOAD_BALANCER = "DeleteLoadBalancer";
+        public static final String DESCRIBE_LOAD_BALANCERS = "DescribeLoadBalancers";
     }
 
     public static class S3QueryApiActions {

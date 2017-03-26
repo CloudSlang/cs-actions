@@ -33,9 +33,9 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FILTER;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FIXED_PREFIX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LISTENERS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.MEMBER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REGION_NAME;
@@ -65,9 +65,11 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
+
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.quote;
+
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.indexOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -99,8 +101,12 @@ public final class InputsUtil {
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
     private static final int MINIMUM_MAX_RESULTS = 5;
     private static final int MAXIMUM_MAX_RESULTS = 1000;
+    private static final int MAXIMUM_NETMASK_VALUE = 16;
+    private static final int MINIMUM_NETMASK_VALUE = 28;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
+    private static final int PAGE_SIZE_MAX_VALUE = 400;
+    private static final int PAGE_SIZE_MIN_VALUE = 1;
 
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
@@ -288,6 +294,12 @@ public final class InputsUtil {
                         getValidationException(input, false));
     }
 
+    public static int getValidPageSizeInt(String input) {
+        return isBlank(input) ? PAGE_SIZE_MIN_VALUE :
+                getValidInt(input, PAGE_SIZE_MIN_VALUE, PAGE_SIZE_MAX_VALUE, getValidationException(input, true),
+                        getValidationException(input, false));
+    }
+
     public static String getMaxResultsCount(String input) {
         return isBlank(input) ? NOT_RELEVANT :
                 valueOf(getValidInt(input, MINIMUM_MAX_RESULTS, MAXIMUM_MAX_RESULTS, getValidationException(input, true),
@@ -339,9 +351,25 @@ public final class InputsUtil {
         }
     }
 
+    public static String getValidDelimiter(String input, String pattern) {
+        patternCheck(input, pattern);
+
+        return input;
+    }
+
     public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
         if (condition) {
             inputMap.put(key, value);
+        }
+    }
+
+    public static void setTypicalQueryParams(Map<String, String> inputMap, String inputString, String inputName,
+                                             String prefix, String delimiter) {
+        String[] inputsArray = getArrayWithoutDuplicateEntries(inputString, inputName, delimiter);
+        if (isNotEmpty(inputsArray)) {
+            for (int index = START_INDEX; index < inputsArray.length; index++) {
+                inputMap.put(prefix + valueOf(index + ONE), inputsArray[index]);
+            }
         }
     }
 
@@ -352,7 +380,7 @@ public final class InputsUtil {
 
     public static String getQueryParamsSpecificString(String specificArea, int index) {
         if (AVAILABILITY_ZONES.equalsIgnoreCase(specificArea)) {
-            return AVAILABILITY_ZONES + DOT + MEMBER + DOT + valueOf(index + ONE);
+            return AVAILABILITY_ZONES + FIXED_PREFIX + valueOf(index + ONE);
         } else if (NETWORK.equalsIgnoreCase(specificArea)) {
             return PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
@@ -360,12 +388,11 @@ public final class InputsUtil {
         } else if (EBS.equalsIgnoreCase(specificArea)) {
             return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT + EBS + DOT;
         } else if (LISTENERS.equalsIgnoreCase(specificArea)) {
-            return LISTENERS + DOT + MEMBER + DOT + valueOf(index + ONE) + DOT;
+            return LISTENERS + FIXED_PREFIX+ valueOf(index + ONE) + DOT;
         } else if (NAME.equalsIgnoreCase(specificArea)) {
             return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
-            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
-                    valueOf(index + ONE) + DOT;
+            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (RESOURCE_ID.equalsIgnoreCase(specificArea)) {
             return RESOURCE_ID + DOT + valueOf(index + ONE);
         } else if (KEY.equalsIgnoreCase(specificArea)) {
@@ -395,6 +422,7 @@ public final class InputsUtil {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid CIDR notation.");
         }
         getValidIPv4Address(input.substring(START_INDEX, indexOf(input, SCOPE_SEPARATOR)));
+        validateNetmask(input);
 
         return input;
     }
@@ -494,6 +522,13 @@ public final class InputsUtil {
                 currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 currentArray[index], currentArray.length > START_INDEX);
+    }
+
+    private static void validateNetmask(String input) {
+        int netmaskIndex = indexOf(input, SCOPE_SEPARATOR) + ONE;
+        String netmask = input.substring(netmaskIndex);
+        getValidInt(netmask, MAXIMUM_NETMASK_VALUE, MINIMUM_NETMASK_VALUE, getValidationException("netmask value [" + input + "]", true),
+                getValidationException("netmask value [" + input + "]", false));
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {
