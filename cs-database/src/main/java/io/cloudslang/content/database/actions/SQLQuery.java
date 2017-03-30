@@ -150,7 +150,7 @@ public class SQLQuery {
         dbType = getDbType(dbType);
 
         final SQLInputs sqlInputs = SQLInputs.builder()
-                .dbServer(dbServerName) //mandatory
+                .dbServer(dbServerName)
                 .dbType(dbType)
                 .username(username)
                 .password(password)
@@ -215,7 +215,5 @@ public class SQLQuery {
             failureMap.put(ROWS_LEFT, ZERO);
             return failureMap;
         }
-
-
     }
 }

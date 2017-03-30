@@ -74,7 +74,7 @@ public class SQLQueryTabular {
      * @param resultSetConcurrency      the result set concurrency. See JDBC folder description for more details.
      *                                  Valid values: CONCUR_READ_ONLY, CONCUR_UPDATABLE
      *                                  Default value: CONCUR_READ_ONLY
-     * @return This is the primary output. Returns the data returned from the query as a table.
+     * @return Returns the data returned from the query as a table.
      */
     @Action(name = "SQL Query Tabular",
             outputs = {

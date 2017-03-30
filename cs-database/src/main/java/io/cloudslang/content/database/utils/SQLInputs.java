@@ -9,9 +9,13 @@
  *******************************************************************************/
 package io.cloudslang.content.database.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by victor on 13.01.2017.
@@ -37,7 +41,7 @@ public class SQLInputs {
     private long skip = 0L;
     private String strDelim;
     private String strColumns;
-    private List<String> lRows;
+    private List<String> lRows = new ArrayList<>();
     private int iUpdateCount;
     private Properties databasePoolingProperties;
     private String trustStore;
@@ -47,7 +51,7 @@ public class SQLInputs {
     private String rowDelimiter;
     private Integer resultSetType;
     private Integer resultSetConcurrency;
-    private List<String> sqlCommands;
+    private List<String> sqlCommands = new ArrayList<>();
 
     @java.beans.ConstructorProperties({"sqlCommand", "dbServer", "dbName", "dbPort", "dbType", "key", "username", "password", "authenticationType", "instance", "ignoreCase", "timeout", "dbUrl", "dbClass", "isNetcool", "lRowsFiles", "lRowsNames", "skip", "strDelim", "strColumns", "lRows", "iUpdateCount", "databasePoolingProperties", "trustStore", "trustStorePassword", "trustAllRoots", "colDelimiter", "rowDelimiter", "resultSetType", "resultSetConcurrency", "sqlCommands"})
     SQLInputs(String sqlCommand, String dbServer, String dbName, int dbPort, String dbType, String key, String username, String password, String authenticationType, String instance, boolean ignoreCase, int timeout, String dbUrl, String dbClass, boolean isNetcool, List<List<String>> lRowsFiles, List<List<String>> lRowsNames, long skip, String strDelim, String strColumns, List<String> lRows, int iUpdateCount, Properties databasePoolingProperties, String trustStore, String trustStorePassword, boolean trustAllRoots, String colDelimiter, String rowDelimiter, Integer resultSetType, Integer resultSetConcurrency, List<String> sqlCommands) {
@@ -66,12 +70,12 @@ public class SQLInputs {
         this.dbUrl = dbUrl;
         this.dbClass = dbClass;
         this.isNetcool = isNetcool;
-        this.lRowsFiles = lRowsFiles;
-        this.lRowsNames = lRowsNames;
+        this.lRowsFiles = lRowsFiles == null ? new ArrayList<List<String>>() : lRowsFiles;
+        this.lRowsNames = lRowsNames == null ? new ArrayList<List<String>>() : lRowsNames;
         this.skip = skip;
         this.strDelim = strDelim;
-        this.strColumns = strColumns;
-        this.lRows = lRows;
+        this.strColumns = StringUtils.defaultIfEmpty(strColumns, EMPTY);
+        this.lRows = lRows == null ? new ArrayList<String>() : lRows;
         this.iUpdateCount = iUpdateCount;
         this.databasePoolingProperties = databasePoolingProperties;
         this.trustStore = trustStore;
@@ -81,7 +85,7 @@ public class SQLInputs {
         this.rowDelimiter = rowDelimiter;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
-        this.sqlCommands = sqlCommands;
+        this.sqlCommands = sqlCommands == null ? new ArrayList<String>() : sqlCommands;
     }
 
     public static SQLInputsBuilder builder() {
@@ -92,246 +96,245 @@ public class SQLInputs {
         return this.sqlCommand;
     }
 
-    public String getDbServer() {
-        return this.dbServer;
-    }
-
-    public String getDbName() {
-        return this.dbName;
-    }
-
-    public int getDbPort() {
-        return this.dbPort;
-    }
-
-    public String getDbType() {
-        return this.dbType;
-    }
-
-    public String getKey() {
-        return this.key;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public String getAuthenticationType() {
-        return this.authenticationType;
-    }
-
-    public String getInstance() {
-        return this.instance;
-    }
-
-    public boolean isIgnoreCase() {
-        return this.ignoreCase;
-    }
-
-    public int getTimeout() {
-        return this.timeout;
-    }
-
-    public String getDbUrl() {
-        return this.dbUrl;
-    }
-
-    public String getDbClass() {
-        return this.dbClass;
-    }
-
-    public boolean isNetcool() {
-        return this.isNetcool;
-    }
-
-    public List<List<String>> getLRowsFiles() {
-        return this.lRowsFiles;
-    }
-
-    public List<List<String>> getLRowsNames() {
-        return this.lRowsNames;
-    }
-
-    public long getSkip() {
-        return this.skip;
-    }
-
-    public String getStrDelim() {
-        return this.strDelim;
-    }
-
-    public String getStrColumns() {
-        return this.strColumns;
-    }
-
-    public List<String> getLRows() {
-        return this.lRows;
-    }
-
-    public int getIUpdateCount() {
-        return this.iUpdateCount;
-    }
-
-    public Properties getDatabasePoolingProperties() {
-        return this.databasePoolingProperties;
-    }
-
-    public String getTrustStore() {
-        return this.trustStore;
-    }
-
-    public String getTrustStorePassword() {
-        return this.trustStorePassword;
-    }
-
-    public boolean isTrustAllRoots() {
-        return this.trustAllRoots;
-    }
-
-    public String getColDelimiter() {
-        return this.colDelimiter;
-    }
-
-    public String getRowDelimiter() {
-        return this.rowDelimiter;
-    }
-
-    public Integer getResultSetType() {
-        return this.resultSetType;
-    }
-
-    public Integer getResultSetConcurrency() {
-        return this.resultSetConcurrency;
-    }
-
-    public List<String> getSqlCommands() {
-        return this.sqlCommands;
-    }
-
     public void setSqlCommand(String sqlCommand) {
         this.sqlCommand = sqlCommand;
+    }
+
+    public String getDbServer() {
+        return this.dbServer;
     }
 
     public void setDbServer(String dbServer) {
         this.dbServer = dbServer;
     }
 
+    public String getDbName() {
+        return this.dbName;
+    }
+
     public void setDbName(String dbName) {
         this.dbName = dbName;
+    }
+
+    public int getDbPort() {
+        return this.dbPort;
     }
 
     public void setDbPort(int dbPort) {
         this.dbPort = dbPort;
     }
 
+    public String getDbType() {
+        return this.dbType;
+    }
+
     public void setDbType(String dbType) {
         this.dbType = dbType;
+    }
+
+    public String getKey() {
+        return this.key;
     }
 
     public void setKey(String key) {
         this.key = key;
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getAuthenticationType() {
+        return this.authenticationType;
+    }
+
     public void setAuthenticationType(String authenticationType) {
         this.authenticationType = authenticationType;
+    }
+
+    public String getInstance() {
+        return this.instance;
     }
 
     public void setInstance(String instance) {
         this.instance = instance;
     }
 
+    public boolean isIgnoreCase() {
+        return this.ignoreCase;
+    }
+
     public void setIgnoreCase(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
+    }
+
+    public int getTimeout() {
+        return this.timeout;
     }
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 
+    public String getDbUrl() {
+        return this.dbUrl;
+    }
+
     public void setDbUrl(String dbUrl) {
         this.dbUrl = dbUrl;
+    }
+
+    public String getDbClass() {
+        return this.dbClass;
     }
 
     public void setDbClass(String dbClass) {
         this.dbClass = dbClass;
     }
 
+    public boolean isNetcool() {
+        return this.isNetcool;
+    }
+
     public void setNetcool(boolean isNetcool) {
         this.isNetcool = isNetcool;
+    }
+
+    public List<List<String>> getLRowsFiles() {
+        return this.lRowsFiles;
     }
 
     public void setLRowsFiles(List<List<String>> lRowsFiles) {
         this.lRowsFiles = lRowsFiles;
     }
 
+    public List<List<String>> getLRowsNames() {
+        return this.lRowsNames;
+    }
+
     public void setLRowsNames(List<List<String>> lRowsNames) {
         this.lRowsNames = lRowsNames;
+    }
+
+    public long getSkip() {
+        return this.skip;
     }
 
     public void setSkip(long skip) {
         this.skip = skip;
     }
 
+    public String getStrDelim() {
+        return this.strDelim;
+    }
+
     public void setStrDelim(String strDelim) {
         this.strDelim = strDelim;
+    }
+
+    public String getStrColumns() {
+        return this.strColumns;
     }
 
     public void setStrColumns(String strColumns) {
         this.strColumns = strColumns;
     }
 
+    public List<String> getLRows() {
+        return this.lRows;
+    }
+
     public void setLRows(List<String> lRows) {
         this.lRows = lRows;
+    }
+
+    public int getIUpdateCount() {
+        return this.iUpdateCount;
     }
 
     public void setIUpdateCount(int iUpdateCount) {
         this.iUpdateCount = iUpdateCount;
     }
 
+    public Properties getDatabasePoolingProperties() {
+        return this.databasePoolingProperties;
+    }
+
     public void setDatabasePoolingProperties(Properties databasePoolingProperties) {
         this.databasePoolingProperties = databasePoolingProperties;
+    }
+
+    public String getTrustStore() {
+        return this.trustStore;
     }
 
     public void setTrustStore(String trustStore) {
         this.trustStore = trustStore;
     }
 
+    public String getTrustStorePassword() {
+        return this.trustStorePassword;
+    }
+
     public void setTrustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
+    }
+
+    public boolean isTrustAllRoots() {
+        return this.trustAllRoots;
     }
 
     public void setTrustAllRoots(boolean trustAllRoots) {
         this.trustAllRoots = trustAllRoots;
     }
 
+    public String getColDelimiter() {
+        return this.colDelimiter;
+    }
+
     public void setColDelimiter(String colDelimiter) {
         this.colDelimiter = colDelimiter;
+    }
+
+    public String getRowDelimiter() {
+        return this.rowDelimiter;
     }
 
     public void setRowDelimiter(String rowDelimiter) {
         this.rowDelimiter = rowDelimiter;
     }
 
+    public Integer getResultSetType() {
+        return this.resultSetType;
+    }
+
     public void setResultSetType(Integer resultSetType) {
         this.resultSetType = resultSetType;
+    }
+
+    public Integer getResultSetConcurrency() {
+        return this.resultSetConcurrency;
     }
 
     public void setResultSetConcurrency(Integer resultSetConcurrency) {
         this.resultSetConcurrency = resultSetConcurrency;
     }
 
+    public List<String> getSqlCommands() {
+        return this.sqlCommands;
+    }
 
     public boolean equals(Object o) {
         if (o == this) return true;

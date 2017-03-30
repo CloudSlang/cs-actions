@@ -61,10 +61,10 @@ public class SQLScript {
      *                                  Note: currently, the only valid value is sql, more are planed
      * @param dbClass                   The classname of the JDBC driver to use.
      * @param dbURL                     The url required to load up the driver and make your connection.
-     * @param delimiter                 The delimiter to use <sqlCommand>
+     * @param delimiter                 The delimiter to use <sqlCommands>
      * @param sqlCommands               All the SQL commands that you want to run using the <delimiter>
      * @param scriptFileName            SQL script file name. The command in the file need to have ';' to indicate the end of the command
-     *                                  Note: this is mutual exclusive wit <sqlCommands>
+     *                                  Note: this is mutual exclusive with <sqlCommands>
      * @param databasePoolingProperties Properties for database pooling configuration. Pooling is disabled by default.
      *                                  Default: db.pooling.enable=false
      *                                  Example: db.pooling.enable=true
@@ -76,7 +76,7 @@ public class SQLScript {
      *                                  Default value: CONCUR_READ_ONLY
      * @return Returns a success or failure message.
      */
-    @Action(name = "SQL Command",
+    @Action(name = "SQL Script",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),

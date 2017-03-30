@@ -149,7 +149,7 @@ public class SQLQueryLOB {
 
 
         final SQLInputs sqlInputs = SQLInputs.builder()
-                .dbServer(dbServerName) //mandatory
+                .dbServer(dbServerName)
                 .dbType(dbType)
                 .username(username)
                 .password(password)
@@ -277,6 +277,6 @@ public class SQLQueryLOB {
             failureMap.put(ROWS_LEFT, ZERO);
             return failureMap;
         }
-
     }
+
 }

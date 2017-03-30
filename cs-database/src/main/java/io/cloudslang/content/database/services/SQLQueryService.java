@@ -54,11 +54,13 @@ public class SQLQueryService {
                 final StringBuilder strRowHolder = new StringBuilder();
                 for (int i = 1; i <= iNumCols; i++) {
                     if (i > 1) strRowHolder.append(sqlInputs.getStrDelim());
-                    String value = results.getString(i).trim();
-                    if (sqlInputs.isNetcool())
-                        value = SQLUtils.processNullTerminatedString(value);
+                    if (results.getString(i) != null) {
+                        String value = results.getString(i).trim();
+                        if (sqlInputs.isNetcool())
+                            value = SQLUtils.processNullTerminatedString(value);
 
-                    strRowHolder.append(value);
+                        strRowHolder.append(value);
+                    }
                 }
                 sqlInputs.getLRows().add(strRowHolder.toString());
             }
