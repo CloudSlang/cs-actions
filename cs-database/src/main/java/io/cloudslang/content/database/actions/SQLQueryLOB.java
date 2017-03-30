@@ -20,7 +20,6 @@ import io.cloudslang.content.database.services.SQLQueryLobService;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLInputsUtils;
 import io.cloudslang.content.database.utils.SQLSessionResource;
-import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +33,6 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.*;
@@ -60,25 +58,39 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class SQLQueryLOB {
 
     /**
-     * @param dbServerName
-     * @param dbType
-     * @param username
-     * @param password
-     * @param instance
-     * @param dbPort
-     * @param databaseName
-     * @param authenticationType
-     * @param dbClass
-     * @param dbURL
-     * @param command
-     * @param delimiter
-     * @param key
-     * @param timeout
-     * @param databasePoolingProperties
-     * @param resultSetType
-     * @param resultSetConcurrency
-     * @param globalSessionObject
-     * @return
+     * @param dbServerName              The hostname or ip address of the database server.
+     * @param dbType                    The type of database to connect to
+     *                                  Valid values: Oracle, MSSQL, Sybase, Netcool, DB2, PostgreSQL and Custom.
+     *                                  Default value: Oracle
+     * @param username                  The username to use when connecting to the server.
+     * @param password                  The password to use when connecting to the server.
+     * @param instance                  The name instance of MSSQL Server. Leave it blank for default instance.
+     *                                  Example: MSSQLSERVER
+     * @param dbPort                    The port to connect to.
+     *                                  Valid values: Oracle: 1521, MSSQL: 1433, Sybase: 5000, Netcool: 4100, DB2: 50000, PostgreSQL: 5432.
+     * @param databaseName              The name of the database to connect to.
+     * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
+     *                                  Default: sql
+     *                                  Values: sql
+     *                                  Note: currently, the only valid value is sql, more are planed
+     * @param dbClass                   The class name of the JDBC driver to use.
+     * @param dbURL                     The URL required to load up the driver and make your connection.
+     * @param command                   The SQL query to execute.
+     * @param delimiter                 The delimiter to use between resulted values in "returnResult" and column names in "columnNames".
+     * @param key                       The key to help keep multiple query results distinct.
+     * @param timeout                   Seconds to wait before timing out the SQL command execution. When the default value is used, there
+     *                                  is no limit on the amount of time allowed for a running command to complete.
+     *                                  Default values: 0
+     * @param databasePoolingProperties Properties for database pooling configuration. Pooling is disabled by default.
+     *                                  Default: db.pooling.enable=false
+     *                                  Example: db.pooling.enable=true
+     * @param resultSetType             the result set type. See JDBC folder description for more details.
+     *                                  Valid values: TYPE_FORWARD_ONLY, TYPE_SCROLL_INSENSITIVE,TYPE_SCROLL_SENSITIVE.
+     *                                  Default value: TYPE_SCROLL_INSENSITIVE except DB2 which is overridden to TYPE_FORWARD_ONLY
+     * @param resultSetConcurrency      the result set concurrency. See JDBC folder description for more details.
+     *                                  Valid values: CONCUR_READ_ONLY, CONCUR_UPDATABLE
+     *                                  Default value: CONCUR_READ_ONLY
+     * @return Returns the data of a row returned from query. It is delimited by <delimiter>.
      */
     @Action(name = "SQL Query LOB",
             outputs = {

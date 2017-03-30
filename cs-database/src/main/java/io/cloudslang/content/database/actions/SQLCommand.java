@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
@@ -36,7 +35,6 @@ import static io.cloudslang.content.database.constants.DBOutputNames.OUTPUT_TEXT
 import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlCommandInputs;
-import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -48,26 +46,32 @@ public class SQLCommand {
 
 
     /**
-     * @param dbServerName The hostname or ip address of the database server.
-     * @param dbType The type of database to connect to.
-     *               Valid values: Oracle, MSSQL, Sybase, Netcool, DB2, PostgreSQL and Custom.
-     * @param username  The username to use when connecting to the database.
-     * @param password  The password to use when connecting to the database.
-     * @param instance The name instance (for MSSQL Server). Leave it blank for default instance.
-     * @param dbPort The port to connect to.
-     *               Default values: Oracle: 1521, MSSQL: 1433, Sybase: 5000, Netcool: 4100, DB2: 50000, PostgreSQL: 5432.
-     * @param databaseName The type of authentication used to access the database (applicable only to MSSQL type).
-     *                     Default: sql
-     *                     Values: sql
-     *                     Note:
-     * @param authenticationType
-     * @param dbClass
-     * @param dbURL
-     * @param command
-     * @param databasePoolingProperties
-     * @param resultSetType
-     * @param resultSetConcurrency
-     * @return
+     * @param dbServerName              The hostname or ip address of the database server.
+     * @param dbType                    The type of database to connect to.
+     *                                  Valid values: Oracle, MSSQL, Sybase, Netcool, DB2, PostgreSQL and Custom.
+     * @param username                  The username to use when connecting to the database.
+     * @param password                  The password to use when connecting to the database.
+     * @param instance                  The name instance (for MSSQL Server). Leave it blank for default instance.
+     * @param dbPort                    The port to connect to.
+     *                                  Default values: Oracle: 1521, MSSQL: 1433, Sybase: 5000, Netcool: 4100, DB2: 50000, PostgreSQL: 5432.
+     * @param databaseName              The name of the database.
+     * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
+     *                                  Default: sql
+     *                                  Values: sql
+     *                                  Note: currently, the only valid value is sql, more are planed
+     * @param dbClass                   The classname of the JDBC driver to use.
+     * @param dbURL                     The url required to load up the driver and make your connection.
+     * @param command                   The command to execute.
+     * @param databasePoolingProperties Properties for database pooling configuration. Pooling is disabled by default.
+     *                                  Default: db.pooling.enable=false
+     *                                  Example: db.pooling.enable=true
+     * @param resultSetType             The result set type. See JDBC folder description for more details.
+     *                                  Valid values: TYPE_FORWARD_ONLY, TYPE_SCROLL_INSENSITIVE,TYPE_SCROLL_SENSITIVE.
+     *                                  Default value: TYPE_FORWARD_ONLY
+     * @param resultSetConcurrency      The result set concurrency. See JDBC folder description for more details.
+     *                                  Valid values: CONCUR_READ_ONLY, CONCUR_UPDATABLE
+     *                                  Default value: CONCUR_READ_ONLY
+     * @return The return result of SQL command.
      */
     @Action(name = "SQL Command",
             outputs = {

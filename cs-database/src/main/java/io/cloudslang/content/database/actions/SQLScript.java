@@ -19,13 +19,11 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
@@ -48,23 +46,35 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class SQLScript {
 
     /**
-     * @param dbServerName
-     * @param dbType
-     * @param username
-     * @param password
-     * @param instance
-     * @param dbPort
-     * @param databaseName
-     * @param authenticationType
-     * @param dbClass
-     * @param dbURL
-     * @param delimiter
-     * @param sqlCommands
-     * @param scriptFileName
-     * @param databasePoolingProperties
-     * @param resultSetType
-     * @param resultSetConcurrency
-     * @return
+     * @param dbServerName              The hostname or ip address of the database server.
+     * @param dbType                    The type of database to connect to.
+     *                                  Valid values: Oracle, MSSQL, Sybase, Netcool, DB2, PostgreSQL and Custom.
+     * @param username                  The username to use when connecting to the database.
+     * @param password                  The password to use when connecting to the database.
+     * @param instance                  The name instance (for MSSQL Server). Leave it blank for default instance.
+     * @param dbPort                    The port to connect to.
+     *                                  Default values: Oracle: 1521, MSSQL: 1433, Sybase: 5000, Netcool: 4100, DB2: 50000, PostgreSQL: 5432.
+     * @param databaseName              The name of the database.
+     * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
+     *                                  Default: sql
+     *                                  Values: sql
+     *                                  Note: currently, the only valid value is sql, more are planed
+     * @param dbClass                   The classname of the JDBC driver to use.
+     * @param dbURL                     The url required to load up the driver and make your connection.
+     * @param delimiter                 The delimiter to use <sqlCommand>
+     * @param sqlCommands               All the SQL commands that you want to run using the <delimiter>
+     * @param scriptFileName            SQL script file name. The command in the file need to have ';' to indicate the end of the command
+     *                                  Note: this is mutual exclusive wit <sqlCommands>
+     * @param databasePoolingProperties Properties for database pooling configuration. Pooling is disabled by default.
+     *                                  Default: db.pooling.enable=false
+     *                                  Example: db.pooling.enable=true
+     * @param resultSetType             The result set type. See JDBC folder description for more details.
+     *                                  Valid values: TYPE_FORWARD_ONLY, TYPE_SCROLL_INSENSITIVE,TYPE_SCROLL_SENSITIVE.
+     *                                  Default value: TYPE_FORWARD_ONLY
+     * @param resultSetConcurrency      The result set concurrency. See JDBC folder description for more details.
+     *                                  Valid values: CONCUR_READ_ONLY, CONCUR_UPDATABLE
+     *                                  Default value: CONCUR_READ_ONLY
+     * @return Returns a success or failure message.
      */
     @Action(name = "SQL Command",
             outputs = {
