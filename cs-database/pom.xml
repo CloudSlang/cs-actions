@@ -12,14 +12,8 @@
            The Apache License is available at
            http://www.apache.org/licenses/LICENSE-2.0
        -->
-
-    <parent>
-        <groupId>io.cloudslang.content</groupId>
-        <artifactId>cs-actions</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
-
-
+         
+    <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-database</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
