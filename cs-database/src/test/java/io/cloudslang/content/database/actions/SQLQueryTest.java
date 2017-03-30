@@ -49,14 +49,9 @@ public class SQLQueryTest {
     @Test
     public void executeFailValidation() throws Exception {
         final Map<String, String> resultMap = new SQLQuery().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, null);
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, null);
         assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
-        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\n" +
-                "username input is empty.\n" +
-                "password input is empty.\n" +
-                "database input is empty.\n" +
-                "trustStore or trustStorePassword is mandatory if trustAllRoots is false\n" +
-                "command input is empty."));
+        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ncommand input is empty."));
     }
 
     @Test
@@ -73,7 +68,7 @@ public class SQLQueryTest {
 
         when(SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class))).thenReturn(globalSessionObject);
         final Map<String, String> resultMap = sqlQuery.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something","true",  EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, FALSE, globalSessionObject);
+                AUTH_SQL, EMPTY, EMPTY, "something", EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, FALSE, globalSessionObject);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(NO_MORE));

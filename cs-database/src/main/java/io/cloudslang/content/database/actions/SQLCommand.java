@@ -47,6 +47,28 @@ import static org.apache.commons.lang3.StringUtils.*;
 public class SQLCommand {
 
 
+    /**
+     * @param dbServerName The hostname or ip address of the database server.
+     * @param dbType The type of database to connect to.
+     *               Valid values: Oracle, MSSQL, Sybase, Netcool, DB2, PostgreSQL and Custom.
+     * @param username  The username to use when connecting to the database.
+     * @param password  The password to use when connecting to the database.
+     * @param instance The name instance (for MSSQL Server). Leave it blank for default instance.
+     * @param dbPort The port to connect to.
+     *               Default values: Oracle: 1521, MSSQL: 1433, Sybase: 5000, Netcool: 4100, DB2: 50000, PostgreSQL: 5432.
+     * @param databaseName The type of authentication used to access the database (applicable only to MSSQL type).
+     *                     Default: sql
+     *                     Values: sql
+     *                     Note:
+     * @param authenticationType
+     * @param dbClass
+     * @param dbURL
+     * @param command
+     * @param databasePoolingProperties
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @return
+     */
     @Action(name = "SQL Command",
             outputs = {
                     @Output(RETURN_CODE),
@@ -70,25 +92,25 @@ public class SQLCommand {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-                                       @Param(value = TRUST_STORE) String trustStore,
-                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+//                                       @Param(value = TRUST_STORE) String trustStore,
+//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
-        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_FORWARD_ONLY);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
-        trustStore = defaultIfEmpty(trustStore, EMPTY);
-        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+//        trustStore = defaultIfEmpty(trustStore, EMPTY);
+//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
 
         final List<String> preInputsValidation = validateSqlCommandInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
-                trustStorePassword);
+                databaseName, authenticationType, command, /*trustAllRoots,*/ resultSetType, resultSetConcurrency/*, trustStore,
+                trustStorePassword*/);
 
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -108,9 +130,9 @@ public class SQLCommand {
                     .dbClass(getOrDefaultDBClass(dbClass, dbType))
                     .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                     .sqlCommand(command)
-                    .trustAllRoots(toBoolean(trustAllRoots))
-                    .trustStore(trustStore)
-                    .trustStorePassword(trustStorePassword)
+//                    .trustAllRoots(toBoolean(trustAllRoots))
+//                    .trustStore(trustStore)
+//                    .trustStorePassword(trustStorePassword)
                     .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
                     .resultSetType(getResultSetType(resultSetType))
                     .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))

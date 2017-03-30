@@ -47,6 +47,25 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class SQLScript {
 
+    /**
+     * @param dbServerName
+     * @param dbType
+     * @param username
+     * @param password
+     * @param instance
+     * @param dbPort
+     * @param databaseName
+     * @param authenticationType
+     * @param dbClass
+     * @param dbURL
+     * @param delimiter
+     * @param sqlCommands
+     * @param scriptFileName
+     * @param databasePoolingProperties
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @return
+     */
     @Action(name = "SQL Command",
             outputs = {
                     @Output(RETURN_CODE),
@@ -73,9 +92,9 @@ public class SQLScript {
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = SQL_COMMANDS) String sqlCommands,
                                        @Param(value = SCRIPT_FILE_NAME) String scriptFileName,
-                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-                                       @Param(value = TRUST_STORE) String trustStore,
-                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+//                                       @Param(value = TRUST_STORE) String trustStore,
+//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
@@ -83,15 +102,15 @@ public class SQLScript {
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-        trustStore = defaultIfEmpty(trustStore, EMPTY);
-        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+//        trustStore = defaultIfEmpty(trustStore, EMPTY);
+//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlScriptInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, sqlCommands, scriptFileName, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, sqlCommands, scriptFileName, /*trustAllRoots, trustStore, trustStorePassword,*/
                 resultSetType, resultSetConcurrency);
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -112,9 +131,9 @@ public class SQLScript {
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .strDelim(delimiter)
                 .sqlCommands(getSqlCommands(sqlCommands, scriptFileName, delimiter))
-                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
-                .trustStore(trustStore)
-                .trustStorePassword(trustStorePassword)
+//                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+//                .trustStore(trustStore)
+//                .trustStorePassword(trustStorePassword)
                 .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
                 .resultSetType(getResultSetType(resultSetType))
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))

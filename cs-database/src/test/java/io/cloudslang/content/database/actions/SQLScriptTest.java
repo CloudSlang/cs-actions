@@ -51,14 +51,9 @@ public class SQLScriptTest {
     @Test
     public void executeFailValidation() throws Exception {
         final Map<String, String> resultMap = new SQLScript().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
         assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
-        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\n" +
-                "username input is empty.\n" +
-                "password input is empty.\n" +
-                "database input is empty.\n" +
-                "trustStore or trustStorePassword is mandatory if trustAllRoots is false\n" +
-                "Only one of the sqlCommands and scriptFileName can be specified"));
+        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\nOnly one of the sqlCommands and scriptFileName can be specified"));
     }
 
     @Test
@@ -72,7 +67,7 @@ public class SQLScriptTest {
         when(SQLScriptService.executeSqlScript(anyList, any(SQLInputs.class))).thenReturn(res);
 
         final Map<String, String> resultMap = sqlScript.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, EMPTY, "something", EMPTY, "true", EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+                AUTH_SQL, EMPTY, EMPTY, EMPTY, "something", EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));

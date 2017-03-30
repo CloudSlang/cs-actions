@@ -53,6 +53,28 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class SQLQuery {
 
+    /**
+     * @param dbServerName
+     * @param dbType
+     * @param username
+     * @param password
+     * @param instance
+     * @param dbPort
+     * @param databaseName
+     * @param authenticationType
+     * @param dbClass
+     * @param dbURL
+     * @param command
+     * @param delimiter
+     * @param key
+     * @param timeout
+     * @param databasePoolingProperties
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @param ignoreCase
+     * @param globalSessionObject
+     * @return
+     */
     @Action(name = "SQL Query",
             outputs = {
                     @Output(RETURN_CODE),
@@ -78,9 +100,9 @@ public class SQLQuery {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-                                       @Param(value = TRUST_STORE) String trustStore,
-                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+//                                       @Param(value = TRUST_STORE) String trustStore,
+//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = DELIMITER, required = true) String delimiter,
                                        @Param(value = KEY, required = true) String key,
                                        @Param(value = TIMEOUT) String timeout,
@@ -93,16 +115,16 @@ public class SQLQuery {
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-        trustStore = defaultIfEmpty(trustStore, EMPTY);
-        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+//        trustStore = defaultIfEmpty(trustStore, EMPTY);
+//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
 
         final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, command, /*trustAllRoots, trustStore, trustStorePassword,*/
                 timeout, resultSetType, resultSetConcurrency, ignoreCase);
 
         if (!preInputsValidation.isEmpty()) {
@@ -124,9 +146,9 @@ public class SQLQuery {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
-                .trustStore(trustStore)
-                .trustStorePassword(trustStorePassword)
+//                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+//                .trustStore(trustStore)
+//                .trustStorePassword(trustStorePassword)
                 .strDelim(delimiter)
                 .key(key)
                 .timeout(toInteger(timeout))

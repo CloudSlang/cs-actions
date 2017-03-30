@@ -48,6 +48,24 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class SQLQueryTabular {
 
+    /**
+     * @param dbServerName
+     * @param dbType
+     * @param username
+     * @param password
+     * @param instance
+     * @param dbPort
+     * @param databaseName
+     * @param authenticationType
+     * @param dbClass
+     * @param dbURL
+     * @param command
+     * @param timeout
+     * @param databasePoolingProperties
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @return
+     */
     @Action(name = "SQL Query Tabular",
             outputs = {
                     @Output(RETURN_CODE),
@@ -71,9 +89,9 @@ public class SQLQueryTabular {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-                                       @Param(value = TRUST_STORE) String trustStore,
-                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+//                                       @Param(value = TRUST_STORE) String trustStore,
+//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = TIMEOUT) String timeout,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
@@ -82,16 +100,16 @@ public class SQLQueryTabular {
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-        trustStore = defaultIfEmpty(trustStore, EMPTY);
-        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+//        trustStore = defaultIfEmpty(trustStore, EMPTY);
+//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryTabularInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, command, /*trustAllRoots, trustStore, trustStorePassword,*/
                 timeout, resultSetType, resultSetConcurrency);
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -99,7 +117,7 @@ public class SQLQueryTabular {
         dbType = getDbType(dbType);
 
         final SQLInputs sqlInputs = SQLInputs.builder()
-                .dbServer(dbServerName) //mandator
+                .dbServer(dbServerName)
                 .dbType(dbType)
                 .username(username)
                 .password(password)
@@ -110,9 +128,9 @@ public class SQLQueryTabular {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
-                .trustStore(trustStore)
-                .trustStorePassword(trustStorePassword)
+//                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+//                .trustStore(trustStore)
+//                .trustStorePassword(trustStorePassword)
                 .timeout(toInteger(timeout))
                 .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
                 .resultSetType(getResultSetTypeForDbType(resultSetType, dbType))

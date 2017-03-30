@@ -59,6 +59,27 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class SQLQueryLOB {
 
+    /**
+     * @param dbServerName
+     * @param dbType
+     * @param username
+     * @param password
+     * @param instance
+     * @param dbPort
+     * @param databaseName
+     * @param authenticationType
+     * @param dbClass
+     * @param dbURL
+     * @param command
+     * @param delimiter
+     * @param key
+     * @param timeout
+     * @param databasePoolingProperties
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @param globalSessionObject
+     * @return
+     */
     @Action(name = "SQL Query LOB",
             outputs = {
                     @Output(RETURN_CODE),
@@ -84,9 +105,9 @@ public class SQLQueryLOB {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-                                       @Param(value = TRUST_STORE) String trustStore,
-                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+//                                       @Param(value = TRUST_STORE) String trustStore,
+//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = DELIMITER, required = true) String delimiter,
                                        @Param(value = KEY, required = true) String key,
                                        @Param(value = TIMEOUT) String timeout,
@@ -97,16 +118,16 @@ public class SQLQueryLOB {
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-        trustStore = defaultIfEmpty(trustStore, EMPTY);
-        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+//        trustStore = defaultIfEmpty(trustStore, EMPTY);
+//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryLOBInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                databaseName, authenticationType, command, /*trustAllRoots, trustStore, trustStorePassword,*/
                 timeout, resultSetType, resultSetConcurrency);
 
         if (!preInputsValidation.isEmpty()) {
@@ -127,9 +148,9 @@ public class SQLQueryLOB {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
-                .trustStore(trustStore)
-                .trustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY))
+//                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+//                .trustStore(trustStore)
+//                .trustStorePassword(defaultIfEmpty(trustStorePassword, EMPTY))
                 .strDelim(delimiter)
                 .key(key)
                 .timeout(toInteger(timeout))

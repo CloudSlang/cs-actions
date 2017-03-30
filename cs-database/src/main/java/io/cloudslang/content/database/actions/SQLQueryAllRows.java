@@ -46,6 +46,26 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class SQLQueryAllRows {
 
+    /**
+     * @param dbServerName
+     * @param dbType
+     * @param username
+     * @param password
+     * @param instance
+     * @param dbPort
+     * @param databaseName
+     * @param authenticationType
+     * @param dbClass
+     * @param dbURL
+     * @param command
+     * @param colDelimiter
+     * @param rowDelimiter
+     * @param timeout
+     * @param databasePoolingProperties
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @return
+     */
     @Action(name = "SQL Query All Rows",
             outputs = {
                     @Output(RETURN_CODE),
@@ -69,9 +89,9 @@ public class SQLQueryAllRows {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-                                       @Param(value = TRUST_STORE) String trustStore,
-                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+//                                       @Param(value = TRUST_STORE) String trustStore,
+//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = COL_DELIMITER) String colDelimiter,
                                        @Param(value = ROW_DELIMITER) String rowDelimiter,
                                        @Param(value = TIMEOUT) String timeout,
@@ -82,16 +102,16 @@ public class SQLQueryAllRows {
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-        trustStore = defaultIfEmpty(trustStore, EMPTY);
-        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+//        trustStore = defaultIfEmpty(trustStore, EMPTY);
+//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryAllRowsInputs(dbServerName, dbType, username, password, instance,
-                dbPort, databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                dbPort, databaseName, authenticationType, command, /*trustAllRoots, trustStore, trustStorePassword,*/
                 timeout, resultSetType, resultSetConcurrency);
 
         if (!preInputsValidation.isEmpty()) {
@@ -111,9 +131,9 @@ public class SQLQueryAllRows {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-                .trustAllRoots(toBoolean(trustAllRoots))
-                .trustStore(trustStore)
-                .trustStorePassword(trustStorePassword)
+//                .trustAllRoots(toBoolean(trustAllRoots))
+//                .trustStore(trustStore)
+//                .trustStorePassword(trustStorePassword)
                 .colDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER))
                 .rowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE))
                 .timeout(toInteger(timeout))

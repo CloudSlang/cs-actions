@@ -34,20 +34,20 @@ public class SQLInputsValidator {
     private static final List<String> AUTH_TYPES = Arrays.asList(AUTH_WINDOWS, AUTH_SQL);
 
     public static List<String> validateSqlCommandInputs(String dbServerName, String dbType, String username, String password, String instance, String dbPort,
-                                                        String database, String authenticationType, String command, String trustAllRoots,
-                                                        String resultSetType, String resultSetConcurrency, String trustStore,
-                                                        String trustStorePassword) {
-        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, trustAllRoots, trustStore, trustStorePassword, resultSetType, resultSetConcurrency);
+                                                        String database, String authenticationType, String command, /*String trustAllRoots,*/
+                                                        String resultSetType, String resultSetConcurrency/*, String trustStore,*/
+                                                        /*String trustStorePassword*/) {
+        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, /*trustAllRoots, trustStore, trustStorePassword,*/ resultSetType, resultSetConcurrency);
         validateNoneEmpty(command, INVALID_COMMAND, validationList);
         return validationList;
     }
 
     public static List<String> validateSqlQueryInputs(String dbServerName, String dbType, String username, String password,
-                                                      String instance, String dbPort, String database, String authenticationType,
-                                                      String command, String trustAllRoots, String trustStore, String trustStorePassword,
+                                                      String instance, String dbPort, String database, String authenticationType, String command,
+//                                                      String trustAllRoots, String trustStore, String trustStorePassword,
                                                       String timeout, String resultSetType, String resultSetConcurrency, String ignoreCase) {
         final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, trustAllRoots, trustStore, trustStorePassword, resultSetType, resultSetConcurrency);
+                database, authenticationType, /*trustAllRoots, trustStore, trustStorePassword,*/ resultSetType, resultSetConcurrency);
         validateIgnoreCase(ignoreCase, validationList);
         validateNoneEmpty(command, INVALID_COMMAND, validationList);
         validateTimeout(timeout, validationList);
@@ -55,52 +55,54 @@ public class SQLInputsValidator {
     }
 
     public static List<String> validateSqlQueryAllRowsInputs(String dbServerName, String dbType, String username, String password,
-                                                             String instance, String dbPort, String database, String authenticationType,
-                                                             String command, String trustAllRoots, String trustStore, String trustStorePassword,
+                                                             String instance, String dbPort, String database, String authenticationType, String command,
+//                                                             String trustAllRoots, String trustStore, String trustStorePassword,
                                                              String timeout, String resultSetType, String resultSetConcurrency) {
-        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, trustAllRoots, trustStore, trustStorePassword, resultSetType, resultSetConcurrency);
+        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, /*trustAllRoots, trustStore, trustStorePassword,*/ resultSetType, resultSetConcurrency);
         validateNoneEmpty(command, INVALID_COMMAND, validationList);
         validateTimeout(timeout, validationList);
         return validationList;
     }
 
     public static List<String> validateSqlQueryLOBInputs(String dbServerName, String dbType, String username, String password,
-                                                         String instance, String dbPort, String database, String authenticationType,
-                                                         String command, String trustAllRoots, String trustStore, String trustStorePassword,
+                                                         String instance, String dbPort, String database, String authenticationType, String command,
+//                                                         String trustAllRoots, String trustStore, String trustStorePassword,
                                                          String timeout, String resultSetType, String resultSetConcurrency) {
         final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort,
-                database, authenticationType, trustAllRoots, trustStore, trustStorePassword, resultSetType, resultSetConcurrency);
+                database, authenticationType, /*trustAllRoots, trustStore, trustStorePassword,*/ resultSetType, resultSetConcurrency);
         validateNoneEmpty(command, INVALID_COMMAND, validationList);
         validateTimeout(timeout, validationList);
         return validationList;
     }
 
     public static List<String> validateSqlQueryTabularInputs(String dbServerName, String dbType, String username, String password,
-                                                             String instance, String dbPort, String database, String authenticationType,
-                                                             String command, String trustAllRoots, String trustStore, String trustStorePassword,
+                                                             String instance, String dbPort, String database, String authenticationType, String command,
+//                                                             String trustAllRoots, String trustStore, String trustStorePassword,
                                                              String timeout, String resultSetType, String resultSetConcurrency) {
-        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, trustAllRoots, trustStore, trustStorePassword, resultSetType, resultSetConcurrency);
+        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, /*trustAllRoots, trustStore, trustStorePassword,*/ resultSetType, resultSetConcurrency);
         validateNoneEmpty(command, INVALID_COMMAND, validationList);
         validateTimeout(timeout, validationList);
         return validationList;
     }
 
     public static List<String> validateSqlScriptInputs(String dbServerName, String dbType, String username, String password,
-                                                       String instance, String dbPort, String database, String authenticationType,
-                                                       String sqlCommands, String scriptFileName, String trustAllRoots, String trustStore,
-                                                       String trustStorePassword, String resultSetType, String resultSetConcurrency) {
-        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, trustAllRoots, trustStore, trustStorePassword, resultSetType, resultSetConcurrency);
+                                                       String instance, String dbPort, String database, String authenticationType, String sqlCommands, String scriptFileName,
+//                                                       String trustAllRoots, String trustStore, String trustStorePassword,
+                                                       String resultSetType, String resultSetConcurrency) {
+        final List<String> validationList = validateCommonSqlInputs(dbServerName, dbType, username, password, instance, dbPort, database, authenticationType, /*trustAllRoots, trustStore, trustStorePassword,*/ resultSetType, resultSetConcurrency);
         validateMExclusivityCommands(sqlCommands, scriptFileName, validationList);
         return validationList;
     }
 
-    private static List<String> validateCommonSqlInputs(String dbServerName, String dbType, String username, String password, String instance, String dbPort, String database, String authenticationType, String trustAllRoots, String trustStore, String trustStorePassword, String resultSetType, String resultSetConcurrency) {
+    private static List<String> validateCommonSqlInputs(String dbServerName, String dbType, String username, String password, String instance, String dbPort, String database, String authenticationType,
+//                                                        String trustAllRoots, String trustStore, String trustStorePassword,
+                                                        String resultSetType, String resultSetConcurrency) {
         final List<String> validationList = new ArrayList<>();
         validateDbType(dbType, validationList);
         validateNoneEmpty(dbServerName, INVALID_DB_SERVER_NAME, validationList);
         validateNoneEmpty(username, INVALID_USERNAME, validationList);
         validateNoneEmpty(password, INVALID_PASSWORD, validationList);
-        validateTrustAllRoots(trustAllRoots, validationList);
+//        validateTrustAllRoots(trustAllRoots, validationList);
         validateResultSetType(resultSetType, validationList);
         validateResultSetConcurrency(resultSetConcurrency, validationList);
         validateDbPort(dbPort, validationList);
@@ -109,9 +111,9 @@ public class SQLInputsValidator {
             validateDbName(database, dbType, validationList);
             validateAuthType(authenticationType, dbType, validationList);
         }
-        if (BooleanUtilities.isValid(trustAllRoots)) {
-            validateTrustAllRootsRequire(BooleanUtilities.toBoolean(trustAllRoots), trustStore, trustStorePassword, validationList);
-        }
+//        if (BooleanUtilities.isValid(trustAllRoots)) {
+//            validateTrustAllRootsRequire(BooleanUtilities.toBoolean(trustAllRoots), trustStore, trustStorePassword, validationList);
+//        }
         return validationList;
     }
 
