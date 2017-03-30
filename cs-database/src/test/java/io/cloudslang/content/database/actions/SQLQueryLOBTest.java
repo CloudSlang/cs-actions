@@ -11,6 +11,7 @@ package io.cloudslang.content.database.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.constants.DBResponseNames;
+import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryLobService;
 import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.SQLInputs;
@@ -115,6 +116,6 @@ public class SQLQueryLOBTest {
                 AUTH_SQL, EMPTY, EMPTY, "something", EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, null);
 
         verifyStatic();
-        assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
+        assertThat(resultMap.get(RETURN_CODE), is(DBReturnCodes.NO_MORE));
     }
 }
