@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <groupId>io.cloudslang.content</groupId>
-        <artifactId>cs-actions</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
     <!--
         (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
         All rights reserved. This program and the accompanying materials
@@ -15,6 +9,7 @@
         The Apache License is available at
         http://www.apache.org/licenses/LICENSE-2.0
     -->
+    <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-lists</artifactId>
     <version>0.0.7-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -69,38 +64,6 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
-            </plugin>
-            <!--License checker for build-->
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <header>${project.basedir}/license.template</header>
-                    <headerDefinitions>
-                        <headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>
-                    </headerDefinitions>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                    <!--Pass arguments using ${var} syntax in license.template file-->
-                    <properties>
-                        <copyright.year>2017</copyright.year>
-                    </properties>
-                    <!--Custom mapping for java extensions-->
-                    <useDefaultMapping>false</useDefaultMapping>
-                    <mapping>
-                        <java>cs-actions-java-header</java>
-                    </mapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
@@ -196,39 +159,52 @@
     </profiles>
 
     <dependencies>
+
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
+            <version>1.10.6</version>
         </dependency>
+
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
+            <version>0.0.3</version>
         </dependency>
+
         <!--Test dependencies-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
+            <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
+            <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
+            <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>
