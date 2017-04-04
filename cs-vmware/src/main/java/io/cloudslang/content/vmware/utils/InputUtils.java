@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import static io.cloudslang.content.utils.StringUtilities.isBlank;
 import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -135,6 +136,12 @@ public class InputUtils {
 
     public static void checkMutuallyExclusiveInputs(final String input1, final String input2, final String exceptionMessage) {
         if (!(isBlank(input1) ^ isBlank(input2))) {
+            throw new IllegalArgumentException(exceptionMessage);
+        }
+    }
+
+    public static void checkOptionalMutuallyExclusiveInputs(final String input1, final String input2, final String exceptionMessage) {
+        if (isNotBlank(input1) && isNotBlank(input2)) {
             throw new IllegalArgumentException(exceptionMessage);
         }
     }

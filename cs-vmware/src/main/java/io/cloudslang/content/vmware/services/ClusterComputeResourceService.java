@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.vmware.vim25.ArrayUpdateOperation;
 import com.vmware.vim25.ClusterConfigInfoEx;
 import com.vmware.vim25.ClusterConfigSpecEx;
@@ -43,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.vmware.constants.Constants.RESTART_PRIORITY;
+import static io.cloudslang.content.vmware.constants.Constants.VM_ID;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.AFFINE_HOST_GROUP_DOES_NOT_EXIST;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.ANOTHER_FAILURE_MSG;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST;
@@ -52,6 +56,7 @@ import static io.cloudslang.content.vmware.constants.ErrorMessages.RULE_ALREADY_
 import static io.cloudslang.content.vmware.constants.ErrorMessages.SUCCESS_MSG;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES_NOT_EXIST;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_NOT_FOUND;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by das giloan on 8/30/2016.
@@ -87,6 +92,27 @@ public class ClusterComputeResourceService {
                         String.format(FAILURE_MSG, vmInputs.getClusterName()));
         connectionResources.getConnection().disconnect();
         return resultMap;
+    }
+
+    public String getVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs) throws Exception {
+        final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+
+        final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+
+        final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+
+        final String restartPriority;
+        if(StringUtilities.isNotBlank(vmInputs.getVirtualMachineId()) || StringUtilities.isNotBlank(vmInputs.getVirtualMachineName())) {
+            final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
+            restartPriority = getVmRestartPriority(clusterConfigInfoEx, vmMor);
+        } else {
+            restartPriority = getVmRestartPriority(clusterConfigInfoEx);
+        }
+
+        connectionResources.getConnection().disconnect();
+
+        return restartPriority;
     }
 
     private ManagedObjectReference getVirtualMachineReference(final VmInputs vmInputs, final ConnectionResources connectionResources) throws Exception {
@@ -276,7 +302,7 @@ public class ClusterComputeResourceService {
                                                            VmInputs vmInputs, String affineHostGroupName, String antiAffineHostGroupName) throws Exception {
         ClusterVmHostRuleInfo clusterVmHostRuleInfo = new ClusterVmHostRuleInfo();
         clusterVmHostRuleInfo.setName(vmInputs.getRuleName());
-        if (StringUtilities.isNotBlank(affineHostGroupName)) {
+        if (isNotBlank(affineHostGroupName)) {
             clusterVmHostRuleInfo = addAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, affineHostGroupName);
         } else {
             clusterVmHostRuleInfo = addAntiAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, antiAffineHostGroupName);
@@ -383,6 +409,37 @@ public class ClusterComputeResourceService {
         clusterDasVmConfigInfo.setKey(vmMor);
         clusterDasVmConfigInfo.setDasSettings(createClusterDasVmSettings(restartPriority));
         return clusterDasVmConfigInfo;
+    }
+
+    /**
+     * @param clusterConfigInfoEx
+     * @param vmMor
+     * @return
+     */
+    private String getVmRestartPriority(ClusterConfigInfoEx clusterConfigInfoEx, ManagedObjectReference vmMor) {
+        List<ClusterDasVmConfigInfo> dasVmConfig = clusterConfigInfoEx.getDasVmConfig();
+        for (ClusterDasVmConfigInfo clusterDasVmConfigInfo : dasVmConfig) {
+            if (vmMor.getValue().equals(clusterDasVmConfigInfo.getKey().getValue())) {
+                return clusterDasVmConfigInfo.getDasSettings().getRestartPriority();
+            }
+        }
+        return "unknown configuration";
+    }
+
+    /**
+     * @param clusterConfigInfoEx
+     * @return
+     */
+    private String getVmRestartPriority(ClusterConfigInfoEx clusterConfigInfoEx) {
+        JsonArray resultArray = new JsonArray();
+        List<ClusterDasVmConfigInfo> dasVmConfig = clusterConfigInfoEx.getDasVmConfig();
+        for (ClusterDasVmConfigInfo clusterDasVmConfigInfo : dasVmConfig) {
+            JsonObject vmRestartPriority = new JsonObject();
+            vmRestartPriority.addProperty(VM_ID, clusterDasVmConfigInfo.getKey().getValue());
+            vmRestartPriority.addProperty(RESTART_PRIORITY, clusterDasVmConfigInfo.getDasSettings().getRestartPriority());
+            resultArray.add(vmRestartPriority);
+        }
+        return resultArray.toString();
     }
 
     /**
