@@ -103,7 +103,7 @@ public class ClusterComputeResourceService {
         final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
 
         final String restartPriority;
-        if(isNotBlank(vmInputs.getVirtualMachineId()) || isNotBlank(vmInputs.getVirtualMachineName())) {
+        if(StringUtilities.isNotBlank(vmInputs.getVirtualMachineId()) || StringUtilities.isNotBlank(vmInputs.getVirtualMachineName())) {
             final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
             restartPriority = getVmRestartPriority(clusterConfigInfoEx, vmMor);
         } else {

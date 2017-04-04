@@ -64,7 +64,6 @@ public class GetVmOverrides {
      *                              mutually exclusive with virtualMachineName.
      *                              Example: "vm-1230"
      * @param clusterName           The name of the cluster.
-
      * @return                      A map containing the output of the operation. Keys present in the map are:
      * <br><b>returnResult</b>      The primary output.
      * <br><b>returnCode</b>        The return code of the operation. 0 if the operation goes to success, -1 if the
