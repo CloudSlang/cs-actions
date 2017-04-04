@@ -58,9 +58,9 @@ public class GetVmOverrides {
      *                              Default Value: "false"
      * @param hostname              The name of the target host to be queried to retrieve the supported guest OSes
      *                              Example: "host123.subdomain.example.com"
-     * @param virtualMachineName    The name of the virtual machine for which the override will be created. This input
+     * @param virtualMachineName    optional - The name of the virtual machine for which the override will be created. This input
      *                              is mutually exclusive with virtualMachineId.
-     * @param virtualMachineId      The id of the virtual machine for which the override will be created. This input is
+     * @param virtualMachineId      optional - The id of the virtual machine for which the override will be created. This input is
      *                              mutually exclusive with virtualMachineName.
      *                              Example: "vm-1230"
      * @param clusterName           The name of the cluster.
