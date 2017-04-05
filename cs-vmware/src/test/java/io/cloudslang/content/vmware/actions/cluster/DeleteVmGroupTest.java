@@ -61,7 +61,7 @@ public class DeleteVmGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.deleteVmGroup(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = deleteVmGroup.deleteVmGroup("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = deleteVmGroup.deleteVmGroup("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -71,7 +71,7 @@ public class DeleteVmGroupTest {
 
     @Test
     public void testDeleteVmGroupProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -82,7 +82,7 @@ public class DeleteVmGroupTest {
 
     @Test
     public void testDeleteVmGroupPortException() throws Exception {
-        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 

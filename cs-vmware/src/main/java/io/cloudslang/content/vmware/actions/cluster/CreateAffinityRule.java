@@ -15,6 +15,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
@@ -25,6 +26,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -88,8 +90,8 @@ public class CreateAffinityRule {
                                                   @Param(value = RULE_NAME, required = true) String ruleName,
                                                   @Param(value = AFFINE_HOST_GROUP_NAME) String affineHostGroupName,
                                                   @Param(value = ANTI_AFFINE_HOST_GROUP_NAME) String antiAffineHostGroupName,
-                                                  @Param(value = VM_GROUP_NAME, required = true) String vmGroupName) {
-
+                                                  @Param(value = VM_GROUP_NAME, required = true) String vmGroupName,
+                                                  @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         try {
             InputUtils.checkMutuallyExclusiveInputs(affineHostGroupName, antiAffineHostGroupName, PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP);
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
@@ -98,8 +100,9 @@ public class CreateAffinityRule {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
             final VmInputs vmInputs = new VmInputs.VmInputsBuilder()

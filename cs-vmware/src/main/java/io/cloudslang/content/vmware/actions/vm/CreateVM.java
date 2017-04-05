@@ -15,15 +15,17 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -67,7 +69,7 @@ public class CreateVM {
      * @param vmMemorySize       optional - the memory amount (in Mb) attached to the virtual machine that will will
      *                           be created - Default: "1024"
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     *         task id of the execution or failure message and the exception if there is one
+     * task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Create Virtual Machine",
             outputs = {
@@ -99,22 +101,22 @@ public class CreateVM {
                                         @Param(value = VM_DESCRIPTION) String description,
                                         @Param(value = VM_CPU_COUNT) String numCPUs,
                                         @Param(value = VM_DISK_SIZE) String vmDiskSize,
-                                        @Param(value = VM_MEMORY_SIZE) String vmMemorySize) {
-
-        Map<String, String> resultMap = new HashMap<>();
+                                        @Param(value = VM_MEMORY_SIZE) String vmMemorySize,
+                                        @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
         try {
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withDataCenterName(dataCenterName)
                     .withHostname(hostname)
                     .withVirtualMachineName(virtualMachineName)
@@ -131,14 +133,9 @@ public class CreateVM {
                     .withLongVmMemorySize(vmMemorySize)
                     .build();
 
-            resultMap = new VmService().createVM(httpInputs, vmInputs);
-
+            return new VmService().createVM(httpInputs, vmInputs);
         } catch (Exception ex) {
-            resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            resultMap.put(Outputs.RETURN_RESULT, ex.getMessage());
-            resultMap.put(Outputs.EXCEPTION, ex.toString());
+            return OutputUtilities.getFailureResultsMap(ex);
         }
-
-        return resultMap;
     }
 }

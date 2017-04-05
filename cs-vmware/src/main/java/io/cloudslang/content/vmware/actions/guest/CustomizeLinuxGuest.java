@@ -15,7 +15,8 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.utils.StringUtilities;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
@@ -23,10 +24,10 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.GuestService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -61,7 +62,7 @@ public class CustomizeLinuxGuest {
      *                           https://technet.microsoft.com/en-us/library/ms145276%28v=sql.90%29.aspx
      *                           - Default: "360"
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     *         task id of the execution or failure message and the exception if there is one
+     * task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Customize Linux Guest",
             outputs = {
@@ -76,23 +77,23 @@ public class CustomizeLinuxGuest {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> customizeLinuxGuest(@Param(value = Inputs.HOST, required = true) String host,
-                                            @Param(value = PORT) String port,
-                                            @Param(value = PROTOCOL) String protocol,
-                                            @Param(value = USERNAME, required = true) String username,
-                                            @Param(value = PASSWORD, encrypted = true) String password,
-                                            @Param(value = TRUST_EVERYONE) String trustEveryone,
-                                            @Param(value = CLOSE_SESSION) String closeSession,
+                                                   @Param(value = PORT) String port,
+                                                   @Param(value = PROTOCOL) String protocol,
+                                                   @Param(value = USERNAME, required = true) String username,
+                                                   @Param(value = PASSWORD, encrypted = true) String password,
+                                                   @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                                   @Param(value = CLOSE_SESSION) String closeSession,
 
-                                            @Param(value = VM_NAME, required = true) String virtualMachineName,
-                                            @Param(value = COMPUTER_NAME, required = true) String computerName,
-                                            @Param(value = DOMAIN) String domain,
-                                            @Param(value = IP_ADDRESS) String ipAddress,
-                                            @Param(value = SUBNET_MASK) String subnetMask,
-                                            @Param(value = DEFAULT_GATEWAY) String defaultGateway,
-                                            @Param(value = UTC_CLOCK) String hwClockUTC,
-                                            @Param(value = TIME_ZONE) String timeZone) {
+                                                   @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                                   @Param(value = COMPUTER_NAME, required = true) String computerName,
+                                                   @Param(value = DOMAIN) String domain,
+                                                   @Param(value = IP_ADDRESS) String ipAddress,
+                                                   @Param(value = SUBNET_MASK) String subnetMask,
+                                                   @Param(value = DEFAULT_GATEWAY) String defaultGateway,
+                                                   @Param(value = UTC_CLOCK) String hwClockUTC,
+                                                   @Param(value = TIME_ZONE) String timeZone,
+                                                   @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
-        Map<String, String> resultMap = new HashMap<>();
 
         try {
             HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
@@ -101,13 +102,14 @@ public class CustomizeLinuxGuest {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName(virtualMachineName).build();
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName(virtualMachineName).build();
 
-            GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
+            final GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                     .withComputerName(computerName)
                     .withDomain(domain)
                     .withIpAddress(ipAddress)
@@ -117,14 +119,10 @@ public class CustomizeLinuxGuest {
                     .withTimeZone(timeZone)
                     .build();
 
-            resultMap = new GuestService().customizeVM(httpInputs, vmInputs, guestInputs, false);
-
+            return new GuestService().customizeVM(httpInputs, vmInputs, guestInputs, false);
         } catch (Exception ex) {
-            resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            resultMap.put(Outputs.RETURN_RESULT, ex.getMessage());
-            resultMap.put(Outputs.EXCEPTION, ex.toString());
+            return OutputUtilities.getFailureResultsMap(ex);
         }
 
-        return resultMap;
     }
 }

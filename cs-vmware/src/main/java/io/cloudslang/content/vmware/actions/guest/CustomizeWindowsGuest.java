@@ -15,17 +15,18 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.vmware.constants.Inputs;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.GuestService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -145,26 +146,26 @@ public class CustomizeWindowsGuest {
                                                      @Param(value = CHANGE_SID, required = true) String changeSID,
                                                      @Param(value = AUTO_LOGON_COUNT) String autoLogonCount,
                                                      @Param(value = AUTO_USERS) String autoUsers,
-                                                     @Param(value = TIME_ZONE) String timeZone) {
-
-        Map<String, String> resultMap = new HashMap<>();
+                                                     @Param(value = TIME_ZONE) String timeZone,
+                                                     @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
         try {
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withVirtualMachineName(virtualMachineName)
                     .build();
 
-            GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
+            final GuestInputs guestInputs = new GuestInputs.GuestInputsBuilder()
                     .withRebootOption(rebootOption)
                     .withComputerName(computerName)
                     .withComputerPassword(computerPassword)
@@ -189,14 +190,10 @@ public class CustomizeWindowsGuest {
                     .withTimeZone(timeZone)
                     .build();
 
-            resultMap = new GuestService().customizeVM(httpInputs, vmInputs, guestInputs, true);
-
+            return new GuestService().customizeVM(httpInputs, vmInputs, guestInputs, true);
         } catch (Exception ex) {
-            resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            resultMap.put(Outputs.RETURN_RESULT, ex.getMessage());
-            resultMap.put(Outputs.EXCEPTION, ex.toString());
+            return OutputUtilities.getFailureResultsMap(ex);
         }
 
-        return resultMap;
     }
 }

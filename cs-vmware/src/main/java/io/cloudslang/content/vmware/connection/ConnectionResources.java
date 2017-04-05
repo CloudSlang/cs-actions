@@ -43,6 +43,30 @@ public class ConnectionResources {
     private ManagedObjectReference resourcePoolMor;
     private ManagedObjectReference vmFolderMor;
 
+    public ConnectionResources(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
+        this(httpInputs);
+
+        setDataCenterMor(vmInputs);
+        setHostMor(vmInputs);
+        setComputeResourceMor();
+        setResourcePoolMor();
+        setVmFolderMor();
+    }
+
+    public ConnectionResources(HttpInputs httpInputs) throws Exception {
+        basicConnection = getBasicConnectionFromContext();
+
+        this.connection = getVCenterConnection(httpInputs);
+        this.moRefHandler = new MoRefHandler(connection);
+        this.morRootFolder = basicConnection.getServiceContent().getRootFolder();
+        this.serviceInstance = basicConnection.getServiceInstanceReference();
+        this.vimPortType = connection.getVimPort();
+    }
+
+    private BasicConnection getBasicConnectionFromContext() {
+        return new BasicConnection();
+    }
+
     public ManagedObjectReference getServiceInstance() {
         return serviceInstance;
     }
@@ -67,8 +91,16 @@ public class ConnectionResources {
         return resourcePoolMor;
     }
 
+    private void setResourcePoolMor(ManagedObjectReference resourcePoolMor) {
+        this.resourcePoolMor = resourcePoolMor;
+    }
+
     public ManagedObjectReference getVmFolderMor() {
         return vmFolderMor;
+    }
+
+    private void setVmFolderMor(ManagedObjectReference vmFolderMor) {
+        this.vmFolderMor = vmFolderMor;
     }
 
     public VimPortType getVimPortType() {
@@ -81,29 +113,6 @@ public class ConnectionResources {
         return basicConnection.connect(url, httpInputs.getUsername(), httpInputs.getPassword(), httpInputs.isTrustEveryone());
     }
 
-    public ConnectionResources(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
-        this(httpInputs);
-
-        setDataCenterMor(vmInputs);
-        setHostMor(vmInputs);
-        setComputeResourceMor();
-        setResourcePoolMor();
-        setVmFolderMor();
-    }
-
-    public ConnectionResources(HttpInputs httpInputs) throws Exception {
-        basicConnection = new BasicConnection();
-        this.connection = getVCenterConnection(httpInputs);
-        this.moRefHandler = new MoRefHandler(connection);
-        this.morRootFolder = basicConnection.getServiceContent().getRootFolder();
-        this.serviceInstance = basicConnection.getServiceInstanceReference();
-        this.vimPortType = connection.getVimPort();
-    }
-
-    private void setVmFolderMor(ManagedObjectReference vmFolderMor) {
-        this.vmFolderMor = vmFolderMor;
-    }
-
     private void setVmFolderMor() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference vmFolderMor = null;
         if (dataCenterMor != null) {
@@ -113,10 +122,6 @@ public class ConnectionResources {
         this.setVmFolderMor(vmFolderMor);
     }
 
-    private void setResourcePoolMor(ManagedObjectReference resourcePoolMor) {
-        this.resourcePoolMor = resourcePoolMor;
-    }
-
     private void setResourcePoolMor() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference resourcePoolMor = null;
         if (computeResourceMor != null) {
@@ -124,10 +129,6 @@ public class ConnectionResources {
                     .entityProps(computeResourceMor, new String[]{RESOURCE_POOL}).get(RESOURCE_POOL);
         }
         this.setResourcePoolMor(resourcePoolMor);
-    }
-
-    private void setComputeResourceMor(ManagedObjectReference computeResourceMor) {
-        this.computeResourceMor = computeResourceMor;
     }
 
     private void setComputeResourceMor() throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
@@ -140,14 +141,6 @@ public class ConnectionResources {
 
     private void setHostMor(ManagedObjectReference hostMor) {
         this.hostMor = hostMor;
-    }
-
-    private void setHostMor(VmInputs vmInputs) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        ManagedObjectReference hostMor = null;
-        if (dataCenterMor != null) {
-            hostMor = getHostMor(vmInputs.getHostname(), moRefHandler, dataCenterMor);
-        }
-        this.setHostMor(hostMor);
     }
 
     private void setDataCenterMor(ManagedObjectReference dataCenterMor) {
@@ -178,6 +171,14 @@ public class ConnectionResources {
         return hostMor;
     }
 
+    private void setHostMor(VmInputs vmInputs) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        ManagedObjectReference hostMor = null;
+        if (dataCenterMor != null) {
+            hostMor = getHostMor(vmInputs.getHostname(), moRefHandler, dataCenterMor);
+        }
+        this.setHostMor(hostMor);
+    }
+
     private ManagedObjectReference getHostMor(String hostname, MoRefHandler moRefHandler, ManagedObjectReference dataCenterMor)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
@@ -192,6 +193,10 @@ public class ConnectionResources {
 
     public ManagedObjectReference getComputeResourceMor() {
         return computeResourceMor;
+    }
+
+    private void setComputeResourceMor(ManagedObjectReference computeResourceMor) {
+        this.computeResourceMor = computeResourceMor;
     }
 
     private ManagedObjectReference getComputeResourceMor(MoRefHandler moRefHandler, ManagedObjectReference hostMor)

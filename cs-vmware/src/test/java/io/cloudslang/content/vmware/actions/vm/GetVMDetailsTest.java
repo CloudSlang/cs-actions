@@ -61,7 +61,7 @@ public class GetVMDetailsTest {
 
         when(vmServiceMock.getVMDetails(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = getVMDetails.getVMDetails("", "", "", "", "", "", "", "");
+        resultMap = getVMDetails.getVMDetails("", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).getVMDetails(any(HttpInputs.class), any(VmInputs.class));
 
@@ -70,7 +70,7 @@ public class GetVMDetailsTest {
 
     @Test
     public void testGetVMDetailsProtocolException() throws Exception {
-        Map<String, String> resultMap = getVMDetails.getVMDetails("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = getVMDetails.getVMDetails("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).getVMDetails(any(HttpInputs.class), any(VmInputs.class));
 

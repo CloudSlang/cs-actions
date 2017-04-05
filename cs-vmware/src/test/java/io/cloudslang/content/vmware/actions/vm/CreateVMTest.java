@@ -60,7 +60,7 @@ public class CreateVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.createVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).createVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -69,7 +69,7 @@ public class CreateVMTest {
 
     @Test
     public void testCreatesVMProtocolException() throws Exception {
-        Map<String, String> resultMap = createVM.createVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createVM.createVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).createVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -80,7 +80,7 @@ public class CreateVMTest {
 
     @Test
     public void testCreatesVMIntException() throws Exception {
-        Map<String, String> resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "");
+        Map<String, String> resultMap = createVM.createVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", null);
 
         verify(vmServiceMock, never()).createVM(any(HttpInputs.class), any(VmInputs.class));
 

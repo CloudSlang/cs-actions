@@ -15,15 +15,17 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -78,34 +80,29 @@ public class GetOSDescriptors {
                                                 @Param(value = DATA_CENTER_NAME, required = true) String dataCenterName,
                                                 @Param(value = HOSTNAME, required = true) String hostname,
 
-                                                @Param(value = DELIMITER) String delimiter) {
-
-        Map<String, String> resultMap = new HashMap<>();
+                                                @Param(value = DELIMITER) String delimiter,
+                                                @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
         try {
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withDataCenterName(dataCenterName)
                     .withHostname(hostname)
                     .build();
 
-            resultMap = new VmService().getOsDescriptors(httpInputs, vmInputs, delimiter);
-
+            return new VmService().getOsDescriptors(httpInputs, vmInputs, delimiter);
         } catch (Exception ex) {
-            resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            resultMap.put(Outputs.RETURN_RESULT, ex.getMessage());
-            resultMap.put(Outputs.EXCEPTION, ex.toString());
+            return OutputUtilities.getFailureResultsMap(ex);
         }
-
-        return resultMap;
     }
 }

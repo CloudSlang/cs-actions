@@ -62,7 +62,7 @@ public class CustomizeLinuxGuestTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean())).thenReturn(resultMap);
 
-        resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(guestServiceMock, times(1)).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
@@ -71,7 +71,7 @@ public class CustomizeLinuxGuestTest {
 
     @Test
     public void customizeLinuxGuestProtocolFailure() throws Exception {
-        Map<String, String> resultMap = linuxGuest.customizeLinuxGuest("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = linuxGuest.customizeLinuxGuest("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 

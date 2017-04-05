@@ -14,6 +14,8 @@ package io.cloudslang.content.vmware.constants;
  * 10/20/2015.
  */
 public class Inputs {
+    public static final String VMWARE_GLOBAL_SESSION_OBJECT = "VMWareGlobalSessionObject";
+
     // Http client specific inputs
     public static final String HOST = "host";
     public static final String PORT = "port";

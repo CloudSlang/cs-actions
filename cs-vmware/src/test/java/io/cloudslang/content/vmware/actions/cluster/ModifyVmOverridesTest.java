@@ -82,7 +82,7 @@ public class ModifyVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doReturn(map).when(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
 
-        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "vmName", "", "", CLUSTER_RESTART_PRIORITY);
+        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "vmName", "", "", CLUSTER_RESTART_PRIORITY, null);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
@@ -94,7 +94,7 @@ public class ModifyVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doThrow(new Exception(OPERATION_FAILED)).when(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
 
-        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "vm-123", "", CLUSTER_RESTART_PRIORITY); // TODO
+        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "vm-123", "", CLUSTER_RESTART_PRIORITY, null); // TODO
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
@@ -118,8 +118,8 @@ public class ModifyVmOverridesTest {
 
     @Test
     public void testValidateMutualExclusiveInputs() throws Exception {
-        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "", CLUSTER_RESTART_PRIORITY));
-        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "vmName", "vm-123", "", CLUSTER_RESTART_PRIORITY));
+        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "", "", CLUSTER_RESTART_PRIORITY, null));
+        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "", "vmName", "vm-123", "", CLUSTER_RESTART_PRIORITY, null));
     }
 
     private void verifyFailureResultMap(Map<String, String> result) {

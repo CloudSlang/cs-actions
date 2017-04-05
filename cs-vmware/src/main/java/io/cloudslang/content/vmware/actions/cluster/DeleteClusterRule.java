@@ -15,6 +15,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
@@ -24,6 +25,7 @@ import io.cloudslang.content.vmware.services.ClusterComputeResourceService;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -69,19 +71,21 @@ public class DeleteClusterRule {
                                                  @Param(value = TRUST_EVERYONE) String trustEveryone,
                                                  @Param(value = CLOSE_SESSION) String closeSession,
                                                  @Param(value = CLUSTER_NAME, required = true) String clusterName,
-                                                 @Param(value = RULE_NAME, required = true) String ruleName) {
+                                                 @Param(value = RULE_NAME, required = true) String ruleName,
+                                                 @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         try {
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withClusterName(clusterName)
                     .withRuleName(ruleName)
                     .build();

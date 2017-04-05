@@ -15,6 +15,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -23,6 +24,7 @@ import io.cloudslang.content.vmware.services.VmService;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -49,8 +51,8 @@ public class ListVMsAndTemplates {
      *                      to see how to obtain a valid vCenter certificate
      * @param delimiter     the delimiter that will be used in response list - Default: ","
      * @return resultMap with String as key and value that contains returnCode of the operation, a list that contains
-     *         all the virtual machines and templates within the data center  or failure message and the exception if there is
-     *         one
+     * all the virtual machines and templates within the data center  or failure message and the exception if there is
+     * one
      */
     @Action(name = "List VMs and Templates",
             outputs = {
@@ -72,7 +74,8 @@ public class ListVMsAndTemplates {
                                                    @Param(value = TRUST_EVERYONE) String trustEveryone,
                                                    @Param(value = CLOSE_SESSION) String closeSession,
 
-                                                   @Param(value = DELIMITER) String delimiter) {
+                                                   @Param(value = DELIMITER) String delimiter,
+                                                   @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         try {
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
@@ -80,14 +83,14 @@ public class ListVMsAndTemplates {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
             final VmInputs vmInputs = new VmInputs.VmInputsBuilder().build();
 
             return new VmService().listVMsAndTemplates(httpInputs, vmInputs, delimiter);
-
         } catch (Exception ex) {
             return getFailureResultsMap(ex);
         }

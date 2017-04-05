@@ -15,6 +15,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
@@ -27,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -65,9 +67,9 @@ public class DeployOvfTemplateAction {
      *                         - Valid values:
      *                         dhcpPolicy - Specifies that DHCP must be used to allocate IP addresses to the vApp.
      *                         fixedPolicy - The IP addresses are allocated when the vApp is deployed and
-     *                              will be kept with the server as long as it is deployed.
+     *                         will be kept with the server as long as it is deployed.
      *                         transientPolicy - The IP addresses are allocated when needed, typically
-     *                              at power-on, and deallocated during power-off.
+     *                         at power-on, and deallocated during power-off.
      * @param localeLang       The locale language in which to process the OVF. If you do not specify a value for this input,
      *                         the default locale language of the system will be used.
      * @param localeCountry    The locale country in which to process the OVF. If you do not specify a value for this input,
@@ -129,21 +131,23 @@ public class DeployOvfTemplateAction {
                                               @Param(value = NET_PORT_GROUP_JS) String netPortGroupJS,
                                               @Param(value = OVF_PROP_KEY_JS) String ovfPropKeyJS,
                                               @Param(value = OVF_PROP_VALUE_JS) String ovfPropValueJS,
-                                              @Param(value = PARALLEL) String parallel) {
+                                              @Param(value = PARALLEL) String parallel,
+                                              @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         try {
-            Locale locale = InputUtils.getLocale(localeLang, localeCountry);
+            final Locale locale = InputUtils.getLocale(localeLang, localeCountry);
 
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
                     .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withHostname(hostname)
                     .withVirtualMachineName(name)
                     .withDataCenterName(datacenter)
@@ -158,8 +162,8 @@ public class DeployOvfTemplateAction {
                     .withDiskProvisioning(diskProvisioning)
                     .build();
 
-            Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
-            Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
+            final Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
+            final Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
 
             new DeployOvfTemplateService(InputUtils.getBooleanInput(parallel, true))
                     .deployOvfTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);

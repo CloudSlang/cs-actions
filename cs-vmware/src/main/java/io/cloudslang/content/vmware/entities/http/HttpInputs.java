@@ -9,8 +9,11 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities.http;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.vmware.utils.InputUtils;
+
+import java.util.Map;
 
 /**
  * Created by Mihai Tusa.
@@ -19,13 +22,14 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 public class HttpInputs {
     private static final int DEFAULT_HTTPS_PORT = 443;
 
-    private String host;
-    private int port;
-    private String protocol;
-    private String username;
-    private String password;
-    private boolean trustEveryone;
-    private boolean closeSession;
+    private final String host;
+    private final int port;
+    private final String protocol;
+    private final String username;
+    private final String password;
+    private final boolean trustEveryone;
+    private final boolean closeSession;
+    private final GlobalSessionObject<Map<String, Object>> globalSessionObject;
 
     public HttpInputs(HttpInputsBuilder builder) {
         this.host = builder.host;
@@ -35,6 +39,7 @@ public class HttpInputs {
         this.password = builder.password;
         this.trustEveryone = builder.trustEveryone;
         this.closeSession = builder.closeSession;
+        this.globalSessionObject = builder.globalSessionObject;
     }
 
     public String getHost() {
@@ -65,6 +70,10 @@ public class HttpInputs {
         return closeSession;
     }
 
+    public GlobalSessionObject<Map<String, Object>> getGlobalSessionObject() {
+        return globalSessionObject;
+    }
+
     public static class HttpInputsBuilder {
         private String host;
         private int port;
@@ -73,6 +82,7 @@ public class HttpInputs {
         private String password;
         private boolean trustEveryone;
         private boolean closeSession;
+        private GlobalSessionObject<Map<String, Object>> globalSessionObject;
 
         public HttpInputs build() {
             return new HttpInputs(this);
@@ -110,6 +120,11 @@ public class HttpInputs {
 
         public HttpInputsBuilder withCloseSession(String inputValue) throws Exception {
             closeSession = BooleanUtilities.toBoolean(inputValue);
+            return this;
+        }
+
+        public HttpInputsBuilder withGlobalSessionObject(GlobalSessionObject<Map<String, Object>> globalSessionObject) throws Exception {
+            this.globalSessionObject = globalSessionObject;
             return this;
         }
     }
