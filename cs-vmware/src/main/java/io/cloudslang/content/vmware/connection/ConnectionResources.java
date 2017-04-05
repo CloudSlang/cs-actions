@@ -30,7 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 public class ConnectionResources {
     private static final String RESOURCE_POOL = "resourcePool";
 
-    private BasicConnection basicConnection = new BasicConnection();
+    private final BasicConnection basicConnection;
 
     private Connection connection;
     private MoRefHandler moRefHandler;
@@ -92,6 +92,7 @@ public class ConnectionResources {
     }
 
     public ConnectionResources(HttpInputs httpInputs) throws Exception {
+        basicConnection = new BasicConnection();
         this.connection = getVCenterConnection(httpInputs);
         this.moRefHandler = new MoRefHandler(connection);
         this.morRootFolder = basicConnection.getServiceContent().getRootFolder();

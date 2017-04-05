@@ -21,6 +21,7 @@ public class Inputs {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String TRUST_EVERYONE = "trustEveryone";
+    public static final String CLOSE_SESSION = "closeSession";
 
     // VM specific inputs
     public static final String DATA_CENTER_NAME = "dataCenterName";
@@ -92,7 +93,6 @@ public class Inputs {
     public static final String USER = "user";
 
     //template upload inputs
-    public static final String CLOSE_SESSION = "closeSession";
     public static final String PATH = "path";
     public static final String NAME = "name";
     public static final String DATACENTER = "datacenter";

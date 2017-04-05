@@ -15,7 +15,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -23,6 +22,10 @@ import io.cloudslang.content.vmware.services.VmService;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by Mihai Tusa.
@@ -80,26 +83,27 @@ public class CloneVM {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> cloneVM(@Param(value = Inputs.HOST, required = true) String host,
-                                       @Param(Inputs.PORT) String port,
-                                       @Param(Inputs.PROTOCOL) String protocol,
-                                       @Param(value = Inputs.USERNAME, required = true) String username,
-                                       @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                       @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
-                                       @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
-                                       @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-                                       @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                       @Param(value = Inputs.CLONE_NAME, required = true) String cloneName,
-                                       @Param(Inputs.FOLDER_NAME) String folderName,
-                                       @Param(Inputs.CLONE_HOST) String cloneHost,
-                                       @Param(Inputs.CLONE_RESOURCE_POOL) String cloneResourcePool,
-                                       @Param(Inputs.CLONE_DATA_STORE) String cloneDataStore,
-                                       @Param(Inputs.THICK_PROVISION) String thickProvision,
-                                       @Param(Inputs.IS_TEMPLATE) String isTemplate,
-                                       @Param(Inputs.CPU_NUM) String cpuNum,
-                                       @Param(Inputs.CORES_PER_SOCKET) String coresPerSocket,
-                                       @Param(Inputs.MEMORY) String memory,
-                                       @Param(Inputs.CLONE_DESCRIPTION) String cloneDescription) {
+    public Map<String, String> cloneVM(@Param(value = HOST, required = true) String host,
+                                       @Param(value = PORT) String port,
+                                       @Param(value = PROTOCOL) String protocol,
+                                       @Param(value = USERNAME, required = true) String username,
+                                       @Param(value = PASSWORD, encrypted = true) String password,
+                                       @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                       @Param(value = CLOSE_SESSION) String closeSession,
+                                       @Param(value = DATA_CENTER_NAME, required = true) String dataCenterName,
+                                       @Param(value = HOSTNAME, required = true) String hostname,
+                                       @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                       @Param(value = CLONE_NAME, required = true) String cloneName,
+                                       @Param(value = FOLDER_NAME) String folderName,
+                                       @Param(value = CLONE_HOST) String cloneHost,
+                                       @Param(value = CLONE_RESOURCE_POOL) String cloneResourcePool,
+                                       @Param(value = CLONE_DATA_STORE) String cloneDataStore,
+                                       @Param(value = THICK_PROVISION) String thickProvision,
+                                       @Param(value = IS_TEMPLATE) String isTemplate,
+                                       @Param(value = CPU_NUM) String cpuNum,
+                                       @Param(value = CORES_PER_SOCKET) String coresPerSocket,
+                                       @Param(value = MEMORY) String memory,
+                                       @Param(value = CLONE_DESCRIPTION) String cloneDescription) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -111,6 +115,7 @@ public class CloneVM {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()

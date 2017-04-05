@@ -15,6 +15,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
@@ -24,6 +25,10 @@ import io.cloudslang.content.vmware.services.GuestService;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by Mihai Tusa.
@@ -71,20 +76,21 @@ public class CustomizeLinuxGuest {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> customizeLinuxGuest(@Param(value = Inputs.HOST, required = true) String host,
-                                            @Param(Inputs.PORT) String port,
-                                            @Param(Inputs.PROTOCOL) String protocol,
-                                            @Param(value = Inputs.USERNAME, required = true) String username,
-                                            @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                            @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+                                            @Param(value = PORT) String port,
+                                            @Param(value = PROTOCOL) String protocol,
+                                            @Param(value = USERNAME, required = true) String username,
+                                            @Param(value = PASSWORD, encrypted = true) String password,
+                                            @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                            @Param(value = CLOSE_SESSION) String closeSession,
 
-                                            @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                            @Param(value = Inputs.COMPUTER_NAME, required = true) String computerName,
-                                            @Param(Inputs.DOMAIN) String domain,
-                                            @Param(Inputs.IP_ADDRESS) String ipAddress,
-                                            @Param(Inputs.SUBNET_MASK) String subnetMask,
-                                            @Param(Inputs.DEFAULT_GATEWAY) String defaultGateway,
-                                            @Param(Inputs.UTC_CLOCK) String hwClockUTC,
-                                            @Param(Inputs.TIME_ZONE) String timeZone) {
+                                            @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                            @Param(value = COMPUTER_NAME, required = true) String computerName,
+                                            @Param(value = DOMAIN) String domain,
+                                            @Param(value = IP_ADDRESS) String ipAddress,
+                                            @Param(value = SUBNET_MASK) String subnetMask,
+                                            @Param(value = DEFAULT_GATEWAY) String defaultGateway,
+                                            @Param(value = UTC_CLOCK) String hwClockUTC,
+                                            @Param(value = TIME_ZONE) String timeZone) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -96,6 +102,7 @@ public class CustomizeLinuxGuest {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName(virtualMachineName).build();

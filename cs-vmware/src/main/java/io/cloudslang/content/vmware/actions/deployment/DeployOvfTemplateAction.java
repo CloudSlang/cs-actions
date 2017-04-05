@@ -16,7 +16,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.utils.OutputUtilities;
-import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -26,6 +25,10 @@ import io.cloudslang.content.vmware.utils.OvfUtils;
 
 import java.util.Locale;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeployOvfTemplateAction {
 
@@ -102,30 +105,31 @@ public class DeployOvfTemplateAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> deployTemplate(@Param(value = Inputs.HOST, required = true) String host,
-                                              @Param(value = Inputs.USERNAME) String username,
-                                              @Param(value = Inputs.PASSWORD, encrypted = true, required = true) String password,
-                                              @Param(value = Inputs.PORT) String port,
-                                              @Param(value = Inputs.PROTOCOL) String protocol,
-                                              @Param(value = Inputs.TRUST_EVERYONE) String trustEveryone,
-                                              @Param(value = Inputs.PATH, required = true) String path,
-                                              @Param(value = Inputs.NAME, required = true) String name,
-                                              @Param(value = Inputs.DATACENTER, required = true) String datacenter,
-                                              @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
-                                              @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-                                              @Param(value = Inputs.CLUSTER_NAME) String clusterName,
-                                              @Param(value = Inputs.RESOURCE_POOL) String resourcePool,
-                                              @Param(value = Inputs.VM_FOLDER) String vmFolder,
-                                              @Param(value = Inputs.DISK_PROVISIONING) String diskProvisioning,
-                                              @Param(value = Inputs.IP_PROTOCOL) String ipProtocol,
-                                              @Param(value = Inputs.IP_ALLOC_SCHEME) String ipAllocScheme,
-                                              @Param(value = Inputs.LOCALE_LANG) String localeLang,
-                                              @Param(value = Inputs.LOCALE_COUNTRY) String localeCountry,
-                                              @Param(value = Inputs.OVF_NETWORK_JS) String ovfNetworkJS,
-                                              @Param(value = Inputs.NET_PORT_GROUP_JS) String netPortGroupJS,
-                                              @Param(value = Inputs.OVF_PROP_KEY_JS) String ovfPropKeyJS,
-                                              @Param(value = Inputs.OVF_PROP_VALUE_JS) String ovfPropValueJS,
-                                              @Param(value = Inputs.PARALLEL) String parallel) {
+    public Map<String, String> deployTemplate(@Param(value = HOST, required = true) String host,
+                                              @Param(value = USERNAME) String username,
+                                              @Param(value = PASSWORD, encrypted = true, required = true) String password,
+                                              @Param(value = PORT) String port,
+                                              @Param(value = PROTOCOL) String protocol,
+                                              @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                              @Param(value = CLOSE_SESSION) String closeSession,
+                                              @Param(value = PATH, required = true) String path,
+                                              @Param(value = NAME, required = true) String name,
+                                              @Param(value = DATACENTER, required = true) String datacenter,
+                                              @Param(value = DATA_STORE, required = true) String dataStore,
+                                              @Param(value = HOSTNAME, required = true) String hostname,
+                                              @Param(value = CLUSTER_NAME) String clusterName,
+                                              @Param(value = RESOURCE_POOL) String resourcePool,
+                                              @Param(value = VM_FOLDER) String vmFolder,
+                                              @Param(value = DISK_PROVISIONING) String diskProvisioning,
+                                              @Param(value = IP_PROTOCOL) String ipProtocol,
+                                              @Param(value = IP_ALLOC_SCHEME) String ipAllocScheme,
+                                              @Param(value = LOCALE_LANG) String localeLang,
+                                              @Param(value = LOCALE_COUNTRY) String localeCountry,
+                                              @Param(value = OVF_NETWORK_JS) String ovfNetworkJS,
+                                              @Param(value = NET_PORT_GROUP_JS) String netPortGroupJS,
+                                              @Param(value = OVF_PROP_KEY_JS) String ovfPropKeyJS,
+                                              @Param(value = OVF_PROP_VALUE_JS) String ovfPropValueJS,
+                                              @Param(value = PARALLEL) String parallel) {
         try {
             Locale locale = InputUtils.getLocale(localeLang, localeCountry);
 
@@ -136,6 +140,7 @@ public class DeployOvfTemplateAction {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()

@@ -15,7 +15,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -23,6 +22,10 @@ import io.cloudslang.content.vmware.services.VmService;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by Mihai Tusa.
@@ -59,7 +62,7 @@ public class UpdateVM {
      *                           be created - Valid values: "persistent", "independent_persistent", "independent_nonpersistent"
      *                           This input will be considered only when "add" operation and "disk" device are provided
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     *         task id of the execution or failure message and the exception if there is one
+     * task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Update Virtual Machine",
             outputs = {
@@ -73,19 +76,20 @@ public class UpdateVM {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> updateVM(@Param(value = Inputs.HOST, required = true) String host,
-                                        @Param(Inputs.PORT) String port,
-                                        @Param(Inputs.PROTOCOL) String protocol,
-                                        @Param(value = Inputs.USERNAME, required = true) String username,
-                                        @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                        @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+    public Map<String, String> updateVM(@Param(value = HOST, required = true) String host,
+                                        @Param(value = PORT) String port,
+                                        @Param(value = PROTOCOL) String protocol,
+                                        @Param(value = USERNAME, required = true) String username,
+                                        @Param(value = PASSWORD, encrypted = true) String password,
+                                        @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                        @Param(value = CLOSE_SESSION) String closeSession,
 
-                                        @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                        @Param(value = Inputs.OPERATION, required = true) String operation,
-                                        @Param(value = Inputs.DEVICE, required = true) String device,
-                                        @Param(value = Inputs.UPDATE_VALUE, required = true) String updateValue,
-                                        @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
-                                        @Param(Inputs.VM_DISK_MODE) String vmDiskMode) {
+                                        @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                        @Param(value = OPERATION, required = true) String operation,
+                                        @Param(value = DEVICE, required = true) String device,
+                                        @Param(value = UPDATE_VALUE, required = true) String updateValue,
+                                        @Param(value = VM_DISK_SIZE) String vmDiskSize,
+                                        @Param(value = VM_DISK_MODE) String vmDiskMode) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -97,6 +101,7 @@ public class UpdateVM {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()

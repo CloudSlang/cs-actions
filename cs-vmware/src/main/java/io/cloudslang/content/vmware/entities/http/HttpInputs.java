@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities.http;
 
+import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
 /**
@@ -24,6 +25,7 @@ public class HttpInputs {
     private String username;
     private String password;
     private boolean trustEveryone;
+    private boolean closeSession;
 
     public HttpInputs(HttpInputsBuilder builder) {
         this.host = builder.host;
@@ -32,6 +34,7 @@ public class HttpInputs {
         this.username = builder.username;
         this.password = builder.password;
         this.trustEveryone = builder.trustEveryone;
+        this.closeSession = builder.closeSession;
     }
 
     public String getHost() {
@@ -54,8 +57,12 @@ public class HttpInputs {
         return password;
     }
 
-    public Boolean isTrustEveryone() {
+    public boolean isTrustEveryone() {
         return trustEveryone;
+    }
+
+    public boolean isCloseSession() {
+        return closeSession;
     }
 
     public static class HttpInputsBuilder {
@@ -65,6 +72,7 @@ public class HttpInputs {
         private String username;
         private String password;
         private boolean trustEveryone;
+        private boolean closeSession;
 
         public HttpInputs build() {
             return new HttpInputs(this);
@@ -96,7 +104,12 @@ public class HttpInputs {
         }
 
         public HttpInputsBuilder withTrustEveryone(String inputValue) throws Exception {
-            trustEveryone = Boolean.parseBoolean(inputValue);
+            trustEveryone = BooleanUtilities.toBoolean(inputValue);
+            return this;
+        }
+
+        public HttpInputsBuilder withCloseSession(String inputValue) throws Exception {
+            closeSession = BooleanUtilities.toBoolean(inputValue);
             return this;
         }
     }

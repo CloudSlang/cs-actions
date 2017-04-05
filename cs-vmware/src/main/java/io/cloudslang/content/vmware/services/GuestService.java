@@ -55,7 +55,8 @@ public class GuestService {
                 connectionResources.getVimPortType().checkCustomizationSpec(vmMor, customizationSpec);
                 ManagedObjectReference task = connectionResources.getVimPortType().customizeVMTask(vmMor, customizationSpec);
 
-                return new ResponseHelper(connectionResources, task).getResultsMap("Success: The [" +
+                return new ResponseHelper(connectionResources, task)
+                        .getResultsMap("Success: The [" +
                         vmInputs.getVirtualMachineName() + "] VM was successfully customized. The taskId is: " +
                         task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be customized.");
             } else {
@@ -64,7 +65,9 @@ public class GuestService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+            }
         }
     }
 
@@ -93,7 +96,9 @@ public class GuestService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+            }
         }
     }
 }

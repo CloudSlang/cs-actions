@@ -24,18 +24,10 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
-import static io.cloudslang.content.vmware.constants.Inputs.AFFINE_HOST_GROUP_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.ANTI_AFFINE_HOST_GROUP_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.HOST;
-import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
-import static io.cloudslang.content.vmware.constants.Inputs.PORT;
-import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
-import static io.cloudslang.content.vmware.constants.Inputs.RULE_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
-import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
-import static io.cloudslang.content.vmware.constants.Inputs.VM_GROUP_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
 /**
@@ -91,6 +83,7 @@ public class CreateAffinityRule {
                                                   @Param(value = USERNAME, required = true) String username,
                                                   @Param(value = PASSWORD, encrypted = true) String password,
                                                   @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                                  @Param(value = CLOSE_SESSION) String closeSession,
                                                   @Param(value = CLUSTER_NAME, required = true) String clusterName,
                                                   @Param(value = RULE_NAME, required = true) String ruleName,
                                                   @Param(value = AFFINE_HOST_GROUP_NAME) String affineHostGroupName,
@@ -106,6 +99,7 @@ public class CreateAffinityRule {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
 
             final VmInputs vmInputs = new VmInputs.VmInputsBuilder()

@@ -13,7 +13,9 @@ import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.ServiceContent;
 import com.vmware.vim25.VimPortType;
 
-public interface Connection {
+import java.io.Serializable;
+
+public interface Connection extends Serializable {
     VimPortType getVimPort();
 
     ServiceContent getServiceContent();

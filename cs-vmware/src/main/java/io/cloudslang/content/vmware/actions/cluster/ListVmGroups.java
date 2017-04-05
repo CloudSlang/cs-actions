@@ -24,15 +24,10 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
-import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.DELIMITER;
-import static io.cloudslang.content.vmware.constants.Inputs.HOST;
-import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
-import static io.cloudslang.content.vmware.constants.Inputs.PORT;
-import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
-import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
-import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by pinteae on 10/5/2016.
@@ -75,6 +70,7 @@ public class ListVmGroups {
                                             @Param(value = USERNAME, required = true) String username,
                                             @Param(value = PASSWORD, encrypted = true) String password,
                                             @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                            @Param(value = CLOSE_SESSION) String closeSession,
                                             @Param(value = CLUSTER_NAME, required = true) String clusterName,
                                             @Param(value = DELIMITER) String delimiter) {
         try {
@@ -85,7 +81,9 @@ public class ListVmGroups {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
+
             return OutputUtilities.getSuccessResultsMap(
                     new ClusterComputeResourceService()
                             .listGroups(httpInputs, clusterName, InputUtils.getDefaultDelimiter(delimiter, COMMA_DELIMITER), ClusterVmGroup.class));

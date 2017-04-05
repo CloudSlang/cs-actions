@@ -25,6 +25,10 @@ import io.cloudslang.content.vmware.services.GuestService;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+
 /**
  * Created by Mihai Tusa.
  * 3/22/2016.
@@ -95,7 +99,7 @@ public class CustomizeWindowsGuest {
      *                           https://technet.microsoft.com/en-us/library/ms145276%28v=sql.90%29.aspx
      *                           - Default: "360"
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     *         task id of the execution or failure message and the exception if there is one
+     * task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Customize Windows Guest",
             outputs = {
@@ -109,37 +113,39 @@ public class CustomizeWindowsGuest {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> customizeWindowsGuest(@Param(value = Inputs.HOST, required = true) String host,
-                                              @Param(Inputs.PORT) String port,
-                                              @Param(Inputs.PROTOCOL) String protocol,
-                                              @Param(value = Inputs.USERNAME, required = true) String username,
-                                              @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                              @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+    public Map<String, String> customizeWindowsGuest(@Param(value = HOST, required = true) String host,
+                                                     @Param(value = PORT) String port,
+                                                     @Param(value = PROTOCOL) String protocol,
+                                                     @Param(value = USERNAME, required = true) String username,
+                                                     @Param(value = PASSWORD, encrypted = true) String password,
+                                                     @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                                     @Param(value = CLOSE_SESSION) String closeSession,
 
-                                              @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                              @Param(value = Inputs.REBOOT_OPTION, required = true) String rebootOption,
-                                              @Param(value = Inputs.COMPUTER_NAME, required = true) String computerName,
-                                              @Param(value = Inputs.COMPUTER_PASSWORD, required = true) String computerPassword,
-                                              @Param(value = Inputs.OWNER_NAME, required = true) String ownerName,
-                                              @Param(value = Inputs.OWNER_ORGANIZATION, required = true) String ownerOrganization,
-                                              @Param(Inputs.PRODUCT_KEY) String productKey,
-                                              @Param(Inputs.DOMAIN_USERNAME) String domainUsername,
-                                              @Param(Inputs.DOMAIN_PASSWORD) String domainPassword,
-                                              @Param(Inputs.DOMAIN) String domain,
-                                              @Param(Inputs.WORKGROUP) String workgroup,
-                                              @Param(value = Inputs.LICENSE_DATA_MODE, required = true) String licenseDataMode,
-                                              @Param(Inputs.DNS_SERVER) String dnsServer,
-                                              @Param(Inputs.IP_ADDRESS) String ipAddress,
-                                              @Param(Inputs.SUBNET_MASK) String subnetMask,
-                                              @Param(Inputs.DEFAULT_GATEWAY) String defaultGateway,
-                                              @Param(Inputs.MAC_ADDRESS) String macAddress,
 
-                                              @Param(Inputs.AUTO_LOGON) String autoLogon,
-                                              @Param(Inputs.DELETE_ACCOUNTS) String deleteAccounts,
-                                              @Param(value = Inputs.CHANGE_SID, required = true) String changeSID,
-                                              @Param(Inputs.AUTO_LOGON_COUNT) String autoLogonCount,
-                                              @Param(Inputs.AUTO_USERS) String autoUsers,
-                                              @Param(Inputs.TIME_ZONE) String timeZone) {
+                                                     @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                                     @Param(value = REBOOT_OPTION, required = true) String rebootOption,
+                                                     @Param(value = COMPUTER_NAME, required = true) String computerName,
+                                                     @Param(value = COMPUTER_PASSWORD, required = true) String computerPassword,
+                                                     @Param(value = OWNER_NAME, required = true) String ownerName,
+                                                     @Param(value = OWNER_ORGANIZATION, required = true) String ownerOrganization,
+                                                     @Param(value = PRODUCT_KEY) String productKey,
+                                                     @Param(value = DOMAIN_USERNAME) String domainUsername,
+                                                     @Param(value = DOMAIN_PASSWORD) String domainPassword,
+                                                     @Param(value = DOMAIN) String domain,
+                                                     @Param(value = WORKGROUP) String workgroup,
+                                                     @Param(value = LICENSE_DATA_MODE, required = true) String licenseDataMode,
+                                                     @Param(value = DNS_SERVER) String dnsServer,
+                                                     @Param(value = IP_ADDRESS) String ipAddress,
+                                                     @Param(value = SUBNET_MASK) String subnetMask,
+                                                     @Param(value = DEFAULT_GATEWAY) String defaultGateway,
+                                                     @Param(value = MAC_ADDRESS) String macAddress,
+
+                                                     @Param(value = AUTO_LOGON) String autoLogon,
+                                                     @Param(value = DELETE_ACCOUNTS) String deleteAccounts,
+                                                     @Param(value = CHANGE_SID, required = true) String changeSID,
+                                                     @Param(value = AUTO_LOGON_COUNT) String autoLogonCount,
+                                                     @Param(value = AUTO_USERS) String autoUsers,
+                                                     @Param(value = TIME_ZONE) String timeZone) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -151,6 +157,7 @@ public class CustomizeWindowsGuest {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()

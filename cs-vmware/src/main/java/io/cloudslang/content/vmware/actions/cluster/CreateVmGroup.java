@@ -25,17 +25,11 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.InputNames.DELIMITER;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
-import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.HOST;
-import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
-import static io.cloudslang.content.vmware.constants.Inputs.PORT;
-import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
-import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
-import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
-import static io.cloudslang.content.vmware.constants.Inputs.VM_GROUP_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.VM_LIST;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by pinteae on 9/27/2016.
@@ -80,6 +74,7 @@ public class CreateVmGroup {
                                              @Param(value = USERNAME, required = true) String username,
                                              @Param(value = PASSWORD, encrypted = true) String password,
                                              @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                             @Param(value = CLOSE_SESSION) String closeSession,
                                              @Param(value = VM_GROUP_NAME, required = true) String vmGroupName,
                                              @Param(value = CLUSTER_NAME, required = true) String clusterName,
                                              @Param(value = VM_LIST, required = true) String vmList,
@@ -92,7 +87,9 @@ public class CreateVmGroup {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
+
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withClusterName(clusterName)
                     .withVmGroupName(vmGroupName)

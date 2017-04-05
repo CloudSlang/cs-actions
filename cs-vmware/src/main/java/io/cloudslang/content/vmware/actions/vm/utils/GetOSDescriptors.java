@@ -15,7 +15,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -23,6 +22,10 @@ import io.cloudslang.content.vmware.services.VmService;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by Mihai Tusa.
@@ -50,7 +53,7 @@ public class GetOSDescriptors {
      *                       - Example: 'host123.subdomain.example.com'
      * @param delimiter      the delimiter that will be used in response list - Default: ","
      * @return resultMap with String as key and value that contains returnCode of the operation, a list that contains all the
-     *         guest operating system descriptors supported by the host system or failure message and the exception if there is one
+     * guest operating system descriptors supported by the host system or failure message and the exception if there is one
      */
     @Action(name = "Get OS Descriptors",
             outputs = {
@@ -64,17 +67,18 @@ public class GetOSDescriptors {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> getOsDescriptors(@Param(value = Inputs.HOST, required = true) String host,
-                                                @Param(Inputs.PORT) String port,
-                                                @Param(Inputs.PROTOCOL) String protocol,
-                                                @Param(value = Inputs.USERNAME, required = true) String username,
-                                                @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                                @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+    public Map<String, String> getOsDescriptors(@Param(value = HOST, required = true) String host,
+                                                @Param(value = PORT) String port,
+                                                @Param(value = PROTOCOL) String protocol,
+                                                @Param(value = USERNAME, required = true) String username,
+                                                @Param(value = PASSWORD, encrypted = true) String password,
+                                                @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                                @Param(value = CLOSE_SESSION) String closeSession,
 
-                                                @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
-                                                @Param(value = Inputs.HOSTNAME, required = true) String hostname,
+                                                @Param(value = DATA_CENTER_NAME, required = true) String dataCenterName,
+                                                @Param(value = HOSTNAME, required = true) String hostname,
 
-                                                @Param(Inputs.DELIMITER) String delimiter) {
+                                                @Param(value = DELIMITER) String delimiter) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -86,6 +90,7 @@ public class GetOSDescriptors {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(trustEveryone)
+                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
                     .build();
 
             VmInputs vmInputs = new VmInputs.VmInputsBuilder()
