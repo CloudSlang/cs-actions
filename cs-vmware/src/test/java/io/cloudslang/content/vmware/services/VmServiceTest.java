@@ -136,6 +136,7 @@ public class VmServiceTest {
         when(taskMorMock.getValue()).thenReturn("task-12345");
         when(connectionMock.disconnect()).thenReturn(connectionMock);
         when(vimPortMock.retrieveServiceContent(any(ManagedObjectReference.class))).thenReturn(serviceContentMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
 
         dataStoresVictim = new ArrayList<>();
         morVictim = new ManagedObjectReference();

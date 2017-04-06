@@ -145,16 +145,6 @@ public class InputUtils {
         }
     }
 
-    public static String sha256(final @NotNull String base) {
-        try {
-            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            final byte[] hash = digest.digest(base.getBytes(StandardCharsets.UTF_8));
-            return new String(hash);
-        } catch (NoSuchAlgorithmException nsae) {
-            throw new RuntimeException(nsae.getMessage(), nsae.getCause());
-        }
-    }
-
     public static void checkOptionalMutuallyExclusiveInputs(final String input1, final String input2, final String exceptionMessage) {
         if (isNotBlank(input1) && isNotBlank(input2)) {
             throw new IllegalArgumentException(exceptionMessage);

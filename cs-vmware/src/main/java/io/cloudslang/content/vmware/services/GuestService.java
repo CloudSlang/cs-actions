@@ -20,9 +20,12 @@ import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.helpers.ResponseHelper;
 import io.cloudslang.content.vmware.services.utils.GuestConfigSpecs;
+import io.cloudslang.content.vmware.utils.ConnectionUtils;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
 
 import java.util.Map;
+
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
 
 /**
  * Created by Mihai Tusa.
@@ -67,6 +70,7 @@ public class GuestService {
         } finally {
             if (httpInputs.isCloseSession()) {
                 connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
             }
         }
     }
@@ -98,6 +102,7 @@ public class GuestService {
         } finally {
             if (httpInputs.isCloseSession()) {
                 connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
             }
         }
     }

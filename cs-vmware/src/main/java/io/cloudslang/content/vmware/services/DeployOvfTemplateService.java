@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.vmware.constants.Constants.DISK_DRIVE_CIM_TYPE;
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
 import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseErrorState;
 import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseInfo;
 import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseState;
@@ -82,20 +83,26 @@ public class DeployOvfTemplateService {
                                   final Map<String, String> ovfNetworkMap, final Map<String, String> ovfPropertyMap)
             throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair =
-                createLeaseSetup(connectionResources, vmInputs, templatePath, ovfNetworkMap, ovfPropertyMap);
-        final ManagedObjectReference httpNfcLease = pair.getLeft();
-        final OvfCreateImportSpecResult importSpecResult = pair.getRight();
+        try {
+            final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair = createLeaseSetup(connectionResources, vmInputs, templatePath, ovfNetworkMap, ovfPropertyMap);
+            final ManagedObjectReference httpNfcLease = pair.getLeft();
+            final OvfCreateImportSpecResult importSpecResult = pair.getRight();
 
-        final HttpNfcLeaseInfo httpNfcLeaseInfo = getHttpNfcLeaseInfoWhenReady(connectionResources, httpNfcLease);
-        final List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
-        final ProgressUpdater progressUpdater = executor.isParallel() ?
-                new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources) :
-                new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
+            final HttpNfcLeaseInfo httpNfcLeaseInfo = getHttpNfcLeaseInfoWhenReady(connectionResources, httpNfcLease);
+            final List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
+            final ProgressUpdater progressUpdater = executor.isParallel() ?
+                    new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources) :
+                    new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
 
-        executor.execute(progressUpdater);
-        transferVmdkFiles(templatePath, importSpecResult, deviceUrls, progressUpdater);
-        executor.shutdown();
+            executor.execute(progressUpdater);
+            transferVmdkFiles(templatePath, importSpecResult, deviceUrls, progressUpdater);
+            executor.shutdown();
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     protected ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> createLeaseSetup(

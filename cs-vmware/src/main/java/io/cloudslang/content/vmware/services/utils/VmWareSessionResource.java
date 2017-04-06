@@ -32,9 +32,11 @@ public class VmWareSessionResource extends SessionResource<Map<String, Connectio
     }
 
     @Override
-    public void release() {
+    public synchronized void release() {
         for (final Connection vmWareConnection : vmWareConnectionMap.values()) {
-            vmWareConnection.disconnect();
+            if (vmWareConnection != null && vmWareConnection.isConnected()) {
+                vmWareConnection.disconnect();
+            }
         }
         vmWareConnectionMap = null;
     }
