@@ -45,6 +45,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -201,7 +202,7 @@ public class DeployOvfTemplateService {
             final TarArchiveInputStream tar = new TarArchiveInputStream(new FileInputStream(templateFilePathStr));
             TarArchiveEntry entry;
             while ((entry = tar.getNextTarEntry()) != null) {
-                if (entry.getName().startsWith(vmdkName)) {
+                if (new File(entry.getName()).getName().startsWith(vmdkName)) {
                     return new TransferVmdkFromInputStream(tar, entry.getSize());
                 }
             }
@@ -232,7 +233,7 @@ public class DeployOvfTemplateService {
             try (final TarArchiveInputStream tar = new TarArchiveInputStream(new FileInputStream(templatePath))) {
                 TarArchiveEntry entry;
                 while ((entry = tar.getNextTarEntry()) != null) {
-                    if (isOvf(Paths.get(entry.getName()))) {
+                    if (isOvf(Paths.get(new File(entry.getName()).getName()))) {
                         return OvfUtils.writeToString(tar, entry.getSize());
                     }
                 }

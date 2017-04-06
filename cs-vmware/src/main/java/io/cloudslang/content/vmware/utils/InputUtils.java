@@ -16,7 +16,6 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.entities.http.Protocol;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -27,7 +26,8 @@ import java.util.Locale;
 
 import static io.cloudslang.content.utils.StringUtilities.isBlank;
 import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 
 /**
  * Created by Mihai Tusa.
@@ -152,6 +152,12 @@ public class InputUtils {
             return new String(hash);
         } catch (NoSuchAlgorithmException nsae) {
             throw new RuntimeException(nsae.getMessage(), nsae.getCause());
+        }
+    }
+
+    public static void checkOptionalMutuallyExclusiveInputs(final String input1, final String input2, final String exceptionMessage) {
+        if (isNotBlank(input1) && isNotBlank(input2)) {
+            throw new IllegalArgumentException(exceptionMessage);
         }
     }
 }
