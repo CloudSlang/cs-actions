@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_VM_NAME_OR_ID;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
@@ -77,7 +76,7 @@ public class ModifyVmOverrides {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
-                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();
 

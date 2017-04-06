@@ -25,7 +25,6 @@ import io.cloudslang.content.vmware.services.VmService;
 
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -51,6 +50,11 @@ public class GetOSDescriptors {
      *                       to see how to import a certificate into Java Keystore and
      *                       https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html
      *                       to see how to obtain a valid vCenter certificate
+     * @param closeSession   Whether to use the flow session context to cache the Connection to the host or not. If set to
+     *                       "false" it will close and remove any connection from the session context, otherwise the Connection
+     *                       will be kept alive and not removed.
+     *                       Valid values: "true", "false"
+     *                       Default value: "true"
      * @param dataCenterName the data center name where the host system is - Example: 'DataCenter2'
      * @param hostname       the name of the target host to be queried to retrieve the supported guest OSes
      *                       - Example: 'host123.subdomain.example.com'
@@ -92,7 +96,7 @@ public class GetOSDescriptors {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
-                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();
 

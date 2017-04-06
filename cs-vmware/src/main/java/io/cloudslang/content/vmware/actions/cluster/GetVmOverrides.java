@@ -26,7 +26,6 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_VM_NAME_OR_ID_OR_NONE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
@@ -39,31 +38,36 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class GetVmOverrides {
 
     /**
-     * @param host                  VMware host or IP.
-     *                              Example: "vc6.subdomain.example.com"
-     * @param port                  optional - The port to connect through.
-     *                              Default Value: "443"
-     *                              Examples: "443", "80"
-     * @param protocol              optional - The connection protocol.
-     *                              Default Value: "https"
-     *                              Valid Values: "http", "https"
-     * @param username              The VMware username used to connect.
-     * @param password              The password associated with "username" input.
-     * @param trustEveryone         optional - If "true" will allow connections from any host, if "false" the connection
-     *                              will be allowed only using a valid vCenter certificate.
-     *                              Default Value: "false"
-     * @param hostname              The name of the target host to be queried to retrieve the supported guest OSes
-     *                              Example: "host123.subdomain.example.com"
-     * @param virtualMachineName    optional - The name of the virtual machine for which the override will be created. This input
-     *                              is mutually exclusive with virtualMachineId.
-     * @param virtualMachineId      optional - The id of the virtual machine for which the override will be created. This input is
-     *                              mutually exclusive with virtualMachineName.
-     *                              Example: "vm-1230"
-     * @param clusterName           The name of the cluster.
-     * @return                      A map containing the output of the operation. Keys present in the map are:
+     * @param host               VMware host or IP.
+     *                           Example: "vc6.subdomain.example.com"
+     * @param port               optional - The port to connect through.
+     *                           Default Value: "443"
+     *                           Examples: "443", "80"
+     * @param protocol           optional - The connection protocol.
+     *                           Default Value: "https"
+     *                           Valid Values: "http", "https"
+     * @param username           The VMware username used to connect.
+     * @param password           The password associated with "username" input.
+     * @param trustEveryone      optional - If "true" will allow connections from any host, if "false" the connection
+     *                           will be allowed only using a valid vCenter certificate.
+     *                           Default Value: "false"
+     * @param closeSession       Whether to use the flow session context to cache the Connection to the host or not. If set to
+     *                           "false" it will close and remove any connection from the session context, otherwise the Connection
+     *                           will be kept alive and not removed.
+     *                           Valid values: "true", "false"
+     *                           Default value: "true"
+     * @param hostname           The name of the target host to be queried to retrieve the supported guest OSes
+     *                           Example: "host123.subdomain.example.com"
+     * @param virtualMachineName optional - The name of the virtual machine for which the override will be created. This input
+     *                           is mutually exclusive with virtualMachineId.
+     * @param virtualMachineId   optional - The id of the virtual machine for which the override will be created. This input is
+     *                           mutually exclusive with virtualMachineName.
+     *                           Example: "vm-1230"
+     * @param clusterName        The name of the cluster.
+     * @return A map containing the output of the operation. Keys present in the map are:
      * <br><b>returnResult</b>      The primary output.
      * <br><b>returnCode</b>        The return code of the operation. 0 if the operation goes to success, -1 if the
-     *                              operation goes to failure.
+     * operation goes to failure.
      * <br><b>exception</b>         The exception message if the operation goes to failure.
      */
 
@@ -100,7 +104,7 @@ public class GetVmOverrides {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
-                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();
 

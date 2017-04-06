@@ -28,7 +28,6 @@ import io.cloudslang.content.vmware.utils.OvfUtils;
 import java.util.Locale;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -49,6 +48,11 @@ public class DeployOvfTemplateAction {
      *                         to see how to import a certificate into Java Keystore and
      *                         https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html
      *                         to see how to obtain a valid vCenter certificate
+     * @param closeSession     Whether to use the flow session context to cache the Connection to the host or not. If set to
+     *                         "false" it will close and remove any connection from the session context, otherwise the Connection
+     *                         will be kept alive and not removed.
+     *                         Valid values: "true", "false"
+     *                         Default value: "true"
      * @param path             Path to the .ovf or .ova file on the RAS filesystem or network to import.
      * @param name             Name of the newly deployed virtual machine.
      * @param datacenter       Datacenter of the host system or cluster.
@@ -144,7 +148,7 @@ public class DeployOvfTemplateAction {
                     .withUsername(username)
                     .withPassword(password)
                     .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
-                    .withCloseSession(defaultIfEmpty(closeSession, FALSE))
+                    .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();
 

@@ -110,7 +110,9 @@ public class ConnectionResources {
 
     private Connection getVCenterConnection(HttpInputs httpInputs) throws Exception {
         String url = InputUtils.getUrlString(httpInputs);
-
+        if (basicConnection.isConnected()) {
+            return basicConnection;
+        }
         return basicConnection.connect(url, httpInputs.getUsername(), httpInputs.getPassword(), httpInputs.isTrustEveryone());
     }
 
