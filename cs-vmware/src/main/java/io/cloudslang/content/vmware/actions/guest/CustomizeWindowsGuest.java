@@ -17,6 +17,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
@@ -147,7 +148,7 @@ public class CustomizeWindowsGuest {
                                                      @Param(value = AUTO_LOGON_COUNT) String autoLogonCount,
                                                      @Param(value = AUTO_USERS) String autoUsers,
                                                      @Param(value = TIME_ZONE) String timeZone,
-                                                     @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                                     @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
 
         try {
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()

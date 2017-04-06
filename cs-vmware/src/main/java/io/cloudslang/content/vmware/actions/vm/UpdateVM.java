@@ -17,6 +17,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -92,7 +93,7 @@ public class UpdateVM {
                                         @Param(value = UPDATE_VALUE, required = true) String updateValue,
                                         @Param(value = VM_DISK_SIZE) String vmDiskSize,
                                         @Param(value = VM_DISK_MODE) String vmDiskMode,
-                                        @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                        @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
 
 
         try {

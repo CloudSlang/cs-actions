@@ -11,6 +11,7 @@ package io.cloudslang.content.vmware.entities.http;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.BooleanUtilities;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
@@ -29,7 +30,7 @@ public class HttpInputs {
     private final String password;
     private final boolean trustEveryone;
     private final boolean closeSession;
-    private final GlobalSessionObject<Map<String, Object>> globalSessionObject;
+    private final GlobalSessionObject<Map<String, Connection>> globalSessionObject;
 
     public HttpInputs(HttpInputsBuilder builder) {
         this.host = builder.host;
@@ -70,7 +71,7 @@ public class HttpInputs {
         return closeSession;
     }
 
-    public GlobalSessionObject<Map<String, Object>> getGlobalSessionObject() {
+    public GlobalSessionObject<Map<String, Connection>> getGlobalSessionObject() {
         return globalSessionObject;
     }
 
@@ -82,7 +83,7 @@ public class HttpInputs {
         private String password;
         private boolean trustEveryone;
         private boolean closeSession;
-        private GlobalSessionObject<Map<String, Object>> globalSessionObject;
+        private GlobalSessionObject<Map<String, Connection>> globalSessionObject;
 
         public HttpInputs build() {
             return new HttpInputs(this);
@@ -123,7 +124,7 @@ public class HttpInputs {
             return this;
         }
 
-        public HttpInputsBuilder withGlobalSessionObject(GlobalSessionObject<Map<String, Object>> globalSessionObject) throws Exception {
+        public HttpInputsBuilder withGlobalSessionObject(GlobalSessionObject<Map<String, Connection>> globalSessionObject) throws Exception {
             this.globalSessionObject = globalSessionObject;
             return this;
         }

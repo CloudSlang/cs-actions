@@ -18,6 +18,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.CollectionUtilities;
 import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -80,7 +81,7 @@ public class CreateHostGroup {
                                                @Param(value = HOST_GROUP_NAME, required = true) String hostGroupName,
                                                @Param(value = HOST_LIST, required = true) String hostList,
                                                @Param(value = DELIMITER) String delimiter,
-                                               @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                               @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
         try {
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)

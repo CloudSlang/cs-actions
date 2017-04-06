@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.connection;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.vmware.vim25.InvalidPropertyFaultMsg;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFaultFaultMsg;
@@ -19,8 +20,17 @@ import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
+import io.cloudslang.content.vmware.services.utils.VmWareSessionResource;
 import io.cloudslang.content.vmware.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static io.cloudslang.content.vmware.utils.InputUtils.sha256;
+import static java.lang.String.format;
 
 
 /**
@@ -54,7 +64,8 @@ public class ConnectionResources {
     }
 
     public ConnectionResources(HttpInputs httpInputs) throws Exception {
-        basicConnection = getBasicConnectionFromContext();
+        final String connectionContextKey = computeConnectionContextKey(httpInputs.getProtocol(), httpInputs.getHost(), httpInputs.getPort(), httpInputs.getUsername());
+        basicConnection = getBasicConnectionFromContext(httpInputs.getGlobalSessionObject(), connectionContextKey);
 
         this.connection = getVCenterConnection(httpInputs);
         this.moRefHandler = new MoRefHandler(connection);
@@ -63,8 +74,29 @@ public class ConnectionResources {
         this.vimPortType = connection.getVimPort();
     }
 
-    private BasicConnection getBasicConnectionFromContext() {
-        return new BasicConnection();
+    @NotNull
+    private String computeConnectionContextKey(final String protocol, final String host, final Integer port, final String username) {
+        return sha256(format("%s%s%d%s", protocol, host, port, username));
+    }
+
+    private BasicConnection getBasicConnectionFromContext(@Nullable  GlobalSessionObject<Map<String, Connection>> globalSessionObject, @NotNull final String connectionContextKey) {
+        if (globalSessionObject == null) {
+            globalSessionObject = new GlobalSessionObject<>();
+        }
+        Map<String, Connection> connectionMap = globalSessionObject.get();
+        if (connectionMap != null) {
+            if (connectionMap.get(connectionContextKey) instanceof BasicConnection) {
+                return (BasicConnection) connectionMap.get(connectionContextKey);
+            }
+            final BasicConnection basicConnection = new BasicConnection();
+            connectionMap.put(connectionContextKey, basicConnection);
+            return basicConnection;
+        }
+        connectionMap = new HashMap<>();
+        final BasicConnection basicConnection = new BasicConnection();
+        connectionMap.put(connectionContextKey, basicConnection);
+        globalSessionObject.setResource(new VmWareSessionResource(connectionMap));
+        return basicConnection;
     }
 
     public ManagedObjectReference getServiceInstance() {

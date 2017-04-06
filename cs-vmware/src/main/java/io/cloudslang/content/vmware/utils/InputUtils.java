@@ -16,12 +16,18 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.entities.http.Protocol;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
 import static io.cloudslang.content.utils.StringUtilities.isBlank;
 import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by Mihai Tusa.
@@ -134,8 +140,18 @@ public class InputUtils {
     }
 
     public static void checkMutuallyExclusiveInputs(final String input1, final String input2, final String exceptionMessage) {
-        if (!(isBlank(input1) ^ isBlank(input2))) {
+        if (isBlank(input1) == isBlank(input2)) {
             throw new IllegalArgumentException(exceptionMessage);
+        }
+    }
+
+    public static String sha256(final @NotNull String base) {
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final byte[] hash = digest.digest(base.getBytes(StandardCharsets.UTF_8));
+            return new String(hash);
+        } catch (NoSuchAlgorithmException nsae) {
+            throw new RuntimeException(nsae.getMessage(), nsae.getCause());
         }
     }
 }

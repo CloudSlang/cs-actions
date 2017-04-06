@@ -17,6 +17,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -91,7 +92,7 @@ public class CreateAffinityRule {
                                                   @Param(value = AFFINE_HOST_GROUP_NAME) String affineHostGroupName,
                                                   @Param(value = ANTI_AFFINE_HOST_GROUP_NAME) String antiAffineHostGroupName,
                                                   @Param(value = VM_GROUP_NAME, required = true) String vmGroupName,
-                                                  @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                                  @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
         try {
             InputUtils.checkMutuallyExclusiveInputs(affineHostGroupName, antiAffineHostGroupName, PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP);
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
