@@ -88,7 +88,7 @@ public class GetVmOverrides {
                                               @Param(value = PORT) String port,
                                               @Param(value = PROTOCOL) String protocol,
                                               @Param(value = USERNAME, required = true) String username,
-                                              @Param(value = PASSWORD, encrypted = true) String password,
+                                              @Param(value = PASSWORD, encrypted = true, required = true) String password,
                                               @Param(value = TRUST_EVERYONE) String trustEveryone,
                                               @Param(value = HOSTNAME, required = true) String hostname,
                                               @Param(value = VM_NAME) String virtualMachineName,

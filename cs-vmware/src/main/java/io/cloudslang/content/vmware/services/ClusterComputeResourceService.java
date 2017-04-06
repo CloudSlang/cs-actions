@@ -95,24 +95,29 @@ public class ClusterComputeResourceService {
     }
 
     public String getVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs) throws Exception {
-        final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        ConnectionResources connectionResources = null;
+        try {
+            connectionResources = new ConnectionResources(httpInputs, vmInputs);
 
-        final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+            final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
 
-        final String restartPriority;
-        if(StringUtilities.isNotBlank(vmInputs.getVirtualMachineId()) || StringUtilities.isNotBlank(vmInputs.getVirtualMachineName())) {
-            final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
-            restartPriority = getVmRestartPriority(clusterConfigInfoEx, vmMor);
-        } else {
-            restartPriority = getVmRestartPriority(clusterConfigInfoEx);
+            final String restartPriority;
+            if (StringUtilities.isNotBlank(vmInputs.getVirtualMachineId()) || StringUtilities.isNotBlank(vmInputs.getVirtualMachineName())) {
+                final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
+                restartPriority = getVmRestartPriority(clusterConfigInfoEx, vmMor);
+            } else {
+                restartPriority = getVmRestartPriority(clusterConfigInfoEx);
+            }
+
+            return restartPriority;
+        } finally {
+            if(connectionResources != null && connectionResources.getConnection() != null) {
+                connectionResources.getConnection().disconnect();
+            }
         }
-
-        connectionResources.getConnection().disconnect();
-
-        return restartPriority;
     }
 
     private ManagedObjectReference getVirtualMachineReference(final VmInputs vmInputs, final ConnectionResources connectionResources) throws Exception {
