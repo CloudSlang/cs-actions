@@ -60,7 +60,7 @@ public class MountToolsTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = mountTools.mountTools("", "", "", "", "", "", "");
+        resultMap = mountTools.mountTools("", "", "", "", "", "", "true", "", null);
 
         verify(guestServiceMock, times(1)).mountTools(any(HttpInputs.class), any(VmInputs.class));
 
@@ -73,7 +73,7 @@ public class MountToolsTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = mountTools.mountTools("", "", "myProtocol", "", "", "", "");
+        resultMap = mountTools.mountTools("", "", "myProtocol", "", "", "", "true", "", null);
 
         verify(guestServiceMock, never()).mountTools(any(HttpInputs.class), any(VmInputs.class));
 

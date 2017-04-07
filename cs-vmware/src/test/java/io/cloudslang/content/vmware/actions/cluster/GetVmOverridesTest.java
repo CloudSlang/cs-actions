@@ -75,7 +75,7 @@ public class GetVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doReturn(expectedReturnResult).when(service).getVmOverride(any(HttpInputs.class), any(VmInputs.class));
 
-        Map<String, String> actual = action.getVmOverrides("", "", "", "", "", "", "", "vmName", "", "");
+        Map<String, String> actual = action.getVmOverrides("", "", "", "", "", "", "", "", "vmName", "", "", null);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).getVmOverride(any(HttpInputs.class), any(VmInputs.class));
@@ -91,7 +91,7 @@ public class GetVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doReturn(expectedReturnResult).when(service).getVmOverride(any(HttpInputs.class), any(VmInputs.class));
 
-        Map<String, String> actual = action.getVmOverrides("", "", "", "", "", "", "", "", "", "");
+        Map<String, String> actual = action.getVmOverrides("", "", "", "", "", "", "", "", "", "", "", null);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).getVmOverride(any(HttpInputs.class), any(VmInputs.class));
@@ -103,7 +103,7 @@ public class GetVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doThrow(new Exception(OPERATION_FAILED)).when(service).getVmOverride(any(HttpInputs.class), any(VmInputs.class));
 
-        Map<String, String> result = action.getVmOverrides("", "", "", "", "", "", "", "", "vm-123", "");
+        Map<String, String> result = action.getVmOverrides("", "", "", "", "", "", "", "", "", "vm-123", "", null);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).getVmOverride(any(HttpInputs.class), any(VmInputs.class));
@@ -113,7 +113,7 @@ public class GetVmOverridesTest {
 
     @Test
     public void testValidateMutualExclusiveInputs() throws Exception {
-        verifyFailureResultMap(action.getVmOverrides("", "", "", "", "", "", "", "vmName", "vm-123", ""));
+        verifyFailureResultMap(action.getVmOverrides("", "", "", "", "", "", "", "", "vmName", "vm-123", "", null));
     }
 
     private void verifyFailureResultMap(Map<String, String> result) {

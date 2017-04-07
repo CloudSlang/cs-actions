@@ -15,14 +15,19 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.vmware.constants.Inputs;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by Mihai Tusa.
@@ -43,6 +48,11 @@ public class CreateVM {
      *                           to see how to import a certificate into Java Keystore and
      *                           https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html
      *                           to see how to obtain a valid vCenter certificate
+     * @param closeSession       Whether to use the flow session context to cache the Connection to the host or not. If set to
+     *                           "false" it will close and remove any connection from the session context, otherwise the Connection
+     *                           will be kept alive and not removed.
+     *                           Valid values: "true", "false"
+     *                           Default value: "true"
      * @param dataCenterName     the data center name where the host system is - Example: 'DataCenter2'
      * @param hostname           the name of the target host to be queried to retrieve the supported guest OSes
      *                           - Example: "host123.subdomain.example.com"
@@ -64,7 +74,7 @@ public class CreateVM {
      * @param vmMemorySize       optional - the memory amount (in Mb) attached to the virtual machine that will will
      *                           be created - Default: "1024"
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
-     *         task id of the execution or failure message and the exception if there is one
+     * task id of the execution or failure message and the exception if there is one
      */
     @Action(name = "Create Virtual Machine",
             outputs = {
@@ -78,38 +88,40 @@ public class CreateVM {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> createVM(@Param(value = Inputs.HOST, required = true) String host,
-                                        @Param(Inputs.PORT) String port,
-                                        @Param(Inputs.PROTOCOL) String protocol,
-                                        @Param(value = Inputs.USERNAME, required = true) String username,
-                                        @Param(value = Inputs.PASSWORD, encrypted = true) String password,
-                                        @Param(Inputs.TRUST_EVERYONE) String trustEveryone,
+    public Map<String, String> createVM(@Param(value = HOST, required = true) String host,
+                                        @Param(value = PORT) String port,
+                                        @Param(value = PROTOCOL) String protocol,
+                                        @Param(value = USERNAME, required = true) String username,
+                                        @Param(value = PASSWORD, encrypted = true) String password,
+                                        @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                        @Param(value = CLOSE_SESSION) String closeSession,
 
-                                        @Param(value = Inputs.DATA_CENTER_NAME, required = true) String dataCenterName,
-                                        @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-                                        @Param(value = Inputs.VM_NAME, required = true) String virtualMachineName,
-                                        @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
-                                        @Param(value = Inputs.GUEST_OS_ID, required = true) String guestOsId,
-                                        @Param(Inputs.FOLDER_NAME) String folderName,
-                                        @Param(Inputs.RESOURCE_POOL) String resourcePool,
-                                        @Param(Inputs.VM_DESCRIPTION) String description,
-                                        @Param(Inputs.VM_CPU_COUNT) String numCPUs,
-                                        @Param(Inputs.VM_DISK_SIZE) String vmDiskSize,
-                                        @Param(Inputs.VM_MEMORY_SIZE) String vmMemorySize) {
-
-        Map<String, String> resultMap = new HashMap<>();
+                                        @Param(value = DATA_CENTER_NAME, required = true) String dataCenterName,
+                                        @Param(value = HOSTNAME, required = true) String hostname,
+                                        @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                        @Param(value = DATA_STORE, required = true) String dataStore,
+                                        @Param(value = GUEST_OS_ID, required = true) String guestOsId,
+                                        @Param(value = FOLDER_NAME) String folderName,
+                                        @Param(value = RESOURCE_POOL) String resourcePool,
+                                        @Param(value = VM_DESCRIPTION) String description,
+                                        @Param(value = VM_CPU_COUNT) String numCPUs,
+                                        @Param(value = VM_DISK_SIZE) String vmDiskSize,
+                                        @Param(value = VM_MEMORY_SIZE) String vmMemorySize,
+                                        @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
 
         try {
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
+                    .withCloseSession(defaultIfEmpty(closeSession, TRUE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withDataCenterName(dataCenterName)
                     .withHostname(hostname)
                     .withVirtualMachineName(virtualMachineName)
@@ -126,14 +138,9 @@ public class CreateVM {
                     .withLongVmMemorySize(vmMemorySize)
                     .build();
 
-            resultMap = new VmService().createVM(httpInputs, vmInputs);
-
+            return new VmService().createVM(httpInputs, vmInputs);
         } catch (Exception ex) {
-            resultMap.put(Outputs.RETURN_CODE, Outputs.RETURN_CODE_FAILURE);
-            resultMap.put(Outputs.RETURN_RESULT, ex.getMessage());
-            resultMap.put(Outputs.EXCEPTION, ex.toString());
+            return OutputUtilities.getFailureResultsMap(ex);
         }
-
-        return resultMap;
     }
 }

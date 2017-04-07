@@ -15,8 +15,9 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
-import io.cloudslang.content.vmware.constants.Inputs;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -26,6 +27,10 @@ import io.cloudslang.content.vmware.utils.OvfUtils;
 
 import java.util.Locale;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeployOvfTemplateAction {
 
@@ -43,6 +48,11 @@ public class DeployOvfTemplateAction {
      *                         to see how to import a certificate into Java Keystore and
      *                         https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html
      *                         to see how to obtain a valid vCenter certificate
+     * @param closeSession     Whether to use the flow session context to cache the Connection to the host or not. If set to
+     *                         "false" it will close and remove any connection from the session context, otherwise the Connection
+     *                         will be kept alive and not removed.
+     *                         Valid values: "true", "false"
+     *                         Default value: "true"
      * @param path             Path to the .ovf or .ova file on the RAS filesystem or network to import.
      * @param name             Name of the newly deployed virtual machine.
      * @param datacenter       Datacenter of the host system or cluster.
@@ -62,9 +72,9 @@ public class DeployOvfTemplateAction {
      *                         - Valid values:
      *                         dhcpPolicy - Specifies that DHCP must be used to allocate IP addresses to the vApp.
      *                         fixedPolicy - The IP addresses are allocated when the vApp is deployed and
-     *                              will be kept with the server as long as it is deployed.
+     *                         will be kept with the server as long as it is deployed.
      *                         transientPolicy - The IP addresses are allocated when needed, typically
-     *                              at power-on, and deallocated during power-off.
+     *                         at power-on, and deallocated during power-off.
      * @param localeLang       The locale language in which to process the OVF. If you do not specify a value for this input,
      *                         the default locale language of the system will be used.
      * @param localeCountry    The locale country in which to process the OVF. If you do not specify a value for this input,
@@ -102,43 +112,47 @@ public class DeployOvfTemplateAction {
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> deployTemplate(@Param(value = Inputs.HOST, required = true) String host,
-                                              @Param(value = Inputs.USERNAME) String username,
-                                              @Param(value = Inputs.PASSWORD, encrypted = true, required = true) String password,
-                                              @Param(value = Inputs.PORT) String port,
-                                              @Param(value = Inputs.PROTOCOL) String protocol,
-                                              @Param(value = Inputs.TRUST_EVERYONE) String trustEveryone,
-                                              @Param(value = Inputs.PATH, required = true) String path,
-                                              @Param(value = Inputs.NAME, required = true) String name,
-                                              @Param(value = Inputs.DATACENTER, required = true) String datacenter,
-                                              @Param(value = Inputs.DATA_STORE, required = true) String dataStore,
-                                              @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-                                              @Param(value = Inputs.CLUSTER_NAME) String clusterName,
-                                              @Param(value = Inputs.RESOURCE_POOL) String resourcePool,
-                                              @Param(value = Inputs.VM_FOLDER) String vmFolder,
-                                              @Param(value = Inputs.DISK_PROVISIONING) String diskProvisioning,
-                                              @Param(value = Inputs.IP_PROTOCOL) String ipProtocol,
-                                              @Param(value = Inputs.IP_ALLOC_SCHEME) String ipAllocScheme,
-                                              @Param(value = Inputs.LOCALE_LANG) String localeLang,
-                                              @Param(value = Inputs.LOCALE_COUNTRY) String localeCountry,
-                                              @Param(value = Inputs.OVF_NETWORK_JS) String ovfNetworkJS,
-                                              @Param(value = Inputs.NET_PORT_GROUP_JS) String netPortGroupJS,
-                                              @Param(value = Inputs.OVF_PROP_KEY_JS) String ovfPropKeyJS,
-                                              @Param(value = Inputs.OVF_PROP_VALUE_JS) String ovfPropValueJS,
-                                              @Param(value = Inputs.PARALLEL) String parallel) {
+    public Map<String, String> deployTemplate(@Param(value = HOST, required = true) String host,
+                                              @Param(value = USERNAME) String username,
+                                              @Param(value = PASSWORD, encrypted = true, required = true) String password,
+                                              @Param(value = PORT) String port,
+                                              @Param(value = PROTOCOL) String protocol,
+                                              @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                              @Param(value = CLOSE_SESSION) String closeSession,
+                                              @Param(value = PATH, required = true) String path,
+                                              @Param(value = NAME, required = true) String name,
+                                              @Param(value = DATACENTER, required = true) String datacenter,
+                                              @Param(value = DATA_STORE, required = true) String dataStore,
+                                              @Param(value = HOSTNAME, required = true) String hostname,
+                                              @Param(value = CLUSTER_NAME) String clusterName,
+                                              @Param(value = RESOURCE_POOL) String resourcePool,
+                                              @Param(value = VM_FOLDER) String vmFolder,
+                                              @Param(value = DISK_PROVISIONING) String diskProvisioning,
+                                              @Param(value = IP_PROTOCOL) String ipProtocol,
+                                              @Param(value = IP_ALLOC_SCHEME) String ipAllocScheme,
+                                              @Param(value = LOCALE_LANG) String localeLang,
+                                              @Param(value = LOCALE_COUNTRY) String localeCountry,
+                                              @Param(value = OVF_NETWORK_JS) String ovfNetworkJS,
+                                              @Param(value = NET_PORT_GROUP_JS) String netPortGroupJS,
+                                              @Param(value = OVF_PROP_KEY_JS) String ovfPropKeyJS,
+                                              @Param(value = OVF_PROP_VALUE_JS) String ovfPropValueJS,
+                                              @Param(value = PARALLEL) String parallel,
+                                              @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
         try {
-            Locale locale = InputUtils.getLocale(localeLang, localeCountry);
+            final Locale locale = InputUtils.getLocale(localeLang, localeCountry);
 
-            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+            final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
+                    .withCloseSession(defaultIfEmpty(closeSession, TRUE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
-            VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+            final VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                     .withHostname(hostname)
                     .withVirtualMachineName(name)
                     .withDataCenterName(datacenter)
@@ -153,8 +167,8 @@ public class DeployOvfTemplateAction {
                     .withDiskProvisioning(diskProvisioning)
                     .build();
 
-            Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
-            Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
+            final Map<String, String> ovfNetworkMappings = OvfUtils.getOvfMappings(ovfNetworkJS, netPortGroupJS);
+            final Map<String, String> ovfPropertyMappings = OvfUtils.getOvfMappings(ovfPropKeyJS, ovfPropValueJS);
 
             new DeployOvfTemplateService(InputUtils.getBooleanInput(parallel, true))
                     .deployOvfTemplate(httpInputs, vmInputs, path, ovfNetworkMappings, ovfPropertyMappings);

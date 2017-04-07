@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
+
 /**
  * Created by Mihai Tusa.
  * 1/6/2016.
@@ -69,7 +71,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -100,7 +105,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
 
     }
@@ -131,7 +139,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -161,7 +172,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -191,7 +205,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -221,7 +238,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -262,7 +282,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -301,7 +324,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -345,7 +371,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 }

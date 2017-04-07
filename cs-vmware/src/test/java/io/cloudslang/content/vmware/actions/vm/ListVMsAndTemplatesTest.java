@@ -63,7 +63,7 @@ public class ListVMsAndTemplatesTest {
 
         when(vmServiceMock.listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString())).thenReturn(resultMap);
 
-        resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "");
+        resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
 
@@ -72,7 +72,7 @@ public class ListVMsAndTemplatesTest {
 
     @Test
     public void testListVMsAndTemplatesProtocolException() throws Exception {
-        Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "");
+        Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
 

@@ -62,7 +62,7 @@ public class DeleteClusterRuleTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.deleteClusterRule(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = deleteClusterRule.deleteClusterRule("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = deleteClusterRule.deleteClusterRule("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
 
@@ -72,7 +72,7 @@ public class DeleteClusterRuleTest {
 
     @Test
     public void testDeleteClusterRuleProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
 
@@ -83,7 +83,7 @@ public class DeleteClusterRuleTest {
 
     @Test
     public void testDeleteClusterRulePortException() throws Exception {
-        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
 

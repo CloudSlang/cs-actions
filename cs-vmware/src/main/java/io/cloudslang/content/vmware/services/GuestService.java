@@ -20,9 +20,12 @@ import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.helpers.ResponseHelper;
 import io.cloudslang.content.vmware.services.utils.GuestConfigSpecs;
+import io.cloudslang.content.vmware.utils.ConnectionUtils;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
 
 import java.util.Map;
+
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
 
 /**
  * Created by Mihai Tusa.
@@ -55,7 +58,8 @@ public class GuestService {
                 connectionResources.getVimPortType().checkCustomizationSpec(vmMor, customizationSpec);
                 ManagedObjectReference task = connectionResources.getVimPortType().customizeVMTask(vmMor, customizationSpec);
 
-                return new ResponseHelper(connectionResources, task).getResultsMap("Success: The [" +
+                return new ResponseHelper(connectionResources, task)
+                        .getResultsMap("Success: The [" +
                         vmInputs.getVirtualMachineName() + "] VM was successfully customized. The taskId is: " +
                         task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be customized.");
             } else {
@@ -64,7 +68,10 @@ public class GuestService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -93,7 +100,10 @@ public class GuestService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 }

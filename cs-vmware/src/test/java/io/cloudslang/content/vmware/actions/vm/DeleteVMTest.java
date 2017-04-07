@@ -60,7 +60,7 @@ public class DeleteVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.deleteVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = deleteVM.deleteVM("", "", "", "", "", "", "");
+        resultMap = deleteVM.deleteVM("", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).deleteVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -69,7 +69,7 @@ public class DeleteVMTest {
 
     @Test
     public void testDeletesVMProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteVM.deleteVM("", "", "myProtocol", "", "", "", "");
+        Map<String, String> resultMap = deleteVM.deleteVM("", "", "myProtocol", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).deleteVM(any(HttpInputs.class), any(VmInputs.class));
 
