@@ -62,11 +62,9 @@ public class ClusterComputeResourceService {
             final ManagedObjectReference task = connectionResources.getVimPortType()
                     .reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
-            final Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+            return new ResponseHelper(connectionResources, task)
                     .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
                             String.format(FAILURE_MSG, vmInputs.getClusterName()));
-            connectionResources.getConnection().disconnect();
-            return resultMap;
         } finally {
             if (httpInputs.isCloseSession()) {
                 connectionResources.getConnection().disconnect();
@@ -146,11 +144,9 @@ public class ClusterComputeResourceService {
         ManagedObjectReference task = connectionResources.getVimPortType()
                 .reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+        return new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
                         String.format(FAILURE_MSG, vmInputs.getClusterName()));
-        connectionResources.getConnection().disconnect();
-        return resultMap;
     }
 
     public Map<String, String> deleteVmGroup(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -190,9 +186,7 @@ public class ClusterComputeResourceService {
                     groupNameList.add(clusterGroupInfo.getName());
                 }
             }
-            String result = StringUtilities.join(groupNameList, delimiter);
-            connectionResources.getConnection().disconnect();
-            return result;
+            return StringUtilities.join(groupNameList, delimiter);
         } finally {
             if (httpInputs.isCloseSession()) {
                 connectionResources.getConnection().disconnect();
