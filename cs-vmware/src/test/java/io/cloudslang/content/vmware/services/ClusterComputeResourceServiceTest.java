@@ -656,6 +656,7 @@ public class ClusterComputeResourceServiceTest {
         when(connectionMock.disconnect()).thenReturn(connectionMock);
         when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
                 .thenReturn(taskMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
     }
 
     private void commonVmMockInitializations() throws Exception {
