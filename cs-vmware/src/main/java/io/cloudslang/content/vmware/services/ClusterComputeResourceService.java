@@ -74,9 +74,9 @@ public class ClusterComputeResourceService {
     }
 
     public String getVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs) throws Exception {
-        ConnectionResources connectionResources = null;
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
         try {
-            connectionResources = new ConnectionResources(httpInputs, vmInputs);
+
 
             final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
                     ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
@@ -93,8 +93,9 @@ public class ClusterComputeResourceService {
 
             return restartPriority;
         } finally {
-            if (connectionResources != null && connectionResources.getConnection() != null) {
+            if (httpInputs.isCloseSession()) {
                 connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
             }
         }
     }

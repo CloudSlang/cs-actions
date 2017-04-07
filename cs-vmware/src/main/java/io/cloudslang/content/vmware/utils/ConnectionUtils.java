@@ -30,10 +30,13 @@ import static java.lang.String.format;
  */
 public class ConnectionUtils {
 
+    private static final String SHA_256 = "SHA-256";
+    private static final String FORMAT_URL = "%s%s%d%s";
+
     @NotNull
     public static String sha256(final @NotNull String base) {
         try {
-            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final MessageDigest digest = MessageDigest.getInstance(SHA_256);
             final byte[] hash = digest.digest(base.getBytes(StandardCharsets.UTF_8));
             return new String(hash);
         } catch (NoSuchAlgorithmException nsae) {
@@ -43,7 +46,7 @@ public class ConnectionUtils {
 
     @NotNull
     public static String computeConnectionContextKey(final String protocol, final String host, final Integer port, final String username) {
-        return sha256(format("%s%s%d%s", protocol, host, port, username));
+        return sha256(format(FORMAT_URL, protocol, host, port, username));
     }
 
     @NotNull
