@@ -94,7 +94,7 @@ public class ModifyVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doThrow(new Exception(OPERATION_FAILED)).when(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
 
-        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "vm-123", "", CLUSTER_RESTART_PRIORITY, null); // TODO
+        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "vm-123", "", CLUSTER_RESTART_PRIORITY, null);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
