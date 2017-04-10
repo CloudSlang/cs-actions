@@ -1,0 +1,101 @@
+/*******************************************************************************
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
+package io.cloudslang.content.couchbase.actions.buckets;
+
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
+import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
+import io.cloudslang.content.couchbase.execute.Executor;
+import io.cloudslang.content.couchbase.utils.ExceptionProcessor;
+import io.cloudslang.content.httpclient.HttpClientInputs;
+
+import java.util.Map;
+
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
+
+import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
+
+/**
+ * Created by Mihai Tusa
+ * 3/26/2017.
+ */
+public class GetBucket {
+    /**
+     * Retrieve all bucket information for a cluster.
+     * http://docs.couchbase.com/admin/admin/REST/rest-buckets-summary.html
+     *
+     * @param endpoint      Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
+     *                      bellow example.
+     *                      Example: "http://somewhere.couchbase.com:8091"
+     * @param username      Username used in basic authentication.
+     * @param password      Password associated with "username" input to be used in basic authentication.
+     * @param proxyHost     Optional - proxy server used to connect to Couchbase API. If empty no proxy will be used.
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and proxyPort
+     *                      inputs or leave them both empty.
+     * @param proxyUsername Optional - proxy server user name.
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
+     * @param bucketName    Name of the bucket to retrieve details for
+     * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
+     * and the exception if there is one), returnCode of the operation and the ID of the request
+     */
+    @Action(name = "Get Bucket",
+            outputs = {
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(EXCEPTION)
+            },
+            responses = {
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+            })
+    public Map<String, String> execute(@Param(value = ENDPOINT, required = true) String endpoint,
+                                       @Param(value = USERNAME, required = true) String username,
+                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
+                                       @Param(value = PROXY_HOST) String proxyHost,
+                                       @Param(value = PROXY_PORT) String proxyPort,
+                                       @Param(value = PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = BUCKET_NAME, encrypted = true) String bucketName) {
+        try {
+            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
+                    proxyUsername, proxyPassword, METHOD_NAME);
+
+            final CommonInputs commonInputs = new CommonInputs.Builder()
+                    .withAction(GET_BUCKET)
+                    .withApi(BUCKETS)
+                    .withEndpoint(endpoint)
+                    .build();
+
+            final BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName(bucketName).build();
+
+            return new Executor().execute(httpClientInputs, commonInputs, bucketInputs);
+        } catch (Exception exception) {
+            return ExceptionProcessor.getExceptionResultsMap(exception);
+        }
+    }
+}

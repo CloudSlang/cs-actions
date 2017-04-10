@@ -192,6 +192,7 @@
         <module>cs-commons</module>
         <module>cs-azure</module>
         <module>cs-database</module>
+        <module>cs-couchbase</module>
     </modules>
 
     <dependencyManagement>
