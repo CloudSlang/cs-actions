@@ -25,11 +25,16 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
  * 3/26/2017.
  */
 public class Executor {
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String COUCHBASE_HEADER = "X-memcachekv-Store-Client-Specification-Version:0.1";
+
     @SafeVarargs
     public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, T... builders) throws MalformedURLException {
         InputsWrapper wrapper = buildWrapper(builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));
+        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.setHeaders(COUCHBASE_HEADER);
 
         return new CSHttpClient().execute(httpClientInputs);
     }

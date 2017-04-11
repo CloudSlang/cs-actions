@@ -16,17 +16,19 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * 4/8/2017.
  */
 public enum UriSuffix {
-    GET_BUCKET_STATISTICS("/stats");
+    GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats");
 
+    private final String key;
     private final String value;
 
-    UriSuffix(String value) {
+    UriSuffix(String key, String value) {
+        this.key = key;
         this.value = value;
     }
 
     public static String getUriSuffix(String input) throws RuntimeException {
         for (UriSuffix uriSuffix : UriSuffix.values()) {
-            if (uriSuffix.name().equalsIgnoreCase(input)) {
+            if (uriSuffix.getKey().equalsIgnoreCase(input)) {
                 return uriSuffix.getValue();
             }
         }
@@ -34,6 +36,9 @@ public enum UriSuffix {
         return EMPTY;
     }
 
+    private String getKey() {
+        return key;
+    }
     private String getValue() {
         return value;
     }

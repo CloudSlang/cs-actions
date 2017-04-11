@@ -12,7 +12,7 @@ package io.cloudslang.content.couchbase.factory.buckets;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_ALL_BUCKETS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -30,7 +30,7 @@ public class BucketsUriFactory {
         switch (wrapper.getCommonInputs().getAction()) {
             case GET_ALL_BUCKETS:
                 return EMPTY;
-            case GET_BUCKET:
+            case GET_BUCKET_STATISTICS:
                 return wrapper.getBucketInputs().getBucketName();
             default:
                 throw new RuntimeException(UNSUPPORTED_COUCHBASE_BUCKETS_API);

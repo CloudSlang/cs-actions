@@ -31,7 +31,7 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
@@ -42,7 +42,7 @@ import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
  * Created by Mihai Tusa
  * 3/26/2017.
  */
-public class GetBucket {
+public class GetBucketStatistics {
     /**
      * Retrieve all bucket information for a cluster.
      * http://docs.couchbase.com/admin/admin/REST/rest-buckets-summary.html
@@ -61,7 +61,7 @@ public class GetBucket {
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Get Bucket",
+    @Action(name = "Get Bucket Statistics",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -86,7 +86,7 @@ public class GetBucket {
                     proxyUsername, proxyPassword, METHOD_NAME);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withAction(GET_BUCKET)
+                    .withAction(GET_BUCKET_STATISTICS)
                     .withApi(BUCKETS)
                     .withEndpoint(endpoint)
                     .build();
