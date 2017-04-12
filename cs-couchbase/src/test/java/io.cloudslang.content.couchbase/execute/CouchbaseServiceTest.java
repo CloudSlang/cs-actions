@@ -40,19 +40,19 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class, Executor.class})
-public class ExecutorTest {
+@PrepareForTest({CSHttpClient.class, CouchbaseService.class})
+public class CouchbaseServiceTest {
     @Mock
     private CSHttpClient csHttpClientMock;
 
-    private Executor toTest;
+    private CouchbaseService toTest;
     private HttpClientInputs httpClientInputs;
 
     @Before
     public void init() throws Exception {
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
-        toTest = new Executor();
+        toTest = new CouchbaseService();
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
                 "", "", "", "", "", "", "GET");

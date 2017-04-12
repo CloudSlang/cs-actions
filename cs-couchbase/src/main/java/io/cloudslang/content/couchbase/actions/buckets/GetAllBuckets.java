@@ -17,8 +17,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
-import io.cloudslang.content.couchbase.execute.Executor;
-import io.cloudslang.content.couchbase.utils.ExceptionProcessor;
+import io.cloudslang.content.couchbase.execute.CouchbaseService;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.util.Map;
@@ -50,6 +49,7 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.SOCKET_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
 
 /**
@@ -114,9 +114,9 @@ public class GetAllBuckets {
                     .withEndpoint(endpoint)
                     .build();
 
-            return new Executor().execute(httpClientInputs, commonInputs);
+            return new CouchbaseService().execute(httpClientInputs, commonInputs);
         } catch (Exception exception) {
-            return ExceptionProcessor.getExceptionResultsMap(exception);
+            return getFailureResultsMap(exception);
         }
     }
 }

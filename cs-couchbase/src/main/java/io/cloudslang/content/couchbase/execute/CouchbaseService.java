@@ -24,7 +24,7 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
  * Created by Mihai Tusa
  * 3/26/2017.
  */
-public class Executor {
+public class CouchbaseService {
     private static final String APPLICATION_JSON = "application/json";
     private static final String COUCHBASE_HEADER = "X-memcachekv-Store-Client-Specification-Version:0.1";
 
