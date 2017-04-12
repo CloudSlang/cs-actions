@@ -31,7 +31,10 @@ public class InputsUtil {
     }
 
     public static HttpClientInputs getHttpClientInputs(String username, String password, String proxyHost, String proxyPort,
-                                                       String proxyUsername, String proxyPassword, String method) {
+                                                       String proxyUsername, String proxyPassword, String trustAllRoots,
+                                                       String x509HostnameVerifier, String trustKeystore, String trustPassword,
+                                                       String keystore, String keystorePassword, String connectTimeout,
+                                                       String socketTimeout, String useCookies, String keepAlive, String method) {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUsername(username);
         httpClientInputs.setPassword(password);
@@ -39,6 +42,16 @@ public class InputsUtil {
         httpClientInputs.setProxyPort(proxyPort);
         httpClientInputs.setProxyUsername(proxyUsername);
         httpClientInputs.setProxyPassword(proxyPassword);
+        httpClientInputs.setTrustAllRoots(trustAllRoots);
+        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
+        httpClientInputs.setTrustKeystore(trustKeystore);
+        httpClientInputs.setTrustPassword(trustPassword);
+        httpClientInputs.setKeystore(keystore);
+        httpClientInputs.setKeystorePassword(keystorePassword);
+        httpClientInputs.setConnectTimeout(connectTimeout);
+        httpClientInputs.setSocketTimeout(socketTimeout);
+        httpClientInputs.setUseCookies(useCookies);
+        httpClientInputs.setKeepAlive(keepAlive);
         httpClientInputs.setMethod(method);
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());

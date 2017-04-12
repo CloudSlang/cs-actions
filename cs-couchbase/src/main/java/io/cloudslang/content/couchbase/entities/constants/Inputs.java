@@ -20,12 +20,6 @@ public class Inputs {
 
     public static class CommonInputs {
         public static final String ENDPOINT = "endpoint";
-        public static final String USERNAME = "username";
-        public static final String PASSWORD = "password";
-        public static final String PROXY_HOST = "proxyHost";
-        public static final String PROXY_PORT = "proxyPort";
-        public static final String PROXY_USERNAME = "proxyUsername";
-        public static final String PROXY_PASSWORD = "proxyPassword";
     }
 
     public static class BucketInputs {

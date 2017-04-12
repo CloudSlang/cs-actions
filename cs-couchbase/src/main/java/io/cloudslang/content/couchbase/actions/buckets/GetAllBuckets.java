@@ -31,9 +31,25 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_ALL_BUCKETS;
-import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 
+import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.SOCKET_TIMEOUT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
 import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
 
 /**
@@ -76,10 +92,21 @@ public class GetAllBuckets {
                                        @Param(value = PROXY_HOST) String proxyHost,
                                        @Param(value = PROXY_PORT) String proxyPort,
                                        @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword) {
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(value = X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
+                                       @Param(value = TRUST_KEYSTORE) String trustKeystore,
+                                       @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
+                                       @Param(value = KEYSTORE) String keystore,
+                                       @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
+                                       @Param(value = CONNECT_TIMEOUT) String connectTimeout,
+                                       @Param(value = SOCKET_TIMEOUT) String socketTimeout,
+                                       @Param(value = USE_COOKIES) String useCookies,
+                                       @Param(value = KEEP_ALIVE) String keepAlive) {
         try {
             final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
-                    proxyUsername, proxyPassword, METHOD_NAME);
+                    proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
+                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(GET_ALL_BUCKETS)

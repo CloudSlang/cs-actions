@@ -54,7 +54,8 @@ public class ExecutorTest {
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
         toTest = new Executor();
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
-                "", "", "GET");
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
     }
 
     @After
