@@ -27,10 +27,6 @@ public class Constants {
         public static final String GET_BUCKET_STATISTICS = "GetBucketStatistics";
     }
 
-    public static class Miscellaneous {
-        public static final String SLASH = "/";
-    }
-
     public static class Values {
         public static final int START_INDEX = 0;
     }

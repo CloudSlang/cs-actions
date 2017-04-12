@@ -18,8 +18,6 @@ import java.net.URL;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.http.client.config.AuthSchemes.BASIC;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.SLASH;
-
 /**
  * Created by Mihai Tusa
  * 3/26/2017.
@@ -68,6 +66,6 @@ public class InputsUtil {
             return prefix;
         }
 
-        return prefix + SLASH + suffix + UriSuffix.getUriSuffix(action);
+        return prefix + "/" + suffix + UriSuffix.getUriSuffix(action);
     }
 }
