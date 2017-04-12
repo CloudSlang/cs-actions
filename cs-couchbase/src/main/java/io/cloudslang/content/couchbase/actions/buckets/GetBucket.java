@@ -28,40 +28,23 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
-import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.SOCKET_TIMEOUT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
-
+import static io.cloudslang.content.httpclient.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
 
 /**
- * Created by Mihai Tusa
- * 3/26/2017.
+ * Created by TusaM
+ * 4/12/2017.
  */
-public class GetBucketStatistics {
+public class GetBucket {
     /**
-     * Retrieve usage statistics for a specified bucket.
-     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-stats.html
+     * Retrieve specified bucket details information.
+     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-info.html
      *
      * @param endpoint      Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
      *                      bellow example.
@@ -73,11 +56,11 @@ public class GetBucketStatistics {
      *                      inputs or leave them both empty.
      * @param proxyUsername Optional - proxy server user name.
      * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
-     * @param bucketName    Name of the bucket to retrieve statistics for
+     * @param bucketName    Name of the bucket to retrieve details for
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Get Bucket Statistics",
+    @Action(name = "Get Bucket",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -113,7 +96,7 @@ public class GetBucketStatistics {
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withAction(GET_BUCKET_STATISTICS)
+                    .withAction(GET_BUCKET)
                     .withApi(BUCKETS)
                     .withEndpoint(endpoint)
                     .build();

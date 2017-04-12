@@ -58,12 +58,6 @@ public class CouchbaseServiceTest {
                 "", "", "", "", "", "", "GET");
     }
 
-    @After
-    public void tearDown() {
-        toTest = null;
-        httpClientInputs = null;
-    }
-
     @Test
     public void testGetAllBuckets() throws MalformedURLException {
         CommonInputs commonInputs = getCommonInputs("GetAllBuckets", "buckets", "http://somewhere.couchbase.com:8091");
@@ -78,7 +72,7 @@ public class CouchbaseServiceTest {
     }
 
     @Test
-    public void testGetBucket() throws MalformedURLException {
+    public void testGetBucketStatistics() throws MalformedURLException {
         CommonInputs commonInputs = getCommonInputs("GetBucketStatistics", "buckets", "http://somewhere.couchbase.com:8091");
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("testBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
@@ -87,6 +81,20 @@ public class CouchbaseServiceTest {
         verifyNoMoreInteractions(csHttpClientMock);
 
         assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets/testBucket/stats", httpClientInputs.getUrl());
+        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
+    public void testGetBucket() throws MalformedURLException {
+        CommonInputs commonInputs = getCommonInputs("GetBucket", "buckets", "http://somewhere.couchbase.com:8091");
+        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("specifiedBucket").build();
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets/specifiedBucket", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
         assertEquals("application/json", httpClientInputs.getContentType());
     }

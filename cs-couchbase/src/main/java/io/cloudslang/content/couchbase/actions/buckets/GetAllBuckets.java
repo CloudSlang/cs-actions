@@ -58,8 +58,8 @@ import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
  */
 public class GetAllBuckets {
     /**
-     * Retrieve all bucket information for a cluster.
-     * http://docs.couchbase.com/admin/admin/REST/rest-buckets-summary.html
+     * Retrieve all buckets information for a cluster.
+     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-buckets-summary.html
      *
      * @param endpoint      Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
      *                      bellow example.
