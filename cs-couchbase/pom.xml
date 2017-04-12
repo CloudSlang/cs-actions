@@ -6,7 +6,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Java actions for amazon integration</description>
+    <description>Java actions for Couchbase integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
     <licenses>
         <license>
@@ -37,6 +37,12 @@
             <name>Mihail Cristian Tusa</name>
             <email>tusa.mihai@gmail.com</email>
             <organization>CloudSlang contributor</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Sorin Moldovan</name>
+            <email>sorin.moldovan@hpe.com</email>
+            <organization>HPE Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
     </developers>
