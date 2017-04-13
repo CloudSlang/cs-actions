@@ -12,6 +12,7 @@ package io.cloudslang.content.couchbase.factory;
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
+import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.START_INDEX;
 
@@ -27,8 +28,9 @@ public class InputsWrapperBuilder {
     }
 
     @SafeVarargs
-    public static <T> InputsWrapper buildWrapper(T... builders) {
+    public static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, T... builders) {
         InputsWrapper wrapper = new InputsWrapper.Builder().build();
+        wrapper.setHttpClientInputs(httpClientInputs);
 
         if (builders.length > START_INDEX) {
             for (T builder : builders) {

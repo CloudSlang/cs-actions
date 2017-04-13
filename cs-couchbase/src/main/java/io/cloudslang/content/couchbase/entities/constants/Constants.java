@@ -23,6 +23,7 @@ public class Constants {
     }
 
     public static class BucketActions {
+        public static final String DELETE_BUCKET = "DeleteBucket";
         public static final String GET_ALL_BUCKETS = "GetAllBuckets";
         public static final String GET_BUCKET = "GetBucket";
         public static final String GET_BUCKET_STATISTICS = "GetBucketStatistics";

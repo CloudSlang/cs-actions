@@ -63,16 +63,63 @@ public class GetBucketStatistics {
      * Retrieve usage statistics for a specified bucket.
      * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-stats.html
      *
-     * @param endpoint      Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
-     *                      bellow example.
-     *                      Example: "http://somewhere.couchbase.com:8091"
-     * @param username      Username used in basic authentication.
-     * @param password      Password associated with "username" input to be used in basic authentication.
-     * @param proxyHost     Optional - proxy server used to connect to Couchbase API. If empty no proxy will be used.
-     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and proxyPort
-     *                      inputs or leave them both empty.
-     * @param proxyUsername Optional - proxy server user name.
-     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
+     * @param endpoint             Endpoint to which request will be sent. A valid endpoint will be formatted as it shows
+     *                             in bellow example.
+     *                             Example: "http://somewhere.couchbase.com:8091"
+     * @param username             Username used in basic authentication.
+     * @param password             Password associated with "username" input to be used in basic authentication.
+     * @param proxyHost            Optional - proxy server used to connect to Couchbase API. If empty no proxy will be used.
+     * @param proxyPort            Optional - proxy server port. You must either specify values for both proxyHost and
+     *                             proxyPort inputs or leave them both empty.
+     * @param proxyUsername        Optional - proxy server user name.
+     * @param proxyPassword        Optional - proxy server password associated with the proxyUsername input value.
+     * @param trustAllRoots        Optional - specifies whether to enable weak security over SSL/TSL. A certificate is
+     *                             trusted even if no trusted certification authority issued it.
+     *                             Valid values: "true", "false"
+     *                             Default value: "false"
+     * @param x509HostnameVerifier Optional - specifies the way the server hostname must match a domain name in the subject's
+     *                             Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to "allow_all"
+     *                             to skip any checking. For the value "browser_compatible" the hostname verifier works
+     *                             the same way as Curl and Firefox. The hostname must match either the first CN, or any
+     *                             of the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts.
+     *                             The only difference between "browser_compatible" and "strict" is that a wildcard (such
+     *                             as "*.foo.com") with "browser_compatible" matches all subdomains, including "a.b.foo.com".
+     *                             Valid values: "strict", "browser_compatible", "allow_all"
+     *                             Default value: "allow_all"
+     * @param trustKeystore        Optional - pathname of the Java TrustStore file. This contains certificates from other
+     *                             parties that you expect to communicate with, or from Certificate Authorities that you
+     *                             trust to identify other parties. If the protocol (specified by the "url") is not "https"
+     *                             or if trustAllRoots is "true" this input is ignored.
+     *                             Default value: ../java/lib/security/cacerts
+     *                             Format: Java KeyStore (JKS)
+     * @param trustPassword        Optional - password associated with the TrustStore file. If trustAllRoots is "false"
+     *                             and trustKeystore is empty, trustPassword default will be supplied.
+     *                             Default value: "changeit"
+     * @param keystore             Optional - pathname of the Java KeyStore file. You only need this if the server requires
+     *                             client authentication. If the protocol (specified by the "url") is not "https" or if
+     *                             trustAllRoots is "true" this input is ignored.
+     *                             Format: Java KeyStore (JKS)
+     *                             Default value: ../java/lib/security/cacerts.
+     * @param keystorePassword     Optional - password associated with the KeyStore file. If trustAllRoots is "false" and
+     *                             keystore is empty, keystorePassword default will be supplied.
+     *                             Default value: "changeit"
+     * @param connectTimeout       Optional - time to wait for a connection to be established, in seconds. A timeout value
+     *                             of "0" represents an infinite timeout.
+     *                             Default value: "0"
+     * @param socketTimeout        Optional - timeout for waiting for data (a maximum period inactivity between two
+     *                             consecutive data packets), in seconds. A socketTimeout value of "0" represents an
+     *                             infinite timeout.
+     *                             Default value: "0"
+     * @param useCookies           Optional - specifies whether to enable cookie tracking or not. Cookies are stored between
+     *                             consecutive calls in a serializable session object therefore they will be available on
+     *                             a branch level. If you specify a non-boolean value, the default value is used.
+     *                             Valid values: "true", "false"
+     *                             Default value: "true"
+     * @param keepAlive            Optional - specifies whether to create a shared connection that will be used in subsequent
+     *                             calls. If keepAlive is "false", the already open connection will be used and after
+     *                             execution it will close it.
+     *                             Valid values: "true", "false"
+     *                             Default value: "true"
      * @param bucketName    Name of the bucket to retrieve statistics for
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
@@ -106,7 +153,7 @@ public class GetBucketStatistics {
                                        @Param(value = SOCKET_TIMEOUT) String socketTimeout,
                                        @Param(value = USE_COOKIES) String useCookies,
                                        @Param(value = KEEP_ALIVE) String keepAlive,
-                                       @Param(value = BUCKET_NAME, encrypted = true) String bucketName) {
+                                       @Param(value = BUCKET_NAME, required = true) String bucketName) {
         try {
             final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
