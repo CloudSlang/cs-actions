@@ -28,15 +28,15 @@ public class InputsWrapperBuilder {
     }
 
     @SafeVarargs
-    public static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, T... builders) {
-        InputsWrapper wrapper = new InputsWrapper.Builder().build();
-        wrapper.setHttpClientInputs(httpClientInputs);
+    public static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+        InputsWrapper wrapper = new InputsWrapper.Builder()
+                .withHttpClientInputs(httpClientInputs)
+                .withCommonInputs(commonInputs)
+                .build();
 
         if (builders.length > INIT_INDEX) {
             for (T builder : builders) {
-                if (builder instanceof CommonInputs) {
-                    wrapper.setCommonInputs((CommonInputs) builder);
-                } else if (builder instanceof BucketInputs) {
+                if (builder instanceof BucketInputs) {
                     wrapper.setBucketInputs((BucketInputs) builder);
                 } else {
                     throw new RuntimeException(UNKNOWN_BUILDER_TYPE);

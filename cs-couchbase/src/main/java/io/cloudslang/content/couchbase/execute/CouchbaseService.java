@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.execute;
 
+import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -28,8 +29,9 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
  */
 public class CouchbaseService {
     @SafeVarargs
-    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, T... builders) throws MalformedURLException {
-        InputsWrapper wrapper = buildWrapper(httpClientInputs, builders);
+    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs,
+                                                 T... builders) throws MalformedURLException {
+        InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));
         buildHeaders(wrapper);

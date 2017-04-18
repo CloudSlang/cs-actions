@@ -16,34 +16,22 @@ import io.cloudslang.content.httpclient.HttpClientInputs;
  * 4/9/2017.
  */
 public class InputsWrapper {
-    private HttpClientInputs httpClientInputs;
-    private CommonInputs commonInputs;
+    private final HttpClientInputs httpClientInputs;
+    private final CommonInputs commonInputs;
+
     private BucketInputs bucketInputs;
 
-    private final String requestPayload;
-    private final String headers;
-    private final String queryParams;
-
     private InputsWrapper(Builder builder) {
-        this.requestPayload = builder.requestPayload;
-        this.headers = builder.headers;
-        this.queryParams = builder.queryParams;
+        this.httpClientInputs = builder.httpClientInputs;
+        this.commonInputs = builder.commonInputs;
     }
 
     public HttpClientInputs getHttpClientInputs() {
         return httpClientInputs;
     }
 
-    public void setHttpClientInputs(HttpClientInputs httpClientInputs) {
-        this.httpClientInputs = httpClientInputs;
-    }
-
     public CommonInputs getCommonInputs() {
         return commonInputs;
-    }
-
-    public void setCommonInputs(CommonInputs commonInputs) {
-        this.commonInputs = commonInputs;
     }
 
     public BucketInputs getBucketInputs() {
@@ -54,39 +42,21 @@ public class InputsWrapper {
         this.bucketInputs = bucketInputs;
     }
 
-    public String getRequestPayload() {
-        return requestPayload;
-    }
-
-    public String getHeaders() {
-        return headers;
-    }
-
-    public String getQueryParams() {
-        return queryParams;
-    }
-
     public static class Builder {
-        private String requestPayload;
-        private String headers;
-        private String queryParams;
+        private HttpClientInputs httpClientInputs;
+        private CommonInputs commonInputs;
 
         public InputsWrapper build() {
             return new InputsWrapper(this);
         }
 
-        public Builder withRequestPayload(String inputValue) {
-            requestPayload = inputValue;
+        public Builder withHttpClientInputs(HttpClientInputs httpClientInputs) {
+            this.httpClientInputs = httpClientInputs;
             return this;
         }
 
-        public Builder withHeaders(String inputValue) {
-            headers = inputValue;
-            return this;
-        }
-
-        public Builder withQueryParams(String inputValue) {
-            queryParams = inputValue;
+        public Builder withCommonInputs(CommonInputs commonInputs) {
+            this.commonInputs = commonInputs;
             return this;
         }
     }

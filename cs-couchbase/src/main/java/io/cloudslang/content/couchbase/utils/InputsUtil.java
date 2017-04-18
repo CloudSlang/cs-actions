@@ -105,8 +105,7 @@ public class InputsUtil {
         return prefix + "/" + suffix + UriSuffix.getUriSuffix(action);
     }
 
-    public static String getPayloadString(Map<String, String> headersOrParamsMap, String separator, String suffix,
-                                                  boolean deleteLastChar) {
+    public static String getPayloadString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
         if (headersOrParamsMap.isEmpty()) {
             return EMPTY;
         }

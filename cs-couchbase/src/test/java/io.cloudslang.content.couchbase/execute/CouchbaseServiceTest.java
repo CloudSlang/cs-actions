@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -52,13 +53,55 @@ public class CouchbaseServiceTest {
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
         toTest = new CouchbaseService();
+    }
+
+    @Test
+    public void testCreateOrEditBucket() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
-                "", "", "", "", "", "", "GET");
+                "", "", "", "", "", "", "POST");
+        BucketInputs bucketInputs = new BucketInputs.Builder()
+                .withBucketName("toBeCreated")
+                .withAuthType("")
+                .withBucketType("")
+                .withConflictResolutionType("")
+                .withProxyPort("")
+                .withEvictionPolicy("")
+                .withFlushEnabled("")
+                .withParallelDBAndViewCompaction("")
+                .withRamQuotaMB("")
+                .withReplicaIndex("")
+                .withReplicaNumber("")
+                .withSaslPassword("")
+                .withThreadsNumber("")
+                .build();
+        CommonInputs commonInputs = getCommonInputs("CreateOrEditBucket", "buckets", "http://subdomain.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://subdomain.couchbase.com:8091/pools/default/buckets", httpClientInputs.getUrl());
+        assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
+        assertEquals("application/x-www-form-urlencoded; charset=UTF-8", httpClientInputs.getContentType());
+        assertTrue(httpClientInputs.getBody().contains("name=toBeCreated"));
+        assertTrue(httpClientInputs.getBody().contains("authType=none"));
+        assertTrue(httpClientInputs.getBody().contains("bucketType=membase"));
+        assertTrue(httpClientInputs.getBody().contains("conflictResolutionType=seqno"));
+        assertTrue(httpClientInputs.getBody().contains("proxyPort=11215"));
+        assertTrue(httpClientInputs.getBody().contains("evictionPolicy=valueOnly"));
+        assertTrue(httpClientInputs.getBody().contains("flushEnabled=0"));
+        assertTrue(httpClientInputs.getBody().contains("parallelDBAndViewCompaction=false"));
+        assertTrue(httpClientInputs.getBody().contains("ramQuotaMB=100"));
+        assertTrue(httpClientInputs.getBody().contains("replicaNumber=1"));
+        assertTrue(httpClientInputs.getBody().contains("threadsNumber=2"));
     }
 
     @Test
     public void testGetAllBuckets() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
         CommonInputs commonInputs = getCommonInputs("GetAllBuckets", "buckets", "http://somewhere.couchbase.com:8091");
         toTest.execute(httpClientInputs, commonInputs);
 
@@ -72,6 +115,9 @@ public class CouchbaseServiceTest {
 
     @Test
     public void testGetBucketStatistics() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
         CommonInputs commonInputs = getCommonInputs("GetBucketStatistics", "buckets", "http://somewhere.couchbase.com:8091");
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("testBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
@@ -86,6 +132,9 @@ public class CouchbaseServiceTest {
 
     @Test
     public void testGetBucket() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
         CommonInputs commonInputs = getCommonInputs("GetBucket", "buckets", "http://somewhere.couchbase.com:8091");
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("specifiedBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
@@ -100,14 +149,17 @@ public class CouchbaseServiceTest {
 
     @Test
     public void testDeleteBucket() throws MalformedURLException {
-        CommonInputs commonInputs = getCommonInputs("DeleteBucket", "buckets", "http://somewhere.couchbase.com:8091");
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "DELETE");
+        CommonInputs commonInputs = getCommonInputs("DeleteBucket", "buckets", "http://anywhere.couchbase.com:8091");
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toBeDeletedBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
         verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
         verifyNoMoreInteractions(csHttpClientMock);
 
-        assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets/toBeDeletedBucket", httpClientInputs.getUrl());
+        assertEquals("http://anywhere.couchbase.com:8091/pools/default/buckets/toBeDeletedBucket", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
     }
 
