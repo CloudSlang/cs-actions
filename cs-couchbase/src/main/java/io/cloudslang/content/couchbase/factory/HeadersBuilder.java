@@ -9,30 +9,29 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.factory;
 
-import io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
-import static io.cloudslang.content.couchbase.factory.buckets.BucketsUriFactory.getBucketsUri;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.appendTo;
+import static io.cloudslang.content.couchbase.factory.buckets.BucketHeadersBuilder.setBucketHeaders;
 
 /**
- * Created by Mihai Tusa
- * 4/5/2017.
+ * Created by TusaM
+ * 4/14/2017.
  */
-public class UriFactory {
-    private static final String UNSUPPORTED_COUCHBASE_API = "Unsupported Couchbase API.";
+public class HeadersBuilder {
+    private static final String UNKNOWN_COUCHBASE_HEADER = "Unknown Couchbase header.";
 
-    private UriFactory() {
+    private HeadersBuilder() {
         // prevent instantiation
     }
 
-    public static String getUri(InputsWrapper wrapper) {
+    public static void buildHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getApi()) {
             case BUCKETS:
-                return appendTo(CouchbaseApi.BUCKETS.getValue(), getBucketsUri(wrapper), wrapper.getCommonInputs().getAction());
+                setBucketHeaders(wrapper);
+                break;
             default:
-                throw new RuntimeException(UNSUPPORTED_COUCHBASE_API);
+                throw new RuntimeException(UNKNOWN_COUCHBASE_HEADER);
         }
     }
 }

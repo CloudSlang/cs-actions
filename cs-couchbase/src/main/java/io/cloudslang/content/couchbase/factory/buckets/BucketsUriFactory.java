@@ -11,7 +11,9 @@ package io.cloudslang.content.couchbase.factory.buckets;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.*;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.DELETE_BUCKET;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -19,16 +21,12 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * 4/8/2017.
  */
 public class BucketsUriFactory {
-    private static final String UNSUPPORTED_COUCHBASE_BUCKETS_API = "Unsupported Couchbase Buckets API.";
-
     private BucketsUriFactory() {
         // prevent instantiation
     }
 
     public static String getBucketsUri(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
-            case GET_ALL_BUCKETS:
-                return EMPTY;
             case GET_BUCKET:
                 return wrapper.getBucketInputs().getBucketName();
             case GET_BUCKET_STATISTICS:
@@ -36,7 +34,7 @@ public class BucketsUriFactory {
             case DELETE_BUCKET:
                 return wrapper.getBucketInputs().getBucketName();
             default:
-                throw new RuntimeException(UNSUPPORTED_COUCHBASE_BUCKETS_API);
+                return EMPTY;
         }
     }
 }

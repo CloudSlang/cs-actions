@@ -14,7 +14,7 @@ import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
 
 /**
  * Created by Mihai Tusa
@@ -32,7 +32,7 @@ public class InputsWrapperBuilder {
         InputsWrapper wrapper = new InputsWrapper.Builder().build();
         wrapper.setHttpClientInputs(httpClientInputs);
 
-        if (builders.length > START_INDEX) {
+        if (builders.length > INIT_INDEX) {
             for (T builder : builders) {
                 if (builder instanceof CommonInputs) {
                     wrapper.setCommonInputs((CommonInputs) builder);

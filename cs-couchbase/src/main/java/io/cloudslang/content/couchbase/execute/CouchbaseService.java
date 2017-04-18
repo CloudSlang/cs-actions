@@ -16,8 +16,9 @@ import io.cloudslang.content.httpclient.HttpClientInputs;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import static io.cloudslang.content.couchbase.factory.HeadersSetter.setHeaders;
+import static io.cloudslang.content.couchbase.factory.HeadersBuilder.buildHeaders;
 import static io.cloudslang.content.couchbase.factory.InputsWrapperBuilder.buildWrapper;
+import static io.cloudslang.content.couchbase.factory.PayloadBuilder.buildPayload;
 import static io.cloudslang.content.couchbase.factory.UriFactory.getUri;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
 
@@ -31,7 +32,8 @@ public class CouchbaseService {
         InputsWrapper wrapper = buildWrapper(httpClientInputs, builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));
-        setHeaders(wrapper);
+        buildHeaders(wrapper);
+        buildPayload(wrapper);
 
         return new CSHttpClient().execute(httpClientInputs);
     }

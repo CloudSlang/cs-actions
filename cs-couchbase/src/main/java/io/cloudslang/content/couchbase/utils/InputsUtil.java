@@ -14,9 +14,15 @@ import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.CONSTRAINS_ERROR_MESSAGE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.COUCHBASE_DEFAULT_PROXY_PORT;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.compile;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.http.client.config.AuthSchemes.BASIC;
@@ -27,6 +33,11 @@ import static org.apache.http.client.config.AuthSchemes.BASIC;
  */
 
 public class InputsUtil {
+    private static final String ALLOW_ALL = "allow_all";
+    private static final String BROWSER_COMPATIBLE = "browser_compatible";
+    private static final String PORT_REGEX = "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$";
+    private static final String STRICT = "strict";
+
     private InputsUtil() {
         // prevent instantiation
     }
@@ -67,13 +78,16 @@ public class InputsUtil {
             httpClientInputs.setKeystorePassword(keystorePassword);
         }
 
-        httpClientInputs.setConnectTimeout(getDefaultStringInput(connectTimeout, valueOf(START_INDEX)));
-        httpClientInputs.setSocketTimeout(getDefaultStringInput(socketTimeout, valueOf(START_INDEX)));
+        httpClientInputs.setConnectTimeout(getInputWithDefaultValue(connectTimeout, valueOf(INIT_INDEX)));
+        httpClientInputs.setSocketTimeout(getInputWithDefaultValue(socketTimeout, valueOf(INIT_INDEX)));
 
-        if (isBlank(x509HostnameVerifier) || (!"strict".equalsIgnoreCase(x509HostnameVerifier) && !"browser_compatible".equalsIgnoreCase(x509HostnameVerifier))) {
-            httpClientInputs.setX509HostnameVerifier("allow_all");
+        if (isBlank(x509HostnameVerifier)) {
+            httpClientInputs.setX509HostnameVerifier(ALLOW_ALL);
         } else {
-            httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
+            String[] hostnameVerifierValues = {ALLOW_ALL, BROWSER_COMPATIBLE, STRICT};
+            if (asList(hostnameVerifierValues).contains(x509HostnameVerifier)) {
+                httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
+            }
         }
 
         return httpClientInputs;
@@ -83,7 +97,7 @@ public class InputsUtil {
         return new URL(input).toString();
     }
 
-    public static String toAppend(String prefix, String suffix, String action) {
+    public static String appendTo(String prefix, String suffix, String action) {
         if (isBlank(suffix)) {
             return prefix;
         }
@@ -91,8 +105,42 @@ public class InputsUtil {
         return prefix + "/" + suffix + UriSuffix.getUriSuffix(action);
     }
 
-    private static String getDefaultStringInput(String input, String defaultValue) {
-        return isBlank(input) ? defaultValue : input;
+    public static String getPayloadString(Map<String, String> headersOrParamsMap, String separator, String suffix,
+                                                  boolean deleteLastChar) {
+        if (headersOrParamsMap.isEmpty()) {
+            return EMPTY;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
+            sb.append(entry.getKey());
+            sb.append(separator);
+            sb.append(entry.getValue());
+            sb.append(suffix);
+        }
+        if (deleteLastChar) {
+            return sb.deleteCharAt(sb.length() - 1).toString();
+        }
+
+        return sb.toString();
+    }
+
+    public static int getValidPort(String input) {
+        if (isBlank(input)) {
+            return COUCHBASE_DEFAULT_PROXY_PORT;
+        }
+
+        patternCheck(input, PORT_REGEX);
+
+        return Integer.parseInt(input);
+    }
+
+    public static String getEnabledString(String input, boolean enforcedBoolean) {
+        if (getEnforcedBooleanCondition(input, enforcedBoolean)) {
+            return valueOf(1);
+        }
+
+        return valueOf(INIT_INDEX);
     }
 
     /**
@@ -107,8 +155,51 @@ public class InputsUtil {
      * @param enforcedBoolean Enforcement boolean.
      * @return A boolean according with above description.
      */
-    private static boolean getEnforcedBooleanCondition(String input, boolean enforcedBoolean) {
+    public static boolean getEnforcedBooleanCondition(String input, boolean enforcedBoolean) {
         return (enforcedBoolean) ? isTrueOrFalse(input) == Boolean.parseBoolean(input) : Boolean.parseBoolean(input);
+    }
+
+    public static int getValidIntValue(String input, Integer minAllowed, Integer maxAllowed, Integer defaultValue) {
+        return isBlank(input) ? defaultValue : getIntegerWithinValidRange(input, minAllowed, maxAllowed);
+    }
+
+    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
+        if (condition) {
+            inputMap.put(key, value);
+        }
+    }
+
+    private static String getInputWithDefaultValue(String input, String defaultValue) {
+        return isBlank(input) ? defaultValue : input;
+    }
+
+    private static int getIntegerWithinValidRange(String input, Integer minAllowed, Integer maxAllowed) {
+        if (!isInt(input)) {
+            throw new RuntimeException("Incorrect provided value: " + input + " input. The value is not a valid integer.");
+        }
+
+        int intInput = Integer.parseInt(input);
+        if ((maxAllowed != null && (intInput < minAllowed || intInput > maxAllowed)) || (maxAllowed == null && intInput < minAllowed)) {
+            throw new RuntimeException("The value " + CONSTRAINS_ERROR_MESSAGE);
+        }
+
+        return intInput;
+    }
+
+    private static boolean isInt(String input) {
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            Integer.parseInt(input);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    private static void patternCheck(String input, String regex) {
+        if (!compile(regex).matcher(input).matches()) {
+            throw new IllegalArgumentException("Incorrect provided value: " + input + " input. The value " + CONSTRAINS_ERROR_MESSAGE);
+        }
     }
 
     private static boolean isTrueOrFalse(String input) {

@@ -33,7 +33,22 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Bucke
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
-import static io.cloudslang.content.httpclient.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.SOCKET_TIMEOUT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.http.client.methods.HttpDelete.METHOD_NAME;
 
@@ -44,7 +59,7 @@ import static org.apache.http.client.methods.HttpDelete.METHOD_NAME;
 public class DeleteBucket {
     /**
      * Deletes specified bucket.
-     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-info.html
+     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-delete.html
      *
      * Note: Bucket deletion is a synchronous operation. When a cluster has multiple servers, some servers might not be
      * able to delete the bucket within the standard 30 second timeout period.
@@ -68,7 +83,7 @@ public class DeleteBucket {
      * @param trustAllRoots        Optional - specifies whether to enable weak security over SSL/TSL. A certificate is
      *                             trusted even if no trusted certification authority issued it.
      *                             Valid values: "true", "false"
-     *                             Default value: "false"
+     *                             Default value: "true"
      * @param x509HostnameVerifier Optional - specifies the way the server hostname must match a domain name in the subject's
      *                             Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to "allow_all"
      *                             to skip any checking. For the value "browser_compatible" the hostname verifier works
@@ -112,7 +127,7 @@ public class DeleteBucket {
      *                             execution it will close it.
      *                             Valid values: "true", "false"
      *                             Default value: "true"
-     * @param bucketName           Name of the bucket to retrieve details for
+     * @param bucketName           Name of the bucket to be deleted
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
