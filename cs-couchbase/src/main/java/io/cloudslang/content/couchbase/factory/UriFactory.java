@@ -13,6 +13,7 @@ import io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNSUPPORTED_COUCHBASE_API;
 import static io.cloudslang.content.couchbase.factory.buckets.BucketsUriFactory.getBucketsUri;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.appendTo;
 
@@ -21,8 +22,6 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.appendTo;
  * 4/5/2017.
  */
 public class UriFactory {
-    private static final String UNSUPPORTED_COUCHBASE_API = "Unsupported Couchbase API.";
-
     private UriFactory() {
         // prevent instantiation
     }

@@ -13,17 +13,16 @@ import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.DELETE_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.CREATE_BUCKET_HEADER;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
 
 /**
  * Created by TusaM
  * 4/12/2017.
  */
 public class BucketHeadersBuilder {
-    private static final String APPLICATION_JSON = "application/json";
-    private static final String CREATE_BUCKET_HEADER = "Accept:application/json, text/plain, */*";
-    private static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded; charset=UTF-8";
-    private static final String X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1 = "X-memcachekv-Store-Client-Specification-Version:0.1";
-
     private BucketHeadersBuilder() {
         // prevent instantiation
     }

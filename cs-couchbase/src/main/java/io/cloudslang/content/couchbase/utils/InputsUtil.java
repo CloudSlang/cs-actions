@@ -16,9 +16,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALLOW_ALL;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.BROWSER_COMPATIBLE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.STRICT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.CONSTRAINS_ERROR_MESSAGE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.PORT_REGEX;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.COUCHBASE_DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.utils.BooleanUtilities.isValid;
+import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.compile;
@@ -33,11 +40,6 @@ import static org.apache.http.client.config.AuthSchemes.BASIC;
  */
 
 public class InputsUtil {
-    private static final String ALLOW_ALL = "allow_all";
-    private static final String BROWSER_COMPATIBLE = "browser_compatible";
-    private static final String PORT_REGEX = "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$";
-    private static final String STRICT = "strict";
-
     private InputsUtil() {
         // prevent instantiation
     }
@@ -50,7 +52,7 @@ public class InputsUtil {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setMethod(method);
         httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
+        httpClientInputs.setQueryParamsAreURLEncoded(FALSE);
         httpClientInputs.setUsername(username);
         httpClientInputs.setPassword(password);
 
@@ -84,8 +86,7 @@ public class InputsUtil {
         if (isBlank(x509HostnameVerifier)) {
             httpClientInputs.setX509HostnameVerifier(ALLOW_ALL);
         } else {
-            String[] hostnameVerifierValues = {ALLOW_ALL, BROWSER_COMPATIBLE, STRICT};
-            if (asList(hostnameVerifierValues).contains(x509HostnameVerifier)) {
+            if (asList(ALLOW_ALL, BROWSER_COMPATIBLE, STRICT).contains(x509HostnameVerifier)) {
                 httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
             }
         }
@@ -112,16 +113,10 @@ public class InputsUtil {
 
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
-            sb.append(entry.getKey());
-            sb.append(separator);
-            sb.append(entry.getValue());
-            sb.append(suffix);
-        }
-        if (deleteLastChar) {
-            return sb.deleteCharAt(sb.length() - 1).toString();
+            sb.append(entry.getKey()).append(separator).append(entry.getValue()).append(suffix);
         }
 
-        return sb.toString();
+        return deleteLastChar ? sb.deleteCharAt(sb.length() - 1).toString() : sb.toString();
     }
 
     public static int getValidPort(String input) {
@@ -155,7 +150,7 @@ public class InputsUtil {
      * @return A boolean according with above description.
      */
     public static boolean getEnforcedBooleanCondition(String input, boolean enforcedBoolean) {
-        return (enforcedBoolean) ? isTrueOrFalse(input) == Boolean.parseBoolean(input) : Boolean.parseBoolean(input);
+        return (enforcedBoolean) ? isValid(input) == Boolean.parseBoolean(input) : Boolean.parseBoolean(input);
     }
 
     public static int getValidIntValue(String input, Integer minAllowed, Integer maxAllowed, Integer defaultValue) {
@@ -173,35 +168,16 @@ public class InputsUtil {
     }
 
     private static int getIntegerWithinValidRange(String input, Integer minAllowed, Integer maxAllowed) {
-        if (!isInt(input)) {
-            throw new RuntimeException("Incorrect provided value: " + input + " input. The value is not a valid integer.");
+        if (isValidInt(input, minAllowed, maxAllowed, true, true)) {
+            return Integer.parseInt(input);
         }
 
-        int intInput = Integer.parseInt(input);
-        if ((maxAllowed != null && (intInput < minAllowed || intInput > maxAllowed)) || (maxAllowed == null && intInput < minAllowed)) {
-            throw new RuntimeException("The value " + CONSTRAINS_ERROR_MESSAGE);
-        }
-
-        return intInput;
-    }
-
-    private static boolean isInt(String input) {
-        try {
-            //noinspection ResultOfMethodCallIgnored
-            Integer.parseInt(input);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
+        throw new RuntimeException(CONSTRAINS_ERROR_MESSAGE);
     }
 
     private static void patternCheck(String input, String regex) {
         if (!compile(regex).matcher(input).matches()) {
-            throw new IllegalArgumentException("Incorrect provided value: " + input + " input. The value " + CONSTRAINS_ERROR_MESSAGE);
+            throw new IllegalArgumentException("Incorrect provided value: " + input + " input. "  + CONSTRAINS_ERROR_MESSAGE);
         }
-    }
-
-    private static boolean isTrueOrFalse(String input) {
-        return Boolean.FALSE.toString().equalsIgnoreCase(input) || Boolean.TRUE.toString().equalsIgnoreCase(input);
     }
 }

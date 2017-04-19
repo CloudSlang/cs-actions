@@ -14,6 +14,7 @@ import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
 
 /**
@@ -21,8 +22,6 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Value
  * 4/9/2017.
  */
 public class InputsWrapperBuilder {
-    private static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
-
     private InputsWrapperBuilder() {
         // prevent instantiation
     }

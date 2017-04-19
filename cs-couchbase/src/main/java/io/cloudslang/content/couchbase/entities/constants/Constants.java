@@ -22,6 +22,16 @@ public class Constants {
         public static final String BUCKETS = "buckets";
     }
 
+    public static class HttpClientInputsValues {
+        public static final String ALLOW_ALL = "allow_all";
+        public static final String APPLICATION_JSON = "application/json";
+        public static final String BROWSER_COMPATIBLE = "browser_compatible";
+        public static final String CREATE_BUCKET_HEADER = "Accept:application/json, text/plain, */*";
+        public static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded; charset=UTF-8";
+        public static final String STRICT = "strict";
+        public static final String X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1 = "X-memcachekv-Store-Client-Specification-Version:0.1";
+    }
+
     public static class BucketActions {
         public static final String CREATE_OR_EDIT_BUCKET = "CreateOrEditBucket";
         public static final String DELETE_BUCKET = "DeleteBucket";
@@ -31,13 +41,19 @@ public class Constants {
     }
 
     public static class ErrorMessages {
-        public static final String CONSTRAINS_ERROR_MESSAGE = "doesn't meet conditions for general purpose usage. " +
+        public static final String CONSTRAINS_ERROR_MESSAGE = "The value doesn't meet conditions for general purpose usage. " +
                 "See operation inputs description section for details.";
+        public static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
+        public static final String UNKNOWN_COUCHBASE_HEADER = "Unknown Couchbase header.";
+        public static final String UNSUPPORTED_COUCHBASE_API = "Unsupported Couchbase API.";
+        public static final String INPUTS_COMBINATION_ERROR_MESSAGE = "The combination of values supplied for inputs: " +
+                "authType, proxyPort and/or saslPassword doesn't meet conditions for general purpose usage.";
     }
 
     public static class Miscellaneous {
         public static final String AMPERSAND = "&";
         public static final String EQUAL = "=";
+        public static final String PORT_REGEX = "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$";
     }
 
     public static class Values {

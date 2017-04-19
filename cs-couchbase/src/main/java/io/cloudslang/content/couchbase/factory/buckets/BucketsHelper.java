@@ -15,7 +15,7 @@ import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.CONSTRAINS_ERROR_MESSAGE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.INPUTS_COMBINATION_ERROR_MESSAGE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.EQUAL;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.*;
@@ -65,8 +65,7 @@ public class BucketsHelper {
     private void validateAuthType(Map<String, String> getPayloadMap, String authType) {
         if ((AuthType.SASL.name().equals(authType) && !getPayloadMap.containsKey(SASL_PASSWORD))
                 || (AuthType.NONE.name().equals(authType) && !getPayloadMap.containsKey(PROXY_PORT))) {
-            throw new RuntimeException("The combination of values supplied for inputs: authType, proxyPort and/or saslPassword "
-                    + CONSTRAINS_ERROR_MESSAGE);
+            throw new RuntimeException(INPUTS_COMBINATION_ERROR_MESSAGE);
         }
     }
 }

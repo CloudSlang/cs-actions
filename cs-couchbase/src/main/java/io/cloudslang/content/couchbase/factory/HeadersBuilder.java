@@ -12,6 +12,7 @@ package io.cloudslang.content.couchbase.factory;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNKNOWN_COUCHBASE_HEADER;
 import static io.cloudslang.content.couchbase.factory.buckets.BucketHeadersBuilder.setBucketHeaders;
 
 /**
@@ -19,8 +20,6 @@ import static io.cloudslang.content.couchbase.factory.buckets.BucketHeadersBuild
  * 4/14/2017.
  */
 public class HeadersBuilder {
-    private static final String UNKNOWN_COUCHBASE_HEADER = "Unknown Couchbase header.";
-
     private HeadersBuilder() {
         // prevent instantiation
     }
