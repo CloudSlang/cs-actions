@@ -99,11 +99,7 @@ public class InputsUtil {
     }
 
     public static String appendTo(String prefix, String suffix, String action) {
-        if (isBlank(suffix)) {
-            return prefix;
-        }
-
-        return prefix + "/" + suffix + UriSuffix.getUriSuffix(action);
+        return (isBlank(suffix)) ? prefix : prefix + "/" + suffix + UriSuffix.getUriSuffix(action);
     }
 
     public static String getPayloadString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
@@ -124,7 +120,9 @@ public class InputsUtil {
             return COUCHBASE_DEFAULT_PROXY_PORT;
         }
 
-        patternCheck(input, PORT_REGEX);
+        if (!compile(PORT_REGEX).matcher(input).matches()) {
+            throw new IllegalArgumentException("Incorrect provided value: " + input + " input. "  + CONSTRAINS_ERROR_MESSAGE);
+        }
 
         return Integer.parseInt(input);
     }
@@ -157,16 +155,6 @@ public class InputsUtil {
         return isBlank(input) ? defaultValue : getIntegerWithinValidRange(input, minAllowed, maxAllowed);
     }
 
-    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
-        if (condition) {
-            inputMap.put(key, value);
-        }
-    }
-
-    private static String getInputWithDefaultValue(String input, String defaultValue) {
-        return isBlank(input) ? defaultValue : input;
-    }
-
     private static int getIntegerWithinValidRange(String input, Integer minAllowed, Integer maxAllowed) {
         if (isValidInt(input, minAllowed, maxAllowed, true, true)) {
             return Integer.parseInt(input);
@@ -175,9 +163,13 @@ public class InputsUtil {
         throw new RuntimeException(CONSTRAINS_ERROR_MESSAGE);
     }
 
-    private static void patternCheck(String input, String regex) {
-        if (!compile(regex).matcher(input).matches()) {
-            throw new IllegalArgumentException("Incorrect provided value: " + input + " input. "  + CONSTRAINS_ERROR_MESSAGE);
+    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
+        if (condition) {
+            inputMap.put(key, value);
         }
+    }
+
+    private static String getInputWithDefaultValue(String input, String defaultValue) {
+        return isBlank(input) ? defaultValue : input;
     }
 }
