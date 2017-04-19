@@ -26,7 +26,7 @@ public enum UriSuffix {
         this.value = value;
     }
 
-    public static String getUriSuffix(String input) throws RuntimeException {
+    public static String getUriSuffix(String input) {
         for (UriSuffix uriSuffix : UriSuffix.values()) {
             if (uriSuffix.getKey().equalsIgnoreCase(input)) {
                 return uriSuffix.getValue();
@@ -39,6 +39,7 @@ public enum UriSuffix {
     private String getKey() {
         return key;
     }
+
     private String getValue() {
         return value;
     }

@@ -25,7 +25,7 @@ public enum EvictionPolicy {
         this.value = value;
     }
 
-    public static String getEvictionPolicy(String input) throws RuntimeException {
+    public static String getEvictionPolicy(String input) {
         if (isBlank(input)) {
             return VALUE_ONLY.getValue();
         }

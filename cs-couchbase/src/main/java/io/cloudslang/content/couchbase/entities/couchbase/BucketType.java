@@ -25,7 +25,7 @@ public enum BucketType {
         this.value = value;
     }
 
-    public static String getBucketType(String input) throws RuntimeException {
+    public static String getBucketType(String input) {
         if (isBlank(input)) {
             return MEMCACHED.getValue();
         }

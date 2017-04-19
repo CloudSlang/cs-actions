@@ -25,7 +25,7 @@ public enum AuthType {
         this.value = value;
     }
 
-    public static String getAuthType(String input) throws RuntimeException {
+    public static String getAuthType(String input) {
         if (isBlank(input)) {
             return NONE.getValue();
         }

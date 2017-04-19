@@ -25,7 +25,7 @@ public enum ConflictResolutionType {
         this.value = value;
     }
 
-    public static String getConflictResolutionType(String input) throws RuntimeException {
+    public static String getConflictResolutionType(String input) {
         if (isBlank(input)) {
             return SEQNO.getValue();
         }
