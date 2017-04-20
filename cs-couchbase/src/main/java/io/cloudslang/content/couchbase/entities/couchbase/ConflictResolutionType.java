@@ -9,35 +9,34 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.entities.couchbase;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * Created by Mihai Tusa
- * 4/8/2017.
+ * Created by TusaM
+ * 4/14/2017.
  */
-public enum UriSuffix {
-    GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats");
+public enum ConflictResolutionType {
+    LWW("lww"),
+    SEQNO("seqno");
 
-    private final String key;
     private final String value;
 
-    UriSuffix(String key, String value) {
-        this.key = key;
+    ConflictResolutionType(String value) {
         this.value = value;
     }
 
-    public static String getUriSuffix(String input) {
-        for (UriSuffix uriSuffix : UriSuffix.values()) {
-            if (uriSuffix.getKey().equalsIgnoreCase(input)) {
-                return uriSuffix.getValue();
+    public static String getConflictResolutionType(String input) {
+        if (isBlank(input)) {
+            return SEQNO.getValue();
+        }
+
+        for (ConflictResolutionType resolution : ConflictResolutionType.values()) {
+            if (resolution.getValue().equalsIgnoreCase(input)) {
+                return resolution.getValue();
             }
         }
 
-        return EMPTY;
-    }
-
-    private String getKey() {
-        return key;
+        throw new RuntimeException("Invalid Couchbase conflict resolution type value: [" + input + "]. Valid values: lww, seqno.");
     }
 
     private String getValue() {

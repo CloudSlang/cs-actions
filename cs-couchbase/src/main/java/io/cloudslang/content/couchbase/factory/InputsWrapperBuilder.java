@@ -12,29 +12,30 @@ package io.cloudslang.content.couchbase.factory;
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
+import io.cloudslang.content.httpclient.HttpClientInputs;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
 
 /**
  * Created by Mihai Tusa
  * 4/9/2017.
  */
 public class InputsWrapperBuilder {
-    private static final String UNKNOWN_BUILDER_TYPE = "Unknown builder type.";
-
     private InputsWrapperBuilder() {
         // prevent instantiation
     }
 
     @SafeVarargs
-    public static <T> InputsWrapper buildWrapper(T... builders) {
-        InputsWrapper wrapper = new InputsWrapper.Builder().build();
+    public static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+        InputsWrapper wrapper = new InputsWrapper.Builder()
+                .withHttpClientInputs(httpClientInputs)
+                .withCommonInputs(commonInputs)
+                .build();
 
-        if (builders.length > START_INDEX) {
+        if (builders.length > INIT_INDEX) {
             for (T builder : builders) {
-                if (builder instanceof CommonInputs) {
-                    wrapper.setCommonInputs((CommonInputs) builder);
-                } else if (builder instanceof BucketInputs) {
+                if (builder instanceof BucketInputs) {
                     wrapper.setBucketInputs((BucketInputs) builder);
                 } else {
                     throw new RuntimeException(UNKNOWN_BUILDER_TYPE);

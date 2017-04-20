@@ -9,35 +9,34 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.entities.couchbase;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * Created by Mihai Tusa
- * 4/8/2017.
+ * Created by TusaM
+ * 4/14/2017.
  */
-public enum UriSuffix {
-    GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats");
+public enum AuthType {
+    NONE("none"),
+    SASL("sasl");
 
-    private final String key;
     private final String value;
 
-    UriSuffix(String key, String value) {
-        this.key = key;
+    AuthType(String value) {
         this.value = value;
     }
 
-    public static String getUriSuffix(String input) {
-        for (UriSuffix uriSuffix : UriSuffix.values()) {
-            if (uriSuffix.getKey().equalsIgnoreCase(input)) {
-                return uriSuffix.getValue();
+    public static String getAuthType(String input) {
+        if (isBlank(input)) {
+            return NONE.getValue();
+        }
+
+        for (AuthType type : AuthType.values()) {
+            if (type.getValue().equalsIgnoreCase(input)) {
+                return type.getValue();
             }
         }
 
-        return EMPTY;
-    }
-
-    private String getKey() {
-        return key;
+        throw new RuntimeException("Invalid Couchbase bucket authorization type value: [" + input + "]. Valid values: none, sasl.");
     }
 
     private String getValue() {

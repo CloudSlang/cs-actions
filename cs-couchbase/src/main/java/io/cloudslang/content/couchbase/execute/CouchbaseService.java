@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.execute;
 
+import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -16,7 +17,9 @@ import io.cloudslang.content.httpclient.HttpClientInputs;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import static io.cloudslang.content.couchbase.factory.HeadersBuilder.buildHeaders;
 import static io.cloudslang.content.couchbase.factory.InputsWrapperBuilder.buildWrapper;
+import static io.cloudslang.content.couchbase.factory.PayloadBuilder.buildPayload;
 import static io.cloudslang.content.couchbase.factory.UriFactory.getUri;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
 
@@ -25,16 +28,14 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
  * 3/26/2017.
  */
 public class CouchbaseService {
-    private static final String APPLICATION_JSON = "application/json";
-    private static final String COUCHBASE_HEADER = "X-memcachekv-Store-Client-Specification-Version:0.1";
-
     @SafeVarargs
-    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, T... builders) throws MalformedURLException {
-        InputsWrapper wrapper = buildWrapper(builders);
+    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs,
+                                                 T... builders) throws MalformedURLException {
+        InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setHeaders(COUCHBASE_HEADER);
+        buildHeaders(wrapper);
+        buildPayload(wrapper);
 
         return new CSHttpClient().execute(httpClientInputs);
     }
