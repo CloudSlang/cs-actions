@@ -20,6 +20,7 @@ public class Constants {
 
     public static class Api {
         public static final String BUCKETS = "buckets";
+        public static final String CLUSTER = "cluster";
     }
 
     public static class HttpClientInputsValues {
@@ -38,6 +39,10 @@ public class Constants {
         public static final String GET_ALL_BUCKETS = "GetAllBuckets";
         public static final String GET_BUCKET = "GetBucket";
         public static final String GET_BUCKET_STATISTICS = "GetBucketStatistics";
+    }
+
+    public static class ClusterActions {
+        public static final String GET_CLUSTER_INFO = "GetClusterInfo";
     }
 
     public static class ErrorMessages {

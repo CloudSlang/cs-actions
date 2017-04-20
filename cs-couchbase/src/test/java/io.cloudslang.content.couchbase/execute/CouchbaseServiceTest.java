@@ -163,6 +163,22 @@ public class CouchbaseServiceTest {
         assertEquals("application/json", httpClientInputs.getContentType());
     }
 
+    @Test
+    public void testGetCluster() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetClusterInfo", "cluster", "http://whatever.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://whatever.couchbase.com:8091/pools", httpClientInputs.getUrl());
+        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
     private CommonInputs getCommonInputs(String action, String api, String endpoint) {
         return new CommonInputs.Builder()
                     .withAction(action)
