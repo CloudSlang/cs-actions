@@ -318,8 +318,8 @@ public class HttpClientAction {
         httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
         httpClientInputs.setTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE));
         httpClientInputs.setTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT));
-        httpClientInputs.setKeystore(keystore);
-        httpClientInputs.setKeystorePassword(keystorePassword);
+        httpClientInputs.setKeystore(defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE));
+        httpClientInputs.setKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT));
         httpClientInputs.setConnectTimeout(connectTimeout);
         httpClientInputs.setSocketTimeout(socketTimeout);
         httpClientInputs.setUseCookies(useCookies);
