@@ -164,7 +164,7 @@ public class CouchbaseServiceTest {
     }
 
     @Test
-    public void testGetCluster() throws MalformedURLException {
+    public void testGetClusterInfo() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
                 "", "", "", "", "", "", "GET");
@@ -175,6 +175,22 @@ public class CouchbaseServiceTest {
         verifyNoMoreInteractions(csHttpClientMock);
 
         assertEquals("http://whatever.couchbase.com:8091/pools", httpClientInputs.getUrl());
+        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
+    public void testGetClusterDetails() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetClusterDetails", "cluster", "http://whatever.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://whatever.couchbase.com:8091/pools/default", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
         assertEquals("application/json", httpClientInputs.getContentType());
     }
