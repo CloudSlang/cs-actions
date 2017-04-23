@@ -9,7 +9,12 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.utils;
 
+import io.cloudslang.content.couchbase.entities.couchbase.AuthType;
+import io.cloudslang.content.couchbase.entities.couchbase.BucketType;
+import io.cloudslang.content.couchbase.entities.couchbase.ConflictResolutionType;
+import io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy;
 import io.cloudslang.content.couchbase.entities.couchbase.UriSuffix;
+import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.net.MalformedURLException;
@@ -20,12 +25,16 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpC
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.BROWSER_COMPATIBLE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.STRICT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.CONSTRAINS_ERROR_MESSAGE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.BLANK_SPACE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.COMMA;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.PORT_REGEX;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.COUCHBASE_DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.couchbase.factory.UriFactory.getUri;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.compile;
@@ -94,8 +103,8 @@ public class InputsUtil {
         return httpClientInputs;
     }
 
-    public static String getUrl(String input) throws MalformedURLException {
-        return new URL(input).toString();
+    public static String buildUrl(InputsWrapper wrapper) throws MalformedURLException {
+        return getUrl(wrapper.getCommonInputs().getEndpoint()) + getUri(wrapper);
     }
 
     public static String appendTo(String prefix, String suffix, String action) {
@@ -121,7 +130,7 @@ public class InputsUtil {
         }
 
         if (!compile(PORT_REGEX).matcher(input).matches()) {
-            throw new IllegalArgumentException("Incorrect provided value: " + input + " input. "  + CONSTRAINS_ERROR_MESSAGE);
+            throw new IllegalArgumentException(format("Incorrect provided value: '%s' input. '%s'", input, CONSTRAINS_ERROR_MESSAGE));
         }
 
         return Integer.parseInt(input);
@@ -155,6 +164,33 @@ public class InputsUtil {
         return isBlank(input) ? defaultValue : getIntegerWithinValidRange(input, minAllowed, maxAllowed);
     }
 
+    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
+        if (condition) {
+            inputMap.put(key, value);
+        }
+    }
+
+    public static <T extends Enum<T>> String getEnumValidValuesString(Class<T> inputEnum) {
+        StringBuilder sb = new StringBuilder();
+        for (T enumValue : inputEnum.getEnumConstants()) {
+            if (AuthType.class.getCanonicalName().equalsIgnoreCase(enumValue.getClass().getCanonicalName())) {
+                sb.append(((AuthType) enumValue).getValue()).append(COMMA).append(BLANK_SPACE);
+            } else if (BucketType.class.getCanonicalName().equalsIgnoreCase(enumValue.getClass().getCanonicalName())) {
+                sb.append(((BucketType) enumValue).getValue()).append(COMMA).append(BLANK_SPACE);
+            } else if (ConflictResolutionType.class.getCanonicalName().equalsIgnoreCase(enumValue.getClass().getCanonicalName())) {
+                sb.append(((ConflictResolutionType) enumValue).getValue()).append(COMMA).append(BLANK_SPACE);
+            } else if (EvictionPolicy.class.getCanonicalName().equalsIgnoreCase(enumValue.getClass().getCanonicalName())) {
+                sb.append(((EvictionPolicy) enumValue).getValue()).append(COMMA).append(BLANK_SPACE);
+            }
+        }
+
+        return isBlank(sb.toString()) ? EMPTY : sb.deleteCharAt(sb.length() - 2).toString();
+    }
+
+    private static String getInputWithDefaultValue(String input, String defaultValue) {
+        return isBlank(input) ? defaultValue : input;
+    }
+
     private static int getIntegerWithinValidRange(String input, Integer minAllowed, Integer maxAllowed) {
         if (isValidInt(input, minAllowed, maxAllowed, true, true)) {
             return Integer.parseInt(input);
@@ -163,13 +199,7 @@ public class InputsUtil {
         throw new RuntimeException(CONSTRAINS_ERROR_MESSAGE);
     }
 
-    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
-        if (condition) {
-            inputMap.put(key, value);
-        }
-    }
-
-    private static String getInputWithDefaultValue(String input, String defaultValue) {
-        return isBlank(input) ? defaultValue : input;
+    private static String getUrl(String input) throws MalformedURLException {
+        return new URL(input).toString();
     }
 }
