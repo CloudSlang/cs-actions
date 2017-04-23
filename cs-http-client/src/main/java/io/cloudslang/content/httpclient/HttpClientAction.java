@@ -23,12 +23,17 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+
 /**
  * Created with IntelliJ IDEA.
  * User: davidmih
  * Date: 7/15/14
  */
 public class HttpClientAction {
+
+    private static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    private static final String CHANGEIT = "changeit";
 
     /**
      * This operation does an http request and a parsing of the response.
@@ -311,10 +316,10 @@ public class HttpClientAction {
         httpClientInputs.setProxyPassword(proxyPassword);
         httpClientInputs.setTrustAllRoots(trustAllRoots);
         httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-        httpClientInputs.setKeystore(keystore);
-        httpClientInputs.setKeystorePassword(keystorePassword);
+        httpClientInputs.setTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE));
+        httpClientInputs.setTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT));
+        httpClientInputs.setKeystore(defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE));
+        httpClientInputs.setKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT));
         httpClientInputs.setConnectTimeout(connectTimeout);
         httpClientInputs.setSocketTimeout(socketTimeout);
         httpClientInputs.setUseCookies(useCookies);
