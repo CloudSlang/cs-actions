@@ -42,6 +42,7 @@ public class Constants {
     }
 
     public static class ClusterActions {
+        public static final String GET_CLUSTER_DETAILS = "GetClusterDetails";
         public static final String GET_CLUSTER_INFO = "GetClusterInfo";
     }
 
