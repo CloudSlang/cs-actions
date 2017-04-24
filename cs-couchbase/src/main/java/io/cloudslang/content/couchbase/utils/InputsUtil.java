@@ -161,7 +161,8 @@ public class InputsUtil {
     }
 
     public static int getValidIntValue(String input, Integer minAllowed, Integer maxAllowed, Integer defaultValue) {
-        return isBlank(input) ? defaultValue : getIntegerWithinValidRange(input, minAllowed, maxAllowed);
+        return isBlank(input) ? defaultValue : maxAllowed == null ?
+                getIntegerAboveMinimum(input, minAllowed) : getIntegerWithinValidRange(input, minAllowed, maxAllowed);
     }
 
     public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
@@ -197,6 +198,19 @@ public class InputsUtil {
         }
 
         throw new RuntimeException(CONSTRAINS_ERROR_MESSAGE);
+    }
+
+    private static int getIntegerAboveMinimum (String input, Integer minAllowed) {
+        try {
+            int validInt = Integer.parseInt(input);
+            if (validInt < minAllowed) {
+                throw new RuntimeException(CONSTRAINS_ERROR_MESSAGE);
+            }
+
+            return validInt;
+        } catch (NumberFormatException nfe) {
+            throw new RuntimeException(format("The provided input value: %s is not integer.", input));
+        }
     }
 
     private static String getUrl(String input) throws MalformedURLException {
