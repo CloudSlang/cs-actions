@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.entities.couchbase;
 
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -25,6 +27,10 @@ public enum ConflictResolutionType {
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public static String getConflictResolutionType(String input) {
         if (isBlank(input)) {
             return SEQNO.getValue();
@@ -36,10 +42,7 @@ public enum ConflictResolutionType {
             }
         }
 
-        throw new RuntimeException("Invalid Couchbase conflict resolution type value: [" + input + "]. Valid values: lww, seqno.");
-    }
-
-    private String getValue() {
-        return value;
+        throw new RuntimeException(format("Invalid Couchbase conflict resolution type value: '%s'. Valid values: '%s'.",
+                input, getEnumValidValuesString(ConflictResolutionType.class)));
     }
 }

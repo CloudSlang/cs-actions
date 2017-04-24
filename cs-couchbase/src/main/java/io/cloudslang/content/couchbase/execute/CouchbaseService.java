@@ -20,8 +20,7 @@ import java.util.Map;
 import static io.cloudslang.content.couchbase.factory.HeadersBuilder.buildHeaders;
 import static io.cloudslang.content.couchbase.factory.InputsWrapperBuilder.buildWrapper;
 import static io.cloudslang.content.couchbase.factory.PayloadBuilder.buildPayload;
-import static io.cloudslang.content.couchbase.factory.UriFactory.getUri;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
+import static io.cloudslang.content.couchbase.utils.InputsUtil.buildUrl;
 
 /**
  * Created by Mihai Tusa
@@ -29,18 +28,15 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.getUrl;
  */
 public class CouchbaseService {
     @SafeVarargs
-    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs,
-                                                 T... builders) throws MalformedURLException {
+    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders)
+            throws MalformedURLException {
         InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));
+
         buildHeaders(wrapper);
         buildPayload(wrapper);
 
         return new CSHttpClient().execute(httpClientInputs);
-    }
-
-    private String buildUrl(InputsWrapper wrapper) throws MalformedURLException {
-        return getUrl(wrapper.getCommonInputs().getEndpoint()) + getUri(wrapper);
     }
 }

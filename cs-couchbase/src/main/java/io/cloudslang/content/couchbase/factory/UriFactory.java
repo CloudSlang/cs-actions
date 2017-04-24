@@ -9,10 +9,12 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.factory;
 
+import io.cloudslang.content.couchbase.entities.couchbase.ClusterUri;
 import io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNSUPPORTED_COUCHBASE_API;
 import static io.cloudslang.content.couchbase.factory.buckets.BucketsUriFactory.getBucketsUri;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.appendTo;
@@ -30,6 +32,8 @@ public class UriFactory {
         switch (wrapper.getCommonInputs().getApi()) {
             case BUCKETS:
                 return appendTo(CouchbaseApi.BUCKETS.getValue(), getBucketsUri(wrapper), wrapper.getCommonInputs().getAction());
+            case CLUSTER:
+                return ClusterUri.getClusterUri(wrapper.getCommonInputs().getAction());
             default:
                 throw new RuntimeException(UNSUPPORTED_COUCHBASE_API);
         }

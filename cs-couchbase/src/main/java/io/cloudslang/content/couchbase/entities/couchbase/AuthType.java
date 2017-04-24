@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.entities.couchbase;
 
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -25,6 +27,10 @@ public enum AuthType {
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public static String getAuthType(String input) {
         if (isBlank(input)) {
             return NONE.getValue();
@@ -36,10 +42,7 @@ public enum AuthType {
             }
         }
 
-        throw new RuntimeException("Invalid Couchbase bucket authorization type value: [" + input + "]. Valid values: none, sasl.");
-    }
-
-    private String getValue() {
-        return value;
+        throw new RuntimeException(format("Invalid Couchbase bucket authorization type value: '%s'. Valid values: '%s'.",
+                input, getEnumValidValuesString(AuthType.class)));
     }
 }
