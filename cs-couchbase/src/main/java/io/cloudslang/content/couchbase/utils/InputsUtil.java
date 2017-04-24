@@ -130,7 +130,7 @@ public class InputsUtil {
         }
 
         if (!compile(PORT_REGEX).matcher(input).matches()) {
-            throw new IllegalArgumentException(format("Incorrect provided value: '%s' input. '%s'", input, CONSTRAINS_ERROR_MESSAGE));
+            throw new IllegalArgumentException(format("Incorrect provided value: %s input. %s", input, CONSTRAINS_ERROR_MESSAGE));
         }
 
         return Integer.parseInt(input);
@@ -184,7 +184,7 @@ public class InputsUtil {
             }
         }
 
-        return isBlank(sb.toString()) ? EMPTY : sb.deleteCharAt(sb.length() - 2).toString();
+        return isBlank(sb.toString()) ? EMPTY : sb.deleteCharAt(sb.length() - 2).toString().trim();
     }
 
     private static String getInputWithDefaultValue(String input, String defaultValue) {
