@@ -197,14 +197,16 @@ public class InputsUtil {
             return Integer.parseInt(input);
         }
 
-        throw new RuntimeException(CONSTRAINS_ERROR_MESSAGE);
+        throw new RuntimeException(format("The provided value: %s is not within valid range. See operation inputs " +
+                "description section for details.", input));
     }
 
     private static int getIntegerAboveMinimum (String input, Integer minAllowed) {
         try {
             int validInt = Integer.parseInt(input);
             if (validInt < minAllowed) {
-                throw new RuntimeException(CONSTRAINS_ERROR_MESSAGE);
+                throw new RuntimeException(format("The provided value: %s is bellow minimum allowed. See operation inputs " +
+                        "description section for details.", input));
             }
 
             return validInt;

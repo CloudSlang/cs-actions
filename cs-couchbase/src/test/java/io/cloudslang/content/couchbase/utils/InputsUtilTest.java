@@ -18,9 +18,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.HashMap;
+
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getPayloadString;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidIntValue;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidPort;
+import static io.cloudslang.content.couchbase.utils.TestUtils.setExpectedExceptions;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -70,16 +75,16 @@ public class InputsUtilTest {
 
     @Test
     public void testGetValidIntValueExceedMaxValue() {
-        setExpectedExceptions(RuntimeException.class, exception, "The value doesn't meet conditions for general " +
-                "purpose usage. See operation inputs description section for details.");
+        setExpectedExceptions(RuntimeException.class, exception, "The provided value: 65536 is not within valid range. " +
+                "See operation inputs description section for details.");
 
         getValidIntValue("65536", 0, 65535, 80);
     }
 
     @Test
     public void testGetValidIntValueBellowMinValue() {
-        setExpectedExceptions(RuntimeException.class, exception, "The value doesn't meet conditions for general " +
-                "purpose usage. See operation inputs description section for details.");
+        setExpectedExceptions(RuntimeException.class, exception, "The provided value: -1 is not within valid range. " +
+                "See operation inputs description section for details.");
 
         getValidIntValue("-1", 0, 65535, 80);
     }
@@ -109,16 +114,37 @@ public class InputsUtilTest {
     }
 
     @Test
-    public void testGetValidPortWrongvalue() {
+    public void testGetValidPortWrongValue() {
         setExpectedExceptions(IllegalArgumentException.class, exception, "Incorrect provided value: not integer input. " +
                 "The value doesn't meet conditions for general purpose usage. See operation inputs description section for details.");
 
         getValidPort("not integer");
     }
 
-    @SuppressWarnings("unchecked")
-    private static void setExpectedExceptions(Class<?> type, ExpectedException exception, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
+    @Test
+    public void testGetEmptyPayloadString() {
+        assertEquals(EMPTY, getPayloadString(new HashMap<String, String>(), ",", "", true));
+    }
+
+    @Test
+    public void testGetIntegerWrongInputValue() {
+        setExpectedExceptions(RuntimeException.class, exception, "The provided input value: blah blah is not integer.");
+
+        getValidIntValue("blah blah", 0, null, 3);
+    }
+
+    @Test
+    public void testGetIntegerBellowAllowedMinimum() {
+        setExpectedExceptions(RuntimeException.class, exception, "The provided value: -10 is bellow minimum allowed. " +
+                "See operation inputs description section for details.");
+
+        getValidIntValue("-10", 0, null, 3);
+    }
+
+    @Test
+    public void testGetValidInt() {
+        int toTest = getValidIntValue("8080", 0, null, 80);
+
+        assertEquals(8080, toTest);
     }
 }
