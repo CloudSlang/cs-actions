@@ -14,7 +14,9 @@ import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -24,10 +26,12 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
+import static io.cloudslang.content.couchbase.utils.TestUtils.setExpectedExceptions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -42,6 +46,9 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CSHttpClient.class, CouchbaseService.class})
 public class CouchbaseServiceTest {
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Mock
     private CSHttpClient csHttpClientMock;
 
@@ -95,6 +102,35 @@ public class CouchbaseServiceTest {
         assertTrue(httpClientInputs.getBody().contains("ramQuotaMB=100"));
         assertTrue(httpClientInputs.getBody().contains("replicaNumber=1"));
         assertTrue(httpClientInputs.getBody().contains("threadsNumber=2"));
+    }
+
+    @Test
+    public void testCreateOrEditBucketWithoutSaslPassword() throws MalformedURLException {
+        setExpectedExceptions(RuntimeException.class, exception, "The combination of values supplied for inputs: " +
+                "authType, proxyPort and/or saslPassword doesn't meet conditions for general purpose usage.");
+
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "POST");
+        BucketInputs bucketInputs = new BucketInputs.Builder()
+                .withBucketName("toBeCreated")
+                .withAuthType("sasl")
+                .withBucketType("")
+                .withConflictResolutionType("")
+                .withProxyPort("")
+                .withEvictionPolicy("")
+                .withFlushEnabled("")
+                .withParallelDBAndViewCompaction("")
+                .withRamQuotaMB("")
+                .withReplicaIndex("")
+                .withReplicaNumber("")
+                .withSaslPassword("")
+                .withThreadsNumber("")
+                .build();
+        CommonInputs commonInputs = getCommonInputs("CreateOrEditBucket", "buckets", "http://subdomain.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+
+        verify(csHttpClientMock, never()).execute(eq(httpClientInputs));
     }
 
     @Test
@@ -197,9 +233,9 @@ public class CouchbaseServiceTest {
 
     private CommonInputs getCommonInputs(String action, String api, String endpoint) {
         return new CommonInputs.Builder()
-                    .withAction(action)
-                    .withApi(api)
-                    .withEndpoint(endpoint)
-                    .build();
+                .withAction(action)
+                .withApi(api)
+                .withEndpoint(endpoint)
+                .build();
     }
 }
