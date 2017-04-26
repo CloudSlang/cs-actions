@@ -7,7 +7,8 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
-import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
+import io.cloudslang.content.gcloud.services.compute.disks.DiskController
+import io.cloudslang.content.gcloud.services.compute.instances.{InstanceController, InstanceService}
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
@@ -66,7 +67,8 @@ class InstancesInsert {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val instance = new Instance()
+      val disk = DiskController.createDisk(zone, "diskn", Some("projects/centos-cloud/global/images/centos-6-v20170327"), None, None, None, "projects/rational-medley-165804/zones/us-central1-c/diskTypes/pd-standard", "", "", "", 10)
+      val instance = InstanceController.createInstance(instanceName, zone, disk)
 
       val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString

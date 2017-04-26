@@ -52,7 +52,7 @@ class NetworksInsert {
               @Param(value = PROXY_USERNAME) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
-//    networkName: String, networkDescription: String, autoCreateSubnetworks: Boolean, ipV4Range: Option[String]
+
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val networkDescription = defaultIfEmpty(networkDescriptionInp, EMPTY)
