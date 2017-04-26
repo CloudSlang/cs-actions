@@ -10,8 +10,11 @@ object NetworkController {
     val network = new Network()
       .setName(networkName)
       .setDescription(networkDescription)
-      .setAutoCreateSubnetworks(autoCreateSubnetworks)
-      .setIPv4Range(ipV4Range.get)
+    if (ipV4Range.isDefined) {
+      return network.setIPv4Range(ipV4Range.get)
+    } else {
+      return network.setAutoCreateSubnetworks(autoCreateSubnetworks)
+    }
     network
   }
 }

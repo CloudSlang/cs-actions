@@ -2,22 +2,18 @@ package io.cloudslang.content.gcloud.actions.compute.networks
 
 import java.util
 
-import com.google.api.services.compute.model.{Disk, Network}
+import com.google.api.services.compute.model.Network
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.{BooleanValues, OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.actions.compute.instances.InstancesInsert
-import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
-import io.cloudslang.content.gcloud.services.compute.disks.{DiskController, DiskService}
+import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.networks.{NetworkController, NetworkService}
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_AUTO_CREATE_SUBNETWORKS, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateDiskSize, validateProxyPort}
+import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.BooleanUtilities
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -28,6 +24,11 @@ import scala.collection.JavaConversions._
   * Created by victor on 26.04.2017.
   */
 class NetworksInsert {
+
+  /*
+  todo if ipv4 is specified, autoCreateSubnetworks is ignored
+   */
+
   @Action(name = "Insert Network",
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
@@ -55,11 +56,11 @@ class NetworksInsert {
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val networkDescription = defaultIfEmpty(networkDescriptionInp, EMPTY)
+    val autoCreateSubnetworksStr = defaultIfEmpty(autoCreateSubnetworksInp, DEFAULT_AUTO_CREATE_SUBNETWORKS)
     val ipV4Range = verifyEmpty(ipV4RangeInp)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-    val autoCreateSubnetworksStr = defaultIfEmpty(autoCreateSubnetworksInp, DEFAULT_AUTO_CREATE_SUBNETWORKS)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
