@@ -63,7 +63,7 @@ public class ListHostGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class))).thenReturn(expectedReturnResult);
 
-        Map<String, String> actualResultMap = listHostGroups.listHostGroups("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = listHostGroups.listHostGroups("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class));
 
@@ -73,7 +73,7 @@ public class ListHostGroupTest {
 
     @Test
     public void testListGroupVmsProtocolException() throws Exception {
-        Map<String, String> resultMap = listHostGroups.listHostGroups("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = listHostGroups.listHostGroups("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class));
 
@@ -84,7 +84,7 @@ public class ListHostGroupTest {
 
     @Test
     public void testListGroupVmsPortException() throws Exception {
-        Map<String, String> resultMap = listHostGroups.listHostGroups("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = listHostGroups.listHostGroups("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterHostGroup.class));
 

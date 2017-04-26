@@ -60,7 +60,7 @@ public class PowerOffVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.powerOffVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = powerOffVM.powerOffVM("", "", "", "", "", "", "");
+        resultMap = powerOffVM.powerOffVM("", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).powerOffVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -69,7 +69,7 @@ public class PowerOffVMTest {
 
     @Test
     public void testPowersOffVMProtocolException() throws Exception {
-        Map<String, String> resultMap = powerOffVM.powerOffVM("", "", "myProtocol", "", "", "", "");
+        Map<String, String> resultMap = powerOffVM.powerOffVM("", "", "myProtocol", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).powerOffVM(any(HttpInputs.class), any(VmInputs.class));
 

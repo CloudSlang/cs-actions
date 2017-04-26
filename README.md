@@ -2,8 +2,7 @@
 =============
 
 [![Build Status](https://travis-ci.org/CloudSlang/cs-actions.svg?branch=master)](https://travis-ci.org/CloudSlang/cs-actions)
-[![Coverage Status](https://coveralls.io/repos/github/CloudSlang/cs-actions/badge.svg)](https://coveralls.io/github/CloudSlang/cs-actions)
-[![Test Coverage](https://codeclimate.com/github/CloudSlang/cs-actions/badges/coverage.svg)](https://codeclimate.com/github/CloudSlang/cs-actions/coverage)
+[![Coverage Status](https://coveralls.io/repos/github/CloudSlang/cs-actions/badge.svg?branch=master)](https://coveralls.io/github/CloudSlang/cs-actions?branch=master)
 [![Issue Count](https://codeclimate.com/github/CloudSlang/cs-actions/badges/issue_count.svg)](https://codeclimate.com/github/CloudSlang/cs-actions)
 [![Code Climate](https://codeclimate.com/github/CloudSlang/cs-actions/badges/gpa.svg)](https://codeclimate.com/github/CloudSlang/cs-actions)
 

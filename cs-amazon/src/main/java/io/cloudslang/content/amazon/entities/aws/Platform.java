@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -33,7 +34,7 @@ public enum Platform {
 
         for (Platform member : Platform.values()) {
             if (OTHERS.value.equals(input.toLowerCase())) {
-                return "";
+                return EMPTY;
             } else if (member.value.equals(input.toLowerCase())) {
                 return member.value;
             }

@@ -23,21 +23,16 @@ import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS_RETURN_CODE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE_RETURN_CODE;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.CREATE_LOAD_BALANCER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
@@ -49,16 +44,16 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SUBNET_IDS_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.LOAD_BALANCER_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.SCHEME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS_RETURN_CODE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE_RETURN_CODE;
 
 /**
  * Created by TusaM
@@ -162,10 +157,10 @@ public class CreateLoadBalancer {
                                        @Param(value = KEY_TAGS_STRING) String keyTagsString,
                                        @Param(value = VALUE_TAGS_STRING) String valueTagsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, LOAD_BALANCING_API)
+                    .withEndpoint(endpoint, LOAD_BALANCING_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

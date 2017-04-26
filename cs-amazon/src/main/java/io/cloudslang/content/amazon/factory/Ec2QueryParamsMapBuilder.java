@@ -48,6 +48,8 @@ class Ec2QueryParamsMapBuilder {
                 return new TagUtils().getCreateTagsQueryParamsMap(wrapper);
             case CREATE_VOLUME:
                 return new VolumeUtils().getCreateVolumeQueryParamsMap(wrapper);
+            case CREATE_VPC:
+                return new NetworkUtils().getCreateVpcQueryParamsMap(wrapper);
             case DELETE_NETWORK_INTERFACE:
                 return new NetworkUtils().getDeleteNetworkInterfaceQueryParamsMap(wrapper);
             case DELETE_SNAPSHOT:
@@ -56,6 +58,8 @@ class Ec2QueryParamsMapBuilder {
                 return new NetworkUtils().getDeleteSubnetQueryParamsMap(wrapper);
             case DELETE_VOLUME:
                 return new VolumeUtils().getDeleteVolumeQueryParamsMap(wrapper);
+            case DELETE_VPC:
+                return new NetworkUtils().getDeleteVpcQueryParamsMap(wrapper);
             case DESCRIBE_AVAILABILITY_ZONES:
                 return new RegionUtils().getDescribeAvailabilityZonesQueryParamsMap(wrapper);
             case DESCRIBE_IMAGES:
@@ -64,8 +68,14 @@ class Ec2QueryParamsMapBuilder {
                 return new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
             case DESCRIBE_INSTANCES:
                 return new InstanceUtils().getDescribeInstancesQueryParamsMap(wrapper);
+            case DESCRIBE_NETWORK_INTERFACES:
+                return new NetworkUtils().getDescribeNetworkInterfacesQueryParamsMap(wrapper);
             case DESCRIBE_REGIONS:
                 return new RegionUtils().getDescribeRegionsQueryParamsMap(wrapper);
+            case DESCRIBE_TAGS:
+                return new TagUtils().getDescribeTagsQueryParamsMap(wrapper);
+            case DESCRIBE_VOLUMES:
+                return new VolumeUtils().getDescribeVolumesQueryParamsMap(wrapper);
             case DEREGISTER_IMAGE:
                 return new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
             case DETACH_NETWORK_INTERFACE:

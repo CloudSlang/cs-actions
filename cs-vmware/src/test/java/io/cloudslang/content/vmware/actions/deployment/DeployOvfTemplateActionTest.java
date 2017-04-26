@@ -69,8 +69,8 @@ public class DeployOvfTemplateActionTest {
         prepareForTests();
         Mockito.doNothing().when(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
 
-        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "");
+        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
 
         Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
         assertEquals(ReturnCodes.SUCCESS, result.get(Outputs.RETURN_CODE));
@@ -86,8 +86,8 @@ public class DeployOvfTemplateActionTest {
         prepareForTests();
         Mockito.doThrow(new Exception(OPERATION_FAILED)).when(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
 
-        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "");
+        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
 
         Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
         assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));

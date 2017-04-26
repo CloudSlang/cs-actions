@@ -28,6 +28,7 @@ public class Inputs {
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PREFIX = "prefix";
         public static final String QUERY_PARAMS = "queryParams";
         public static final String VERSION = "version";
     }
@@ -151,12 +152,17 @@ public class Inputs {
     }
 
     public static class LoadBalancerInputs {
+        public static final String ARNS_STRING = "arnsString";
         public static final String LOAD_BALANCER_ARN = "loadBalancerArn";
         public static final String LOAD_BALANCER_NAME = "loadBalancerName";
+        public static final String MARKER = "marker";
+        public static final String MEMBER_NAMES_STRING = "memberNamesString";
+        public static final String PAGE_SIZE = "pageSize";
         public static final String SCHEME = "schema";
     }
 
     public static class NetworkInputs {
+        public static final String AMAZON_PROVIDED_IPV6_CIDR_BLOCK = "amazonProvidedIpv6CidrBlock";
         public static final String CIDR_BLOCK = "cidrBlock";
         public static final String DEVICE_INDEX = "deviceIndex";
         public static final String FORCE_DETACH = "forceDetach";
@@ -167,6 +173,52 @@ public class Inputs {
         public static final String NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS = "networkInterfaceAssociatePublicIpAddress";
         public static final String SECONDARY_PRIVATE_IP_ADDRESS_COUNT = "secondaryPrivateIpAddressCount";
         public static final String SUBNET_IDS_STRING = "subnetIdsString";
+        public static final String FILTER_ADDRESSES_PRIVATE_IP_ADDRESS = "filterAddressesPrivateIpAddress";
+        public static final String FILTER_ADDRESSES_PRIMARY = "filterAddressesPrimary";
+        public static final String FILTER_ADDRESSES_ASSOCIATION_PUBLIC_IP = "filterAddressesAssociationPublicIp";
+        public static final String FILTER_ADDRESSES_ASSOCIATION_OWNER_ID = "filterAddressesAssociationOwnerId";
+        public static final String FILTER_ASSOCIATION_ASSOCIATION_ID = "filterAssociationAssociationId";
+        public static final String FILTER_ASSOCIATION_ALLOCATION_ID = "filterAssociationAllocationId";
+        public static final String FILTER_ASSOCIATION_IP_OWNER_ID = "filterAssociationIpOwnerId";
+        public static final String FILTER_ASSOCIATION_PUBLIC_IP = "filterAssociationPublicIp";
+        public static final String FILTER_ASSOCIATION_PUBLIC_DNS_NAME = "filterAssociationPublicDnsName";
+        public static final String FILTER_ATTACHMENT_ATTACHMENT_ID = "filterAttachmentAttachmentId";
+        public static final String FILTER_ATTACHMENT_ATTACH_TIME = "filterAttachmentAttachTime";
+        public static final String FILTER_ATTACHMENT_DELETE_ON_TERMINATION = "filterAttachmentDeleteOnTermination";
+        public static final String FILTER_ATTACHMENT_DEVICE_INDEX = "filterAttachmentDeviceIndex";
+        public static final String FILTER_ATTACHMENT_INSTANCE_ID = "filterAttachmentInstanceId";
+        public static final String FILTER_ATTACHMENT_INSTANCE_OWNER_ID = "filterAttachmentInstanceOwnerId";
+        public static final String FILTER_ATTACHMENT_NAT_GATEWAY_ID = "filterAttachmentNatGatewayId";
+        public static final String FILTER_ATTACHMENT_STATUS = "filterAttachmentStatus";
+        public static final String FILTER_AVAILABILITY_ZONE = "filterAvailabilityZone";
+        public static final String FILTER_DESCRIPTION = "filterDescription";
+        public static final String FILTER_GROUP_ID = "filterGroupId";
+        public static final String FILTER_GROUP_NAME = "filterGroupName";
+        public static final String FILTER_IPV6_ADDRESSES_IPV6_ADDRESS = "filterIpv6AddressesIpv6Address";
+        public static final String FILTER_MAC_ADDRESS = "filterMacAddress";
+        public static final String FILTER_NETWORK_INTERFACE_ID = "filterNetworkInterfaceId";
+        public static final String FILTER_OWNER_ID = "filterOwnerId";
+        public static final String FILTER_PRIVATE_IP_ADDRESS = "filterPrivateIpAddress";
+        public static final String FILTER_PRIVATE_DNS_NAME = "filterPrivateDnsName";
+        public static final String FILTER_REQUESTER_ID = "filterRequesterId";
+        public static final String FILTER_REQUESTER_MANAGED = "filterRequesterManaged";
+        public static final String FILTER_SOURCE_DEST_CHECK = "filterSourceDestCheck";
+        public static final String FILTER_STATUS = "filterStatus";
+        public static final String FILTER_SUBNET_ID = "filterSubnetId";
+        public static final String FILTER_TAG = "filterTag";
+        public static final String FILTER_TAG_KEY = "filterTagKey";
+        public static final String FILTER_TAG_VALUE = "filterTagValue";
+        public static final String FILTER_VPC_ID = "filterVpcId";
+    }
+
+    public static class StorageInputs {
+        public static final String BUCKET_NAME = "bucketName";
+        public static final String CONTINUATION_TOKEN = "continuationToken";
+        public static final String ENCODING_TYPE = "encodingType";
+        public static final String FETCH_OWNER = "fetchOwner";
+        public static final String MAX_KEYS = "maxKeys";
+        public static final String PREFIX = "prefix";
+        public static final String START_AFTER = "startAfter";
     }
 
     public static class VolumeInputs {
@@ -177,5 +229,29 @@ public class Inputs {
         public static final String SIZE = "size";
         public static final String SNAPSHOT_DESCRIPTION = "snapshotDescription";
         public static final String SNAPSHOT_ID = "snapshotId";
+        public static final String VOLUME_IDS_STRING = "volumeIdsString";
+        public static final String FILTER_ATTACHMENT_ATTACH_TIME = "filterAttachmentAttachTime";
+        public static final String FILTER_ATTACHMENT_DELETE_ON_TERMINATION = "filterAttachmentDeleteOnTermination";
+        public static final String FILTER_ATTACHMENT_DEVICE = "filterAttachmentDevice";
+        public static final String FILTER_ATTACHMENT_INSTANCE_ID = "filterAttachmentInstanceId";
+        public static final String FILTER_ATTACHMENT_STATUS = "filterAttachmentStatus";
+        public static final String FILTER_AVAILABILITY_ZONE = "filterAvailabilityZone";
+        public static final String FILTER_CREATE_TIME = "filterCreateTime";
+        public static final String FILTER_ENCRYPTED = "filterEncrypted";
+        public static final String FILTER_SIZE = "filterSize";
+        public static final String FILTER_SNAPSHOT_ID = "filterSnapshotId";
+        public static final String FILTER_STATUS = "filterStatus";
+        public static final String FILTER_TAG = "filterTag";
+        public static final String FILTER_TAG_KEY = "filterTagKey";
+        public static final String FILTER_TAG_VALUE = "filterTagValue";
+        public static final String FILTER_VOLUME_ID = "filterVolumeId";
+        public static final String FILTER_VOLUME_TYPE = "filterVolumeType";
+    }
+
+    public static class TagsInputs {
+        public static final String FILTER_KEY = "filterKey";
+        public static final String FILTER_RESOURCE_ID = "filterResourceId";
+        public static final String FILTER_RESOURCE_TYPE = "filterResourceType";
+        public static final String FILTER_VALUE = "filterValue";
     }
 }

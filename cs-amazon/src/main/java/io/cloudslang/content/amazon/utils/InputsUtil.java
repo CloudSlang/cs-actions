@@ -9,27 +9,33 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.utils;
 
+import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FILTER;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FIXED_PREFIX;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LISTENERS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.MEMBER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REGION_NAME;
@@ -41,14 +47,17 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ZONE_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.DEFAULT_MAX_KEYS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
@@ -57,14 +66,15 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInpu
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
 
+import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
+
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.indexOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
-import static java.lang.String.valueOf;
-import static java.util.Arrays.asList;
-import static java.util.regex.Pattern.quote;
 
 /**
  * Created by Mihai Tusa.
@@ -73,6 +83,7 @@ import static java.util.regex.Pattern.quote;
 public final class InputsUtil {
     private static final String ACTION = "Action";
     private static final String ASSOCIATE_PUBLIC_IP_ADDRESS = "AssociatePublicIpAddress";
+    private static final String CANONICAL_HEADER_CONTENT_SHA = "x-amz-content-sha256";
     private static final String GP2 = "gp2";
     private static final String HTTPS_PROTOCOL = "https";
     private static final String IO1 = "io1";
@@ -83,14 +94,19 @@ public final class InputsUtil {
     private static final String SUBNET_ID_INPUT = "subnetId";
     private static final String VERSION = "Version";
 
+    private static final int MAXIMUM_ACCEPTED_MAX_KEY = 1;
     private static final int MAXIMUM_EBS_SIZE = 16384;
     private static final int MINIMUM_IO1_EBS_SIZE = 4;
     private static final int MAXIMUM_INSTANCES_NUMBER = 50;
     private static final int MINIMUM_INSTANCES_NUMBER = 1;
     private static final int MINIMUM_MAX_RESULTS = 5;
     private static final int MAXIMUM_MAX_RESULTS = 1000;
+    private static final int MAXIMUM_NETMASK_VALUE = 16;
+    private static final int MINIMUM_NETMASK_VALUE = 28;
     private static final int MAXIMUM_STANDARD_EBS_SIZE = 1024;
     private static final int MINIMUM_SC1_AND_ST1_EBS_SIZE = 500;
+    private static final int PAGE_SIZE_MAX_VALUE = 400;
+    private static final int PAGE_SIZE_MIN_VALUE = 1;
 
     private static final float MAXIMUM_VOLUME_AMOUNT = 16000f;
     private static final float MINIMUM_VOLUME_AMOUNT = 0.5f;
@@ -98,6 +114,23 @@ public final class InputsUtil {
     private InputsUtil() {
         // prevent instantiation
     }
+
+    public static void setQueryApiHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
+            throws SignatureException, MalformedURLException {
+        AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
+        inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
+        if (S3_API.equalsIgnoreCase(inputs.getCommonInputs().getApiService())) {
+            inputs.getHttpClientInputs().setHeaders(CANONICAL_HEADER_CONTENT_SHA + COLON + signedHeaders.getSignature());
+        }
+    }
+
+    public static void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
+        String queryParamsString = getHeadersOrParamsString(queryParamsMap, EQUAL, AMPERSAND, true);
+        if (isNotBlank(queryParamsString)) {
+            inputs.getHttpClientInputs().setQueryParams(queryParamsString);
+        }
+    }
+
 
     public static Map<String, String> getHeadersOrQueryParamsMap(Map<String, String> inputMap, String stringToSplit,
                                                                  String delimiter, String customDelimiter, boolean trim) {
@@ -127,13 +160,20 @@ public final class InputsUtil {
         return endpoint;
     }
 
-    public static String getUrlFromApiService(String endpoint, String apiService) {
+    public static String getUrlFromApiService(String endpoint, String apiService, String prefix) {
+        String insertionString = isBlank(prefix) ? apiService : prefix + DOT + apiService;
+
         return isBlank(endpoint) ?
-                HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + apiService + DOT + AMAZON_HOSTNAME : endpoint;
+                HTTPS_PROTOCOL + COLON + SCOPE_SEPARATOR + SCOPE_SEPARATOR + insertionString + DOT + AMAZON_HOSTNAME :
+                endpoint;
     }
 
     public static String getHeadersOrParamsString(Map<String, String> headersOrParamsMap, String separator, String suffix,
                                                   boolean deleteLastChar) {
+        if (headersOrParamsMap.isEmpty()) {
+            return EMPTY;
+        }
+
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
             sb.append(entry.getKey());
@@ -165,6 +205,10 @@ public final class InputsUtil {
         return isBlank(input) ? defaultValue : input;
     }
 
+    public static String getS3HostHeaderValue(String apiService, String bucketName) {
+        return isBlank(bucketName) ? apiService + DOT + AMAZON_HOSTNAME : bucketName + DOT + apiService + DOT + AMAZON_HOSTNAME;
+    }
+
     public static String[] getArrayWithoutDuplicateEntries(String inputString, String inputName, String delimiter) {
         String[] currentArray = getStringsArray(inputString, EMPTY, delimiter);
         validateArrayAgainstDuplicateElements(currentArray, inputString, delimiter, inputName);
@@ -177,6 +221,17 @@ public final class InputsUtil {
         if (isNotEmpty(firstArray) && isNotEmpty(secondArray) && firstArray.length != secondArray.length) {
             throw new RuntimeException("The values provided: [" + firstInputName + "] and [" + secondInputName + "] " +
                     "cannot have different length!");
+        }
+    }
+
+    public static void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
+        if (set != null) {
+            int step;
+            Iterator<String> iterator = set.iterator();
+            for (step = ONE; iterator.hasNext(); step++) {
+                String curValue = iterator.next();
+                queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
+            }
         }
     }
 
@@ -220,11 +275,9 @@ public final class InputsUtil {
     /**
      * If enforcedBoolean is "true" and string input is: null, empty, many empty chars, TrUe, tRuE... but not "false"
      * then returns "true".
-     *
-     * <p>If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
+     * If enforcedBoolean is "false" and string input is: null, empty, many empty chars, FaLsE, fAlSe... but not "true"
      * then returns "false"
-     *
-     * <p>This behavior is needed for inputs like: "imageNoReboot" when we want them to be set to "true" disregarding the
+     * This behavior is needed for inputs like: "imageNoReboot" when we want them to be set to "true" disregarding the
      * value provided (null, empty, many empty chars, TrUe, tRuE) except the case when is "false"
      *
      * @param input           String to be evaluated.
@@ -241,6 +294,12 @@ public final class InputsUtil {
                         getValidationException(input, false));
     }
 
+    public static int getValidPageSizeInt(String input) {
+        return isBlank(input) ? PAGE_SIZE_MIN_VALUE :
+                getValidInt(input, PAGE_SIZE_MIN_VALUE, PAGE_SIZE_MAX_VALUE, getValidationException(input, true),
+                        getValidationException(input, false));
+    }
+
     public static String getMaxResultsCount(String input) {
         return isBlank(input) ? NOT_RELEVANT :
                 valueOf(getValidInt(input, MINIMUM_MAX_RESULTS, MAXIMUM_MAX_RESULTS, getValidationException(input, true),
@@ -252,6 +311,13 @@ public final class InputsUtil {
             return input.toLowerCase();
         }
         return NOT_RELEVANT;
+    }
+
+    public static int getRelevantMaxKeys(String input) {
+        if (isBlank(input)) {
+            return DEFAULT_MAX_KEYS;
+        }
+        return getValidInt(input, MAXIMUM_ACCEPTED_MAX_KEY, Integer.MAX_VALUE, getValidationException(input, true), getValidationException(input, false));
     }
 
     public static String getValidVolumeAmount(String input) {
@@ -285,9 +351,25 @@ public final class InputsUtil {
         }
     }
 
+    public static String getValidDelimiter(String input, String pattern) {
+        patternCheck(input, pattern);
+
+        return input;
+    }
+
     public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
         if (condition) {
             inputMap.put(key, value);
+        }
+    }
+
+    public static void setTypicalQueryParams(Map<String, String> inputMap, String inputString, String inputName,
+                                             String prefix, String delimiter) {
+        String[] inputsArray = getArrayWithoutDuplicateEntries(inputString, inputName, delimiter);
+        if (isNotEmpty(inputsArray)) {
+            for (int index = START_INDEX; index < inputsArray.length; index++) {
+                inputMap.put(prefix + valueOf(index + ONE), inputsArray[index]);
+            }
         }
     }
 
@@ -298,7 +380,7 @@ public final class InputsUtil {
 
     public static String getQueryParamsSpecificString(String specificArea, int index) {
         if (AVAILABILITY_ZONES.equalsIgnoreCase(specificArea)) {
-            return AVAILABILITY_ZONES + DOT + MEMBER + DOT + valueOf(index + ONE);
+            return AVAILABILITY_ZONES + FIXED_PREFIX + valueOf(index + ONE);
         } else if (NETWORK.equalsIgnoreCase(specificArea)) {
             return PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (BLOCK_DEVICE_MAPPING.equalsIgnoreCase(specificArea)) {
@@ -306,12 +388,11 @@ public final class InputsUtil {
         } else if (EBS.equalsIgnoreCase(specificArea)) {
             return BLOCK_DEVICE_MAPPING + DOT + valueOf(index + ONE) + DOT + EBS + DOT;
         } else if (LISTENERS.equalsIgnoreCase(specificArea)) {
-            return LISTENERS + DOT + MEMBER + DOT + valueOf(index + ONE) + DOT;
+            return LISTENERS + FIXED_PREFIX+ valueOf(index + ONE) + DOT;
         } else if (NAME.equalsIgnoreCase(specificArea)) {
             return FILTER + DOT + valueOf(index + ONE) + DOT + NAME;
         } else if (NETWORK_INTERFACE.equalsIgnoreCase(specificArea)) {
-            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT +
-                    valueOf(index + ONE) + DOT;
+            return NETWORK_INTERFACE + DOT + valueOf(index + ONE) + DOT + PRIVATE_IP_ADDRESSES + DOT + valueOf(index + ONE) + DOT;
         } else if (RESOURCE_ID.equalsIgnoreCase(specificArea)) {
             return RESOURCE_ID + DOT + valueOf(index + ONE);
         } else if (KEY.equalsIgnoreCase(specificArea)) {
@@ -341,6 +422,7 @@ public final class InputsUtil {
             throw new RuntimeException("The provided value for: " + input + " input must be a valid CIDR notation.");
         }
         getValidIPv4Address(input.substring(START_INDEX, indexOf(input, SCOPE_SEPARATOR)));
+        validateNetmask(input);
 
         return input;
     }
@@ -440,6 +522,13 @@ public final class InputsUtil {
                 currentInputName);
         setOptionalMapEntry(queryParamsMap, SPECIFIC_QUERY_PARAM_PREFIX + valueOf(index + ONE) + DOT + suffix,
                 currentArray[index], currentArray.length > START_INDEX);
+    }
+
+    private static void validateNetmask(String input) {
+        int netmaskIndex = indexOf(input, SCOPE_SEPARATOR) + ONE;
+        String netmask = input.substring(netmaskIndex);
+        getValidInt(netmask, MAXIMUM_NETMASK_VALUE, MINIMUM_NETMASK_VALUE, getValidationException("netmask value [" + input + "]", true),
+                getValidationException("netmask value [" + input + "]", false));
     }
 
     private static int getValidInt(String input, int minAllowed, int maxAllowed, String noIntError, String constrainsError) {

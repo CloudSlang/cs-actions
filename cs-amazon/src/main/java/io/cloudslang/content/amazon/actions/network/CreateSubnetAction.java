@@ -20,10 +20,11 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
@@ -136,10 +137,10 @@ public class CreateSubnetAction {
                                        @Param(value = VPC_ID, required = true) String vpcId,
                                        @Param(value = CIDR_BLOCK, required = true) String cidrBlock) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

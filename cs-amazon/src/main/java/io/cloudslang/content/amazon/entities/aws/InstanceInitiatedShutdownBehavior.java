@@ -10,7 +10,6 @@
 package io.cloudslang.content.amazon.entities.aws;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 /**
  * Created by Mihai Tusa.
@@ -31,8 +30,6 @@ public enum InstanceInitiatedShutdownBehavior {
             }
         }
 
-        throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. " +
-                "Valid values are: stop, terminate.");
-
+        throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. Valid values are: stop, terminate.");
     }
 }

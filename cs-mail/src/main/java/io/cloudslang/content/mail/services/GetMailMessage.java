@@ -222,7 +222,10 @@ public class GetMailMessage {
                 }
             }
 
-            message.getFolder().close(true);
+            try {
+                message.getFolder().close(true);
+            } catch (Throwable ignore) {
+            }
 
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
         } catch (Exception e) {

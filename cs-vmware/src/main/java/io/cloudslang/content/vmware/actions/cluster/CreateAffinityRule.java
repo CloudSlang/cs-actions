@@ -15,7 +15,9 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -24,18 +26,10 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
-import static io.cloudslang.content.vmware.constants.Inputs.AFFINE_HOST_GROUP_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.ANTI_AFFINE_HOST_GROUP_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.HOST;
-import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
-import static io.cloudslang.content.vmware.constants.Inputs.PORT;
-import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
-import static io.cloudslang.content.vmware.constants.Inputs.RULE_NAME;
-import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
-import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
-import static io.cloudslang.content.vmware.constants.Inputs.VM_GROUP_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
 /**
@@ -59,6 +53,11 @@ public class CreateAffinityRule {
      *                                Check the: https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_java_development.4.3.html
      *                                to see how to import a certificate into Java Keystore and https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html to see how to obtain a valid vCenter certificate
      *                                Default Value: "true"
+     * @param closeSession            Whether to use the flow session context to cache the Connection to the host or not. If set to
+     *                                "false" it will close and remove any connection from the session context, otherwise the Connection
+     *                                will be kept alive and not removed.
+     *                                Valid values: "true", "false"
+     *                                Default value: "true"
      * @param clusterName             the name of the cluster.
      * @param ruleName                the name of the affinity rule.
      * @param affineHostGroupName     optional - the name of the affine host group. The affine host group represents the
@@ -91,12 +90,13 @@ public class CreateAffinityRule {
                                                   @Param(value = USERNAME, required = true) String username,
                                                   @Param(value = PASSWORD, encrypted = true) String password,
                                                   @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                                  @Param(value = CLOSE_SESSION) String closeSession,
                                                   @Param(value = CLUSTER_NAME, required = true) String clusterName,
                                                   @Param(value = RULE_NAME, required = true) String ruleName,
                                                   @Param(value = AFFINE_HOST_GROUP_NAME) String affineHostGroupName,
                                                   @Param(value = ANTI_AFFINE_HOST_GROUP_NAME) String antiAffineHostGroupName,
-                                                  @Param(value = VM_GROUP_NAME, required = true) String vmGroupName) {
-
+                                                  @Param(value = VM_GROUP_NAME, required = true) String vmGroupName,
+                                                  @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
         try {
             InputUtils.checkMutuallyExclusiveInputs(affineHostGroupName, antiAffineHostGroupName, PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP);
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
@@ -105,7 +105,9 @@ public class CreateAffinityRule {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(trustEveryone)
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
+                    .withCloseSession(defaultIfEmpty(closeSession, TRUE))
+                    .withGlobalSessionObject(globalSessionObject)
                     .build();
 
             final VmInputs vmInputs = new VmInputs.VmInputsBuilder()

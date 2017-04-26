@@ -14,6 +14,8 @@ package io.cloudslang.content.vmware.constants;
  * 10/20/2015.
  */
 public class Inputs {
+    public static final String VMWARE_GLOBAL_SESSION_OBJECT = "VMWareGlobalSessionObject";
+
     // Http client specific inputs
     public static final String HOST = "host";
     public static final String PORT = "port";
@@ -21,6 +23,7 @@ public class Inputs {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String TRUST_EVERYONE = "trustEveryone";
+    public static final String CLOSE_SESSION = "closeSession";
 
     // VM specific inputs
     public static final String DATA_CENTER_NAME = "dataCenterName";
@@ -92,7 +95,6 @@ public class Inputs {
     public static final String USER = "user";
 
     //template upload inputs
-    public static final String CLOSE_SESSION = "closeSession";
     public static final String PATH = "path";
     public static final String NAME = "name";
     public static final String DATACENTER = "datacenter";

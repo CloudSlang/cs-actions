@@ -22,10 +22,11 @@ import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
@@ -61,9 +62,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
  * 9/9/2016.
  */
 public class CreateNetworkInterfaceAction {
-
     private static final String NETWORK_INTERFACE_ID_X_PATH_QUERY = "/CreateNetworkInterfaceResponse/networkInterface/networkInterfaceId";
-
     /**
      * Creates a network interface in the specified subnet.
      * Note: For more information about network interfaces, see Elastic Network Interfaces in the Amazon Elastic Compute
@@ -153,10 +152,10 @@ public class CreateNetworkInterfaceAction {
                                        @Param(value = NETWORK_INTERFACE_DESCRIPTION, required = true) String networkInterfaceDescription,
                                        @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
