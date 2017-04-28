@@ -5,16 +5,15 @@ import java.util
 import com.google.api.services.compute.model._
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
+import io.cloudslang.content.constants.{BooleanValues, OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.gcloud.services.compute.disks.DiskController
 import io.cloudslang.content.gcloud.services.compute.instances.{InstanceController, InstanceService}
 import io.cloudslang.content.gcloud.services.compute.networks.NetworkController
-import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
+import io.cloudslang.content.gcloud.utils.Constants.{COMMA, NEW_LINE}
 import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.gcloud.utils.action.InputValidator.{validateBoolean, validateProxyPort}
+import io.cloudslang.content.gcloud.utils.action.InputValidator._
 import io.cloudslang.content.gcloud.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
@@ -27,6 +26,7 @@ import scala.collection.JavaConversions._
   * Created by victor on 01.03.2017.
   */
 class InstancesInsert {
+
 
   @Action(name = "Insert Instance",
     outputs = Array(
@@ -44,21 +44,21 @@ class InstancesInsert {
               @Param(value = PROJECT_ID, required = true) projectId: String,
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
-              @Param(value = INSTANCE_DESCRIPTION, required = true) instanceDescription: String,
+              @Param(value = INSTANCE_DESCRIPTION) instanceDescription: String,
               @Param(value = MACHINE_TYPE, required = true) machineType: String,
-              @Param(value = LIST_DELIMITER, required = true) listDelimiter: String,
-              @Param(value = CAN_IP_FORWARD, required = true) canIpForward: String,
+              @Param(value = LIST_DELIMITER) listDelimiter: String,
+              @Param(value = CAN_IP_FORWARD) canIpForward: String,
 
               @Param(value = METADATA_KEYS) metadataKeys: String,
               @Param(value = METADATA_VALUES) metadataValues: String,
 
               @Param(value = TAGS_LIST) tagsList: String,
 
-              @Param(value = VOLUME_MOUNT_TYPE, required = true) volumeMountType: String,
-              @Param(value = VOLUME_MOUNT_MODE, required = true) volumeMountMode: String,
-              @Param(value = VOLUME_AUTO_DELETE, required = true) volumeAutoDelete: String,
+              @Param(value = VOLUME_MOUNT_TYPE) volumeMountType: String,
+              @Param(value = VOLUME_MOUNT_MODE) volumeMountMode: String,
+              @Param(value = VOLUME_AUTO_DELETE) volumeAutoDelete: String,
               @Param(value = VOLUME_DISK_DEVICE_NAME, required = true) volumeDiskDeviceName: String,
-              @Param(value = VOLUME_DISK_NAME, required = true) volumeDiskName: String,
+              @Param(value = VOLUME_DISK_NAME) volumeDiskName: String,
               @Param(value = VOLUME_DISK_SOURCE_IMAGE, required = true) volumeDiskSourceImage: String,
               @Param(value = VOLUME_DISK_TYEPE, required = true) volumeDiskType: String,
               @Param(value = VOLUME_DISK_SIZE, required = true) volumeDiskSize: String,
@@ -86,9 +86,28 @@ class InstancesInsert {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
+    val volumeMountTypeStr = defaultIfEmpty(volumeMountType, "PERSISTENT")
+    val volumeMountModeStr = defaultIfEmpty(volumeMountType, "READ_WRITE")
+    val volumeAutoDeleteStr = defaultIfEmpty(volumeAutoDelete, BooleanValues.TRUE)
+    val volumeDiskNameStr = defaultIfEmpty(volumeAutoDelete, instanceName)
+    val canIpForwardStr = defaultIfEmpty(canIpForward, BooleanValues.TRUE)
+    val listDelimiterStr = defaultIfEmpty(listDelimiter, COMMA)
+    val instanceDescriptionStr = defaultIfEmpty(instanceDescription, EMPTY)
+    val metadataKeysStr = defaultIfEmpty(metadataKeys, EMPTY)
+    val metadataValuesStr = defaultIfEmpty(metadataValues, EMPTY)
+    val tagsListStr = defaultIfEmpty(tagsList, EMPTY)
+    val networkOpt = verifyEmpty(network)
+    val subnetworkOpt = verifyEmpty(subnetwork)
+    val accessConfigNameOpt = verifyEmpty(accessConfigName)
+    val accessConfigTypeStr = defaultIfEmpty(accessConfigType, "ONE_TO_ONE_NAT")
+
 
     val validationStream = validateProxyPort(proxyPortStr) ++
-      validateBoolean(prettyPrintStr, PRETTY_PRINT)
+      validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
+      validateBoolean(volumeAutoDeleteStr, VOLUME_AUTO_DELETE) ++
+      validateDiskSize(volumeDiskSize, VOLUME_DISK_SIZE) ++
+      validateBoolean(canIpForwardStr, CAN_IP_FORWARD) ++
+      validatePairedLists(metadataKeysStr, metadataValuesStr, listDelimiterStr)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
