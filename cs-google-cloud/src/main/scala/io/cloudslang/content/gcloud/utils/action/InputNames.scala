@@ -1,5 +1,7 @@
 package io.cloudslang.content.gcloud.utils.action
 
+import com.hp.oo.sdk.content.annotations.Param
+
 /**
   * Created by victor on 28.02.2017.
   */
@@ -18,6 +20,7 @@ object InputNames {
   final val SCOPES_DELIMITER = "scopesDelimiter"
   final val ITEMS_DELIMITER = "itemsDelimiter"
   final val INSTANCE_NAME = "instanceName"
+  final val INSTANCE_DESCRIPTION = "instanceDescription"
   final val ITEMS_KEYS_LIST = "itemsKeysList"
   final val ITEMS_VALUES_LIST = "itemsValuesList"
   final val DISK_NAME = "diskName"
@@ -39,4 +42,34 @@ object InputNames {
   final val DISK_TYPE = "diskType"
   final val FILTER = "filter"
   final val ORDER_BY = "orderBy"
-}
+
+  final val LIST_DELIMITER = "listDelimiter"
+  final val MACHINE_TYPE = "machineType"
+  final val CAN_IP_FORWARD = "canIpForward"
+
+
+  final val METADATA_KEYS = "metadataKeys"
+  final val METADATA_VALUES = "metadataValues"
+
+  final val VOLUME_BOOT = "volumeBoot"
+  final val VOLUME_MOUNT_TYPE = "volumeMountType"
+  final val VOLUME_MOUNT_MODE = "volumeMountMode"
+  final val VOLUME_AUTO_DELETE = "volumeAutoDelete"
+  final val VOLUME_DISK_DEVICE_NAME = "volumeDiskDeviceName"
+  final val VOLUME_DISK_NAME = "volumeDiskName"
+  final val VOLUME_DISK_SOURCE_IMAGE = "volumeDiskSourceImage"
+  final val VOLUME_DISK_TYEPE = "volumeDiskType"
+  final val VOLUME_DISK_SIZE = "volumeDiskSize"
+
+  final val NETWORK = "network"
+  final val SUBNETWORK = "subNetwork"
+  final val ACCESS_CONFIG_NAME = "accessConfigName"
+  final val ACCESS_CONFIG_TYPE = "accessConfigType"
+
+  final val SCHEDULING_ON_HOST_MAINTENANCE = "schedulingOnHostMaintenance"
+  final val SCHEDULING_AUTOMATIC_RESTART = "schedulingAutomaticRestart"
+  final val SCHEDULING_PREEMPTIBLE = "schedulingPreemptible"
+
+  final val SERVICE_ACCOUNT_EMAIL = "serviceAccountEmail"
+  final val SERVICE_ACCOUNT_SCOPES = "serviceAccountScopes"
+  }

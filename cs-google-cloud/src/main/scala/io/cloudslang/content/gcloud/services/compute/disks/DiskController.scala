@@ -1,6 +1,6 @@
 package io.cloudslang.content.gcloud.services.compute.disks
 
-import com.google.api.services.compute.model.{CustomerEncryptionKey, Disk}
+import com.google.api.services.compute.model._
 import io.cloudslang.content.utils.CollectionUtilities.toList
 
 /**
@@ -28,4 +28,25 @@ object DiskController {
     diskEncryptionKeyOpt.foreach { encrypt => computeDisk.setDiskEncryptionKey(new CustomerEncryptionKey().setRawKey(encrypt)) }
     computeDisk
   }
+
+  def createAttachedDisk(boot: Boolean,
+                         mountType: String,
+                         mountMode: String,
+                         autoDelete: Boolean,
+                         diskDeviceName: String,
+                         diskName: String,
+                         diskSourceImage: String,
+                         diskType: String,
+                         diskSize: Long): AttachedDisk =
+    new AttachedDisk()
+      .setBoot(boot)
+      .setType(mountType)
+      .setMode(mountMode)
+      .setAutoDelete(autoDelete)
+      .setDeviceName(diskDeviceName)
+      .setInitializeParams(new AttachedDiskInitializeParams()
+        .setDiskName(diskName)
+        .setSourceImage(diskSourceImage)
+        .setDiskType(diskType)
+        .setDiskSizeGb(diskSize))
 }
