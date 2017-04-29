@@ -33,20 +33,33 @@ object DiskController {
                          mountType: String,
                          mountMode: String,
                          autoDelete: Boolean,
-                         diskDeviceName: String,
+                         diskDeviceNameOpt: Option[String],
                          diskName: String,
                          diskSourceImage: String,
-                         diskType: String,
-                         diskSize: Long): AttachedDisk =
-    new AttachedDisk()
+                         diskTypeOpt: Option[String],
+                         diskSize: Long): AttachedDisk = {
+    val attachedDisk = new AttachedDisk()
       .setBoot(boot)
       .setType(mountType)
       .setMode(mountMode)
       .setAutoDelete(autoDelete)
-      .setDeviceName(diskDeviceName)
-      .setInitializeParams(new AttachedDiskInitializeParams()
-        .setDiskName(diskName)
-        .setSourceImage(diskSourceImage)
-        .setDiskType(diskType)
-        .setDiskSizeGb(diskSize))
+      .setInitializeParams(createAttachedDiskInitializeParams(diskName, diskSourceImage, diskTypeOpt, diskSize))
+
+    diskDeviceNameOpt match {
+      case Some(diskDeviceName) => attachedDisk.setDeviceName(diskDeviceName)
+      case _ => attachedDisk
+    }
+  }
+
+  private def createAttachedDiskInitializeParams(diskName: String, diskSourceImage: String, diskTypeOpt: Option[String], diskSize: Long): AttachedDiskInitializeParams = {
+    val initParam = new AttachedDiskInitializeParams()
+      .setDiskName(diskName)
+      .setSourceImage(diskSourceImage)
+      .setDiskSizeGb(diskSize)
+
+    diskTypeOpt match {
+      case Some(diskType) => initParam.setDiskType(diskType)
+      case _ => initParam
+    }
+  }
 }
