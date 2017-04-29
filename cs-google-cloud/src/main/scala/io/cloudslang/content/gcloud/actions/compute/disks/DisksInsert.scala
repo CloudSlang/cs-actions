@@ -6,8 +6,6 @@ import com.google.api.services.compute.model.Disk
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.actions.compute.instances.InstancesInsert
-import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
 import io.cloudslang.content.gcloud.services.compute.disks.{DiskController, DiskService}
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
 import io.cloudslang.content.gcloud.utils.action.DefaultValues._
@@ -34,7 +32,7 @@ class DisksInsert {
     * @param projectId            Name of the Google Cloud project.
     * @param zone                 Name of the zone for this request.
     * @param accessToken          The access token from GetAccessToken.
-    * @param diskName             Name of the resource. Provided by the client when the resource is created. The name must be
+    * @param diskName             Name of the Disk. Provided by the client when the Disk is created. The name must be
     *                             1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63 characters
     *                             long and match the regular expression [a-z]([-a-z0-9]*[a-z0-9])? which means the first
     *                             character must be a lowercase letter, and all following characters must be a dash, lowercase
@@ -51,25 +49,17 @@ class DisksInsert {
     * @param licensesDelimiterInp Optional - The delimiter used to split the <licensesListInp>
     * @param sourceImage          Optional - The source image used to create this disk. If the source image is deleted, this field will not
     *                             be set.
-    *
     *                             To create a disk with one of the public operating system images, specify the image by its
     *                             family name. For example, specify family/debian-8 to use the latest Debian 8 image:
-    *
-    *                             projects/debian-cloud/global/images/family/debian-8
-    *
+    *                             "projects/debian-cloud/global/images/family/debian-8"
     *                             Alternatively, use a specific version of a public operating system image:
-    *
-    *                             projects/debian-cloud/global/images/debian-8-jessie-vYYYYMMDD
-    *
+    *                             "projects/debian-cloud/global/images/debian-8-jessie-vYYYYMMDD"
     *                             To create a disk with a private image that you created, specify the image name in the following
     *                             format:
-    *
-    *                             global/images/my-private-image
-    *
+    *                             "global/images/my-private-image"
     *                             You can also specify a private image by its image family, which returns the latest version of
     *                             the image in that family. Replace the image name with family/family-name:
-    *
-    *                             global/images/family/my-private-family
+    *                             "global/images/family/my-private-family"
     *                             Note: mutual exclusive with <snapshotImage>
     * @param snapshotImage        Optional - The source snapshot used to create this disk. You can provide this as a partial or full URL to
     *                             the resource. For example, the following are valid values: -

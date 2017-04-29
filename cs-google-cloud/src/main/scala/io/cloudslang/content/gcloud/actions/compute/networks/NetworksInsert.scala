@@ -20,14 +20,43 @@ import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuc
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+
 /**
   * Created by victor on 26.04.2017.
   */
 class NetworksInsert {
 
-  /*
-  todo if ipv4 is specified, autoCreateSubnetworks is ignored
-   */
+
+  /**
+    * Creates a disk resource in the specified project using the data included as inputs.
+    *
+    * @param projectId                Name of the Google Cloud project.
+    * @param accessToken              The access token from GetAccessToken.
+    * @param networkName              Name of the Network. Provided by the client when the Network is created. The name must be
+    *                                 1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63 characters
+    *                                 long and match the regular expression [a-z]([-a-z0-9]*[a-z0-9])? which means the first
+    *                                 character must be a lowercase letter, and all following characters must be a dash, lowercase
+    *                                 letter, or digit, except the last character, which cannot be a dash.
+    * @param networkDescriptionInp    Optional - The description of the new Network
+    * @param ipV4RangeInp             Optional - The range of internal addresses that are legal on this network. This range is a CIDR
+    *                                 specification, for example: 192.168.0.0/16. Provided by the client when the network is created.
+    * @param autoCreateSubnetworksInp Optional - When set to true, the network is created in "auto subnet mode". When set to false, the network
+    *                                 is in "custom subnet mode".
+    *                                 In "auto subnet mode", a newly created network is assigned the default CIDR of 10.128.0.0/9 and
+    *                                 it automatically creates one subnetwork per region.
+    *                                 Note: If <ipV4RangeInp> is set, then this input is ignored
+    * @param proxyHost                Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                                 be used.
+    * @param proxyPortInp             Optional - Proxy server port.
+    *                                 Default: "8080"
+    * @param proxyUsername            Optional - Proxy server user name.
+    * @param proxyPasswordInp         Optional - Proxy server password associated with the proxyUsername input value.
+    * @param prettyPrintInp           Optional - Whether to format (pretty print) the resulting json.
+    *                                 Valid values: "true", "false"
+    *                                 Default: "true"
+    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+    *         operation, status of the ZoneOperation, or failure message and the exception if there is one
+    */
 
   @Action(name = "Insert Network",
     outputs = Array(
