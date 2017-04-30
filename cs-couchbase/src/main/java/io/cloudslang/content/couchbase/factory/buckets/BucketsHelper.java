@@ -63,8 +63,7 @@ public class BucketsHelper {
     }
 
     private void validateAuthType(Map<String, String> getPayloadMap, String authType) {
-        if ((AuthType.SASL.name().equals(authType) && !getPayloadMap.containsKey(SASL_PASSWORD))
-                || (AuthType.NONE.name().equals(authType) && !getPayloadMap.containsKey(PROXY_PORT))) {
+        if (AuthType.SASL.getValue().equals(authType) && !getPayloadMap.containsKey(SASL_PASSWORD)) {
             throw new RuntimeException(INPUTS_COMBINATION_ERROR_MESSAGE);
         }
     }

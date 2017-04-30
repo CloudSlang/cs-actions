@@ -20,6 +20,7 @@ public class Constants {
 
     public static class Api {
         public static final String BUCKETS = "buckets";
+        public static final String CLUSTER = "cluster";
     }
 
     public static class HttpClientInputsValues {
@@ -40,6 +41,11 @@ public class Constants {
         public static final String GET_BUCKET_STATISTICS = "GetBucketStatistics";
     }
 
+    public static class ClusterActions {
+        public static final String GET_CLUSTER_DETAILS = "GetClusterDetails";
+        public static final String GET_CLUSTER_INFO = "GetClusterInfo";
+    }
+
     public static class ErrorMessages {
         public static final String CONSTRAINS_ERROR_MESSAGE = "The value doesn't meet conditions for general purpose usage. " +
                 "See operation inputs description section for details.";
@@ -52,6 +58,8 @@ public class Constants {
 
     public static class Miscellaneous {
         public static final String AMPERSAND = "&";
+        public static final String BLANK_SPACE = " ";
+        public static final String COMMA = ",";
         public static final String EQUAL = "=";
         public static final String PORT_REGEX = "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$";
     }

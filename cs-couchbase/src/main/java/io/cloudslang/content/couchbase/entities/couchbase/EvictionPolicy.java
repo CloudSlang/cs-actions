@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.couchbase.entities.couchbase;
 
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -25,6 +27,10 @@ public enum EvictionPolicy {
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public static String getEvictionPolicy(String input) {
         if (isBlank(input)) {
             return VALUE_ONLY.getValue();
@@ -36,10 +42,7 @@ public enum EvictionPolicy {
             }
         }
 
-        throw new RuntimeException("Invalid Couchbase eviction policy value: [" + input + "]. Valid values: fullEviction, valueOnly.");
-    }
-
-    private String getValue() {
-        return value;
+        throw new RuntimeException(format("Invalid Couchbase eviction policy value: '%s'. Valid values: '%s'.",
+                input, getEnumValidValuesString(EvictionPolicy.class)));
     }
 }

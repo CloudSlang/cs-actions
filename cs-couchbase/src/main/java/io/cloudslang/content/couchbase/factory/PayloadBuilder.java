@@ -13,6 +13,7 @@ import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.couchbase.factory.buckets.BucketsHelper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
+import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM
@@ -24,13 +25,15 @@ public class PayloadBuilder {
     }
 
     public static void buildPayload(InputsWrapper wrapper) {
-        switch (wrapper.getCommonInputs().getAction()) {
-            case CREATE_OR_EDIT_BUCKET:
-                String payload = new BucketsHelper().getCreateBucketPayload(wrapper);
-                wrapper.getHttpClientInputs().setBody(payload);
-                break;
-            default:
-                break;
+        if (METHOD_NAME.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
+            switch (wrapper.getCommonInputs().getAction()) {
+                case CREATE_OR_EDIT_BUCKET:
+                    String payload = new BucketsHelper().getCreateBucketPayload(wrapper);
+                    wrapper.getHttpClientInputs().setBody(payload);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
