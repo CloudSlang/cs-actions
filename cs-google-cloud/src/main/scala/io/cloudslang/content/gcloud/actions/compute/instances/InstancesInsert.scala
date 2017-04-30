@@ -12,6 +12,7 @@ import io.cloudslang.content.gcloud.services.compute.instances.{InstanceControll
 import io.cloudslang.content.gcloud.services.compute.networks.NetworkController
 import io.cloudslang.content.gcloud.utils.Constants.{COMMA, NEW_LINE}
 import io.cloudslang.content.gcloud.utils.action.DefaultValues._
+import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.gcloud.utils.action.InputValidator._
@@ -150,7 +151,9 @@ class InstancesInsert {
     outputs = Array(
       new Output(OutputNames.RETURN_CODE),
       new Output(OutputNames.RETURN_RESULT),
-      new Output(OutputNames.EXCEPTION)
+      new Output(OutputNames.EXCEPTION),
+      new Output(ZONE_OPERATION_NAME)
+
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -300,7 +303,7 @@ class InstancesInsert {
       val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
-      getSuccessResultsMap(resultString)
+      getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> operation.getName)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
