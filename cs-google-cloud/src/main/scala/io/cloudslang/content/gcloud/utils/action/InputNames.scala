@@ -62,7 +62,7 @@ object InputNames {
   final val VOLUME_DISK_SIZE = "volumeDiskSize"
 
   final val NETWORK = "network"
-  final val SUBNETWORK = "subNetwork"
+  final val SUBNETWORK = "subnetwork"
   final val ACCESS_CONFIG_NAME = "accessConfigName"
   final val ACCESS_CONFIG_TYPE = "accessConfigType"
 

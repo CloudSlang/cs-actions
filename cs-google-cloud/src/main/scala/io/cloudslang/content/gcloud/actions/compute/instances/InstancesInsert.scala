@@ -5,9 +5,8 @@ import java.util
 import com.google.api.services.compute.model._
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.TRUE
+import io.cloudslang.content.constants.BooleanValues.{FALSE, TRUE}
 import io.cloudslang.content.constants.{BooleanValues, OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
 import io.cloudslang.content.gcloud.services.compute.disks.DiskController
 import io.cloudslang.content.gcloud.services.compute.instances.{InstanceController, InstanceService}
 import io.cloudslang.content.gcloud.services.compute.networks.NetworkController
@@ -38,8 +37,8 @@ class InstancesInsert {
     * @param instanceName                The name that the new instance will have
     * @param instanceDescription         Optional - The description of the new instance
     * @param machineType                 Full or partial URL of the machine type resource to use for this instance, in the format:
-    *                                    zones/zone/machineTypes/machine-type.
-    *                                    Example: zones/us-central1-f/machineTypes/n1-standard-1
+    *                                    "zones/zone/machineTypes/machine-type".
+    *                                    Example: "zones/us-central1-f/machineTypes/n1-standard-1"
     * @param listDelimiter               Optional - The delimiter to split all the lists from the inputs
     *                                    Default: ","
     * @param canIpForward                Optional - Boolean that specifies if the instance is allowed to send and receive packets
@@ -98,7 +97,7 @@ class InstancesInsert {
     *                                    "projects/project/zones/zone/diskTypes/diskType/pd-standard",
     *                                    "zones/zone/diskTypes/diskType/pd-standard"
     * @param volumeDiskSize              Optional - Specifies the size in GB of the disk on which the system will be installed
-    *                                    Constraint: Number greater or eaqual with 10
+    *                                    Constraint: Number greater or equal with 10
     *                                    Default: "10"
     * @param network                     Optional - URL of the network resource for this instance. When creating an instance, if neither the
     *                                    network nor the subnetwork is specified, the default network global/networks/default is used;
@@ -123,12 +122,17 @@ class InstancesInsert {
     *                                    Default: "ONE_TO_ONE_NAT"
     * @param schedulingOnHostMaintenance Optional - Defines the maintenance behavior for this instance. For standard instances, the default
     *                                    behavior is MIGRATE. For preemptible instances, the default and only possible behavior is
-    *                                    TERMINATE. For more information, see Setting Instance Scheduling Options.
+    *                                    TERMINATE.
     * @param schedulingAutomaticRestart  Optional - Boolean specifying whether the instance should be automatically restarted if it is terminated by Compute
     *                                    Engine (not terminated by a user). You can only set the automatic restart option for standard
     *                                    instances. Preemptible instances cannot be automatically restarted.
+    *                                    Valid values: "true", "false"
+    *                                    Default: "true"
     * @param schedulingPreemptible       Optional - Boolean specifying whether the instance is preemptible.
+    *                                    Valid values: "true", "false"
+    *                                    Default: "false"
     * @param serviceAccountEmail         Optional - Email address of the service account
+    *                                    Default: The service account that was used to generate the token
     * @param serviceAccountScopes        Optional - The list of scopes to be made available for this service account.
     * @param proxyHost                   Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
     *                                    be used.
@@ -220,7 +224,7 @@ class InstancesInsert {
 
     val schedulingOnHostMaintenanceOpt = verifyEmpty(schedulingOnHostMaintenance)
     val schedulingAutomaticRestartStr = defaultIfEmpty(schedulingAutomaticRestart, TRUE)
-    val schedulingPreemptibleStr = defaultIfEmpty(schedulingPreemptible, BooleanValues.FALSE)
+    val schedulingPreemptibleStr = defaultIfEmpty(schedulingPreemptible, FALSE)
 
     val serviceAccountEmailOpt = verifyEmpty(serviceAccountEmail)
     val serviceAccountScopesOpt = verifyEmpty(serviceAccountScopes)

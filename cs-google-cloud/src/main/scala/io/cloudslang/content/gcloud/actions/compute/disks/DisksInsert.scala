@@ -62,22 +62,20 @@ class DisksInsert {
     *                             "global/images/family/my-private-family"
     *                             Note: mutual exclusive with <snapshotImage>
     * @param snapshotImage        Optional - The source snapshot used to create this disk. You can provide this as a partial or full URL to
-    *                             the resource. For example, the following are valid values: -
-    *                             https://www.googleapis.com/compute/v1/projects/project/global/snapshots/snapshot  -
-    *                             projects/project/global/snapshots/snapshot  - global/snapshots/snapshot
+    *                             the resource. For example, the following are valid values:
+    *                             "https://www.googleapis.com/compute/v1/projects/project/global/snapshots/snapshot"
+    *                             "projects/project/global/snapshots/snapshot"
+    *                             "global/snapshots/snapshot"
     *                             Note: mutual exclusive with <sourceImage>
     * @param imageEncryptionKey   Optional - The customer-supplied encryption key of the source image. Required if the source image is
     *                             protected by a customer-supplied encryption key.
     * @param diskType             URL of the disk type resource describing which disk type to use to create the disk. Provide
     *                             this when creating the disk.
     * @param diskEncryptionKey    Optional -  Encrypts the disk using a customer-supplied encryption key.
-    *
     *                             After you encrypt a disk with a customer-supplied key, you must provide the same key if you use
     *                             the disk later (e.g. to create a disk snapshot or an image, or to attach the disk to a virtual
     *                             machine).
-    *
     *                             Customer-supplied encryption keys do not protect access to metadata of the disk.
-    *
     *                             If you do not provide an encryption key when creating the disk, then the disk will be encrypted
     *                             using an automatically generated key and you do not need to provide a key to use the disk
     *                             later.

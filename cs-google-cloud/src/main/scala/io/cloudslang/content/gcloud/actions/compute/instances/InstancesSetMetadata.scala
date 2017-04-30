@@ -27,7 +27,7 @@ import scala.collection.JavaConversions._
   * Created by Tirla Alin
   * 2/27/2017.
   */
-class InstanceSetMetadata {
+class InstancesSetMetadata {
   /**
     * Sets metadata for the specified instance to the data provided to the operation. Can be used as a delete metadata as well.
     *
@@ -40,23 +40,18 @@ class InstanceSetMetadata {
     *                           server. Additionally, to avoid ambiguity, keys must not conflict with any other metadata
     *                           keys for the project. The length of the itemsKeysList must be equal with the length of
     *                           the itemsValuesList.
-    *                           Default: ""
     * @param itemsValuesListInp Optional - value for the metadata entry. These are free-form strings, and only have meaning as
     *                           interpreted by the image running in the instance. The only restriction placed on values
     *                           is that their size must be less than or equal to 32768 bytes. The length of the
     *                           itemsKeysList must be equal with the length of the itemsValuesList.
-    *                           Default: ""
-    * @param itemsDelimiterInp  The delimiter to split the items_keys_list and items_values_list
+    * @param itemsDelimiterInp  The delimiter to split the <itemsKeysListInp> and <itemsValuesListInp>
     *                           Default: ','
     * @param proxyHostInp       Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
     *                           be used.
-    *                           Default: ""
     * @param proxyPortInp       Optional - proxy server port.
     *                           Default: "8080"
     * @param proxyUsernameInp   Optional - proxy server user name.
-    *                           Default: ""
     * @param proxyPasswordInp   Optional - proxy server password associated with the proxyUsername input value.
-    *                           Default: ""
     * @param prettyPrintInp     Optional - whether to format (pretty print) the resulting json.
     *                           Valid values: "true", "false"
     *                           Default: "true"
