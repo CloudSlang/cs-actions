@@ -111,10 +111,11 @@
                     <version>3.0.1</version>
                     <executions>
                         <execution>
-                            <id>attach-sources</id>
-                            <configuration>
-                                <useReleaseProfile>false</useReleaseProfile>
-                            </configuration>
+                            <id>attach-sources-no-fork</id>
+                            <inherited>true</inherited>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
                         </execution>
                     </executions>
                 </plugin>
