@@ -112,6 +112,9 @@
                     <executions>
                         <execution>
                             <id>attach-sources</id>
+                            <configuration>
+                                <useReleaseProfile>false</useReleaseProfile>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
