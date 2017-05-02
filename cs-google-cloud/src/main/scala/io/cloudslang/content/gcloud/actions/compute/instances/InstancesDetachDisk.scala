@@ -25,7 +25,28 @@ import scala.collection.JavaConversions._
   * Created by sandorr on 5/2/2017.
   */
 class InstancesDetachDisk {
-  @Action(name = "Instances Attach Disk",
+
+  /**
+    * Creates a disk resource in the specified project using the data included as inputs.
+    *
+    * @param projectId        Name of the Google Cloud project.
+    * @param zone             Name of the zone for this request.
+    * @param accessToken      The access token from GetAccessToken.
+    * @param instanceName     Name of the instance to attach the disk to.
+    * @param deviceName       The disk device name to detach.
+    * @param proxyHost        Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                         be used.
+    * @param proxyPortInp     Optional - Proxy server port.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
+    *                         Valid values: "true", "false"
+    *                         Default: "true"
+    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+    *         operation, status of the ZoneOperation, or failure message and the exception if there is one
+    */
+  @Action(name = "Instances Detach Disk",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),

@@ -4,15 +4,13 @@ import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.TRUE
+import io.cloudslang.content.constants.BooleanValues.FALSE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.gcloud.actions.compute.utils.GetAccessToken
 import io.cloudslang.content.gcloud.services.compute.disks.DiskController
 import io.cloudslang.content.gcloud.services.compute.instances.InstanceService
 import io.cloudslang.content.gcloud.utils.Constants.NEW_LINE
-import io.cloudslang.content.gcloud.utils.action.DefaultValues
-import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_INTERFACE, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.gcloud.utils.action.DefaultValues.{DEFAULT_INTERFACE, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_VOLUME_MOUNT_MODE}
 import io.cloudslang.content.gcloud.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.gcloud.utils.action.InputNames._
 import io.cloudslang.content.gcloud.utils.action.InputUtils.verifyEmpty
@@ -29,6 +27,45 @@ import scala.collection.JavaConversions._
   * Created by sandorr on 5/2/2017.
   */
 class InstancesAttachDisk {
+
+  /**
+    * Creates a disk resource in the specified project using the data included as inputs.
+    *
+    * @param projectId        Name of the Google Cloud project.
+    * @param zone             Name of the zone for this request.
+    * @param accessToken      The access token from GetAccessToken.
+    * @param instanceName     Name of the instance to attach the disk to.
+    * @param source           A valid partial or full URL to an existing Persistent Disk resource.
+    * @param mode             Optional - The mode in which to attach the disk to the instance.
+    *                         Valid values: "READ_WRITE", "READ_ONLY"
+    *                         Default: "READ_WRITE"
+    * @param autoDelete       Optional - Whether to delete the disk when the instance is deleted.
+    *                         Default: "false"
+    * @param deviceName       Optional - Specifies a unique device name of your choice that is reflected into the
+    *                         /dev/disk/by-id/google-* tree of a Linux operating system running within the instance.
+    *                         This name can be used to reference the device for mounting, resizing, and so on, from
+    *                         within the instance.
+    *                         Note: If not specified, the server chooses a default device name to apply to this disk,
+    *                         in the form persistent-disks-x, where x is a number assigned by Google Compute Engine.
+    *                         This field is only applicable for persistent disks.
+    * @param interface        Optional - Specifies the disk interface to use for attaching this disk.
+    *                         Note: Persistent disks must always use SCSI and the request will fail if you attempt to
+    *                         attach a persistent disk in any other format than SCSI. Local SSDs can use either
+    *                         NVME or SCSI.
+    *                         Valid values: "SCSI", "NVME"
+    *                         Default: "SCSI"
+    * @param proxyHost        Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                         be used.
+    * @param proxyPortInp     Optional - Proxy server port.
+    *                         Default: "8080"
+    * @param proxyUsername    Optional - Proxy server user name.
+    * @param proxyPasswordInp Optional - Proxy server password associated with the proxyUsername input value.
+    * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
+    *                         Valid values: "true", "false"
+    *                         Default: "true"
+    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+    *         operation, status of the ZoneOperation, or failure message and the exception if there is one
+    */
   @Action(name = "Instances Attach Disk",
     outputs = Array(
       new Output(RETURN_CODE),
@@ -62,8 +99,8 @@ class InstancesAttachDisk {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-    val modeStr = defaultIfEmpty(mode, DefaultValues.DEFAULT_VOLUME_MOUNT_MODE)
-    val autoDeleteStr = defaultIfEmpty(autoDelete, TRUE)
+    val modeStr = defaultIfEmpty(mode, DEFAULT_VOLUME_MOUNT_MODE)
+    val autoDeleteStr = defaultIfEmpty(autoDelete, FALSE)
     val interfaceStr = defaultIfEmpty(autoDelete, DEFAULT_INTERFACE)
     val deviceNameOpt = verifyEmpty(deviceName)
 
