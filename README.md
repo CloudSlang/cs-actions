@@ -23,6 +23,7 @@
 
     cs-amazon - Integration with Amazon AWS
     cs-azure - Integration with Microsoft Azure
+    cs-couchbase - Integration with Couchbase
     cs-date-time - Date and Time actions
     cs-http-client - HTTP REST calls
     cs-json - JSON parsing and manipulation actions
