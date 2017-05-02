@@ -134,6 +134,22 @@ public class CouchbaseServiceTest {
     }
 
     @Test
+    public void testDeleteBucket() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "DELETE");
+        CommonInputs commonInputs = getCommonInputs("DeleteBucket", "buckets", "http://anywhere.couchbase.com:8091");
+        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toBeDeletedBucket").build();
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://anywhere.couchbase.com:8091/pools/default/buckets/toBeDeletedBucket", httpClientInputs.getUrl());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
     public void testGetAllBuckets() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
@@ -145,23 +161,6 @@ public class CouchbaseServiceTest {
         verifyNoMoreInteractions(csHttpClientMock);
 
         assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets", httpClientInputs.getUrl());
-        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
-        assertEquals("application/json", httpClientInputs.getContentType());
-    }
-
-    @Test
-    public void testGetBucketStatistics() throws MalformedURLException {
-        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
-                "", "", "", "", "", "",
-                "", "", "", "", "", "", "GET");
-        CommonInputs commonInputs = getCommonInputs("GetBucketStatistics", "buckets", "http://somewhere.couchbase.com:8091");
-        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("testBucket").build();
-        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
-
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
-
-        assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets/testBucket/stats", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
         assertEquals("application/json", httpClientInputs.getContentType());
     }
@@ -184,18 +183,35 @@ public class CouchbaseServiceTest {
     }
 
     @Test
-    public void testDeleteBucket() throws MalformedURLException {
+    public void testGetBucketStatistics() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
-                "", "", "", "", "", "", "DELETE");
-        CommonInputs commonInputs = getCommonInputs("DeleteBucket", "buckets", "http://anywhere.couchbase.com:8091");
-        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toBeDeletedBucket").build();
+                "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetBucketStatistics", "buckets", "http://somewhere.couchbase.com:8091");
+        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("testBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
         verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
         verifyNoMoreInteractions(csHttpClientMock);
 
-        assertEquals("http://anywhere.couchbase.com:8091/pools/default/buckets/toBeDeletedBucket", httpClientInputs.getUrl());
+        assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets/testBucket/stats", httpClientInputs.getUrl());
+        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
+    public void testGetClusterDetails() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetClusterDetails", "cluster", "http://whatever.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://whatever.couchbase.com:8091/pools/default", httpClientInputs.getUrl());
+        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
         assertEquals("application/json", httpClientInputs.getContentType());
     }
 
@@ -216,19 +232,49 @@ public class CouchbaseServiceTest {
     }
 
     @Test
-    public void testGetClusterDetails() throws MalformedURLException {
+    public void testGetDesignDocsInfo() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
                 "", "", "", "", "", "", "GET");
-        CommonInputs commonInputs = getCommonInputs("GetClusterDetails", "cluster", "http://whatever.couchbase.com:8091");
-        toTest.execute(httpClientInputs, commonInputs);
+        CommonInputs commonInputs = getCommonInputs("GetDesignDocsInfo", "views", "http://whatever.couchbase.com:8091");
+        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toGetDesignDocsBucket").build();
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
         verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
         verifyNoMoreInteractions(csHttpClientMock);
 
-        assertEquals("http://whatever.couchbase.com:8091/pools/default", httpClientInputs.getUrl());
-        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
+        assertEquals("http://whatever.couchbase.com:8091/pools/default/buckets/toGetDesignDocsBucket/ddocs", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
+    public void testUnknownApi() throws MalformedURLException {
+        setExpectedExceptions(RuntimeException.class, exception, "Unsupported Couchbase API.");
+
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetDesignDocsInfo", "The Wizard of Oz", "http://whatever.couchbase.com:8091");
+        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("anyBucket").build();
+
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+
+        verify(csHttpClientMock, never()).execute(eq(httpClientInputs));
+    }
+
+    @Test
+    public void testUnknownBuilderType() throws MalformedURLException {
+        setExpectedExceptions(RuntimeException.class, exception, "Unknown builder type.");
+
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "proxy.example.com", "8080",
+                "some", "any", "", "strict", "C:\\temp\\keystore.jks", "changeit",
+                "C:\\temp\\keystore.jks", "changeit", "15", "10", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetDesignDocsInfo", "views", "http://whatever.couchbase.com:8091");
+        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("anyBucket").build();
+
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs, null);
+
+        verify(csHttpClientMock, never()).execute(eq(httpClientInputs));
     }
 
     private CommonInputs getCommonInputs(String action, String api, String endpoint) {
