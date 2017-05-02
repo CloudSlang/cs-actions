@@ -53,10 +53,6 @@ cs-actions
 
 All documentation is available on the [CloudSlang website](http://www.cloudslang.io/#/docs).
 
-#### What's New
-
-See what's new [here](CHANGELOG.md).
-
 #### Get Involved
 
 Read our Contribution Guide [here](CONTRIBUTING.md).
