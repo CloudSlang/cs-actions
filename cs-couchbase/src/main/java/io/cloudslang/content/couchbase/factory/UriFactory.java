@@ -19,7 +19,7 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.C
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.VIEWS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNSUPPORTED_COUCHBASE_API;
 import static io.cloudslang.content.couchbase.factory.buckets.BucketsUriFactory.getBucketsUri;
-import static io.cloudslang.content.couchbase.factory.views.ViewsUriFactory.getViewsUriValue;
+import static io.cloudslang.content.couchbase.factory.views.ViewsUriFactory.getViewsUri;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.appendTo;
 
 /**
@@ -38,7 +38,7 @@ public class UriFactory {
             case CLUSTER:
                 return ClusterUri.getClusterUri(wrapper.getCommonInputs().getAction());
             case VIEWS:
-                return appendTo(ViewsUri.getViewsUri(wrapper.getCommonInputs().getAction()), getViewsUriValue(wrapper), wrapper.getCommonInputs().getAction());
+                return appendTo(ViewsUri.getViewsUri(wrapper.getCommonInputs().getAction()), getViewsUri(wrapper), wrapper.getCommonInputs().getAction());
             default:
                 throw new RuntimeException(UNSUPPORTED_COUCHBASE_API);
         }

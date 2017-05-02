@@ -31,7 +31,7 @@ public enum BucketType {
         return value;
     }
 
-    public static String getBucketType(String input) {
+    public static String getBucketTypeValue(String input) {
         if (isBlank(input)) {
             return MEMCACHED.getValue();
         }

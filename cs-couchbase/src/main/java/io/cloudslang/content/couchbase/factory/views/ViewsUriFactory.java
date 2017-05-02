@@ -14,7 +14,7 @@ public class ViewsUriFactory {
         // prevent instantiation
     }
 
-    public static String getViewsUriValue(InputsWrapper wrapper) {
+    public static String getViewsUri(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             case GET_DESIGN_DOCS_INFO:
                 return wrapper.getBucketInputs().getBucketName();
