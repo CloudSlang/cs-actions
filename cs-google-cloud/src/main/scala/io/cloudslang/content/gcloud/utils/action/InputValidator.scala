@@ -16,7 +16,7 @@ object InputValidator {
   val INVALID_BOOLEAN = "Invalid boolean value!"
   val INVALID_NON_NEGATIVE_INTEGER = "Invalid non-negative integer!"
   val INVALID_PAIRED_LISTS_LENGTH = "Paired lists must have the same length!"
-  val INVALID_DISK_SIZE = "Invalid diskSize, the size has an integer >= 10!"
+  val INVALID_DISK_SIZE = "Invalid diskSize, the size has to be an integer >= 10!"
 
   def validate(inputValue: String, inputName: String)(validator: (String) => Option[String]): Stream[String] =
     validator(inputValue) match {

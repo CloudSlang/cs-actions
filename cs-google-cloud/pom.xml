@@ -43,6 +43,12 @@
             <organization>Hewlett Packard Enterprise</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
+        <developer>
+            <name>Robert Sandor</name>
+            <email>robert.sandor@hpe.com</email>
+            <organization>Hewlett Packard Enterprise</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
     </developers>
     <build>
         <pluginManagement>

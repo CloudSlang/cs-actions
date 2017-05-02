@@ -58,7 +58,7 @@ object InputNames {
   final val VOLUME_DISK_DEVICE_NAME = "volumeDiskDeviceName"
   final val VOLUME_DISK_NAME = "volumeDiskName"
   final val VOLUME_DISK_SOURCE_IMAGE = "volumeDiskSourceImage"
-  final val VOLUME_DISK_TYEPE = "volumeDiskType"
+  final val VOLUME_DISK_TYPE = "volumeDiskType"
   final val VOLUME_DISK_SIZE = "volumeDiskSize"
 
   final val NETWORK = "network"
@@ -72,4 +72,10 @@ object InputNames {
 
   final val SERVICE_ACCOUNT_EMAIL = "serviceAccountEmail"
   final val SERVICE_ACCOUNT_SCOPES = "serviceAccountScopes"
+
+  final val SOURCE = "source"
+  final val MODE = "mode"
+  final val AUTO_DELETE = "autoDelete"
+  final val INTERFACE = "interface"
+  final val DEVICE_NAME = "deviceName"
   }

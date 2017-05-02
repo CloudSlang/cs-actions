@@ -19,5 +19,5 @@ object DefaultValues {
   final val DEFAULT_VOLUME_MOUNT_TYPE = "PERSISTENT"
   final val DEFAULT_VOLUME_MOUNT_MODE = "READ_WRITE"
   final val DEFAULT_ACCESS_CONFIG_TYPE = "ONE_TO_ONE_NAT"
-
+  final val DEFAULT_INTERFACE = "SCSI"
 }

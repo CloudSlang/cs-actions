@@ -29,6 +29,19 @@ object DiskController {
     computeDisk
   }
 
+  def createAttachedDisk(autoDelete: Boolean, deviceNameOpt: Option[String], mode: String, source: String, interface: String): AttachedDisk = {
+    val attachedDisk = new AttachedDisk()
+      .setAutoDelete(autoDelete)
+      .setMode(mode)
+      .setSource(source)
+      .setInterface(interface)
+
+    deviceNameOpt match {
+      case Some(deviceName) => attachedDisk.setDeviceName(deviceName)
+      case _ => attachedDisk
+    }
+  }
+
   def createAttachedDisk(boot: Boolean,
                          mountType: String,
                          mountMode: String,

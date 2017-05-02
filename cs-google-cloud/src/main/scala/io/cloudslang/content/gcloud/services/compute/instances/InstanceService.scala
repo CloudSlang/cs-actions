@@ -6,7 +6,6 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model.Metadata.Items
 import com.google.api.services.compute.model._
 import io.cloudslang.content.gcloud.services.compute.ComputeService
-import org.apache.commons.lang3.StringUtils
 
 import scala.collection.JavaConversions._
 
@@ -84,6 +83,18 @@ object InstanceService {
     val request = computeInstances.setMetadata(project, zone, instanceName, metadata)
 
     request.execute()
+  }
+
+  def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, attachedDisk: AttachedDisk): Operation = {
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .attachDisk(project, zone, instanceName, attachedDisk)
+      .execute()
+  }
+
+  def detachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, deviceName: String): Operation = {
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .detachDisk(project, zone, instanceName, deviceName)
+      .execute()
   }
 
 }

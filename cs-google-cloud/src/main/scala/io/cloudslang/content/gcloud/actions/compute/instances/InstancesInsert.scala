@@ -181,7 +181,7 @@ class InstancesInsert {
               @Param(value = VOLUME_DISK_DEVICE_NAME) volumeDiskDeviceName: String,
               @Param(value = VOLUME_DISK_NAME) volumeDiskName: String,
               @Param(value = VOLUME_DISK_SOURCE_IMAGE, required = true) volumeDiskSourceImage: String,
-              @Param(value = VOLUME_DISK_TYEPE) volumeDiskType: String,
+              @Param(value = VOLUME_DISK_TYPE) volumeDiskType: String,
               @Param(value = VOLUME_DISK_SIZE) volumeDiskSize: String,
 
               @Param(value = NETWORK) network: String,
