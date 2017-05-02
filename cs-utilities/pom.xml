@@ -108,11 +108,10 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>3.0.1</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
-                            <phase>DISABLE_FORKED_LIFECYCLE_MSOURCES-13</phase>
                         </execution>
                     </executions>
                 </plugin>
@@ -184,7 +183,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.2</version>
+                        <version>3.0.1</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
