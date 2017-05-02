@@ -6,7 +6,7 @@ import com.google.api.services.compute.model._
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.{FALSE, TRUE}
-import io.cloudslang.content.constants.{BooleanValues, OutputNames, ResponseNames, ReturnCodes}
+import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.disks.DiskController
 import io.cloudslang.content.google.services.compute.instances.{InstanceController, InstanceService}
 import io.cloudslang.content.google.services.compute.networks.NetworkController
@@ -61,6 +61,11 @@ class InstancesInsert {
     *                                    identify valid sources or targets for network firewalls and are specified by the client
     *                                    during instance creation. The tags can be later modified by the setTags method. Each tag
     *                                    within the list must comply with RFC1035.
+    * @param volumeSource                Optional - A valid partial or full URL to an existing Persistent Disk resource.
+    *                                    Note: If this input is specified, the disk will be used as a boot disk for the
+    *                                    newly created instance, and <volumeDiskSourceImage> cannot be specified.
+    *                                    Also <volumeMountType>, <volumeDiskName>, <volumeDiskType> and <volumeDiskSize>
+    *                                    will be ignored.
     * @param volumeMountType             Optional - Specifies the type of the disk, either SCRATCH or PERSISTENT.
     *                                    Default: "PERSISTENT"
     * @param volumeMountMode             Optional - The mode in which to attach this disk, either READ_WRITE or READ_ONLY.
@@ -89,6 +94,7 @@ class InstancesInsert {
     *                                    You can also specify a private image by its image family, which returns the latest version
     *                                    of the image in that family. Replace the image name with family/family-name:
     *                                    "global/images/family/my-private-family"
+    *                                    Note: This input cannot be specified if <volumeSource> is also specified.
     * @param volumeDiskType              Optional - Specifies the disk type to use to create the instance. If you define this input,
     *                                    you can provide either the full or partial URL. For example, the following are valid values:
     *                                    Note that for InstanceTemplate, this is the name of the disk type, not URL.
@@ -175,12 +181,13 @@ class InstancesInsert {
 
               @Param(value = TAGS_LIST) tagsList: String,
 
+              @Param(value = VOLUME_SOURCE) volumeSource: String,
               @Param(value = VOLUME_MOUNT_TYPE) volumeMountType: String,
               @Param(value = VOLUME_MOUNT_MODE) volumeMountMode: String,
               @Param(value = VOLUME_AUTO_DELETE) volumeAutoDelete: String,
               @Param(value = VOLUME_DISK_DEVICE_NAME) volumeDiskDeviceName: String,
               @Param(value = VOLUME_DISK_NAME) volumeDiskName: String,
-              @Param(value = VOLUME_DISK_SOURCE_IMAGE, required = true) volumeDiskSourceImage: String,
+              @Param(value = VOLUME_DISK_SOURCE_IMAGE) volumeDiskSourceImage: String,
               @Param(value = VOLUME_DISK_TYPE) volumeDiskType: String,
               @Param(value = VOLUME_DISK_SIZE) volumeDiskSize: String,
 
@@ -210,7 +217,7 @@ class InstancesInsert {
     val volumeMountTypeStr = defaultIfEmpty(volumeMountType, DEFAULT_VOLUME_MOUNT_TYPE)
     val volumeMountModeStr = defaultIfEmpty(volumeMountMode, DEFAULT_VOLUME_MOUNT_MODE)
     val volumeAutoDeleteStr = defaultIfEmpty(volumeAutoDelete, TRUE)
-    val volumeDiskNameStr = defaultIfEmpty(volumeDiskDeviceName, instanceName)
+    val volumeDiskNameStr = defaultIfEmpty(volumeDiskName, instanceName)
     val volumeDiskSizeStr = defaultIfEmpty(volumeDiskSize, DEFAULT_DISK_SIZE)
     val volumeDiskDeviceNameOpt = verifyEmpty(volumeDiskDeviceName)
     val volumeDiskTypeOpt = verifyEmpty(volumeDiskType)
@@ -224,6 +231,8 @@ class InstancesInsert {
     val subnetworkOpt = verifyEmpty(subnetwork)
     val accessConfigNameOpt = verifyEmpty(accessConfigName)
     val accessConfigTypeStr = defaultIfEmpty(accessConfigType, DEFAULT_ACCESS_CONFIG_TYPE)
+    val volumeSourceOpt = verifyEmpty(volumeSource)
+    val volumeDiskSourceImageOpt = verifyEmpty(volumeDiskSourceImage)
 
     val schedulingOnHostMaintenanceOpt = verifyEmpty(schedulingOnHostMaintenance)
     val schedulingAutomaticRestartStr = defaultIfEmpty(schedulingAutomaticRestart, TRUE)
@@ -236,11 +245,12 @@ class InstancesInsert {
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
       validateBoolean(volumeAutoDeleteStr, VOLUME_AUTO_DELETE) ++
-      validateDiskSize(volumeDiskSize, VOLUME_DISK_SIZE) ++
+      validateDiskSize(volumeDiskSizeStr, VOLUME_DISK_SIZE) ++
       validateBoolean(canIpForwardStr, CAN_IP_FORWARD) ++
       validatePairedLists(metadataKeysStr, metadataValuesStr, listDelimiterStr) ++
       validateBoolean(schedulingAutomaticRestartStr, SCHEDULING_AUTOMATIC_RESTART) ++
-      validateBoolean(schedulingPreemptibleStr, SCHEDULING_PREEMPTIBLE)
+      validateBoolean(schedulingPreemptibleStr, SCHEDULING_PREEMPTIBLE) ++
+      validateRequiredExclusion(volumeSourceOpt, VOLUME_SOURCE, volumeDiskSourceImageOpt, VOLUME_DISK_SOURCE_IMAGE)
 
 
     if (validationStream.nonEmpty) {
@@ -263,16 +273,27 @@ class InstancesInsert {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
 
-      val attachedDisk = DiskController.createAttachedDisk(
-        boot = true,
-        mountType = volumeMountTypeStr,
-        mountMode = volumeMountModeStr,
-        autoDelete = volumeAutoDelete,
-        diskDeviceNameOpt = volumeDiskDeviceNameOpt,
-        diskName = volumeDiskNameStr,
-        diskSourceImage = volumeDiskSourceImage,
-        diskTypeOpt = volumeDiskTypeOpt,
-        diskSize = volumeDiskSize)
+      val attachedDisk = volumeSourceOpt match {
+        case Some(volumeSourceValue) => DiskController.createAttachedDisk(
+          boot = true,
+          autoDelete = volumeAutoDelete,
+          deviceNameOpt = volumeDiskDeviceNameOpt,
+          mode = volumeMountModeStr,
+          source = volumeSourceValue,
+          interface = DEFAULT_INTERFACE
+        )
+        case None => DiskController.createAttachedDisk(
+          boot = true,
+          mountType = volumeMountTypeStr,
+          mountMode = volumeMountModeStr,
+          autoDelete = volumeAutoDelete,
+          diskDeviceNameOpt = volumeDiskDeviceNameOpt,
+          diskName = volumeDiskNameStr,
+          diskSourceImage = volumeDiskSourceImage,
+          diskTypeOpt = volumeDiskTypeOpt,
+          diskSize = volumeDiskSize)
+      }
+
 
       val metadata = new Metadata().setItems(InstanceController.createMetadataItems(metadataKeysStr, metadataValuesStr, listDelimiterStr))
       val tags = InstanceController.createTags(tagsListStr, listDelimiterStr)

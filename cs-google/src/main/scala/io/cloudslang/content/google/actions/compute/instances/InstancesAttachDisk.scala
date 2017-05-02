@@ -36,6 +36,8 @@ class InstancesAttachDisk {
     * @param accessToken      The access token from GetAccessToken.
     * @param instanceName     Name of the instance to attach the disk to.
     * @param source           A valid partial or full URL to an existing Persistent Disk resource.
+    * @param boot             Optional - Indicates that this is a boot disk. The virtual machine will use the first
+    *                         partition of the disk for its root filesystem.
     * @param mode             Optional - The mode in which to attach the disk to the instance.
     *                         Valid values: "READ_WRITE", "READ_ONLY"
     *                         Default: "READ_WRITE"
@@ -83,6 +85,7 @@ class InstancesAttachDisk {
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = SOURCE, required = true) source: String,
+              @Param(value = BOOT) boot: String,
               @Param(value = MODE) mode: String,
               @Param(value = AUTO_DELETE) autoDelete: String,
               @Param(value = DEVICE_NAME) deviceName: String,
@@ -101,13 +104,15 @@ class InstancesAttachDisk {
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
     val modeStr = defaultIfEmpty(mode, DEFAULT_VOLUME_MOUNT_MODE)
     val autoDeleteStr = defaultIfEmpty(autoDelete, FALSE)
+    val bootStr = defaultIfEmpty(boot, FALSE)
     val interfaceStr = defaultIfEmpty(autoDelete, DEFAULT_INTERFACE)
     val deviceNameOpt = verifyEmpty(deviceName)
 
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(autoDeleteStr, AUTO_DELETE)
+      validateBoolean(autoDeleteStr, AUTO_DELETE) ++
+      validateBoolean(bootStr, BOOT)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -117,12 +122,13 @@ class InstancesAttachDisk {
       val proxyPort = toInteger(proxyPortStr)
       val prettyPrint = toBoolean(prettyPrintStr)
       val autoDelete = toBoolean(autoDeleteStr)
+      val boot = toBoolean(bootStr)
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val attachedDisk = DiskController.createAttachedDisk(autoDelete, deviceNameOpt, modeStr, source, interfaceStr)
+      val attachedDisk = DiskController.createAttachedDisk(boot, autoDelete, deviceNameOpt, modeStr, source, interfaceStr)
 
       val operation = InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, attachedDisk)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString

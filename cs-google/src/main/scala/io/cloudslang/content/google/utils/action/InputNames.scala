@@ -51,7 +51,7 @@ object InputNames {
   final val METADATA_KEYS = "metadataKeys"
   final val METADATA_VALUES = "metadataValues"
 
-  final val VOLUME_BOOT = "volumeBoot"
+  final val VOLUME_SOURCE = "volumeSource"
   final val VOLUME_MOUNT_TYPE = "volumeMountType"
   final val VOLUME_MOUNT_MODE = "volumeMountMode"
   final val VOLUME_AUTO_DELETE = "volumeAutoDelete"
@@ -75,6 +75,7 @@ object InputNames {
 
   final val SOURCE = "source"
   final val MODE = "mode"
+  final val BOOT = "boot"
   final val AUTO_DELETE = "autoDelete"
   final val INTERFACE = "interface"
   final val DEVICE_NAME = "deviceName"
