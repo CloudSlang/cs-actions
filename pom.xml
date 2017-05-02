@@ -191,7 +191,7 @@
         <module>cs-lists</module>
         <module>cs-commons</module>
         <module>cs-azure</module>
-        <module>cs-google-cloud</module>
+        <module>cs-google</module>
         <module>cs-database</module>
         <module>cs-couchbase</module>
     </modules>
