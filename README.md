@@ -10,6 +10,7 @@ cs-actions
 * [Overview](#Overview)
 * [Common Integrations](#CommonIntegrations)
 * [Open Source Project](#OpenSourceProject)
+* [Content Actions Development Best Practices](#BestPractices)
 
 <a name="Overview"/>
 
@@ -47,6 +48,11 @@ cs-actions
 
 [CloudSlang Documentation](http://cloudslang-docs.readthedocs.io/en/latest/)
 
+<a name="BestPractices"/>
+
+#### Content Actions Development Best Practices
+
+Things to consider when [developing new cs-actions](https://github.com/CloudSlang/cs-actions/wiki/Best-Practices-%231-maven-checkstyle-plugin-enforcements)
 
 #### Documentation :
 
