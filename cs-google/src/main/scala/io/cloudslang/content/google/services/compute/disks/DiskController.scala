@@ -34,6 +34,7 @@ object DiskController {
                          mountMode: String,
                          sourceOpt: Option[String] = None,
                          deviceNameOpt: Option[String] = None,
+                         mountTypeOpt: Option[String] = None,
                          interfaceOpt: Option[String] = None,
                          initializeParamsOpt: Option[AttachedDiskInitializeParams] = None): AttachedDisk = {
     val attachedDisk = new AttachedDisk()
@@ -42,6 +43,8 @@ object DiskController {
       .setMode(mountMode)
 
     sourceOpt.foreach(source => attachedDisk.setSource(source))
+
+    mountTypeOpt.foreach(mountType => attachedDisk.setType(mountType))
 
     initializeParamsOpt.foreach(initializeParams => attachedDisk.setInitializeParams(initializeParams))
 
