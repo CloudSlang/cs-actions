@@ -21,6 +21,7 @@ public class Constants {
     public static class Api {
         public static final String BUCKETS = "buckets";
         public static final String CLUSTER = "cluster";
+        public static final String VIEWS = "views";
     }
 
     public static class HttpClientInputsValues {
@@ -44,6 +45,10 @@ public class Constants {
     public static class ClusterActions {
         public static final String GET_CLUSTER_DETAILS = "GetClusterDetails";
         public static final String GET_CLUSTER_INFO = "GetClusterInfo";
+    }
+
+    public static class ViewsActions {
+        public static final String GET_DESIGN_DOCS_INFO = "GetDesignDocsInfo";
     }
 
     public static class ErrorMessages {

@@ -31,7 +31,7 @@ public enum EvictionPolicy {
         return value;
     }
 
-    public static String getEvictionPolicy(String input) {
+    public static String getEvictionPolicyValue(String input) {
         if (isBlank(input)) {
             return VALUE_ONLY.getValue();
         }

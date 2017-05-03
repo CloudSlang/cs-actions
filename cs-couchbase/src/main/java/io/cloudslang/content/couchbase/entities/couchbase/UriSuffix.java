@@ -16,7 +16,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * 4/8/2017.
  */
 public enum UriSuffix {
-    GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats");
+    GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats"),
+    GET_DESIGN_DOC_INFO("GetDesignDocsInfo", "/ddocs");
 
     private final String key;
     private final String value;

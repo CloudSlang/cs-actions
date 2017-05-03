@@ -31,7 +31,7 @@ public enum AuthType {
         return value;
     }
 
-    public static String getAuthType(String input) {
+    public static String getAuthTypeValue(String input) {
         if (isBlank(input)) {
             return NONE.getValue();
         }
