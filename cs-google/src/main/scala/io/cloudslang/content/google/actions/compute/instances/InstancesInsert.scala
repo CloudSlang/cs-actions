@@ -274,24 +274,27 @@ class InstancesInsert {
 
 
       val attachedDisk = volumeSourceOpt match {
-        case Some(volumeSourceValue) => DiskController.createAttachedDisk(
+        case Some(_) => DiskController.createAttachedDisk(
           boot = true,
           autoDelete = volumeAutoDelete,
-          deviceNameOpt = volumeDiskDeviceNameOpt,
-          mode = volumeMountModeStr,
-          source = volumeSourceValue,
-          interface = DEFAULT_INTERFACE
+          mountMode = volumeMountModeStr,
+          sourceOpt = volumeSourceOpt,
+          deviceNameOpt = volumeDiskDeviceNameOpt
         )
         case None => DiskController.createAttachedDisk(
           boot = true,
-          mountType = volumeMountTypeStr,
-          mountMode = volumeMountModeStr,
           autoDelete = volumeAutoDelete,
-          diskDeviceNameOpt = volumeDiskDeviceNameOpt,
-          diskName = volumeDiskNameStr,
-          diskSourceImage = volumeDiskSourceImage,
-          diskTypeOpt = volumeDiskTypeOpt,
-          diskSize = volumeDiskSize)
+          mountMode = volumeMountModeStr,
+          deviceNameOpt = volumeDiskDeviceNameOpt,
+          initializeParamsOpt = Some(
+            DiskController.createAttachedDiskInitializeParams(
+              diskName = volumeDiskNameStr,
+              diskSourceImage = volumeDiskSourceImage,
+              diskTypeOpt = volumeDiskTypeOpt,
+              diskSize = volumeDiskSize
+            )
+          )
+        )
       }
 
 

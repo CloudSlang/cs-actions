@@ -128,7 +128,13 @@ class InstancesAttachDisk {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val attachedDisk = DiskController.createAttachedDisk(boot, autoDelete, deviceNameOpt, modeStr, source, interfaceStr)
+      val attachedDisk = DiskController.createAttachedDisk(
+        boot = boot,
+        autoDelete = autoDelete,
+        mountMode = modeStr,
+        deviceNameOpt = deviceNameOpt,
+        sourceOpt = Some(source),
+        interfaceOpt = Some(interfaceStr))
 
       val operation = InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, attachedDisk)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString

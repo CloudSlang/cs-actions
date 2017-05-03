@@ -29,13 +29,29 @@ object DiskController {
     computeDisk
   }
 
-  def createAttachedDisk(boot:Boolean, autoDelete: Boolean, deviceNameOpt: Option[String], mode: String, source: String, interface: String): AttachedDisk = {
+  def createAttachedDisk(boot: Boolean,
+                         autoDelete: Boolean,
+                         mountMode: String,
+                         sourceOpt: Option[String] = None,
+                         deviceNameOpt: Option[String] = None,
+                         interfaceOpt: Option[String] = None,
+                         initializeParamsOpt: Option[AttachedDiskInitializeParams] = None): AttachedDisk = {
     val attachedDisk = new AttachedDisk()
       .setBoot(boot)
       .setAutoDelete(autoDelete)
-      .setMode(mode)
-      .setSource(source)
-      .setInterface(interface)
+      .setMode(mountMode)
+
+    sourceOpt match {
+      case Some(source) => attachedDisk.setSource(source)
+    }
+
+    initializeParamsOpt match {
+      case Some(initializeParams) => attachedDisk.setInitializeParams(initializeParams)
+    }
+
+    interfaceOpt match {
+      case Some(interface) => attachedDisk.setInterface(interface)
+    }
 
     deviceNameOpt match {
       case Some(deviceName) => attachedDisk.setDeviceName(deviceName)
@@ -43,29 +59,7 @@ object DiskController {
     }
   }
 
-  def createAttachedDisk(boot: Boolean,
-                         mountType: String,
-                         mountMode: String,
-                         autoDelete: Boolean,
-                         diskDeviceNameOpt: Option[String],
-                         diskName: String,
-                         diskSourceImage: String,
-                         diskTypeOpt: Option[String],
-                         diskSize: Long): AttachedDisk = {
-    val attachedDisk = new AttachedDisk()
-      .setBoot(boot)
-      .setType(mountType)
-      .setMode(mountMode)
-      .setAutoDelete(autoDelete)
-      .setInitializeParams(createAttachedDiskInitializeParams(diskName, diskSourceImage, diskTypeOpt, diskSize))
-
-    diskDeviceNameOpt match {
-      case Some(diskDeviceName) => attachedDisk.setDeviceName(diskDeviceName)
-      case _ => attachedDisk
-    }
-  }
-
-  private def createAttachedDiskInitializeParams(diskName: String, diskSourceImage: String, diskTypeOpt: Option[String], diskSize: Long): AttachedDiskInitializeParams = {
+  def createAttachedDiskInitializeParams(diskName: String, diskSourceImage: String, diskTypeOpt: Option[String], diskSize: Long): AttachedDiskInitializeParams = {
     val initParam = new AttachedDiskInitializeParams()
       .setDiskName(diskName)
       .setSourceImage(diskSourceImage)
