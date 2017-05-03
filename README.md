@@ -34,7 +34,6 @@ cs-actions
     cs-powershell - PowerShell actions
     cs-rft - Remote File Transfer actions
     cs-ssh - SSH actions
-    cs-utilities - Basic utility actions
     cs-vmware - Integration with VMWare vCenter Server
     cs-xml - XML parsing and manipulation actions
 
