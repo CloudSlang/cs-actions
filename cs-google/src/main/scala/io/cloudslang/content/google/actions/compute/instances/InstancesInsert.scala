@@ -286,6 +286,7 @@ class InstancesInsert {
           autoDelete = volumeAutoDelete,
           mountMode = volumeMountModeStr,
           deviceNameOpt = volumeDiskDeviceNameOpt,
+          mountTypeOpt = Some(volumeMountTypeStr),
           initializeParamsOpt = Some(
             DiskController.createAttachedDiskInitializeParams(
               diskName = volumeDiskNameStr,
