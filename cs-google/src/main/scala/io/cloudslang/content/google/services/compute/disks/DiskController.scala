@@ -41,17 +41,11 @@ object DiskController {
       .setAutoDelete(autoDelete)
       .setMode(mountMode)
 
-    sourceOpt match {
-      case Some(source) => attachedDisk.setSource(source)
-    }
+    sourceOpt.foreach(source => attachedDisk.setSource(source))
 
-    initializeParamsOpt match {
-      case Some(initializeParams) => attachedDisk.setInitializeParams(initializeParams)
-    }
+    initializeParamsOpt.foreach(initializeParams => attachedDisk.setInitializeParams(initializeParams))
 
-    interfaceOpt match {
-      case Some(interface) => attachedDisk.setInterface(interface)
-    }
+    interfaceOpt.foreach(interface => attachedDisk.setInterface(interface))
 
     deviceNameOpt match {
       case Some(deviceName) => attachedDisk.setDeviceName(deviceName)
