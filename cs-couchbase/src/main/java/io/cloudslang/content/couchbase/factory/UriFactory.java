@@ -11,14 +11,17 @@ package io.cloudslang.content.couchbase.factory;
 
 import io.cloudslang.content.couchbase.entities.couchbase.ClusterUri;
 import io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi;
+import io.cloudslang.content.couchbase.entities.couchbase.NodesUri;
 import io.cloudslang.content.couchbase.entities.couchbase.ViewsUri;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.VIEWS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNSUPPORTED_COUCHBASE_API;
 import static io.cloudslang.content.couchbase.factory.buckets.BucketsUriFactory.getBucketsUri;
+import static io.cloudslang.content.couchbase.factory.nodes.NodesUriFactory.getNodesUri;
 import static io.cloudslang.content.couchbase.factory.views.ViewsUriFactory.getViewsUri;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.appendTo;
 
@@ -32,13 +35,16 @@ public class UriFactory {
     }
 
     public static String getUri(InputsWrapper wrapper) {
+        String action = wrapper.getCommonInputs().getAction();
         switch (wrapper.getCommonInputs().getApi()) {
             case BUCKETS:
-                return appendTo(CouchbaseApi.BUCKETS.getValue(), getBucketsUri(wrapper), wrapper.getCommonInputs().getAction());
+                return appendTo(CouchbaseApi.BUCKETS.getValue(), getBucketsUri(wrapper), action);
             case CLUSTER:
-                return ClusterUri.getClusterUri(wrapper.getCommonInputs().getAction());
+                return ClusterUri.getClusterUri(action);
+            case NODES:
+                return appendTo(NodesUri.getNodesUri(action), getNodesUri(wrapper), action);
             case VIEWS:
-                return appendTo(ViewsUri.getViewsUri(wrapper.getCommonInputs().getAction()), getViewsUri(wrapper), wrapper.getCommonInputs().getAction());
+                return appendTo(ViewsUri.getViewsUri(action), getViewsUri(wrapper), action);
             default:
                 throw new RuntimeException(UNSUPPORTED_COUCHBASE_API);
         }

@@ -13,11 +13,13 @@ import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.VIEWS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNKNOWN_COUCHBASE_HEADER;
 import static io.cloudslang.content.couchbase.factory.buckets.BucketHeadersBuilder.setBucketHeaders;
 import static io.cloudslang.content.couchbase.factory.cluster.ClusterHeadersBuilder.setClusterHeaders;
-import static io.cloudslang.content.couchbase.factory.views.ViewsHeadersBuilder.setViewsHeaders;
+import static io.cloudslang.content.couchbase.factory.nodes.NodeHeadersBuilder.setNodeHeaders;
+import static io.cloudslang.content.couchbase.factory.views.ViewHeadersBuilder.setViewHeaders;
 
 /**
  * Created by TusaM
@@ -36,8 +38,11 @@ public class HeadersBuilder {
             case CLUSTER:
                 setClusterHeaders(wrapper);
                 break;
+            case NODES:
+                setNodeHeaders(wrapper);
+                break;
             case VIEWS:
-                setViewsHeaders(wrapper);
+                setViewHeaders(wrapper);
                 break;
             default:
                 throw new RuntimeException(UNKNOWN_COUCHBASE_HEADER);

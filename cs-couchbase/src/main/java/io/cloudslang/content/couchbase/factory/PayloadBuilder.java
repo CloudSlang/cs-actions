@@ -11,8 +11,10 @@ package io.cloudslang.content.couchbase.factory;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.couchbase.factory.buckets.BucketsHelper;
+import io.cloudslang.content.couchbase.factory.nodes.NodesHelper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
 import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
@@ -28,8 +30,10 @@ public class PayloadBuilder {
         if (METHOD_NAME.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
             switch (wrapper.getCommonInputs().getAction()) {
                 case CREATE_OR_EDIT_BUCKET:
-                    String payload = new BucketsHelper().getCreateBucketPayload(wrapper);
-                    wrapper.getHttpClientInputs().setBody(payload);
+                    wrapper.getHttpClientInputs().setBody(new BucketsHelper().getCreateBucketPayload(wrapper));
+                    break;
+                case FAIL_OVER_NODE:
+                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayload(wrapper));
                     break;
                 default:
                     break;

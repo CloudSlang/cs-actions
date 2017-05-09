@@ -21,14 +21,15 @@ public class Constants {
     public static class Api {
         public static final String BUCKETS = "buckets";
         public static final String CLUSTER = "cluster";
+        public static final String NODES = "nodes";
         public static final String VIEWS = "views";
     }
 
     public static class HttpClientInputsValues {
+        public static final String ALL_TYPE_HEADER = "Accept:application/json, text/plain, */*";
         public static final String ALLOW_ALL = "allow_all";
         public static final String APPLICATION_JSON = "application/json";
         public static final String BROWSER_COMPATIBLE = "browser_compatible";
-        public static final String CREATE_BUCKET_HEADER = "Accept:application/json, text/plain, */*";
         public static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded; charset=UTF-8";
         public static final String STRICT = "strict";
         public static final String X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1 = "X-memcachekv-Store-Client-Specification-Version:0.1";
@@ -47,6 +48,10 @@ public class Constants {
         public static final String GET_CLUSTER_INFO = "GetClusterInfo";
     }
 
+    public static class NodeActions {
+        public static final String FAIL_OVER_NODE = "FailOverNode";
+    }
+
     public static class ViewsActions {
         public static final String GET_DESIGN_DOCS_INFO = "GetDesignDocsInfo";
     }
@@ -63,6 +68,7 @@ public class Constants {
 
     public static class Miscellaneous {
         public static final String AMPERSAND = "&";
+        public static final String AT = "@";
         public static final String BLANK_SPACE = " ";
         public static final String COMMA = ",";
         public static final String EQUAL = "=";

@@ -7,22 +7,25 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.couchbase.utils;
+package io.cloudslang.content.couchbase.factory.views;
 
-import org.junit.rules.ExpectedException;
+import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
+
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
 
 /**
  * Created by TusaM
- * 4/25/2017.
+ * 4/28/2017.
  */
-public class TestUtils {
-    private TestUtils() {
+public class ViewHeadersBuilder {
+    private ViewHeadersBuilder() {
         // prevent instantiation
     }
 
-    @SuppressWarnings("unchecked")
-    public static void setExpectedExceptions(Class<?> type, ExpectedException exception, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
+    public static void setViewHeaders(InputsWrapper wrapper) {
+        switch (wrapper.getCommonInputs().getAction()) {
+            default:
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+        }
     }
 }
