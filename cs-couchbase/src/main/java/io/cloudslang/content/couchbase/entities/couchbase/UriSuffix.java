@@ -27,9 +27,9 @@ public enum UriSuffix {
         this.value = value;
     }
 
-    public static String getUriSuffix(String input) {
+    public static String getValue(String key) {
         for (UriSuffix uriSuffix : UriSuffix.values()) {
-            if (uriSuffix.getKey().equalsIgnoreCase(input)) {
+            if (uriSuffix.getKey().equalsIgnoreCase(key)) {
                 return uriSuffix.getValue();
             }
         }

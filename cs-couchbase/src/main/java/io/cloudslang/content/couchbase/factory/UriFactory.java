@@ -40,11 +40,11 @@ public class UriFactory {
             case BUCKETS:
                 return appendTo(CouchbaseApi.BUCKETS.getValue(), getBucketsUri(wrapper), action);
             case CLUSTER:
-                return ClusterUri.getClusterUri(action);
+                return ClusterUri.getValue(action);
             case NODES:
-                return appendTo(NodesUri.getNodesUri(action), getNodesUri(wrapper), action);
+                return appendTo(NodesUri.getValue(action), getNodesUri(wrapper), action);
             case VIEWS:
-                return appendTo(ViewsUri.getViewsUri(action), getViewsUri(wrapper), action);
+                return appendTo(ViewsUri.getValue(action), getViewsUri(wrapper), action);
             default:
                 throw new RuntimeException(UNSUPPORTED_COUCHBASE_API);
         }

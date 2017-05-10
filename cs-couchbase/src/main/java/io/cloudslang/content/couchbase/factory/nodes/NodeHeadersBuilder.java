@@ -20,7 +20,7 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeA
  * 5/9/2017.
  */
 public class NodeHeadersBuilder {
-    public NodeHeadersBuilder() {
+    private NodeHeadersBuilder() {
         // prevent instantiation
     }
 

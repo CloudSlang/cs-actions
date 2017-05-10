@@ -26,9 +26,9 @@ public enum ViewsUri {
         this.value = value;
     }
 
-    public static String getViewsUri(String input) {
+    public static String getValue(String key) {
         for (ViewsUri uri : ViewsUri.values()) {
-            if (uri.getKey().equalsIgnoreCase(input)) {
+            if (uri.getKey().equalsIgnoreCase(key)) {
                 return uri.getValue();
             }
         }

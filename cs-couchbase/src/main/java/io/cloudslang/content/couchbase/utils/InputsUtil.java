@@ -110,7 +110,7 @@ public class InputsUtil {
     }
 
     public static String appendTo(String prefix, String suffix, String action) {
-        return (isBlank(suffix)) ? prefix : prefix + "/" + suffix + UriSuffix.getUriSuffix(action);
+        return (isBlank(suffix)) ? prefix : prefix + "/" + suffix + UriSuffix.getValue(action);
     }
 
     public static String getPayloadString(Map<String, String> payloadMap, String separator, String suffix, boolean deleteLastChar) {

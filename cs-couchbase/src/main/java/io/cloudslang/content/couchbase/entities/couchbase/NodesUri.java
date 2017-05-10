@@ -26,9 +26,9 @@ public enum NodesUri {
         this.value = value;
     }
 
-    public static String getNodesUri(String input) {
+    public static String getValue(String key) {
         for (NodesUri uri : NodesUri.values()) {
-            if (uri.getKey().equalsIgnoreCase(input)) {
+            if (uri.getKey().equalsIgnoreCase(key)) {
                 return uri.getValue();
             }
         }
