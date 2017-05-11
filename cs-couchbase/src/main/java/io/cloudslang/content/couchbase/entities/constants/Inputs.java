@@ -36,4 +36,8 @@ public class Inputs {
         public static final String SASL_PASSWORD = "saslPassword";
         public static final String THREADS_NUMBER = "threadsNumber";
     }
+
+    public static class NodeInputs {
+        public static final String INTERNAL_NODE_IP_ADDRESS = "internalNodeIpAddress";
+    }
 }

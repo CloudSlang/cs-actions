@@ -7,38 +7,31 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.couchbase.factory.buckets;
+package io.cloudslang.content.couchbase.factory.nodes;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.DELETE_BUCKET;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
 
 /**
  * Created by TusaM
- * 4/12/2017.
+ * 5/9/2017.
  */
-public class BucketHeadersBuilder {
-    private BucketHeadersBuilder() {
+public class NodeHeadersBuilder {
+    private NodeHeadersBuilder() {
         // prevent instantiation
     }
 
-    public static void setBucketHeaders(InputsWrapper wrapper) {
+    public static void setNodeHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
-            case CREATE_OR_EDIT_BUCKET:
+            case FAIL_OVER_NODE:
                 wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
                 wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
                 break;
-            case DELETE_BUCKET:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
-                break;
             default:
-                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
         }
     }
 }

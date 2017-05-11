@@ -16,6 +16,7 @@ import io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy;
 import io.cloudslang.content.couchbase.entities.couchbase.UriSuffix;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.HttpClientInputs;
+import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,6 +26,7 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpC
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.BROWSER_COMPATIBLE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.STRICT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.CONSTRAINS_ERROR_MESSAGE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.AT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.BLANK_SPACE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.COMMA;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.PORT_REGEX;
@@ -108,16 +110,16 @@ public class InputsUtil {
     }
 
     public static String appendTo(String prefix, String suffix, String action) {
-        return (isBlank(suffix)) ? prefix : prefix + "/" + suffix + UriSuffix.getUriSuffix(action);
+        return (isBlank(suffix)) ? prefix : prefix + "/" + suffix + UriSuffix.getValue(action);
     }
 
-    public static String getPayloadString(Map<String, String> headersOrParamsMap, String separator, String suffix, boolean deleteLastChar) {
-        if (headersOrParamsMap.isEmpty()) {
+    public static String getPayloadString(Map<String, String> payloadMap, String separator, String suffix, boolean deleteLastChar) {
+        if (payloadMap.isEmpty()) {
             return EMPTY;
         }
 
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : headersOrParamsMap.entrySet()) {
+        for (Map.Entry<String, String> entry : payloadMap.entrySet()) {
             sb.append(entry.getKey()).append(separator).append(entry.getValue()).append(suffix);
         }
 
@@ -188,6 +190,25 @@ public class InputsUtil {
         return isBlank(sb.toString()) ? EMPTY : sb.deleteCharAt(sb.length() - 2).toString().trim();
     }
 
+    public static String getValidInternalNodeIpAddress(String input) {
+        if (!input.contains(AT)) {
+            throw new RuntimeException(format("The provided value for: \"%s\" input must be a valid Couchbase internal node format.", input));
+        }
+
+        int indexOfAt = input.indexOf(AT);
+        String ipv4Address = input.substring(indexOfAt + 1);
+
+        if (!isValidIPv4Address(ipv4Address)) {
+            throw new RuntimeException(format("The value of: [%s] input as part of: [%s] input must be a valid IPv4 address.", ipv4Address, input));
+        }
+
+        return input;
+    }
+
+    private static boolean isValidIPv4Address(String input) {
+        return new InetAddressValidator().isValidInet4Address(input) ? Boolean.TRUE : Boolean.FALSE;
+    }
+
     private static String getInputWithDefaultValue(String input, String defaultValue) {
         return isBlank(input) ? defaultValue : input;
     }
@@ -201,7 +222,7 @@ public class InputsUtil {
                 "description section for details.", input));
     }
 
-    private static int getIntegerAboveMinimum (String input, Integer minAllowed) {
+    private static int getIntegerAboveMinimum(String input, Integer minAllowed) {
         try {
             int validInt = Integer.parseInt(input);
             if (validInt < minAllowed) {
