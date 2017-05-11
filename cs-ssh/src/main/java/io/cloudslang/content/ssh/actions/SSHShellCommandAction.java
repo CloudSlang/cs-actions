@@ -17,8 +17,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
@@ -67,6 +67,12 @@ public class SSHShellCommandAction {
      * @param closeSession        If true it closes the SSH session at completion of this operation.
      *                            If false the SSH session will be cached for future calls of this operation during the life of the flow.
      *                            Valid values: false, true. Default value: false
+     * @param useShell            Specifies whether to use shell mode to run the commands. This will start a shell
+     *                            session and run the command, after which it will issue an 'exit' command, to close
+     *                            the shell.
+     *                            Note: If the output does not show the whole expected output, increase the <timeout> value.
+     *                            Valid values: true, false.
+     *                            Default value: false.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * <br><b>returnResult</b> - The primary output.
      * <br><b>STDOUT</b> - The standard output of the command(s).

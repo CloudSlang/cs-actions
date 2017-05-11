@@ -39,6 +39,7 @@ public class SSHServiceImpl implements SSHService {
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
     private static final String ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
+    public static final String EXIT_COMMAND = "exit";
     private Session session;
     private Channel execChannel;
 
@@ -147,16 +148,16 @@ public class SSHServiceImpl implements SSHService {
                 session.connect(connectTimeout);
             }
 
-            ChannelShell channelShell = (ChannelShell) session.openChannel(SHELL_CHANNEL);
+            final ChannelShell channelShell = (ChannelShell) session.openChannel(SHELL_CHANNEL);
             channelShell.setPty(usePseudoTerminal);
             channelShell.setAgentForwarding(agentForwarding);
 
-            OutputStream shellIn = channelShell.getOutputStream();
-            InputStream shellOut = channelShell.getInputStream();
+            final OutputStream shellIn = channelShell.getOutputStream();
+            final InputStream shellOut = channelShell.getInputStream();
 
             channelShell.connect(connectTimeout);
 
-            PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(shellIn, characterSet));
+            final PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(shellIn, characterSet));
 
             printWriter.println(command);
             printWriter.flush();
@@ -166,12 +167,12 @@ public class SSHServiceImpl implements SSHService {
             } catch (InterruptedException ignored) {
             }
 
-            printWriter.println("exit");
+            printWriter.println(EXIT_COMMAND);
             printWriter.flush();
 
             final String result = IOUtils.toString(shellOut, characterSet);
 
-            CommandResult commandResult = new CommandResult();
+            final CommandResult commandResult = new CommandResult();
             commandResult.setStandardOutput(result);
 
             return commandResult;
