@@ -11,6 +11,7 @@ package io.cloudslang.content.couchbase.execute;
 
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
+import io.cloudslang.content.couchbase.entities.inputs.NodeInputs;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.junit.Before;
@@ -245,6 +246,47 @@ public class CouchbaseServiceTest {
 
         assertEquals("http://whatever.couchbase.com:8091/pools/default/buckets/toGetDesignDocsBucket/ddocs", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
+    public void testFailOverNodeSuccess() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "POST");
+        CommonInputs commonInputs = getCommonInputs("FailOverNode", "nodes", "http://whatever.couchbase.com:8091");
+        NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@10.0.0.2").build();
+        toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://whatever.couchbase.com:8091/controller/failOver", httpClientInputs.getUrl());
+        assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
+        assertEquals("application/x-www-form-urlencoded; charset=UTF-8", httpClientInputs.getContentType());
+    }
+
+    @Test
+    public void testFailOverNodeNoIPv4Address() throws MalformedURLException {
+        setExpectedExceptions(RuntimeException.class, exception, "The value of: [ blah blah blah ] input as part " +
+                "of: [ns_2@ blah blah blah ] input must be a valid IPv4 address.");
+
+        CommonInputs commonInputs = getCommonInputs("FailOverNode", "nodes", "http://whatever.couchbase.com:8091");
+        NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@ blah blah blah ").build();
+        toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+
+        verify(csHttpClientMock, never()).execute(eq(httpClientInputs));
+    }
+
+    @Test
+    public void testFailOverNodeInvalidInternalNodeIpAddress() throws MalformedURLException {
+        setExpectedExceptions(RuntimeException.class, exception, "The provided value for: " +
+                "\" anything here but not [at] symbol \" input must be a valid Couchbase internal node format.");
+
+        CommonInputs commonInputs = getCommonInputs("FailOverNode", "nodes", "http://whatever.couchbase.com:8091");
+        NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress(" anything here but not [at] symbol ").build();
+        toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+
+        verify(csHttpClientMock, never()).execute(eq(httpClientInputs));
     }
 
     @Test

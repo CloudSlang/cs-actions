@@ -137,7 +137,7 @@ public class BucketInputs {
         }
 
         public BucketInputs.Builder withAuthType(String input) {
-            authType = AuthType.getAuthTypeValue(input);
+            authType = AuthType.getValue(input);
             return this;
         }
 
@@ -147,17 +147,17 @@ public class BucketInputs {
         }
 
         public BucketInputs.Builder withBucketType(String input) {
-            bucketType = BucketType.getBucketTypeValue(input);
+            bucketType = BucketType.getValue(input);
             return this;
         }
 
         public BucketInputs.Builder withConflictResolutionType(String input) {
-            conflictResolutionType = ConflictResolutionType.getConflictResolutionTypeValue(input);
+            conflictResolutionType = ConflictResolutionType.getValue(input);
             return this;
         }
 
         public BucketInputs.Builder withEvictionPolicy(String input) {
-            evictionPolicy = EvictionPolicy.getEvictionPolicyValue(input);
+            evictionPolicy = EvictionPolicy.getValue(input);
             return this;
         }
 

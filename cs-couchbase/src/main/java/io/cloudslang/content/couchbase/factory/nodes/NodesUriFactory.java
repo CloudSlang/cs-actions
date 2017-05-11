@@ -7,22 +7,25 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.couchbase.utils;
+package io.cloudslang.content.couchbase.factory.nodes;
 
-import org.junit.rules.ExpectedException;
+import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by TusaM
- * 4/25/2017.
+ * 5/9/2017.
  */
-public class TestUtils {
-    private TestUtils() {
+public class NodesUriFactory {
+    private NodesUriFactory() {
         // prevent instantiation
     }
 
-    @SuppressWarnings("unchecked")
-    public static void setExpectedExceptions(Class<?> type, ExpectedException exception, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
+    public static String getNodesUri(InputsWrapper wrapper) {
+        switch (wrapper.getCommonInputs().getAction()) {
+            default:
+                return EMPTY;
+        }
     }
 }

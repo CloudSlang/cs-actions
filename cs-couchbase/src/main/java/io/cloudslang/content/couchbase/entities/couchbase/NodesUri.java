@@ -12,25 +12,24 @@ package io.cloudslang.content.couchbase.entities.couchbase;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
- * Created by Mihai Tusa
- * 4/8/2017.
+ * Created by TusaM
+ * 5/9/2017.
  */
-public enum UriSuffix {
-    GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats"),
-    GET_DESIGN_DOC_INFO("GetDesignDocsInfo", "/ddocs");
+public enum NodesUri {
+    FAIL_OVER_NODE("FailOverNode", "/controller/failOver");
 
     private final String key;
     private final String value;
 
-    UriSuffix(String key, String value) {
+    NodesUri(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
     public static String getValue(String key) {
-        for (UriSuffix uriSuffix : UriSuffix.values()) {
-            if (uriSuffix.getKey().equalsIgnoreCase(key)) {
-                return uriSuffix.getValue();
+        for (NodesUri uri : NodesUri.values()) {
+            if (uri.getKey().equalsIgnoreCase(key)) {
+                return uri.getValue();
             }
         }
 

@@ -27,9 +27,9 @@ public enum ClusterUri {
         this.value = value;
     }
 
-    public static String getClusterUri(String input) {
+    public static String getValue(String key) {
         for (ClusterUri uri : ClusterUri.values()) {
-            if (uri.getKey().equalsIgnoreCase(input)) {
+            if (uri.getKey().equalsIgnoreCase(key)) {
                 return uri.getValue();
             }
         }
