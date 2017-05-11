@@ -18,6 +18,7 @@ import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.utils.CacheUtils;
 import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -168,16 +169,10 @@ public class SSHServiceImpl implements SSHService {
             printWriter.println("exit");
             printWriter.flush();
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(shellOut));
-            StringBuilder shellOutputBuilder = new StringBuilder();
-            while (true) {
-                final String line = bufferedReader.readLine();
-                if (line == null) break;
-                shellOutputBuilder.append(line).append(System.lineSeparator());
-            }
+            final String result = IOUtils.toString(shellOut, characterSet);
 
             CommandResult commandResult = new CommandResult();
-            commandResult.setStandardOutput(shellOutputBuilder.toString());
+            commandResult.setStandardOutput(result);
 
             return commandResult;
         } catch (JSchException | IOException e) {
