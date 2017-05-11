@@ -10,17 +10,8 @@
 package io.cloudslang.content.ssh.services.impl;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.ProxyHTTP;
-import com.jcraft.jsch.Session;
-import io.cloudslang.content.ssh.entities.CommandResult;
-import io.cloudslang.content.ssh.entities.ConnectionDetails;
-import io.cloudslang.content.ssh.entities.IdentityKey;
-import io.cloudslang.content.ssh.entities.KnownHostsFile;
-import io.cloudslang.content.ssh.entities.SSHConnection;
+import com.jcraft.jsch.*;
+import io.cloudslang.content.ssh.entities.*;
 import io.cloudslang.content.ssh.exceptions.SSHException;
 import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
@@ -28,10 +19,7 @@ import io.cloudslang.content.ssh.utils.CacheUtils;
 import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -43,6 +31,7 @@ import java.util.Map;
  * @author octavian-h
  */
 public class SSHServiceImpl implements SSHService {
+    private static final String SHELL_CHANNEL = "shell";
     private static final int POLLING_INTERVAL = 10;
     private static final String EXEC_CHANNEL = "exec";
     private static final String KNOWN_HOSTS_ALLOW = "allow";
@@ -56,7 +45,8 @@ public class SSHServiceImpl implements SSHService {
         this.session = session;
         this.execChannel = channel;
     }
-        /**
+
+    /**
      * Open SSH session.
      *
      * @param details                     The connection details.
@@ -123,7 +113,7 @@ public class SSHServiceImpl implements SSHService {
             IdentityKeyUtils.setIdentity(jsch, identityKey);
         }
 
-        if(proxyHTTP != null) {
+        if (proxyHTTP != null) {
             session.setProxy(proxyHTTP);
         }
 
@@ -142,6 +132,58 @@ public class SSHServiceImpl implements SSHService {
         }
     }
 
+    @Override
+    public CommandResult runShell(
+            final String command,
+            final String characterSet,
+            boolean usePseudoTerminal,
+            int connectTimeout,
+            int commandTimeout,
+            boolean agentForwarding) {
+
+        try {
+            if (!isConnected()) {
+                session.connect(connectTimeout);
+            }
+
+            ChannelShell channelShell = (ChannelShell) session.openChannel(SHELL_CHANNEL);
+            channelShell.setPty(usePseudoTerminal);
+            channelShell.setAgentForwarding(agentForwarding);
+
+            OutputStream shellIn = channelShell.getOutputStream();
+            InputStream shellOut = channelShell.getInputStream();
+
+            channelShell.connect(connectTimeout);
+
+            PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(shellIn, characterSet));
+
+            printWriter.println(command);
+            printWriter.flush();
+
+            try {
+                Thread.sleep(commandTimeout);
+            } catch (InterruptedException ignored) {
+            }
+
+            printWriter.println("exit");
+            printWriter.flush();
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(shellOut));
+            StringBuilder shellOutputBuilder = new StringBuilder();
+            while (true) {
+                final String line = bufferedReader.readLine();
+                if (line == null) break;
+                shellOutputBuilder.append(line).append(System.lineSeparator());
+            }
+
+            CommandResult commandResult = new CommandResult();
+            commandResult.setStandardOutput(shellOutputBuilder.toString());
+
+            return commandResult;
+        } catch (JSchException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public CommandResult runShellCommand(

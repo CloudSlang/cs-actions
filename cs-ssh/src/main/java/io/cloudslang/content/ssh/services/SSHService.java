@@ -24,6 +24,19 @@ import java.util.Map;
 public interface SSHService extends AutoCloseable {
 
     /**
+     * Run a Shell command(s) using SSH protocol, using a direct shell.
+     *
+     * @param command           The Shell command(s).
+     * @param characterSet      The character set for the command and for the output of the command.
+     * @param usePseudoTerminal If true the result will be formatted like in a terminal.
+     * @param connectTimeout    The channel connection timeout.
+     * @param commandTimeout    The command timeout.
+     * @param agentForwarding   Weathers the agent forwarding is enabled or not.
+     * @return the command result.
+     */
+    CommandResult runShell(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout, boolean agentForwarding);
+
+    /**
      * Run a Shell command(s) using SSH protocol.
      *
      * @param command           The Shell command(s).

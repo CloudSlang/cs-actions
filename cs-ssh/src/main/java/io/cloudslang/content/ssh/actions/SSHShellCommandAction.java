@@ -112,7 +112,8 @@ public class SSHShellCommandAction {
             @Param(Constants.PROXY_PORT) String proxyPort,
             @Param(Constants.PROXY_USERNAME) String proxyUsername,
             @Param(value = Constants.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-            @Param(Constants.ALLOW_EXPECT_COMMANDS) String allowExpectCommands) {
+            @Param(Constants.ALLOW_EXPECT_COMMANDS) String allowExpectCommands,
+            @Param(Constants.USE_SHELL) String useShell) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
         sshShellInputs.setHost(host);
@@ -138,6 +139,7 @@ public class SSHShellCommandAction {
         sshShellInputs.setProxyUsername(proxyUsername);
         sshShellInputs.setProxyPassword(proxyPassword);
         sshShellInputs.setAllowExpectCommands(allowExpectCommands);
+        sshShellInputs.setUseShell(useShell);
 
         return new ScoreSSHShellCommand().execute(sshShellInputs);
     }

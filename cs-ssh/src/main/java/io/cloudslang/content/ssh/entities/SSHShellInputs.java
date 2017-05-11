@@ -45,6 +45,7 @@ public class SSHShellInputs {
     private String allowedCiphers;
     private boolean allowExpectCommands;
     private int connectTimeout;
+    private boolean useShell;
 
     public String getHost() {
         return host;
@@ -253,5 +254,13 @@ public class SSHShellInputs {
 
     public int getConnectTimeout() {
         return connectTimeout;
+    }
+
+    public boolean isUseShell() {
+        return useShell;
+    }
+
+    public void setUseShell(String useShell) {
+        this.useShell = StringUtils.toBoolean(useShell, Constants.DEFAULT_USE_SHELL);
     }
 }
