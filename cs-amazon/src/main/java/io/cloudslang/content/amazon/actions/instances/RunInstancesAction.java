@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -24,11 +24,11 @@ import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
@@ -148,11 +148,11 @@ public class RunInstancesAction {
      *                                                  proxy will be used.
      *                                                  Default: ""
      * @param proxyPort                                 Optional - proxy server port. You must either specify values for both
-     *                                                  <proxyHost> and <proxyPort> inputs or leave them both empty.
+     *                                                  proxyHost and proxyPort inputs or leave them both empty.
      *                                                  Default: ""
      * @param proxyUsername                             Optional - proxy server user name.
      *                                                  Default: ""
-     * @param proxyPassword                             Optional - proxy server password associated with the <proxyUsername>
+     * @param proxyPassword                             Optional - proxy server password associated with the proxyUsername
      *                                                  input value.
      * @param headers                                   Optional - string containing the headers to use for the request separated
      *                                                  by new line (CRLF). The header name-value pair will be separated by ":".
@@ -175,9 +175,9 @@ public class RunInstancesAction {
      *                                                  Default: ""
      * @param hostId                                    Optional - ID of the dedicated host on which the instance resides
      *                                                  (as part of Placement). This parameter is not support for the
-     *                                                  <ImportInstance> command.
+     *                                                  ImportInstance command.
      *                                                  Default: ""
-     * @param imageId                                   ID of the AMI, which you can get by calling <DescribeImages>.
+     * @param imageId                                   ID of the AMI, which you can get by calling DescribeImages.
      *                                                  For more information go to: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html
      *                                                  Example: "ami-abcdef12"
      * @param instanceType                              Optional - Instance type. For more information, see Instance Types
@@ -211,13 +211,13 @@ public class RunInstancesAction {
      *                                                  [EC2-VPC] The ID of the subnet to launch the instance into.
      *                                                  Default: ""
      * @param blockDeviceMappingDeviceNamesString       Optional - String that contains one or more device names, exposed
-     *                                                  to the instance, separated by <delimiter>. If you want to suppress
+     *                                                  to the instance, separated by delimiter. If you want to suppress
      *                                                  the specified device included in the block device mapping of the
      *                                                  AMI then supply "NoDevice" in string.
      *                                                  Examples: "/dev/sdc,/dev/sdd", "/dev/sdh", "xvdh" or "NoDevice"
      *                                                  Default: ""
      * @param blockDeviceMappingVirtualNamesString      Optional - String that contains one or more virtual names separated
-     *                                                  by <delimiter>. Virtual device name is "ephemeralN". Instance store
+     *                                                  by delimiter. Virtual device name is "ephemeralN". Instance store
      *                                                  volumes are numbered starting from 0. An instance type with 2 available
      *                                                  instance store volumes can specify mappings for ephemeral0 and ephemeral1.
      *                                                  The number of available instance store volumes depends on the instance
@@ -294,8 +294,8 @@ public class RunInstancesAction {
      * @param privateIpAddress                          Optional - [EC2-VPC] The primary IP address. You must specify a
      *                                                  value from the IP address range of the subnet. Only one private
      *                                                  IP address can be designated as primary. Therefore, you can't
-     *                                                  specify this parameter if <PrivateIpAddresses.n.Primary> is set
-     *                                                  to "true" and <PrivateIpAddresses.n.PrivateIpAddress> is set to
+     *                                                  specify this parameter if PrivateIpAddresses.n.Primary is set
+     *                                                  to "true" and PrivateIpAddresses.n.PrivateIpAddress is set to
      *                                                  an IP address.
      *                                                  Default: We select an IP address from the IP address range of the
      *                                                  subnet.
@@ -312,7 +312,7 @@ public class RunInstancesAction {
      * @param iamInstanceProfileName                    Optional - Name of the instance profile.
      *                                                  Default: ""
      * @param keyPairName                               Optional - Name of the key pair. You can create a key pair using
-     *                                                  <CreateKeyPair> or <ImportKeyPair>.
+     *                                                  CreateKeyPair or ImportKeyPair.
      *                                                  Important: If you do not specify a key pair, you can't connect to
      *                                                  the instance unless you choose an AMI that is configured to allow
      *                                                  users another way to log in.
@@ -328,7 +328,7 @@ public class RunInstancesAction {
      *                                                  Default: ""
      * @param affinity                                  Optional - Affinity setting for the instance on the Dedicated Host
      *                                                  (as part of Placement). This parameter is not supported for the
-     *                                                  <ImportInstance> command.
+     *                                                  ImportInstance command.
      *                                                  Default: ""
      * @param clientToken                               Optional - Unique, case-sensitive identifier you provide to ensure
      *                                                  the idem-potency of the request. For more information, see Ensuring
@@ -339,8 +339,8 @@ public class RunInstancesAction {
      *                                                  the instance using the Amazon EC2 console, CLI, or API; otherwise,
      *                                                  you can. If you set this parameter to "true" and then later want
      *                                                  to be able to terminate the instance, you must first change the
-     *                                                  value of the <disableApiTermination> attribute to "false" using
-     *                                                  <ModifyInstanceAttribute>. Alternatively, if you set <InstanceInitiatedShutdownBehavior>
+     *                                                  value of the disableApiTermination attribute to "false" using
+     *                                                  ModifyInstanceAttribute. Alternatively, if you set InstanceInitiatedShutdownBehavior
      *                                                  to "terminate", you can terminate the instance by running the shutdown
      *                                                  command from the instance.
      *                                                  Valid values: "true", "false"
@@ -415,7 +415,7 @@ public class RunInstancesAction {
      *                                                  using the private IP addresses option. Minimum valid number is 2.
      *                                                  Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Run Instances",
             outputs = {
@@ -482,10 +482,10 @@ public class RunInstancesAction {
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
                                        @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

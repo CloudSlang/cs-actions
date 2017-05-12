@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 
@@ -109,12 +109,12 @@ public class EbsInputs {
         }
 
         public Builder withBlockDeviceMappingDeviceNamesString(String inputValue) {
-            blockDeviceMappingDeviceNamesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            blockDeviceMappingDeviceNamesString = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withBlockDeviceMappingVirtualNamesString(String inputValue) {
-            blockDeviceMappingVirtualNamesString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            blockDeviceMappingVirtualNamesString = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -62,7 +62,7 @@ public class CreateVmGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.createVmGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = createVmGroup.createVmGroup("", "", "", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = createVmGroup.createVmGroup("", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).createVmGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 
@@ -72,7 +72,7 @@ public class CreateVmGroupTest {
 
     @Test
     public void testCreateVmGroupProtocolException() throws Exception {
-        Map<String, String> resultMap = createVmGroup.createVmGroup("", "", "myProtocol", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createVmGroup.createVmGroup("", "", "myProtocol", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createVmGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 
@@ -83,7 +83,7 @@ public class CreateVmGroupTest {
 
     @Test
     public void testCreateVmGroupPortException() throws Exception {
-        Map<String, String> resultMap = createVmGroup.createVmGroup("", "myPort", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createVmGroup.createVmGroup("", "myPort", "", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createVmGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 

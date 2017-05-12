@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -60,7 +60,7 @@ public class MountToolsTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = mountTools.mountTools("", "", "", "", "", "", "");
+        resultMap = mountTools.mountTools("", "", "", "", "", "", "true", "", null);
 
         verify(guestServiceMock, times(1)).mountTools(any(HttpInputs.class), any(VmInputs.class));
 
@@ -73,7 +73,7 @@ public class MountToolsTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = mountTools.mountTools("", "", "myProtocol", "", "", "", "");
+        resultMap = mountTools.mountTools("", "", "myProtocol", "", "", "", "true", "", null);
 
         verify(guestServiceMock, never()).mountTools(any(HttpInputs.class), any(VmInputs.class));
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -60,7 +60,7 @@ public class PowerOnVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.powerOnVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = powerOnVM.powerOnVM("", "", "", "", "", "", "");
+        resultMap = powerOnVM.powerOnVM("", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).powerOnVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -69,7 +69,7 @@ public class PowerOnVMTest {
 
     @Test
     public void testPowerOnVMProtocolException() throws Exception {
-        Map<String, String> resultMap = powerOnVM.powerOnVM("", "", "myProtocol", "", "", "", "");
+        Map<String, String> resultMap = powerOnVM.powerOnVM("", "", "myProtocol", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).powerOnVM(any(HttpInputs.class), any(VmInputs.class));
 

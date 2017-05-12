@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -9,8 +9,11 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.services;
 
+import com.google.gson.JsonArray;
 import com.vmware.vim25.ClusterConfigInfoEx;
 import com.vmware.vim25.ClusterConfigSpecEx;
+import com.vmware.vim25.ClusterDasVmConfigInfo;
+import com.vmware.vim25.ClusterDasVmSettings;
 import com.vmware.vim25.ClusterGroupInfo;
 import com.vmware.vim25.ClusterGroupSpec;
 import com.vmware.vim25.ClusterHostGroup;
@@ -58,6 +61,8 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -74,6 +79,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class ClusterComputeResourceServiceTest {
     private static final String CLUSTER_CONFIGURATION_FAILED = "Cluster configuration failed!";
     private static final String GET_CLUSTER_CONFIGURATION = "getClusterConfiguration";
+    private static final String GET_DAS_VM_CONFIG = "getDasVmConfig";
     private static final String RULE_EXISTS = "ruleExists";
     private static final String GET_CLUSTER_VM_HOST_RULE_INFO = "getClusterVmHostRuleInfo";
     private static final String GET_RULE = "getRule";
@@ -83,6 +89,8 @@ public class ClusterComputeResourceServiceTest {
     private static final String EXISTS_GROUP = "existsGroup";
     private static final String SUCCESS_MESSAGE = "Success: The [Cluster1] cluster was successfully reconfigured. The taskId is: task-12345";
     private static final String FAILURE_MESSAGE = "Failure: The [Cluster1] cluster could not be reconfigured.";
+    private static final String VM_ID_VALUE = "vm-911";
+    private static final String DAS_RESTART_PRIORITY = "dasFcPriority";
     @Mock
     private HttpInputs httpInputsMock;
 
@@ -166,6 +174,7 @@ public class ClusterComputeResourceServiceTest {
     @Before
     public void setUp() throws Exception {
         whenNew(ConnectionResources.class).withArguments(any(HttpInputs.class)).thenReturn(connectionResourcesMock);
+        whenNew(ConnectionResources.class).withArguments(any(HttpInputs.class), any(VmInputs.class)).thenReturn(connectionResourcesMock);
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getSpecificMor(any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class), any(String.class)))
                 .thenReturn(clusterMorMock);
@@ -178,6 +187,7 @@ public class ClusterComputeResourceServiceTest {
         connectionResourcesMock = null;
         morObjectHandlerMock = null;
         clusterMorMock = null;
+        vmMorMock = null;
 
         clusterComputeResourceService = null;
     }
@@ -376,6 +386,59 @@ public class ClusterComputeResourceServiceTest {
 
         thrownException.expectMessage(CLUSTER_CONFIGURATION_FAILED);
         clusterComputeResourceService.deleteHostGroup(httpInputsMock, vmInputs);
+    }
+
+    @Test
+    public void getVmOverrideWithNoVmInformationAndNoConfigurationsSuccess() throws Exception {
+        commonMockInitializations();
+        ClusterConfigInfoEx clusterConfigInfoEx = new ClusterConfigInfoEx();
+        doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
+
+        String result = clusterComputeResourceServiceSpy.getVmOverride(httpInputsMock, getVmInputs());
+
+        assertNotNull(result);
+        assertEquals(new JsonArray().toString(), result);
+    }
+
+    @Test
+    public void getVmOverrideWithVmInformationAndNoConfigurationsSuccess() throws Exception {
+        commonVmMockInitializations();
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withVirtualMachineId(VM_ID_VALUE)
+                .build();
+        ClusterConfigInfoEx clusterConfigInfoEx = new ClusterConfigInfoEx();
+        doReturn(clusterConfigInfoEx).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
+
+        String result = clusterComputeResourceServiceSpy.getVmOverride(httpInputsMock, vmInputs);
+
+        assertNotNull(result);
+        assertEquals("unknown configuration", result);
+    }
+
+    @Test
+    public void getVmOverrideWithVmInformationAndConfigurationsSuccess() throws Exception {
+        commonVmMockInitializations();
+        VmInputs vmInputs = new VmInputs.VmInputsBuilder()
+                .withVirtualMachineId(VM_ID_VALUE)
+                .build();
+
+        String result = clusterComputeResourceServiceSpy.getVmOverride(httpInputsMock, vmInputs);
+
+        assertNotNull(result);
+        assertEquals(DAS_RESTART_PRIORITY, result);
+    }
+
+    @Test
+    public void getVmOverrideWithNoVmInformationAndConfigurationsSuccess() throws Exception {
+        String expectedResponse = String.format("[{\"vmId\":\"%s\",\"restartPriority\":\"%s\"}]", VM_ID_VALUE, DAS_RESTART_PRIORITY);
+        commonVmMockInitializations();
+
+        String result = clusterComputeResourceServiceSpy.getVmOverride(httpInputsMock, getVmInputs());
+
+        assertNotNull(result);
+        assertEquals(expectedResponse, result);
     }
 
     @Test
@@ -593,6 +656,26 @@ public class ClusterComputeResourceServiceTest {
         when(connectionMock.disconnect()).thenReturn(connectionMock);
         when(vimPortMock.reconfigureComputeResourceTask(any(ManagedObjectReference.class), any(ClusterConfigSpecEx.class), any(Boolean.class)))
                 .thenReturn(taskMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
+    }
+
+    private void commonVmMockInitializations() throws Exception {
+        commonMockInitializations();
+        when(morObjectHandlerMock.getMorById(eq(connectionResourcesMock), eq("VirtualMachine"), anyString())).thenReturn(vmMorMock);
+        when(vmMorMock.getValue()).thenReturn(VM_ID_VALUE);
+        when(vmMorMock.getType()).thenReturn("VirtualMachine");
+        List<ClusterDasVmConfigInfo> dasVmConfig = new ArrayList<>();
+        ClusterDasVmConfigInfo clusterDasVmConfigInfo = new ClusterDasVmConfigInfo();
+        ManagedObjectReference vmMor = new ManagedObjectReference();
+        vmMor.setValue(VM_ID_VALUE);
+        clusterDasVmConfigInfo.setKey(vmMor);
+        ClusterDasVmSettings clusterDasVmSettings = new ClusterDasVmSettings();
+        clusterDasVmSettings.setRestartPriority(DAS_RESTART_PRIORITY);
+        clusterDasVmConfigInfo.setDasSettings(clusterDasVmSettings);
+        dasVmConfig.add(clusterDasVmConfigInfo);
+        doReturn(dasVmConfig).when(clusterConfigInfoExSpy, GET_DAS_VM_CONFIG);
+        doReturn(clusterConfigInfoExSpy).when(clusterComputeResourceServiceSpy, GET_CLUSTER_CONFIGURATION,
+                any(ConnectionResources.class), any(ManagedObjectReference.class), any(String.class));
     }
 
     private void commonVmGroupMockInitializations() throws Exception {

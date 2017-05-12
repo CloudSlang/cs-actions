@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -11,7 +11,9 @@ package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import org.jetbrains.annotations.NotNull;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
 
@@ -30,7 +32,9 @@ public class InputsWrapper {
     private InstanceInputs instanceInputs;
     private LoadBalancerInputs loadBalancerInputs;
     private NetworkInputs networkInputs;
+    private StorageInputs storageInputs;
     private VolumeInputs volumeInputs;
+    private FilterInputs filterInputs;
 
     private final String apiService;
     private final String requestUri;
@@ -123,6 +127,14 @@ public class InputsWrapper {
         return networkInputs;
     }
 
+    public StorageInputs getStorageInputs() {
+        return storageInputs;
+    }
+
+    public void setStorageInputs(StorageInputs storageInputs) {
+        this.storageInputs = storageInputs;
+    }
+
     public void setNetworkInputs(NetworkInputs networkInputs) {
         this.networkInputs = networkInputs;
     }
@@ -167,6 +179,14 @@ public class InputsWrapper {
         return queryParams;
     }
 
+    public FilterInputs getFilterInputs() {
+        return filterInputs;
+    }
+
+    public void setFilterInputs(@NotNull final FilterInputs filterInputs) {
+        this.filterInputs = filterInputs;
+    }
+
     public static class Builder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
@@ -200,7 +220,7 @@ public class InputsWrapper {
         }
 
         public Builder withRequestUri(String inputValue) {
-            requestUri = InputsUtil.getDefaultStringInput(inputValue, SCOPE_SEPARATOR);
+            requestUri = getDefaultStringInput(inputValue, SCOPE_SEPARATOR);
             return this;
         }
 

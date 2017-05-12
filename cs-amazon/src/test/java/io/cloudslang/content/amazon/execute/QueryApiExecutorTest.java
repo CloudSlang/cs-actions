@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -10,19 +10,23 @@
 package io.cloudslang.content.amazon.execute;
 
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
+import io.cloudslang.content.amazon.entities.aws.VolumeFilter;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.EbsInputs;
 import io.cloudslang.content.amazon.entities.inputs.ElasticIpInputs;
+import io.cloudslang.content.amazon.entities.inputs.FilterInputs;
 import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.ImageInputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
+import io.cloudslang.content.amazon.entities.inputs.StorageInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
+import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.MockingHelper;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -33,13 +37,14 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
+import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.eq;
@@ -48,7 +53,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -57,9 +61,10 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  * 9/7/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class})
+@PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
+    private static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -74,10 +79,7 @@ public class QueryApiExecutorTest {
     private AuthorizationHeader authorizationHeaderMock;
 
     @Mock
-    private ParamsMapBuilder paramsMapBuilderMock;
-
-    @Spy
-    private QueryApiExecutor queryApiExecutorSpy = new QueryApiExecutor();
+    private InputsUtil inputsUtilMock;
 
     private QueryApiExecutor toTest;
 
@@ -90,12 +92,11 @@ public class QueryApiExecutorTest {
     @After
     public void tearDown() {
         toTest = null;
-        queryApiExecutorSpy = null;
     }
 
     @Test
     public void testAddLaunchPermissionsToImage() throws Exception {
-        toTest.execute(getCommonInputs("ModifyImageAttribute", HEADERS, ""), getAddLaunchPermissionsToImageInputs(), getAddLaunchPermissionsToImageCustomInputs());
+        toTest.execute(getCommonInputs("ModifyImageAttribute", HEADERS), getAddLaunchPermissionsToImageInputs(), getAddLaunchPermissionsToImageCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ModifyImageAttribute")));
@@ -104,7 +105,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testAllocateAddress() throws Exception {
-        toTest.execute(getCommonInputs("AllocateAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
+        toTest.execute(getCommonInputs("AllocateAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(true));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -114,7 +115,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testAssociateAddress() throws Exception {
-        toTest.execute(getCommonInputs("AssociateAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
+        toTest.execute(getCommonInputs("AssociateAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(true));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -124,7 +125,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testAttachNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("DeleteNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(true));
+        toTest.execute(getCommonInputs("DeleteNetworkInterface", HEADERS), getCustomInputs(), getNetworkInputs(true));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteNetworkInterface")));
@@ -133,7 +134,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testAttachVolume() throws Exception {
-        toTest.execute(getCommonInputs("AttachVolume", HEADERS, ""), getVolumeCustomInputs(), getVolumeInputs());
+        toTest.execute(getCommonInputs("AttachVolume", HEADERS), getVolumeCustomInputs(), getVolumeInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachVolume")));
@@ -142,7 +143,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateLoadBalancer() throws Exception {
-        toTest.execute(getCommonInputsForLoadBalancers("CreateLoadBalancer", HEADERS, ""), getCustomInputs(), getIamInputs(),
+        toTest.execute(getCommonInputsForLoadBalancers("CreateLoadBalancer", HEADERS), getCustomInputs(), getIamInputs(),
                 getLoadBalancerInputs(), getNetworkInputsForLoadBalancers());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -151,8 +152,8 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testDeleteLoadBalancer() throws Exception {
-        toTest.execute(getCommonInputsForLoadBalancers("DeleteLoadBalancer", HEADERS, ""), getLoadBalancerInputs());
+    public void testDeleteLoadBalancers() throws Exception {
+        toTest.execute(getCommonInputsForLoadBalancers("DeleteLoadBalancer", HEADERS), getLoadBalancerInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteLoadBalancer")));
@@ -160,8 +161,17 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeLoadBalancer() throws Exception {
+        toTest.execute(getCommonInputsForLoadBalancers("DescribeLoadBalancers", HEADERS), getLoadBalancerInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeLoadBalancers")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testCreateNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
+        toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getIamInputs(), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -171,7 +181,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateImage() throws Exception {
-        toTest.execute(getCommonInputs("CreateImage", HEADERS, ""), getCreateImageInputs(), getCreateImageCustomInputs());
+        toTest.execute(getCommonInputs("CreateImage", HEADERS), getCreateImageInputs(), getCreateImageCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateImage")));
@@ -180,7 +190,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateSnapshot() throws Exception {
-        toTest.execute(getCommonInputs("CreateSnapshot", HEADERS, ""), getVolumeCustomInputs(), getVolumeInputs());
+        toTest.execute(getCommonInputs("CreateSnapshot", HEADERS), getVolumeCustomInputs(), getVolumeInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateSnapshot")));
@@ -189,7 +199,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateSubnet() throws Exception {
-        toTest.execute(getCommonInputs("CreateSubnet", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
+        toTest.execute(getCommonInputs("CreateSubnet", HEADERS), getCustomInputs(), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateSubnet")));
@@ -198,7 +208,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateTags() throws Exception {
-        toTest.execute(getCommonInputs("CreateTags", HEADERS, ""), getCustomInputs());
+        toTest.execute(getCommonInputs("CreateTags", HEADERS), getCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateTags")));
@@ -207,7 +217,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testCreateVolume() throws Exception {
-        toTest.execute(getCommonInputs("CreateVolume", HEADERS, ""), getCustomInputs(), getVolumeInputs(),
+        toTest.execute(getCommonInputs("CreateVolume", HEADERS), getCustomInputs(), getVolumeInputs(),
                 getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -216,8 +226,17 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testCreateVpc() throws Exception {
+        toTest.execute(getCommonInputs("CreateVpc", HEADERS), getDescribeInstancesInputs(), getNetworkInputs(false));
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("CreateVpc")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDeleteNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(true));
+        toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS), getCustomInputs(), getNetworkInputs(true));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
@@ -226,7 +245,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDeleteSnapshot() throws Exception {
-        toTest.execute(getCommonInputs("DeleteSnapshot", HEADERS, ""), getVolumeInputs());
+        toTest.execute(getCommonInputs("DeleteSnapshot", HEADERS), getVolumeInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteSnapshot")));
@@ -235,7 +254,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDeleteSubnet() throws Exception {
-        toTest.execute(getCommonInputs("DeleteSubnet", HEADERS, ""), getCustomInputs());
+        toTest.execute(getCommonInputs("DeleteSubnet", HEADERS), getCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteSubnet")));
@@ -244,7 +263,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDeleteVolume() throws Exception {
-        toTest.execute(getCommonInputs("DeleteVolume", HEADERS, ""), getVolumeCustomInputs());
+        toTest.execute(getCommonInputs("DeleteVolume", HEADERS), getVolumeCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteVolume")));
@@ -252,8 +271,17 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDeleteVpc() throws Exception {
+        toTest.execute(getCommonInputs("DeleteVpc", HEADERS), getCustomInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DeleteVpc")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDeregisterImage() throws Exception {
-        toTest.execute(getCommonInputs("DeregisterImage", HEADERS, ""), getImageCustomInputs());
+        toTest.execute(getCommonInputs("DeregisterImage", HEADERS), getImageCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeregisterImage")));
@@ -262,7 +290,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeAvailabilityZones() throws Exception {
-        toTest.execute(getCommonInputs("DescribeAvailabilityZones", HEADERS, ""), getCustomInputsForDescribeAvailabilityZones());
+        toTest.execute(getCommonInputs("DescribeAvailabilityZones", HEADERS), getCustomInputsForDescribeAvailabilityZones());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeAvailabilityZones")));
@@ -271,7 +299,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeImages() throws Exception {
-        toTest.execute(getCommonInputs("DescribeImages", HEADERS, ""), getDescribeImagesInputs(), getDescribeImagesCustomInputs());
+        toTest.execute(getCommonInputs("DescribeImages", HEADERS), getDescribeImagesInputs(), getDescribeImagesCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeImages")));
@@ -279,8 +307,27 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeVolumes() throws Exception {
+        final VolumeInputs volumeInputs = new VolumeInputs.Builder()
+                .withVolumeIdsString("1,2,3")
+                .withMaxResults("10")
+                .withNextToken("token")
+                .build();
+        final FilterInputs.Builder filterInputsBuilder = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter(VolumeFilter.STATUS, "in-use,available")
+                .withNewFilter(VolumeFilter.SIZE, "50");
+        processTagFilter("TEST=testTag", COMMA_DELIMITER, filterInputsBuilder);
+        toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs, filterInputsBuilder.build());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeVolumes")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
     public void testDescribeInstances() throws Exception {
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), getDescribeInstancesInputs());
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), getDescribeInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeInstances")));
@@ -294,7 +341,7 @@ public class QueryApiExecutorTest {
                 .withFilterNamesString("affinity")
                 .withFilterValuesString("WRONG_VALUE")
                 .build();
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
     }
 
     @Test
@@ -306,7 +353,7 @@ public class QueryApiExecutorTest {
                 .withFilterValuesString("i386|WRONG_VALUE|x86_64")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
     }
 
     @Test
@@ -316,14 +363,46 @@ public class QueryApiExecutorTest {
                 .withFilterValuesString("new_value")
                 .withMaxResults("5")
                 .build();
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS, ""), instanceInputs);
+        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeInstancesSuccess")));
     }
 
     @Test
+    public void testDescribeNetworkInterfacesWithSuccess() throws Exception {
+        final NetworkInputs networkInputs = new NetworkInputs.Builder()
+                .withNetworkInterfaceId("eni-12345678,eni-87654321")
+                .build();
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter("status", "in-use,available")
+                .withNewFilter("attachment.status", "attaching,attached,detaching,detached")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs);
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeNetworkInterfacesSuccess")));
+    }
+
+    @Test
+    public void testDescribeNetworkInterfacesWithWrongStatus() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized networkInterfaceAttachmentStatus value: [WRONG]. Valid values are: attaching, attached, detaching, detached.");
+
+        NetworkInputs networkInputs = new NetworkInputs.Builder()
+                .build();
+
+        FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter("attachment.status", "WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs);
+    }
+
+    @Test
     public void testDescribeRegions() throws Exception {
-        toTest.execute(getCommonInputs("DescribeRegions", HEADERS, ""), getCustomInputs());
+        toTest.execute(getCommonInputs("DescribeRegions", HEADERS), getCustomInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeRegions")));
@@ -331,8 +410,94 @@ public class QueryApiExecutorTest {
     }
 
     @Test
+    public void testDescribeTagsWithSuccess() throws Exception {
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(COMMA_DELIMITER)
+                .withNewFilter("key", "myKey")
+                .withNewFilter("resource-id", "myReId,myReId2")
+                .withNewFilter("resource-type", ALL_RESOURCE_TYPES)
+                .withNewFilter("value", "val1,val2")
+                .withMaxResults("5")
+                .withNextToken("myToken")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+                eq(getQueryParamsMap("DescribeTagsSuccess")));
+        runCommonVerifiersForQueryApi();
+    }
+
+    @Test
+    public void testDescribeTagsWithWrongResourceType() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withDelimiter(",")
+                .withNewFilter("resource-type", "WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsLessThanAccepted() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 4 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("4")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsGreaterThanAccepted() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 1001 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("1001")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsNegative() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 0 input. The value doesn't meet conditions for general purpose usage.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("0")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsDouble() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: 6.7 input must be integer.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("6.7")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
+    public void testDescribeTagsWithMaxResultsString() throws Exception {
+        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: WRONG input must be integer.");
+
+        final FilterInputs filterInputs = new FilterInputs.Builder()
+                .withMaxResults("WRONG")
+                .build();
+
+        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+    }
+
+    @Test
     public void testDetachNetworkInterface() throws Exception {
-        toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS, ""), getCustomInputs(), getNetworkInputs(false));
+        toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS), getCustomInputs(), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachNetworkInterface")));
@@ -341,7 +506,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDetachVolume() throws Exception {
-        toTest.execute(getCommonInputs("DetachVolume", HEADERS, ""), getVolumeCustomInputs(), getVolumeInputs());
+        toTest.execute(getCommonInputs("DetachVolume", HEADERS), getVolumeCustomInputs(), getVolumeInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachVolume")));
@@ -350,7 +515,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDisassociateAddress() throws Exception {
-        toTest.execute(getCommonInputs("DisassociateAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
+        toTest.execute(getCommonInputs("DisassociateAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -360,7 +525,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testModifyInstanceAttribute() throws Exception {
-        toTest.execute(getCommonInputs("ModifyInstanceAttribute", HEADERS, ""), getCustomInputs(),
+        toTest.execute(getCommonInputs("ModifyInstanceAttribute", HEADERS), getCustomInputs(),
                 getModifyInstanceAttributeEbsinputs(), getModifyInstanceAttributeIamInputs(), getModifyInstanceAttributeInstanceInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -370,7 +535,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testReleaseAddress() throws Exception {
-        toTest.execute(getCommonInputs("ReleaseAddress", HEADERS, ""), getCustomInputs(), getElasticIpInputs(),
+        toTest.execute(getCommonInputs("ReleaseAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
@@ -380,7 +545,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStartInstances() throws Exception {
-        toTest.execute(getCommonInputs("StartInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
+        toTest.execute(getCommonInputs("StartInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StartInstances")));
@@ -389,7 +554,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testStopInstances() throws Exception {
-        toTest.execute(getCommonInputs("StopInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
+        toTest.execute(getCommonInputs("StopInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StopInstances")));
@@ -398,7 +563,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testRebootInstances() throws Exception {
-        toTest.execute(getCommonInputs("RebootInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
+        toTest.execute(getCommonInputs("RebootInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RebootInstances")));
@@ -407,7 +572,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testRunInstances() throws Exception {
-        toTest.execute(getCommonInputs("RunInstances", HEADERS, ""), getRunInstancesCustomInputs(),
+        toTest.execute(getCommonInputs("RunInstances", HEADERS), getRunInstancesCustomInputs(),
                 getRunInstancesEbsInputs(), getRunInstancesElasticIpInputs(), getRunInstancesIamInputs(),
                 getRunInstancesInstanceInputs(), getRunInstancesNetworkInputs());
 
@@ -487,7 +652,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testResetLaunchPermissionOnImage() throws Exception {
-        toTest.execute(getCommonInputs("ResetImageAttribute", HEADERS, ""), getResetLaunchPermissionOnImageInputs());
+        toTest.execute(getCommonInputs("ResetImageAttribute", HEADERS), getResetLaunchPermissionOnImageInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ResetImageAttribute")));
@@ -496,7 +661,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testGetLaunchPermissionForImage() throws Exception {
-        toTest.execute(getCommonInputs("DescribeImageAttribute", HEADERS, ""), getLaunchPermissionForImageInputs());
+        toTest.execute(getCommonInputs("DescribeImageAttribute", HEADERS), getLaunchPermissionForImageInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeImageAttribute")));
@@ -505,7 +670,7 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testTerminateInstances() throws Exception {
-        toTest.execute(getCommonInputs("TerminateInstances", HEADERS, ""), getRebootStartStopTerminateInstancesInputs());
+        toTest.execute(getCommonInputs("TerminateInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("TerminateInstances")));
@@ -516,20 +681,29 @@ public class QueryApiExecutorTest {
     public void testExecuteWithException() throws Exception {
         MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unsupported Query API.");
 
-        toTest.execute(getCommonInputs("", "", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false));
+        toTest.execute(getCommonInputs("", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false));
 
         verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
         verify(csHttpClientMock, never()).execute(any(HttpClientInputs.class));
     }
 
+    @Test
+    public void testGetBucket() throws Exception {
+        toTest.execute(getStorageCommonInputs(), getStorageInputs());
+
+        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getS3HeadersMap()),
+                eq(getS3QueryParamsmap("GET Bucket")));
+        runCommonVerifiersForQueryApi();
+    }
+
     private void addCommonMocksForQueryApi() throws Exception {
         whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
-        when(amazonSignatureServiceMock.signRequestHeaders(any(InputsWrapper.class),
-                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class)))
+        when(amazonSignatureServiceMock
+                .signRequestHeaders(any(InputsWrapper.class), anyMapOf(String.class, String.class), anyMapOf(String.class, String.class)))
                 .thenReturn(authorizationHeaderMock);
-        doNothing().when(queryApiExecutorSpy).setQueryApiHeaders(any(InputsWrapper.class),
-                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
+        when(authorizationHeaderMock.getAuthorizationHeader()).thenReturn("");
+        when(authorizationHeaderMock.getSignature()).thenReturn("");
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
     }
@@ -540,6 +714,18 @@ public class QueryApiExecutorTest {
         verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
         verifyNoMoreInteractions(amazonSignatureServiceMock);
         verifyNoMoreInteractions(csHttpClientMock);
+    }
+
+    private StorageInputs getStorageInputs() {
+        return new StorageInputs.Builder()
+                .withBucketName("testBucket")
+                .withContinuationToken("1ueGcxLPRx1Tr/XYExHnhbYLgveDs2J/wm36Hy4vbOwM=")
+                .withEncodingType("url")
+                .withFetchOwner("tRuE")
+                .withMaxKeys("100")
+                .withPrefix("E")
+                .withStartAfter("ExampleGuide.pdf")
+                .build();
     }
 
     private EbsInputs getModifyInstanceAttributeEbsinputs() {
@@ -584,25 +770,35 @@ public class QueryApiExecutorTest {
                 .build();
     }
 
-    private CommonInputs getCommonInputs(String action, String headersString, String queryParamsString) {
+    private CommonInputs getCommonInputs(String action, String headersString) {
         return new CommonInputs.Builder()
                 .withAction(action)
                 .withHeaders(headersString)
-                .withQueryParams(queryParamsString)
+                .withQueryParams("")
                 .withApiService("ec2")
                 .withVersion("2016-04-01")
                 .withDelimiter(",")
                 .build();
     }
 
-    private CommonInputs getCommonInputsForLoadBalancers(String action, String headersString, String queryParamsString) {
+    private CommonInputs getCommonInputsForLoadBalancers(String action, String headersString) {
         return new CommonInputs.Builder()
                 .withAction(action)
                 .withHeaders(headersString)
-                .withQueryParams(queryParamsString)
+                .withQueryParams("")
                 .withApiService("elasticloadbalancing")
                 .withVersion("2016-04-01")
                 .withDelimiter(",")
+                .build();
+    }
+
+    private CommonInputs getStorageCommonInputs() {
+        return new CommonInputs.Builder()
+                .withAction("GET Bucket")
+                .withHeaders("")
+                .withQueryParams("")
+                .withApiService("s3")
+                .withDelimiter("/")
                 .build();
     }
 
@@ -685,6 +881,7 @@ public class QueryApiExecutorTest {
                 .withNetworkInterfacePrivateIpAddress("10.0.0.129")
                 .withSecondaryPrivateIpAddressCount("3")
                 .withCidrBlock("10.0.1.0/24")
+                .withAmazonProvidedIpv6CidrBlock("true")
                 .build();
     }
 
@@ -696,12 +893,44 @@ public class QueryApiExecutorTest {
         return headersMap;
     }
 
+    private Map<String, String> getS3HeadersMap() {
+        Map<String, String> headersMap = new HashMap<>();
+        headersMap.put("Content-Type", "text/plain");
+        headersMap.put("Host", "testBucket.s3.amazonaws.com");
+
+        return headersMap;
+    }
+
     private LoadBalancerInputs getLoadBalancerInputs() {
         return new LoadBalancerInputs.Builder()
                 .withLoadBalancerName("testLB")
                 .withScheme("internal")
                 .withLoadBalancerArn("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188")
+                .withMemberNamesString("testLB1,testLB2,testLB3,testLB4,testLB5")
+                .withPageSize("123")
+                .withMarker("somethingHere")
+                .withArnsString("arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9111,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9222,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9333,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9444,arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9555")
                 .build();
+    }
+
+    private Map<String, String> getS3QueryParamsmap(String action) {
+        Map<String, String> s3QueryParamsMap = new HashMap<>();
+        switch (action) {
+            case "GET Bucket":
+                s3QueryParamsMap.put("list-type", "2");
+                s3QueryParamsMap.put("continuation-token", "1ueGcxLPRx1Tr/XYExHnhbYLgveDs2J/wm36Hy4vbOwM=");
+                s3QueryParamsMap.put("delimiter", "/");
+                s3QueryParamsMap.put("encoding-type", "url");
+                s3QueryParamsMap.put("fetch-owner", "true");
+                s3QueryParamsMap.put("max-keys", "100");
+                s3QueryParamsMap.put("prefix", "E");
+                s3QueryParamsMap.put("start-after", "ExampleGuide.pdf");
+                break;
+            default:
+                throw new RuntimeException("You forgot to setup s3QueryParamsMap naughty developer!");
+        }
+
+        return s3QueryParamsMap;
     }
 
     private Map<String, String> getQueryParamsMap(String action) {
@@ -748,6 +977,21 @@ public class QueryApiExecutorTest {
                 break;
             case "DeleteLoadBalancer":
                 queryParamsMap.put("LoadBalancerArn", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188");
+                break;
+            case "DescribeLoadBalancers":
+                queryParamsMap.put("LoadBalancerArns.member.1", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9111");
+                queryParamsMap.put("LoadBalancerArns.member.2", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9222");
+                queryParamsMap.put("LoadBalancerArns.member.3", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9333");
+                queryParamsMap.put("LoadBalancerArns.member.4", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9444");
+                queryParamsMap.put("LoadBalancerArns.member.5", "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9555");
+                queryParamsMap.put("Marker", "somethingHere");
+                queryParamsMap.put("Names.member.1", "testLB1");
+                queryParamsMap.put("Names.member.2", "testLB2");
+                queryParamsMap.put("Names.member.3", "testLB3");
+                queryParamsMap.put("Names.member.4", "testLB4");
+                queryParamsMap.put("Names.member.5", "testLB5");
+                queryParamsMap.put("Names.member.5", "testLB5");
+                queryParamsMap.put("PageSize", "123");
                 break;
             case "CreateNetworkInterface":
                 queryParamsMap.put("SubnetId", "subnet-abcdef12");
@@ -796,6 +1040,25 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("SnapshotId", "snap-id");
                 queryParamsMap.put("AvailabilityZone", "us-east-1d");
                 break;
+            case "CreateVpc":
+                queryParamsMap.put("AmazonProvidedIpv6CidrBlock", "true");
+                queryParamsMap.put("CidrBlock", "10.0.1.0/24");
+                queryParamsMap.put("InstanceTenancy", "default");
+                break;
+            case "DescribeVolumes":
+                queryParamsMap.put("Filter.1.Name", "status");
+                queryParamsMap.put("Filter.1.Value.1", "in-use");
+                queryParamsMap.put("Filter.1.Value.2", "available");
+                queryParamsMap.put("Filter.2.Name", "size");
+                queryParamsMap.put("Filter.2.Value.1", "50");
+                queryParamsMap.put("Filter.3.Name", "tag:TEST");
+                queryParamsMap.put("Filter.3.Value.1", "testTag");
+                queryParamsMap.put("VolumeId.1", "1");
+                queryParamsMap.put("VolumeId.2", "2");
+                queryParamsMap.put("VolumeId.3", "3");
+                queryParamsMap.put("MaxResults", "10");
+                queryParamsMap.put("NextToken", "token");
+                break;
             case "DeleteNetworkInterface":
                 queryParamsMap.put("NetworkInterfaceId", "eni-12345678");
                 break;
@@ -807,6 +1070,9 @@ public class QueryApiExecutorTest {
                 break;
             case "DeleteVolume":
                 queryParamsMap.put("VolumeId", "v-12345678");
+                break;
+            case "DeleteVpc":
+                queryParamsMap.put("VpcId", "vpc-1a2b3c4d");
                 break;
             case "DeregisterImage":
                 queryParamsMap.put("ImageId", "ami-abcd1234");
@@ -917,9 +1183,53 @@ public class QueryApiExecutorTest {
                 queryParamsMap.put("Filter.1.Name", "availability-zone");
                 queryParamsMap.put("Filter.1.Value.1", "new_value");
                 break;
+            case "DescribeNetworkInterfacesSuccess":
+                queryParamsMap.put("Action", "DescribeNetworkInterfaces");
+                queryParamsMap.put("NetworkInterfaceId.1", "eni-12345678");
+                queryParamsMap.put("NetworkInterfaceId.2", "eni-87654321");
+                queryParamsMap.put("Filter.1.Name", "status");
+                queryParamsMap.put("Filter.1.Value.1", "in-use");
+                queryParamsMap.put("Filter.1.Value.2", "available");
+                queryParamsMap.put("Filter.2.Name", "attachment.status");
+                queryParamsMap.put("Filter.2.Value.1", "attaching");
+                queryParamsMap.put("Filter.2.Value.2", "attached");
+                queryParamsMap.put("Filter.2.Value.3", "detaching");
+                queryParamsMap.put("Filter.2.Value.4", "detached");
+                break;
             case "DescribeRegions":
                 queryParamsMap.put("RegionName.1", "us-east-1");
                 queryParamsMap.put("RegionName.2", "eu-central-1");
+                break;
+            case "DescribeTagsSuccess":
+                queryParamsMap.put("Action", "DescribeTags");
+                queryParamsMap.put("Filter.1.Name", "key");
+                queryParamsMap.put("Filter.1.Value.1", "myKey");
+                queryParamsMap.put("Filter.2.Name", "resource-id");
+                queryParamsMap.put("Filter.2.Value.1", "myReId");
+                queryParamsMap.put("Filter.2.Value.2", "myReId2");
+                queryParamsMap.put("Filter.3.Name", "resource-type");
+                queryParamsMap.put("Filter.3.Value.1", "customer-gateway");
+                queryParamsMap.put("Filter.3.Value.3", "image");
+                queryParamsMap.put("Filter.3.Value.2", "dhcp-options");
+                queryParamsMap.put("Filter.3.Value.5", "internet-gateway");
+                queryParamsMap.put("Filter.3.Value.4", "instance");
+                queryParamsMap.put("Filter.3.Value.6", "network-acl");
+                queryParamsMap.put("Filter.3.Value.7", "network-interface");
+                queryParamsMap.put("Filter.3.Value.8", "reserved-instances");
+                queryParamsMap.put("Filter.3.Value.9", "route-table");
+                queryParamsMap.put("Filter.3.Value.10", "security-group");
+                queryParamsMap.put("Filter.3.Value.11", "snapshot");
+                queryParamsMap.put("Filter.3.Value.12", "spot-instances-request");
+                queryParamsMap.put("Filter.3.Value.13", "subnet");
+                queryParamsMap.put("Filter.3.Value.14", "volume");
+                queryParamsMap.put("Filter.3.Value.15", "vpc");
+                queryParamsMap.put("Filter.3.Value.16", "vpn-connection");
+                queryParamsMap.put("Filter.3.Value.17", "vpn-gateway");
+                queryParamsMap.put("Filter.4.Name", "value");
+                queryParamsMap.put("Filter.4.Value.1", "val1");
+                queryParamsMap.put("Filter.4.Value.2", "val2");
+                queryParamsMap.put("MaxResults", "5");
+                queryParamsMap.put("NextToken", "myToken");
                 break;
             case "ModifyImageAttribute":
                 queryParamsMap.put("Attribute", "launchPermission");
@@ -1125,6 +1435,7 @@ public class QueryApiExecutorTest {
                 .withInstanceIdsString("instance1,instance2,instance3")
                 .withMaxResults("10")
                 .withNextToken("token")
+                .withTenancy("")
                 .build();
     }
 }

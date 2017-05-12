@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.aws;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -32,8 +33,8 @@ public enum Platform {
         }
 
         for (Platform member : Platform.values()) {
-            if(OTHERS.value.equals(input.toLowerCase())) {
-                return "";
+            if (OTHERS.value.equals(input.toLowerCase())) {
+                return EMPTY;
             } else if (member.value.equals(input.toLowerCase())) {
                 return member.value;
             }

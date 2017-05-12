@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -10,7 +10,6 @@
 package io.cloudslang.content.amazon.entities.aws;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 /**
  * Created by Mihai Tusa.
@@ -31,8 +30,6 @@ public enum InstanceInitiatedShutdownBehavior {
             }
         }
 
-        throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. " +
-                "Valid values are: stop, terminate.");
-
+        throw new RuntimeException("Unrecognized Instance Initiated Shutdown Behavior value: [" + input + "]. Valid values are: stop, terminate.");
     }
 }

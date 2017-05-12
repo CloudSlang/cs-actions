@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -9,15 +9,14 @@
  *******************************************************************************/
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidCidrNotation;
 
 /**
  * Created by Mihai Tusa.
  * 6/7/2016.
  */
 public class NetworkInputs {
-    private static final int MINIMUM_PRIVATE_SECONDARY_IP_ADDRESSES_COUNT = 2;
-
     private final String cidrBlock;
     private final String deviceIndex;
     private final String networkInterfaceDescription;
@@ -29,6 +28,7 @@ public class NetworkInputs {
     private final String networkInterfaceDeleteOnTermination;
     private final String subnetIdsString;
 
+    private final boolean amazonProvidedIpv6CidrBlock;
     private final boolean forceDetach;
 
     private NetworkInputs(Builder builder) {
@@ -43,6 +43,7 @@ public class NetworkInputs {
         this.networkInterfacesAssociatePublicIpAddressesString = builder.networkInterfacesAssociatePublicIpAddressesString;
         this.subnetIdsString = builder.subnetIdsString;
 
+        this.amazonProvidedIpv6CidrBlock = builder.amazonProvidedIpv6CidrBlock;
         this.forceDetach = builder.forceDetach;
     }
 
@@ -86,6 +87,10 @@ public class NetworkInputs {
         return subnetIdsString;
     }
 
+    public boolean isAmazonProvidedIpv6CidrBlock() {
+        return amazonProvidedIpv6CidrBlock;
+    }
+
     public boolean isForceDetach() {
         return forceDetach;
     }
@@ -102,6 +107,7 @@ public class NetworkInputs {
         private String networkInterfaceDeleteOnTermination;
         private String subnetIdsString;
 
+        private boolean amazonProvidedIpv6CidrBlock;
         private boolean forceDetach;
 
         public NetworkInputs build() {
@@ -109,7 +115,7 @@ public class NetworkInputs {
         }
 
         public Builder withCidrBlock(String inputValue) {
-            cidrBlock = InputsUtil.getValidCidrNotation(inputValue);
+            cidrBlock = getValidCidrNotation(inputValue);
             return this;
         }
 
@@ -158,8 +164,13 @@ public class NetworkInputs {
             return this;
         }
 
+        public Builder withAmazonProvidedIpv6CidrBlock(String inputValue) {
+            amazonProvidedIpv6CidrBlock = getEnforcedBooleanCondition(inputValue, Boolean.FALSE);
+            return this;
+        }
+
         public Builder withForceDetach(String inputValue) {
-            forceDetach = InputsUtil.getEnforcedBooleanCondition(inputValue, Boolean.FALSE);
+            forceDetach = getEnforcedBooleanCondition(inputValue, Boolean.FALSE);
             return this;
         }
     }

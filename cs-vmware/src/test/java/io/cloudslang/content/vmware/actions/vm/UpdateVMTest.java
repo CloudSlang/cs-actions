@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -60,7 +60,7 @@ public class UpdateVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.updateVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = updateVM.updateVM("", "", "", "", "", "", "", "update", "cpu", "low", "", "");
+        resultMap = updateVM.updateVM("", "", "", "", "", "", "", "", "update", "cpu", "low", "", "", null);
 
         verify(vmServiceMock, times(1)).updateVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -69,7 +69,7 @@ public class UpdateVMTest {
 
     @Test
     public void testUpdateVMProtocolException() throws Exception {
-        Map<String, String> resultMap = updateVM.updateVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = updateVM.updateVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).deleteVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -80,7 +80,7 @@ public class UpdateVMTest {
 
     @Test
     public void testUpdateVMOperationException() throws Exception {
-        Map<String, String> resultMap = updateVM.updateVM("", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = updateVM.updateVM("", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).updateVM(any(HttpInputs.class), any(VmInputs.class));
 

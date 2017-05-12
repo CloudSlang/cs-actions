@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -61,7 +61,7 @@ public class DeleteVmGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.deleteVmGroup(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = deleteVmGroup.deleteVmGroup("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = deleteVmGroup.deleteVmGroup("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -71,7 +71,7 @@ public class DeleteVmGroupTest {
 
     @Test
     public void testDeleteVmGroupProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -82,7 +82,7 @@ public class DeleteVmGroupTest {
 
     @Test
     public void testDeleteVmGroupPortException() throws Exception {
-        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 

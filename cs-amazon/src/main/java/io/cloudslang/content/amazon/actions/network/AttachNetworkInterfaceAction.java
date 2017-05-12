@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -21,11 +21,12 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.OutputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
@@ -58,11 +59,10 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
  */
 public class AttachNetworkInterfaceAction {
     private static final String ATTACHMENT_ID_X_PATH_QUERY = "/AttachNetworkInterfaceResponse/attachmentId";
-
     /**
      * Attaches a network interface to an instance.
-     * Note: The set of: <instanceId>, <networkInterfaceId>, <deviceIndex> are mutually exclusive with <queryParams> input.
-     * Please provide values EITHER FOR ALL: <instanceId>, <networkInterfaceId>, <deviceIndex> inputs OR FOR <queryParams> input.
+     * Note: The set of: instanceId, networkInterfaceId, deviceIndex are mutually exclusive with queryParams input.
+     * Please provide values EITHER FOR ALL: instanceId, networkInterfaceId, deviceIndex inputs OR FOR queryParams input.
      * Note: As with all Amazon EC2 operations, the results might not appear immediately.
      * Note: For Region-Endpoint correspondence information, check all the service endpoints available at:
      * http://docs.amazonwebservices.com/general/latest/gr/rande.html#ec2_region
@@ -75,12 +75,12 @@ public class AttachNetworkInterfaceAction {
      *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost          Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                           Default: ""
-     * @param proxyPort          Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                           <proxyPort> inputs or leave them both empty.
+     * @param proxyPort          Optional - proxy server port. You must either specify values for both proxyHost and
+     *                           proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername input value.
      *                           Default: ""
      * @param instanceId         Optional - ID of the instance that will be attached to the network interface. The instance
      *                           should be running (hot attach) or stopped (warm attach).
@@ -104,7 +104,7 @@ public class AttachNetworkInterfaceAction {
      *                           Example: "2016-11-15"
      *                           Default: "2016-11-15"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Attach Network Interface",
             outputs = {
@@ -133,10 +133,10 @@ public class AttachNetworkInterfaceAction {
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
                                        @Param(value = DEVICE_INDEX) String deviceIndex) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

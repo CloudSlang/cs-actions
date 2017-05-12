@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -20,9 +20,10 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.REGIONS_DEFAULT_API_VERSION;
@@ -62,12 +63,12 @@ public class DescribeRegionsAction {
      *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost          Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                           Default: ""
-     * @param proxyPort          Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                           <proxyPort> inputs or leave them both empty.
+     * @param proxyPort          Optional - proxy server port. You must either specify values for both proxyHost and
+     *                           proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername input value.
      *                           Default: ""
      * @param headers            Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                           The header name-value pair will be separated by ":".
@@ -94,7 +95,7 @@ public class DescribeRegionsAction {
      * @param regionsString      String that contains one or more regions.
      *                           Example: "us-east-1,eu-central-1"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Describe Regions",
             outputs = {
@@ -124,10 +125,10 @@ public class DescribeRegionsAction {
                                        @Param(value = VALUE_FILTERS_STRING, required = true) String valueFiltersString,
                                        @Param(value = REGIONS_STRING, required = true) String regionsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, REGIONS_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, REGIONS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -87,7 +87,7 @@ public class Utils {
 
         try {
             portNumber = Integer.parseInt(portStringValue);
-            if ((portNumber < 0) && (portNumber != -1)) {
+            if ((portNumber <= 0) && (portNumber != -1)) {
                 throw new IllegalArgumentException(exceptionMessageBuilder.toString());
             }
         } catch (NumberFormatException e) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -61,7 +61,7 @@ public class CloneVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.createVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -70,7 +70,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMProtocolException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -81,7 +81,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMIntException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "", null);
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -92,7 +92,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMLongException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "anything", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "anything", "", null);
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 

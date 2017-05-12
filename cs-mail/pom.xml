@@ -11,7 +11,7 @@ http://www.apache.org/licenses/LICENSE-2.0
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-mail</artifactId>
-    <version>0.0.35-SNAPSHOT</version>
+    <version>0.0.37-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Mail java actions</description>
@@ -80,6 +80,45 @@ http://www.apache.org/licenses/LICENSE-2.0
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- Checkstyle plugin, should be run only locally -->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle-for-java-sources</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>false</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            &lt;!&ndash;
+                                AuthSSLX509TrustManager has a long header that can not be break
+                                SendMailTest has a long constant that can not be break.
+                            &ndash;&gt;
+                            <maxAllowedViolations>2</maxAllowedViolations>
+                            <logViolationsToConsole>true</logViolationsToConsole>
+                            <violationSeverity>warning</violationSeverity>
+                            <includeResources>false</includeResources>
+                            <includeTestResources>false</includeTestResources>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        &lt;!&ndash; Do not update this version because it is not compatible with java 7 &ndash;&gt;
+                        <version>6.19</version>
+                    </dependency>
+                </dependencies>
+            </plugin>-->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -103,7 +142,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2016</copyright.year>
+                        <copyright.year>2017</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>
@@ -254,6 +293,7 @@ http://www.apache.org/licenses/LICENSE-2.0
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

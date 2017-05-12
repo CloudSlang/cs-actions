@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -61,7 +61,7 @@ public class DeleteHostGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.deleteHostGroup(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = deleteHostGroup.deleteHostGroup("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = deleteHostGroup.deleteHostGroup("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).deleteHostGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -71,7 +71,7 @@ public class DeleteHostGroupTest {
 
     @Test
     public void testDeleteHostGroupProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteHostGroup.deleteHostGroup("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = deleteHostGroup.deleteHostGroup("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteHostGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -82,7 +82,7 @@ public class DeleteHostGroupTest {
 
     @Test
     public void testDeleteHostGroupPortException() throws Exception {
-        Map<String, String> resultMap = deleteHostGroup.deleteHostGroup("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = deleteHostGroup.deleteHostGroup("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteHostGroup(any(HttpInputs.class), any(VmInputs.class));
 

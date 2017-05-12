@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -62,7 +62,7 @@ public class CreateHostGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = createHostGroup.createHostGroup("", "", "", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = createHostGroup.createHostGroup("", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 
@@ -72,7 +72,7 @@ public class CreateHostGroupTest {
 
     @Test
     public void testCreateHostGroupProtocolException() throws Exception {
-        Map<String, String> resultMap = createHostGroup.createHostGroup("", "", "myProtocol", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createHostGroup.createHostGroup("", "", "myProtocol", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 
@@ -83,7 +83,7 @@ public class CreateHostGroupTest {
 
     @Test
     public void testCreateHostGroupPortException() throws Exception {
-        Map<String, String> resultMap = createHostGroup.createHostGroup("", "myPort", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createHostGroup.createHostGroup("", "myPort", "", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 

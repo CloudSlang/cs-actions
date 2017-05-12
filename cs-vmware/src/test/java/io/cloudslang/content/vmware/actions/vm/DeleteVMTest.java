@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -60,7 +60,7 @@ public class DeleteVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.deleteVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = deleteVM.deleteVM("", "", "", "", "", "", "");
+        resultMap = deleteVM.deleteVM("", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).deleteVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -69,7 +69,7 @@ public class DeleteVMTest {
 
     @Test
     public void testDeletesVMProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteVM.deleteVM("", "", "myProtocol", "", "", "", "");
+        Map<String, String> resultMap = deleteVM.deleteVM("", "", "myProtocol", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).deleteVM(any(HttpInputs.class), any(VmInputs.class));
 

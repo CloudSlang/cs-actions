@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -24,7 +24,7 @@ class UriEncoder {
      * Hexadecimal digits for escaping.
      */
     private static final char[] hexDigits = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
 
     /**
@@ -40,14 +40,14 @@ class UriEncoder {
 
     static {
         // common unreserved characters
-        for (char c = 'a'; c <= 'z'; c++) {
-            unreserved[c] = true;
+        for (char lowLetter = 'a'; lowLetter <= 'z'; lowLetter++) {
+            unreserved[lowLetter] = true;
         }
-        for (char c = 'A'; c <= 'Z'; c++) {
-            unreserved[c] = true;
+        for (char capLetter = 'A'; capLetter <= 'Z'; capLetter++) {
+            unreserved[capLetter] = true;
         }
-        for (char c = '0'; c <= '9'; c++) {
-            unreserved[c] = true;
+        for (char digit = '0'; digit <= '9'; digit++) {
+            unreserved[digit] = true;
         }
         for (char markChar : markChars) {
             unreserved[markChar] = true;
@@ -103,21 +103,21 @@ class UriEncoder {
         StringBuilder sb = new StringBuilder(buffer.remaining());
         // Now encode the characters
         while (buffer.hasRemaining()) {
-            int c = buffer.get();
-            if ((c == '%') && relax && (buffer.remaining() >= 2)) {
+            int remainingBuffer = buffer.get();
+            if ((remainingBuffer == '%') && relax && (buffer.remaining() >= 2)) {
                 int position = buffer.position();
                 if (isHex(buffer.get(position)) && isHex(buffer.get(position + 1))) {
-                    sb.append((char) c);
+                    sb.append((char) remainingBuffer);
                     continue;
                 }
             }
 
-            if (c >= ' ' && unreserved[c]) {
-                sb.append((char) c);
+            if (remainingBuffer >= ' ' && unreserved[remainingBuffer]) {
+                sb.append((char) remainingBuffer);
             } else {
                 sb.append('%');
-                sb.append(hexDigits[(c & 0xf0) >> 4]);
-                sb.append(hexDigits[c & 0xf]);
+                sb.append(hexDigits[(remainingBuffer & 0xf0) >> 4]);
+                sb.append(hexDigits[remainingBuffer & 0xf]);
             }
         }
 

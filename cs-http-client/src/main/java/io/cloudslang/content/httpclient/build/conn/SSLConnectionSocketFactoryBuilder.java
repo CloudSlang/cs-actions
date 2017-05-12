@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -97,9 +97,12 @@ public class SSLConnectionSocketFactoryBuilder {
         } else {
             try {
                 //need to override isTrusted() method to accept CA certs because the Apache HTTP Client ver.4.3 will only accepts self-signed certificates
-                KeyStore keyStore = createKeyStore(new URL("file:" + javaKeystore), changeit);
+                KeyStore keyStore = createKeyStore(new URL("file:" + keystore), keystorePassword);
+                sslContextBuilder.loadKeyMaterial(keyStore, keystorePassword.toCharArray());
 
-                sslContextBuilder.loadTrustMaterial(keyStore, new TrustSelfSignedStrategy() {
+                String internalJavaKeystoreUri = "file:" + javaKeystore;
+                KeyStore javaTrustStore = createKeyStore(new URL(internalJavaKeystoreUri), changeit);
+                sslContextBuilder.loadTrustMaterial(javaTrustStore, new TrustSelfSignedStrategy() {
                     @Override
                     public boolean isTrusted(X509Certificate[] chain, String authType)
                             throws CertificateException {

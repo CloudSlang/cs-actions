@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -38,6 +38,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
@@ -234,6 +235,8 @@ public class CSHttpClient {
         } else {
             httpClientBuilder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
         }
+
+        httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
 
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 

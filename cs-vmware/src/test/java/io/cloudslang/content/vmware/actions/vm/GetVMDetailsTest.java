@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -61,7 +61,7 @@ public class GetVMDetailsTest {
 
         when(vmServiceMock.getVMDetails(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = getVMDetails.getVMDetails("", "", "", "", "", "", "", "");
+        resultMap = getVMDetails.getVMDetails("", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).getVMDetails(any(HttpInputs.class), any(VmInputs.class));
 
@@ -70,7 +70,7 @@ public class GetVMDetailsTest {
 
     @Test
     public void testGetVMDetailsProtocolException() throws Exception {
-        Map<String, String> resultMap = getVMDetails.getVMDetails("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = getVMDetails.getVMDetails("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).getVMDetails(any(HttpInputs.class), any(VmInputs.class));
 

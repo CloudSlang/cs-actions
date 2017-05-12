@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -62,7 +62,7 @@ public class CustomizeLinuxGuestTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean())).thenReturn(resultMap);
 
-        resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(guestServiceMock, times(1)).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 
@@ -71,7 +71,7 @@ public class CustomizeLinuxGuestTest {
 
     @Test
     public void customizeLinuxGuestProtocolFailure() throws Exception {
-        Map<String, String> resultMap = linuxGuest.customizeLinuxGuest("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = linuxGuest.customizeLinuxGuest("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(guestServiceMock, never()).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,17 +19,17 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.DELETE_LOAD_BALANCER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -40,13 +40,10 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.LOAD_BALANCER_ARN;
-
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
@@ -70,12 +67,12 @@ public class DeleteLoadBalancer {
      *                        Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost       Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                        Default: ""
-     * @param proxyPort       Optional - proxy server port. You must either specify values for both <proxyHost> and
-     *                        <proxyPort> inputs or leave them both empty.
+     * @param proxyPort       Optional - proxy server port. You must either specify values for both proxyHost and
+     *                        proxyPort inputs or leave them both empty.
      *                        Default: ""
      * @param proxyUsername   Optional - proxy server user name.
      *                        Default: ""
-     * @param proxyPassword   Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword   Optional - proxy server password associated with the proxyUsername input value.
      * @param headers         Optional - string containing the headers to use for the request separated by new line (CRLF).
      *                        The header name-value pair will be separated by ":"
      *                        Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -93,7 +90,7 @@ public class DeleteLoadBalancer {
      * @param loadBalancerArn Amazon Resource Name (ARN) of the load balancer.
      *                        Example: "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Delete Load Balancer",
             outputs = {
@@ -119,10 +116,10 @@ public class DeleteLoadBalancer {
                                        @Param(value = VERSION) String version,
                                        @Param(value = LOAD_BALANCER_ARN, required = true) String loadBalancerArn) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, LOAD_BALANCING_API)
+                    .withEndpoint(endpoint, LOAD_BALANCING_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

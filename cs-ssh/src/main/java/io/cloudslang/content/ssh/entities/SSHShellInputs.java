@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -45,6 +45,7 @@ public class SSHShellInputs {
     private String allowedCiphers;
     private boolean allowExpectCommands;
     private int connectTimeout;
+    private boolean useShell;
 
     public String getHost() {
         return host;
@@ -253,5 +254,13 @@ public class SSHShellInputs {
 
     public int getConnectTimeout() {
         return connectTimeout;
+    }
+
+    public boolean isUseShell() {
+        return useShell;
+    }
+
+    public void setUseShell(String useShell) {
+        this.useShell = StringUtils.toBoolean(useShell, Constants.DEFAULT_USE_SHELL);
     }
 }

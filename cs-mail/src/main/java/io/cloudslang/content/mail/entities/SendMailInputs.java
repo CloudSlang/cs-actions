@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -49,7 +49,7 @@ public class SendMailInputs {
     private String bcc;
     private String subject;
     private String body;
-    private String read_receipt;
+    private String readReceipt;
     private String attachments;
     private String headers;
     private String rowDelimiter;
@@ -179,11 +179,11 @@ public class SendMailInputs {
     }
 
     public String getReadReceipt() {
-        return read_receipt;
+        return readReceipt;
     }
 
-    public void setReadReceipt(String read_receipt) {
-        this.read_receipt = read_receipt;
+    public void setReadReceipt(String readReceipt) {
+        this.readReceipt = readReceipt;
     }
 
     public String getAttachments() {

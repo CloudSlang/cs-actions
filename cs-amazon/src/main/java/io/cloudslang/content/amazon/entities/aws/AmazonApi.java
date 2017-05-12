@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -37,8 +37,7 @@ public enum AmazonApi {
             }
         }
 
-        throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. " +
-                "Valid values: ec2, elasticloadbalancing, s3.");
+        throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. Valid values: ec2, elasticloadbalancing, s3.");
     }
 
     private String getValue() {

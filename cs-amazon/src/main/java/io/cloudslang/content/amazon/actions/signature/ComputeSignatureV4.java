@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -21,11 +21,12 @@ import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.OutputsUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getHeadersOrQueryParamsMap;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HEADER_DELIMITER;
@@ -37,6 +38,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PREFIX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AMAZON_API;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.DATE;
@@ -83,8 +85,12 @@ public class ComputeSignatureV4 {
      *                      separator between name-value pairs is "&" symbol. The query name will be separated from query
      *                      value by "="
      *                      Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;
+     * @param prefix        Optional - used to sign request for Simple Storage Service (S3). This prefix will precede the
+     *                      endpoint when made calls for specific bucket (for e.g. if prefix is "mybucket" then the endpoint
+     *                      where the request are made will be "mybucket.s3.amazonaws.com")
+     *                      Default: ""
      * @return A map, with strings as keys and values, that contains: outcome of the action, returnCode of the operation
-     * or failure message, the exception if there is one, signature value and authorization header value
+     *         or failure message, the exception if there is one, signature value and authorization header value
      */
     @Action(name = "Compute Signature V4",
             outputs = {
@@ -112,15 +118,14 @@ public class ComputeSignatureV4 {
                                        @Param(value = PAYLOAD_HASH) String payloadHash,
                                        @Param(value = DATE) String date,
 
-                                       @Param(value = SECURITY_TOKEN) String securityToken) {
+                                       @Param(value = SECURITY_TOKEN) String securityToken,
+                                       @Param(value = PREFIX) String prefix) {
         try {
-            Map<String, String> headersMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
-                    headers, HEADER_DELIMITER, COLON, true);
-            Map<String, String> queryParamsMap = InputsUtil.getHeadersOrQueryParamsMap(new HashMap<String, String>(),
-                    queryParams, AMPERSAND, EQUAL, false);
+            Map<String, String> headersMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), headers, HEADER_DELIMITER, COLON, true);
+            Map<String, String> queryParamsMap = getHeadersOrQueryParamsMap(new HashMap<String, String>(), queryParams, AMPERSAND, EQUAL, false);
 
             CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, amazonApi)
+                    .withEndpoint(endpoint, amazonApi, prefix)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .build();

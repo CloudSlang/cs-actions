@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -66,7 +66,7 @@ public class GetOSDescriptorsTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.getOsDescriptors(any(HttpInputs.class), any(VmInputs.class), anyString())).thenReturn(resultMap);
 
-        resultMap = getOSDescriptors.getOsDescriptors("", "", "", "", "", "", "", "", "");
+        resultMap = getOSDescriptors.getOsDescriptors("", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).getOsDescriptors(any(HttpInputs.class), any(VmInputs.class), anyString());
 
@@ -75,7 +75,7 @@ public class GetOSDescriptorsTest {
 
     @Test
     public void testGetOSDescriptorsProtocolException() throws Exception {
-        Map<String, String> resultMap = getOSDescriptors.getOsDescriptors("", "", "myProtocol", "", "", "", "", "", "");
+        Map<String, String> resultMap = getOSDescriptors.getOsDescriptors("", "", "myProtocol", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).getOsDescriptors(any(HttpInputs.class), any(VmInputs.class), anyString());
 

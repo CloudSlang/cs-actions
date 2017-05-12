@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -63,7 +63,7 @@ public class ListVMsAndTemplatesTest {
 
         when(vmServiceMock.listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString())).thenReturn(resultMap);
 
-        resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "");
+        resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
 
@@ -72,7 +72,7 @@ public class ListVMsAndTemplatesTest {
 
     @Test
     public void testListVMsAndTemplatesProtocolException() throws Exception {
-        Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "");
+        Map<String, String> resultMap = listVMsAndTemplates.listVMsAndTemplates("", "", "myProtocol", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).listVMsAndTemplates(any(HttpInputs.class), any(VmInputs.class), anyString());
 

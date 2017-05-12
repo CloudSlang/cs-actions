@@ -11,7 +11,7 @@ http://www.apache.org/licenses/LICENSE-2.0
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-http-client</artifactId>
-    <version>0.1.69-SNAPSHOT</version>
+    <version>0.1.72-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>An HTTP client for CloudSlang</description>
@@ -94,12 +94,16 @@ http://www.apache.org/licenses/LICENSE-2.0
                 <artifactId>license-maven-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
+                    <header>${project.basedir}/license.template</header>
+                    <headerDefinitions>
+                        <headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>
+                    </headerDefinitions>
                     <includes>
                         <include>**/*.java</include>
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2016</copyright.year>
+                        <copyright.year>2017</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>

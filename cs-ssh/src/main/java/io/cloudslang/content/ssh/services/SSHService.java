@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,6 +22,19 @@ import java.util.Map;
  *         Date: 10/29/14
  */
 public interface SSHService extends AutoCloseable {
+
+    /**
+     * Run a Shell command(s) using SSH protocol, using a direct shell.
+     *
+     * @param command           The Shell command(s).
+     * @param characterSet      The character set for the command and for the output of the command.
+     * @param usePseudoTerminal If true the result will be formatted like in a terminal.
+     * @param connectTimeout    The channel connection timeout.
+     * @param commandTimeout    The command timeout.
+     * @param agentForwarding   Weathers the agent forwarding is enabled or not.
+     * @return the command result.
+     */
+    CommandResult runShell(String command, String characterSet, boolean usePseudoTerminal, int connectTimeout, int commandTimeout, boolean agentForwarding);
 
     /**
      * Run a Shell command(s) using SSH protocol.

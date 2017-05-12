@@ -1,5 +1,5 @@
 /*******************************************************************************
- * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -74,11 +74,11 @@ public class DescribeAvailabilityZonesAction {
      *                           will be used.
      *                           Default: ""
      * @param proxyPort          Optional - proxy server port. You must either specify values for both
-     *                           <proxyHost> and <proxyPort> inputs or leave them both empty.
+     *                           proxyHost and proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername>
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername
      *                           input value.
      *                           Default: ""
      * @param headers            Optional - string containing the headers to use for the request separated
@@ -107,7 +107,7 @@ public class DescribeAvailabilityZonesAction {
      * @param zoneNamesString    Optional - String that contains names of one or more Availability Zones.
      *                           Example: "us-east-1a,us-east-1d"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Describe Instances",
             outputs = {
@@ -141,7 +141,7 @@ public class DescribeAvailabilityZonesAction {
             version = getDefaultStringInput(version, REGIONS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)
