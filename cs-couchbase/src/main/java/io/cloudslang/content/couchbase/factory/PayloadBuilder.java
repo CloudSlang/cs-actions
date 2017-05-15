@@ -11,9 +11,11 @@ package io.cloudslang.content.couchbase.factory;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.couchbase.factory.buckets.BucketsHelper;
+import io.cloudslang.content.couchbase.factory.cluster.ClusterHelper;
 import io.cloudslang.content.couchbase.factory.nodes.NodesHelper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
 import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
@@ -34,6 +36,9 @@ public class PayloadBuilder {
                     break;
                 case FAIL_OVER_NODE:
                     wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayload(wrapper));
+                    break;
+                case REBALANCING_NODES:
+                    wrapper.getHttpClientInputs().setBody(new ClusterHelper().getRebalancingNodesPayload(wrapper));
                     break;
                 default:
                     break;

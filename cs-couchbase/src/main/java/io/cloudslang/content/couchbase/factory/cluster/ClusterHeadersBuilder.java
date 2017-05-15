@@ -11,9 +11,10 @@ package io.cloudslang.content.couchbase.factory.cluster;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_CLUSTER_DETAILS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_CLUSTER_INFO;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
 
 /**
@@ -27,16 +28,13 @@ public class ClusterHeadersBuilder {
 
     public static void setClusterHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
-            case GET_CLUSTER_INFO:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
-                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
-                break;
-            case GET_CLUSTER_DETAILS:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
-                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+            case REBALANCING_NODES:
+                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
+                wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
                 break;
             default:
                 wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
         }
     }
 }

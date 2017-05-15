@@ -31,7 +31,7 @@ public class NodeHeadersBuilder {
                 wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
                 break;
             default:
-                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
+                break;
         }
     }
 }

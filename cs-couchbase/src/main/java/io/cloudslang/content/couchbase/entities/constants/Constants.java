@@ -46,6 +46,7 @@ public class Constants {
     public static class ClusterActions {
         public static final String GET_CLUSTER_DETAILS = "GetClusterDetails";
         public static final String GET_CLUSTER_INFO = "GetClusterInfo";
+        public static final String REBALANCING_NODES = "RebalancingNodes";
     }
 
     public static class NodeActions {
@@ -70,6 +71,7 @@ public class Constants {
         public static final String AMPERSAND = "&";
         public static final String AT = "@";
         public static final String BLANK_SPACE = " ";
+        public static final String COLON = ":";
         public static final String COMMA = ",";
         public static final String EQUAL = "=";
         public static final String PORT_REGEX = "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$";
