@@ -285,11 +285,11 @@ public class CouchbaseServiceTest {
         assertEquals("http://whatever.couchbase.com:8091/controller/rebalance", httpClientInputs.getUrl());
         assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
         assertEquals("application/x-www-form-urlencoded; charset=UTF-8", httpClientInputs.getContentType());
-        assertTrue(httpClientInputs.getBody().contains("ejectedNodes"));
+        assertTrue(httpClientInputs.getBody().contains("ejectedNodes="));
         assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.4"));
         assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.5"));
         assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.6"));
-        assertTrue(httpClientInputs.getBody().contains("knownNodes"));
+        assertTrue(httpClientInputs.getBody().contains("knownNodes="));
         assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.2"));
         assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.3"));
     }

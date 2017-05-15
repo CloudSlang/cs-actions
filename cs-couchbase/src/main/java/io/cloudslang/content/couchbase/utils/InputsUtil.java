@@ -197,7 +197,7 @@ public class InputsUtil {
         return input;
     }
 
-    public static void validateIfNotBothBlankInputs(String value1, String value2, String name1, String name2) {
+    public static void validateNotBothBlankInputs(String value1, String value2, String name1, String name2) {
         if (isBlank(value1) && isBlank(value2)) {
             throw new RuntimeException(format("The values: %s, %s provided for inputs: %s, %s cannot be both empty. " +
                     "Please provide values for at least one of them.", value1, value2, name1, name2));

@@ -14,13 +14,15 @@ import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.BLANK_SPACE;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.COLON;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.AMPERSAND;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.EQUAL;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.EJECTED_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.KNOWN_NODES;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getPayloadString;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.validateIfNotBothBlankInputs;
+import static io.cloudslang.content.couchbase.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.couchbase.utils.InputsUtil.validateNotBothBlankInputs;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.validateRebalancingNodesPayloadInputs;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by TusaM
@@ -28,21 +30,21 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.validateRebalanci
  */
 public class ClusterHelper {
     public String getRebalancingNodesPayload(InputsWrapper wrapper) {
-        return getPayloadString(getPayloadMap(wrapper), COLON, BLANK_SPACE, false);
+        return getPayloadString(getPayloadMap(wrapper), EQUAL, AMPERSAND, true);
     }
 
     private Map<String, String> getPayloadMap(InputsWrapper wrapper) {
         String ejectedNodesString = wrapper.getClusterInputs().getEjectedNodes();
         String knownNodesString = wrapper.getClusterInputs().getKnownNodes();
-        validateIfNotBothBlankInputs(ejectedNodesString, knownNodesString, EJECTED_NODES, KNOWN_NODES);
+        validateNotBothBlankInputs(ejectedNodesString, knownNodesString, EJECTED_NODES, KNOWN_NODES);
 
         String delimiter = wrapper.getCommonInputs().getDelimiter();
         validateRebalancingNodesPayloadInputs(ejectedNodesString, delimiter);
         validateRebalancingNodesPayloadInputs(knownNodesString, delimiter);
 
         Map<String, String> payloadMap = new HashMap<>();
-        payloadMap.put(EJECTED_NODES, wrapper.getClusterInputs().getEjectedNodes());
-        payloadMap.put(KNOWN_NODES, wrapper.getClusterInputs().getKnownNodes());
+        setOptionalMapEntry(payloadMap, EJECTED_NODES, wrapper.getClusterInputs().getEjectedNodes(), isNotBlank(wrapper.getClusterInputs().getEjectedNodes()));
+        setOptionalMapEntry(payloadMap, KNOWN_NODES, wrapper.getClusterInputs().getKnownNodes(), isNotBlank(wrapper.getClusterInputs().getKnownNodes()));
 
         return payloadMap;
     }
