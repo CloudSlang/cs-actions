@@ -17,7 +17,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 public enum ClusterUri {
     GET_CLUSTER_DETAILS("GetClusterDetails", "/pools/default"),
-    GET_CLUSTER_INFO("GetClusterInfo", "/pools");
+    GET_CLUSTER_INFO("GetClusterInfo", "/pools"),
+    REBALANCING_NODES("RebalancingNodes", "/controller/rebalance");
 
     private final String key;
     private final String value;

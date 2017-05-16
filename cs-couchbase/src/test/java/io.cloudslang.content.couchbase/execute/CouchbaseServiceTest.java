@@ -10,6 +10,7 @@
 package io.cloudslang.content.couchbase.execute;
 
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
+import io.cloudslang.content.couchbase.entities.inputs.ClusterInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.NodeInputs;
 import io.cloudslang.content.httpclient.CSHttpClient;
@@ -266,6 +267,34 @@ public class CouchbaseServiceTest {
     }
 
     @Test
+    public void testRebalancingNodes() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "POST");
+        CommonInputs commonInputs = getCommonInputsWithDelimiter("RebalancingNodes", "cluster",
+                "http://whatever.couchbase.com:8091", "");
+        ClusterInputs clusterInputs = new ClusterInputs.Builder()
+                .withEjectedNodes("ns_2@10.0.0.4,ns_2@10.0.0.5,ns_2@10.0.0.6")
+                .withKnownNodes("ns_2@10.0.0.2,ns_2@10.0.0.3")
+                .build();
+        toTest.execute(httpClientInputs, commonInputs, clusterInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://whatever.couchbase.com:8091/controller/rebalance", httpClientInputs.getUrl());
+        assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
+        assertEquals("application/x-www-form-urlencoded; charset=UTF-8", httpClientInputs.getContentType());
+        assertTrue(httpClientInputs.getBody().contains("ejectedNodes="));
+        assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.4"));
+        assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.5"));
+        assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.6"));
+        assertTrue(httpClientInputs.getBody().contains("knownNodes="));
+        assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.2"));
+        assertTrue(httpClientInputs.getBody().contains("ns_2@10.0.0.3"));
+    }
+
+    @Test
     public void testFailOverNodeNoIPv4Address() throws MalformedURLException {
         setExpectedExceptions(RuntimeException.class, exception, "The value of: [ blah blah blah ] input as part " +
                 "of: [ns_2@ blah blah blah ] input must be a valid IPv4 address.");
@@ -324,6 +353,15 @@ public class CouchbaseServiceTest {
                 .withAction(action)
                 .withApi(api)
                 .withEndpoint(endpoint)
+                .build();
+    }
+
+    private CommonInputs getCommonInputsWithDelimiter(String action, String api, String endpoint, String delimiter) {
+        return new CommonInputs.Builder()
+                .withAction(action)
+                .withApi(api)
+                .withEndpoint(endpoint)
+                .withDelimiter(delimiter)
                 .build();
     }
 }

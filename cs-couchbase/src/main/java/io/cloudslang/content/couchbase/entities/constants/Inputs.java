@@ -20,6 +20,7 @@ public class Inputs {
 
     public static class CommonInputs {
         public static final String ENDPOINT = "endpoint";
+        public static final String DELIMITER = "delimiter";
     }
 
     public static class BucketInputs {
@@ -35,6 +36,11 @@ public class Inputs {
         public static final String REPLICA_NUMBER = "replicaNumber";
         public static final String SASL_PASSWORD = "saslPassword";
         public static final String THREADS_NUMBER = "threadsNumber";
+    }
+
+    public static class ClusterInputs {
+        public static final String EJECTED_NODES = "ejectedNodes";
+        public static final String KNOWN_NODES = "knownNodes";
     }
 
     public static class NodeInputs {

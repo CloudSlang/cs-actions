@@ -46,6 +46,7 @@ public class Constants {
     public static class ClusterActions {
         public static final String GET_CLUSTER_DETAILS = "GetClusterDetails";
         public static final String GET_CLUSTER_INFO = "GetClusterInfo";
+        public static final String REBALANCING_NODES = "RebalancingNodes";
     }
 
     public static class NodeActions {
