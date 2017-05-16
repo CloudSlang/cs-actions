@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.couchbase.actions.views;
+package io.cloudslang.content.couchbase.actions.cluster;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -16,7 +16,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
+import io.cloudslang.content.couchbase.entities.inputs.ClusterInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.execute.CouchbaseService;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -28,14 +28,16 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.VIEWS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.ViewsActions.GET_DESIGN_DOCS_INFO;
-import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.EJECTED_NODES;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.KNOWN_NODES;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
 import static io.cloudslang.content.httpclient.HttpClientInputs.PASSWORD;
 import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
@@ -46,20 +48,20 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.SOCKET_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
+import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM
- * 4/28/2017.
+ * 5/11/2017.
  */
-public class GetDesignDocsInfo {
+public class RebalancingNodes {
     /**
-     * Retrieves design documents.
-     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-ddocs-get.html
+     * Starts rebalancing process on all cluster nodes.
+     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-cluster-rebalance.html
      *
      * @param endpoint             Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
      *                             bellow example.
@@ -118,11 +120,17 @@ public class GetDesignDocsInfo {
      *                             execution it will close it.
      *                             Valid values: "true", "false"
      *                             Default value: "true"
-     * @param bucketName           Name of the bucket to retrieve design documents for
+     * @param ejectedNodes         Optional - A string that contains: none, one or more nodes (that previously were part
+     *                             of cluster and at the moment are marked as rejected) separated by delimiter.
+     *                             Example: "ns_2@10.0.0.4,ns_2@10.0.0.5,ns_2@10.0.0.6"
+     * @param knownNodes           Optional - A string that contains: none, one or more nodes that are known within the
+     *                             cluster.
+     *                             Example: "ns_2@10.0.0.2,ns_2@10.0.0.3"
+     * Note: The inputs: ejectedNodes, knownNodes cannot be both blank in order to successfully trigger nodes rebalancing.
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Get Design Docs Info",
+    @Action(name = "Rebalancing Nodes",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -151,23 +159,27 @@ public class GetDesignDocsInfo {
                                        @Param(value = SOCKET_TIMEOUT) String socketTimeout,
                                        @Param(value = USE_COOKIES) String useCookies,
                                        @Param(value = KEEP_ALIVE) String keepAlive,
-                                       @Param(value = BUCKET_NAME, required = true) String bucketName) {
+                                       @Param(value = EJECTED_NODES) String ejectedNodes,
+                                       @Param(value = KNOWN_NODES) String knownNodes,
+                                       @Param(value = DELIMITER) String delimiter) {
         try {
             final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withAction(GET_DESIGN_DOCS_INFO)
-                    .withApi(VIEWS)
+                    .withAction(REBALANCING_NODES)
+                    .withApi(CLUSTER)
                     .withEndpoint(endpoint)
+                    .withDelimiter(delimiter)
                     .build();
 
-            final BucketInputs bucketInputs = new BucketInputs.Builder()
-                    .withBucketName(bucketName)
+            final ClusterInputs clusterInputs = new ClusterInputs.Builder()
+                    .withEjectedNodes(ejectedNodes)
+                    .withKnownNodes(knownNodes)
                     .build();
 
-            return new CouchbaseService().execute(httpClientInputs, commonInputs, bucketInputs);
+            return new CouchbaseService().execute(httpClientInputs, commonInputs, clusterInputs);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

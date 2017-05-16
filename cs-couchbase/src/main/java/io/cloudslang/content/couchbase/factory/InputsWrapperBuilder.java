@@ -10,8 +10,10 @@
 package io.cloudslang.content.couchbase.factory;
 
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
+import io.cloudslang.content.couchbase.entities.inputs.ClusterInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
+import io.cloudslang.content.couchbase.entities.inputs.NodeInputs;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE;
@@ -37,6 +39,10 @@ public class InputsWrapperBuilder {
             for (T builder : builders) {
                 if (builder instanceof BucketInputs) {
                     wrapper.setBucketInputs((BucketInputs) builder);
+                } else if (builder instanceof ClusterInputs) {
+                    wrapper.setClusterInputs((ClusterInputs) builder);
+                } else if (builder instanceof NodeInputs) {
+                    wrapper.setNodeInputs((NodeInputs) builder);
                 } else {
                     throw new RuntimeException(UNKNOWN_BUILDER_TYPE);
                 }

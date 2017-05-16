@@ -70,7 +70,7 @@ public class GetAuthorizationToken {
      * @param proxyPort      Proxy server port
      *                       Default: '8080'
      * @param proxyUsername  User name used when connecting to the proxy
-     * @param proxyPassword  The proxy server password associated with the <proxyUsername> input value
+     * @param proxyPassword  The proxy server password associated with the proxyUsername input value
      * @return The authorization Bearer token for Azure
      */
     @Action(name = "Get the authorization token for Azure",

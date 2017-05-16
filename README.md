@@ -1,6 +1,8 @@
 cs-actions
 ==============
 
+[![Join the chat at https://gitter.im/CloudSlang/cs-actions](https://badges.gitter.im/CloudSlang/cs-actions.svg)](https://gitter.im/CloudSlang/cs-actions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/CloudSlang/cs-actions.svg?branch=master)](https://travis-ci.org/CloudSlang/cs-actions)
 [![Coverage Status](https://coveralls.io/repos/github/CloudSlang/cs-actions/badge.svg?branch=master)](https://coveralls.io/github/CloudSlang/cs-actions?branch=master)
 [![Issue Count](https://codeclimate.com/github/CloudSlang/cs-actions/badges/issue_count.svg)](https://codeclimate.com/github/CloudSlang/cs-actions)

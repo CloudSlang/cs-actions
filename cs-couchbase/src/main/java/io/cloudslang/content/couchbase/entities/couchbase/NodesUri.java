@@ -13,23 +13,21 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by TusaM
- * 4/20/2017.
+ * 5/9/2017.
  */
-public enum ClusterUri {
-    GET_CLUSTER_DETAILS("GetClusterDetails", "/pools/default"),
-    GET_CLUSTER_INFO("GetClusterInfo", "/pools"),
-    REBALANCING_NODES("RebalancingNodes", "/controller/rebalance");
+public enum NodesUri {
+    FAIL_OVER_NODE("FailOverNode", "/controller/failOver");
 
     private final String key;
     private final String value;
 
-    ClusterUri(String key, String value) {
+    NodesUri(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
     public static String getValue(String key) {
-        for (ClusterUri uri : ClusterUri.values()) {
+        for (NodesUri uri : NodesUri.values()) {
             if (uri.getKey().equalsIgnoreCase(key)) {
                 return uri.getValue();
             }

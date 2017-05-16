@@ -15,22 +15,22 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * Created by Mihai Tusa
  * 4/8/2017.
  */
-public enum UriSuffix {
+public enum SuffixUri {
     GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats"),
     GET_DESIGN_DOC_INFO("GetDesignDocsInfo", "/ddocs");
 
     private final String key;
     private final String value;
 
-    UriSuffix(String key, String value) {
+    SuffixUri(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    public static String getUriSuffix(String input) {
-        for (UriSuffix uriSuffix : UriSuffix.values()) {
-            if (uriSuffix.getKey().equalsIgnoreCase(input)) {
-                return uriSuffix.getValue();
+    public static String getValue(String key) {
+        for (SuffixUri suffixUri : SuffixUri.values()) {
+            if (suffixUri.getKey().equalsIgnoreCase(key)) {
+                return suffixUri.getValue();
             }
         }
 

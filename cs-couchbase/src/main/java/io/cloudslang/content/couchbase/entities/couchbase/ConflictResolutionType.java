@@ -31,7 +31,7 @@ public enum ConflictResolutionType {
         return value;
     }
 
-    public static String getConflictResolutionTypeValue(String input) {
+    public static String getValue(String input) {
         if (isBlank(input)) {
             return SEQNO.getValue();
         }

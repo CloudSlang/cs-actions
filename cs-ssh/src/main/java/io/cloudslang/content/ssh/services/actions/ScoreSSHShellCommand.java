@@ -12,11 +12,7 @@ package io.cloudslang.content.ssh.services.actions;
 import com.jcraft.jsch.ProxyHTTP;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.ssh.entities.CommandResult;
-import io.cloudslang.content.ssh.entities.ConnectionDetails;
-import io.cloudslang.content.ssh.entities.IdentityKey;
-import io.cloudslang.content.ssh.entities.KnownHostsFile;
-import io.cloudslang.content.ssh.entities.SSHShellInputs;
+import io.cloudslang.content.ssh.entities.*;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 import io.cloudslang.content.ssh.utils.Constants;
@@ -99,13 +95,25 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         sshShellInputs.setCharacterSet(StringUtils.toNotEmptyString(sshShellInputs.getCharacterSet(), Constants.DEFAULT_CHARACTER_SET));
 
         // run the SSH command
-        CommandResult commandResult = service.runShellCommand(
-                sshShellInputs.getCommand(),
-                sshShellInputs.getCharacterSet(),
-                usePseudoTerminal,
-                sshShellInputs.getConnectTimeout(),
-                timeoutNumber,
-                agentForwarding);
+        CommandResult commandResult;
+
+        if (sshShellInputs.isUseShell()) {
+            commandResult = service.runShell(
+                    sshShellInputs.getCommand(),
+                    sshShellInputs.getCharacterSet(),
+                    usePseudoTerminal,
+                    sshShellInputs.getConnectTimeout(),
+                    timeoutNumber,
+                    agentForwarding);
+        } else {
+            commandResult = service.runShellCommand(
+                    sshShellInputs.getCommand(),
+                    sshShellInputs.getCharacterSet(),
+                    usePseudoTerminal,
+                    sshShellInputs.getConnectTimeout(),
+                    timeoutNumber,
+                    agentForwarding);
+        }
 
         handleSessionClosure(sshShellInputs, service, sessionId, saveSSHSession);
 

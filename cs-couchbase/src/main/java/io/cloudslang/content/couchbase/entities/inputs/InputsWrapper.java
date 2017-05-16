@@ -20,6 +20,8 @@ public class InputsWrapper {
     private final CommonInputs commonInputs;
 
     private BucketInputs bucketInputs;
+    private ClusterInputs clusterInputs;
+    private NodeInputs nodeInputs;
 
     private InputsWrapper(Builder builder) {
         this.httpClientInputs = builder.httpClientInputs;
@@ -40,6 +42,22 @@ public class InputsWrapper {
 
     public void setBucketInputs(BucketInputs bucketInputs) {
         this.bucketInputs = bucketInputs;
+    }
+
+    public ClusterInputs getClusterInputs() {
+        return clusterInputs;
+    }
+
+    public void setClusterInputs(ClusterInputs clusterInputs) {
+        this.clusterInputs = clusterInputs;
+    }
+
+    public NodeInputs getNodeInputs() {
+        return nodeInputs;
+    }
+
+    public void setNodeInputs(NodeInputs nodeInputs) {
+        this.nodeInputs = nodeInputs;
     }
 
     public static class Builder {
