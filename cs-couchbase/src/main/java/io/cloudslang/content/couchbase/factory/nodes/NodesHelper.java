@@ -25,7 +25,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class NodesHelper {
     private static final String OTP_NODE = "otpNode";
 
-    public String getFailOverNodePayload(InputsWrapper wrapper) {
+    public String getFailOverAndGracefulFailOverNodePayload(InputsWrapper wrapper) {
         return getPayloadString(getPayloadMap(wrapper), EQUAL, EMPTY, false);
     }
 

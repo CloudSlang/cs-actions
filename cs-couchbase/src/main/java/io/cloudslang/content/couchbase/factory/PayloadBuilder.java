@@ -17,6 +17,7 @@ import io.cloudslang.content.couchbase.factory.nodes.NodesHelper;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.GRACEFUL_FAIL_OVER_NODE;
 import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
@@ -35,7 +36,10 @@ public class PayloadBuilder {
                     wrapper.getHttpClientInputs().setBody(new BucketsHelper().getCreateBucketPayload(wrapper));
                     break;
                 case FAIL_OVER_NODE:
-                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayload(wrapper));
+                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverAndGracefulFailOverNodePayload(wrapper));
+                    break;
+                case GRACEFUL_FAIL_OVER_NODE:
+                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverAndGracefulFailOverNodePayload(wrapper));
                     break;
                 case REBALANCING_NODES:
                     wrapper.getHttpClientInputs().setBody(new ClusterHelper().getRebalancingNodesPayload(wrapper));
