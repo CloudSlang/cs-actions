@@ -13,6 +13,7 @@ import io.cloudslang.content.couchbase.entities.couchbase.AuthType;
 import io.cloudslang.content.couchbase.entities.couchbase.BucketType;
 import io.cloudslang.content.couchbase.entities.couchbase.ConflictResolutionType;
 import io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy;
+import io.cloudslang.content.couchbase.entities.couchbase.RecoveryType;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.apache.commons.validator.routines.InetAddressValidator;
@@ -185,6 +186,8 @@ public class InputsUtil {
                 sb.append(((ConflictResolutionType) enumValue).getValue()).append(COMMA).append(BLANK_SPACE);
             } else if (EvictionPolicy.class.getCanonicalName().equalsIgnoreCase(enumValue.getClass().getCanonicalName())) {
                 sb.append(((EvictionPolicy) enumValue).getValue()).append(COMMA).append(BLANK_SPACE);
+            } else if (RecoveryType.class.getCanonicalName().equalsIgnoreCase(enumValue.getClass().getCanonicalName())) {
+                sb.append(((RecoveryType) enumValue).getValue()).append(COMMA).append(BLANK_SPACE);
             }
         }
 

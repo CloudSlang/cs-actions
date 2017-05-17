@@ -312,6 +312,25 @@ public class CouchbaseServiceTest {
     }
 
     @Test
+    public void testSetRecoveryTypes() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "POST");
+        CommonInputs commonInputs = getCommonInputs("SetRecoveryType", "nodes", "http://whatever.couchbase.com:8091");
+        NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@10.0.0.2").withRecoveryType("full").build();
+        toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://whatever.couchbase.com:8091/controller/setRecoveryType", httpClientInputs.getUrl());
+        assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
+        assertEquals("application/x-www-form-urlencoded; charset=UTF-8", httpClientInputs.getContentType());
+        assertTrue(httpClientInputs.getBody().contains("otpNode=ns_2@10.0.0.2"));
+        assertTrue(httpClientInputs.getBody().contains("recoveryType=full"));
+    }
+
+    @Test
     public void testFailOverNodeNoIPv4Address() throws MalformedURLException {
         setExpectedExceptions(RuntimeException.class, exception, "The value of: [ blah blah blah ] input as part " +
                 "of: [ns_2@ blah blah blah ] input must be a valid IPv4 address.");
