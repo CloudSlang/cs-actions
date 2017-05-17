@@ -45,5 +45,6 @@ public class Inputs {
 
     public static class NodeInputs {
         public static final String INTERNAL_NODE_IP_ADDRESS = "internalNodeIpAddress";
+        public static final String RECOVERY_TYPE = "recoveryType";
     }
 }

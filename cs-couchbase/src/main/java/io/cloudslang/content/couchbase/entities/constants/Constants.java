@@ -52,6 +52,7 @@ public class Constants {
     public static class NodeActions {
         public static final String FAIL_OVER_NODE = "FailOverNode";
         public static final String GRACEFUL_FAIL_OVER_NODE = "GracefulFailOverNode";
+        public static final String SET_RECOVERY_TYPE = "SetRecoveryType";
     }
 
     public static class ViewsActions {

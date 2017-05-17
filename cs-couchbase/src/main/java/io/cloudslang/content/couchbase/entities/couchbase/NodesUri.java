@@ -17,7 +17,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 public enum NodesUri {
     FAIL_OVER_NODE("FailOverNode", "/controller/failOver"),
-    GRACEFUL_FAIL_OVER_NODE("GracefulFailOverNode", "/controller/startGracefulFailover");
+    GRACEFUL_FAIL_OVER_NODE("GracefulFailOverNode", "/controller/startGracefulFailover"),
+    SET_RECOVERY_TYPE("SetRecoveryType", "/controller/setRecoveryType");
 
     private final String key;
     private final String value;

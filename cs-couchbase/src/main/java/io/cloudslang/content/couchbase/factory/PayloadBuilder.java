@@ -18,6 +18,7 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Bucke
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.GRACEFUL_FAIL_OVER_NODE;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.SET_RECOVERY_TYPE;
 import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
@@ -36,13 +37,16 @@ public class PayloadBuilder {
                     wrapper.getHttpClientInputs().setBody(new BucketsHelper().getCreateBucketPayload(wrapper));
                     break;
                 case FAIL_OVER_NODE:
-                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverAndGracefulFailOverNodePayload(wrapper));
+                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayloadString(wrapper));
                     break;
                 case GRACEFUL_FAIL_OVER_NODE:
-                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverAndGracefulFailOverNodePayload(wrapper));
+                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayloadString(wrapper));
                     break;
                 case REBALANCING_NODES:
                     wrapper.getHttpClientInputs().setBody(new ClusterHelper().getRebalancingNodesPayload(wrapper));
+                    break;
+                case SET_RECOVERY_TYPE:
+                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getRecoveryTypePayloadString(wrapper));
                     break;
                 default:
                     break;
