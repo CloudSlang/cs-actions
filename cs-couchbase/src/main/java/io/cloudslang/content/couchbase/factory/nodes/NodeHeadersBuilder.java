@@ -26,12 +26,9 @@ public class NodeHeadersBuilder {
 
     public static void setNodeHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
-            case FAIL_OVER_NODE:
+            default:
                 wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
                 wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
-                break;
-            default:
-                break;
         }
     }
 }

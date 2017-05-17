@@ -267,6 +267,23 @@ public class CouchbaseServiceTest {
     }
 
     @Test
+    public void testGracefulFailOverNodeSuccess() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "POST");
+        CommonInputs commonInputs = getCommonInputs("GracefulFailOverNode", "nodes", "http://whatever.couchbase.com:8091");
+        NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@10.0.0.2").build();
+        toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://whatever.couchbase.com:8091/controller/startGracefulFailover", httpClientInputs.getUrl());
+        assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
+        assertEquals("application/x-www-form-urlencoded; charset=UTF-8", httpClientInputs.getContentType());
+    }
+
+    @Test
     public void testRebalancingNodes() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
