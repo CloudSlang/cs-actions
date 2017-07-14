@@ -52,7 +52,7 @@ public class InputsUtil {
         httpClientInputs.setMethod(method);
         httpClientInputs.setQueryParamsAreURLEncoded(FALSE);
 
-        httpClientInputs.setTrustAllRoots(valueOf(getEnforcedBooleanCondition(trustAllRoots, true)));
+        httpClientInputs.setTrustAllRoots(valueOf(getEnforcedBooleanCondition(trustAllRoots, false)));
         httpClientInputs.setKeepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, true)));
         httpClientInputs.setUseCookies(valueOf(getEnforcedBooleanCondition(useCookies, true)));
 
