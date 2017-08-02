@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities;
 
+import static java.lang.String.format;
+
 /**
  * Created by Mihai Tusa.
  * 1/22/2016.
@@ -20,11 +22,12 @@ public enum Operation {
     UPDATE;
 
     public static String getValue(String input) throws Exception {
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unsupported operation value: [" + input + "]. Valid values are: " +
-                    "create, add, remove, update.");
+        for (Operation operation : Operation.values()) {
+            if (operation.name().equalsIgnoreCase(input)) {
+                return operation.name().toLowerCase();
+            }
         }
+
+        throw new IllegalArgumentException(format("Unsupported operation value: [%s]. Valid values are: create, add, remove, update.", input));
     }
 }

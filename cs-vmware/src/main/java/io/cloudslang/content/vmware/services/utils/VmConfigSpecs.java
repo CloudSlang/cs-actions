@@ -9,69 +9,83 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.services.utils;
 
-import com.vmware.vim25.*;
+import com.vmware.vim25.ArrayOfManagedObjectReference;
+import com.vmware.vim25.ArrayOfVirtualDevice;
+import com.vmware.vim25.ConfigTarget;
+import com.vmware.vim25.DatastoreSummary;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.NetworkSummary;
+import com.vmware.vim25.ResourceAllocationInfo;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.SharesInfo;
+import com.vmware.vim25.VirtualDevice;
+import com.vmware.vim25.VirtualDeviceConfigSpec;
+import com.vmware.vim25.VirtualDeviceConfigSpecFileOperation;
+import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
+import com.vmware.vim25.VirtualFloppy;
+import com.vmware.vim25.VirtualFloppyDeviceBackingInfo;
+import com.vmware.vim25.VirtualIDEController;
+import com.vmware.vim25.VirtualLsiLogicController;
+import com.vmware.vim25.VirtualMachineCloneSpec;
+import com.vmware.vim25.VirtualMachineConfigOption;
+import com.vmware.vim25.VirtualMachineConfigSpec;
+import com.vmware.vim25.VirtualMachineDatastoreInfo;
+import com.vmware.vim25.VirtualMachineFileInfo;
+import com.vmware.vim25.VirtualMachineNetworkInfo;
+import com.vmware.vim25.VirtualMachineRelocateSpec;
+import com.vmware.vim25.VirtualSCSIController;
+import com.vmware.vim25.VirtualSCSISharing;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.constants.Constants;
-import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.utils.InputUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.vmware.vim25.SharesLevel.NORMAL;
+import static io.cloudslang.content.vmware.constants.Constants.RIGHT_SQUARE_BRACKET;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.ATAPI_CONTROLLER_CAPACITY_MAXED_OUT;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.DATA_STORE_NOT_FOUND_IN_COMPUTE_RESOURCE;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.DATA_STORE_NOT_FOUND_ON_HOST;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.SCSI_CONTROLLER_CAPACITY_MAXED_OUT;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.VIRTUAL_HARDWARE_INFO_NOT_FOUND_IN_COMPUTE_RESOURCE;
+import static io.cloudslang.content.vmware.entities.Operation.ADD;
+import static io.cloudslang.content.vmware.entities.Operation.CREATE;
+import static io.cloudslang.content.vmware.entities.Operation.REMOVE;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 /**
  * Created by Mihai Tusa.
  * 1/8/2016.
  */
 public class VmConfigSpecs {
-    private static final String GENERATED = "generated";
-    private static final String CONFIG_HARDWARE_DEVICE = "config.hardware.device";
-    private static final String DEFAULT_FLOPPY_DEVICE_NAME = "/dev/fd0";
-    private static final String DEFAULT_VOLUME_NAME = "[Local]";
-    private static final String LEFT_SQUARE_BRACKET = "[";
-
-    private static final int DEFAULT_DISK_CONTROLLER_KEY = 1;
-    private static final int DEFAULT_DISK_UNIT_NUMBER = 0;
-    private static final int DEFAULT_DISK_KEY = 0;
-    private static final int DEFAULT_FLOPPY_DEVICE_KEY = 3;
-    private static final int DEFAULT_CD_ROM_KEY = 20;
-    private static final int DEFAULT_CD_ROM_UNIT_NUMBER = 0;
-    private static final int DEFAULT_CONTROLLER_BUS_NUMBER = 0;
-    private static final int DEFAULT_NIC_KEY = 4;
-    private static final int MAXIMUM_SCSI_SLOTS = 16;
-    private static final int MAXIMUM_ATAPI_SLOTS = 2;
-    private static final int RESERVED_SCSI_SLOT = 7;
-    private static final int SERVER_ASSIGNED = -1;
-    private static final int OCCUPIED = 1;
-
     public VirtualMachineConfigSpec getVmConfigSpec(VmInputs vmInputs, ConnectionResources connectionResources) throws Exception {
-        VmUtils vmUtils = new VmUtils();
         VirtualMachineConfigSpec vmConfigSpec = createVmConfigSpec(connectionResources, vmInputs);
-        vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(vmConfigSpec, vmInputs, vmInputs.getVirtualMachineName());
+        vmConfigSpec = new VmUtils().getPopulatedVmConfigSpec(vmConfigSpec, vmInputs, vmInputs.getVirtualMachineName());
 
         return vmConfigSpec;
     }
 
-    public VirtualMachineCloneSpec getCloneSpec(VmInputs vmInputs, VirtualMachineRelocateSpec virtualMachineRelocateSpec)
-            throws Exception {
+    public VirtualMachineCloneSpec getCloneSpec(VmInputs vmInputs, VirtualMachineRelocateSpec virtualMachineRelocateSpec) throws Exception {
         VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
 
         cloneSpec.setLocation(virtualMachineRelocateSpec);
         cloneSpec.setPowerOn(false);
         cloneSpec.setTemplate(vmInputs.isTemplate());
 
-        VmUtils vmUtils = new VmUtils();
-        VirtualMachineConfigSpec vmConfigSpec = vmUtils.getPopulatedVmConfigSpec(new VirtualMachineConfigSpec(),
-                vmInputs, vmInputs.getCloneName());
+        VirtualMachineConfigSpec vmConfigSpec = new VmUtils().getPopulatedVmConfigSpec(new VirtualMachineConfigSpec(), vmInputs, vmInputs.getCloneName());
 
-        ResourceAllocationInfo resourceAllocationInfo = getResourceAllocationInfo(SharesLevel.NORMAL.value());
+        ResourceAllocationInfo resourceAllocationInfo = getResourceAllocationInfo(NORMAL.value());
         vmConfigSpec.setMemoryAllocation(resourceAllocationInfo);
         vmConfigSpec.setCpuAllocation(resourceAllocationInfo);
 
@@ -80,14 +94,10 @@ public class VmConfigSpecs {
         return cloneSpec;
     }
 
-    VirtualDeviceConfigSpec getDiskDeviceConfigSpec(ConnectionResources connectionResources,
-                                                    ManagedObjectReference vmMor,
-                                                    VmInputs vmInputs) throws Exception {
-        if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
-            String dataStoreName = getDataStoreWithFreeSpaceNeeded(connectionResources, vmMor,
-                    vmInputs.getLongVmDiskSize());
-            String volumeName = InputUtils.getDiskFileNameString(dataStoreName, vmInputs.getVirtualMachineName(),
-                    vmInputs.getUpdateValue());
+    VirtualDeviceConfigSpec getDiskDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor, VmInputs vmInputs) throws Exception {
+        if (ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
+            String dataStoreName = getDataStoreWithFreeSpaceNeeded(connectionResources, vmMor, vmInputs.getLongVmDiskSize());
+            String volumeName = InputUtils.getDiskFileNameString(dataStoreName, vmInputs.getVirtualMachineName(), vmInputs.getUpdateValue());
 
             int controllerKey = 0;
             int unitNumber = 0;
@@ -98,15 +108,26 @@ public class VmConfigSpecs {
             }
 
             return new VmUtils().getPopulatedDiskSpec(volumeName, null, VirtualDeviceConfigSpecOperation.ADD,
-                    VirtualDeviceConfigSpecFileOperation.CREATE, controllerKey, unitNumber, SERVER_ASSIGNED,
-                    Operation.ADD.toString(), vmInputs);
-
+                    VirtualDeviceConfigSpecFileOperation.CREATE, controllerKey, unitNumber, Constants.SERVER_ASSIGNED, ADD.toString(), vmInputs);
         } else {
             List<VirtualDevice> deviceList = getVirtualDeviceList(connectionResources, vmMor);
 
-            return new VmUtils().getPopulatedDiskSpec(Constants.EMPTY, deviceList, VirtualDeviceConfigSpecOperation.REMOVE,
-                    VirtualDeviceConfigSpecFileOperation.DESTROY, DEFAULT_DISK_CONTROLLER_KEY, DEFAULT_DISK_UNIT_NUMBER,
-                    SERVER_ASSIGNED, Operation.REMOVE.toString(), vmInputs);
+            return new VmUtils().getPopulatedDiskSpec(EMPTY, deviceList, VirtualDeviceConfigSpecOperation.REMOVE,
+                    VirtualDeviceConfigSpecFileOperation.DESTROY, Constants.DEFAULT_DISK_CONTROLLER_KEY, Constants.DEFAULT_DISK_UNIT_NUMBER,
+                    Constants.SERVER_ASSIGNED, REMOVE.toString(), vmInputs);
+        }
+    }
+
+    VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
+                                                   VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+        if (ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
+            return new VmUtils().getNicSpecs(vmInputs.getUpdateValue(), null, VirtualDeviceConfigSpecOperation.ADD,
+                    Constants.GENERATED, Constants.SERVER_ASSIGNED, ADD.toString(), vmInputs);
+        } else {
+            List<VirtualDevice> virtualDevicesList = getVirtualDeviceList(connectionResources, vmMor);
+
+            return new VmUtils().getNicSpecs(EMPTY, virtualDevicesList, VirtualDeviceConfigSpecOperation.REMOVE, EMPTY,
+                    null, REMOVE.toString(), vmInputs);
         }
     }
 
@@ -114,21 +135,19 @@ public class VmConfigSpecs {
                                                   VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         List<VirtualDevice> virtualDevicesList = getVirtualDeviceList(connectionResources, vmMor);
 
-        if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
+        if (ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
             Map<Integer, VirtualDevice> deviceMap = getVirtualDeviceMap(virtualDevicesList);
-
             for (VirtualDevice virtualDevice : virtualDevicesList) {
                 if (virtualDevice instanceof VirtualIDEController) {
                     VirtualIDEController virtualScsiController = (VirtualIDEController) virtualDevice;
                     List<Integer> deviceList = virtualScsiController.getDevice();
-                    int[] slots = new int[MAXIMUM_ATAPI_SLOTS];
+                    int[] slots = new int[Constants.MAXIMUM_ATAPI_SLOTS];
                     markOccupiedSlots(deviceMap, deviceList, slots);
-
                     int unitNumber = 0;
                     boolean isAtapiCtrlAvailable = false;
                     int controllerKey = 0;
                     for (int counter = 0; counter < slots.length; counter++) {
-                        if (slots[counter] != OCCUPIED) {
+                        if (slots[counter] != Constants.OCCUPIED) {
                             controllerKey = virtualScsiController.getKey();
                             unitNumber = counter;
                             isAtapiCtrlAvailable = true;
@@ -136,58 +155,40 @@ public class VmConfigSpecs {
                         }
                     }
                     if (isAtapiCtrlAvailable) {
-                        return new VmUtils().getPopulatedCDSpecs(Constants.EMPTY, null, null,
-                                VirtualDeviceConfigSpecOperation.ADD, controllerKey, unitNumber, SERVER_ASSIGNED,
-                                Operation.ADD.toString(), vmInputs);
+                        return new VmUtils().getPopulatedCDSpecs(EMPTY, null, null, VirtualDeviceConfigSpecOperation.ADD,
+                                controllerKey, unitNumber, Constants.SERVER_ASSIGNED, ADD.toString(), vmInputs);
                     }
                 }
             }
-            throw new RuntimeException(ErrorMessages.ATAPI_CONTROLLER_CAPACITY_MAXED_OUT);
+            throw new RuntimeException(ATAPI_CONTROLLER_CAPACITY_MAXED_OUT);
         } else {
-            return new VmUtils().getPopulatedCDSpecs(null, null, virtualDevicesList,
-                    VirtualDeviceConfigSpecOperation.REMOVE, null, null, null, Operation.REMOVE.toString(), vmInputs);
-        }
-    }
-
-    private void markOccupiedSlots(Map<Integer, VirtualDevice> deviceMap, List<Integer> deviceList, int[] slots) {
-        for (Integer deviceKey : deviceList) {
-            if (deviceMap.get(deviceKey).getUnitNumber() != null) {
-                slots[deviceMap.get(deviceKey).getUnitNumber()] = OCCUPIED;
-            }
-        }
-    }
-
-    VirtualDeviceConfigSpec getNICDeviceConfigSpec(ConnectionResources connectionResources, ManagedObjectReference vmMor,
-                                                   VmInputs vmInputs) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation())) {
-            return new VmUtils().getNicSpecs(vmInputs.getUpdateValue(), null, VirtualDeviceConfigSpecOperation.ADD,
-                    GENERATED, SERVER_ASSIGNED, Operation.ADD.toString(), vmInputs);
-        } else {
-            List<VirtualDevice> virtualDevicesList = getVirtualDeviceList(connectionResources, vmMor);
-
-            return new VmUtils().getNicSpecs(Constants.EMPTY, virtualDevicesList, VirtualDeviceConfigSpecOperation.REMOVE,
-                    Constants.EMPTY, null, Operation.REMOVE.toString(), vmInputs);
+            return new VmUtils().getPopulatedCDSpecs(null, null, virtualDevicesList, VirtualDeviceConfigSpecOperation.REMOVE,
+                    null, null, null, REMOVE.toString(), vmInputs);
         }
     }
 
     ResourceAllocationInfo getResourceAllocationInfo(String input) throws Exception {
-        VmUtils vmUtils = new VmUtils();
-        SharesInfo sharesInfo = vmUtils.getSharesInfo(input);
+        SharesInfo sharesInfo = new VmUtils().getSharesInfo(input);
         ResourceAllocationInfo resourceAllocationInfo = new ResourceAllocationInfo();
         resourceAllocationInfo.setShares(sharesInfo);
 
         return resourceAllocationInfo;
     }
 
-    private VirtualMachineConfigSpec createVmConfigSpec(ConnectionResources connectionResources, VmInputs vmInputs)
-            throws Exception {
+    private void markOccupiedSlots(Map<Integer, VirtualDevice> deviceMap, List<Integer> deviceList, int[] slots) {
+        for (Integer deviceKey : deviceList) {
+            if (deviceMap.get(deviceKey).getUnitNumber() != null) {
+                slots[deviceMap.get(deviceKey).getUnitNumber()] = Constants.OCCUPIED;
+            }
+        }
+    }
+
+    private VirtualMachineConfigSpec createVmConfigSpec(ConnectionResources connectionResources, VmInputs vmInputs) throws Exception {
         ConfigTarget configTarget = new VmUtils().getHostConfigTarget(connectionResources, connectionResources.getHostMor());
         List<VirtualMachineDatastoreInfo> dataStoresList = configTarget.getDatastore();
         String dataStoreName = vmInputs.getDataStore();
-
         ManagedObjectReference dataStoreRef = null;
-
-        if (StringUtils.isNotBlank(dataStoreName)) {
+        if (isNotBlank(dataStoreName)) {
             dataStoreRef = new VmUtils().getDataStoreRef(dataStoreName, dataStoresList);
         } else {
             boolean isDsAvailable = false;
@@ -201,39 +202,38 @@ public class VmConfigSpecs {
                 }
             }
             if (!isDsAvailable) {
-                throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND_ON_HOST);
+                throw new RuntimeException(DATA_STORE_NOT_FOUND_ON_HOST);
             }
         }
 
         String volumeName = getVolumeName(dataStoreName);
         VmUtils vmUtils = new VmUtils();
 
-        VirtualDeviceConfigSpec diskSpec = vmUtils.getPopulatedDiskSpec(volumeName, null,
-                VirtualDeviceConfigSpecOperation.ADD, VirtualDeviceConfigSpecFileOperation.CREATE,
-                DEFAULT_DISK_CONTROLLER_KEY, DEFAULT_DISK_UNIT_NUMBER, DEFAULT_DISK_KEY, Operation.CREATE.toString(), vmInputs);
+        VirtualDeviceConfigSpec diskSpec = vmUtils.getPopulatedDiskSpec(volumeName, null, VirtualDeviceConfigSpecOperation.ADD,
+                VirtualDeviceConfigSpecFileOperation.CREATE, Constants.DEFAULT_DISK_CONTROLLER_KEY, Constants.DEFAULT_DISK_UNIT_NUMBER, Constants.DEFAULT_DISK_KEY,
+                CREATE.toString(), vmInputs);
 
         VirtualDevice ideController = getFirstFreeIdeController(connectionResources);
         VirtualDeviceConfigSpec cdSpec = new VirtualDeviceConfigSpec();
         if (ideController != null) {
             cdSpec = vmUtils.getPopulatedCDSpecs(volumeName, dataStoreRef, null,
-                    VirtualDeviceConfigSpecOperation.ADD, ideController.getKey(), DEFAULT_CD_ROM_UNIT_NUMBER,
-                    DEFAULT_CD_ROM_KEY, Operation.ADD.toString(), vmInputs);
+                    VirtualDeviceConfigSpecOperation.ADD, ideController.getKey(), Constants.DEFAULT_CD_ROM_UNIT_NUMBER,
+                    Constants.DEFAULT_CD_ROM_KEY, Operation.ADD.toString(), vmInputs);
         }
 
         String networkName = getNetworkName(configTarget);
         VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
         if (configTarget.getNetwork() != null) {
-            nicSpec = vmUtils.getNicSpecs(networkName, null, VirtualDeviceConfigSpecOperation.ADD, GENERATED,
-                    DEFAULT_NIC_KEY, Operation.ADD.toString(), vmInputs);
+            nicSpec = vmUtils.getNicSpecs(networkName, null, VirtualDeviceConfigSpecOperation.ADD, Constants.GENERATED,
+                    Constants.DEFAULT_NIC_KEY, Operation.ADD.toString(), vmInputs);
         }
 
         VirtualMachineConfigSpec configSpec = getVirtualMachineConfigSpec(dataStoreName);
-        VirtualDeviceConfigSpec scsiCtrlSpec = getFirstScsiController(DEFAULT_DISK_CONTROLLER_KEY);
+        VirtualDeviceConfigSpec scsiCtrlSpec = getFirstScsiController(Constants.DEFAULT_DISK_CONTROLLER_KEY);
         VirtualDeviceConfigSpec floppySpec = createFloppyConfigSpecs();
 
         return addDeviceConfigSpecs(configSpec, scsiCtrlSpec, floppySpec, cdSpec, ideController, diskSpec, nicSpec);
     }
-
 
     private VirtualMachineConfigSpec getVirtualMachineConfigSpec(String dataStoreName) {
         VirtualMachineFileInfo virtualMachineFileInfo = new VirtualMachineFileInfo();
@@ -246,19 +246,18 @@ public class VmConfigSpecs {
     }
 
     private String getVolumeName(String name) {
-        return StringUtils.isBlank(name) ? DEFAULT_VOLUME_NAME : LEFT_SQUARE_BRACKET + name + Constants.RIGHT_SQUARE_BRACKET;
+        return isBlank(name) ? Constants.DEFAULT_VOLUME_NAME : Constants.LEFT_SQUARE_BRACKET + name + RIGHT_SQUARE_BRACKET;
     }
 
     private VirtualDeviceConfigSpec getFirstScsiController(int diskCtrlKey) {
         VirtualLsiLogicController scsiCtrl = new VirtualLsiLogicController();
-        scsiCtrl.setBusNumber(DEFAULT_CONTROLLER_BUS_NUMBER);
+        scsiCtrl.setBusNumber(Constants.DEFAULT_CONTROLLER_BUS_NUMBER);
         scsiCtrl.setKey(diskCtrlKey);
         scsiCtrl.setSharedBus(VirtualSCSISharing.NO_SHARING);
 
         return getVirtualDeviceConfigSpec(scsiCtrl);
     }
 
-    @NotNull
     private VirtualDeviceConfigSpec getVirtualDeviceConfigSpec(VirtualDevice virtualDevice) {
         VirtualDeviceConfigSpec scsiCtrlSpec = new VirtualDeviceConfigSpec();
         scsiCtrlSpec.setOperation(VirtualDeviceConfigSpecOperation.ADD);
@@ -267,8 +266,7 @@ public class VmConfigSpecs {
         return scsiCtrlSpec;
     }
 
-    private VirtualDevice getFirstFreeIdeController(ConnectionResources connectionResources)
-            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+    private VirtualDevice getFirstFreeIdeController(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         List<VirtualDevice> defaultDevices = getDefaultDevicesList(connectionResources);
         for (VirtualDevice device : defaultDevices) {
             if (device instanceof VirtualIDEController) {
@@ -281,29 +279,28 @@ public class VmConfigSpecs {
 
     private VirtualDeviceConfigSpec createFloppyConfigSpecs() {
         VirtualFloppyDeviceBackingInfo flpBacking = new VirtualFloppyDeviceBackingInfo();
-        flpBacking.setDeviceName(DEFAULT_FLOPPY_DEVICE_NAME);
+        flpBacking.setDeviceName(Constants.DEFAULT_FLOPPY_DEVICE_NAME);
 
         VirtualFloppy floppyDisk = new VirtualFloppy();
         floppyDisk.setBacking(flpBacking);
-        floppyDisk.setKey(DEFAULT_FLOPPY_DEVICE_KEY);
+        floppyDisk.setKey(Constants.DEFAULT_FLOPPY_DEVICE_KEY);
 
         return getVirtualDeviceConfigSpec(floppyDisk);
     }
 
-    private List<VirtualDevice> getDefaultDevicesList(ConnectionResources connectionResources)
-            throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+    private List<VirtualDevice> getDefaultDevicesList(ConnectionResources connectionResources) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         ManagedObjectReference environmentBrowserMor = new MorObjectHandler()
                 .getEnvironmentBrowser(connectionResources, ManagedObjectType.ENVIRONMENT_BROWSER.getValue());
 
         VirtualMachineConfigOption configOptions = connectionResources.getVimPortType()
                 .queryConfigOption(environmentBrowserMor, null, connectionResources.getHostMor());
         if (configOptions == null) {
-            throw new RuntimeException(ErrorMessages.VIRTUAL_HARDWARE_INFO_NOT_FOUND_IN_COMPUTE_RESOURCE);
+            throw new RuntimeException(VIRTUAL_HARDWARE_INFO_NOT_FOUND_IN_COMPUTE_RESOURCE);
         }
 
         List<VirtualDevice> listVirtualDevices = configOptions.getDefaultDevice();
         if (listVirtualDevices == null) {
-            throw new RuntimeException(ErrorMessages.DATA_STORE_NOT_FOUND_IN_COMPUTE_RESOURCE);
+            throw new RuntimeException(DATA_STORE_NOT_FOUND_IN_COMPUTE_RESOURCE);
         }
 
         return listVirtualDevices;
@@ -325,7 +322,6 @@ public class VmConfigSpecs {
                                                           VirtualDeviceConfigSpec floppySpec, VirtualDeviceConfigSpec cdSpec,
                                                           VirtualDevice ideController, VirtualDeviceConfigSpec diskSpec,
                                                           VirtualDeviceConfigSpec nicSpec) {
-
         List<VirtualDeviceConfigSpec> deviceConfigSpec = new ArrayList<>();
         deviceConfigSpec.add(scsiCtrlSpec);
         deviceConfigSpec.add(floppySpec);
@@ -351,23 +347,22 @@ public class VmConfigSpecs {
                 return datastoreSummary.getName();
             }
         }
-        throw new RuntimeException("Cannot find any dataStore with: [" + minFreeSpace + "] minimum amount of space available.");
+        throw new RuntimeException(format("Cannot find any dataStore with: [%s] minimum amount of space available.", minFreeSpace));
     }
 
-    private List<Integer> getControllerKey(ConnectionResources connectionResources, ManagedObjectReference vmMor)
-            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+    private List<Integer> getControllerKey(ConnectionResources connectionResources, ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         List<VirtualDevice> virtualDevicesList = getVirtualDeviceList(connectionResources, vmMor);
         Map<Integer, VirtualDevice> deviceMap = getVirtualDeviceMap(virtualDevicesList);
 
         for (VirtualDevice virtualDevice : virtualDevicesList) {
             if (virtualDevice instanceof VirtualSCSIController) {
                 VirtualSCSIController scsiController = (VirtualSCSIController) virtualDevice;
-                int[] slots = new int[MAXIMUM_SCSI_SLOTS];
-                slots[RESERVED_SCSI_SLOT] = OCCUPIED;
+                int[] slots = new int[Constants.MAXIMUM_SCSI_SLOTS];
+                slots[Constants.RESERVED_SCSI_SLOT] = Constants.OCCUPIED;
                 List<Integer> deviceKeyList = scsiController.getDevice();
                 markOccupiedSlots(deviceMap, deviceKeyList, slots);
                 for (int counter = 0; counter < slots.length; counter++) {
-                    if (slots[counter] != OCCUPIED) {
+                    if (slots[counter] != Constants.OCCUPIED) {
                         List<Integer> controllerKeys = new ArrayList<>();
                         controllerKeys.add(scsiController.getKey());
                         controllerKeys.add(counter);
@@ -376,12 +371,12 @@ public class VmConfigSpecs {
                 }
             }
         }
-        throw new RuntimeException(ErrorMessages.SCSI_CONTROLLER_CAPACITY_MAXED_OUT);
+        throw new RuntimeException(SCSI_CONTROLLER_CAPACITY_MAXED_OUT);
     }
 
     private List<VirtualDevice> getVirtualDeviceList(ConnectionResources connectionResources, ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         return ((ArrayOfVirtualDevice) connectionResources.getMoRefHandler()
-                .entityProps(vmMor, new String[]{CONFIG_HARDWARE_DEVICE}).get(CONFIG_HARDWARE_DEVICE))
+                .entityProps(vmMor, new String[]{Constants.CONFIG_HARDWARE_DEVICE}).get(Constants.CONFIG_HARDWARE_DEVICE))
                 .getVirtualDevice();
     }
 

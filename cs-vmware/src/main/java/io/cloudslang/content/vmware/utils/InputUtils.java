@@ -9,23 +9,25 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.utils;
 
-import io.cloudslang.content.vmware.constants.Constants;
-import io.cloudslang.content.vmware.constants.ErrorMessages;
-import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
-import io.cloudslang.content.vmware.entities.http.Protocol;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
 import static io.cloudslang.content.utils.StringUtilities.isBlank;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.INVALID_VM_DISK_SIZE;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER;
+import static io.cloudslang.content.vmware.entities.Operation.ADD;
+import static io.cloudslang.content.vmware.entities.Operation.REMOVE;
+import static io.cloudslang.content.vmware.entities.Operation.UPDATE;
+import static io.cloudslang.content.vmware.entities.http.Protocol.getValue;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.LocaleUtils.isAvailableLocale;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 
@@ -38,7 +40,7 @@ public class InputUtils {
     private static final String VMDK_SUFFIX = ".vmdk";
 
     public static String getUrlString(HttpInputs httpInputs) throws Exception {
-        String protocolString = Protocol.getValue(httpInputs.getProtocol());
+        String protocolString = getValue(httpInputs.getProtocol());
         String urlString = protocolString + "://" + httpInputs.getHost() + ":" + httpInputs.getPort() + URI_PATH;
         URL url = new URL(urlString.toLowerCase());
 
@@ -46,36 +48,34 @@ public class InputUtils {
     }
 
     public static String getDiskFileNameString(String dataStoreName, String vmName, String updateValue) {
-        return "[" + dataStoreName + "] " + vmName + "/" + updateValue + VMDK_SUFFIX;
+        return format("[%s] " + vmName + "/" + updateValue + VMDK_SUFFIX, dataStoreName);
     }
 
     public static boolean isUpdateOperation(VmInputs vmInputs) {
-        return Operation.UPDATE.toString().equalsIgnoreCase(vmInputs.getOperation());
+        return UPDATE.toString().equalsIgnoreCase(vmInputs.getOperation());
     }
 
     public static void checkValidOperation(VmInputs vmInputs, String device) {
-        if (!InputUtils.isValidUpdateOperation(vmInputs)) {
-            throw new RuntimeException("Invalid operation specified for " + device + " device. " +
-                    "The " + device + " device can be only added or removed.");
+        if (!isValidUpdateOperation(vmInputs)) {
+            throw new RuntimeException(format("Invalid operation specified for %s device. This device can be only added or removed.", device));
         }
     }
 
     public static void validateDiskInputs(VmInputs vmInputs) {
-        if (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation()) && vmInputs.getLongVmDiskSize() <= 0L) {
-            throw new RuntimeException(ErrorMessages.INVALID_VM_DISK_SIZE);
+        if (ADD.toString().equalsIgnoreCase(vmInputs.getOperation()) && vmInputs.getLongVmDiskSize() <= 0L) {
+            throw new RuntimeException(INVALID_VM_DISK_SIZE);
         }
-        if (Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()) &&
-                Constants.EMPTY.equals(vmInputs.getUpdateValue())) {
-            throw new RuntimeException("The [" + vmInputs.getUpdateValue() + "] is not a valid disk label.");
+        if (REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()) && EMPTY.equals(vmInputs.getUpdateValue())) {
+            throw new RuntimeException(format("The [%s] is not a valid disk label.", vmInputs.getUpdateValue()));
         }
     }
 
     public static int getIntInput(String input, int defaultValue) {
         int intInput;
         try {
-            intInput = StringUtils.isBlank(input) ? defaultValue : Integer.parseInt(input);
+            intInput = isBlank(input) ? defaultValue : parseInt(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER);
+            throw new RuntimeException(NOT_ZERO_OR_POSITIVE_NUMBER);
         }
 
         return intInput;
@@ -84,21 +84,22 @@ public class InputUtils {
     public static long getLongInput(String input, long defaultValue) {
         long longInput;
         try {
-            longInput = StringUtils.isBlank(input) ? defaultValue : Long.parseLong(input);
+            longInput = isBlank(input) ? defaultValue : parseLong(input);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER);
+            throw new RuntimeException(NOT_ZERO_OR_POSITIVE_NUMBER);
         }
 
         return longInput;
     }
 
     public static boolean getBooleanInput(String input, boolean defaultValue) {
-        return StringUtils.isBlank(input) ? defaultValue : Boolean.parseBoolean(input);
+        return isBlank(input) ? defaultValue : parseBoolean(input);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean isInt(String input) {
         try {
-            Integer.parseInt(input);
+            parseInt(input);
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -106,29 +107,13 @@ public class InputUtils {
         return true;
     }
 
-    public static byte getByteInput(String input, byte defaultValue) {
-        byte byteInput;
-        try {
-            byteInput = StringUtils.isBlank(input) ? defaultValue : Byte.parseByte(input);
-        } catch (NumberFormatException nfe) {
-            throw new RuntimeException(ErrorMessages.NOT_BYTE);
-        }
-
-        return byteInput;
-    }
-
     public static String getDefaultDelimiter(String input, String defaultValue) {
-        return StringUtils.isBlank(input) ? defaultValue : input;
-    }
-
-    private static boolean isValidUpdateOperation(VmInputs vmInputs) {
-        return (Operation.ADD.toString().equalsIgnoreCase(vmInputs.getOperation()) ||
-                Operation.REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
+        return isBlank(input) ? defaultValue : input;
     }
 
     public static Locale getLocale(String localeLang, String localeCountry) throws Exception {
         Locale locale;
-        if (StringUtils.isEmpty(localeLang) && StringUtils.isEmpty(localeCountry)) {
+        if (isBlank(localeLang) && isBlank(localeCountry)) {
             locale = Locale.getDefault();
         } else {
             locale = new Locale(localeLang, localeCountry);
@@ -149,5 +134,9 @@ public class InputUtils {
         if (isNotBlank(input1) && isNotBlank(input2)) {
             throw new IllegalArgumentException(exceptionMessage);
         }
+    }
+
+    private static boolean isValidUpdateOperation(VmInputs vmInputs) {
+        return (ADD.toString().equalsIgnoreCase(vmInputs.getOperation()) || REMOVE.toString().equalsIgnoreCase(vmInputs.getOperation()));
     }
 }

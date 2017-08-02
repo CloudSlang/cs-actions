@@ -9,17 +9,17 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities;
 
-import io.cloudslang.content.vmware.utils.InputUtils;
+import io.cloudslang.content.vmware.constants.Constants;
+
+import static io.cloudslang.content.vmware.utils.InputUtils.getBooleanInput;
+import static io.cloudslang.content.vmware.utils.InputUtils.getIntInput;
+import static java.lang.Boolean.parseBoolean;
 
 /**
  * Created by Mihai Tusa.
  * 3/21/2016.
  */
 public class GuestInputs {
-    private static final int DEFAULT_AUTO_LOGON_COUNT = 0;
-    private static final int DEFAULT_AUTO_USERS_NUMBER = 1;
-    private static final int DEFAULT_TIME_ZONE = 0;
-
     private String rebootOption;
     private String computerName;
     private String computerPassword;
@@ -278,37 +278,37 @@ public class GuestInputs {
         }
 
         public GuestInputsBuilder withAutoLogon(String inputValue) throws Exception {
-            autoLogon = Boolean.parseBoolean(inputValue);
+            autoLogon = parseBoolean(inputValue);
             return this;
         }
 
         public GuestInputsBuilder withHwClockUTC(String inputValue) throws Exception {
-            hwClockUTC = InputUtils.getBooleanInput(inputValue, true);
+            hwClockUTC = getBooleanInput(inputValue, true);
             return this;
         }
 
         public GuestInputsBuilder withDeleteAccounts(String inputValue) {
-            deleteAccounts = Boolean.parseBoolean(inputValue);
+            deleteAccounts = parseBoolean(inputValue);
             return this;
         }
 
         public GuestInputsBuilder withChangeSID(String inputValue) {
-            changeSID = InputUtils.getBooleanInput(inputValue, true);
+            changeSID = getBooleanInput(inputValue, true);
             return this;
         }
 
         public GuestInputsBuilder withAutoLogonCount(String inputValue) {
-            autoLogonCount = InputUtils.getIntInput(inputValue, DEFAULT_AUTO_LOGON_COUNT);
+            autoLogonCount = getIntInput(inputValue, Constants.DEFAULT_AUTO_LOGON_COUNT);
             return this;
         }
 
         public GuestInputsBuilder withAutoUsers(String inputValue) {
-            autoUsers = InputUtils.getIntInput(inputValue, DEFAULT_AUTO_USERS_NUMBER);
+            autoUsers = getIntInput(inputValue, Constants.DEFAULT_AUTO_USERS_NUMBER);
             return this;
         }
 
         public GuestInputsBuilder withTimeZone(String inputValue) {
-            timeZone = InputUtils.getIntInput(inputValue, DEFAULT_TIME_ZONE);
+            timeZone = getIntInput(inputValue, Constants.DEFAULT_TIME_ZONE);
             return this;
         }
     }

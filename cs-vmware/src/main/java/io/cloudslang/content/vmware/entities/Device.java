@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities;
 
+import static java.lang.String.format;
+
 /**
  * Created by Mihai Tusa.
  * 1/22/2016.
@@ -21,10 +23,12 @@ public enum Device {
     NIC;
 
     public static String getValue(String input) throws Exception {
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized device: [" + input + "]. Valid values are: cpu, memory, disk, cd, nic.");
+        for (Device device : Device.values()) {
+            if (device.name().equalsIgnoreCase(input)) {
+                return device.name().toLowerCase();
+            }
         }
+
+        throw new IllegalArgumentException(format("Unrecognized device: [%s]. Valid values are: cpu, memory, disk, cd, nic.", input));
     }
 }

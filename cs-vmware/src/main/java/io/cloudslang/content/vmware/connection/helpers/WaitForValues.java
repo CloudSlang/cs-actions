@@ -32,12 +32,9 @@ import org.w3c.dom.Element;
 
 import java.util.Arrays;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 public class WaitForValues {
-    private static final String ERROR = "error";
-    private static final String READY = "ready";
-    private static final String FILTER_VALUES = "filtervals";
-    private static final String KEY_VALUE_NULL_STRING = "val: null";
-    private static final int MAX_TRIED_WAIT_FOR_UPDATE_COUNTER = 100;
 
     private ServiceContent serviceContent;
     private VimPortType vimPort;
@@ -64,7 +61,7 @@ public class WaitForValues {
     public Object[] wait(ManagedObjectReference objMor, String[] filterProps, String[] endWaitProps, Object[][] expectedValues)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
 
-        String version = Constants.EMPTY;
+        String version = EMPTY;
         String stateVal = null;
 
         Object[] endValues = new Object[endWaitProps.length];
@@ -81,7 +78,7 @@ public class WaitForValues {
             int waitForUpdateCounter = 0;
             if (updateset == null || updateset.getFilterSet() == null) {
                 waitForUpdateCounter++;
-                if (waitForUpdateCounter <= MAX_TRIED_WAIT_FOR_UPDATE_COUNTER) {
+                if (waitForUpdateCounter <= Constants.MAX_TRIED_WAIT_FOR_UPDATE_COUNTER) {
                     continue;
                 }
                 break;
@@ -104,7 +101,7 @@ public class WaitForValues {
             for (int chgi = 0; chgi < endValues.length && !reached; chgi++) {
                 for (int vali = 0; vali < expectedValues[chgi].length && !reached; vali++) {
                     Object expctdval = expectedValues[chgi][vali];
-                    if (endValues[chgi].toString().contains(KEY_VALUE_NULL_STRING)) {
+                    if (endValues[chgi].toString().contains(Constants.KEY_VALUE_NULL_STRING)) {
                         Element stateElement = (Element) endValues[chgi];
                         if (stateElement != null && stateElement.getFirstChild() != null) {
                             stateVal = stateElement.getFirstChild().getTextContent();
@@ -113,7 +110,7 @@ public class WaitForValues {
                     } else {
                         expctdval = expectedValues[chgi][vali];
                         reached = expctdval.equals(endValues[chgi]);
-                        stateVal = FILTER_VALUES;
+                        stateVal = Constants.FILTER_VALUES;
                     }
                 }
             }
@@ -132,11 +129,11 @@ public class WaitForValues {
             return new Object[]{HttpNfcLeaseState.ERROR};
         } else {
             switch (stateVal) {
-                case READY:
+                case Constants.READY:
                     return new Object[]{HttpNfcLeaseState.READY};
-                case ERROR:
+                case Constants.ERROR:
                     return new Object[]{HttpNfcLeaseState.ERROR};
-                case FILTER_VALUES:
+                case Constants.FILTER_VALUES:
                     return filterValues;
                 default:
                     return null;
@@ -163,7 +160,7 @@ public class WaitForValues {
     private void updateValues(String[] props, Object[] vals, PropertyChange propchg) {
         for (int findi = 0; findi < props.length; findi++) {
             if (propchg.getName().lastIndexOf(props[findi]) >= 0) {
-                vals[findi] = propchg.getOp() == PropertyChangeOp.REMOVE ? Constants.EMPTY : propchg.getVal();
+                vals[findi] = propchg.getOp() == PropertyChangeOp.REMOVE ? EMPTY : propchg.getVal();
             }
         }
     }

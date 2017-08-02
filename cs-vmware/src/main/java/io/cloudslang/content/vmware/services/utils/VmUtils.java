@@ -435,13 +435,11 @@ public class VmUtils {
         return nicSpecs;
     }
 
-    private <T extends VirtualDevice> T findVirtualDevice(Class<T> type, List<VirtualDevice> virtualDevicesList,
-                                                          VmInputs vmInputs) {
+    @SuppressWarnings("unchecked")
+    private <T extends VirtualDevice> T findVirtualDevice(Class<T> type, List<VirtualDevice> virtualDevicesList, VmInputs vmInputs) {
         for (VirtualDevice device : virtualDevicesList) {
-            if (type.isAssignableFrom(device.getClass())) {
-                if (vmInputs.getUpdateValue().equalsIgnoreCase(device.getDeviceInfo().getLabel())) {
-                    return (T) device;
-                }
+            if (type.isAssignableFrom(device.getClass()) && vmInputs.getUpdateValue().equalsIgnoreCase(device.getDeviceInfo().getLabel())) {
+                return (T) device;
             }
         }
         return null;

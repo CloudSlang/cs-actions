@@ -26,19 +26,19 @@ import com.vmware.vim25.CustomizationSysprep;
 import com.vmware.vim25.CustomizationSysprepRebootOption;
 import com.vmware.vim25.CustomizationUserData;
 import com.vmware.vim25.CustomizationWinOptions;
-import io.cloudslang.content.vmware.constants.ErrorMessages;
 import io.cloudslang.content.vmware.entities.GuestInputs;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+
+import static io.cloudslang.content.vmware.constants.Constants.PER_SERVER;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.DOMAIN_AND_WORKGROUP_BOTH_PRESENT;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by Mihai Tusa.
  * 3/21/2016.
  */
 public class GuestConfigSpecs {
-    private static final String PER_SERVER = "perServer";
-
     public CustomizationSpec getWinCustomizationSpec(GuestInputs guestInputs) {
         CustomizationSpec customizationSpec = new CustomizationSpec();
 
@@ -102,9 +102,8 @@ public class GuestConfigSpecs {
         winOptions.setDeleteAccounts(guestInputs.isDeleteAccounts());
         winOptions.setChangeSID(guestInputs.isChangeSID());
 
-        if (StringUtils.isNotBlank(guestInputs.getRebootOption())) {
-            CustomizationSysprepRebootOption rebootOption = CustomizationSysprepRebootOption
-                    .fromValue(guestInputs.getRebootOption());
+        if (isNotBlank(guestInputs.getRebootOption())) {
+            CustomizationSysprepRebootOption rebootOption = CustomizationSysprepRebootOption.fromValue(guestInputs.getRebootOption());
             winOptions.setReboot(rebootOption);
         }
 
@@ -121,7 +120,7 @@ public class GuestConfigSpecs {
         CustomizationAdapterMapping adapterMapping = new CustomizationAdapterMapping();
 
         CustomizationIPSettings ipSettings;
-        if (StringUtils.isNotBlank(guestInputs.getIpAddress())) {
+        if (isNotBlank(guestInputs.getIpAddress())) {
             ipSettings = getFixedIpSettings(guestInputs);
         } else {
             ipSettings = new CustomizationIPSettings();
@@ -129,7 +128,7 @@ public class GuestConfigSpecs {
         }
         adapterMapping.setAdapter(ipSettings);
 
-        if (StringUtils.isNotBlank(guestInputs.getMacAddress())) {
+        if (isNotBlank(guestInputs.getMacAddress())) {
             adapterMapping.setMacAddress(guestInputs.getMacAddress());
         }
 
@@ -145,12 +144,12 @@ public class GuestConfigSpecs {
         ipSettings.setIp(fixedIp);
         ipSettings.setSubnetMask(guestInputs.getSubnetMask());
 
-        if (StringUtils.isNotBlank(guestInputs.getDefaultGateway())) {
+        if (isNotBlank(guestInputs.getDefaultGateway())) {
             List<String> gatewaysList = ipSettings.getGateway();
             gatewaysList.add(guestInputs.getDefaultGateway());
         }
 
-        if (StringUtils.isNotBlank(guestInputs.getDnsServer())) {
+        if (isNotBlank(guestInputs.getDnsServer())) {
             List<String> dnsServersList = ipSettings.getDnsServerList();
             dnsServersList.add(guestInputs.getDnsServer());
         }
@@ -167,7 +166,7 @@ public class GuestConfigSpecs {
         CustomizationIdentification identification = getCustomizationIdentification(guestInputs);
         customizationSysprep.setIdentification(identification);
 
-        if (StringUtils.isNotBlank(guestInputs.getLicenseDataMode())) {
+        if (isNotBlank(guestInputs.getLicenseDataMode())) {
             CustomizationLicenseFilePrintData licenseFilePrintData = getCustomizationLicenseFilePrintData(guestInputs);
             customizationSysprep.setLicenseFilePrintData(licenseFilePrintData);
         }
@@ -203,11 +202,11 @@ public class GuestConfigSpecs {
     private CustomizationIdentification getCustomizationIdentification(GuestInputs guestInputs) {
         CustomizationIdentification identification = new CustomizationIdentification();
 
-        if (StringUtils.isNotBlank(guestInputs.getDomain()) && StringUtils.isNotBlank(guestInputs.getWorkgroup())) {
-            throw new RuntimeException(ErrorMessages.DOMAIN_AND_WORKGROUP_BOTH_PRESENT);
+        if (isNotBlank(guestInputs.getDomain()) && isNotBlank(guestInputs.getWorkgroup())) {
+            throw new RuntimeException(DOMAIN_AND_WORKGROUP_BOTH_PRESENT);
         }
 
-        if (StringUtils.isNotBlank(guestInputs.getDomain())) {
+        if (isNotBlank(guestInputs.getDomain())) {
             identification.setDomainAdmin(guestInputs.getDomainUsername());
             identification.setJoinDomain(guestInputs.getDomain());
 
@@ -226,8 +225,7 @@ public class GuestConfigSpecs {
             licenseFilePrintData.setAutoUsers(guestInputs.getAutoUsers());
         }
 
-        CustomizationLicenseDataMode licenseDataMode = CustomizationLicenseDataMode
-                .fromValue(guestInputs.getLicenseDataMode());
+        CustomizationLicenseDataMode licenseDataMode = CustomizationLicenseDataMode.fromValue(guestInputs.getLicenseDataMode());
         licenseFilePrintData.setAutoMode(licenseDataMode);
 
         return licenseFilePrintData;
@@ -236,7 +234,7 @@ public class GuestConfigSpecs {
     private CustomizationPassword getCustomizationPassword(String value) {
         CustomizationPassword password = new CustomizationPassword();
 
-        if (StringUtils.isNotBlank(value)) {
+        if (isNotBlank(value)) {
             password.setPlainText(true);
             password.setValue(value);
         } else {

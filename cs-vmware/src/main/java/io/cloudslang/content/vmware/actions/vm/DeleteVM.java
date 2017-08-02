@@ -16,9 +16,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.vmware.connection.Connection;
-import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
@@ -26,7 +25,21 @@ import io.cloudslang.content.vmware.services.VmService;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.vmware.constants.Inputs.CLOSE_SESSION;
+import static io.cloudslang.content.vmware.constants.Inputs.HOST;
+import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
+import static io.cloudslang.content.vmware.constants.Inputs.PORT;
+import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
+import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
+import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.VMWARE_GLOBAL_SESSION_OBJECT;
+import static io.cloudslang.content.vmware.constants.Inputs.VM_NAME;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -59,14 +72,14 @@ public class DeleteVM {
      */
     @Action(name = "Delete Virtual Machine",
             outputs = {
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_SUCCESS,
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> deleteVM(@Param(value = HOST, required = true) String host,
@@ -98,8 +111,7 @@ public class DeleteVM {
 
             return new VmService().deleteVM(httpInputs, vmInputs);
         } catch (Exception ex) {
-            return OutputUtilities.getFailureResultsMap(ex);
+            return getFailureResultsMap(ex);
         }
-
     }
 }

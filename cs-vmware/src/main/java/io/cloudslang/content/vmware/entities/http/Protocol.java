@@ -9,7 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities.http;
 
-import org.apache.commons.lang3.StringUtils;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -20,13 +21,16 @@ public enum Protocol {
     HTTPS;
 
     public static String getValue(String input) throws Exception {
-        if (StringUtils.isBlank(input)) {
-            return HTTPS.toString();
+        if (isBlank(input)) {
+            return HTTPS.name().toLowerCase();
         }
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unsupported protocol value: [" + input + "]. Valid values are: https, http.");
+
+        for (Protocol protocol : Protocol.values()) {
+            if (protocol.name().equalsIgnoreCase(input)) {
+                return protocol.name().toLowerCase();
+            }
         }
+
+        throw new IllegalArgumentException(format("Unsupported protocol value: [%s]. Valid values are: https, http.", input));
     }
 }

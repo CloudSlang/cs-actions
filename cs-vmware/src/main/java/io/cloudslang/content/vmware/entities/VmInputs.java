@@ -9,10 +9,12 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities;
 
-import io.cloudslang.content.vmware.utils.InputUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Locale;
+
+import static io.cloudslang.content.vmware.utils.InputUtils.getIntInput;
+import static io.cloudslang.content.vmware.utils.InputUtils.getLongInput;
+import static java.lang.Boolean.parseBoolean;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -23,39 +25,46 @@ public class VmInputs {
     private static final int DEFAULT_CPU_COUNT = 1;
     private static final long DEFAULT_VM_DISK_SIZE_MB = 1024;
     private static final long DEFAULT_VM_MEMORY_SIZE_MB = 1024;
-    private String dataCenterName;
-    private String hostname;
-    private String virtualMachineName;
-    private String virtualMachineId;
-    private String description;
-    private String dataStore;
-    private String guestOsId;
-    private String operation;
-    private String device;
-    private String updateValue;
-    private String vmDiskMode;
-    private String folderName;
-    private String resourcePool;
-    private String cloneName;
-    private String cloneResourcePool;
-    private String cloneHost;
-    private String cloneDataStore;
-    private String coresPerSocket;
-    private int intNumCPUs;
-    private long longVmDiskSize;
 
-    private long longVmMemorySize;
-    private boolean thickProvision;
-    private boolean template;
+    private final String cloneDataStore;
+    private final String cloneHost;
+    private final String cloneName;
+    private final String cloneResourcePool;
+    private final String coresPerSocket;
+    private final String clusterName;
+    private final String dataCenterName;
+    private final String dataStore;
+    private final String description;
+    private final String device;
+    private final String diskProvisioning;
+    private final String folderName;
+    private final String guestOsId;
+    private final String hostGroupName;
+    private final String hostname;
+    private final String ipAllocScheme;
+    private final String ipProtocol;
+    private final String operation;
+    private final String resourcePool;
+    private final String ruleName;
+    private final String snapshotDescription;
+    private final String snapshotName;
+    private final String updateValue;
+    private final String virtualMachineId;
+    private final String virtualMachineName;
+    private final String vmDiskMode;
+    private final String vmGroupName;
 
-    private Locale locale;
-    private String ipProtocol;
-    private String ipAllocScheme;
-    private String diskProvisioning;
-    private String vmGroupName;
-    private String hostGroupName;
-    private String ruleName;
-    private String clusterName;
+    private final int intNumCPUs;
+
+    private final long longVmDiskSize;
+    private final long longVmMemorySize;
+
+    private final boolean quiesce;
+    private final boolean template;
+    private final boolean thickProvision;
+    private final boolean withMemoryDump;
+
+    private final Locale locale;
 
     private VmInputs(VmInputsBuilder builder) {
         this.dataCenterName = builder.dataCenterName;
@@ -75,11 +84,9 @@ public class VmInputs {
         this.cloneHost = builder.cloneHost;
         this.cloneDataStore = builder.cloneDataStore;
         this.coresPerSocket = builder.coresPerSocket;
-
         this.intNumCPUs = builder.intNumCPUs;
         this.longVmDiskSize = builder.longVmDiskSize;
         this.longVmMemorySize = builder.longVmMemorySize;
-
         this.thickProvision = builder.thickProvision;
         this.template = builder.template;
         this.locale = builder.locale;
@@ -90,8 +97,11 @@ public class VmInputs {
         this.vmGroupName = builder.vmGroupName;
         this.hostGroupName = builder.hostGroupName;
         this.ruleName = builder.ruleName;
-        this.clusterName = builder.clusterName;
         this.virtualMachineId = builder.virtualMachineId;
+        this.snapshotName = builder.snapshotName;
+        this.snapshotDescription = builder.snapshotDescription;
+        this.withMemoryDump = builder.withMemoryDump;
+        this.quiesce = builder.quiesce;
     }
 
     public String getDataCenterName() {
@@ -218,6 +228,22 @@ public class VmInputs {
         return ruleName;
     }
 
+    public String getSnapshotName() {
+        return snapshotName;
+    }
+
+    public String getSnapshotDescription() {
+        return snapshotDescription;
+    }
+
+    public boolean isWithMemoryDump() {
+        return withMemoryDump;
+    }
+
+    public boolean isQuiesce() {
+        return quiesce;
+    }
+
     public static class VmInputsBuilder {
         private String dataCenterName;
         private String hostname;
@@ -252,6 +278,11 @@ public class VmInputs {
         private String hostGroupName;
         private String ruleName;
         private String virtualMachineId;
+
+        private String snapshotName;
+        private String snapshotDescription;
+        private boolean withMemoryDump;
+        private boolean quiesce;
 
         public VmInputs build() {
             return new VmInputs(this);
@@ -338,7 +369,7 @@ public class VmInputs {
         }
 
         public VmInputsBuilder withIntNumCPUs(String inputValue) {
-            intNumCPUs = InputUtils.getIntInput(inputValue, DEFAULT_CPU_COUNT);
+            intNumCPUs = getIntInput(inputValue, DEFAULT_CPU_COUNT);
             return this;
         }
 
@@ -348,22 +379,22 @@ public class VmInputs {
         }
 
         public VmInputsBuilder withLongVmDiskSize(String inputValue) {
-            longVmDiskSize = InputUtils.getLongInput(inputValue, DEFAULT_VM_DISK_SIZE_MB);
+            longVmDiskSize = getLongInput(inputValue, DEFAULT_VM_DISK_SIZE_MB);
             return this;
         }
 
         public VmInputsBuilder withLongVmMemorySize(String inputValue) {
-            longVmMemorySize = InputUtils.getLongInput(inputValue, DEFAULT_VM_MEMORY_SIZE_MB);
+            longVmMemorySize = getLongInput(inputValue, DEFAULT_VM_MEMORY_SIZE_MB);
             return this;
         }
 
         public VmInputsBuilder withThickProvision(String inputValue) {
-            thickProvision = Boolean.parseBoolean(inputValue);
+            thickProvision = parseBoolean(inputValue);
             return this;
         }
 
         public VmInputsBuilder withTemplate(String inputValue) {
-            template = Boolean.parseBoolean(inputValue);
+            template = parseBoolean(inputValue);
             return this;
         }
 
@@ -383,7 +414,7 @@ public class VmInputs {
         }
 
         public VmInputsBuilder withDiskProvisioning(String diskProvisioning) {
-            if (StringUtils.isBlank(diskProvisioning)) {
+            if (isBlank(diskProvisioning)) {
                 this.diskProvisioning = null;
             } else {
                 this.diskProvisioning = diskProvisioning;
@@ -413,6 +444,26 @@ public class VmInputs {
 
         public VmInputsBuilder withVirtualMachineId(String virtualMachineId) {
             this.virtualMachineId = virtualMachineId;
+            return this;
+        }
+
+        public VmInputsBuilder withSnapshotName(String snapshotName) {
+            this.snapshotName = snapshotName;
+            return this;
+        }
+
+        public VmInputsBuilder withSnapshotDescription(String snapshotDescription) {
+            this.snapshotDescription = snapshotDescription;
+            return this;
+        }
+
+        public VmInputsBuilder withWithMemoryDump(String withMemoryDump) {
+            this.withMemoryDump = parseBoolean(withMemoryDump);
+            return this;
+        }
+
+        public VmInputsBuilder withQuiesce(String quiesce) {
+            this.quiesce = parseBoolean(quiesce);
             return this;
         }
     }

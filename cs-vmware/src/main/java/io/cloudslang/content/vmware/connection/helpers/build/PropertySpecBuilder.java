@@ -12,7 +12,8 @@ package io.cloudslang.content.vmware.connection.helpers.build;
 import com.vmware.vim25.PropertySpec;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import static java.util.Arrays.asList;
 
 public class PropertySpecBuilder extends PropertySpec {
     private void init() {
@@ -33,7 +34,7 @@ public class PropertySpecBuilder extends PropertySpec {
 
     public PropertySpecBuilder pathSet(final String... paths) {
         init();
-        this.pathSet.addAll(Arrays.asList(paths));
+        this.pathSet.addAll(asList(paths));
         return this;
     }
 }

@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities;
 
+import static java.lang.String.format;
+
 /**
  * Created by Mihai Tusa.
  * 1/22/2016.
@@ -19,10 +21,12 @@ public enum Level {
     LOW;
 
     public static String getValue(String input) throws Exception {
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unsupported level value: [" + input + "]. Valid values are: high, normal, low.");
+        for (Level level : Level.values()) {
+            if (level.name().equalsIgnoreCase(input)) {
+                return level.name().toLowerCase();
+            }
         }
+
+        throw new IllegalArgumentException(format("Unsupported level value: [%s]. Valid values are: high, normal, low.", input));
     }
 }
