@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  *******************************************************************************/
-package io.cloudslang.content.vmware.actions.vm;
+package io.cloudslang.content.vmware.actions.snapshot;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -48,11 +48,15 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateSnapshot {
     /**
-     * Connects to a specified data center and deletes a virtual machine identified by the inputs provided.
+     * Connects to a specified data center and creates a snapshot out of specified virtual machine with/without memory dump.
      *
      * @param host                VMware host or IP - Example: "vc6.subdomain.example.com"
-     * @param port                Optional - the port to connect through - Examples: "443", "80" - Default: "443"
-     * @param protocol            Optional - the connection protocol - Valid: "http", "https" - Default: "https"
+     * @param port                Optional - the port to connect through
+     *                            Valid values: "443", "80"
+     *                            Default: "443"
+     * @param protocol            Optional - the connection protocol
+     *                            Valid: "http", "https"
+     *                            Default: "https"
      * @param username            VMware username used to connect
      * @param password            Password associated with "username" input
      * @param trustEveryone       Optional - if "true" will allow connections from any host, if "false" the connection will
@@ -86,7 +90,7 @@ public class CreateSnapshot {
      * @return resultMap with String as key and value that contains returnCode of the operation, success message with
      * task id of the execution or failure message and the exception if there is one
      */
-    @Action(name = "Delete Virtual Machine",
+    @Action(name = "Create Virtual Machine Snapshot",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -98,20 +102,20 @@ public class CreateSnapshot {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
-    public Map<String, String> deleteVM(@Param(value = HOST, required = true) String host,
-                                        @Param(value = PORT) String port,
-                                        @Param(value = PROTOCOL) String protocol,
-                                        @Param(value = USERNAME, required = true) String username,
-                                        @Param(value = PASSWORD, encrypted = true) String password,
-                                        @Param(value = TRUST_EVERYONE) String trustEveryone,
-                                        @Param(value = CLOSE_SESSION) String closeSession,
+    public Map<String, String> createVMSnapshot(@Param(value = HOST, required = true) String host,
+                                                @Param(value = PORT) String port,
+                                                @Param(value = PROTOCOL) String protocol,
+                                                @Param(value = USERNAME, required = true) String username,
+                                                @Param(value = PASSWORD, encrypted = true) String password,
+                                                @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                                @Param(value = CLOSE_SESSION) String closeSession,
 
-                                        @Param(value = VM_NAME, required = true) String virtualMachineName,
-                                        @Param(value = SNAPSHOT_NAME, required = true) String snapshotName,
-                                        @Param(value = SNAPSHOT_DESCRIPTION) String snapshotDescription,
-                                        @Param(value = MEMORY_DUMP, required = true) String withMemoryDump,
-                                        @Param(value = QUIESCE, required = true) String quiesce,
-                                        @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
+                                                @Param(value = VM_NAME, required = true) String virtualMachineName,
+                                                @Param(value = SNAPSHOT_NAME, required = true) String snapshotName,
+                                                @Param(value = SNAPSHOT_DESCRIPTION) String snapshotDescription,
+                                                @Param(value = MEMORY_DUMP, required = true) String withMemoryDump,
+                                                @Param(value = QUIESCE, required = true) String quiesce,
+                                                @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
 
         try {
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()

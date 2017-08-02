@@ -27,7 +27,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
@@ -58,9 +57,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MorObjectHandler.class, GuestConfigSpecs.class, GuestService.class})
 public class GuestServiceTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Mock
     private ConnectionResources connectionResourcesMock;
 

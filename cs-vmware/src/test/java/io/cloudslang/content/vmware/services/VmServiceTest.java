@@ -50,7 +50,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
@@ -89,9 +88,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({GetObjectProperties.class, MorObjectHandler.class, VirtualMachineRelocateSpec.class, VmConfigSpecs.class, VmService.class, VmUtils.class})
 public class VmServiceTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Mock
     private HttpInputs httpInputsMock;
 
@@ -1436,23 +1432,7 @@ public class VmServiceTest {
 
     private VmService createResponseHelperForCreateAndCloneVM(final ManagedObjectReference folderMock, final ManagedObjectReference resourcePoolMock,
                                                               final ManagedObjectReference hostMock, final ManagedObjectReference dataStoreMock) {
-        return new VmService() {
-            ManagedObjectReference getMorFolder(String name, ConnectionResources connectionResources) {
-                return folderMock;
-            }
-
-            ManagedObjectReference getMorResourcePool(String name, ConnectionResources connectionResources) {
-                return resourcePoolMock;
-            }
-
-            ManagedObjectReference getMorHost(String name, ConnectionResources connectionResources, ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-                return hostMock;
-            }
-
-            ManagedObjectReference getMorDataStore(String name, ConnectionResources connectionResources, ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-                return dataStoreMock;
-            }
-        };
+        return new VmService() {};
     }
 
     private ResponseHelper getResponseHelper(final ConnectionResources connectionResources, final ManagedObjectReference task, final boolean isDone) {
