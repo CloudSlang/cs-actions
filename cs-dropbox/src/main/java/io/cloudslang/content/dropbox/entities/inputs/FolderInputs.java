@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.dropbox.entities.inputs;
 
+import static io.cloudslang.content.dropbox.entities.constants.Constants.Miscellaneous.CREATE_FOLDER_PATH_REGEX;
+import static io.cloudslang.content.dropbox.entities.constants.Constants.Miscellaneous.DELETE_FOLDER_PATH_REGEX;
 import static io.cloudslang.content.dropbox.utils.InputsUtil.getValidPath;
 import static java.lang.Boolean.valueOf;
 
@@ -17,39 +19,52 @@ import static java.lang.Boolean.valueOf;
  * 5/31/2017.
  */
 public class FolderInputs {
-    private final String path;
+    private final String createFolderPath;
+    private final String deleteFileOrFolderPath;
 
-    private final Boolean autorename;
+    private final boolean autoRename;
 
     private FolderInputs(Builder builder) {
-        this.path = builder.path;
-        this.autorename = builder.autorename;
+        this.createFolderPath = builder.createFolderPath;
+        this.deleteFileOrFolderPath = builder.deleteFileOrFolderPath;
+
+        this.autoRename = builder.autoRename;
     }
 
-    public String getPath() {
-        return path;
+    public String getCreateFolderPath() {
+        return createFolderPath;
     }
 
-    public Boolean getAutorename() {
-        return autorename;
+    public String getDeleteFileOrFolderPath() {
+        return deleteFileOrFolderPath;
+    }
+
+    public boolean isAutoRename() {
+        return autoRename;
     }
 
     public static class Builder {
-        private String path;
+        private String createFolderPath;
+        private String deleteFileOrFolderPath;
 
-        private Boolean autorename;
+        private boolean autoRename;
 
         public FolderInputs build() {
             return new FolderInputs(this);
         }
 
-        public Builder withPath(String input) {
-            path = getValidPath(input);
+        public Builder withCreateFolderPath(String input) {
+            createFolderPath = getValidPath(input, CREATE_FOLDER_PATH_REGEX);
+            return this;
+        }
+
+        public Builder withDeleteFileOrFolderPath(String input) {
+            deleteFileOrFolderPath = getValidPath(input, DELETE_FOLDER_PATH_REGEX);
             return this;
         }
 
         public Builder withAutoRename(String input) {
-            autorename = valueOf(input);
+            autoRename = valueOf(input);
             return this;
         }
     }

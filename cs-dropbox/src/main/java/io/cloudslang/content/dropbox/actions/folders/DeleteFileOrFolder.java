@@ -29,10 +29,9 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.Api.FOLDERS;
-import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.CREATE_FOLDER;
+import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.DELETE_FILE_OR_FOLDER;
 import static io.cloudslang.content.dropbox.entities.constants.Inputs.CommonInputs.ACCESS_TOKEN;
 import static io.cloudslang.content.dropbox.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.dropbox.entities.constants.Inputs.FolderInputs.AUTO_RENAME;
 import static io.cloudslang.content.dropbox.entities.constants.Inputs.FolderInputs.PATH;
 import static io.cloudslang.content.dropbox.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
@@ -51,14 +50,14 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
-/**
- * Created by TusaM
- * 5/26/2017.
- */
-public class CreateFolder {
+
+public class DeleteFileOrFolder {
     /**
-     * Creates a folder at a given path.
-     * https://www.dropbox.com/developers/documentation/http/documentation#files-create_folder
+     * Deletes a folder at a given path.
+     * Notes: Delete the file or folder at a given path. If the path is a folder, all its contents will be deleted too.
+     * A successful response indicates that the file or folder was deleted. The returned metadata will be the corresponding
+     * FileMetadata or FolderMetadata for the item at time of deletion, and not a DeletedMetadata object.
+     * https://www.dropbox.com/developers/documentation/http/documentation#files-delete_v2
      *
      * @param endpoint             Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
      *                             bellow example.
@@ -118,16 +117,12 @@ public class CreateFolder {
      *                             execution it will close it.
      *                             Valid values: "true", "false"
      *                             Default value: "true"
-     * @param autorename           Optional - Whether Dropbox server try/or not to auto-rename the folder to avoid naming
-     *                             conflict.
-     *                             Valid values: "true", "false"
-     *                             Default value: "false"
-     * @param path                 Path in the user's Dropbox to create.
-     *                             Regex pattern: "(/(.|[\r\n])*)|(ns:[0-9]+(/.*)?)"
+     * @param path                 Path in the user's Dropbox to indicate the file/folder to be deleted.
+     *                             Regex pattern: "(/(.|[\r\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Create Folder",
+    @Action(name = "Delete File Or Folder",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -155,7 +150,6 @@ public class CreateFolder {
                                        @Param(value = SOCKET_TIMEOUT) String socketTimeout,
                                        @Param(value = USE_COOKIES) String useCookies,
                                        @Param(value = KEEP_ALIVE) String keepAlive,
-                                       @Param(value = AUTO_RENAME) String autorename,
                                        @Param(value = PATH, required = true) String path) {
         try {
             final HttpClientInputs httpClientInputs = getHttpClientInputs(proxyHost, proxyPort, proxyUsername, proxyPassword,
@@ -163,15 +157,14 @@ public class CreateFolder {
                     socketTimeout, useCookies, keepAlive, METHOD_NAME);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withAction(CREATE_FOLDER)
+                    .withAction(DELETE_FILE_OR_FOLDER)
                     .withAccessToken(accessToken)
                     .withApi(FOLDERS)
                     .withEndpoint(endpoint)
                     .build();
 
             final FolderInputs folderInputs = new FolderInputs.Builder()
-                    .withAutoRename(autorename)
-                    .withCreateFolderPath(path)
+                    .withDeleteFileOrFolderPath(path)
                     .build();
 
             return new DropboxService().execute(httpClientInputs, commonInputs, folderInputs);
