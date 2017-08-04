@@ -54,6 +54,7 @@ public class Constants {
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String PIPE_DELIMITER = "|";
         public static final String SCOPE_SEPARATOR = "/";
+        public static final String DEFAULT_INSTANCE_TYPE = "m1.small";
     }
 
     public static class Values {
