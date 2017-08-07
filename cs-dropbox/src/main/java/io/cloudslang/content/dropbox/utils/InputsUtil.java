@@ -20,12 +20,10 @@ import static io.cloudslang.content.dropbox.entities.constants.Constants.ErrorMe
 import static io.cloudslang.content.dropbox.entities.constants.Constants.HttpClientInputsValues.ALLOW_ALL;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.HttpClientInputsValues.BROWSER_COMPATIBLE;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.HttpClientInputsValues.STRICT;
-import static io.cloudslang.content.dropbox.entities.constants.Constants.Miscellaneous.PATH_REGEX;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.Values.INIT_INDEX;
 import static io.cloudslang.content.dropbox.factory.UriFactory.getUri;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.ANONYMOUS;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
-import static java.lang.Boolean.parseBoolean;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
@@ -98,15 +96,15 @@ public class InputsUtil {
         return (isBlank(suffix)) ? prefix : prefix + suffix;
     }
 
-    public static String getValidPath(String input) {
-        if (!compile(PATH_REGEX).matcher(input).matches()) {
+    public static String getValidPath(String input, String regex) {
+        if (!compile(regex).matcher(input).matches()) {
             throw new IllegalArgumentException(format("Incorrect provided value: %s input. %s", input, CONSTRAINS_ERROR_MESSAGE));
         }
 
         return input;
     }
 
-    private static String getInputWithDefaultValue(String input, String defaultValue) {
+    public static String getInputWithDefaultValue(String input, String defaultValue) {
         return isBlank(input) ? defaultValue : input;
     }
 

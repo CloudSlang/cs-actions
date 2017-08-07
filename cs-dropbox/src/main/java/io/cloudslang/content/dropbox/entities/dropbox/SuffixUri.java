@@ -16,7 +16,10 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * 5/30/2017.
  */
 public enum SuffixUri {
-    CREATE_FOLDER("CreateFolder", "/create_folder");
+    CREATE_FOLDER("CreateFolder", "/create_folder"),
+    CREATE_FOLDER_V2("CreateFolder2", "/create_folder_v2"),
+    DELETE_FILE_OR_FOLDER("DeleteFileOrFolder", "/delete"),
+    DELETE_FILE_OR_FOLDER_V2("DeleteFileOrFolder2", "/delete_v2");
 
     private final String key;
     private final String value;
@@ -26,7 +29,7 @@ public enum SuffixUri {
         this.value = value;
     }
 
-    public static String getValue(String key) {
+    public static String getSuffixUri(String key) {
         for (SuffixUri suffixUri : SuffixUri.values()) {
             if (suffixUri.getKey().equalsIgnoreCase(key)) {
                 return suffixUri.getValue();

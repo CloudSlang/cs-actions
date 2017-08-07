@@ -20,6 +20,7 @@ public class Constants {
 
     public static class Api {
         public static final String FOLDERS = "folders";
+        public static final String FILES = "files";
     }
 
     public static class ErrorMessages {
@@ -32,7 +33,7 @@ public class Constants {
 
     public static class FolderActions {
         public static final String CREATE_FOLDER = "CreateFolder";
-
+        public static final String DELETE_FILE_OR_FOLDER = "DeleteFileOrFolder";
     }
 
     public static class HttpClientInputsValues {
@@ -45,12 +46,13 @@ public class Constants {
     }
 
     public static class Miscellaneous {
-        public static final String BLANK = " ";
-        public static final String PATH_REGEX = "(/(.|[\r\n])*)|(ns:[0-9]+(/.*)?)";
-
+        public static final String BLANK_CHAR = " ";
+        public static final String CREATE_FOLDER_PATH_REGEX = "(/(.|[\r\n])*)|(ns:[0-9]+(/.*)?)";
+        public static final String DELETE_FOLDER_PATH_REGEX = "(/(.|[\r\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)";
     }
 
     public static class Values {
         public static final int INIT_INDEX = 0;
+        public static final int VERSION_2 = 2;
     }
 }

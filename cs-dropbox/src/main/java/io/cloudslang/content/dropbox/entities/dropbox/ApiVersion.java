@@ -14,6 +14,7 @@ package io.cloudslang.content.dropbox.entities.dropbox;
  * 5/30/2017.
  */
 public enum ApiVersion {
+    NONE(""),
     ONE("/1"),
     TWO("/2");
 
@@ -23,9 +24,9 @@ public enum ApiVersion {
         this.value = value;
     }
 
-    public static String getValue(String key) {
+    public static String getApiVersion(String key) {
         for (ApiVersion version : ApiVersion.values()) {
-            if (version.getValue().equalsIgnoreCase(key)) {
+            if (version.name().equalsIgnoreCase(key)) {
                 return version.getValue();
             }
         }

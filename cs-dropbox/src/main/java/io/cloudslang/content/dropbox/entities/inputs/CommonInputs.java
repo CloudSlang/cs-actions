@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.dropbox.entities.inputs;
 
-import io.cloudslang.content.dropbox.entities.dropbox.ApiVersion;
+import static io.cloudslang.content.dropbox.entities.dropbox.ApiVersion.getApiVersion;
 
 /**
  * Created by TusaM
@@ -82,7 +82,7 @@ public class CommonInputs {
         }
 
         public Builder withVersion(String input) {
-            version = ApiVersion.getValue(input);
+            version = getApiVersion(input);
             return this;
         }
     }

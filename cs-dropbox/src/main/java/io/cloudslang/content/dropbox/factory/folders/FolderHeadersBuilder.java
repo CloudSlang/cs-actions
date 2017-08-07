@@ -12,9 +12,10 @@ package io.cloudslang.content.dropbox.factory.folders;
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.CREATE_FOLDER;
+import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.DELETE_FILE_OR_FOLDER;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.HttpClientInputsValues.AUTHORIZATION_HEADER_PREFIX;
-import static io.cloudslang.content.dropbox.entities.constants.Constants.Miscellaneous.BLANK;
+import static io.cloudslang.content.dropbox.entities.constants.Constants.Miscellaneous.BLANK_CHAR;
 
 /**
  * Created by TusaM
@@ -28,7 +29,11 @@ public class FolderHeadersBuilder {
     public static void setFolderHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             case CREATE_FOLDER:
-                wrapper.getHttpClientInputs().setHeaders(AUTHORIZATION_HEADER_PREFIX + BLANK + wrapper.getCommonInputs().getAccessToken());
+                wrapper.getHttpClientInputs().setHeaders(AUTHORIZATION_HEADER_PREFIX + BLANK_CHAR + wrapper.getCommonInputs().getAccessToken());
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                break;
+            case DELETE_FILE_OR_FOLDER:
+                wrapper.getHttpClientInputs().setHeaders(AUTHORIZATION_HEADER_PREFIX + BLANK_CHAR + wrapper.getCommonInputs().getAccessToken());
                 wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
                 break;
             default:

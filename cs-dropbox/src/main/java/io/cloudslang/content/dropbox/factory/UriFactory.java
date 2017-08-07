@@ -9,13 +9,19 @@
  *******************************************************************************/
 package io.cloudslang.content.dropbox.factory;
 
-import io.cloudslang.content.dropbox.entities.dropbox.DropboxApi;
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
 
+import static io.cloudslang.content.dropbox.entities.constants.Constants.Api.FILES;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.Api.FOLDERS;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.ErrorMessages.UNSUPPORTED_DROPBOX_API;
-import static io.cloudslang.content.dropbox.entities.dropbox.SuffixUri.getValue;
+import static io.cloudslang.content.dropbox.entities.constants.Constants.Values.VERSION_2;
+import static io.cloudslang.content.dropbox.entities.dropbox.ApiVersion.TWO;
+import static io.cloudslang.content.dropbox.entities.dropbox.ApiVersion.getApiVersion;
+import static io.cloudslang.content.dropbox.entities.dropbox.DropboxApi.getApi;
+import static io.cloudslang.content.dropbox.entities.dropbox.SuffixUri.getSuffixUri;
+import static io.cloudslang.content.dropbox.utils.InputsUtil.getInputWithDefaultValue;
 import static io.cloudslang.content.dropbox.utils.InputsUtil.toAppend;
+import static java.lang.String.valueOf;
 
 /**
  * Created by TusaM
@@ -28,12 +34,12 @@ public class UriFactory {
 
     public static String getUri(InputsWrapper wrapper) {
         String action = wrapper.getCommonInputs().getAction();
-        String api = wrapper.getCommonInputs().getApi();
-        String apiVersion = wrapper.getCommonInputs().getVersion();
+        String apiVersion = getInputWithDefaultValue(wrapper.getCommonInputs().getVersion(), getApiVersion(TWO.name()));
+        String suffixUriKey = apiVersion.contains(valueOf(VERSION_2)) ? action + VERSION_2 : action;
 
-        switch (api) {
+        switch (wrapper.getCommonInputs().getApi()) {
             case FOLDERS:
-                return toAppend(apiVersion + DropboxApi.FILES.getValue(), getValue(action));
+                return toAppend(apiVersion + getApi(FILES), getSuffixUri(suffixUriKey));
             default:
                 throw new RuntimeException(UNSUPPORTED_DROPBOX_API);
         }
