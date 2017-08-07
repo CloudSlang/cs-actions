@@ -24,29 +24,29 @@ import io.cloudslang.content.vmware.connection.ConnectionResources;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by Mihai Tusa.
  * 1/15/2016.
  */
 public class GetObjectProperties {
-
-    private GetObjectProperties() {}
+    private GetObjectProperties() {
+        // prevent instantiation
+    }
 
     /**
-     * Retrieve contents for a single object based on the property collector
-     * registered with the service.
+     * Retrieve contents for a single object based on the property collector registered with the service.
      *
      * @param mor        Managed Object Reference to get contents for
      * @param properties names of properties of object to retrieve
      * @return retrieved object contents
      */
+    @SuppressWarnings("ConstantConditions")
     @NotNull
-    public static ObjectContent[] getObjectProperties(ConnectionResources connectionResources,
-                                                      ManagedObjectReference mor,
-                                                      String[] properties)
+    public static ObjectContent[] getObjectProperties(ConnectionResources connectionResources, ManagedObjectReference mor, String[] properties)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
         if (mor == null) {
             return new ObjectContent[0];
@@ -62,7 +62,7 @@ public class GetObjectProperties {
         }
 
         spec.getPropSet().get(0).setType(mor.getType());
-        spec.getPropSet().get(0).getPathSet().addAll(Arrays.asList(properties));
+        spec.getPropSet().get(0).getPathSet().addAll(asList(properties));
         spec.getObjectSet().add(new ObjectSpec());
         spec.getObjectSet().get(0).setObj(mor);
         spec.getObjectSet().get(0).setSkip(false);
@@ -75,15 +75,14 @@ public class GetObjectProperties {
     }
 
     @NotNull
-    public static ObjectContent getObjectProperty(final ConnectionResources connectionResources,
-                                                  final ManagedObjectReference mor,
+    public static ObjectContent getObjectProperty(final ConnectionResources connectionResources, final ManagedObjectReference mor,
                                                   final String property) throws Exception {
         final ObjectContent[] objectContents = getObjectProperties(connectionResources, mor, new String[]{property});
         if (objectContents.length != 0 && objectContents[0] != null) {
-            return objectContents[0]; //not the best solution, but life is too short. It's not because of management! Nooooo
-        } else {
-            throw new Exception();
+            return objectContents[0];
         }
+
+        throw new Exception();
     }
 
     /**
@@ -94,10 +93,8 @@ public class GetObjectProperties {
      * @return list of object content
      * @throws Exception
      */
-    private static List<ObjectContent> retrievePropertiesAllObjects(ConnectionResources connectionResources,
-                                                                   List<PropertyFilterSpec> propertyFilterSpecList)
+    private static List<ObjectContent> retrievePropertiesAllObjects(ConnectionResources connectionResources, List<PropertyFilterSpec> propertyFilterSpecList)
             throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-
         VimPortType vimPort = connectionResources.getVimPortType();
         ManagedObjectReference serviceInstance = connectionResources.getServiceInstance();
         ServiceContent serviceContent = vimPort.retrieveServiceContent(serviceInstance);
@@ -105,9 +102,7 @@ public class GetObjectProperties {
         RetrieveOptions propertyObjectRetrieveOptions = new RetrieveOptions();
         List<ObjectContent> objectContentList = new ArrayList<>();
 
-        RetrieveResult results = vimPort.retrievePropertiesEx(propertyCollectorReference,
-                propertyFilterSpecList,
-                propertyObjectRetrieveOptions);
+        RetrieveResult results = vimPort.retrievePropertiesEx(propertyCollectorReference, propertyFilterSpecList, propertyObjectRetrieveOptions);
 
         if (results != null && results.getObjects() != null && !results.getObjects().isEmpty()) {
             objectContentList.addAll(results.getObjects());

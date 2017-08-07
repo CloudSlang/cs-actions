@@ -17,11 +17,15 @@ import com.vmware.vim25.RuntimeFaultFaultMsg;
 import com.vmware.vim25.TaskInfoState;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.connection.helpers.WaitForValues;
-import io.cloudslang.content.vmware.constants.Outputs;
-import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
 
 import java.util.Map;
+
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.vmware.entities.ManagedObjectType.INFO_ERROR;
+import static io.cloudslang.content.vmware.entities.ManagedObjectType.INFO_STATE;
+import static io.cloudslang.content.vmware.entities.ManagedObjectType.STATE;
 
 /**
  * Created by Mihai Tusa.
@@ -40,15 +44,14 @@ public class ResponseHelper {
             throws InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 
         return (getTaskResultAfterDone(connectionResources, task)) ?
-                ResponseUtils.getResultsMap(successMessage, Outputs.RETURN_CODE_SUCCESS) :
-                ResponseUtils.getResultsMap(failureMessage, Outputs.RETURN_CODE_FAILURE);
+                ResponseUtils.getResultsMap(successMessage, SUCCESS) :
+                ResponseUtils.getResultsMap(failureMessage, FAILURE);
     }
 
     protected boolean getTaskResultAfterDone(ConnectionResources connectionResources, ManagedObjectReference task)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg {
         WaitForValues waitForValues = new WaitForValues(connectionResources.getConnection());
-        Object[] result = waitForValues.wait(task, new String[]{ManagedObjectType.INFO_STATE.getValue(),
-                        ManagedObjectType.INFO_ERROR.getValue()}, new String[]{ManagedObjectType.STATE.getValue()},
+        Object[] result = waitForValues.wait(task, new String[]{INFO_STATE.getValue(), INFO_ERROR.getValue()}, new String[]{STATE.getValue()},
                 new Object[][]{new Object[]{TaskInfoState.SUCCESS, TaskInfoState.ERROR}});
 
         if (result[1] instanceof LocalizedMethodFault) {

@@ -10,11 +10,13 @@
 package io.cloudslang.content.vmware.entities.http;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.vmware.connection.Connection;
-import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
+
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
+import static io.cloudslang.content.vmware.entities.http.Protocol.getValue;
+import static io.cloudslang.content.vmware.utils.InputUtils.getIntInput;
 
 /**
  * Created by Mihai Tusa.
@@ -95,12 +97,12 @@ public class HttpInputs {
         }
 
         public HttpInputsBuilder withPort(String inputValue) {
-            port = InputUtils.getIntInput(inputValue, DEFAULT_HTTPS_PORT);
+            port = getIntInput(inputValue, DEFAULT_HTTPS_PORT);
             return this;
         }
 
         public HttpInputsBuilder withProtocol(String inputValue) throws Exception {
-            protocol = Protocol.getValue(inputValue);
+            protocol = getValue(inputValue);
             return this;
         }
 
@@ -115,12 +117,12 @@ public class HttpInputs {
         }
 
         public HttpInputsBuilder withTrustEveryone(String inputValue) throws Exception {
-            trustEveryone = BooleanUtilities.toBoolean(inputValue);
+            trustEveryone = toBoolean(inputValue);
             return this;
         }
 
         public HttpInputsBuilder withCloseSession(String inputValue) throws Exception {
-            closeSession = BooleanUtilities.toBoolean(inputValue);
+            closeSession = toBoolean(inputValue);
             return this;
         }
 

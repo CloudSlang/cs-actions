@@ -11,14 +11,14 @@ package io.cloudslang.content.vmware.utils;
 
 import com.google.gson.Gson;
 
-public class JsonConverter {
-
-    private static Gson gson = new Gson();
+class JsonConverter {
+    private static Gson GSON = new Gson();
 
     private JsonConverter() {
+        // prevent instantiation
     }
 
-    public static <T> T convertFromJson(String jsonString, Class<T> classOfT) {
-        return gson.fromJson(jsonString, classOfT);
+    static <T> T convertFromJson(String jsonString, Class<T> classOfT) {
+        return GSON.fromJson(jsonString, classOfT);
     }
 }

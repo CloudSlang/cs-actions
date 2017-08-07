@@ -14,7 +14,8 @@ import com.vmware.vim25.ObjectSpec;
 import com.vmware.vim25.SelectionSpec;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import static java.util.Arrays.asList;
 
 public class ObjectSpecBuilder extends ObjectSpec {
     private void init() {
@@ -35,7 +36,7 @@ public class ObjectSpecBuilder extends ObjectSpec {
 
     public ObjectSpecBuilder selectSet(final SelectionSpec... selectionSpecs) {
         init();
-        this.selectSet.addAll(Arrays.asList(selectionSpecs));
+        this.selectSet.addAll(asList(selectionSpecs));
         return this;
     }
 }

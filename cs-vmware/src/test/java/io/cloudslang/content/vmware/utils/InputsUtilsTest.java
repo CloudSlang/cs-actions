@@ -111,7 +111,7 @@ public class InputsUtilsTest {
     @Test
     public void checkValidOperation() throws Exception {
         exception.expect(RuntimeException.class);
-        exception.expectMessage("Invalid operation specified for disk device. The disk device can be only added or removed.");
+        exception.expectMessage("Invalid operation specified for disk device. This device can be only added or removed.");
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withDevice("disk").withOperation("update").build();
         InputUtils.checkValidOperation(vmInputs, "disk");
@@ -160,31 +160,6 @@ public class InputsUtilsTest {
                 .withUpdateValue("")
                 .build();
         InputUtils.validateDiskInputs(vmInputs);
-    }
-
-    @Test
-    public void getByteInputSuccess() {
-        byte test = 0;
-        InputUtils.getByteInput("-128", test);
-
-        assertEquals(0, test);
-    }
-
-    @Test
-    public void getByteInputNotByte() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a positive number between 0 and 127 values range.");
-
-        byte test = 0;
-        InputUtils.getByteInput("128", test);
-    }
-
-    @Test
-    public void getByteInputDefault() {
-        byte test = 0;
-        InputUtils.getByteInput("", test);
-
-        assertEquals(0, test);
     }
 
     @Test

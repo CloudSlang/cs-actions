@@ -9,9 +9,11 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
+import static java.lang.Long.MAX_VALUE;
+import static java.util.concurrent.Executors.newCachedThreadPool;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Created by giloan on 10/5/2016.
@@ -23,7 +25,7 @@ public class CustomExecutor {
 
     public CustomExecutor(boolean parallel) {
         this.parallel = parallel;
-        this.executor = parallel ? (ThreadPoolExecutor) Executors.newCachedThreadPool() : null;
+        this.executor = parallel ? (ThreadPoolExecutor) newCachedThreadPool() : null;
     }
 
     public void execute(final Runnable task) {
@@ -37,7 +39,7 @@ public class CustomExecutor {
     public void shutdown() throws InterruptedException {
         if (parallel) {
             executor.shutdown();
-            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+            executor.awaitTermination(MAX_VALUE, SECONDS);
         }
     }
 

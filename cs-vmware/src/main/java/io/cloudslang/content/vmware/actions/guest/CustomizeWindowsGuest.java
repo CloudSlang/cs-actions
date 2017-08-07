@@ -16,9 +16,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.vmware.connection.Connection;
-import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
@@ -27,7 +26,43 @@ import io.cloudslang.content.vmware.services.GuestService;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.vmware.constants.Inputs.AUTO_LOGON;
+import static io.cloudslang.content.vmware.constants.Inputs.AUTO_LOGON_COUNT;
+import static io.cloudslang.content.vmware.constants.Inputs.AUTO_USERS;
+import static io.cloudslang.content.vmware.constants.Inputs.CHANGE_SID;
+import static io.cloudslang.content.vmware.constants.Inputs.CLOSE_SESSION;
+import static io.cloudslang.content.vmware.constants.Inputs.COMPUTER_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.COMPUTER_PASSWORD;
+import static io.cloudslang.content.vmware.constants.Inputs.DEFAULT_GATEWAY;
+import static io.cloudslang.content.vmware.constants.Inputs.DELETE_ACCOUNTS;
+import static io.cloudslang.content.vmware.constants.Inputs.DNS_SERVER;
+import static io.cloudslang.content.vmware.constants.Inputs.DOMAIN;
+import static io.cloudslang.content.vmware.constants.Inputs.DOMAIN_PASSWORD;
+import static io.cloudslang.content.vmware.constants.Inputs.DOMAIN_USERNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.HOST;
+import static io.cloudslang.content.vmware.constants.Inputs.IP_ADDRESS;
+import static io.cloudslang.content.vmware.constants.Inputs.LICENSE_DATA_MODE;
+import static io.cloudslang.content.vmware.constants.Inputs.MAC_ADDRESS;
+import static io.cloudslang.content.vmware.constants.Inputs.OWNER_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.OWNER_ORGANIZATION;
+import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
+import static io.cloudslang.content.vmware.constants.Inputs.PORT;
+import static io.cloudslang.content.vmware.constants.Inputs.PRODUCT_KEY;
+import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
+import static io.cloudslang.content.vmware.constants.Inputs.REBOOT_OPTION;
+import static io.cloudslang.content.vmware.constants.Inputs.SUBNET_MASK;
+import static io.cloudslang.content.vmware.constants.Inputs.TIME_ZONE;
+import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
+import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.VMWARE_GLOBAL_SESSION_OBJECT;
+import static io.cloudslang.content.vmware.constants.Inputs.VM_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.WORKGROUP;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -109,14 +144,14 @@ public class CustomizeWindowsGuest {
      */
     @Action(name = "Customize Windows Guest",
             outputs = {
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_SUCCESS,
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.RETURN_CODE_FAILURE,
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> customizeWindowsGuest(@Param(value = HOST, required = true) String host,
@@ -126,7 +161,6 @@ public class CustomizeWindowsGuest {
                                                      @Param(value = PASSWORD, encrypted = true) String password,
                                                      @Param(value = TRUST_EVERYONE) String trustEveryone,
                                                      @Param(value = CLOSE_SESSION) String closeSession,
-
 
                                                      @Param(value = VM_NAME, required = true) String virtualMachineName,
                                                      @Param(value = REBOOT_OPTION, required = true) String rebootOption,
@@ -197,7 +231,7 @@ public class CustomizeWindowsGuest {
 
             return new GuestService().customizeVM(httpInputs, vmInputs, guestInputs, true);
         } catch (Exception ex) {
-            return OutputUtilities.getFailureResultsMap(ex);
+            return getFailureResultsMap(ex);
         }
 
     }

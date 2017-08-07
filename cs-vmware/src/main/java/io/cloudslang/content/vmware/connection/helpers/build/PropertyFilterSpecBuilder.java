@@ -14,7 +14,8 @@ import com.vmware.vim25.PropertyFilterSpec;
 import com.vmware.vim25.PropertySpec;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import static java.util.Arrays.asList;
 
 public class PropertyFilterSpecBuilder extends PropertyFilterSpec {
     private void init() {
@@ -28,13 +29,13 @@ public class PropertyFilterSpecBuilder extends PropertyFilterSpec {
 
     public PropertyFilterSpecBuilder propSet(final PropertySpec... propertySpecs) {
         init();
-        this.propSet.addAll(Arrays.asList(propertySpecs));
+        this.propSet.addAll(asList(propertySpecs));
         return this;
     }
 
     public PropertyFilterSpecBuilder objectSet(final ObjectSpec... objectSpecs) {
         init();
-        this.objectSet.addAll(Arrays.asList(objectSpecs));
+        this.objectSet.addAll(asList(objectSpecs));
         return this;
     }
 }

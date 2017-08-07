@@ -9,6 +9,8 @@
  *******************************************************************************/
 package io.cloudslang.content.vmware.entities;
 
+import static java.lang.String.format;
+
 /**
  * Created by Mihai Tusa.
  * 1/22/2016.
@@ -19,11 +21,13 @@ public enum DiskMode {
     INDEPENDENT_NONPERSISTENT;
 
     public static String getValue(String input) throws Exception {
-        try {
-            return valueOf(input.toUpperCase()).toString();
-        } catch (IllegalArgumentException iae) {
-            throw new RuntimeException("Unrecognized disk mode value: [" + input + "]. " +
-                    "Valid values are: persistent, independent_persistent, independent_nonpersistent.");
+        for (DiskMode diskMode : DiskMode.values()) {
+            if (diskMode.name().equalsIgnoreCase(input)) {
+                return diskMode.name().toLowerCase();
+            }
         }
+
+        throw new IllegalArgumentException(format("Unrecognized disk mode value: [%s]. Valid values are: persistent, " +
+                "independent_persistent, independent_nonpersistent.", input));
     }
 }
