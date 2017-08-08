@@ -84,7 +84,7 @@ public class GetAuthorizationToken {
             })
     public Map<String, String> execute(@Param(value = USERNAME, required = true) String username,
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
-                                       @Param(value = CLIENT_ID) String clientId,
+                                       @Param(value = CLIENT_ID, required = true) String clientId,
                                        @Param(value = LOGIN_AUTHORITY) String loginAuthority,
                                        @Param(value = RESOURCE) String resource,
                                        @Param(value = PROXY_HOST) String proxyHost,
