@@ -36,7 +36,6 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_US
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.RESOURCE;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_AUTHORITY;
-import static io.cloudslang.content.azure.utils.Constants.DEFAULT_CLIENT_ID;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
 import static io.cloudslang.content.azure.utils.Constants.NEW_LINE;
@@ -92,7 +91,7 @@ public class GetAuthorizationToken {
                                        @Param(value = PROXY_PORT) String proxyPort,
                                        @Param(value = PROXY_USERNAME) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword) {
-        clientId = defaultIfEmpty(clientId, DEFAULT_CLIENT_ID);
+        clientId = defaultIfEmpty(clientId, EMPTY);
         loginAuthority = defaultIfEmpty(loginAuthority, DEFAULT_AUTHORITY);
         resource = defaultIfEmpty(resource, DEFAULT_RESOURCE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
