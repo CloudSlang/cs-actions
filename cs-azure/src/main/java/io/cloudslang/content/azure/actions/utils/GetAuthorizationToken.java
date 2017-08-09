@@ -39,6 +39,13 @@ import static io.cloudslang.content.azure.utils.Constants.DEFAULT_AUTHORITY;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
 import static io.cloudslang.content.azure.utils.Constants.NEW_LINE;
+import static io.cloudslang.content.azure.utils.DescriptionConstants.InputsDescription.*;
+import static io.cloudslang.content.azure.utils.DescriptionConstants.OperationDescription.GET_AUTH_TOKEN_DESC;
+import static io.cloudslang.content.azure.utils.DescriptionConstants.OutputsDescription.EXCEPTION_DESC;
+import static io.cloudslang.content.azure.utils.DescriptionConstants.OutputsDescription.RETURN_CODE_DESC;
+import static io.cloudslang.content.azure.utils.DescriptionConstants.OutputsDescription.RETURN_RESULT_DESC;
+import static io.cloudslang.content.azure.utils.DescriptionConstants.ResultsDescription.FAILURE_DESC;
+import static io.cloudslang.content.azure.utils.DescriptionConstants.ResultsDescription.SUCCESS_DESC;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyAuthorizationInputs;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
@@ -70,28 +77,29 @@ public class GetAuthorizationToken {
      *                       Default: '8080'
      * @param proxyUsername  User name used when connecting to the proxy
      * @param proxyPassword  The proxy server password associated with the proxyUsername input value
-     * @return The authorization Bearer token for Azure
+     * @return The authorization Bearer token for Azure.
      */
+
     @Action(name = "Get the authorization token for Azure",
+            description = GET_AUTH_TOKEN_DESC,
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = USERNAME, required = true) String username,
-                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
-                                       @Param(value = CLIENT_ID, required = true) String clientId,
-                                       @Param(value = LOGIN_AUTHORITY) String loginAuthority,
-                                       @Param(value = RESOURCE) String resource,
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword) {
-        clientId = defaultIfEmpty(clientId, EMPTY);
+    public Map<String, String> execute(@Param(value = USERNAME,required = true,description = USERNAME_DESC) String username,
+                                       @Param(value = PASSWORD,required = true,  description = PASSWORD_DESC, encrypted = true) String password,
+                                       @Param(value = CLIENT_ID,required = true, description = CLIENT_ID_DESC) String clientId,
+                                       @Param(value = LOGIN_AUTHORITY, description = LOGIN_AUTHORITY_DESC) String loginAuthority,
+                                       @Param(value = RESOURCE, description = RESOURCE_DESCRIPTION) String resource,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword) {
         loginAuthority = defaultIfEmpty(loginAuthority, DEFAULT_AUTHORITY);
         resource = defaultIfEmpty(resource, DEFAULT_RESOURCE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
