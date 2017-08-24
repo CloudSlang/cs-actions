@@ -26,18 +26,17 @@ import static io.cloudslang.content.constants.ReturnCodes.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
-
 /**
  * Created by moldovai on 8/21/2017.
  */
 public class DefaultIfEmptyAction {
 
     /**
-     * This operation checks if a string is empty and if it's true a default value will
-     * be assigned instead of the initial string.
+     * This operation checks if a string is blank or empty and if it's true a default value
+     * will be assigned instead of the initial string.
      *
-     * @param initial_value The initial string where the default value will be assigned.
-     * @param default_value The default value used to replace the empty string.
+     * @param initial_value The initial string.
+     * @param default_value The default value used to replace the initial string.
      * @param trim A variable used to check if the initial string is blank or empty.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <p/>
@@ -51,7 +50,7 @@ public class DefaultIfEmptyAction {
     private static final String DEFAULT_VALUE = "default_value";
     private static final String TRIM = "trim";
 
-    @Action(name = "Default value if string is empty",
+    @Action(name = "Default value if the initial string is blank or empty",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
