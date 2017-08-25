@@ -85,16 +85,21 @@ object InstanceService {
     request.execute()
   }
 
-  def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, attachedDisk: AttachedDisk): Operation = {
+  def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, attachedDisk: AttachedDisk): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .attachDisk(project, zone, instanceName, attachedDisk)
       .execute()
-  }
 
-  def detachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, deviceName: String): Operation = {
+  def detachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, deviceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .detachDisk(project, zone, instanceName, deviceName)
       .execute()
-  }
+
+  def getSerialPortOutput(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, port: Int, start: Long): SerialPortOutput =
+    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .getSerialPortOutput(project, zone, instanceName)
+      .setPort(port)
+      .setStart(start)
+      .execute()
 
 }
