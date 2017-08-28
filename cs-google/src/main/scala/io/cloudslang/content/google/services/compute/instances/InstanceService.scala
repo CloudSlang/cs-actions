@@ -100,6 +100,6 @@ object InstanceService {
       .getSerialPortOutput(project, zone, instanceName)
       .setPort(port)
       .setStart(start)
-      .execute()
+      .executeUsingHead()
 
 }

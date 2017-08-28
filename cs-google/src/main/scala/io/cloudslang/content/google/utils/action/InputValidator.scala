@@ -14,6 +14,7 @@ object InputValidator {
   val INVALID_PORT = "Invalid port value!"
   val INVALID_BOOLEAN = "Invalid boolean value!"
   val INVALID_NON_NEGATIVE_INTEGER = "Invalid non-negative integer!"
+  val INVALID_INTEGER = "Invalid integer!"
   val INVALID_PAIRED_LISTS_LENGTH = "Paired lists must have the same length!"
   val INVALID_DISK_SIZE = "Invalid diskSize, the size has to be an integer >= 10!"
 
@@ -23,6 +24,10 @@ object InputValidator {
 
   def validateBoolean: (String, String) => Stream[String] = validate(_, _) { value =>
     if (!BooleanUtilities.isValid(value)) Some(INVALID_BOOLEAN) else None
+  }
+
+  def validateInteger: (String, String) => Stream[String] = validate(_, _) { value =>
+    if (!NumberUtilities.isValidInt(value)) Some(INVALID_INTEGER) else None
   }
 
   def validateNonNegativeInteger: (String, String) => Stream[String] = validate(_, _) { value =>
