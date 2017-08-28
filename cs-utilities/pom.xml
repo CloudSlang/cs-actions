@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-utilities</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
     <packaging>jar</packaging>
+
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Java utils actions</description>
+    <description>Java utilities Actions</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
@@ -16,12 +20,14 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
     <scm>
         <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
         <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -34,6 +40,7 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+
     <developers>
         <developer>
             <name>Iulia Moldovan</name>
@@ -42,6 +49,26 @@
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
     </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+            <version>1.10.6</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>0.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -112,6 +139,7 @@
             </plugin>
         </plugins>
     </build>
+
     <profiles>
         <profile>
             <id>default-profile</id>
@@ -202,25 +230,4 @@
             </build>
         </profile>
     </profiles>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.hp.score.sdk</groupId>
-            <artifactId>score-content-sdk</artifactId>
-            <version>1.10.6</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-commons</artifactId>
-            <version>0.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
-
 </project>

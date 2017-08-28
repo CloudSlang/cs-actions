@@ -10,7 +10,7 @@
 package io.cloudslang.content.utilities;
 
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.utilities.actions.DefaultIfEmptyAction;
+import io.cloudslang.content.utilities.actions.DefaultIfEmpty;
 import org.junit.Test;
 import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
@@ -23,7 +23,7 @@ import static junit.framework.Assert.assertTrue;
  */
 public class DefaultIfEmptyTest {
 
-    private final DefaultIfEmptyAction d = new DefaultIfEmptyAction();
+    private final DefaultIfEmpty d = new DefaultIfEmpty();
 
     @Test
     public void testWithBlankString() {

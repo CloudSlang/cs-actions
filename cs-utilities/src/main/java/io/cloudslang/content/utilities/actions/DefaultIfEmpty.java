@@ -18,12 +18,18 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utilities.services.DefaultIfEmptyService;
-
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.OperationDescription.OPERATION_DESC;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.EXCEPTION_DESC;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.RETURN_CODE_DESC;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.RETURN_RESULT_DESC;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.InputsDescription.*;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.ResultsDescription.FAILURE_DESC;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.ResultsDescription.SUCCESS_DESC;
 import static io.cloudslang.content.utilities.entities.constants.Inputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -33,7 +39,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 /**
  * Created by moldovai on 8/21/2017.
  */
-public class DefaultIfEmptyAction {
+public class DefaultIfEmpty {
 
     /**
      * This operation checks if a string is blank or empty and if it's true a default value
@@ -49,20 +55,21 @@ public class DefaultIfEmptyAction {
      * returnCode - The returnCode of the operation: 0 for success, -1 for failure.
      */
 
-    @Action(name = "Default value if the initial string is blank or empty",
+    @Action(name = "Default if empty",
+            description = OPERATION_DESC,
             outputs = {
-                    @Output(RETURN_CODE),
-                    @Output(RETURN_RESULT),
-                    @Output(EXCEPTION),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = INITIAL_VALUE) String initialValue,
-            @Param(value = DEFAULT_VALUE, required = true) String defaultValue,
-            @Param(value = TRIM) String trim) {
+            @Param(value = INITIAL_VALUE, description = INITIAL_VALUE_DESC) String initialValue,
+            @Param(value = DEFAULT_VALUE, required = true, description = DEFAULT_VALUE_DESC) String defaultValue,
+            @Param(value = TRIM, description = TRIM_DESC) String trim) {
 
         try {
             trim = defaultIfBlank(trim, BooleanValues.TRUE);
