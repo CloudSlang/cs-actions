@@ -3,6 +3,7 @@ package io.cloudslang.content.google.actions.compute.operations
 import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
@@ -55,8 +56,8 @@ class ZoneOperationsGet {
       new Output(STATUS)
     ),
     responses = Array(
-      new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-      new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+      new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+      new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,

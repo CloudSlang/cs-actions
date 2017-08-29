@@ -13,11 +13,11 @@ import org.specs2.matcher.JUnitMustMatchers
 class InputValidatorTest extends JUnitMustMatchers {
 
   val TEST_NAME = "inputName"
-  val TEST_VALUE = "a"
+  val TEST_NAME2 = "inputName2"
 
   @Test
   def validateTest(): Unit = {
-    InputValidator.validate("a", TEST_NAME)(value => Some(value)).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $TEST_VALUE"
+    InputValidator.validate("a", TEST_NAME)(value => Some(value)).mkString(NEW_LINE) mustEqual s"$TEST_NAME : a"
     InputValidator.validate("a", TEST_NAME)(_ => None).mkString(NEW_LINE) mustEqual EMPTY
   }
 
@@ -32,8 +32,8 @@ class InputValidatorTest extends JUnitMustMatchers {
   def validateBooleanTest(): Unit = {
     validateBoolean("", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_BOOLEAN"
     validateBoolean("not_boolean", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_BOOLEAN"
-    validateBoolean("true",TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
-    validateBoolean("false",TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateBoolean("true", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateBoolean("false", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
   }
 
   @Test
@@ -41,8 +41,43 @@ class InputValidatorTest extends JUnitMustMatchers {
     validateNonNegativeInteger("", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_NON_NEGATIVE_INTEGER"
     validateNonNegativeInteger("not_number", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_NON_NEGATIVE_INTEGER"
     validateNonNegativeInteger("-1", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_NON_NEGATIVE_INTEGER"
-    validateNonNegativeInteger("0",TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
-    validateNonNegativeInteger("10",TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateNonNegativeInteger("0", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateNonNegativeInteger("10", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
   }
+
+  @Test
+  def validateIntegerTest(): Unit = {
+    validateInteger("", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_INTEGER"
+    validateInteger("123", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateInteger("-123", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateInteger("ana", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_INTEGER"
+  }
+
+  @Test
+  def validateDiskSizeTest(): Unit = {
+    validateDiskSize("1", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_DISK_SIZE"
+    validateDiskSize("123", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateDiskSize("10", TEST_NAME).mkString(NEW_LINE) mustEqual EMPTY
+    validateDiskSize("-1", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_DISK_SIZE"
+    validateDiskSize("ana", TEST_NAME).mkString(NEW_LINE) mustEqual s"$TEST_NAME : $INVALID_DISK_SIZE"
+  }
+
+  @Test
+  def validatePairedListsTest(): Unit = {
+    validatePairedLists("1", "1", ",", TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual EMPTY
+    validatePairedLists("1", "1,2", ",", TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual s"$TEST_NAME, $TEST_NAME2 : $INVALID_PAIRED_LISTS_LENGTH"
+    validatePairedLists("1,2", "1", ",", TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual s"$TEST_NAME, $TEST_NAME2 : $INVALID_PAIRED_LISTS_LENGTH"
+    validatePairedLists("", "1,2,3", ",", TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual s"$TEST_NAME, $TEST_NAME2 : $INVALID_PAIRED_LISTS_LENGTH"
+    validatePairedLists("1,2,3", "1,2,3", ",", TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual EMPTY
+  }
+
+  @Test
+  def validateRequiredExclusionTest(): Unit = {
+    validateRequiredExclusion(Some("1"), Some("1"), TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual s"$TEST_NAME, $TEST_NAME2 : $INVALID_BOTH_ASSIGNED"
+    validateRequiredExclusion(Some("1"), None,  TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual EMPTY
+    validateRequiredExclusion(None, Some("1"), TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual EMPTY
+    validateRequiredExclusion(None, None,  TEST_NAME, TEST_NAME2).mkString(NEW_LINE) mustEqual s"$TEST_NAME, $TEST_NAME2 : $INVALID_NONE_ASSIGNED"
+  }
+
 
 }

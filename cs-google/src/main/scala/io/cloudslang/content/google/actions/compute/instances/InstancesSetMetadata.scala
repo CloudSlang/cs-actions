@@ -93,7 +93,7 @@ class InstancesSetMetadata {
     val prettyPrint = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
-      validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter)
+      validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter, ITEMS_KEYS_LIST, ITEMS_VALUES_LIST)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))

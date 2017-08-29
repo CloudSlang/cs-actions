@@ -247,10 +247,10 @@ class InstancesInsert {
       validateBoolean(volumeAutoDeleteStr, VOLUME_AUTO_DELETE) ++
       validateDiskSize(volumeDiskSizeStr, VOLUME_DISK_SIZE) ++
       validateBoolean(canIpForwardStr, CAN_IP_FORWARD) ++
-      validatePairedLists(metadataKeysStr, metadataValuesStr, listDelimiterStr) ++
+      validatePairedLists(metadataKeysStr, metadataValuesStr, listDelimiterStr, METADATA_KEYS, METADATA_VALUES) ++
       validateBoolean(schedulingAutomaticRestartStr, SCHEDULING_AUTOMATIC_RESTART) ++
       validateBoolean(schedulingPreemptibleStr, SCHEDULING_PREEMPTIBLE) ++
-      validateRequiredExclusion(volumeSourceOpt, VOLUME_SOURCE, volumeDiskSourceImageOpt, VOLUME_DISK_SOURCE_IMAGE)
+      validateRequiredExclusion(volumeSourceOpt, volumeDiskSourceImageOpt, VOLUME_SOURCE, VOLUME_DISK_SOURCE_IMAGE)
 
 
     if (validationStream.nonEmpty) {

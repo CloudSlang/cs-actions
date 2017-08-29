@@ -6,6 +6,7 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
+import io.cloudslang.content.google.actions.compute.utils.GetAccessToken
 import io.cloudslang.content.google.services.compute.instances.InstanceService
 import io.cloudslang.content.google.utils.Constants._
 import io.cloudslang.content.google.utils.action.DefaultValues._
@@ -51,9 +52,6 @@ class InstancesGetSerialPortOutput {
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
     * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
-    *                         Valid values: "true", "false"
-    *                         Default: "true"
     * @return a map containing the list of Disks resources as returnResult
     */
   @Action(name = "Get Serial Port Output",
@@ -85,7 +83,7 @@ class InstancesGetSerialPortOutput {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
 
-    val consolePortStr = defaultIfEmpty(consolePortStr, DEFAULT_CONSOLE_PORT)
+    val consolePortStr = defaultIfEmpty(consolePortInp, DEFAULT_CONSOLE_PORT)
     val startIndexStr = defaultIfEmpty(startIndexInp, DEFAULT_START_INDEX)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
@@ -113,5 +111,4 @@ class InstancesGetSerialPortOutput {
       case e: Throwable => getFailureResultsMap(e)
     }
   }
-
 }

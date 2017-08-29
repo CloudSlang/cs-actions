@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-google</artifactId>
@@ -53,7 +54,7 @@
     </developers>
 
     <properties>
-        <specs2.version>3.9.4</specs2.version>
+        <specs2.version>3.9.5</specs2.version>
         <commons-io.version>2.5</commons-io.version>
         <cs-commons.version>0.0.3</cs-commons.version>
         <score-content-sdk.version>1.10.6</score-content-sdk.version>
@@ -299,16 +300,25 @@
             <groupId>org.specs2</groupId>
             <artifactId>specs2-core_2.11</artifactId>
             <version>${specs2.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.specs2</groupId>
             <artifactId>specs2-mock_2.11</artifactId>
             <version>${specs2.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.specs2</groupId>
             <artifactId>specs2-junit_2.11</artifactId>
             <version>${specs2.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
