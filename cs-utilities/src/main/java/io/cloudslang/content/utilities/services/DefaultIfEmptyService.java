@@ -13,9 +13,9 @@ public class DefaultIfEmptyService {
     public static String defaultIfBlankOrEmpty(final String initialValue, @NotNull final String defaultValue, boolean validTrim) {
         if (validTrim) {
             return defaultIfBlank(initialValue, defaultValue);
-        } else {
+        }
             return defaultIfEmpty(initialValue, defaultValue);
         }
     }
 
-}
+

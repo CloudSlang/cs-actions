@@ -15,6 +15,7 @@ import org.junit.Test;
 import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ReturnCodes.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
@@ -28,91 +29,91 @@ public class DefaultIfEmptyTest {
     @Test
     public void testWithBlankString() {
         final Map<String, String> result = d.execute("   ", "string", "  ");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("string", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testWithEmptyString() {
         final Map<String, String> result = d.execute("", "string", "");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("string", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testWithTrimString() {
         final Map<String, String> result = d.execute("", "string", "astring");
-        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
         assertTrue(result.get(RETURN_RESULT).contains("The provided string cannot be converted to a boolean value"));
     }
 
     @Test
     public void testWithTrimInitialString() {
         final Map<String, String> result = d.execute("initial", "string", "astring");
-        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertEquals(FAILURE, result.get(RETURN_CODE));
         assertTrue(result.get(RETURN_RESULT).contains("The provided string cannot be converted to a boolean value"));
     }
 
     @Test
     public void testHavingInitialString() {
         final Map<String, String> result = d.execute("initialstr", "string", "");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("initialstr", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testWithTrimTrue() {
         final Map<String, String> result = d.execute("   ", "string", "true");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("string", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testWithTrimFalse() {
         final Map<String, String> result = d.execute("", "string", "false");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("string", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testHavingInitialStringAndTrimTrue() {
         final Map<String, String> result = d.execute("initialstr", "string", "true");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("initialstr", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testHavingInitialStringAndTrimFalse() {
         final Map<String, String> result = d.execute("initialstr", "string", "false");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("initialstr", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testHavingTrimNull() {
         final Map<String, String> result = d.execute("", "string", null);
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("string", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testHavingInitialStringNull() {
         final Map<String, String> result = d.execute(null, "string", "false");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("string", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testHavingTrimVariableWrittenInLowerAndUpperCase() {
         final Map<String, String> result = d.execute(null, "string", "    fAlSE  ");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("string", result.get(RETURN_RESULT));
     }
 
     @Test
     public void testHavingTrimVariableInUpperCase() {
         final Map<String, String> result = d.execute("initialstr", "string", "  TRUE     ");
-        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
+        assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals("initialstr", result.get(RETURN_RESULT));
     }
 }
