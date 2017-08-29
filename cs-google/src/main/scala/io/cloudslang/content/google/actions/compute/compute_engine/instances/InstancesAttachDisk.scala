@@ -48,7 +48,7 @@ class InstancesAttachDisk {
     *                         Note: If not specified, the server chooses a default device name to apply to this disk,
     *                         in the form persistent-disks-x, where x is a number assigned by Google Compute Engine.
     *                         This field is only applicable for persistent disks.
-    * @param interfaceInp        Optional - Specifies the disk interface to use for attaching this disk.
+    * @param interfaceInp     Optional - Specifies the disk interface to use for attaching this disk.
     *                         Note: Persistent disks must always use SCSI and the request will fail if you attempt to
     *                         attach a persistent disk in any other format than SCSI. Local SSDs can use either
     *                         NVME or SCSI.

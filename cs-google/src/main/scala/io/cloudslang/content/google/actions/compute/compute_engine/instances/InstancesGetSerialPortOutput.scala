@@ -1,4 +1,4 @@
-package io.cloudslang.content.google.actions.compute.instances
+package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
 
@@ -26,11 +26,11 @@ import scala.collection.JavaConversions._
 class InstancesGetSerialPortOutput {
 
   /**
-    * This operation can be used to retrieve the list of Disk resources, as JSON array.
+    * This operation can be used to retrieve the Serial Port Output for an instance.
     *
     * @param projectId        Google Cloud project id.
     *                         Example: "example-project-a"
-    * @param zone             The name of the zone where the Disks resource is located.
+    * @param zone             The name of the zone where the instance is located.
     *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
     * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
     *                         following scope: "https://www.googleapis.com/auth/compute.readonly".
@@ -50,7 +50,7 @@ class InstancesGetSerialPortOutput {
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
     * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @return a map containing the list of Disks resources as returnResult
+    * @return the Serial Port Output as returnResult and the nextIndex with the last byte position read
     */
   @Action(name = "Get Serial Port Output",
     outputs = Array(
