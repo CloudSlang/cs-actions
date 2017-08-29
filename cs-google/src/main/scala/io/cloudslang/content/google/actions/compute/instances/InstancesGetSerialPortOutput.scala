@@ -6,8 +6,7 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.google.actions.compute.utils.GetAccessToken
-import io.cloudslang.content.google.services.compute.instances.InstanceService
+import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
 import io.cloudslang.content.google.utils.Constants._
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.NEXT_INDEX
@@ -15,7 +14,6 @@ import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
