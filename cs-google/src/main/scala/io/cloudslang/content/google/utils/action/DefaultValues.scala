@@ -7,6 +7,8 @@ import io.cloudslang.content.google.utils.Constants.COMMA
   * Created by victor on 28.02.2017.
   */
 object DefaultValues {
+  final val DEFAULT_CONSOLE_PORT = "1"
+  final val DEFAULT_START_INDEX = "0"
   final val DEFAULT_PROXY_PORT = "8080"
   final val DEFAULT_PRETTY_PRINT = TRUE
   final val DEFAULT_AUTO_CREATE_SUBNETWORKS = TRUE

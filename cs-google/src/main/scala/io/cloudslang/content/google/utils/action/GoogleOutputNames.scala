@@ -9,4 +9,5 @@ import io.cloudslang.content.constants.OutputNames
 object GoogleOutputNames extends OutputNames {
   final val STATUS = "status"
   final val ZONE_OPERATION_NAME = "zoneOperationName"
+  final val NEXT_INDEX = "nextIndex"
 }

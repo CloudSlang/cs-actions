@@ -4,7 +4,9 @@ import java.nio.charset.StandardCharsets
 import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER, DEFAULT_TIMEOUT}
@@ -45,13 +47,13 @@ class GetAccessToken {
 
   @Action(name = "Get the access token for Google Cloud",
     outputs = Array(
-      new Output(OutputNames.RETURN_CODE),
-      new Output(OutputNames.RETURN_RESULT),
-      new Output(OutputNames.EXCEPTION)
+      new Output(RETURN_CODE),
+      new Output(RETURN_RESULT),
+      new Output(EXCEPTION)
     ),
     responses = Array(
-      new Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-      new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+      new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+      new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
   def execute(@Param(value = JSON_TOKEN, required = true, encrypted = true) jsonToken: String,

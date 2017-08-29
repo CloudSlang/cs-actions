@@ -79,4 +79,8 @@ object InputNames {
   final val AUTO_DELETE = "autoDelete"
   final val INTERFACE = "interface"
   final val DEVICE_NAME = "deviceName"
+
+  final val CONSOLE_PORT = "consolePort"
+  final val START_INDEX = "startIndex"
+
   }

@@ -36,8 +36,6 @@ class InstancesAttachDisk {
     * @param accessToken      The access token from GetAccessToken.
     * @param instanceName     Name of the instance to attach the disk to.
     * @param source           A valid partial or full URL to an existing Persistent Disk resource.
-    * @param boot             Optional - Indicates that this is a boot disk. The virtual machine will use the first
-    *                         partition of the disk for its root filesystem.
     * @param mode             Optional - The mode in which to attach the disk to the instance.
     *                         Valid values: "READ_WRITE", "READ_ONLY"
     *                         Default: "READ_WRITE"
@@ -50,7 +48,7 @@ class InstancesAttachDisk {
     *                         Note: If not specified, the server chooses a default device name to apply to this disk,
     *                         in the form persistent-disks-x, where x is a number assigned by Google Compute Engine.
     *                         This field is only applicable for persistent disks.
-    * @param interface        Optional - Specifies the disk interface to use for attaching this disk.
+    * @param interfaceInp     Optional - Specifies the disk interface to use for attaching this disk.
     *                         Note: Persistent disks must always use SCSI and the request will fail if you attempt to
     *                         attach a persistent disk in any other format than SCSI. Local SSDs can use either
     *                         NVME or SCSI.
@@ -85,11 +83,10 @@ class InstancesAttachDisk {
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = SOURCE, required = true) source: String,
-              @Param(value = BOOT) boot: String,
               @Param(value = MODE) mode: String,
               @Param(value = AUTO_DELETE) autoDelete: String,
               @Param(value = DEVICE_NAME) deviceName: String,
-              @Param(value = INTERFACE) interface: String,
+              @Param(value = INTERFACE) interfaceInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -104,15 +101,13 @@ class InstancesAttachDisk {
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
     val modeStr = defaultIfEmpty(mode, DEFAULT_VOLUME_MOUNT_MODE)
     val autoDeleteStr = defaultIfEmpty(autoDelete, FALSE)
-    val bootStr = defaultIfEmpty(boot, FALSE)
-    val interfaceStr = defaultIfEmpty(autoDelete, DEFAULT_INTERFACE)
+    val interface = defaultIfEmpty(interfaceInp, DEFAULT_INTERFACE)
     val deviceNameOpt = verifyEmpty(deviceName)
 
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(autoDeleteStr, AUTO_DELETE) ++
-      validateBoolean(bootStr, BOOT)
+      validateBoolean(autoDeleteStr, AUTO_DELETE)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -122,19 +117,18 @@ class InstancesAttachDisk {
       val proxyPort = toInteger(proxyPortStr)
       val prettyPrint = toBoolean(prettyPrintStr)
       val autoDelete = toBoolean(autoDeleteStr)
-      val boot = toBoolean(bootStr)
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val attachedDisk = DiskController.createAttachedDisk(
-        boot = boot,
+        boot = false,
         autoDelete = autoDelete,
         mountMode = modeStr,
         deviceNameOpt = deviceNameOpt,
         sourceOpt = Some(source),
-        interfaceOpt = Some(interfaceStr))
+        interfaceOpt = Some(interface))
 
       val operation = InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, attachedDisk)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
