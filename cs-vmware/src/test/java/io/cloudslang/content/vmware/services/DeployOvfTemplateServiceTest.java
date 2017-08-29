@@ -279,7 +279,7 @@ public class DeployOvfTemplateServiceTest {
         PowerMockito.doReturn(httpNfcLeaseInfoMock).when(serviceSpy, "getHttpNfcLeaseInfoWhenReady",
                 any(ConnectionResources.class), any(ManagedObjectReference.class));
         doReturn(deviceUrlsMock).when(httpNfcLeaseInfoMock).getDeviceUrl();
-        Whitebox.setInternalState(serviceSpy, "execute", executorMock);
+        Whitebox.setInternalState(serviceSpy, "executor", executorMock);
         PowerMockito.doReturn(DISK_SIZE).when(serviceSpy, "getDisksTotalNoBytes", any(OvfCreateImportSpecResult.class));
         whenNew(AsyncProgressUpdater.class).withArguments(DISK_SIZE, httpNfcLeaseMock, connectionResourcesMock)
                 .thenReturn(asyncProgressUpdaterMock);

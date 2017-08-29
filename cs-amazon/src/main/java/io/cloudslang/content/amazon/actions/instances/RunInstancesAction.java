@@ -28,6 +28,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DEFAULT_INSTANCE_TYPE;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 
@@ -483,6 +484,7 @@ public class RunInstancesAction {
                                        @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
         try {
             version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
+            instanceType = getDefaultStringInput(instanceType, DEFAULT_INSTANCE_TYPE);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)

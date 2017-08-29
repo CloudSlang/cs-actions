@@ -1,30 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-google</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
-
+    <artifactId>cs-dropbox</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Google cloud integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
-
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
-
     <scm>
         <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
         <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
-
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -37,44 +31,20 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
     <developers>
         <developer>
-            <name>Victor Ursan</name>
-            <email>victor.ursan@hpe.com</email>
-            <organization>Hewlett Packard Enterprise</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-        <developer>
-            <name>Robert Sandor</name>
-            <email>robert.sandor@hpe.com</email>
-            <organization>Hewlett Packard Enterprise</organization>
+            <name>Mihail Cristian Tusa</name>
+            <email>tusa.mihai@gmail.com</email>
+            <organization>CloudSlang contributor</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
     </developers>
-
-    <properties>
-        <specs2.version>3.9.5</specs2.version>
-        <commons-io.version>2.5</commons-io.version>
-        <cs-commons.version>0.0.3</cs-commons.version>
-        <score-content-sdk.version>1.10.6</score-content-sdk.version>
-        <google-api-services-compute.version>v1-rev155-1.22.0</google-api-services-compute.version>
-        <scala-library.version>2.11.11</scala-library.version>
-    </properties>
-
     <build>
-
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>net.alchim31.maven</groupId>
-                    <artifactId>scala-maven-plugin</artifactId>
-                    <version>3.2.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.8</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
@@ -88,57 +58,50 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
+            <!-- Checkstyle plugin, should be run only locally -->
+            <!--            <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>2.17</version>
+                            <executions>
+                                <execution>
+                                    <id>checkstyle-for-java-sources</id>
+                                    <phase>validate</phase>
+                                    <configuration>
+                                        <configLocation>checkstyle.xml</configLocation>
+                                        <encoding>UTF-8</encoding>
+                                        <consoleOutput>false</consoleOutput>
+                                        <failsOnError>true</failsOnError>
+                                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                        <maxAllowedViolations>18</maxAllowedViolations>
+                                        <logViolationsToConsole>true</logViolationsToConsole>
+                                        <violationSeverity>warning</violationSeverity>
+                                        <includeResources>false</includeResources>
+                                        <includeTestResources>false</includeTestResources>
+                                    </configuration>
+                                    <goals>
+                                        <goal>check</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.puppycrawl.tools</groupId>
+                                    <artifactId>checkstyle</artifactId>
+                                    &lt;!&ndash; Do not update this version because it is not compatible with java 7 &ndash;&gt;
+                                    <version>6.19</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>-->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
-                <configuration>
-                    <javacArgs>
-                        <javacArg>-Xlint:unchecked</javacArg>
-                        <javacArg>-Xlint:deprecation</javacArg>
-                    </javacArgs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>scala-compile-first</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>scala-test-compile</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>doc-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!--License checker for build-->
             <plugin>
                 <groupId>com.mycila</groupId>
@@ -151,7 +114,6 @@
                     </headerDefinitions>
                     <includes>
                         <include>**/*.java</include>
-                        <include>**/*.scala</include>
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
@@ -173,7 +135,6 @@
                 </executions>
             </plugin>
         </plugins>
-
     </build>
     <profiles>
         <profile>
@@ -267,62 +228,51 @@
     </profiles>
 
     <dependencies>
-        <!-- Scala dependency -->
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala-library.version}</version>
-        </dependency>
-        <!-- Google cloud api -->
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-compute</artifactId>
-            <version>${google-api-services-compute.version}</version>
-        </dependency>
-
-        <!-- Utils -->
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
-            <version>${score-content-sdk.version}</version>
+            <version>1.10.6</version>
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
-            <version>${cs-commons.version}</version>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.specs2</groupId>
-            <artifactId>specs2-core_2.11</artifactId>
-            <version>${specs2.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-http-client</artifactId>
+            <version>0.1.71</version>
         </dependency>
         <dependency>
-            <groupId>org.specs2</groupId>
-            <artifactId>specs2-mock_2.11</artifactId>
-            <version>${specs2.version}</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+        <!--testing dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.specs2</groupId>
-            <artifactId>specs2-junit_2.11</artifactId>
-            <version>${specs2.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- ended testing dependencies-->
     </dependencies>
-
 </project>
