@@ -328,6 +328,7 @@ class InstancesInsert {
       val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
+
       getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> operation.getName)
     } catch {
       case e: Throwable => getFailureResultsMap(e)

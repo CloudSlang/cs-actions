@@ -102,4 +102,8 @@ object InstanceService {
       .setStart(start)
       .execute()
 
+  def a(): Unit = {
+    ComputeService.instancesService
+  }
+
 }

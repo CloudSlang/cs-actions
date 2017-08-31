@@ -36,7 +36,7 @@ class InstancesGetSerialPortOutput {
     *                         following scope: "https://www.googleapis.com/auth/compute.readonly".
     * @param instanceName     Name of the instance resource to return the serial port output.
     *                         Example: "instance-1234"
-    * @param consolePortInp   Specifies which COM or serial port to retrieve data from.
+    * @param consolePortInp   Optional - Specifies which COM or serial port to retrieve data from.
     *                         Valid values: an integer between 1 and 4 (inclusive)
     *                         Default: 1
     * @param startIndexInp    Optional - The byte position from which to return the output. Use this to page through output
@@ -47,7 +47,7 @@ class InstancesGetSerialPortOutput {
     * @param proxyHost        Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
     *                         be used.
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
-    *                         Default: "8080"
+    *                         Default: 8080
     * @param proxyUsername    Optional - Proxy server user name.
     * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
     * @return the Serial Port Output as returnResult and the nextIndex with the last byte position read
@@ -56,8 +56,8 @@ class InstancesGetSerialPortOutput {
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
-      new Output(EXCEPTION),
-      new Output(NEXT_INDEX)
+      new Output(NEXT_INDEX),
+      new Output(EXCEPTION)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),

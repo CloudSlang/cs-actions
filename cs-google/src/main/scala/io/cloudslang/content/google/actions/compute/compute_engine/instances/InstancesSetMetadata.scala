@@ -13,10 +13,9 @@ import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_ITEMS_DE
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.google.utils.action.InputValidator.{validatePairedLists, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validatePairedLists, validateProxyPort}
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
-import io.cloudslang.content.utils.CollectionUtilities.toList
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
@@ -90,16 +89,19 @@ class InstancesSetMetadata {
     val itemsKeysList = defaultIfEmpty(itemsKeysListInp, EMPTY)
     val itemsValuesList = defaultIfEmpty(itemsValuesListInp, EMPTY)
     val itemsDelimiter = defaultIfEmpty(itemsDelimiterInp, DEFAULT_ITEMS_DELIMITER)
-    val prettyPrint = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
+    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
-      validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter, ITEMS_KEYS_LIST, ITEMS_VALUES_LIST)
+      validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter, ITEMS_KEYS_LIST, ITEMS_VALUES_LIST) ++
+      validateBoolean(prettyPrintStr, PRETTY_PRINT)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
 
     try {
+
+      val prettyPrint = toBoolean(prettyPrintStr)
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, toInteger(proxyPortStr), proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
@@ -108,7 +110,7 @@ class InstancesSetMetadata {
       val items: List[Items] = InstanceController.createMetadataItems(itemsKeysList, itemsValuesList, itemsDelimiter)
 
       val result = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items)
-      val resultString = if (toBoolean(prettyPrint)) result.toPrettyString else result.toString
+      val resultString = if (prettyPrint) result.toPrettyString else result.toString
 
       getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> result.getName)
     } catch {
