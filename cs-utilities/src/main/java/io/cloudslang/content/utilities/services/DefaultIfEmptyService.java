@@ -14,8 +14,6 @@ public class DefaultIfEmptyService {
         if (validTrim) {
             return defaultIfBlank(initialValue, defaultValue);
         }
-            return defaultIfEmpty(initialValue, defaultValue);
-        }
+        return defaultIfEmpty(initialValue, defaultValue);
     }
-
-
+}
