@@ -18,6 +18,7 @@ object DefaultValues {
   final val DEFAULT_TAGS_DELIMITER = COMMA
   final val DEFAULT_TIMEOUT = "600"
   final val DEFAULT_DISK_SIZE = "10"
+  final val DEFAULT_SYNC_TIMEOUT = "30"
   final val DEFAULT_VOLUME_MOUNT_TYPE = "PERSISTENT"
   final val DEFAULT_VOLUME_MOUNT_MODE = "READ_WRITE"
   final val DEFAULT_ACCESS_CONFIG_TYPE = "ONE_TO_ONE_NAT"

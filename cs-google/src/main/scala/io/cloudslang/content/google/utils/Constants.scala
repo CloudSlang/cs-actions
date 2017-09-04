@@ -9,4 +9,5 @@ object Constants {
   val COMMA_NEW_LINE = ",\n"
   val SQR_LEFT_BRACKET = "["
   val SQR_RIGHT_BRACKET = "]"
+  val TIMEOUT_EXCEPTION = "Operation failed because the specified timeout was exceeded."
 }
