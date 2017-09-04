@@ -2,27 +2,32 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
 
+import com.google.api.client.json.GenericJson
 import com.google.api.services.compute.model._
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType
 import io.cloudslang.content.constants.BooleanValues.{FALSE, TRUE}
-import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
+import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
+import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskController
 import io.cloudslang.content.google.services.compute.compute_engine.instances.{InstanceController, InstanceService}
 import io.cloudslang.content.google.services.compute.compute_engine.networks.NetworkController
-import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE}
+import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
-import io.cloudslang.content.utils.NumberUtilities.toInteger
+import io.cloudslang.content.utils.NumberUtilities.{toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.concurrent.TimeoutException
+import scala.language.postfixOps
 
 /**
   * Created by victor on 01.03.2017.
@@ -141,6 +146,10 @@ class InstancesInsert {
     * @param serviceAccountEmail         Optional - Email address of the service account
     *                                    Default: The service account that was used to generate the token
     * @param serviceAccountScopes        Optional - The list of scopes to be made available for this service account.
+    * @param syncInp                     Optional - Boolean specifying whether the operation to run sync or async.
+    *                                    Default: "false"
+    * @param timeout                     Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
+    *                                    Default: "30"
     * @param proxyHost                   Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
     *                                    be used.
     * @param proxyPortInp                Optional - Proxy server port.
@@ -155,15 +164,19 @@ class InstancesInsert {
     */
   @Action(name = "Insert Instance",
     outputs = Array(
-      new Output(OutputNames.RETURN_CODE),
-      new Output(OutputNames.RETURN_RESULT),
-      new Output(OutputNames.EXCEPTION),
-      new Output(ZONE_OPERATION_NAME)
+      new Output(RETURN_CODE),
+      new Output(INSTANCE_ID),
+      new Output(RETURN_RESULT),
+      new Output(EXCEPTION),
+      new Output(ZONE_OPERATION_NAME),
+      new Output(NAME),
+      new Output(IPS),
+      new Output(STATUS)
 
     ),
     responses = Array(
-      new Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-      new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+      new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+      new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
   def execute(@Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
@@ -203,6 +216,9 @@ class InstancesInsert {
               @Param(value = SERVICE_ACCOUNT_EMAIL) serviceAccountEmail: String,
               @Param(value = SERVICE_ACCOUNT_SCOPES) serviceAccountScopes: String,
 
+              @Param(value = SYNC) syncInp: String,
+              @Param(value = TIMEOUT) timeout: String,
+
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -241,6 +257,9 @@ class InstancesInsert {
     val serviceAccountEmailOpt = verifyEmpty(serviceAccountEmail)
     val serviceAccountScopesOpt = verifyEmpty(serviceAccountScopes)
 
+    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val timeoutStr = defaultIfEmpty(timeout, "30")
+
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
@@ -250,7 +269,9 @@ class InstancesInsert {
       validatePairedLists(metadataKeysStr, metadataValuesStr, listDelimiterStr, METADATA_KEYS, METADATA_VALUES) ++
       validateBoolean(schedulingAutomaticRestartStr, SCHEDULING_AUTOMATIC_RESTART) ++
       validateBoolean(schedulingPreemptibleStr, SCHEDULING_PREEMPTIBLE) ++
-      validateRequiredExclusion(volumeSourceOpt, volumeDiskSourceImageOpt, VOLUME_SOURCE, VOLUME_DISK_SOURCE_IMAGE)
+      validateBoolean(syncStr, SYNC) ++
+      validateRequiredExclusion(volumeSourceOpt, volumeDiskSourceImageOpt, VOLUME_SOURCE, VOLUME_DISK_SOURCE_IMAGE) ++
+      validateNonNegativeLong(timeoutStr, TIMEOUT)
 
 
     if (validationStream.nonEmpty) {
@@ -267,10 +288,12 @@ class InstancesInsert {
       val schedulingAutomaticRestart = toBoolean(schedulingAutomaticRestartStr)
       val schedulingPreemptible = toBoolean(schedulingPreemptibleStr)
       val canIpForward = toBoolean(canIpForwardStr)
+      val sync = toBoolean(syncStr)
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
+      val timeout = toLong(timeoutStr)
 
 
       val attachedDisk = volumeSourceOpt match {
@@ -324,12 +347,22 @@ class InstancesInsert {
         networkInterface = networkInterface,
         canIpForward = canIpForward,
         serviceAccountOpt = serviceAccount)
+      val toPretty: (GenericJson) => String = if (prettyPrint) _.toPrettyString else _.toString
 
-      val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance)
-      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
-
-      getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> operation.getName)
+      val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance, sync, timeout)
+      if (sync) {
+        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+        getSuccessResultsMap(toPretty(instance)) +
+          (ZONE_OPERATION_NAME -> operation.getName) +
+          (INSTANCE_ID -> instance.getId.toString) +
+          (NAME -> instance.getName) +
+          (IPS -> instance.getNetworkInterfaces.map(_.getNetworkIP).mkString(",")) +
+          (STATUS -> instance.getStatus)
+      } else {
+        getSuccessResultsMap(toPretty(operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+      }
     } catch {
+      case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
     }
   }

@@ -1,12 +1,22 @@
 package io.cloudslang.content.google.services.compute.compute_engine.instances
 
 
+import com.google.api.client.auth.oauth2.Credential
+import com.google.api.client.http.HttpTransport
+import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model.Metadata.Items
 import com.google.api.services.compute.model._
+import io.cloudslang.content.google.services.compute.compute_engine.operations.ZoneOperationService
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.utils.CollectionUtilities
 import io.cloudslang.content.utils.CollectionUtilities.toList
-
+import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
+import scala.concurrent.{Await, Awaitable, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.collection.JavaConversions._
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 /**
   * Created by victor on 26.04.2017.
@@ -58,7 +68,7 @@ object InstanceController {
 
   def createScheduling(onHostMaintenanceOpt: Option[String],
                        automaticRestart: Boolean,
-                       preemptible:Boolean): Option[Scheduling] = onHostMaintenanceOpt match {
+                       preemptible: Boolean): Option[Scheduling] = onHostMaintenanceOpt match {
     case Some(onHostMaintenance) => Some(new Scheduling()
       .setAutomaticRestart(automaticRestart)
       .setOnHostMaintenance(onHostMaintenance)

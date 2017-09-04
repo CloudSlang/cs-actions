@@ -5,7 +5,7 @@ import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model.Metadata.Items
 import com.google.api.services.compute.model._
-import io.cloudslang.content.google.services.compute.compute_engine.ComputeService
+import io.cloudslang.content.google.services.compute.compute_engine.{ComputeController, ComputeService}
 
 import scala.collection.JavaConversions._
 
@@ -50,10 +50,16 @@ object InstanceService {
       .reset(project, zone, instanceName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance): Operation =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance, sync: Boolean, timeout: Long): Operation = {
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .insert(project, zone, instance)
       .execute()
+    if (sync) {
+      ComputeController.getSyncSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+    } else {
+      operation
+    }
+  }
 
   def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)

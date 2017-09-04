@@ -73,6 +73,8 @@ object InputNames {
   final val SERVICE_ACCOUNT_EMAIL = "serviceAccountEmail"
   final val SERVICE_ACCOUNT_SCOPES = "serviceAccountScopes"
 
+  final val SYNC = "sync"
+
   final val SOURCE = "source"
   final val MODE = "mode"
   final val BOOT = "boot"
