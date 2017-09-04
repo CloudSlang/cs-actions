@@ -39,9 +39,6 @@ class InstancesRestWindowsPassword {
     *                         Default: "8080"
     * @param proxyUsername    Optional - Proxy server user name.
     * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
-    *                         Valid values: "true", "false"
-    *                         Default: "true"
     * @return a map containing a Instance resource as returnResult
     */
   @Action(name = "Get Instance",
@@ -65,36 +62,33 @@ class InstancesRestWindowsPassword {
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
-              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String,
-              @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
+              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String): util.Map[String, String] = {
 
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
-    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
-    val validationStream = validateProxyPort(proxyPortStr) ++
-      validateBoolean(prettyPrintStr, PRETTY_PRINT)
+    val validationStream = validateProxyPort(proxyPortStr)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
 
     val proxyPort = toInteger(proxyPortStr)
-    val prettyPrint = toBoolean(prettyPrintStr)
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
+      // Constants for configuring user name, email, and SSH key expiration.
 
-      val instance = WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
-        instanceName, "ghita2", "muscailie@gmail.com", 300000, 30000)
-      //        val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
-      val resultString = ""
-
-      getSuccessResultsMap(resultString)
+      // Keys are one-time use, so the metadata doesn't need to stay around for long.
+      // 5 minutes chosen to allow for differences between time on the client
+      // and time on the server.
+      val password = WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
+        instanceName, userName = "ghita2", email = "muscailie@gmail.com", expireTime = 300000, timeout = 30000)
+      getSuccessResultsMap(password)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
