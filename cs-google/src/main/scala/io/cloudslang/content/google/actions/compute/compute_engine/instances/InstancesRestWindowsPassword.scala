@@ -60,6 +60,8 @@ class InstancesRestWindowsPassword {
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
 
+
+
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -88,7 +90,7 @@ class InstancesRestWindowsPassword {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val instance = WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
-        instanceName, "ghita2", "muscailie@gmail.com", 300000)
+        instanceName, "ghita2", "muscailie@gmail.com", 300000, 30000)
       //        val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
       val resultString = ""
 

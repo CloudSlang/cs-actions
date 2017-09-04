@@ -44,7 +44,7 @@ object WindowsService {
 
 
   def resetWindowsPassword(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
-                           zone: String, instanceName: String, userName: String, email: String, expireTime: Long): String = {
+                           zone: String, instanceName: String, userName: String, email: String, expireTime: Long, timeout: Long): String = {
     // Get the instance object to gain access to the instance's metadata.
     val inst = InstanceService.get(httpTransport, jsonFactory, credential, project, zone, instanceName)
     val metadata = inst.getMetadata
@@ -53,20 +53,12 @@ object WindowsService {
     // Update metadata from instance with new windows-keys entry.
     replaceMetadata(metadata, buildKeyMetadata(keys, expireTime, userName, email))
     // Tell Compute Engine to update the instance metadata with our changes.
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
-      .setMetadata(project, zone, instanceName, metadata)
-      .execute()
-    System.out.println("Updating metadata...")
-    // Sleep while waiting for metadata to propagate - production code may
-    // want to monitor the status of the metadata update operation.
-    Thread.sleep(30000)
+
+    InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, metadata, sync = true, timeout)
     System.out.println("Getting serial output...")
     // Request the output from serial port 4.
     // In production code, this operation should be polled.
-    val output = ComputeService.instancesService(httpTransport, jsonFactory, credential)
-      .getSerialPortOutput(project, zone, instanceName)
-      .setPort(4)
-      .execute
+    val output = InstanceService.getSerialPortOutput(httpTransport, jsonFactory, credential,project, zone, instanceName, 4, 0)
     // Get the last line - this will be a JSON string corresponding to the
     // most recent password reset attempt.
     val entries = output.getContents.split("\n")

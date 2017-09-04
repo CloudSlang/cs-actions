@@ -77,18 +77,30 @@ object InstanceService {
       .execute()
   }
 
-  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance =
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+          instanceName: String): Instance =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .get(project, zone, instanceName)
       .execute()
 
-  def setMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, items: List[Items]): Operation = {
-    val computeInstances = ComputeService.instancesService(httpTransport, jsonFactory, credential)
-    val metadata = get(httpTransport, jsonFactory, credential, project, zone, instanceName).getMetadata.setItems(items)
+  def setMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+                  instanceName: String, items: List[Items], sync: Boolean, timeout: Long): Operation = {
+    val metadata = get(httpTransport, jsonFactory, credential, project, zone, instanceName)
+      .getMetadata
+      .setItems(items)
+    setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, metadata, sync, timeout)
+  }
 
-    val request = computeInstances.setMetadata(project, zone, instanceName, metadata)
-
-    request.execute()
+  def setMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+                  instanceName: String, metadata: Metadata, sync: Boolean, timeout: Long): Operation = {
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
+      .setMetadata(project, zone, instanceName, metadata)
+      .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+    } else {
+      operation
+    }
   }
 
   def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, attachedDisk: AttachedDisk): Operation =
@@ -107,4 +119,5 @@ object InstanceService {
       .setPort(port)
       .setStart(start)
       .execute()
+
 }

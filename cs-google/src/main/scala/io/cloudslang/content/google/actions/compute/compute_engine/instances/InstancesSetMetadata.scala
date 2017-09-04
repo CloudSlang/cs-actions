@@ -109,7 +109,7 @@ class InstancesSetMetadata {
 
       val items: List[Items] = InstanceController.createMetadataItems(itemsKeysList, itemsValuesList, itemsDelimiter)
 
-      val result = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items)
+      val result = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items, sync = false, 30000) //TODO
       val resultString = if (prettyPrint) result.toPrettyString else result.toString
 
       getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> result.getName)
