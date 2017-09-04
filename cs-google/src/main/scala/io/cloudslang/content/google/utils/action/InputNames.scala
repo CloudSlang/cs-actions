@@ -1,7 +1,5 @@
 package io.cloudslang.content.google.utils.action
 
-import com.hp.oo.sdk.content.annotations.Param
-
 /**
   * Created by victor on 28.02.2017.
   */
@@ -85,4 +83,4 @@ object InputNames {
   final val CONSOLE_PORT = "consolePort"
   final val START_INDEX = "startIndex"
 
-  }
+}

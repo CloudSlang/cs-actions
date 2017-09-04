@@ -4,9 +4,11 @@ import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model.Operation
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.cloudslang.content.google.services.compute.compute_engine.operations.ZoneOperationService
 
+import scala.concurrent.duration.Duration.Inf
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -16,7 +18,7 @@ import scala.language.postfixOps
   */
 object ComputeController {
   def getSyncSuccessOperation(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, zone: String, operation: Operation, timeout: Long): Operation =
-    Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation), timeout seconds)
+    Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation), if (timeout == 0) Inf else timeout seconds)
 
   def updateOperationProgress(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, zone: String, operation: Operation): Future[Operation] =
     Future {
