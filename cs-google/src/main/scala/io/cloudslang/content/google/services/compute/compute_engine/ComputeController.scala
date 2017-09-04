@@ -17,10 +17,12 @@ import scala.language.postfixOps
   * Created by marisca on 4/9/2017.
   */
 object ComputeController {
-  def getSyncSuccessOperation(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, zone: String, operation: Operation, timeout: Long): Operation =
+  def awaitSuccessOperation(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
+                            zone: String, operation: Operation, timeout: Long): Operation =
     Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation), if (timeout == 0) Inf else timeout seconds)
 
-  def updateOperationProgress(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, zone: String, operation: Operation): Future[Operation] =
+  def updateOperationProgress(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
+                              zone: String, operation: Operation): Future[Operation] =
     Future {
       Stream.continually {
         Thread.sleep(1000)

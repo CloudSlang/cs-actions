@@ -19,6 +19,8 @@ import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATI
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator._
+import io.cloudslang.content.google.utils.action.OutputUtils
+import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toInteger, toLong}
@@ -150,7 +152,7 @@ class InstancesInsert {
     * @param syncInp                     Optional - Boolean specifying whether the operation to run sync or async.
     *                                    Valid values: "true", "false"
     *                                    Default: "false"
-    * @param timeout                     Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
+    * @param timeoutInp                     Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
     *                                               If the value is 0, the operation will wait until zone operation progress is 100.
     *                                    Valid values: Any positive number including 0.
     *                                    Default: "30"
@@ -223,7 +225,7 @@ class InstancesInsert {
               @Param(value = SERVICE_ACCOUNT_SCOPES) serviceAccountScopes: String,
 
               @Param(value = SYNC) syncInp: String,
-              @Param(value = TIMEOUT) timeout: String,
+              @Param(value = TIMEOUT) timeoutInp: String,
 
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
@@ -264,8 +266,7 @@ class InstancesInsert {
     val serviceAccountScopesOpt = verifyEmpty(serviceAccountScopes)
 
     val syncStr = defaultIfEmpty(syncInp, FALSE)
-    val timeoutStr = defaultIfEmpty(timeout, DEFAULT_SYNC_TIMEOUT)
-
+    val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
@@ -279,11 +280,9 @@ class InstancesInsert {
       validateRequiredExclusion(volumeSourceOpt, volumeDiskSourceImageOpt, VOLUME_SOURCE, VOLUME_DISK_SOURCE_IMAGE) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT)
 
-
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
-
 
     try {
       val proxyPort = toInteger(proxyPortStr)
@@ -300,7 +299,6 @@ class InstancesInsert {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
-
 
       val attachedDisk = volumeSourceOpt match {
         case Some(_) => DiskController.createAttachedDisk(
@@ -338,7 +336,6 @@ class InstancesInsert {
         accessConfigType = accessConfigTypeStr)
 
       val serviceAccount = InstanceController.getServiceAccount(serviceAccountEmailOpt, serviceAccountScopesOpt, listDelimiterStr)
-
       val scheduler = InstanceController.createScheduling(schedulingOnHostMaintenanceOpt, schedulingAutomaticRestart, schedulingPreemptible)
 
       val instance = InstanceController.createInstance(
@@ -353,9 +350,6 @@ class InstancesInsert {
         networkInterface = networkInterface,
         canIpForward = canIpForward,
         serviceAccountOpt = serviceAccount)
-      val toPretty: (GenericJson) => String = if (prettyPrint) _.toPrettyString else _.toString
-
-
 
       val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance, sync, timeout)
       if (sync) {
@@ -363,14 +357,14 @@ class InstancesInsert {
         val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
         val instanceId = Option(instance.getId).getOrElse(BigInt(0))
 
-        getSuccessResultsMap(toPretty(instance)) +
+        getSuccessResultsMap(toPretty(prettyPrint, instance)) +
           (ZONE_OPERATION_NAME -> operation.getName) +
           (INSTANCE_ID -> instanceId.toString) +
           (NAME -> instance.getName) +
           (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(listDelimiterStr)) +
           (STATUS -> instance.getStatus)
       } else {
-        getSuccessResultsMap(toPretty(operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+        getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)

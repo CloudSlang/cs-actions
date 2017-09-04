@@ -55,7 +55,7 @@ object InstanceService {
       .insert(project, zone, instance)
       .execute()
     if (sync) {
-      ComputeController.getSyncSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
     } else {
       operation
     }
