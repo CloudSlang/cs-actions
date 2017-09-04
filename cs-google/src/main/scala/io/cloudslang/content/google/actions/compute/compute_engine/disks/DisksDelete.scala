@@ -4,22 +4,25 @@ import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import io.cloudslang.content.constants.BooleanValues.FALSE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskService
-import io.cloudslang.content.google.utils.Constants.NEW_LINE
-import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
+import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
+import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_SYNC_TIMEOUT}
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeLong, validateProxyPort}
+import io.cloudslang.content.google.utils.action.OutputUtils
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
-import io.cloudslang.content.utils.NumberUtilities.toInteger
+import io.cloudslang.content.utils.NumberUtilities.{toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.concurrent.TimeoutException
 
 /**
   * Created by victor on 3/3/17.
@@ -39,6 +42,13 @@ class DisksDelete {
     *                         Example: "disk-1"
     * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
     *                         following scope: "https://www.googleapis.com/auth/compute".
+    * @param syncInp          Optional - Boolean specifying whether the operation to run sync or async.
+    *                         Valid values: "true", "false"
+    *                         Default: "false"
+    * @param timeoutInp       Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
+    *                         If the value is 0, the operation will wait until zone operation progress is 100.
+    *                         Valid values: Any positive number including 0.
+    *                         Default: "30"
     * @param proxyHost        Optional - Proxy server used to access the provider services.
     * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
     *                         Default: "8080"
@@ -46,14 +56,18 @@ class DisksDelete {
     * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
     * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
     *                         Default: "true"
-    * @return a map containing a ZoneOperation resource as returnResult, and it's name as zoneOperationName
+    * @return a map containing a ZoneOperation resource as returnResult, it's name as zoneOperationName and the disk name.
+    *         If <syncInp> is set to true the map will also contain the status of the operation.
+    *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Delete Disk",
     outputs = Array(
       new Output(RETURN_CODE),
+      new Output(DISK_NAME),
       new Output(RETURN_RESULT),
       new Output(EXCEPTION),
-      new Output(ZONE_OPERATION_NAME)
+      new Output(ZONE_OPERATION_NAME),
+      new Output(STATUS)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -64,6 +78,8 @@ class DisksDelete {
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = DISK_NAME, required = true) diskName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
+              @Param(value = SYNC) syncInp: String,
+              @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -75,9 +91,13 @@ class DisksDelete {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
+    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
-      validateBoolean(prettyPrintStr, PRETTY_PRINT)
+      validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
+      validateBoolean(syncStr, SYNC) ++
+      validateNonNegativeLong(timeoutStr, TIMEOUT)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -85,17 +105,30 @@ class DisksDelete {
 
     val proxyPort = toInteger(proxyPortStr)
     val prettyPrint = toBoolean(prettyPrintStr)
+    val sync = toBoolean(syncStr)
+    val timeout = toLong(timeoutStr)
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = DiskService.delete(httpTransport, jsonFactory, credential, projectId, zone, diskName)
-      val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
+      val operation = DiskService.delete(httpTransport, jsonFactory, credential, projectId, zone, diskName, sync, timeout)
 
-      getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> operation.getName)
+      if (sync) {
+        val status = Option(operation.getStatus).getOrElse("")
+
+        getSuccessResultsMap(OutputUtils.toPretty(prettyPrint, operation)) +
+          (ZONE_OPERATION_NAME -> operation.getName) +
+          (STATUS -> status) +
+          (DISK_NAME -> diskName)
+      } else {
+        getSuccessResultsMap(OutputUtils.toPretty(prettyPrint, operation)) +
+          (ZONE_OPERATION_NAME -> operation.getName) +
+          (DISK_NAME -> diskName)
+      }
     } catch {
+      case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
     }
   }
