@@ -12,9 +12,9 @@ import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PROXY_PORT, DEFAULT_SCOPES_DELIMITER, DEFAULT_TIMEOUT}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.google.utils.action.InputValidator.{validateNonNegativeInteger, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputValidator.{validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.NumberUtilities.toInteger
+import io.cloudslang.content.utils.NumberUtilities.{toLong, toInteger}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
@@ -73,14 +73,14 @@ class GetAccessToken {
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_TIMEOUT)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
-      validateNonNegativeInteger(timeoutStr, TIMEOUT)
+      validateNonNegativeLong(timeoutStr, TIMEOUT)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
 
     val proxyPort = toInteger(proxyPortStr)
-    val timeout = toInteger(timeoutStr)
+    val timeout = toLong(timeoutStr)
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)

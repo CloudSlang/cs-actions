@@ -1,7 +1,5 @@
 package io.cloudslang.content.google.utils.action
 
-import com.hp.oo.sdk.content.annotations.Param
-
 /**
   * Created by victor on 28.02.2017.
   */
@@ -73,6 +71,8 @@ object InputNames {
   final val SERVICE_ACCOUNT_EMAIL = "serviceAccountEmail"
   final val SERVICE_ACCOUNT_SCOPES = "serviceAccountScopes"
 
+  final val SYNC = "sync"
+
   final val SOURCE = "source"
   final val MODE = "mode"
   final val BOOT = "boot"
@@ -83,4 +83,4 @@ object InputNames {
   final val CONSOLE_PORT = "consolePort"
   final val START_INDEX = "startIndex"
 
-  }
+}
