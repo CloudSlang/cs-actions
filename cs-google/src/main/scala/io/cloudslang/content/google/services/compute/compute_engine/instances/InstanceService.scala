@@ -101,9 +101,4 @@ object InstanceService {
       .setPort(port)
       .setStart(start)
       .execute()
-
-  def a(): Unit = {
-    ComputeService.instancesService
-  }
-
 }
