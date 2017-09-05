@@ -35,22 +35,26 @@ object InstanceService {
     instances
   }
 
-  def start(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+  def start(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+            instanceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .start(project, zone, instanceName)
       .execute()
 
-  def stop(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+  def stop(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+           instanceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .stop(project, zone, instanceName)
       .execute()
 
-  def restart(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+  def restart(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+              instanceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .reset(project, zone, instanceName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance, sync: Boolean, timeout: Long): Operation = {
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+             instance: Instance, sync: Boolean, timeout: Long): Operation = {
     val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .insert(project, zone, instance)
       .execute()
@@ -61,12 +65,14 @@ object InstanceService {
     }
   }
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+             instanceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .delete(project, zone, instanceName)
       .execute()
 
-  def setTags(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, tags: Tags): Operation = {
+  def setTags(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+              instanceName: String, tags: Tags): Operation = {
     val instanceTagFingerprint = get(httpTransport, jsonFactory, credential, project, zone, instanceName)
       .getTags.getFingerprint
 
@@ -103,17 +109,20 @@ object InstanceService {
     }
   }
 
-  def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, attachedDisk: AttachedDisk): Operation =
+  def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+                 instanceName: String, attachedDisk: AttachedDisk): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .attachDisk(project, zone, instanceName, attachedDisk)
       .execute()
 
-  def detachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, deviceName: String): Operation =
+  def detachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
+                 instanceName: String, deviceName: String): Operation =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .detachDisk(project, zone, instanceName, deviceName)
       .execute()
 
-  def getSerialPortOutput(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, port: Int, start: Long): SerialPortOutput =
+  def getSerialPortOutput(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
+                          zone: String, instanceName: String, port: Int, start: Long): SerialPortOutput =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .getSerialPortOutput(project, zone, instanceName)
       .setPort(port)

@@ -2,7 +2,6 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
 
-import com.google.api.client.json.GenericJson
 import com.google.api.services.compute.model._
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
@@ -19,7 +18,6 @@ import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATI
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator._
-import io.cloudslang.content.google.utils.action.OutputUtils
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
@@ -152,8 +150,8 @@ class InstancesInsert {
     * @param syncInp                     Optional - Boolean specifying whether the operation to run sync or async.
     *                                    Valid values: "true", "false"
     *                                    Default: "false"
-    * @param timeoutInp                     Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
-    *                                               If the value is 0, the operation will wait until zone operation progress is 100.
+    * @param timeoutInp                  Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
+    *                                    If the value is 0, the operation will wait until zone operation progress is 100.
     *                                    Valid values: Any positive number including 0.
     *                                    Default: "30"
     * @param proxyHost                   Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will

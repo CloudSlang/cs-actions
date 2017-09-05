@@ -9,17 +9,16 @@ import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.actions.authentication.GetAccessToken
 import io.cloudslang.content.google.services.compute.compute_engine.instances.WindowsService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
-import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.google.utils.action.DefaultValues.DEFAULT_PROXY_PORT
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputValidator.validateProxyPort
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
-class InstancesRestWindowsPassword {
+class InstancesResetWindowsPassword {
 
 
   /**
@@ -58,7 +57,6 @@ class InstancesRestWindowsPassword {
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
 
 
-
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -87,7 +85,7 @@ class InstancesRestWindowsPassword {
       // 5 minutes chosen to allow for differences between time on the client
       // and time on the server.
       val password = WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
-        instanceName, userName = "ghita2", email = "muscailie@gmail.com", expireTime = 300000, timeout = 30000)
+        instanceName, userName = "ghita2", email = "muscailie@gmail.com", expireTime = 30000000, timeout = 30000)
       getSuccessResultsMap(password)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
