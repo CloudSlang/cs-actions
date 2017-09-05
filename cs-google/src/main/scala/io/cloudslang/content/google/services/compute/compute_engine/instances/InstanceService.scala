@@ -35,46 +35,75 @@ object InstanceService {
     instances
   }
 
-  def start(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+  def start(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .start(project, zone, instanceName)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
-  def stop(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+  def stop(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .stop(project, zone, instanceName)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
-  def restart(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+  def restart(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .reset(project, zone, instanceName)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
   def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .insert(project, zone, instance)
       .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
     } else {
       operation
     }
   }
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Operation =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation: Operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .delete(project, zone, instanceName)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
-  def setTags(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, tags: Tags): Operation = {
+  def setTags(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, tags: Tags, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val instanceTagFingerprint = get(httpTransport, jsonFactory, credential, project, zone, instanceName)
       .getTags.getFingerprint
 
     tags.setFingerprint(instanceTagFingerprint)
 
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .setTags(project, zone, instanceName, tags)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
   }
 
   def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String): Instance =
@@ -91,15 +120,27 @@ object InstanceService {
     request.execute()
   }
 
-  def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, attachedDisk: AttachedDisk): Operation =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+  def attachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, attachedDisk: AttachedDisk, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .attachDisk(project, zone, instanceName, attachedDisk)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
-  def detachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, deviceName: String): Operation =
-    ComputeService.instancesService(httpTransport, jsonFactory, credential)
+  def detachDisk(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, deviceName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .detachDisk(project, zone, instanceName, deviceName)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
   def getSerialPortOutput(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instanceName: String, port: Int, start: Long): SerialPortOutput =
     ComputeService.instancesService(httpTransport, jsonFactory, credential)

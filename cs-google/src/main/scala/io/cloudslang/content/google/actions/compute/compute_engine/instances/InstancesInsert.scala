@@ -367,12 +367,15 @@ class InstancesInsert {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
         val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
         val instanceId = Option(instance.getId).getOrElse(BigInt(0))
+        val status = Option(instance.getStatus).getOrElse("")
+        val name = Option(instance.getName).getOrElse("")
 
         resultMap +
           (INSTANCE_ID -> instanceId.toString) +
-          (NAME -> instance.getName) +
+          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+          (NAME -> name) +
           (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(listDelimiterStr)) +
-          (STATUS -> instance.getStatus)
+          (STATUS -> status)
       } else {
         resultMap
       }

@@ -27,6 +27,7 @@ object InputNames {
   final val AUTO_CREATE_SUBNETWORKS = "autoCreateSubnetworks"
   final val IPV4_RANGE = "ipV4Range"
   final val ZONE_OPERATION_NAME = "zoneOperationName"
+  final val GLOBAL_OPERATION_NAME = "globalOperationName"
   final val TAGS_LIST = "tagsList"
   final val TAGS_DELIMITER = "tagsDelimiter"
   final val DISK_SIZE = "diskSize"

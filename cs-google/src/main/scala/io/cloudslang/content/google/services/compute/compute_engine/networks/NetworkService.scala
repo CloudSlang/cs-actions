@@ -4,7 +4,7 @@ import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model._
-import io.cloudslang.content.google.services.compute.compute_engine.ComputeService
+import io.cloudslang.content.google.services.compute.compute_engine.{ComputeController, ComputeService}
 
 import scala.collection.JavaConversions._
 
@@ -39,13 +39,25 @@ object NetworkService {
       .get(project, networkName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, network: Network): Operation =
-    ComputeService.networksService(httpTransport, jsonFactory, credential)
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, network: Network, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .insert(project, network)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, networkName: String): Operation =
-    ComputeService.networksService(httpTransport, jsonFactory, credential)
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, networkName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .delete(project, networkName)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 }

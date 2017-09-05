@@ -44,7 +44,7 @@ object DiskService {
     .insert(project, zone, disk)
     .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
     } else {
       operation
     }
@@ -55,7 +55,7 @@ object DiskService {
       .delete(project, zone, diskName)
       .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, Some(zone), operation, timeout, pollingInterval)
     } else {
       operation
     }
