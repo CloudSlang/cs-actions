@@ -39,23 +39,23 @@ object DiskService {
       .get(project, zone, diskName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, disk: Disk, sync: Boolean, timeout: Long): Operation = {
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, disk: Disk, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
   val operation = ComputeService.disksService(httpTransport, jsonFactory, credential)
     .insert(project, zone, disk)
     .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
     } else {
       operation
     }
   }
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, diskName: String, sync: Boolean, timeout: Long): Operation = {
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, diskName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.disksService(httpTransport, jsonFactory, credential)
       .delete(project, zone, diskName)
       .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
     } else {
       operation
     }

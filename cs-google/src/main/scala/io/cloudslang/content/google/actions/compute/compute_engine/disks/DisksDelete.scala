@@ -9,15 +9,15 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskService
 import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
-import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_SYNC_TIMEOUT}
+import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_POLLING_INTERVAL, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_SYNC_TIMEOUT}
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeLong, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
-import io.cloudslang.content.utils.NumberUtilities.{toInteger, toLong}
+import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
@@ -34,28 +34,32 @@ class DisksDelete {
     * JSON object, that can be used to retrieve the status and progress of the ZoneOperation, using the
     * ZoneOperationsGet operation.
     *
-    * @param projectId        Google Cloud project id.
-    *                         Example: "example-project-a"
-    * @param zone             The name of the zone where the Disk resource is located.
-    *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
-    * @param diskName         Name of the Disk resource to delete.
-    *                         Example: "disk-1"
-    * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
-    *                         following scope: "https://www.googleapis.com/auth/compute".
-    * @param syncInp          Optional - Boolean specifying whether the operation to run sync or async.
-    *                         Valid values: "true", "false"
-    *                         Default: "false"
-    * @param timeoutInp       Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
-    *                         If the value is 0, the operation will wait until zone operation progress is 100.
-    *                         Valid values: Any positive number including 0.
-    *                         Default: "30"
-    * @param proxyHost        Optional - Proxy server used to access the provider services.
-    * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
-    *                         Default: "8080"
-    * @param proxyUsername    Optional - Proxy server user name.
-    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @param prettyPrintInp   Optional - Whether to format the resulting JSON.
-    *                         Default: "true"
+    * @param projectId            Google Cloud project id.
+    *                             Example: "example-project-a"
+    * @param zone                 The name of the zone where the Disk resource is located.
+    *                             Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param diskName             Name of the Disk resource to delete.
+    *                             Example: "disk-1"
+    * @param accessToken          The access token returned by the GetAccessToken operation, with at least the
+    *                             following scope: "https://www.googleapis.com/auth/compute".
+    * @param syncInp              Optional - Boolean specifying whether the operation to run sync or async.
+    *                             Valid values: "true", "false"
+    *                             Default: "false"
+    * @param timeoutInp           Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
+    *                             If the value is 0, the operation will wait until zone operation progress is 100.
+    *                             Valid values: Any positive number including 0.
+    *                             Default: "30"
+    * @param pollingIntervalInp   Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
+    *                             is executed, if the sync input is set to "true".
+    *                             Valid values: Any positive number including 0.
+    *                             Default: "1"
+    * @param proxyHost            Optional - Proxy server used to access the provider services.
+    * @param proxyPortInp         Optional - Proxy server port used to access the provider services.
+    *                             Default: "8080"
+    * @param proxyUsername        Optional - Proxy server user name.
+    * @param proxyPasswordInp     Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param prettyPrintInp       Optional - Whether to format the resulting JSON.
+    *                             Default: "true"
     * @return a map containing a ZoneOperation resource as returnResult, it's name as zoneOperationName and the disk name.
     *         If <syncInp> is set to true the map will also contain the status of the operation.
     *         In case an exception occurs the failure message is provided.
@@ -80,6 +84,7 @@ class DisksDelete {
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
               @Param(value = SYNC) syncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
+              @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -93,11 +98,13 @@ class DisksDelete {
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
     val syncStr = defaultIfEmpty(syncInp, FALSE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
+    val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
       validateBoolean(syncStr, SYNC) ++
-      validateNonNegativeLong(timeoutStr, TIMEOUT)
+      validateNonNegativeLong(timeoutStr, TIMEOUT) ++
+      validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -107,13 +114,16 @@ class DisksDelete {
     val prettyPrint = toBoolean(prettyPrintStr)
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
+    val pollingInterval = toDouble(pollingIntervalStr)
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = DiskService.delete(httpTransport, jsonFactory, credential, projectId, zone, diskName, sync, timeout)
+      val pollingIntervalLong = (pollingInterval * 1000).ceil.toLong
+
+      val operation = DiskService.delete(httpTransport, jsonFactory, credential, projectId, zone, diskName, sync, timeout, pollingIntervalLong)
 
       if (sync) {
         val status = Option(operation.getStatus).getOrElse("")

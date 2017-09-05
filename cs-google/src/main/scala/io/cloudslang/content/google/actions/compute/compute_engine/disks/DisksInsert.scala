@@ -17,7 +17,7 @@ import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
-import io.cloudslang.content.utils.NumberUtilities.{toInteger, toLong}
+import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
@@ -89,6 +89,10 @@ class DisksInsert {
     *                             If the value is 0, the operation will wait until zone operation progress is 100.
     *                             Valid values: Any positive number including 0.
     *                             Default: "30"
+    * @param pollingIntervalInp   Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
+    *                             is executed, if the sync input is set to "true".
+    *                             Valid values: Any positive number including 0.
+    *                             Default: "1"
     * @param proxyHost            Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
     *                             be used.
     * @param proxyPortInp         Optional - Proxy server port.
@@ -135,6 +139,7 @@ class DisksInsert {
               @Param(value = DISK_ENCRYPTION_KEY) diskEncryptionKey: String,
               @Param(value = SYNC) syncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
+              @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
@@ -156,12 +161,14 @@ class DisksInsert {
     val licensesDel = defaultIfEmpty(licensesDelimiterInp, DEFAULT_LICENSES_DELIMITER)
     val syncStr = defaultIfEmpty(syncInp, FALSE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
+    val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
       validateDiskSize(diskSizeStr, DISK_SIZE) ++
       validateBoolean(syncStr, SYNC) ++
-      validateNonNegativeLong(timeoutStr, TIMEOUT)
+      validateNonNegativeLong(timeoutStr, TIMEOUT) ++
+      validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -172,11 +179,14 @@ class DisksInsert {
     val diskSize = toInteger(diskSizeStr).toLong
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
+    val pollingInterval = toDouble(pollingIntervalStr)
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
+
+      val pollingIntervalLong = (pollingInterval * 1000).ceil.toLong
 
       val computeDisk: Disk = DiskController.createDisk(
         zone = zone,
@@ -191,7 +201,7 @@ class DisksInsert {
         licensesDel = licensesDel,
         diskSize = diskSize)
 
-      val operation = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, sync, timeout)
+      val operation = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, sync, timeout, pollingIntervalLong)
 
       if (sync) {
         val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
