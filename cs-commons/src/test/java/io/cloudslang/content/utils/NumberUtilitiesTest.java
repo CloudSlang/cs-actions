@@ -168,6 +168,7 @@ public class NumberUtilitiesTest {
         assertEquals(NumberUtilities.toLong("12345"), 12345);
         assertEquals(NumberUtilities.toLong("-123"), -123);
         assertEquals(NumberUtilities.toLong(null, 0), 0);
+        assertEquals(NumberUtilities.toLong("", 100), 100);
     }
 
     private void testInvalidLong(String value) {
