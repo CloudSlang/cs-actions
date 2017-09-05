@@ -12,7 +12,7 @@ import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames._
-import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
+import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
@@ -186,7 +186,7 @@ class DisksInsert {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val pollingIntervalLong = (pollingInterval * 1000).ceil.toLong
+      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
 
       val computeDisk: Disk = DiskController.createDisk(
         zone = zone,
@@ -201,26 +201,23 @@ class DisksInsert {
         licensesDel = licensesDel,
         diskSize = diskSize)
 
-      val operation = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, sync, timeout, pollingIntervalLong)
+      val operation = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, sync, timeout, pollingIntervalMilli)
+      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+        (ZONE_OPERATION_NAME -> operation.getName) +
+        (ZONE -> zone) +
+        (DISK_NAME -> diskName)
 
       if (sync) {
         val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
         val status = Option(disk.getStatus).getOrElse("")
         val diskSize = Option(disk.getSizeGb).getOrElse(0.toLong)
 
-        getSuccessResultsMap(toPretty(prettyPrint, disk)) +
-          (ZONE_OPERATION_NAME -> operation.getName) +
+        resultMap +
           (DISK_ID -> disk.getId.toString) +
-          (DISK_NAME -> disk.getName) +
           (DISK_SIZE -> diskSize.toString) +
-          (ZONE -> zone) +
           (STATUS -> status)
-      }
-      else {
-        getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-          (ZONE_OPERATION_NAME -> operation.getName) +
-          (ZONE -> zone) +
-          (DISK_NAME -> diskName)
+      } else {
+        resultMap
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)

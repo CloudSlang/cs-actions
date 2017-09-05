@@ -165,9 +165,9 @@ public class NumberUtilitiesTest {
 
     @Test
     public void toLongValid() throws Exception {
-        assertTrue(NumberUtilities.toLong("12345") - 12345 == 0);
-        assertTrue(NumberUtilities.toLong("-123") + 123 == 0);
-        assertTrue(NumberUtilities.toLong(null, 0) == 0);
+        assertEquals(NumberUtilities.toLong("12345"), 12345);
+        assertEquals(NumberUtilities.toLong("-123"), -123);
+        assertEquals(NumberUtilities.toLong(null, 0), 0);
     }
 
     private void testInvalidLong(String value) {

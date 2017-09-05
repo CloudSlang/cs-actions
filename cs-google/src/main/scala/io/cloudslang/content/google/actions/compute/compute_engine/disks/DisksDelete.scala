@@ -12,9 +12,9 @@ import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_POLLING_INTERVAL, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_SYNC_TIMEOUT}
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames._
-import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
+import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
-import io.cloudslang.content.google.utils.action.OutputUtils
+import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
@@ -34,32 +34,32 @@ class DisksDelete {
     * JSON object, that can be used to retrieve the status and progress of the ZoneOperation, using the
     * ZoneOperationsGet operation.
     *
-    * @param projectId            Google Cloud project id.
-    *                             Example: "example-project-a"
-    * @param zone                 The name of the zone where the Disk resource is located.
-    *                             Examples: "us-central1-a", "us-central1-b", "us-central1-c"
-    * @param diskName             Name of the Disk resource to delete.
-    *                             Example: "disk-1"
-    * @param accessToken          The access token returned by the GetAccessToken operation, with at least the
-    *                             following scope: "https://www.googleapis.com/auth/compute".
-    * @param syncInp              Optional - Boolean specifying whether the operation to run sync or async.
-    *                             Valid values: "true", "false"
-    *                             Default: "false"
-    * @param timeoutInp           Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
-    *                             If the value is 0, the operation will wait until zone operation progress is 100.
-    *                             Valid values: Any positive number including 0.
-    *                             Default: "30"
-    * @param pollingIntervalInp   Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
-    *                             is executed, if the sync input is set to "true".
-    *                             Valid values: Any positive number including 0.
-    *                             Default: "1"
-    * @param proxyHost            Optional - Proxy server used to access the provider services.
-    * @param proxyPortInp         Optional - Proxy server port used to access the provider services.
-    *                             Default: "8080"
-    * @param proxyUsername        Optional - Proxy server user name.
-    * @param proxyPasswordInp     Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @param prettyPrintInp       Optional - Whether to format the resulting JSON.
-    *                             Default: "true"
+    * @param projectId          Google Cloud project id.
+    *                           Example: "example-project-a"
+    * @param zone               The name of the zone where the Disk resource is located.
+    *                           Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param diskName           Name of the Disk resource to delete.
+    *                           Example: "disk-1"
+    * @param accessToken        The access token returned by the GetAccessToken operation, with at least the
+    *                           following scope: "https://www.googleapis.com/auth/compute".
+    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    *                           Valid values: "true", "false"
+    *                           Default: "false"
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
+    *                           If the value is 0, the operation will wait until zone operation progress is 100.
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "30"
+    * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
+    *                           is executed, if the sync input is set to "true".
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "1"
+    * @param proxyHost          Optional - Proxy server used to access the provider services.
+    * @param proxyPortInp       Optional - Proxy server port used to access the provider services.
+    *                           Default: "8080"
+    * @param proxyUsername      Optional - Proxy server user name.
+    * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param prettyPrintInp     Optional - Whether to format the resulting JSON.
+    *                           Default: "true"
     * @return a map containing a ZoneOperation resource as returnResult, it's name as zoneOperationName and the disk name.
     *         If <syncInp> is set to true the map will also contain the status of the operation.
     *         In case an exception occurs the failure message is provided.
@@ -121,21 +121,19 @@ class DisksDelete {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val pollingIntervalLong = (pollingInterval * 1000).ceil.toLong
+      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
 
-      val operation = DiskService.delete(httpTransport, jsonFactory, credential, projectId, zone, diskName, sync, timeout, pollingIntervalLong)
+      val operation = DiskService.delete(httpTransport, jsonFactory, credential, projectId, zone, diskName, sync, timeout, pollingIntervalMilli)
+      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+        (ZONE_OPERATION_NAME -> operation.getName) +
+        (DISK_NAME -> diskName)
 
       if (sync) {
         val status = Option(operation.getStatus).getOrElse("")
 
-        getSuccessResultsMap(OutputUtils.toPretty(prettyPrint, operation)) +
-          (ZONE_OPERATION_NAME -> operation.getName) +
-          (STATUS -> status) +
-          (DISK_NAME -> diskName)
+        resultMap + (STATUS -> status)
       } else {
-        getSuccessResultsMap(OutputUtils.toPretty(prettyPrint, operation)) +
-          (ZONE_OPERATION_NAME -> operation.getName) +
-          (DISK_NAME -> diskName)
+        resultMap
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)

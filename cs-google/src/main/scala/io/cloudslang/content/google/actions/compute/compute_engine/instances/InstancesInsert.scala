@@ -2,7 +2,6 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
 
-import com.google.api.client.json.GenericJson
 import com.google.api.services.compute.model._
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
@@ -17,13 +16,11 @@ import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EX
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames._
-import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
+import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
-import io.cloudslang.content.google.utils.action.OutputUtils
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
-import io.cloudslang.content.utils.NumberUtilities
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
@@ -361,22 +358,23 @@ class InstancesInsert {
         canIpForward = canIpForward,
         serviceAccountOpt = serviceAccount)
 
-      val pollingIntervalLong = (pollingInterval * 1000).ceil.toLong
+      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
 
-      val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance, sync, timeout, pollingIntervalLong)
+      val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance, sync, timeout, pollingIntervalMilli)
+      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+
       if (sync) {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
         val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
         val instanceId = Option(instance.getId).getOrElse(BigInt(0))
 
-        getSuccessResultsMap(toPretty(prettyPrint, instance)) +
-          (ZONE_OPERATION_NAME -> operation.getName) +
+        resultMap +
           (INSTANCE_ID -> instanceId.toString) +
           (NAME -> instance.getName) +
           (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(listDelimiterStr)) +
           (STATUS -> instance.getStatus)
       } else {
-        getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+        resultMap
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
