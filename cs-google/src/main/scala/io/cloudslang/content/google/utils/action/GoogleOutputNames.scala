@@ -13,4 +13,5 @@ object GoogleOutputNames extends OutputNames {
   final val INSTANCE_ID = "instanceId"
   final val NAME = "name"
   final val IPS = "ips"
+  final val DISK_ID = "diskId"
 }

@@ -14,6 +14,8 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64.decodeBase64
 import com.google.api.services.compute.model.Metadata
 import com.google.common.io.BaseEncoding.base64
+import io.cloudslang.content.google.utils.Constants
+import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import org.apache.commons.lang3.StringUtils.EMPTY
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import spray.json.DefaultJsonProtocol._
@@ -32,14 +34,14 @@ object WindowsService {
   // and time on the server.
   private val WINDOWS_KEYS = "windows-keys"
   private val RSA_KEY = "RSA"
-  private val NEW_LINE = "\n"
   private val MODULUS = "modulus"
   private val EXPONENT = "exponent"
 
   def resetWindowsPassword(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
-                           zone: String, instanceName: String, userName: String, email: String, expireTime: Long, timeout: Long): String = {
+                           zone: String, instanceName: String, userName: String, emailOpt: Option[String], syncTime: Long,
+                           timeout: Long, pollingInterval: Long): String = {
     val keyPair = generateKeyPair()
-    prepareInstanceMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, userName, email, expireTime, timeout, keyPair)
+    prepareInstanceMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, userName, emailOpt, syncTime, timeout, keyPair, pollingInterval)
     val output = InstanceService.getSerialPortOutput(httpTransport, jsonFactory, credential, project, zone, instanceName, 4, 0)
     // Get the last line - this will be a JSON string corresponding to the
     // most recent password reset attempt.
@@ -54,17 +56,17 @@ object WindowsService {
   }
 
   private def prepareInstanceMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
-                                      zone: String, instanceName: String, userName: String, email: String, expireTime: Long,
-                                      timeout: Long, keyPair: KeyPair): Unit = {
+                                      zone: String, instanceName: String, userName: String, emailOpt: Option[String], syncTime: Long,
+                                      timeout: Long, keyPair: KeyPair, pollingInterval: Long): Unit = {
     val instanceMetadata = InstanceService.get(httpTransport, jsonFactory, credential, project, zone, instanceName)
       .getMetadata
-    val rfc339FormattedDate = rfc339DateFormat(timeWithOffset(expireTime))
+    val rfc339FormattedDate = rfc339DateFormat(timeWithOffset(syncTime))
 
-    val keyMetadata = buildKeyMetadata(keyPair, rfc339FormattedDate, userName, email)
+    val keyMetadata = buildKeyMetadata(keyPair, rfc339FormattedDate, userName, emailOpt)
     replaceMetadata(instanceMetadata, keyMetadata)
     // Tell Compute Engine to update the instance metadata with our changes.
 
-    InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, instanceMetadata, sync = true, timeout)
+    InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, instanceMetadata, sync = true, timeout, pollingInterval)
 
   }
 
@@ -81,10 +83,10 @@ object WindowsService {
     }
   }
 
-  private def buildKeyMetadata(pair: KeyPair, dateString: String, userName: String, email: String): Map[String, String] = {
+  private def buildKeyMetadata(pair: KeyPair, dateString: String, userName: String, emailOpt: Option[String]): Map[String, String] = {
     jsonEncode(pair) +
       ("userName" -> userName) +
-      ("email" -> email) +
+      ("email" -> "") +
       ("expireOn" -> dateString)
   }
 

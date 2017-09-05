@@ -4,7 +4,7 @@ import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model._
-import io.cloudslang.content.google.services.compute.compute_engine.ComputeService
+import io.cloudslang.content.google.services.compute.compute_engine.{ComputeController, ComputeService}
 
 import scala.collection.JavaConversions._
 
@@ -39,13 +39,25 @@ object DiskService {
       .get(project, zone, diskName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, disk: Disk): Operation =
-    ComputeService.disksService(httpTransport, jsonFactory, credential)
-      .insert(project, zone, disk)
-      .execute()
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, disk: Disk, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+  val operation = ComputeService.disksService(httpTransport, jsonFactory, credential)
+    .insert(project, zone, disk)
+    .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, diskName: String): Operation =
-    ComputeService.disksService(httpTransport, jsonFactory, credential)
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, diskName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+    val operation = ComputeService.disksService(httpTransport, jsonFactory, credential)
       .delete(project, zone, diskName)
       .execute()
+    if (sync) {
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
+    } else {
+      operation
+    }
+  }
 }

@@ -18,14 +18,14 @@ import scala.language.postfixOps
   */
 object ComputeController {
   def awaitSuccessOperation(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
-                            zone: String, operation: Operation, timeout: Long): Operation =
-    Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation), if (timeout == 0) Inf else timeout seconds)
+                            zone: String, operation: Operation, timeout: Long, pollingInterval: Long): Operation =
+    Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation, pollingInterval), if (timeout == 0) Inf else timeout seconds)
 
   def updateOperationProgress(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
-                              zone: String, operation: Operation): Future[Operation] =
+                              zone: String, operation: Operation, pollingInterval: Long): Future[Operation] =
     Future {
       Stream.continually {
-        Thread.sleep(1000)
+        Thread.sleep(pollingInterval)
         ZoneOperationService.get(httpTransport, jsonFactory, credential, projectId, zone, operation.getName)
       }
         .filter(_.getProgress == 100)

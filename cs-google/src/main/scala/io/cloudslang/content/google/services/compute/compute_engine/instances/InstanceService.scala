@@ -54,12 +54,12 @@ object InstanceService {
       .execute()
 
   def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
-             instance: Instance, sync: Boolean, timeout: Long): Operation = {
+             instance: Instance, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .insert(project, zone, instance)
       .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
     } else {
       operation
     }
@@ -90,20 +90,20 @@ object InstanceService {
       .execute()
 
   def setMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
-                  instanceName: String, items: List[Items], sync: Boolean, timeout: Long): Operation = {
+                  instanceName: String, items: List[Items], sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val metadata = get(httpTransport, jsonFactory, credential, project, zone, instanceName)
       .getMetadata
       .setItems(items)
-    setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, metadata, sync, timeout)
+    setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, metadata, sync, timeout, pollingInterval)
   }
 
   def setMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String,
-                  instanceName: String, metadata: Metadata, sync: Boolean, timeout: Long): Operation = {
+                  instanceName: String, metadata: Metadata, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .setMetadata(project, zone, instanceName, metadata)
       .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
     } else {
       operation
     }
