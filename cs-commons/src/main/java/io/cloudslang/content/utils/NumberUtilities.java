@@ -161,7 +161,7 @@ public final class NumberUtilities {
      */
     public static long toLong(@Nullable final String longStr) {
         if (!isValidLong(longStr)) {
-            throw new IllegalArgumentException(longStr + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_INTEGER_VALUE);
+            throw new IllegalArgumentException(longStr + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_LONG_VALUE);
         }
         final String stripedLong = StringUtils.strip(longStr);
         return NumberUtils.createLong(stripedLong);
@@ -177,6 +177,18 @@ public final class NumberUtilities {
      */
     public static int toInteger(@Nullable final String integerStr, final int defaultInteger) {
         return StringUtils.isNoneEmpty(integerStr) ? toInteger(integerStr) : defaultInteger;
+    }
+
+    /**
+     * If the long integer string is null or empty, it returns the defaultLong otherwise it returns the long integer value (see toLong)
+     *
+     * @param longStr     the long integer to convert
+     * @param defaultLong the default value if the longStr is null or the empty string
+     * @return the long integer value of the string or the defaultLong if the long integer string is empty
+     * @throws IllegalArgumentException if the passed long integer string is not a valid long integer
+     */
+    public static long toLong(@Nullable final String longStr, final long defaultLong) {
+        return StringUtils.isNoneEmpty(longStr) ? toLong(longStr) : defaultLong;
     }
 
 

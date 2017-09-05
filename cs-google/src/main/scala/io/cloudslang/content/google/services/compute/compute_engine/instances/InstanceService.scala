@@ -50,12 +50,12 @@ object InstanceService {
       .reset(project, zone, instanceName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance, sync: Boolean, timeout: Long): Operation = {
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, zone: String, instance: Instance, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.instancesService(httpTransport, jsonFactory, credential)
       .insert(project, zone, instance)
       .execute()
     if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout)
+      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone, operation, timeout, pollingInterval)
     } else {
       operation
     }
