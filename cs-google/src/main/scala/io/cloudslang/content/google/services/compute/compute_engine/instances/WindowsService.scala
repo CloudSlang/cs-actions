@@ -38,8 +38,8 @@ object WindowsService {
                            timeout: Long, pollingInterval: Long): Option[String] = {
     val keyPair = generateKeyPair()
     val metadata = prepareInstanceMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, userName, emailOpt, syncTime, timeout, keyPair, pollingInterval)
-    val output = InstanceService.getSerialPortOutput(httpTransport, jsonFactory, credential, project, zone, instanceName, 4, 0)
-    output.getContents
+    InstanceService.getSerialPortOutput(httpTransport, jsonFactory, credential, project, zone, instanceName, 4, 0)
+      .getContents
       .split(NEW_LINE)
       .reverse
       .toStream
@@ -62,16 +62,14 @@ object WindowsService {
 
     val keyMetadata = buildKeyMetadata(keyPair, rfc339FormattedDate, userName, emailOpt)
     replaceMetadata(instanceMetadata, keyMetadata)
-    // Tell Compute Engine to update the instance metadata with our changes.
 
     InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, instanceMetadata, sync = true, timeout, pollingInterval)
     keyMetadata
   }
 
   private def replaceMetadata(input: Metadata, newMetadataItem: Map[String, String]): Unit = {
-    // Transform the JSON object into a string that the API can use.
     val newItemString = newMetadataItem.toJson.toString
-    // Get the list containing all of the Metadata entries for this instance.
+
     Option(input.getItems) match {
       case Some(items) => items.find(_.getKey.compareTo(WINDOWS_KEYS) == 0) match {
         case Some(item) => item.setValue(newItemString)
@@ -91,22 +89,17 @@ object WindowsService {
     }
   }
 
-  private def jsonEncode(keys: KeyPair) = {
+  private def encodeBase64:(Array[Byte]) => String = base64.encode(_).replaceAll(NEW_LINE, EMPTY)
+
+  private def jsonEncode(keys: KeyPair): Map[String, String] = {
     val factory = KeyFactory.getInstance(RSA_KEY)
-    // Get the RSA spec for key manipulation.
     val pubSpec = factory.getKeySpec(keys.getPublic, classOf[RSAPublicKeySpec])
-    // Extract required parts of the key.
-    val modulus = pubSpec.getModulus
-    val exponent = pubSpec.getPublicExponent
 
-    // Strip out the leading 0 byte in the modulus.
-    val newModulus = modulus.toByteArray.tail
+    val exponent = encodeBase64(pubSpec.getPublicExponent.toByteArray)
+    val modulus = encodeBase64(pubSpec.getModulus.toByteArray.tail)
 
-    val modulusString = base64.encode(newModulus).replaceAll(NEW_LINE, EMPTY)
-    val exponentString = base64.encode(exponent.toByteArray).replaceAll(NEW_LINE, EMPTY)
-
-    Map(MODULUS -> modulusString,
-      EXPONENT -> exponentString)
+    Map(MODULUS -> modulus,
+      EXPONENT -> exponent)
   }
 
   private def timeWithOffset(offset: Long): Date = new Date(new Date().getTime + offset)

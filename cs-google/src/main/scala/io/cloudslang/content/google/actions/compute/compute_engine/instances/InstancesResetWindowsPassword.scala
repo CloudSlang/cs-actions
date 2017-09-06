@@ -8,8 +8,9 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.actions.authentication.GetAccessToken
 import io.cloudslang.content.google.services.compute.compute_engine.instances.WindowsService
-import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants._
 import io.cloudslang.content.google.utils.action.DefaultValues._
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.PASSWORD
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
@@ -18,33 +19,52 @@ import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
+import scala.collection.JavaConversions._
+import scala.concurrent.TimeoutException
+
 class InstancesResetWindowsPassword {
 
 
   /**
-    * This operation can be used to retrieve an instance resource, as JSON object.
+    * This operation can be used to reset the password for a user on a Windows instance.
     *
-    * @param projectId        Google Cloud project id.
-    *                         Example: "example-project-a"
-    * @param zone             The name of the zone where the Instance resource is located.
-    *                         Examples: "us-central1-a", "us-central1-b", "us-central1-c"
-    * @param instanceName     Name of the instance resource to return.
-    *                         Example: "instance-1234"
-    * @param accessToken      The access token returned by the GetAccessToken operation, with at least the
-    *                         following scope: "https://www.googleapis.com/auth/compute.readonly".
-    * @param proxyHost        Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
-    *                         be used.
-    * @param proxyPortInp     Optional - Proxy server port used to access the provider services.
-    *                         Default: "8080"
-    * @param proxyUsername    Optional - Proxy server user name.
-    * @param proxyPasswordInp Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param projectId          Google Cloud project id.
+    *                           Example: "example-project-a"
+    * @param zone               The name of the zone where the Windows Instance resource is located.
+    *                           Examples: "us-central1-a", "us-central1-b", "us-central1-c"
+    * @param instanceName       Name of the instance resource for which to reset the Windows password.
+    *                           Example: "instance-1234"
+    * @param accessToken        The access token returned by the GetAccessToken operation, with at least the
+    *                           following scope: "https://www.googleapis.com/auth/compute".
+    * @param proxyHost          Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                           be used.
+    * @param userName           The username for which to reset the password. If the the username does not exist, it will
+    *                           be created.
+    * @param emailInp           Optional - The email for the username for which the password is reset.
+    * @param syncTimeInp        Optional - The maximum number of seconds to allow to differ between the time on the client
+    *                           and time on the server.
+    *                           Valid values: Any positive number
+    *                           Default: 300
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    *                           If the value is 0, the operation will wait until zone operation progress is 100.
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "30"
+    * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation
+    *                           finished is executed, if the sync input is set to "true".
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "1"
+    * @param proxyPortInp       Optional - Proxy server port used to access the provider services.
+    *                           Default: "8080"
+    * @param proxyUsername      Optional - Proxy server user name.
+    * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
     * @return a map containing a Instance resource as returnResult
     */
   @Action(name = "Reset Windows Password",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
-      new Output(EXCEPTION)
+      new Output(EXCEPTION),
+      new Output(PASSWORD)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -95,17 +115,14 @@ class InstancesResetWindowsPassword {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      // Constants for configuring user name, email, and SSH key expiration.
-
-      // Keys are one-time use, so the metadata doesn't need to stay around for long.
-      // 5 minutes chosen to allow for differences between time on the client
-      // and time on the server.
       WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
         instanceName, userName, emailOpt, syncTime, timeout, pollingInterval) match {
-        case Some(password) => getSuccessResultsMap(password)
-        case _ => getFailureResultsMap("the password could not be reset")
+        case Some(password) => getSuccessResultsMap(password) +
+          (PASSWORD -> password)
+        case _ => getFailureResultsMap(SYNC_TIME_EXCEPTION)
       }
     } catch {
+      case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
     }
   }

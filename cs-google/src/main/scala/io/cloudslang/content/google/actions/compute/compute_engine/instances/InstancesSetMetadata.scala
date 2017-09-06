@@ -9,7 +9,7 @@ import io.cloudslang.content.constants.BooleanValues.FALSE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.{InstanceController, InstanceService}
-import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.InputNames._
@@ -22,6 +22,7 @@ import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuc
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.concurrent.TimeoutException
 
 /**
   * Created by Tirla Alin
@@ -46,6 +47,17 @@ class InstancesSetMetadata {
     *                           itemsKeysList must be equal with the length of the itemsValuesList.
     * @param itemsDelimiterInp  The delimiter to split the <itemsKeysListInp> and <itemsValuesListInp>
     *                           Default: ','
+    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    *                           Valid values: "true", "false"
+    *                           Default: "false"
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    *                           If the value is 0, the operation will wait until zone operation progress is 100.
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "30"
+    * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
+    *                           is executed, if the sync input is set to "true".
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "1"
     * @param proxyHostInp       Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
     *                           be used.
     * @param proxyPortInp       Optional - proxy server port.
@@ -132,6 +144,7 @@ class InstancesSetMetadata {
 
       getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> result.getName)
     } catch {
+      case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
     }
   }
