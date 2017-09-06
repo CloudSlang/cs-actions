@@ -120,11 +120,10 @@ class NetworksDelete {
       val operation = NetworkService.delete(httpTransport, jsonFactory, credential, projectId, networkName, sync, timeout, pollingIntervalMilli)
       val name = defaultIfEmpty(operation.getName, EMPTY)
       val status = defaultIfEmpty(operation.getStatus, EMPTY)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+
+      getSuccessResultsMap(toPretty(prettyPrint, operation)) +
         (GLOBAL_OPERATION_NAME -> name) +
         (STATUS -> status)
-
-      resultMap
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
