@@ -69,9 +69,10 @@ class NetworksInsert {
     * @param prettyPrintInp           Optional - Whether to format (pretty print) the resulting json.
     *                                 Valid values: "true", "false"
     *                                 Default: "true"
-    * @return A map containing a GlobalOperation resource as returnResult, and it's name as globalOperationName.
-    *         If <syncInp> is set to true the map will also contain the name of the network, the network id and the
-    *         status of the operation. In case an exception occurs the failure message is provided.
+    * @return A map containing a GlobalOperation resource as returnResult, it's name as globalOperationName and the
+    *         status of the operation. If <syncInp> is set to true the map will also contain the name of the network
+    *         and the network id.
+    *         In case an exception occurs the failure message is provided.
     */
 
   @Action(name = "Insert Network",
@@ -153,8 +154,8 @@ class NetworksInsert {
 
       if (sync) {
         val network = NetworkService.get(httpTransport, jsonFactory, credential, projectId, networkName)
-        val networkId = Option(network.getId).getOrElse(BigInt(0)).toString
         val name = defaultIfEmpty(network.getName, EMPTY)
+        val networkId = Option(network.getId).getOrElse(BigInt(0)).toString
 
         resultMap +
           (NAME -> name) +

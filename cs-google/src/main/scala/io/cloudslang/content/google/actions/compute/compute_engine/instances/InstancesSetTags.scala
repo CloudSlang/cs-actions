@@ -68,7 +68,8 @@ class InstancesSetTags {
     *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation if the <syncInp> is false. If <syncInp> is true the map will also
-    *         contain the name of the instance, the details of the instance and the status of the operation.
+    *         contain the name of the instance, the details of the instance and the status of the operation will be
+    *         replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Set Instance Tags",

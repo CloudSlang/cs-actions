@@ -170,7 +170,7 @@ class InstancesInsert {
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation if the <syncInp> is false. If <syncInp> is true the map will also
     *         contain the instance id, the name of the instance, a list of IPs separated by <listDelimiter> and the
-    *         status of the instance.
+    *         status of the operation will be replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Insert Instance",

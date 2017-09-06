@@ -58,8 +58,8 @@ class NetworksDelete {
     * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
     * @param prettyPrintInp     Optional - Whether to format the resulting JSON.
     *                           Default: "true"
-    * @return A map containing a GlobalOperation resource as returnResult, and it's name as globalOperationName.
-    *         If <syncInp> is set to true the map will also contain the status of the operation.
+    * @return A map containing a GlobalOperation resource as returnResult, it's name as globalOperationName and the
+    *         status of the operation.
     *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Delete Network",
@@ -121,7 +121,7 @@ class NetworksDelete {
       val name = defaultIfEmpty(operation.getName, EMPTY)
       val status = defaultIfEmpty(operation.getStatus, EMPTY)
       val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (GLOBAL_OPERATION_NAME -> operation.getName) +
+        (GLOBAL_OPERATION_NAME -> name) +
         (STATUS -> status)
 
       resultMap

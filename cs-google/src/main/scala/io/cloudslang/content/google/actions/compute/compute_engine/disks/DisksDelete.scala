@@ -60,8 +60,8 @@ class DisksDelete {
     * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
     * @param prettyPrintInp     Optional - Whether to format the resulting JSON.
     *                           Default: "true"
-    * @return a map containing a ZoneOperation resource as returnResult, it's name as zoneOperationName and the disk name.
-    *         If <syncInp> is set to true the map will also contain the status of the operation.
+    * @return a map containing a ZoneOperation resource as returnResult, it's name as zoneOperationName, the disk name
+    *         and the status of the operation.
     *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Delete Disk",
