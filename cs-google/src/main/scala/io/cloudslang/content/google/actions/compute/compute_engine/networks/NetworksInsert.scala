@@ -158,7 +158,7 @@ class NetworksInsert {
 
         resultMap +
           (NAME -> name) +
-          (NETWORK_ID -> networkId) +
+          (NETWORK_ID -> networkId.toString) +
           (STATUS -> status)
       } else {
         resultMap
