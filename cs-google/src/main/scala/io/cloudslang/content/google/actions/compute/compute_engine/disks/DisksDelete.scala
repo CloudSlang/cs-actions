@@ -114,27 +114,22 @@ class DisksDelete {
     val prettyPrint = toBoolean(prettyPrintStr)
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
-    val pollingInterval = toDouble(pollingIntervalStr)
+    val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
-
       val operation = DiskService.delete(httpTransport, jsonFactory, credential, projectId, zone, diskName, sync, timeout, pollingIntervalMilli)
+      val name = defaultIfEmpty(operation.getName, EMPTY)
+      val status = defaultIfEmpty(operation.getStatus, EMPTY)
       val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (ZONE_OPERATION_NAME -> operation.getName) +
-        (DISK_NAME -> diskName)
+        (ZONE_OPERATION_NAME -> name) +
+        (DISK_NAME -> diskName) +
+        (STATUS -> status)
 
-      if (sync) {
-        val status = Option(operation.getStatus).getOrElse("")
-
-        resultMap + (STATUS -> status)
-      } else {
-        resultMap
-      }
+      resultMap
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

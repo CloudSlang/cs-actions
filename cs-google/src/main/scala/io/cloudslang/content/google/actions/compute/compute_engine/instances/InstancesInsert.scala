@@ -301,7 +301,7 @@ class InstancesInsert {
       val canIpForward = toBoolean(canIpForwardStr)
       val sync = toBoolean(syncStr)
       val timeout = toLong(timeoutStr)
-      val pollingInterval = toDouble(pollingIntervalStr)
+      val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
@@ -358,26 +358,27 @@ class InstancesInsert {
         canIpForward = canIpForward,
         serviceAccountOpt = serviceAccount)
 
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
-
       val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance, sync, timeout, pollingIntervalMilli)
       val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
       if (sync) {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
         val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
-        val instanceId = Option(instance.getId).getOrElse(BigInt(0))
-        val status = Option(instance.getStatus).getOrElse("")
-        val name = Option(instance.getName).getOrElse("")
+        val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
+        val status = defaultIfEmpty(instance.getStatus, EMPTY)
+        val name = defaultIfEmpty(instance.getName, EMPTY)
 
         resultMap +
-          (INSTANCE_ID -> instanceId.toString) +
+          (INSTANCE_ID -> instanceId) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
           (NAME -> name) +
           (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(listDelimiterStr)) +
           (STATUS -> status)
       } else {
-        resultMap
+        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+        resultMap +
+          (STATUS -> status)
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)

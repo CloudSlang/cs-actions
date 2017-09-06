@@ -126,14 +126,12 @@ class InstancesSetTags {
     val prettyPrint = toBoolean(prettyPrintStr)
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
-    val pollingInterval = toDouble(pollingIntervalStr)
+    val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
-
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
 
       val tags = new Tags().setItems(toList(tagsList, tagsDelimiter))
       val operation = InstanceService.setTags(httpTransport, jsonFactory, credential, projectId, zone, instanceName, tags, sync, timeout, pollingIntervalMilli)
@@ -141,15 +139,18 @@ class InstancesSetTags {
 
       if (sync) {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val name = Option(instance.getName).getOrElse("")
-        val status = Option(operation.getStatus).getOrElse("")
+        val name = defaultIfEmpty(instance.getName, EMPTY)
+        val status = defaultIfEmpty(instance.getStatus, EMPTY)
 
         resultMap +
           (INSTANCE_NAME -> name) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
           (STATUS -> status)
       } else {
-        resultMap
+        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+        resultMap +
+          (STATUS -> status)
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)

@@ -116,28 +116,29 @@ class InstancesDetachDisk {
       val prettyPrint = toBoolean(prettyPrintStr)
       val sync = toBoolean(syncStr)
       val timeout = toLong(timeoutStr)
-      val pollingInterval = toDouble(pollingIntervalStr)
+      val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
-
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
 
       val operation = InstanceService.detachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, deviceName, sync, timeout, pollingIntervalMilli)
       val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
       if (sync) {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val name = Option(instance.getName).getOrElse("")
-        val status = Option(operation.getStatus).getOrElse("")
+        val name = defaultIfEmpty(instance.getName, EMPTY)
+        val status = defaultIfEmpty(instance.getStatus, EMPTY)
 
         resultMap +
           (INSTANCE_NAME -> name) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
           (STATUS -> status)
       } else {
-        resultMap
+        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+        resultMap +
+          (STATUS -> status)
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)

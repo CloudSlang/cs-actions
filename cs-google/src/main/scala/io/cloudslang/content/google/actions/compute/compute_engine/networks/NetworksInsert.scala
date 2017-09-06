@@ -132,7 +132,7 @@ class NetworksInsert {
     val autoCreateSubnetworks = toBoolean(autoCreateSubnetworksStr)
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
-    val pollingInterval = toDouble(pollingIntervalStr)
+    val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
@@ -145,21 +145,20 @@ class NetworksInsert {
         autoCreateSubnetworks = autoCreateSubnetworks,
         ipV4Range = ipV4Range)
 
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
-
       val operation = NetworkService.insert(httpTransport, jsonFactory, credential, projectId, computeNetwork, sync, timeout, pollingIntervalMilli)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (GLOBAL_OPERATION_NAME -> operation.getName)
+      val status = defaultIfEmpty(operation.getStatus, EMPTY)
+      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+        (GLOBAL_OPERATION_NAME -> operation.getName) +
+        (STATUS -> status)
 
       if (sync) {
         val network = NetworkService.get(httpTransport, jsonFactory, credential, projectId, networkName)
         val networkId = Option(network.getId).getOrElse(BigInt(0)).toString
-        val name = Option(network.getName).getOrElse("")
-        val status = Option(operation.getStatus).getOrElse("")
+        val name = defaultIfEmpty(network.getName, EMPTY)
 
         resultMap +
           (NAME -> name) +
-          (NETWORK_ID -> networkId) +
-          (STATUS -> status)
+          (NETWORK_ID -> networkId)
       } else {
         resultMap
       }

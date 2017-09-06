@@ -115,27 +115,21 @@ class InstancesDelete {
     val prettyPrint = toBoolean(prettyPrintStr)
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
-    val pollingInterval = toDouble(pollingIntervalStr)
+    val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
-
       val operation = InstanceService.delete(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync, timeout, pollingIntervalMilli)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (ZONE_OPERATION_NAME -> operation.getName) +
-        (INSTANCE_NAME -> instanceName)
+      val name = defaultIfEmpty(operation.getName, EMPTY)
+      val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-      if (sync) {
-        val status = Option(operation.getStatus).getOrElse("")
-
-        resultMap + (STATUS -> status)
-      } else {
-        resultMap
-      }
+      getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+        (ZONE_OPERATION_NAME -> name) +
+        (INSTANCE_NAME -> instanceName) +
+        (STATUS -> status)
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

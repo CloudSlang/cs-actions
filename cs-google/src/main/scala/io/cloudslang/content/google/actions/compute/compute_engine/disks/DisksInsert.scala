@@ -179,14 +179,12 @@ class DisksInsert {
     val diskSize = toInteger(diskSizeStr).toLong
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
-    val pollingInterval = toDouble(pollingIntervalStr)
+    val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
-
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
 
       val computeDisk: Disk = DiskController.createDisk(
         zone = zone,
@@ -209,15 +207,19 @@ class DisksInsert {
 
       if (sync) {
         val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
-        val status = Option(disk.getStatus).getOrElse("")
-        val diskSize = Option(disk.getSizeGb).getOrElse(0.toLong)
+        val diskId = Option(disk.getId).getOrElse(BigInt(0)).toString
+        val status = defaultIfEmpty(disk.getStatus, EMPTY)
+        val diskSize = Option(disk.getSizeGb).getOrElse(0.toLong).toString
 
         resultMap +
-          (DISK_ID -> disk.getId.toString) +
-          (DISK_SIZE -> diskSize.toString) +
+          (DISK_ID -> diskId) +
+          (DISK_SIZE -> diskSize) +
           (STATUS -> status)
       } else {
-        resultMap
+        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+        resultMap +
+          (STATUS -> status)
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
