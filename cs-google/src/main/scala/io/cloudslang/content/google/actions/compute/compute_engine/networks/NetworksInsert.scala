@@ -152,13 +152,13 @@ class NetworksInsert {
 
       if (sync) {
         val network = NetworkService.get(httpTransport, jsonFactory, credential, projectId, networkName)
-        val networkId = Option(network.getId).getOrElse(BigInt(0))
+        val networkId = Option(network.getId).getOrElse(BigInt(0)).toString
         val name = Option(network.getName).getOrElse("")
         val status = Option(operation.getStatus).getOrElse("")
 
         resultMap +
           (NAME -> name) +
-          (NETWORK_ID -> networkId.toString) +
+          (NETWORK_ID -> networkId) +
           (STATUS -> status)
       } else {
         resultMap
