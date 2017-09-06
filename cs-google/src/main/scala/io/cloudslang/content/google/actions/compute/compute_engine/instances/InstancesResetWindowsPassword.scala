@@ -5,7 +5,8 @@ import java.util
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
-import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
+import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
+import io.cloudslang.content.google.actions.authentication.GetAccessToken
 import io.cloudslang.content.google.services.compute.compute_engine.instances.WindowsService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.action.DefaultValues._
@@ -99,9 +100,11 @@ class InstancesResetWindowsPassword {
       // Keys are one-time use, so the metadata doesn't need to stay around for long.
       // 5 minutes chosen to allow for differences between time on the client
       // and time on the server.
-      val password = WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
-        instanceName, userName, emailOpt, syncTime, timeout, pollingInterval)
-      getSuccessResultsMap(password)
+      WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
+        instanceName, userName, emailOpt, syncTime, timeout, pollingInterval) match {
+        case Some(password) => getSuccessResultsMap(password)
+        case _ => getFailureResultsMap("the password could not be reset")
+      }
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
