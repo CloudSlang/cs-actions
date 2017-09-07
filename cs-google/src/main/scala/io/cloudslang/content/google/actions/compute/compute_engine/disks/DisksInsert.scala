@@ -6,6 +6,7 @@ import com.google.api.services.compute.model.Disk
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.FALSE
+import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.disks.{DiskController, DiskService}
 import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
@@ -103,15 +104,16 @@ class DisksInsert {
     *                             Valid values: "true", "false"
     *                             Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-    *         operation, zoneOperationName, zone and diskName if the <syncInp> is false. If <syncInp> is true the map
-    *         will also contain the disk size, the disk id and the status of the disk.
+    *         operation, zoneOperationName, zone, diskName and the status of the operation if the <syncInp> is false.
+    *         If <syncInp> is true the map will also contain the disk size, the disk id and the status of the operation
+    *         will be replaced by the status of the disk.
     *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Insert Disk",
     outputs = Array(
-      new Output(OutputNames.RETURN_CODE),
-      new Output(OutputNames.RETURN_RESULT),
-      new Output(OutputNames.EXCEPTION),
+      new Output(RETURN_CODE),
+      new Output(RETURN_RESULT),
+      new Output(EXCEPTION),
       new Output(ZONE_OPERATION_NAME),
       new Output(DISK_ID),
       new Output(DISK_NAME),
@@ -120,8 +122,8 @@ class DisksInsert {
       new Output(ZONE)
     ),
     responses = Array(
-      new Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-      new Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+      new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+      new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
@@ -179,14 +181,12 @@ class DisksInsert {
     val diskSize = toInteger(diskSizeStr).toLong
     val sync = toBoolean(syncStr)
     val timeout = toLong(timeoutStr)
-    val pollingInterval = toDouble(pollingIntervalStr)
+    val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
-
-      val pollingIntervalMilli = convertSecondsToMilli(pollingInterval)
 
       val computeDisk: Disk = DiskController.createDisk(
         zone = zone,
@@ -209,15 +209,19 @@ class DisksInsert {
 
       if (sync) {
         val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
-        val status = Option(disk.getStatus).getOrElse("")
-        val diskSize = Option(disk.getSizeGb).getOrElse(0.toLong)
+        val diskId = Option(disk.getId).getOrElse(BigInt(0)).toString
+        val status = defaultIfEmpty(disk.getStatus, EMPTY)
+        val diskSize = Option(disk.getSizeGb).getOrElse(0.toLong).toString
 
         resultMap +
-          (DISK_ID -> disk.getId.toString) +
-          (DISK_SIZE -> diskSize.toString) +
+          (DISK_ID -> diskId) +
+          (DISK_SIZE -> diskSize) +
           (STATUS -> status)
       } else {
-        resultMap
+        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+        resultMap +
+          (STATUS -> status)
       }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)

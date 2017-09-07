@@ -14,9 +14,11 @@ object ComputeService {
 
   def zoneOperationsService: (HttpTransport, JsonFactory, Credential) => Compute#ZoneOperations = computeService(_, _, _).zoneOperations()
 
+  def globalOperationsService: (HttpTransport, JsonFactory, Credential) => Compute#GlobalOperations = computeService(_, _, _).globalOperations()
+
+  private def computeService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential): Compute = new Compute(httpTransport, jsonFactory, credential)
+
   def disksService: (HttpTransport, JsonFactory, Credential) => Compute#Disks = computeService(_, _, _).disks()
 
   def networksService: (HttpTransport, JsonFactory, Credential) => Compute#Networks = computeService(_, _, _).networks()
-
-  private def computeService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential): Compute = new Compute(httpTransport, jsonFactory, credential)
 }
