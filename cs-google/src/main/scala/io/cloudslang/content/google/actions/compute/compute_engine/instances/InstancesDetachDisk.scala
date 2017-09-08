@@ -65,7 +65,7 @@ class InstancesDetachDisk {
     *         of the operation will be replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
-  @Action(name = "Instances Detach Disk",
+  @Action(name = "Detach Disk from Instance",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),

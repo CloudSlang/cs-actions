@@ -84,7 +84,7 @@ class InstancesAttachDisk {
     *         of the operation will be replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
-  @Action(name = "Instances Attach Disk",
+  @Action(name = "Attach Disk to Instance",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
