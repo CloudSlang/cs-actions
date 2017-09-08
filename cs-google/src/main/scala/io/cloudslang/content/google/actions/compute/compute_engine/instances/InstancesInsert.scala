@@ -180,7 +180,7 @@ class InstancesInsert {
       new Output(RETURN_RESULT),
       new Output(EXCEPTION),
       new Output(ZONE_OPERATION_NAME),
-      new Output(NAME),
+      new Output(INSTANCE_NAME),
       new Output(IPS),
       new Output(STATUS)
 
@@ -370,8 +370,8 @@ class InstancesInsert {
         resultMap +
           (INSTANCE_ID -> instanceId) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (NAME -> name) +
-          (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(listDelimiterStr)) +
+          (INSTANCE_NAME -> name) +
+          (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
           (STATUS -> status)
       } else {
         val status = defaultIfEmpty(operation.getStatus, EMPTY)

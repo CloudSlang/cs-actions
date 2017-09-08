@@ -7,14 +7,16 @@ import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.FALSE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
-import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
+import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
+import io.cloudslang.content.google.actions.authentication.GetAccessToken
 import io.cloudslang.content.google.services.compute.compute_engine.instances.{InstanceController, InstanceService}
-import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
+import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.{INSTANCE_DETAILS, METADATA, STATUS, ZONE_OPERATION_NAME}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
+import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
@@ -22,12 +24,9 @@ import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuc
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.TimeoutException
 
-/**
-  * Created by Tirla Alin
-  * 2/27/2017.
-  */
 class InstancesSetMetadata {
   /**
     * Sets metadata for the specified instance to the data provided to the operation. Can be used as a delete metadata as well.
@@ -74,8 +73,12 @@ class InstancesSetMetadata {
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
-      new Output(EXCEPTION),
-      new Output(ZONE_OPERATION_NAME)
+      new Output(ZONE_OPERATION_NAME),
+      new Output(INSTANCE_NAME),
+      new Output(INSTANCE_DETAILS),
+      new Output(METADATA),
+      new Output(STATUS),
+      new Output(EXCEPTION)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -120,17 +123,14 @@ class InstancesSetMetadata {
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
-
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
 
     try {
-
       val sync = toBoolean(syncStr)
       val timeout = toLong(timeoutStr)
       val pollingInterval = convertSecondsToMilli(toDouble(pollingIntervalStr))
-
       val prettyPrint = toBoolean(prettyPrintStr)
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, toInteger(proxyPortStr), proxyUsernameOpt, proxyPassword)
@@ -139,10 +139,28 @@ class InstancesSetMetadata {
 
       val items: List[Items] = InstanceController.createMetadataItems(itemsKeysList, itemsValuesList, itemsDelimiter)
 
-      val result = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items, sync, timeout, pollingInterval) //TODO
-      val resultString = if (prettyPrint) result.toPrettyString else result.toString
+      val operation = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items, sync, timeout, pollingInterval)
 
-      getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> result.getName)
+      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+        (ZONE_OPERATION_NAME -> operation.getName)
+
+      if (sync) {
+        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+        val status = defaultIfEmpty(instance.getStatus, EMPTY)
+        val name = defaultIfEmpty(instance.getName, EMPTY)
+        val metadata =  Option(instance.getMetadata.getItems).getOrElse(List().asJava)
+
+        resultMap +
+          (INSTANCE_NAME -> name) +
+          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+          (METADATA -> metadata.map(toPretty(prettyPrint, _)).mkString(COMMA)) +
+          (STATUS -> status)
+      } else {
+        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+        resultMap +
+          (STATUS -> status)
+      }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

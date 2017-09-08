@@ -77,7 +77,7 @@ object InputNames {
   final val SYNC = "sync"
   final val POLLING_INTERVAL = "pollingInterval"
 
-  final val USERNAME = "userName"
+  final val USERNAME = "username"
   final val EMAIL = "email"
   final val SYNC_TIME = "syncTime"
 

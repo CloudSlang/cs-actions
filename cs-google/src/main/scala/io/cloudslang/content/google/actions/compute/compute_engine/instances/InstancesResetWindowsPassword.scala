@@ -57,7 +57,7 @@ class InstancesResetWindowsPassword {
     *                           Default: "8080"
     * @param proxyUsername      Optional - Proxy server user name.
     * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @return a map containing a Instance resource as returnResult
+    * @return a map containing the password for the user as returnResult and password.
     */
   @Action(name = "Reset Windows Password",
     outputs = Array(

@@ -9,7 +9,8 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskController
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
-import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
+import io.cloudslang.content.google.utils.Constants
+import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME, _}
@@ -23,6 +24,7 @@ import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuc
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.TimeoutException
 
 /**
@@ -90,6 +92,7 @@ class InstancesAttachDisk {
       new Output(ZONE_OPERATION_NAME),
       new Output(INSTANCE_NAME),
       new Output(INSTANCE_DETAILS),
+      new Output(DISKS),
       new Output(STATUS)
     ),
     responses = Array(
@@ -113,8 +116,7 @@ class InstancesAttachDisk {
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPasswordInp: String,
-              @Param(value = PRETTY_PRINT) prettyPrintInp: String
-             ): util.Map[String, String] = {
+              @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
@@ -167,10 +169,12 @@ class InstancesAttachDisk {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
         val name = defaultIfEmpty(instance.getName, EMPTY)
         val status = defaultIfEmpty(instance.getStatus, EMPTY)
+        val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
 
         resultMap +
           (INSTANCE_NAME -> name) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+          (DISKS -> disksNames.mkString(COMMA)) +
           (STATUS -> status)
       } else {
         val status = defaultIfEmpty(operation.getStatus, EMPTY)

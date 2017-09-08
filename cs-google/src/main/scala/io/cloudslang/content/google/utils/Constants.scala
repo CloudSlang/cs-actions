@@ -12,5 +12,5 @@ object Constants {
   val SQR_LEFT_BRACKET = "["
   val SQR_RIGHT_BRACKET = "]"
   val TIMEOUT_EXCEPTION = "Operation failed because the specified timeout was exceeded."
-  val SYNC_TIME_EXCEPTION = "The password could not be reset. Please check the 'userName' and 'syncTime' inputs."
+  val SYNC_TIME_EXCEPTION = "The password could not be reset. Please check the 'username' and 'syncTime' inputs."
 }
