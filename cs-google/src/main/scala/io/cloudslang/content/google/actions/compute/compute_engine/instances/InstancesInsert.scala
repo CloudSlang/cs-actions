@@ -180,7 +180,7 @@ class InstancesInsert {
       new Output(RETURN_RESULT),
       new Output(EXCEPTION),
       new Output(ZONE_OPERATION_NAME),
-      new Output(NAME),
+      new Output(INSTANCE_NAME),
       new Output(IPS),
       new Output(STATUS)
 
@@ -281,8 +281,8 @@ class InstancesInsert {
       validatePairedLists(metadataKeysStr, metadataValuesStr, listDelimiterStr, METADATA_KEYS, METADATA_VALUES) ++
       validateBoolean(schedulingAutomaticRestartStr, SCHEDULING_AUTOMATIC_RESTART) ++
       validateBoolean(schedulingPreemptibleStr, SCHEDULING_PREEMPTIBLE) ++
-      validateBoolean(syncStr, SYNC) ++
       validateRequiredExclusion(volumeSourceOpt, volumeDiskSourceImageOpt, VOLUME_SOURCE, VOLUME_DISK_SOURCE_IMAGE) ++
+      validateBoolean(syncStr, SYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
@@ -332,7 +332,6 @@ class InstancesInsert {
         )
       }
 
-
       val metadata = new Metadata().setItems(InstanceController.createMetadataItems(metadataKeysStr, metadataValuesStr, listDelimiterStr))
       val tags = InstanceController.createTags(tagsListStr, listDelimiterStr)
 
@@ -371,8 +370,8 @@ class InstancesInsert {
         resultMap +
           (INSTANCE_ID -> instanceId) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (NAME -> name) +
-          (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(listDelimiterStr)) +
+          (INSTANCE_NAME -> name) +
+          (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
           (STATUS -> status)
       } else {
         val status = defaultIfEmpty(operation.getStatus, EMPTY)

@@ -12,9 +12,12 @@ object GoogleOutputNames extends OutputNames {
   final val NEXT_INDEX = "nextIndex"
   final val INSTANCE_ID = "instanceId"
   final val INSTANCE_DETAILS = "instanceDetails"
-  final val NAME = "name"
+  final val NETWORK_NAME = "networkName"
   final val IPS = "ips"
   final val DISKS = "disks"
   final val DISK_ID = "diskId"
+  final val PASSWORD = "password"
   final val NETWORK_ID = "networkId"
+  final val METADATA = "metadata"
+  final val TAGS = "tags"
 }

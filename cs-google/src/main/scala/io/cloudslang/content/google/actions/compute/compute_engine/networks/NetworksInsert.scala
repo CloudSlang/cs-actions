@@ -11,7 +11,7 @@ import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.networks.{NetworkController, NetworkService}
 import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.{NAME, NETWORK_ID, STATUS}
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.{NETWORK_ID, NETWORK_NAME, STATUS}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
@@ -81,7 +81,7 @@ class NetworksInsert {
       new Output(RETURN_RESULT),
       new Output(EXCEPTION),
       new Output(GLOBAL_OPERATION_NAME),
-      new Output(NAME),
+      new Output(NETWORK_NAME),
       new Output(NETWORK_ID),
       new Output(STATUS)
     ),
@@ -158,7 +158,7 @@ class NetworksInsert {
         val networkId = Option(network.getId).getOrElse(BigInt(0)).toString
 
         resultMap +
-          (NAME -> name) +
+          (NETWORK_NAME -> name) +
           (NETWORK_ID -> networkId)
       } else {
         resultMap

@@ -17,8 +17,8 @@ import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
-import org.apache.commons.lang3.StringUtils.defaultIfEmpty
-import org.apache.commons.lang3.StringUtils.EMPTY
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
+
 /**
   * Created by victor on 3/3/17.
   */

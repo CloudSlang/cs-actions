@@ -8,9 +8,9 @@ import io.cloudslang.content.constants.BooleanValues.FALSE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
-import io.cloudslang.content.google.utils.Constants.{NEW_LINE, TIMEOUT_EXCEPTION}
+import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_POLLING_INTERVAL, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_SYNC_TIMEOUT}
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.{INSTANCE_DETAILS, STATUS, ZONE_OPERATION_NAME => _}
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
@@ -22,6 +22,7 @@ import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuc
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.TimeoutException
 
 /**
@@ -63,7 +64,7 @@ class InstancesDetachDisk {
     *         of the operation will be replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
-  @Action(name = "Instances Detach Disk",
+  @Action(name = "Detach Disk from Instance",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
@@ -71,6 +72,7 @@ class InstancesDetachDisk {
       new Output(ZONE_OPERATION_NAME),
       new Output(INSTANCE_NAME),
       new Output(INSTANCE_DETAILS),
+      new Output(DISKS),
       new Output(STATUS)
     ),
     responses = Array(
@@ -130,10 +132,12 @@ class InstancesDetachDisk {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
         val name = defaultIfEmpty(instance.getName, EMPTY)
         val status = defaultIfEmpty(instance.getStatus, EMPTY)
+        val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
 
         resultMap +
           (INSTANCE_NAME -> name) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+          (DISKS -> disksNames.mkString(COMMA)) +
           (STATUS -> status)
       } else {
         val status = defaultIfEmpty(operation.getStatus, EMPTY)

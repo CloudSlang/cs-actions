@@ -55,7 +55,7 @@ object InputValidator {
     if (!NumberUtilities.isValidDouble(value, 0, Double.MaxValue)) Some(INVALID_NON_NEGATIVE_DOUBLE) else None
   }
 
-  def validate[A <: Any](inputValue: A, inputName: String)(validator: (A) => Option[String]): Stream[String] =
+  def validate[A](inputValue: A, inputName: String)(validator: (A) => Option[String]): Stream[String] =
     validator(inputValue) match {
       case None => Stream.empty
       case Some(errorValue) => Stream(s"$inputName : $errorValue")

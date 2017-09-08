@@ -1,5 +1,7 @@
 package io.cloudslang.content.google.utils.action
 
+import com.hp.oo.sdk.content.annotations.Param
+
 /**
   * Created by victor on 28.02.2017.
   */
@@ -74,6 +76,10 @@ object InputNames {
 
   final val SYNC = "sync"
   final val POLLING_INTERVAL = "pollingInterval"
+
+  final val USERNAME = "username"
+  final val EMAIL = "email"
+  final val SYNC_TIME = "syncTime"
 
   final val SOURCE = "source"
   final val MODE = "mode"

@@ -56,6 +56,8 @@
     <properties>
         <specs2.version>3.9.5</specs2.version>
         <commons-io.version>2.5</commons-io.version>
+        <spray-json.version>1.3.3</spray-json.version>
+        <bouncycastle.version>1.46</bouncycastle.version>
         <cs-commons.version>0.0.4-SNAPSHOT</cs-commons.version>
         <score-content-sdk.version>1.10.6</score-content-sdk.version>
         <google-api-services-compute.version>v1-rev155-1.22.0</google-api-services-compute.version>
@@ -296,6 +298,24 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.spray</groupId>
+            <artifactId>spray-json_2.11</artifactId>
+            <version>${spray-json.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+
+
 
         <!-- Testing -->
         <dependency>
