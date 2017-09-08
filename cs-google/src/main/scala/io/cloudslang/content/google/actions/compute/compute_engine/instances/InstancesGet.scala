@@ -50,7 +50,10 @@ class InstancesGet {
     * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
     *                         Valid values: "true", "false"
     *                         Default: "true"
-    * @return a map containing a Instance resource as returnResult, the
+    * @return a map containing a Instance resource as <returnResult>, the id as <instanceId>, the name as <instanceName>,
+    *         a list of IPs as <ips>, the status of the instance as <status>, the metadata of the instance as pairs in a list
+    *         as <metadata>, a list of tags as <tags>, a list of device names representing the disks as <disks> and the
+    *         <exception> in case something wrong happens.
     */
   @Action(name = "Get Instance",
     outputs = Array(
