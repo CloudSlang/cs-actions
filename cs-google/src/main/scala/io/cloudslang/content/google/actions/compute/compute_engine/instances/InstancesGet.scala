@@ -8,7 +8,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
-import io.cloudslang.content.google.utils.Constants
 import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE}
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.google.utils.action.GoogleOutputNames._
@@ -103,8 +102,8 @@ class InstancesGet {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-      val metadata =  Option(instance.getMetadata.getItems).getOrElse(List().asJava)
-      val tags =  Option(instance.getTags.getItems).getOrElse(List().asJava)
+      val metadata = Option(instance.getMetadata.getItems).getOrElse(List().asJava)
+      val tags = Option(instance.getTags.getItems).getOrElse(List().asJava)
       val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
       val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
       val status = defaultIfEmpty(instance.getStatus, EMPTY)
