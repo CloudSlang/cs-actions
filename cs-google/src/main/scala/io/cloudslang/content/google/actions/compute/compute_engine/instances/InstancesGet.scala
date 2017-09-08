@@ -107,7 +107,7 @@ class InstancesGet {
       val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
       val metadata = Option(instance.getMetadata.getItems).getOrElse(List().asJava)
       val tags = Option(instance.getTags.getItems).getOrElse(List().asJava)
-      val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
+      val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List().asJava)
       val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
       val status = defaultIfEmpty(instance.getStatus, EMPTY)
       val name = defaultIfEmpty(instance.getName, EMPTY)
