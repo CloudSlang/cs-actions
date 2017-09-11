@@ -186,7 +186,7 @@
         <module>cs-amazon</module>
         <module>cs-xml</module>
         <module>cs-date-time</module>
-        <module>cs-vmware</module>
+        <!--<module>cs-vmware</module>-->
         <module>cs-lists</module>
         <module>cs-commons</module>
         <module>cs-azure</module>
@@ -206,7 +206,7 @@
             <dependency>
                 <groupId>io.cloudslang.content</groupId>
                 <artifactId>cs-commons</artifactId>
-                <version>0.0.3</version>
+                <version>0.0.4</version>
             </dependency>
             <dependency>
                 <groupId>io.cloudslang.content</groupId>

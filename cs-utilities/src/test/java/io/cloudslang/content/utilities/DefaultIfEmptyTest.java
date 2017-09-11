@@ -9,13 +9,15 @@
  *******************************************************************************/
 package io.cloudslang.content.utilities;
 
-import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utilities.actions.DefaultIfEmpty;
 import org.junit.Test;
+
 import java.util.Map;
+
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.constants.ReturnCodes.*;
+import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
+import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 

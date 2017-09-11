@@ -285,7 +285,7 @@ http://www.apache.org/licenses/LICENSE-2.0
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.4</version>
         </dependency>
 
         <!-- Testing -->
