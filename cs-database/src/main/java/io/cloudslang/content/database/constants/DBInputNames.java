@@ -15,6 +15,7 @@ import io.cloudslang.content.constants.InputNames;
  * Created by pinteae on 1/16/2017.
  */
 public class DBInputNames extends InputNames {
+    public static final String DELIMITER = "delimiter";
     public static final String DB_SERVER_NAME = "dbServerName";
     public static final String DB_TYPE = "dbType";
     public static final String USERNAME = "username";
