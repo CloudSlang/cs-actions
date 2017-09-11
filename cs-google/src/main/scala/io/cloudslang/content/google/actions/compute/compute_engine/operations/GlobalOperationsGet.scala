@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.google.services.compute.compute_engine.operations.ZoneOperationService
+import io.cloudslang.content.google.services.compute.compute_engine.operations.GlobalOperationService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.STATUS
@@ -23,32 +23,29 @@ import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 import scala.collection.JavaConversions._
 
 /**
-  * Created by sandorr 
-  * 3/1/2017.
+  * Created by marisca on 5/9/2017.
   */
-class ZoneOperationsGet {
+class GlobalOperationsGet {
 
   /**
-    * This operation can be used to retrieve a ZoneOperation resource, as JSON object.
+    * This operation can be used to retrieve a GlobalOperation resource, as JSON object.
     *
-    * @param projectId         Google Cloud project id.
-    *                          Example: "example-project-a"
-    * @param zone              The name of the zone where the Instance resource is located.
-    *                          Examples: "us-central1-a", "us-central1-b", "us-central1-c"
-    * @param zoneOperationName Name of the ZoneOperation resource to return.
-    *                          Example: "operation-1234"
-    * @param accessToken       The access token returned by the GetAccessToken operation, with at least the
-    *                          following scope: "https://www.googleapis.com/auth/compute.readonly".
-    * @param proxyHost         Optional - Proxy server used to access the provider services.
-    * @param proxyPortInp      Optional - Proxy server port used to access the provider services.
-    *                          Default: "8080"
-    * @param proxyUsername     Optional - Proxy server user name.
-    * @param proxyPasswordInp  Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @param prettyPrintInp    Optional - Whether to format the resulting JSON.
-    *                          Default: "true"
-    * @return a map containing a ZoneOperation resource as returnResult, and it's status
+    * @param projectId           Google Cloud project id.
+    *                            Example: "example-project-a"
+    * @param globalOperationName Name of the Global Operation resource to return.
+    *                            Example: "operation-1234"
+    * @param accessToken         The access token returned by the GetAccessToken operation, with at least the
+    *                            following scope: "https://www.googleapis.com/auth/compute.readonly".
+    * @param proxyHost           Optional - Proxy server used to access the provider services.
+    * @param proxyPortInp        Optional - Proxy server port used to access the provider services.
+    *                            Default: "8080"
+    * @param proxyUsername       Optional - Proxy server user name.
+    * @param proxyPasswordInp    Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param prettyPrintInp      Optional - Whether to format the resulting JSON.
+    *                            Default: "true"
+    * @return a map containing a GlobalOperation resource as returnResult, and it's status
     */
-  @Action(name = "Get ZoneOperation",
+  @Action(name = "Get GlobalOperation",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
@@ -61,8 +58,7 @@ class ZoneOperationsGet {
     )
   )
   def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
-              @Param(value = ZONE, required = true) zone: String,
-              @Param(value = ZONE_OPERATION_NAME, required = true) zoneOperationName: String,
+              @Param(value = GLOBAL_OPERATION_NAME, required = true) globalOperationName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
@@ -91,7 +87,7 @@ class ZoneOperationsGet {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = ZoneOperationService.get(httpTransport, jsonFactory, credential, projectId, zone, zoneOperationName)
+      val operation = GlobalOperationService.get(httpTransport, jsonFactory, credential, projectId, globalOperationName)
       val resultString = if (prettyPrint) operation.toPrettyString else operation.toString
 
       getSuccessResultsMap(resultString) + (STATUS -> operation.getStatus)

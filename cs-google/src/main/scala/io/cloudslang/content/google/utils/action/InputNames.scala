@@ -29,6 +29,7 @@ object InputNames {
   final val AUTO_CREATE_SUBNETWORKS = "autoCreateSubnetworks"
   final val IPV4_RANGE = "ipV4Range"
   final val ZONE_OPERATION_NAME = "zoneOperationName"
+  final val GLOBAL_OPERATION_NAME = "globalOperationName"
   final val TAGS_LIST = "tagsList"
   final val TAGS_DELIMITER = "tagsDelimiter"
   final val DISK_SIZE = "diskSize"
@@ -73,6 +74,13 @@ object InputNames {
   final val SERVICE_ACCOUNT_EMAIL = "serviceAccountEmail"
   final val SERVICE_ACCOUNT_SCOPES = "serviceAccountScopes"
 
+  final val SYNC = "sync"
+  final val POLLING_INTERVAL = "pollingInterval"
+
+  final val USERNAME = "username"
+  final val EMAIL = "email"
+  final val SYNC_TIME = "syncTime"
+
   final val SOURCE = "source"
   final val MODE = "mode"
   final val BOOT = "boot"
@@ -83,4 +91,4 @@ object InputNames {
   final val CONSOLE_PORT = "consolePort"
   final val START_INDEX = "startIndex"
 
-  }
+}

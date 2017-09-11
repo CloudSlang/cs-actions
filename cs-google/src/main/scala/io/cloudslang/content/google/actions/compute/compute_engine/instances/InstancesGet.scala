@@ -2,21 +2,27 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
 
+import com.google.api.services.compute.model.NetworkInterface
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
-import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE}
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.google.utils.action.GoogleOutputNames._
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateProxyPort}
+import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
+
+import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 /**
   * Created by sandorr
@@ -44,12 +50,22 @@ class InstancesGet {
     * @param prettyPrintInp   Optional - Whether to format (pretty print) the resulting json.
     *                         Valid values: "true", "false"
     *                         Default: "true"
-    * @return a map containing a Instance resource as returnResult
+    * @return a map containing a Instance resource as <returnResult>, the id as <instanceId>, the name as <instanceName>,
+    *         a list of IPs as <ips>, the status of the instance as <status>, the metadata of the instance as pairs in a list
+    *         as <metadata>, a list of tags as <tags>, a list of device names representing the disks as <disks> and the
+    *         <exception> in case something wrong happens.
     */
   @Action(name = "Get Instance",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
+      new Output(INSTANCE_ID),
+      new Output(INSTANCE_NAME),
+      new Output(IPS),
+      new Output(STATUS),
+      new Output(METADATA),
+      new Output(TAGS),
+      new Output(DISKS),
       new Output(EXCEPTION)
     ),
     responses = Array(
@@ -89,9 +105,22 @@ class InstancesGet {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-      val resultString = if (prettyPrint) instance.toPrettyString else instance.toString
+      val metadata = Option(instance.getMetadata.getItems).getOrElse(List().asJava)
+      val tags = Option(instance.getTags.getItems).getOrElse(List().asJava)
+      val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List().asJava)
+      val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
+      val status = defaultIfEmpty(instance.getStatus, EMPTY)
+      val name = defaultIfEmpty(instance.getName, EMPTY)
+      val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
 
-      getSuccessResultsMap(resultString)
+      getSuccessResultsMap(toPretty(prettyPrint, instance)) +
+        (INSTANCE_ID -> instanceId) +
+        (INSTANCE_NAME -> name) +
+        (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
+        (STATUS -> status) +
+        (METADATA -> metadata.map(toPretty(prettyPrint, _)).mkString(COMMA)) +
+        (TAGS -> tags.mkString(COMMA)) +
+        (DISKS -> disksNames.mkString(COMMA))
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }

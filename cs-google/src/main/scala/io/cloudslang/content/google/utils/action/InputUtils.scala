@@ -8,4 +8,5 @@ import org.apache.commons.lang3.StringUtils.isEmpty
 object InputUtils {
   def verifyEmpty(value: String): Option[String] = if (isEmpty(value)) None else Some(value)
 
+  def convertSecondsToMilli(value: Double): Long = (value * 1000 ceil) toLong
 }

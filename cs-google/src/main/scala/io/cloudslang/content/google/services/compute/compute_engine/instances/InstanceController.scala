@@ -58,7 +58,7 @@ object InstanceController {
 
   def createScheduling(onHostMaintenanceOpt: Option[String],
                        automaticRestart: Boolean,
-                       preemptible:Boolean): Option[Scheduling] = onHostMaintenanceOpt match {
+                       preemptible: Boolean): Option[Scheduling] = onHostMaintenanceOpt match {
     case Some(onHostMaintenance) => Some(new Scheduling()
       .setAutomaticRestart(automaticRestart)
       .setOnHostMaintenance(onHostMaintenance)

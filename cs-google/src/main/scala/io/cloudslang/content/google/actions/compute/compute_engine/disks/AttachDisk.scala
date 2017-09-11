@@ -1,47 +1,56 @@
-package io.cloudslang.content.google.actions.compute.compute_engine.instances
+package io.cloudslang.content.google.actions.compute.compute_engine.disks
 
 import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.FALSE
-import io.cloudslang.content.constants.OutputNames._
+import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
+import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskController
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
-import io.cloudslang.content.google.utils.Constants._
+import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.{INSTANCE_DETAILS, STATUS, ZONE_OPERATION_NAME}
-import io.cloudslang.content.google.utils.action.InputNames._
-import io.cloudslang.content.google.utils.action.InputUtils._
-import io.cloudslang.content.google.utils.action.InputValidator._
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
+import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME, _}
+import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
+import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.BooleanUtilities._
-import io.cloudslang.content.utils.NumberUtilities._
-import io.cloudslang.content.utils.OutputUtilities._
-import org.apache.commons.lang3.StringUtils._
+import io.cloudslang.content.utils.BooleanUtilities.toBoolean
+import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
+import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.TimeoutException
 
 /**
-  * Created by pinteae on 3/1/2017.
+  * Created by sandorr on 5/2/2017.
   */
-class InstancesStart {
+class AttachDisk {
 
   /**
-    * This operation can be used to start an Instance resource. The operation returns a ZoneOperation resource as a
-    * JSON object, that can be used to retrieve the status and progress of the ZoneOperation, using the
-    * ZoneOperationsGet operation.
+    * Creates a disk resource in the specified project using the data included as inputs.
     *
-    * @param projectId          Google Cloud project id.
-    *                           Example: "example-project-a"
-    * @param zone               The name of the zone where the Instance resource is located.
-    *                           Examples: "us-central1-a", "us-central1-b", "us-central1-c"
-    * @param instanceName       Name of the Instance resource to delete.
-    *                           Example: "operation-1234"
-    * @param accessToken        The access token returned by the GetAccessToken operation, with at least the
-    *                           following scope: "https://www.googleapis.com/auth/compute".
+    * @param projectId          Name of the Google Cloud project.
+    * @param zone               Name of the zone for this request.
+    * @param accessToken        The access token from GetAccessToken.
+    * @param instanceName       Name of the instance to attach the disk to.
+    * @param source             A valid partial or full URL to an existing Persistent Disk resource.
+    * @param mode               Optional - The mode in which to attach the disk to the instance.
+    *                           Valid values: "READ_WRITE", "READ_ONLY"
+    *                           Default: "READ_WRITE"
+    * @param autoDelete         Optional - Whether to delete the disk when the instance is deleted.
+    *                           Default: "false"
+    * @param deviceName         Optional - Specifies a unique device name of your choice that is reflected into the
+    *                           /dev/disk/by-id/google-* tree of a Linux operating system running within the instance.
+    *                           This name can be used to reference the device for mounting, resizing, and so on, from
+    *                           within the instance.
+    *                           Note: If not specified, the server chooses a default device name to apply to this disk,
+    *                           in the form persistent-disks-x, where x is a number assigned by Google Compute Engine.
+    *                           This field is only applicable for persistent disks.
     * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
     *                           Default: "false"
@@ -53,20 +62,22 @@ class InstancesStart {
     *                           is executed, if the sync input is set to "true".
     *                           Valid values: Any positive number including 0.
     *                           Default: "1"
-    * @param proxyHost          Optional - Proxy server used to access the provider services.
-    * @param proxyPortInp       Optional - Proxy server port used to access the provider services.
+    * @param proxyHost          Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                           be used.
+    * @param proxyPortInp       Optional - Proxy server port.
     *                           Default: "8080"
     * @param proxyUsername      Optional - Proxy server user name.
-    * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @param prettyPrintInp     Optional - Whether to format the resulting JSON.
+    * @param proxyPasswordInp   Optional - Proxy server password associated with the proxyUsername input value.
+    * @param prettyPrintInp     Optional - Whether to format (pretty print) the resulting json.
+    *                           Valid values: "true", "false"
     *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation if the <syncInp> is false. If <syncInp> is true the map will also
-    *         contain the name of the instance, the details of the instance and the status of the operation will be
-    *         replaced by the status of the instance.
+    *         contain the name of the instance, the details of the instance, including the attached disks and the status
+    *         of the operation will be replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
-  @Action(name = "Start Instance",
+  @Action(name = "Attach Disk",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
@@ -74,6 +85,7 @@ class InstancesStart {
       new Output(ZONE_OPERATION_NAME),
       new Output(INSTANCE_NAME),
       new Output(INSTANCE_DETAILS),
+      new Output(DISKS),
       new Output(STATUS)
     ),
     responses = Array(
@@ -81,10 +93,14 @@ class InstancesStart {
       new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
-  def execute(@Param(value = PROJECT_ID, required = true) projectId: String,
+  def execute(@Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
+              @Param(value = PROJECT_ID, required = true) projectId: String,
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
-              @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
+              @Param(value = SOURCE, required = true) source: String,
+              @Param(value = MODE) mode: String,
+              @Param(value = AUTO_DELETE) autoDelete: String,
+              @Param(value = DEVICE_NAME) deviceName: String,
               @Param(value = SYNC) syncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
@@ -97,14 +113,18 @@ class InstancesStart {
     val proxyHostOpt = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
-    val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, EMPTY)
+    val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
+    val modeStr = defaultIfEmpty(mode, DEFAULT_VOLUME_MOUNT_MODE)
+    val autoDeleteStr = defaultIfEmpty(autoDelete, FALSE)
+    val deviceNameOpt = verifyEmpty(deviceName)
     val syncStr = defaultIfEmpty(syncInp, FALSE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
+      validateBoolean(autoDeleteStr, AUTO_DELETE) ++
       validateBoolean(syncStr, SYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
@@ -113,28 +133,39 @@ class InstancesStart {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
 
-    val proxyPort = toInteger(proxyPortStr)
-    val prettyPrint = toBoolean(prettyPrintStr)
-    val sync = toBoolean(syncStr)
-    val timeout = toLong(timeoutStr)
-    val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
-
     try {
-      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPasswordStr)
+      val proxyPort = toInteger(proxyPortStr)
+      val prettyPrint = toBoolean(prettyPrintStr)
+      val autoDelete = toBoolean(autoDeleteStr)
+      val sync = toBoolean(syncStr)
+      val timeout = toLong(timeoutStr)
+      val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
+
+      val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = InstanceService.start(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync, timeout, pollingIntervalMilli)
+      val attachedDisk = DiskController.createAttachedDisk(
+        boot = false,
+        autoDelete = autoDelete,
+        mountMode = modeStr,
+        deviceNameOpt = deviceNameOpt,
+        sourceOpt = Some(source),
+        interfaceOpt = None)
+
+      val operation = InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, attachedDisk, sync, timeout, pollingIntervalMilli)
       val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
       if (sync) {
         val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
         val name = defaultIfEmpty(instance.getName, EMPTY)
         val status = defaultIfEmpty(instance.getStatus, EMPTY)
+        val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
 
         resultMap +
           (INSTANCE_NAME -> name) +
           (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+          (DISKS -> disksNames.mkString(COMMA)) +
           (STATUS -> status)
       } else {
         val status = defaultIfEmpty(operation.getStatus, EMPTY)

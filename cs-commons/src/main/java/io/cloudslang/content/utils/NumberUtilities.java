@@ -43,6 +43,25 @@ public final class NumberUtilities {
     }
 
     /**
+     * Given a long integer string, it checks if it's a valid long integer (based on apaches NumberUtils.createLong)
+     *
+     * @param longStr the long integer string to check
+     * @return true if it's valid, otherwise false
+     */
+    public static boolean isValidLong(@Nullable final String longStr) {
+        if (StringUtils.isBlank(longStr)) {
+            return false;
+        }
+        final String stripedLong = StringUtils.strip(longStr);
+        try {
+            NumberUtils.createLong(stripedLong);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
      * Given an integer string, it checks if it's a valid integer (base on apaches NumberUtils.createInteger) and if
      * it's between the lowerBound and upperBound.
      *
@@ -67,6 +86,30 @@ public final class NumberUtilities {
     }
 
     /**
+     * Given a long integer string, it checks if it's a valid long (base on apaches NumberUtils.createLong) and if
+     * it's between the lowerBound and upperBound.
+     *
+     * @param longStr        the long integer string to check
+     * @param lowerBound        the lower bound of the interval
+     * @param upperBound        the upper bound of the interval
+     * @param includeLowerBound boolean if to include the lower bound of the interval
+     * @param includeUpperBound boolean if to include the upper bound of the interval
+     * @return true if the long integer string is valid and in between the lowerBound and upperBound, false otherwise
+     * @throws IllegalArgumentException if the lowerBound is not less than the upperBound
+     */
+    public static boolean isValidLong(@Nullable final String longStr, final long lowerBound, final long upperBound, final boolean includeLowerBound, final boolean includeUpperBound) {
+        if (lowerBound > upperBound) {
+            throw new IllegalArgumentException(ExceptionValues.INVALID_BOUNDS);
+        } else if (!isValidLong(longStr)) {
+            return false;
+        }
+        final long aLong = toLong(longStr);
+        final boolean respectsLowerBound = includeLowerBound ? lowerBound <= aLong : lowerBound < aLong;
+        final boolean respectsUpperBound = includeUpperBound ? aLong <= upperBound : aLong < upperBound;
+        return respectsLowerBound && respectsUpperBound;
+    }
+
+    /**
      * Given an integer string, it checks if it's a valid integer (base on apaches NumberUtils.createInteger) and if
      * it's between the lowerBound and upperBound (including the lowerBound and excluding the upperBound).
      *
@@ -78,6 +121,20 @@ public final class NumberUtilities {
      */
     public static boolean isValidInt(@Nullable final String integerStr, final int lowerBound, final int upperBound) {
         return isValidInt(integerStr, lowerBound, upperBound, true, false);
+    }
+
+    /**
+     * Given a long integer string, it checks if it's a valid long (base on apaches NumberUtils.createLong) and if
+     * it's between the lowerBound and upperBound (including the lowerBound and excluding the upperBound).
+     *
+     * @param longStr the long integer string to check
+     * @param lowerBound the lower bound of the interval
+     * @param upperBound the upper bound of the interval
+     * @return true if the long integer string is valid and in between the lowerBound and upperBound, false otherwise
+     * @throws IllegalArgumentException if the lowerBound is not less than the upperBound
+     */
+    public static boolean isValidLong(@Nullable final String longStr, final long lowerBound, final long upperBound) {
+        return isValidLong(longStr, lowerBound, upperBound, true, false);
     }
 
     /**
@@ -96,6 +153,21 @@ public final class NumberUtilities {
     }
 
     /**
+     * Given a long integer string if it's a valid long (see isValidLong) it converts it into a long integer otherwise it throws an exception
+     *
+     * @param longStr the long integer to convert
+     * @return the long integer value of the longStr
+     * @throws IllegalArgumentException if the passed long integer string is not a valid long value
+     */
+    public static long toLong(@Nullable final String longStr) {
+        if (!isValidLong(longStr)) {
+            throw new IllegalArgumentException(longStr + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_LONG_VALUE);
+        }
+        final String stripedLong = StringUtils.strip(longStr);
+        return NumberUtils.createLong(stripedLong);
+    }
+
+    /**
      * If the integer string is null or empty, it returns the defaultInteger otherwise it returns the integer value (see toInteger)
      *
      * @param integerStr     the integer to convert
@@ -105,6 +177,18 @@ public final class NumberUtilities {
      */
     public static int toInteger(@Nullable final String integerStr, final int defaultInteger) {
         return StringUtils.isNoneEmpty(integerStr) ? toInteger(integerStr) : defaultInteger;
+    }
+
+    /**
+     * If the long integer string is null or empty, it returns the defaultLong otherwise it returns the long integer value (see toLong)
+     *
+     * @param longStr     the long integer to convert
+     * @param defaultLong the default value if the longStr is null or the empty string
+     * @return the long integer value of the string or the defaultLong if the long integer string is empty
+     * @throws IllegalArgumentException if the passed long integer string is not a valid long integer
+     */
+    public static long toLong(@Nullable final String longStr, final long defaultLong) {
+        return StringUtils.isNoneEmpty(longStr) ? toLong(longStr) : defaultLong;
     }
 
 

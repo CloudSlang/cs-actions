@@ -5,28 +5,27 @@ import java.util
 import com.google.api.services.compute.model.Metadata.Items
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import io.cloudslang.content.constants.BooleanValues.FALSE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.{InstanceController, InstanceService}
-import io.cloudslang.content.google.utils.Constants.NEW_LINE
-import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_ITEMS_DELIMITER, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.ZONE_OPERATION_NAME
+import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
+import io.cloudslang.content.google.utils.action.DefaultValues._
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.{INSTANCE_DETAILS, METADATA, STATUS, ZONE_OPERATION_NAME}
 import io.cloudslang.content.google.utils.action.InputNames._
-import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.google.utils.action.InputValidator.{validatePairedLists, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
+import io.cloudslang.content.google.utils.action.InputValidator._
+import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
-import io.cloudslang.content.utils.CollectionUtilities.toList
-import io.cloudslang.content.utils.NumberUtilities.toInteger
+import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
+import scala.concurrent.TimeoutException
 
-/**
-  * Created by Tirla Alin
-  * 2/27/2017.
-  */
 class InstancesSetMetadata {
   /**
     * Sets metadata for the specified instance to the data provided to the operation. Can be used as a delete metadata as well.
@@ -46,6 +45,17 @@ class InstancesSetMetadata {
     *                           itemsKeysList must be equal with the length of the itemsValuesList.
     * @param itemsDelimiterInp  The delimiter to split the <itemsKeysListInp> and <itemsValuesListInp>
     *                           Default: ','
+    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    *                           Valid values: "true", "false"
+    *                           Default: "false"
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    *                           If the value is 0, the operation will wait until zone operation progress is 100.
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "30"
+    * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
+    *                           is executed, if the sync input is set to "true".
+    *                           Valid values: Any positive number including 0.
+    *                           Default: "1"
     * @param proxyHostInp       Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
     *                           be used.
     * @param proxyPortInp       Optional - proxy server port.
@@ -62,8 +72,12 @@ class InstancesSetMetadata {
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
-      new Output(EXCEPTION),
-      new Output(ZONE_OPERATION_NAME)
+      new Output(ZONE_OPERATION_NAME),
+      new Output(INSTANCE_NAME),
+      new Output(INSTANCE_DETAILS),
+      new Output(METADATA),
+      new Output(STATUS),
+      new Output(EXCEPTION)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -74,9 +88,15 @@ class InstancesSetMetadata {
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
+
               @Param(value = ITEMS_KEYS_LIST) itemsKeysListInp: String,
               @Param(value = ITEMS_VALUES_LIST) itemsValuesListInp: String,
               @Param(value = ITEMS_DELIMITER) itemsDelimiterInp: String,
+
+              @Param(value = SYNC) syncInp: String,
+              @Param(value = TIMEOUT) timeoutInp: String,
+              @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
+
               @Param(value = PROXY_HOST) proxyHostInp: String,
               @Param(value = PROXY_PORT) proxyPortInp: String,
               @Param(value = PROXY_USERNAME) proxyUsernameInp: String,
@@ -90,16 +110,27 @@ class InstancesSetMetadata {
     val itemsKeysList = defaultIfEmpty(itemsKeysListInp, EMPTY)
     val itemsValuesList = defaultIfEmpty(itemsValuesListInp, EMPTY)
     val itemsDelimiter = defaultIfEmpty(itemsDelimiterInp, DEFAULT_ITEMS_DELIMITER)
-    val prettyPrint = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
+    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
+    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
+    val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
-      validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter, ITEMS_KEYS_LIST, ITEMS_VALUES_LIST)
+      validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter, ITEMS_KEYS_LIST, ITEMS_VALUES_LIST) ++
+      validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
+      validateBoolean(syncStr, SYNC) ++
+      validateNonNegativeLong(timeoutStr, TIMEOUT) ++
+      validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
 
     try {
+      val sync = toBoolean(syncStr)
+      val timeout = toLong(timeoutStr)
+      val pollingInterval = convertSecondsToMilli(toDouble(pollingIntervalStr))
+      val prettyPrint = toBoolean(prettyPrintStr)
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, toInteger(proxyPortStr), proxyUsernameOpt, proxyPassword)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
@@ -107,11 +138,30 @@ class InstancesSetMetadata {
 
       val items: List[Items] = InstanceController.createMetadataItems(itemsKeysList, itemsValuesList, itemsDelimiter)
 
-      val result = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items)
-      val resultString = if (toBoolean(prettyPrint)) result.toPrettyString else result.toString
+      val operation = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items, sync, timeout, pollingInterval)
 
-      getSuccessResultsMap(resultString) + (ZONE_OPERATION_NAME -> result.getName)
+      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+        (ZONE_OPERATION_NAME -> operation.getName)
+
+      if (sync) {
+        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+        val status = defaultIfEmpty(instance.getStatus, EMPTY)
+        val name = defaultIfEmpty(instance.getName, EMPTY)
+        val metadata = Option(instance.getMetadata.getItems).getOrElse(List().asJava)
+
+        resultMap +
+          (INSTANCE_NAME -> name) +
+          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+          (METADATA -> metadata.map(toPretty(prettyPrint, _)).mkString(COMMA)) +
+          (STATUS -> status)
+      } else {
+        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+        resultMap +
+          (STATUS -> status)
+      }
+
     } catch {
+      case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
     }
   }
