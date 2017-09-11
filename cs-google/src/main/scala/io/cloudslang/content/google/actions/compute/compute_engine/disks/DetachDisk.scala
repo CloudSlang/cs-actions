@@ -1,4 +1,4 @@
-package io.cloudslang.content.google.actions.compute.compute_engine.instances
+package io.cloudslang.content.google.actions.compute.compute_engine.disks
 
 import java.util
 
@@ -7,12 +7,11 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.FALSE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskController
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
 import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
-import io.cloudslang.content.google.utils.action.DefaultValues._
+import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_POLLING_INTERVAL, DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT, DEFAULT_SYNC_TIMEOUT}
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.{ZONE_OPERATION_NAME => _, _}
-import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME, _}
+import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
@@ -29,7 +28,7 @@ import scala.concurrent.TimeoutException
 /**
   * Created by sandorr on 5/2/2017.
   */
-class InstancesAttachDisk {
+class DetachDisk {
 
   /**
     * Creates a disk resource in the specified project using the data included as inputs.
@@ -38,25 +37,7 @@ class InstancesAttachDisk {
     * @param zone               Name of the zone for this request.
     * @param accessToken        The access token from GetAccessToken.
     * @param instanceName       Name of the instance to attach the disk to.
-    * @param source             A valid partial or full URL to an existing Persistent Disk resource.
-    * @param mode               Optional - The mode in which to attach the disk to the instance.
-    *                           Valid values: "READ_WRITE", "READ_ONLY"
-    *                           Default: "READ_WRITE"
-    * @param autoDelete         Optional - Whether to delete the disk when the instance is deleted.
-    *                           Default: "false"
-    * @param deviceName         Optional - Specifies a unique device name of your choice that is reflected into the
-    *                           /dev/disk/by-id/google-* tree of a Linux operating system running within the instance.
-    *                           This name can be used to reference the device for mounting, resizing, and so on, from
-    *                           within the instance.
-    *                           Note: If not specified, the server chooses a default device name to apply to this disk,
-    *                           in the form persistent-disks-x, where x is a number assigned by Google Compute Engine.
-    *                           This field is only applicable for persistent disks.
-    * @param interfaceInp       Optional - Specifies the disk interface to use for attaching this disk.
-    *                           Note: Persistent disks must always use SCSI and the request will fail if you attempt to
-    *                           attach a persistent disk in any other format than SCSI. Local SSDs can use either
-    *                           NVME or SCSI.
-    *                           Valid values: "SCSI", "NVME"
-    *                           Default: "SCSI"
+    * @param deviceName         The disk device name to detach.
     * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
     *                           Default: "false"
@@ -83,7 +64,7 @@ class InstancesAttachDisk {
     *         of the operation will be replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
-  @Action(name = "Attach Disk to Instance",
+  @Action(name = "Detach Disk",
     outputs = Array(
       new Output(RETURN_CODE),
       new Output(RETURN_RESULT),
@@ -92,8 +73,7 @@ class InstancesAttachDisk {
       new Output(INSTANCE_NAME),
       new Output(INSTANCE_DETAILS),
       new Output(DISKS),
-      new Output(STATUS)
-    ),
+      new Output(STATUS)),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
       new Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
@@ -103,11 +83,7 @@ class InstancesAttachDisk {
               @Param(value = PROJECT_ID, required = true) projectId: String,
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
-              @Param(value = SOURCE, required = true) source: String,
-              @Param(value = MODE) mode: String,
-              @Param(value = AUTO_DELETE) autoDelete: String,
-              @Param(value = DEVICE_NAME) deviceName: String,
-              @Param(value = INTERFACE) interfaceInp: String,
+              @Param(value = DEVICE_NAME, required = true) deviceName: String,
               @Param(value = SYNC) syncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
@@ -122,17 +98,12 @@ class InstancesAttachDisk {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-    val modeStr = defaultIfEmpty(mode, DEFAULT_VOLUME_MOUNT_MODE)
-    val autoDeleteStr = defaultIfEmpty(autoDelete, FALSE)
-    val interface = defaultIfEmpty(interfaceInp, DEFAULT_INTERFACE)
-    val deviceNameOpt = verifyEmpty(deviceName)
     val syncStr = defaultIfEmpty(syncInp, FALSE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(autoDeleteStr, AUTO_DELETE) ++
       validateBoolean(syncStr, SYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
@@ -144,7 +115,6 @@ class InstancesAttachDisk {
     try {
       val proxyPort = toInteger(proxyPortStr)
       val prettyPrint = toBoolean(prettyPrintStr)
-      val autoDelete = toBoolean(autoDeleteStr)
       val sync = toBoolean(syncStr)
       val timeout = toLong(timeoutStr)
       val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
@@ -153,15 +123,7 @@ class InstancesAttachDisk {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val attachedDisk = DiskController.createAttachedDisk(
-        boot = false,
-        autoDelete = autoDelete,
-        mountMode = modeStr,
-        deviceNameOpt = deviceNameOpt,
-        sourceOpt = Some(source),
-        interfaceOpt = Some(interface))
-
-      val operation = InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, attachedDisk, sync, timeout, pollingIntervalMilli)
+      val operation = InstanceService.detachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, deviceName, sync, timeout, pollingIntervalMilli)
       val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
       if (sync) {
