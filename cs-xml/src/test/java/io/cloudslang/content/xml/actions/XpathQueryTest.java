@@ -12,6 +12,7 @@ package io.cloudslang.content.xml.actions;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
@@ -33,7 +35,9 @@ import static io.cloudslang.content.xml.utils.Constants.QueryTypes.NODE;
 import static io.cloudslang.content.xml.utils.Constants.QueryTypes.NODE_LIST;
 import static io.cloudslang.content.xml.utils.Constants.QueryTypes.VALUE;
 import static io.cloudslang.content.xml.utils.Constants.SuccessMessages.SELECT_SUCCESS;
+import static org.apache.commons.io.IOUtils.readLines;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -48,8 +52,7 @@ public class XpathQueryTest {
     @Before
     public void setUp() throws Exception {
         select = new XpathQuery();
-        URI resource = getClass().getResource("/xml/test.xml").toURI();
-        xml = FileUtils.readFileToString(new File(resource));
+        xml = join(readLines(ClassLoader.getSystemResourceAsStream("xml/test.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
     }
 
     @After

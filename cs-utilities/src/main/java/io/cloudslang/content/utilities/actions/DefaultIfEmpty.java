@@ -1,4 +1,4 @@
-/*******************************************************************************
+/***********************************************************************************************************************
  * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -6,28 +6,28 @@
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+***********************************************************************************************************************/
 package io.cloudslang.content.utilities.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utilities.services.DefaultIfEmptyService;
+
 import java.util.Map;
 
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
-import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.utilities.entities.constants.Descriptions.OperationDescription.OPERATION_DESC;
-import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.EXCEPTION_DESC;
-import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.RETURN_CODE_DESC;
-import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.RETURN_RESULT_DESC;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.InputsDescription.*;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.OperationDescription.OPERATION_DESC;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.*;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.ResultsDescription.FAILURE_DESC;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.ResultsDescription.SUCCESS_DESC;
 import static io.cloudslang.content.utilities.entities.constants.Inputs.*;
@@ -63,8 +63,8 @@ public class DefaultIfEmpty {
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
             @Param(value = INITIAL_VALUE, description = INITIAL_VALUE_DESC) String initialValue,
