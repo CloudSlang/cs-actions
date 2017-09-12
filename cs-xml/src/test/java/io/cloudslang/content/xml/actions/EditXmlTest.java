@@ -9,7 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.xml.actions;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.junit.Before;
@@ -25,9 +25,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Map;
 
+import static org.apache.commons.io.IOUtils.readLines;
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -66,12 +68,9 @@ public class EditXmlTest {
     @Before
     public void beforeTest() throws Exception {
         editXml = new EditXml();
-        URI resource = getClass().getResource("/editxmlres/xmlString.xml").toURI();
-        STRING_XML = FileUtils.readFileToString(new File(resource));
-        URI resource2 = getClass().getResource("/editxmlres/editXMLinsertTextResponse.xml").toURI();
-        insertTextResponse = FileUtils.readFileToString(new File(resource2), "UTF-8");
-        URI resource3 = getClass().getResource("/editxmlres/appendTextResponse.xml").toURI();
-        appendTextResponse = FileUtils.readFileToString(new File(resource3));
+        STRING_XML = join(readLines(ClassLoader.getSystemResourceAsStream("editxmlres/xmlString.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
+        insertTextResponse = join(readLines(ClassLoader.getSystemResourceAsStream("editxmlres/editXMLinsertTextResponse.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
+        appendTextResponse = join(readLines(ClassLoader.getSystemResourceAsStream("editxmlres/appendTextResponse.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
         fullPath = this.getClass().getResource("/editxmlres/xmlFile.xml").getPath();
     }
 
@@ -95,7 +94,7 @@ public class EditXmlTest {
     @Test
     public void testDeleteAttribute() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, DELETE, "/Employees/Employee", EMPTY, EMPTY, ATTR, "emplid", "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLdeletAttribute.xml"), result.get(RETURN_RESULT));
+        assertEquals(getResponseFromFile("/editxmlres/editXMLdeleteAttribute.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -184,8 +183,7 @@ public class EditXmlTest {
     @Test
     public void testAppendText1() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, APPEND, "/Employees/Employee", EMPTY, " new text", TEXT, EMPTY, "");
-        assertEquals(appendTextResponse, (result.get(RETURN_RESULT)));
-        assertEquals(appendTextResponse, (result.get(RETURN_RESULT)));
+        assertEquals(getResponseFromFile("/editxmlres/appendTextResponse.xml"), (result.get(RETURN_RESULT)));
         assertEquals(result.get(EXCEPTION), null);
     }
 
