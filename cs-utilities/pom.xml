@@ -41,6 +41,12 @@
 
     <developers>
         <developer>
+            <name>Sorin Moldovan</name>
+            <email>sorin@hpe.com</email>
+            <organization>Hewlett Packard Enterprise</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
             <name>Iulia Moldovan</name>
             <email>iulia.moldovan@hpe.com</email>
             <organization>Hewlett Packard Enterprise</organization>
@@ -52,6 +58,7 @@
         <!--Maven versions-->
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-delpoy-plugin.version>2.8.2</maven-delpoy-plugin.version>
         <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
@@ -60,9 +67,9 @@
         <cs-commons.version>0.0.4</cs-commons.version>
         <junit.version>4.12</junit.version>
         <!--Misc properties-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -114,6 +121,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>${maven-delpoy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
