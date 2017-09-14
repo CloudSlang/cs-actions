@@ -1,4 +1,4 @@
-/*******************************************************************************
+/***********************************************************************************************************************
  * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -6,7 +6,7 @@
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+***********************************************************************************************************************/
 package io.cloudslang.content.azure.actions.utils;
 
 import org.junit.After;
@@ -20,6 +20,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static java.lang.System.getProperty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -49,8 +50,8 @@ public class GetSharedAccessKeyTokenTest {
     @Test
     public void executeTestFailureEmptyInputs() throws Exception {
         final Map<String, String> resultMap = authorizationToken.execute("", "", "");
-        assertEquals(resultMap.get(RETURN_RESULT), "The identifier can't be null or empty.\nThe primaryOrSecondaryKey can't be null or empty.\nThe expiry can't be null or empty.");
-        assertEquals(resultMap.get(EXCEPTION), "The identifier can't be null or empty.\nThe primaryOrSecondaryKey can't be null or empty.\nThe expiry can't be null or empty.");
+        assertEquals(resultMap.get(RETURN_RESULT), "The identifier can't be null or empty." + getProperty("line.separator") + "The primaryOrSecondaryKey can't be null or empty." + getProperty("line.separator") +"The expiry can't be null or empty.");
+        assertEquals(resultMap.get(EXCEPTION), "The identifier can't be null or empty." + getProperty("line.separator") +"The primaryOrSecondaryKey can't be null or empty." + getProperty("line.separator") + "The expiry can't be null or empty.");
         assertEquals(resultMap.get(RETURN_CODE), FAILURE);
     }
 
