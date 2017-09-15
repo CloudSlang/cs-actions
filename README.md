@@ -36,24 +36,25 @@ CloudSlang Actions
 #### Common Integrations
 
 
-| Module | Description |
-| ------ | ------ |
-| cs-amazon | Integration with Amazon AWS |
-| cs-azure | Integration with Microsoft Azure |
-| cs-commons | Common constants and utilities (numbers, collections, strings) |
-| cs-couchbase | Integration with Couchbase |
-| cs-database | Database queries (MSSQL, MySQL, Oracle) |
-| cs-date-time | Date and Time actions |
-| cs-google | Integration with Google Cloud - Compute |
-| cs-http-client | HTTP REST calls |
-| cs-json | JSON parsing and manipulation actions |
-| cs-lists | String list manipulation actions |
-| cs-mail | Email actions |
-| cs-powershell | PowerShell actions |
-| cs-rft | Remote File Transfer actions |
-| cs-ssh | SSH actions |
-| cs-vmware | Integration with VMWare vCenter Server |
-| cs-xml | XML parsing and manipulation actions | 
+| Module | Release | Description |
+| ----- | ----- | ----- |
+| cs-amazon | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-amazon/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-amazon) | Integration with Amazon AWS |
+| cs-azure | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-azure/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-azure) | Integration with Microsoft Azure |
+| cs-commons | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-commons/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-commons) | Common constants and utilities (numbers, collections, strings) |
+| cs-couchbase | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-couchbase/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-couchbase) | Integration with Couchbase |
+| cs-database | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-database/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-database) | Database queries (MSSQL, MySQL, Oracle) |
+| cs-date-time | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-date-time/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-date-time) | Date and Time actions |
+| cs-google | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-google/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-google) | Integration with Google Cloud - Compute |
+| cs-http-client | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-http-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-http-client) | HTTP REST calls |
+| cs-json | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-json/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-json) | JSON parsing and manipulation actions |
+| cs-lists |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-lists/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-lists) |String list manipulation actions |
+| cs-mail | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-mail/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-mail) | Email actions |
+| cs-powershell | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-powershell/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-powershell) | PowerShell actions |
+| cs-rft | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-rft/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-rft) | Remote File Transfer actions |
+| cs-ssh | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-ssh/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-ssh) | SSH actions |
+| cs-utilities | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-utilities/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-utilities) | Utilities actions (Default if Empty) |
+| cs-vmware | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-vmware/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-vmware) | Integration with VMWare vCenter Server |
+| cs-xml | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-xml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-xml) | XML parsing and manipulation actions | 
 
 
 <a name="OpenSourceProject"/>
