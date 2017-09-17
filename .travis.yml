@@ -3,11 +3,23 @@ language: java
 env:
   - MVN_EXCLUDE_MODULES='-pl !cs-vmware'
 
+cache:
+  directories:
+    - "$HOME/.m2/repository"
+    - "$HOME/apache-maven-3.5.0"
+
+before_install:
+  - export M2_HOME=$HOME/apache-maven-3.5.0
+  - if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C $HOME; fi
+  - export PATH=$M2_HOME/bin:$PATH
+
 install:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
   - mvn install -DskipTests=true -DrepoToken=${repoToken} -Dmaven.javadoc.skip=true -B -V ${MVN_EXCLUDE_MODULES}
+
 script:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
   - mvn test -B ${MVN_EXCLUDE_MODULES}
+
 after_success:
   - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report ${MVN_EXCLUDE_MODULES}
