@@ -89,7 +89,7 @@ object WindowsService {
     }
   }
 
-  private def encodeBase64:(Array[Byte]) => String = base64.encode(_).replaceAll(NEW_LINE, EMPTY)
+  private def encodeBase64: (Array[Byte]) => String = base64.encode(_).replaceAll(NEW_LINE, EMPTY)
 
   private def jsonEncode(keys: KeyPair): Map[String, String] = {
     val factory = KeyFactory.getInstance(RSA_KEY)
