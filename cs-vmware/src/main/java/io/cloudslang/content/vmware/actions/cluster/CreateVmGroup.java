@@ -28,7 +28,6 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.constants.InputNames.DELIMITER;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;

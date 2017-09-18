@@ -5,6 +5,8 @@ output/
 target/
 *.ipr
 *.iml
+*.releaseBackup
+release.properties
 .*
 !/.codeclimate.yml
 !/.coveralls.yml
