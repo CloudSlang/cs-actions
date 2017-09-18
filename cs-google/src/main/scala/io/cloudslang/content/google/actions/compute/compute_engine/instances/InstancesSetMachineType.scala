@@ -58,7 +58,11 @@ class InstancesSetMachineType {
     *                           Default: "8080"
     * @param proxyUsername      Optional - Proxy server user name.
     * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
-    * @return a map containing the password for the user as returnResult and password.
+    * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+    *         operation, status of the ZoneOperation and the machineType of the instance if the <syncInp> is false.
+    *         If <syncInp> is true the map will also contain the name of the instance, the details of the instance and
+    *         the status of the operation will be replaced by the status of the instance.
+    *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Set Machine Type",
     outputs = Array(
