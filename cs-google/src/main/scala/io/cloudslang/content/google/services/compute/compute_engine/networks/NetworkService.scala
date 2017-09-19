@@ -52,21 +52,17 @@ object NetworkService {
     val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .insert(project, network)
       .execute()
-    if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, timeout, pollingInterval)
-    } else {
-      operation
-    }
+    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, sync,
+      timeout, pollingInterval)
+
   }
 
   def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, networkName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .delete(project, networkName)
       .execute()
-    if (sync) {
-      ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, timeout, pollingInterval)
-    } else {
-      operation
-    }
+    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, sync,
+      timeout, pollingInterval)
+
   }
 }
