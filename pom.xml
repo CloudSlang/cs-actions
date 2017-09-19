@@ -1,33 +1,31 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <!--
-        (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-        All rights reserved. This program and the accompanying materials
-        are made available under the terms of the Apache License v2.0 which accompany this distribution.
 
-        The Apache License is available at
-        http://www.apache.org/licenses/LICENSE-2.0
-    -->
+    <modelVersion>4.0.0</modelVersion>
+
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-actions</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Precompiled flows for Cloudslang</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
     <scm>
         <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
         <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
+
     <developers>
         <developer>
             <name>Mihai David</name>
@@ -54,45 +52,26 @@
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
     </developers>
+
     <properties>
+        <!--Maven versions-->
+        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-delpoy-plugin.version>2.8.2</maven-delpoy-plugin.version>
+        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+        <!--Dependencies versions-->
+        <score-content-sdk.version>1.10.6</score-content-sdk.version>
+        <cs-http-client.version>0.1.71</cs-http-client.version>
+        <cs-commons.version>0.0.4</cs-commons.version>
+        <junit.version>4.12</junit.version>
+        <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.eluder.coveralls</groupId>
-                    <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.3.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>2.7</version>
-                    <configuration>
-                        <format>xml</format>
-                        <maxmem>256m</maxmem>
-                        <!-- aggregated reports for multi-module projects -->
-                        <aggregate>true</aggregate>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.8</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>DISABLE_FORKED_LIFECYCLE_MSOURCES-13</phase>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -105,113 +84,23 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-    <profiles>
-        <profile>
-            <id>default-profile</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.1</version>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>release-internal-profile</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.1</version>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>release-external-profile</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.1</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.3</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-    <modules>
-        <module>cs-http-client</module>
-        <module>cs-ssh</module>
-        <module>cs-mail</module>
-        <module>cs-powershell</module>
-        <module>cs-json</module>
-        <module>cs-rft</module>
-        <module>cs-amazon</module>
-        <module>cs-xml</module>
-        <module>cs-date-time</module>
-        <module>cs-vmware</module>
-        <module>cs-lists</module>
-        <module>cs-commons</module>
-        <module>cs-azure</module>
-        <module>cs-google</module>
-        <module>cs-database</module>
-        <module>cs-utilities</module>
-        <module>cs-couchbase</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.hp.score.sdk</groupId>
                 <artifactId>score-content-sdk</artifactId>
-                <version>1.10.6</version>
+                <version>${score-content-sdk.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cloudslang.content</groupId>
                 <artifactId>cs-commons</artifactId>
-                <version>0.0.4</version>
+                <version>${cs-commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cloudslang.content</groupId>
                 <artifactId>cs-http-client</artifactId>
-                <version>0.1.68</version>
+                <version>${cs-http-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-validator</groupId>
@@ -221,7 +110,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -275,4 +164,136 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-delpoy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!--License checker for build-->
+            <!--<plugin>-->
+                <!--<groupId>com.mycila</groupId>-->
+                <!--<artifactId>license-maven-plugin</artifactId>-->
+                <!--<version>3.0</version>-->
+                <!--<configuration>-->
+                    <!--<header>${project.basedir}/license.template</header>-->
+                    <!--<headerDefinitions>-->
+                        <!--<headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>-->
+                    <!--</headerDefinitions>-->
+                    <!--<includes>-->
+                        <!--<include>**/*.java</include>-->
+                    <!--</includes>-->
+                    <!--&lt;!&ndash;Pass arguments using ${var} syntax in license.template file&ndash;&gt;-->
+                    <!--<properties>-->
+                        <!--<copyright.year>2017</copyright.year>-->
+                    <!--</properties>-->
+                    <!--&lt;!&ndash;Custom mapping for java extensions&ndash;&gt;-->
+                    <!--<useDefaultMapping>false</useDefaultMapping>-->
+                    <!--<mapping>-->
+                        <!--<java>cs-actions-java-header</java>-->
+                    <!--</mapping>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>process-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>format</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release-external-profile</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <modules>
+        <module>cs-amazon</module>
+        <module>cs-azure</module>
+        <module>cs-commons</module>
+        <module>cs-couchbase</module>
+        <module>cs-database</module>
+        <module>cs-date-time</module>
+        <module>cs-dropbox</module>
+        <module>cs-google</module>
+        <module>cs-http-client</module>
+        <module>cs-json</module>
+        <module>cs-lists</module>
+        <module>cs-mail</module>
+        <module>cs-powershell</module>
+        <module>cs-rft</module>
+        <module>cs-ssh</module>
+        <module>cs-utilities</module>
+        <module>cs-vmware</module>
+        <module>cs-xml</module>
+    </modules>
+
 </project>
