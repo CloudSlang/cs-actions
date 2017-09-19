@@ -65,4 +65,7 @@ object InstanceController {
       .setPreemptible(preemptible))
     case _ => None
   }
+
+  def createMachineTypeRequest(machineType: String): InstancesSetMachineTypeRequest =
+    new InstancesSetMachineTypeRequest().setMachineType(machineType)
 }
