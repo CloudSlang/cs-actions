@@ -5,8 +5,8 @@
         <beforeEachLine> </beforeEachLine>
         <endLine>*/</endLine>
         <afterEachLine> </afterEachLine>
-        <firstLineDetectionPattern>/[*]</firstLineDetectionPattern>
-        <lastLineDetectionPattern> [*]/</lastLineDetectionPattern>
+        <firstLineDetectionPattern>/*</firstLineDetectionPattern>
+        <lastLineDetectionPattern> */</lastLineDetectionPattern>
         <allowBlankLines>false</allowBlankLines>
         <isMultiline>true</isMultiline>
         <padLines>false</padLines>
