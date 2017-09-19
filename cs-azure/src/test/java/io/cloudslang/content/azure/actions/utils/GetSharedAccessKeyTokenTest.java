@@ -15,12 +15,9 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static java.lang.System.getProperty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -28,6 +25,7 @@ import static org.junit.Assert.assertTrue;
  * Created by victor on 29.09.2016.
  */
 public class GetSharedAccessKeyTokenTest {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
     private GetSharedAccessKeyToken authorizationToken;
 
     @Before
@@ -50,8 +48,8 @@ public class GetSharedAccessKeyTokenTest {
     @Test
     public void executeTestFailureEmptyInputs() throws Exception {
         final Map<String, String> resultMap = authorizationToken.execute("", "", "");
-        assertEquals(resultMap.get(RETURN_RESULT), "The identifier can't be null or empty." + getProperty("line.separator") + "The primaryOrSecondaryKey can't be null or empty." + getProperty("line.separator") +"The expiry can't be null or empty.");
-        assertEquals(resultMap.get(EXCEPTION), "The identifier can't be null or empty." + getProperty("line.separator") +"The primaryOrSecondaryKey can't be null or empty." + getProperty("line.separator") + "The expiry can't be null or empty.");
+        assertEquals(resultMap.get(RETURN_RESULT), "The identifier can't be null or empty." + LINE_SEPARATOR + "The primaryOrSecondaryKey can't be null or empty." + LINE_SEPARATOR + "The expiry can't be null or empty.");
+        assertEquals(resultMap.get(EXCEPTION), "The identifier can't be null or empty." + LINE_SEPARATOR + "The primaryOrSecondaryKey can't be null or empty." + LINE_SEPARATOR + "The expiry can't be null or empty.");
         assertEquals(resultMap.get(RETURN_CODE), FAILURE);
     }
 
