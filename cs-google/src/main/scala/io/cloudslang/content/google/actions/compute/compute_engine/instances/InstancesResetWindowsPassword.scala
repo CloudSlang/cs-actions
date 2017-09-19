@@ -35,9 +35,7 @@ class InstancesResetWindowsPassword {
     *                           Example: "instance-1234"
     * @param accessToken        The access token returned by the GetAccessToken operation, with at least the
     *                           following scope: "https://www.googleapis.com/auth/compute".
-    * @param proxyHost          Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
-    *                           be used.
-    * @param userName           The username for which to reset the password. If the the username does not exist, it will
+    * @param username           The username for which to reset the password. If the the username does not exist, it will
     *                           be created.
     * @param emailInp           Optional - The email for the username for which the password is reset.
     * @param syncTimeInp        Optional - The maximum number of seconds to allow to differ between the time on the client
@@ -52,6 +50,8 @@ class InstancesResetWindowsPassword {
     *                           finished is executed, if the sync input is set to "true".
     *                           Valid values: Any positive number including 0.
     *                           Default: "1"
+    * @param proxyHost          Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
+    *                           be used.
     * @param proxyPortInp       Optional - Proxy server port used to access the provider services.
     *                           Default: "8080"
     * @param proxyUsername      Optional - Proxy server user name.
@@ -75,7 +75,7 @@ class InstancesResetWindowsPassword {
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true) accessToken: String,
 
-              @Param(value = USERNAME, required = true) userName: String,
+              @Param(value = USERNAME, required = true) username: String,
               @Param(value = EMAIL) emailInp: String,
               @Param(value = SYNC_TIME) syncTimeInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
@@ -115,7 +115,7 @@ class InstancesResetWindowsPassword {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
-        instanceName, userName, emailOpt, syncTime, timeout, pollingInterval) match {
+        instanceName, username, emailOpt, syncTime, timeout, pollingInterval) match {
         case Some(password) => getSuccessResultsMap(password) +
           (PASSWORD -> password)
         case _ => getFailureResultsMap(SYNC_TIME_EXCEPTION)
