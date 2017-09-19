@@ -2,11 +2,19 @@ language: java
 
 env:
   - MVN_EXCLUDE_MODULES='-pl !cs-vmware'
+  - JAVA_OPTS='-Xmx2048m -Xms512m'
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
 
 cache:
   directories:
     - "$HOME/.m2/repository"
     - "$HOME/apache-maven-3.5.0"
+
+before_script:
+  - "echo $JAVA_OPTS"
 
 before_install:
   - export M2_HOME=$HOME/apache-maven-3.5.0
@@ -15,11 +23,7 @@ before_install:
 
 install:
   - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
-  - mvn install -DskipTests=true -DrepoToken=${repoToken} -Dmaven.javadoc.skip=true -B -V ${MVN_EXCLUDE_MODULES}
-
-script:
-  - echo "MVN_EXCLUDE_MODULES=${MVN_EXCLUDE_MODULES}"
-  - mvn test -B ${MVN_EXCLUDE_MODULES}
+  - mvn install test -T 2.0C -DrepoToken=${repoToken} -Dmaven.javadoc.skip=true -B -V ${MVN_EXCLUDE_MODULES}
 
 after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report ${MVN_EXCLUDE_MODULES}
+  - mvn clean -T 2.0C cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report ${MVN_EXCLUDE_MODULES}
