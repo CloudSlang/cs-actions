@@ -15,14 +15,21 @@ import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64.d
 import com.google.api.services.compute.model.Metadata
 import com.google.common.io.BaseEncoding.base64
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.exceptions.OperationException
 import org.apache.commons.lang3.StringUtils.EMPTY
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import spray.json.DefaultJsonProtocol._
 import spray.json._
 
+import scala.annotation.tailrec
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
-
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration.Inf
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.language.postfixOps
+import scala.util.Try
 
 object WindowsService {
   private val WINDOWS_KEYS = "windows-keys"
@@ -35,22 +42,48 @@ object WindowsService {
 
   def resetWindowsPassword(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
                            zone: String, instanceName: String, userName: String, emailOpt: Option[String], syncTime: Long,
-                           timeout: Long, pollingInterval: Long): Option[String] = {
+                           timeout: Long, pollingInterval: Long): String = {
     val keyPair = generateKeyPair()
-    val metadata = prepareInstanceMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, userName, emailOpt, syncTime, timeout, keyPair, pollingInterval)
-    InstanceService.getSerialPortOutput(httpTransport, jsonFactory, credential, project, zone, instanceName, 4, 0)
-      .getContents
+
+    Await.result(Future {
+      val metadata = prepareInstanceMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, userName, emailOpt, syncTime, 0, keyPair, pollingInterval)
+      def passwordFrom: (Long) => (Long, Option[String]) = {
+        Thread.sleep(pollingInterval)
+        getPasswordFrom(keyPair, httpTransport, jsonFactory, credential, project, zone, instanceName, userName,
+          metadata.get(MODULUS), metadata.get(EXPONENT))
+      }
+      waitForPassword(passwordFrom)
+    }, if (timeout == 0) Inf else timeout seconds)
+  }
+
+  @tailrec
+  private def waitForPassword(call: (Long) => (Long, Option[String]), from: Long = 0): String = call(from) match {
+    case (next, None) => waitForPassword(call, next)
+    case (_, Some(password)) => password
+  }
+
+  private def getPasswordFrom(keyPair: KeyPair, httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
+                              zone: String, instanceName: String, username: String, modulus: Option[String], exponent: Option[String])
+                             (from: Long): (Long, Option[String]) = {
+    val serialOutput = InstanceService.getSerialPortOutput(httpTransport, jsonFactory, credential, project, zone, instanceName, 4, from)
+    val next = serialOutput.getNext
+    val password = serialOutput.getContents
       .split(NEW_LINE)
       .reverse
       .toStream
-      .map(_.parseJson.convertTo[Map[String, JsValue]])
+      .flatMap{line => Try(line.parseJson.convertTo[Map[String, JsValue]]).toOption}
       .find(mapEntry =>
         List(mapEntry.get(USER_NAME), mapEntry.get(MODULUS), mapEntry.get(EXPONENT)).flatten.map(_.convertTo[String]) ==
-          List(Some(userName), metadata.get(MODULUS), metadata.get(EXPONENT)).flatten)
+          List(Some(username), modulus, exponent).flatten)
       .map { mapEntry =>
+        if (mapEntry.containsKey("errorMessage")) {
+          throw OperationException(mapEntry.getOrElse("errorMessage", EMPTY).toString)
+        }
         val encryptedPassword: String = mapEntry.getOrElse("encryptedPassword", EMPTY).toString
+
         decryptPassword(encryptedPassword, keyPair)
       }
+    (next, password)
   }
 
   private def prepareInstanceMetadata(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
@@ -63,7 +96,11 @@ object WindowsService {
     val keyMetadata = buildKeyMetadata(keyPair, rfc339FormattedDate, userName, emailOpt)
     replaceMetadata(instanceMetadata, keyMetadata)
 
-    InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, instanceMetadata, sync = true, timeout, pollingInterval)
+    val metadataOp = InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, instanceMetadata, sync = true, timeout, pollingInterval)
+    if (metadataOp.getError != null) {
+      throw OperationException(metadataOp)
+    }
+
     keyMetadata
   }
 

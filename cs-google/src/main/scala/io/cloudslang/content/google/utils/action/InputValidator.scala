@@ -55,6 +55,11 @@ object InputValidator {
     if (!NumberUtilities.isValidDouble(value, 0, Double.MaxValue)) Some(INVALID_NON_NEGATIVE_DOUBLE) else None
   }
 
+  def validateUsername: (String, String) => Stream[String] = validate(_, _) { value =>
+    "^[a-z][(0-9)|(a-zA-Z)|(_)]{1,30}$".r //todo
+    if (!NumberUtilities.isValidDouble(value, 0, Double.MaxValue)) Some(INVALID_NON_NEGATIVE_DOUBLE) else None
+  }
+
   def validate[A](inputValue: A, inputName: String)(validator: (A) => Option[String]): Stream[String] =
     validator(inputValue) match {
       case None => Stream.empty

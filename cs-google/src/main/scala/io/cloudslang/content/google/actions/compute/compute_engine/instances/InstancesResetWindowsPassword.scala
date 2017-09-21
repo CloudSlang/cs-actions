@@ -5,7 +5,8 @@ import java.util
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
-import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
+import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
+import io.cloudslang.content.google.actions.authentication.GetAccessToken
 import io.cloudslang.content.google.services.compute.compute_engine.instances.WindowsService
 import io.cloudslang.content.google.utils.Constants._
 import io.cloudslang.content.google.utils.action.DefaultValues._
@@ -13,6 +14,7 @@ import io.cloudslang.content.google.utils.action.GoogleOutputNames.PASSWORD
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
+import io.cloudslang.content.google.utils.exceptions.OperationException
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -35,8 +37,9 @@ class InstancesResetWindowsPassword {
     *                           Example: "instance-1234"
     * @param accessToken        The access token returned by the GetAccessToken operation, with at least the
     *                           following scope: "https://www.googleapis.com/auth/compute".
-    * @param username           The username for which to reset the password. If the the username does not exist, it will
-    *                           be created.
+    * @param username           Specify a username. If the the username does not exist, it will be created.
+    *                           Format: Must start with a lowercase letter, followed by 1-31 lowercase letters, numbers,
+    *                           or underscores
     * @param emailInp           Optional - The email for the username for which the password is reset.
     * @param syncTimeInp        Optional - The maximum number of seconds to allow to differ between the time on the client
     *                           and time on the server.
@@ -99,6 +102,7 @@ class InstancesResetWindowsPassword {
       validateNonNegativeLong(syncTimeStr, SYNC_TIME) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
+//      validateUsername(username, USERNAME)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -114,14 +118,16 @@ class InstancesResetWindowsPassword {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
-        instanceName, username, emailOpt, syncTime, timeout, pollingInterval) match {
-        case Some(password) => getSuccessResultsMap(password) +
-          (PASSWORD -> password)
-        case _ => getFailureResultsMap(SYNC_TIME_EXCEPTION)
-      }
+      getSuccessResultsMap(WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
+        instanceName, username, emailOpt, syncTime, timeout, pollingInterval))
+//      match {
+//        case Some(password) => getSuccessResultsMap(password) +
+//          (PASSWORD -> password)
+//        case _ => getFailureResultsMap()
+//      }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
+      case t: OperationException => getFailureResultsMap(t)
       case e: Throwable => getFailureResultsMap(e)
     }
   }
