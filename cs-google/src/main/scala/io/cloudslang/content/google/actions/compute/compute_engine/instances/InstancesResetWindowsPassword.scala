@@ -5,8 +5,7 @@ import java.util
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
-import io.cloudslang.content.constants.{OutputNames, ResponseNames, ReturnCodes}
-import io.cloudslang.content.google.actions.authentication.GetAccessToken
+import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.WindowsService
 import io.cloudslang.content.google.utils.Constants._
 import io.cloudslang.content.google.utils.action.DefaultValues._
@@ -20,7 +19,6 @@ import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
-import scala.collection.JavaConversions._
 import scala.concurrent.TimeoutException
 
 class InstancesResetWindowsPassword {
@@ -40,6 +38,8 @@ class InstancesResetWindowsPassword {
     * @param username           Specify a username. If the the username does not exist, it will be created.
     *                           Format: Must start with a lowercase letter, followed by 1-31 lowercase letters, numbers,
     *                           or underscores
+    *                           Note: The format is not enforced since it may change or special rules may be added or removed
+    *                           depending on the OS.
     * @param emailInp           Optional - The email for the username for which the password is reset.
     * @param syncTimeInp        Optional - The maximum number of seconds to allow to differ between the time on the client
     *                           and time on the server.
@@ -102,7 +102,6 @@ class InstancesResetWindowsPassword {
       validateNonNegativeLong(syncTimeStr, SYNC_TIME) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
-//      validateUsername(username, USERNAME)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -120,11 +119,6 @@ class InstancesResetWindowsPassword {
 
       getSuccessResultsMap(WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
         instanceName, username, emailOpt, syncTime, timeout, pollingInterval))
-//      match {
-//        case Some(password) => getSuccessResultsMap(password) +
-//          (PASSWORD -> password)
-//        case _ => getFailureResultsMap()
-//      }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case t: OperationException => getFailureResultsMap(t)

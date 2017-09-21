@@ -14,7 +14,8 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64.decodeBase64
 import com.google.api.services.compute.model.Metadata
 import com.google.common.io.BaseEncoding.base64
-import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants._
+import io.cloudslang.content.google.utils.action.InputNames.EMAIL
 import io.cloudslang.content.google.utils.exceptions.OperationException
 import org.apache.commons.lang3.StringUtils.EMPTY
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -32,13 +33,6 @@ import scala.language.postfixOps
 import scala.util.Try
 
 object WindowsService {
-  private val WINDOWS_KEYS = "windows-keys"
-  private val RSA_KEY = "RSA"
-  private val MODULUS = "modulus"
-  private val EXPONENT = "exponent"
-  private val USER_NAME = "userName"
-  private val EXPIRE_ON = "expireOn"
-  private val EMAIL = "email"
 
   def resetWindowsPassword(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
                            zone: String, instanceName: String, userName: String, emailOpt: Option[String], syncTime: Long,
@@ -47,11 +41,13 @@ object WindowsService {
 
     Await.result(Future {
       val metadata = prepareInstanceMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, userName, emailOpt, syncTime, 0, keyPair, pollingInterval)
+
       def passwordFrom: (Long) => (Long, Option[String]) = {
         Thread.sleep(pollingInterval)
         getPasswordFrom(keyPair, httpTransport, jsonFactory, credential, project, zone, instanceName, userName,
           metadata.get(MODULUS), metadata.get(EXPONENT))
       }
+
       waitForPassword(passwordFrom)
     }, if (timeout == 0) Inf else timeout seconds)
   }
@@ -71,15 +67,15 @@ object WindowsService {
       .split(NEW_LINE)
       .reverse
       .toStream
-      .flatMap{line => Try(line.parseJson.convertTo[Map[String, JsValue]]).toOption}
+      .flatMap { line => Try(line.parseJson.convertTo[Map[String, JsValue]]).toOption }
       .find(mapEntry =>
         List(mapEntry.get(USER_NAME), mapEntry.get(MODULUS), mapEntry.get(EXPONENT)).flatten.map(_.convertTo[String]) ==
           List(Some(username), modulus, exponent).flatten)
       .map { mapEntry =>
-        if (mapEntry.containsKey("errorMessage")) {
-          throw OperationException(mapEntry.getOrElse("errorMessage", EMPTY).toString)
+        if (mapEntry.containsKey(ERROR_MESSAGE)) {
+          throw OperationException(mapEntry.getOrElse(ERROR_MESSAGE, EMPTY).toString)
         }
-        val encryptedPassword: String = mapEntry.getOrElse("encryptedPassword", EMPTY).toString
+        val encryptedPassword: String = mapEntry.getOrElse(ENCRYPTED_PASSWORD, EMPTY).toString
 
         decryptPassword(encryptedPassword, keyPair)
       }
@@ -98,7 +94,7 @@ object WindowsService {
 
     val metadataOp = InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, instanceMetadata, sync = true, timeout, pollingInterval)
     if (metadataOp.getError != null) {
-      throw OperationException(metadataOp)
+      throw OperationException(Try(metadataOp.getError.toPrettyString).getOrElse(EMPTY))
     }
 
     keyMetadata
