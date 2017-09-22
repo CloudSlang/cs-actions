@@ -59,7 +59,7 @@
         <bouncycastle.version>1.46</bouncycastle.version>
         <cs-commons.version>0.0.4</cs-commons.version>
         <score-content-sdk.version>1.10.6</score-content-sdk.version>
-        <google-api-services-compute.version>v1-rev155-1.22.0</google-api-services-compute.version>
+        <google-api-services-compute.version>v1-rev156-1.22.0</google-api-services-compute.version>
         <scala-library.version>2.11.11</scala-library.version>
     </properties>
 
