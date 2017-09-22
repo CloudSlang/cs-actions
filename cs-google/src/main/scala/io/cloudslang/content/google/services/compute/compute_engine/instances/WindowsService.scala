@@ -92,7 +92,8 @@ object WindowsService {
     val keyMetadata = buildKeyMetadata(keyPair, rfc339FormattedDate, userName, emailOpt)
     replaceMetadata(instanceMetadata, keyMetadata)
 
-    val metadataOp = InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName, instanceMetadata, sync = true, timeout, pollingInterval)
+    val metadataOp = InstanceService.setMetadata(httpTransport, jsonFactory, credential, project, zone, instanceName,
+      instanceMetadata, async = false, timeout, pollingInterval)
     if (metadataOp.getError != null) {
       throw OperationException(Try(metadataOp.getError.toPrettyString).getOrElse(EMPTY))
     }

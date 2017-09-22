@@ -4,7 +4,7 @@ import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.FALSE
+import io.cloudslang.content.constants.BooleanValues.TRUE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.{InstanceController, InstanceService}
@@ -42,9 +42,9 @@ class InstancesSetMachineType {
     * @param machineType        Full or partial URL of the machine type resource to use for this instance, in the format:
     *                           "zones/zone/machineTypes/machine-type".
     *                           Example: "zones/us-central1-f/machineTypes/n1-standard-1"
-    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    * @param asyncInp           Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
-    *                           Default: "false"
+    *                           Default: "true"
     * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
@@ -89,7 +89,7 @@ class InstancesSetMachineType {
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = MACHINE_TYPE, required = true) machineType: String,
 
-              @Param(value = SYNC) syncInp: String,
+              @Param(value = ASYNC) asyncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
 
@@ -103,14 +103,14 @@ class InstancesSetMachineType {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
-    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(syncStr, SYNC) ++
+      validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
@@ -122,7 +122,7 @@ class InstancesSetMachineType {
 
       val proxyPort = toInteger(proxyPortStr)
       val prettyPrint = toBoolean(prettyPrintStr)
-      val sync = toBoolean(syncStr)
+      val async = toBoolean(asyncStr)
       val timeout = toLong(timeoutStr)
       val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
@@ -132,14 +132,19 @@ class InstancesSetMachineType {
 
       val machineTypeRequest = InstanceController.createMachineTypeRequest(machineType)
 
-      OperationStatus(InstanceService.restart(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync,
-        timeout, pollingIntervalMilli)) match {
+      OperationStatus(InstanceService.setMachineType(httpTransport, jsonFactory, credential, projectId, zone, instanceName,
+        machineTypeRequest, async, timeout, pollingIntervalMilli)) match {
         case SuccessOperation(operation) =>
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
             (ZONE_OPERATION_NAME -> operation.getName) +
             (MACHINE_TYPE -> machineType)
 
-          if (sync) {
+          if (async) {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+            resultMap +
+              (STATUS -> status)
+          } else {
             val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
             val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
             val name = defaultIfEmpty(instance.getName, EMPTY)
@@ -149,11 +154,6 @@ class InstancesSetMachineType {
               (INSTANCE_ID -> instanceId) +
               (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
               (INSTANCE_NAME -> name) +
-              (STATUS -> status)
-          } else {
-            val status = defaultIfEmpty(operation.getStatus, EMPTY)
-
-            resultMap +
               (STATUS -> status)
           }
         case ErrorOperation(error) => getFailureResultsMap(error)

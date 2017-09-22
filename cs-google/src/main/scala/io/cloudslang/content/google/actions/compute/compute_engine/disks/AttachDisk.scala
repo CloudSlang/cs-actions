@@ -4,7 +4,7 @@ import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.FALSE
+import io.cloudslang.content.constants.BooleanValues.{FALSE, TRUE}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskController
@@ -52,9 +52,9 @@ class AttachDisk {
     *                           Note: If not specified, the server chooses a default device name to apply to this disk,
     *                           in the form persistent-disks-x, where x is a number assigned by Google Compute Engine.
     *                           This field is only applicable for persistent disks.
-    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    * @param asyncInp           Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
-    *                           Default: "false"
+    *                           Default: "true"
     * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
@@ -102,7 +102,7 @@ class AttachDisk {
               @Param(value = MODE) mode: String,
               @Param(value = AUTO_DELETE) autoDelete: String,
               @Param(value = DEVICE_NAME) deviceName: String,
-              @Param(value = SYNC) syncInp: String,
+              @Param(value = ASYNC) asyncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
@@ -119,14 +119,14 @@ class AttachDisk {
     val modeStr = defaultIfEmpty(mode, DEFAULT_VOLUME_MOUNT_MODE)
     val autoDeleteStr = defaultIfEmpty(autoDelete, FALSE)
     val deviceNameOpt = verifyEmpty(deviceName)
-    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
       validateBoolean(autoDeleteStr, AUTO_DELETE) ++
-      validateBoolean(syncStr, SYNC) ++
+      validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
@@ -138,7 +138,7 @@ class AttachDisk {
       val proxyPort = toInteger(proxyPortStr)
       val prettyPrint = toBoolean(prettyPrintStr)
       val autoDelete = toBoolean(autoDeleteStr)
-      val sync = toBoolean(syncStr)
+      val async = toBoolean(asyncStr)
       val timeout = toLong(timeoutStr)
       val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
@@ -155,11 +155,16 @@ class AttachDisk {
         interfaceOpt = None)
 
       OperationStatus(InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName,
-        attachedDisk, sync, timeout, pollingIntervalMilli)) match {
+        attachedDisk, async, timeout, pollingIntervalMilli)) match {
         case SuccessOperation(operation) =>
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
-          if (sync) {
+          if (async) {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+            resultMap +
+              (STATUS -> status)
+          } else {
             val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
             val name = defaultIfEmpty(instance.getName, EMPTY)
             val status = defaultIfEmpty(instance.getStatus, EMPTY)
@@ -169,11 +174,6 @@ class AttachDisk {
               (INSTANCE_NAME -> name) +
               (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
               (DISKS -> disksNames.mkString(COMMA)) +
-              (STATUS -> status)
-          } else {
-            val status = defaultIfEmpty(operation.getStatus, EMPTY)
-
-            resultMap +
               (STATUS -> status)
           }
         case ErrorOperation(error) => getFailureResultsMap(error)

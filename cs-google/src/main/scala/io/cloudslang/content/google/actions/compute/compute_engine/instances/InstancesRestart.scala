@@ -4,7 +4,7 @@ import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.FALSE
+import io.cloudslang.content.constants.BooleanValues.TRUE
 import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
@@ -43,9 +43,9 @@ class InstancesRestart {
     *                           Example: "operation-1234"
     * @param accessToken        The access token returned by the GetAccessToken operation, with at least the
     *                           following scope: "https://www.googleapis.com/auth/compute".
-    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    * @param asyncInp           Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
-    *                           Default: "false"
+    *                           Default: "true"
     * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
@@ -86,7 +86,7 @@ class InstancesRestart {
               @Param(value = ZONE, required = true) zone: String,
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = ACCESS_TOKEN, required = true) accessToken: String,
-              @Param(value = SYNC) syncInp: String,
+              @Param(value = ASYNC) asyncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
@@ -99,13 +99,13 @@ class InstancesRestart {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPasswordInp, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(syncStr, SYNC) ++
+      validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
@@ -115,7 +115,7 @@ class InstancesRestart {
 
     val proxyPort = toInteger(proxyPortStr)
     val prettyPrint = toBoolean(prettyPrintStr)
-    val sync = toBoolean(syncStr)
+    val async = toBoolean(asyncStr)
     val timeout = toLong(timeoutStr)
     val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
@@ -124,12 +124,17 @@ class InstancesRestart {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      OperationStatus(InstanceService.restart(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync,
+      OperationStatus(InstanceService.restart(httpTransport, jsonFactory, credential, projectId, zone, instanceName, async,
         timeout, pollingIntervalMilli)) match {
         case SuccessOperation(operation) =>
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
-          if (sync) {
+          if (async) {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+            resultMap +
+              (STATUS -> status)
+          } else {
             val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
             val name = defaultIfEmpty(instance.getName, EMPTY)
             val status = defaultIfEmpty(instance.getStatus, EMPTY)
@@ -137,11 +142,6 @@ class InstancesRestart {
             resultMap +
               (INSTANCE_NAME -> name) +
               (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-              (STATUS -> status)
-          } else {
-            val status = defaultIfEmpty(operation.getStatus, EMPTY)
-
-            resultMap +
               (STATUS -> status)
           }
         case ErrorOperation(error) => getFailureResultsMap(error)

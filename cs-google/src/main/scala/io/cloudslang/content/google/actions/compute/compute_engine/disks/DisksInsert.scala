@@ -5,7 +5,7 @@ import java.util
 import com.google.api.services.compute.model.Disk
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.FALSE
+import io.cloudslang.content.constants.BooleanValues.TRUE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.disks.{DiskController, DiskService}
@@ -84,9 +84,9 @@ class DisksInsert {
     *                             If you do not provide an encryption key when creating the disk, then the disk will be encrypted
     *                             using an automatically generated key and you do not need to provide a key to use the disk
     *                             later.
-    * @param syncInp              Optional - Boolean specifying whether the operation to run sync or async.
+    * @param asyncInp             Optional - Boolean specifying whether the operation to run sync or async.
     *                             Valid values: "true", "false"
-    *                             Default: "false"
+    *                             Default: "true"
     * @param timeoutInp           Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
     *                             If the value is 0, the operation will wait until zone operation progress is 100.
     *                             Valid values: Any positive number including 0.
@@ -140,7 +140,7 @@ class DisksInsert {
               @Param(value = IMAGE_ENCRYPTION_KEY) imageEncryptionKey: String,
               @Param(value = DISK_TYPE, required = true) diskType: String,
               @Param(value = DISK_ENCRYPTION_KEY) diskEncryptionKey: String,
-              @Param(value = SYNC) syncInp: String,
+              @Param(value = ASYNC) asyncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
               @Param(value = PROXY_HOST) proxyHost: String,
@@ -162,14 +162,14 @@ class DisksInsert {
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
     val licensesList = defaultIfEmpty(licensesListInp, EMPTY)
     val licensesDel = defaultIfEmpty(licensesDelimiterInp, DEFAULT_LICENSES_DELIMITER)
-    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
       validateDiskSize(diskSizeStr, DISK_SIZE) ++
-      validateBoolean(syncStr, SYNC) ++
+      validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
@@ -180,7 +180,7 @@ class DisksInsert {
     val proxyPort = toInteger(proxyPortStr)
     val prettyPrint = toBoolean(prettyPrintStr)
     val diskSize = toInteger(diskSizeStr).toLong
-    val sync = toBoolean(syncStr)
+    val async = toBoolean(asyncStr)
     val timeout = toLong(timeoutStr)
     val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
@@ -202,7 +202,7 @@ class DisksInsert {
         licensesDel = licensesDel,
         diskSize = diskSize)
 
-      OperationStatus(DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, sync,
+      OperationStatus(DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, async,
         timeout, pollingIntervalMilli)) match {
         case SuccessOperation(operation) =>
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
@@ -210,7 +210,12 @@ class DisksInsert {
             (ZONE -> zone) +
             (DISK_NAME -> diskName)
 
-          if (sync) {
+          if (async) {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
+
+            resultMap +
+              (STATUS -> status)
+          } else {
             val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
             val diskId = Option(disk.getId).getOrElse(BigInt(0)).toString
             val status = defaultIfEmpty(disk.getStatus, EMPTY)
@@ -219,11 +224,6 @@ class DisksInsert {
             resultMap +
               (DISK_ID -> diskId) +
               (DISK_SIZE -> diskSize) +
-              (STATUS -> status)
-          } else {
-            val status = defaultIfEmpty(operation.getStatus, EMPTY)
-
-            resultMap +
               (STATUS -> status)
           }
         case ErrorOperation(error) => getFailureResultsMap(error)
