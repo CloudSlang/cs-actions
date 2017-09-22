@@ -5,11 +5,7 @@ env:
 
 jdk:
   - oraclejdk8
-  - oraclejdk7
-
-before_cache:
-  - rm -rf $HOME/.gradle/daemon/
-  - rm -rf $HOME/.gradle/caches/modules-2/modules-2.lock
+  - openjdk7
 
 cache:
   directories:
