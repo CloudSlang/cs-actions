@@ -20,6 +20,7 @@ import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMil
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -269,6 +270,7 @@ class InstancesInsert {
     val serviceAccountEmailOpt = verifyEmpty(serviceAccountEmail)
     val serviceAccountScopesOpt = verifyEmpty(serviceAccountScopes)
 
+
     val syncStr = defaultIfEmpty(syncInp, FALSE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
@@ -357,28 +359,33 @@ class InstancesInsert {
         canIpForward = canIpForward,
         serviceAccountOpt = serviceAccount)
 
-      val operation = InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance, sync, timeout, pollingIntervalMilli)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+      OperationStatus(InstanceService.insert(httpTransport, jsonFactory, credential, projectId, zone, instance, sync,
+        timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
-      if (sync) {
-        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
-        val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
-        val status = defaultIfEmpty(instance.getStatus, EMPTY)
-        val name = defaultIfEmpty(instance.getName, EMPTY)
+          if (sync) {
+            val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val networkInterfaces = Option(instance.getNetworkInterfaces).getOrElse(List[NetworkInterface]().asJava)
+            val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
+            val status = defaultIfEmpty(instance.getStatus, EMPTY)
+            val name = defaultIfEmpty(instance.getName, EMPTY)
 
-        resultMap +
-          (INSTANCE_ID -> instanceId) +
-          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (INSTANCE_NAME -> name) +
-          (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+            resultMap +
+              (INSTANCE_ID -> instanceId) +
+              (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+              (INSTANCE_NAME -> name) +
+              (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
+              (STATUS -> status)
+          } else {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

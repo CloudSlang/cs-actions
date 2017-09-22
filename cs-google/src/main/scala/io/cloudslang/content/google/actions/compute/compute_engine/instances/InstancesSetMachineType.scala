@@ -15,8 +15,8 @@ import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
-import io.cloudslang.content.google.utils.exceptions.OperationException
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -132,29 +132,33 @@ class InstancesSetMachineType {
 
       val machineTypeRequest = InstanceController.createMachineTypeRequest(machineType)
 
-      val operation = InstanceService.setMachineType(httpTransport, jsonFactory, credential, projectId, zone, instanceName, machineTypeRequest, sync, timeout, pollingIntervalMilli)
+      OperationStatus(InstanceService.restart(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync,
+        timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+            (ZONE_OPERATION_NAME -> operation.getName) +
+            (MACHINE_TYPE -> machineType)
 
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (ZONE_OPERATION_NAME -> operation.getName) +
-        (MACHINE_TYPE -> machineType)
+          if (sync) {
+            val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
+            val name = defaultIfEmpty(instance.getName, EMPTY)
+            val status = defaultIfEmpty(instance.getStatus, EMPTY)
 
-      if (sync) {
-        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
-        val name = defaultIfEmpty(instance.getName, EMPTY)
-        val status = defaultIfEmpty(instance.getStatus, EMPTY)
+            resultMap +
+              (INSTANCE_ID -> instanceId) +
+              (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+              (INSTANCE_NAME -> name) +
+              (STATUS -> status)
+          } else {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-        resultMap +
-          (INSTANCE_ID -> instanceId) +
-          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (INSTANCE_NAME -> name) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
-
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

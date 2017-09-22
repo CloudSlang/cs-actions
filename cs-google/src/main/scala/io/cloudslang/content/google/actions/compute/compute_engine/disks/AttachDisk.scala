@@ -17,6 +17,7 @@ import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMil
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -153,26 +154,31 @@ class AttachDisk {
         sourceOpt = Some(source),
         interfaceOpt = None)
 
-      val operation = InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName, attachedDisk, sync, timeout, pollingIntervalMilli)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+      OperationStatus(InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName,
+        attachedDisk, sync, timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
-      if (sync) {
-        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val name = defaultIfEmpty(instance.getName, EMPTY)
-        val status = defaultIfEmpty(instance.getStatus, EMPTY)
-        val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
+          if (sync) {
+            val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val name = defaultIfEmpty(instance.getName, EMPTY)
+            val status = defaultIfEmpty(instance.getStatus, EMPTY)
+            val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
 
-        resultMap +
-          (INSTANCE_NAME -> name) +
-          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (DISKS -> disksNames.mkString(COMMA)) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+            resultMap +
+              (INSTANCE_NAME -> name) +
+              (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+              (DISKS -> disksNames.mkString(COMMA)) +
+              (STATUS -> status)
+          } else {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

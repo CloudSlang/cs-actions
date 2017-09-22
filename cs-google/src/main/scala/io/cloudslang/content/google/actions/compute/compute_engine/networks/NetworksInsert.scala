@@ -17,6 +17,7 @@ import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMil
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -146,23 +147,27 @@ class NetworksInsert {
         autoCreateSubnetworks = autoCreateSubnetworks,
         ipV4Range = ipV4Range)
 
-      val operation = NetworkService.insert(httpTransport, jsonFactory, credential, projectId, computeNetwork, sync, timeout, pollingIntervalMilli)
-      val status = defaultIfEmpty(operation.getStatus, EMPTY)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (GLOBAL_OPERATION_NAME -> operation.getName) +
-        (STATUS -> status)
+      OperationStatus(NetworkService.insert(httpTransport, jsonFactory, credential, projectId, computeNetwork, sync, timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val status = defaultIfEmpty(operation.getStatus, EMPTY)
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+            (GLOBAL_OPERATION_NAME -> operation.getName) +
+            (STATUS -> status)
 
-      if (sync) {
-        val network = NetworkService.get(httpTransport, jsonFactory, credential, projectId, networkName)
-        val name = defaultIfEmpty(network.getName, EMPTY)
-        val networkId = Option(network.getId).getOrElse(BigInt(0)).toString
+          if (sync) {
+            val network = NetworkService.get(httpTransport, jsonFactory, credential, projectId, networkName)
+            val name = defaultIfEmpty(network.getName, EMPTY)
+            val networkId = Option(network.getId).getOrElse(BigInt(0)).toString
 
-        resultMap +
-          (NETWORK_NAME -> name) +
-          (NETWORK_ID -> networkId)
-      } else {
-        resultMap
+            resultMap +
+              (NETWORK_NAME -> name) +
+              (NETWORK_ID -> networkId)
+          } else {
+            resultMap
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

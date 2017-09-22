@@ -11,12 +11,13 @@ import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
 import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.{INSTANCE_DETAILS, STATUS, TAGS, ZONE_OPERATION_NAME}
-import io.cloudslang.content.google.utils.action.InputNames._
+import io.cloudslang.content.google.utils.action.GoogleOutputNames._
+import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME, _}
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.CollectionUtilities.toList
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
@@ -137,25 +138,29 @@ class InstancesSetTags {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val tags = new Tags().setItems(toList(tagsList, tagsDelimiter))
-      val operation = InstanceService.setTags(httpTransport, jsonFactory, credential, projectId, zone, instanceName, tags, sync, timeout, pollingIntervalMilli)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+      OperationStatus(InstanceService.setTags(httpTransport, jsonFactory, credential, projectId, zone, instanceName, tags, sync, timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
-      if (sync) {
-        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val name = defaultIfEmpty(instance.getName, EMPTY)
-        val status = defaultIfEmpty(instance.getStatus, EMPTY)
-        val tags = Option(instance.getTags.getItems).getOrElse(List().asJava)
+          if (sync) {
+            val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val name = defaultIfEmpty(instance.getName, EMPTY)
+            val status = defaultIfEmpty(instance.getStatus, EMPTY)
+            val tags = Option(instance.getTags.getItems).getOrElse(List().asJava)
 
-        resultMap +
-          (INSTANCE_NAME -> name) +
-          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (TAGS -> tags.mkString(COMMA)) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (INSTANCE_NAME -> name) +
+              (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+              (TAGS -> tags.mkString(COMMA)) +
+              (STATUS -> status)
+          } else {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
+            resultMap +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

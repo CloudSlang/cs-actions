@@ -16,6 +16,7 @@ import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMil
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -122,14 +123,18 @@ class InstancesDelete {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = InstanceService.delete(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync, timeout, pollingIntervalMilli)
-      val name = defaultIfEmpty(operation.getName, EMPTY)
-      val status = defaultIfEmpty(operation.getStatus, EMPTY)
+      OperationStatus(InstanceService.delete(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync,
+        timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val name = defaultIfEmpty(operation.getName, EMPTY)
+          val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-      getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (ZONE_OPERATION_NAME -> name) +
-        (INSTANCE_NAME -> instanceName) +
-        (STATUS -> status)
+          getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+            (ZONE_OPERATION_NAME -> name) +
+            (INSTANCE_NAME -> instanceName) +
+            (STATUS -> status)
+        case ErrorOperation(error) => getFailureResultsMap(error)
+      }
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

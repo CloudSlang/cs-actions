@@ -16,6 +16,7 @@ import io.cloudslang.content.google.utils.action.InputUtils._
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities._
 import io.cloudslang.content.utils.NumberUtilities._
 import io.cloudslang.content.utils.OutputUtilities._
@@ -123,24 +124,29 @@ class InstancesRestart {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val operation = InstanceService.restart(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync, timeout, pollingIntervalMilli)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
+      OperationStatus(InstanceService.restart(httpTransport, jsonFactory, credential, projectId, zone, instanceName, sync,
+        timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) + (ZONE_OPERATION_NAME -> operation.getName)
 
-      if (sync) {
-        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val name = defaultIfEmpty(instance.getName, EMPTY)
-        val status = defaultIfEmpty(instance.getStatus, EMPTY)
+          if (sync) {
+            val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val name = defaultIfEmpty(instance.getName, EMPTY)
+            val status = defaultIfEmpty(instance.getStatus, EMPTY)
 
-        resultMap +
-          (INSTANCE_NAME -> name) +
-          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+            resultMap +
+              (INSTANCE_NAME -> name) +
+              (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+              (STATUS -> status)
+          } else {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

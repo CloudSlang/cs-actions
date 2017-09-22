@@ -17,6 +17,7 @@ import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMil
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -201,28 +202,34 @@ class DisksInsert {
         licensesDel = licensesDel,
         diskSize = diskSize)
 
-      val operation = DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, sync, timeout, pollingIntervalMilli)
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (ZONE_OPERATION_NAME -> operation.getName) +
-        (ZONE -> zone) +
-        (DISK_NAME -> diskName)
+      OperationStatus(DiskService.insert(httpTransport, jsonFactory, credential, projectId, zone, computeDisk, sync,
+        timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+            (ZONE_OPERATION_NAME -> operation.getName) +
+            (ZONE -> zone) +
+            (DISK_NAME -> diskName)
 
-      if (sync) {
-        val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
-        val diskId = Option(disk.getId).getOrElse(BigInt(0)).toString
-        val status = defaultIfEmpty(disk.getStatus, EMPTY)
-        val diskSize = Option(disk.getSizeGb).getOrElse(0.toLong).toString
+          if (sync) {
+            val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, diskName)
+            val diskId = Option(disk.getId).getOrElse(BigInt(0)).toString
+            val status = defaultIfEmpty(disk.getStatus, EMPTY)
+            val diskSize = Option(disk.getSizeGb).getOrElse(0.toLong).toString
 
-        resultMap +
-          (DISK_ID -> diskId) +
-          (DISK_SIZE -> diskSize) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
+            resultMap +
+              (DISK_ID -> diskId) +
+              (DISK_SIZE -> diskSize) +
+              (STATUS -> status)
+          } else {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
