@@ -15,6 +15,7 @@ import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
+import io.cloudslang.content.google.utils.exceptions.OperationException
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
@@ -58,6 +59,8 @@ class InstancesSetMachineType {
     *                           Default: "8080"
     * @param proxyUsername      Optional - Proxy server user name.
     * @param proxyPasswordInp   Optional - Proxy server password associated with the <proxyUsername> input value.
+    * @param prettyPrintInp     Optional - Whether to format the resulting JSON.
+    *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation and the machineType of the instance if the <syncInp> is false.
     *         If <syncInp> is true the map will also contain the name of the instance, the details of the instance and
