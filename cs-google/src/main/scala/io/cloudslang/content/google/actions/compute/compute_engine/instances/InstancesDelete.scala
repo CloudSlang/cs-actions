@@ -47,7 +47,7 @@ class InstancesDelete {
     * @param asyncInp           Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
     *                           Default: "true"
-    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the syncInp is set to "true".
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the async input is set to "false".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
     *                           Default: "30"
