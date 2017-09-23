@@ -228,8 +228,6 @@ class DisksInsert {
           }
         case ErrorOperation(error) => getFailureResultsMap(error)
       }
-
-
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)
