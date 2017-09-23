@@ -51,7 +51,7 @@ class DisksDelete {
     *                           Valid values: Any positive number including 0.
     *                           Default: "30"
     * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
-    *                           is executed, if the sync input is set to "true".
+    *                           is executed, if the async input is set to "false".
     *                           Valid values: Any positive number including 0.
     *                           Default: "1"
     * @param proxyHost          Optional - Proxy server used to access the provider services.

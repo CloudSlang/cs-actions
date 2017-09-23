@@ -53,12 +53,12 @@ class NetworksInsert {
     * @param asyncInp                 Optional - Boolean specifying whether the operation to run sync or async.
     *                                 Valid values: "true", "false"
     *                                 Default: "true"
-    * @param timeoutInp               Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    * @param timeoutInp               Optional - The time, in seconds, to wait for a response if the async input is set to "false".
     *                                 If the value is 0, the operation will wait until zone operation progress is 100.
     *                                 Valid values: Any positive number including 0.
     *                                 Default: "30"
     * @param pollingIntervalInp       Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
-    *                                 is executed, if the sync input is set to "true".
+    *                                 is executed, if the async input is set to "false".
     *                                 Valid values: Any positive number including 0.
     *                                 Default: "1"
     * @param proxyHost                Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
@@ -71,7 +71,7 @@ class NetworksInsert {
     *                                 Valid values: "true", "false"
     *                                 Default: "true"
     * @return A map containing a GlobalOperation resource as returnResult, it's name as globalOperationName and the
-    *         status of the operation. If <syncInp> is set to true the map will also contain the name of the network
+    *         status of the operation. If <asyncInp> is set to false the map will also contain the name of the network
     *         and the network id.
     *         In case an exception occurs the failure message is provided.
     */

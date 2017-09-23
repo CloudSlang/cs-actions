@@ -92,7 +92,7 @@ class DisksInsert {
     *                             Valid values: Any positive number including 0.
     *                             Default: "30"
     * @param pollingIntervalInp   Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
-    *                             is executed, if the sync input is set to "true".
+    *                             is executed, if the async input is set to "false".
     *                             Valid values: Any positive number including 0.
     *                             Default: "1"
     * @param proxyHost            Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
@@ -105,8 +105,8 @@ class DisksInsert {
     *                             Valid values: "true", "false"
     *                             Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-    *         operation, zoneOperationName, zone, diskName and the status of the operation if the <syncInp> is false.
-    *         If <syncInp> is true the map will also contain the disk size, the disk id and the status of the operation
+    *         operation, zoneOperationName, zone, diskName and the status of the operation if the <asyncInp> is true.
+    *         If <asyncInp> is false the map will also contain the disk size, the disk id and the status of the operation
     *         will be replaced by the status of the disk.
     *         In case an exception occurs the failure message is provided.
     */
