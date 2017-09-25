@@ -118,11 +118,9 @@ class NetworksList {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val networkDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
-
       val resultList = NetworkService.list(httpTransport, jsonFactory, credential, projectId, filterOpt, orderByOpt)
         .map { network: Network => if (prettyPrint) network.toPrettyString else network.toString }
-        .mkString(SQR_LEFT_BRACKET, networkDelimiter, SQR_RIGHT_BRACKET)
+        .mkString(SQR_LEFT_BRACKET, if (prettyPrint) COMMA_NEW_LINE else COMMA, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
     } catch {
       case e: Throwable => getFailureResultsMap(e)

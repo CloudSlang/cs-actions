@@ -22,12 +22,12 @@ import io.cloudslang.content.google.utils.action.GoogleOutputNames.PASSWORD
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
+import io.cloudslang.content.google.utils.exceptions.OperationException
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
-import scala.collection.JavaConversions._
 import scala.concurrent.TimeoutException
 
 class InstancesResetWindowsPassword {
@@ -44,19 +44,22 @@ class InstancesResetWindowsPassword {
     *                           Example: "instance-1234"
     * @param accessToken        The access token returned by the GetAccessToken operation, with at least the
     *                           following scope: "https://www.googleapis.com/auth/compute".
-    * @param username           The username for which to reset the password. If the the username does not exist, it will
-    *                           be created.
+    * @param username           Specify a username. If the the username does not exist, it will be created.
+    *                           Format: Must start with a lowercase letter, followed by 1-31 lowercase letters, numbers,
+    *                           or underscores
+    *                           Note: The format is not enforced since it may change or special rules may be added or removed
+    *                           depending on the OS.
     * @param emailInp           Optional - The email for the username for which the password is reset.
     * @param syncTimeInp        Optional - The maximum number of seconds to allow to differ between the time on the client
     *                           and time on the server.
     *                           Valid values: Any positive number
     *                           Default: 300
-    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the async input is set to "false".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
     *                           Default: "30"
     * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation
-    *                           finished is executed, if the sync input is set to "true".
+    *                           finished is executed, if the async input is set to "false".
     *                           Valid values: Any positive number including 0.
     *                           Default: "1"
     * @param proxyHost          Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
@@ -123,14 +126,11 @@ class InstancesResetWindowsPassword {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
-        instanceName, username, emailOpt, syncTime, timeout, pollingInterval) match {
-        case Some(password) => getSuccessResultsMap(password) +
-          (PASSWORD -> password)
-        case _ => getFailureResultsMap(SYNC_TIME_EXCEPTION)
-      }
+      getSuccessResultsMap(WindowsService.resetWindowsPassword(httpTransport, jsonFactory, credential, projectId, zone,
+        instanceName, username, emailOpt, syncTime, timeout, pollingInterval))
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
+      case t: OperationException => getFailureResultsMap(t)
       case e: Throwable => getFailureResultsMap(e)
     }
   }

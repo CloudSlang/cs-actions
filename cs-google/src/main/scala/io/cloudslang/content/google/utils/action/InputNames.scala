@@ -81,7 +81,7 @@ object InputNames {
   final val SERVICE_ACCOUNT_EMAIL = "serviceAccountEmail"
   final val SERVICE_ACCOUNT_SCOPES = "serviceAccountScopes"
 
-  final val SYNC = "sync"
+  final val ASYNC = "async"
   final val POLLING_INTERVAL = "pollingInterval"
 
   final val USERNAME = "username"

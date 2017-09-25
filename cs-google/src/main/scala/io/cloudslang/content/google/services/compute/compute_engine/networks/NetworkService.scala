@@ -48,20 +48,22 @@ object NetworkService {
       .get(project, networkName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, network: Network, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, network: Network,
+             async: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .insert(project, network)
       .execute()
-    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, sync,
+    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, async,
       timeout, pollingInterval)
 
   }
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, networkName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, networkName: String,
+             async: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .delete(project, networkName)
       .execute()
-    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, sync,
+    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, async,
       timeout, pollingInterval)
 
   }
