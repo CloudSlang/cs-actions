@@ -21,7 +21,7 @@ import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, Succ
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
-import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty, equals => strEquals}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -87,7 +87,8 @@ class AttachDisk {
       new Output(INSTANCE_NAME),
       new Output(INSTANCE_DETAILS),
       new Output(DISKS),
-      new Output(STATUS)
+      new Output(STATUS),
+      new Output(DEVICE_NAME)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -169,12 +170,17 @@ class AttachDisk {
             val name = defaultIfEmpty(instance.getName, EMPTY)
             val status = defaultIfEmpty(instance.getStatus, EMPTY)
             val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
+            val deviceNameOut = Option(instance.getDisks).getOrElse(List().asJava)
+              .find(attachedDisk => strEquals(attachedDisk.getSource, source))
+              .map(_.getDeviceName)
+              .getOrElse(EMPTY)
 
             resultMap +
               (INSTANCE_NAME -> name) +
               (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
               (DISKS -> disksNames.mkString(COMMA)) +
-              (STATUS -> status)
+              (STATUS -> status) +
+              (DEVICE_NAME -> deviceNameOut)
           }
         case ErrorOperation(error) => getFailureResultsMap(error)
       }
