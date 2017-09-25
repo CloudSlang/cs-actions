@@ -4,7 +4,7 @@ import java.util
 
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.FALSE
+import io.cloudslang.content.constants.BooleanValues.TRUE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.{InstanceController, InstanceService}
@@ -15,8 +15,8 @@ import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
-import io.cloudslang.content.google.utils.exceptions.OperationException
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -42,15 +42,15 @@ class InstancesSetMachineType {
     * @param machineType        Full or partial URL of the machine type resource to use for this instance, in the format:
     *                           "zones/zone/machineTypes/machine-type".
     *                           Example: "zones/us-central1-f/machineTypes/n1-standard-1"
-    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    * @param asyncInp           Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
-    *                           Default: "false"
-    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    *                           Default: "true"
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the async input is set to "false".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
     *                           Default: "30"
     * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation
-    *                           finished is executed, if the sync input is set to "true".
+    *                           finished is executed, if the async input is set to "false".
     *                           Valid values: Any positive number including 0.
     *                           Default: "1"
     * @param proxyHost          Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
@@ -62,8 +62,8 @@ class InstancesSetMachineType {
     * @param prettyPrintInp     Optional - Whether to format the resulting JSON.
     *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-    *         operation, status of the ZoneOperation and the machineType of the instance if the <syncInp> is false.
-    *         If <syncInp> is true the map will also contain the name of the instance, the details of the instance and
+    *         operation, status of the ZoneOperation and the machineType of the instance if the <asyncInp> is true.
+    *         If <asyncInp> is false the map will also contain the name of the instance, the details of the instance and
     *         the status of the operation will be replaced by the status of the instance.
     *         In case an exception occurs the failure message is provided.
     */
@@ -89,7 +89,7 @@ class InstancesSetMachineType {
               @Param(value = INSTANCE_NAME, required = true) instanceName: String,
               @Param(value = MACHINE_TYPE, required = true) machineType: String,
 
-              @Param(value = SYNC) syncInp: String,
+              @Param(value = ASYNC) asyncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
 
@@ -103,14 +103,14 @@ class InstancesSetMachineType {
     val proxyPortStr = defaultIfEmpty(proxyPortInp, DEFAULT_PROXY_PORT)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
     val proxyPassword = defaultIfEmpty(proxyPasswordInp, EMPTY)
-    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(syncStr, SYNC) ++
+      validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
@@ -122,7 +122,7 @@ class InstancesSetMachineType {
 
       val proxyPort = toInteger(proxyPortStr)
       val prettyPrint = toBoolean(prettyPrintStr)
-      val sync = toBoolean(syncStr)
+      val async = toBoolean(asyncStr)
       val timeout = toLong(timeoutStr)
       val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
@@ -132,29 +132,33 @@ class InstancesSetMachineType {
 
       val machineTypeRequest = InstanceController.createMachineTypeRequest(machineType)
 
-      val operation = InstanceService.setMachineType(httpTransport, jsonFactory, credential, projectId, zone, instanceName, machineTypeRequest, sync, timeout, pollingIntervalMilli)
+      OperationStatus(InstanceService.setMachineType(httpTransport, jsonFactory, credential, projectId, zone, instanceName,
+        machineTypeRequest, async, timeout, pollingIntervalMilli)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+            (ZONE_OPERATION_NAME -> operation.getName) +
+            (MACHINE_TYPE -> machineType)
 
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (ZONE_OPERATION_NAME -> operation.getName) +
-        (MACHINE_TYPE -> machineType)
+          if (async) {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
 
-      if (sync) {
-        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
-        val name = defaultIfEmpty(instance.getName, EMPTY)
-        val status = defaultIfEmpty(instance.getStatus, EMPTY)
+            resultMap +
+              (STATUS -> status)
+          } else {
+            val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val instanceId = Option(instance.getId).getOrElse(BigInt(0)).toString
+            val name = defaultIfEmpty(instance.getName, EMPTY)
+            val status = defaultIfEmpty(instance.getStatus, EMPTY)
 
-        resultMap +
-          (INSTANCE_ID -> instanceId) +
-          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (INSTANCE_NAME -> name) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
-
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (INSTANCE_ID -> instanceId) +
+              (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+              (INSTANCE_NAME -> name) +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
+
     } catch {
       case t: TimeoutException => getFailureResultsMap(TIMEOUT_EXCEPTION, t)
       case e: Throwable => getFailureResultsMap(e)

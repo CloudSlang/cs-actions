@@ -17,11 +17,11 @@ import scala.language.postfixOps
   */
 object ComputeController {
   def awaitSuccessOperation(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
-                            zone: Option[String], operation: Operation, sync: Boolean, timeout: Long, pollingInterval: Long): Operation =
-    if (sync) {
-      Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation, pollingInterval), if (timeout == 0) Inf else timeout seconds)
-    } else {
+                            zone: Option[String], operation: Operation, async: Boolean, timeout: Long, pollingInterval: Long): Operation =
+    if (async) {
       operation
+    } else {
+      Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation, pollingInterval), if (timeout == 0) Inf else timeout seconds)
     }
 
   def updateOperationProgress(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
