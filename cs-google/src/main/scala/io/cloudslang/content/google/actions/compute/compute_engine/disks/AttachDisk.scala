@@ -74,8 +74,9 @@ class AttachDisk {
     *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation if the <asyncInp> is true. If <asyncInp> is false the map will also
-    *         contain the name of the instance, the details of the instance, including the attached disks and the status
-    *         of the operation will be replaced by the status of the instance.
+    *         contain the name of the instance, the details of the instance, including the attached disks and, the
+    *         device name of the newly attached disk, and the status of the operation will be replaced by the status of
+    *         the instance.
     *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Attach Disk",
