@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.{FALSE, TRUE}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskController
+import io.cloudslang.content.google.services.compute.compute_engine.disks.{DiskController, DiskService}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
 import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
@@ -167,11 +167,13 @@ class AttachDisk {
               (STATUS -> status)
           } else {
             val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, source.split("/").lastOption.getOrElse(EMPTY))
+
             val name = defaultIfEmpty(instance.getName, EMPTY)
             val status = defaultIfEmpty(instance.getStatus, EMPTY)
             val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
             val deviceNameOut = Option(instance.getDisks).getOrElse(List().asJava)
-              .find(attachedDisk => strEquals(attachedDisk.getSource, source))
+              .find(attachedDisk => strEquals(attachedDisk.getSource, disk.getSelfLink))
               .map(_.getDeviceName)
               .getOrElse(EMPTY)
 
