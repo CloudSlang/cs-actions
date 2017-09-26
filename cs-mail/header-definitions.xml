@@ -6,7 +6,7 @@
         <endLine> */</endLine>
         <afterEachLine> </afterEachLine>
         <firstLineDetectionPattern>/*</firstLineDetectionPattern>
-        <lastLineDetectionPattern> *79/</lastLineDetectionPattern>
+        <lastLineDetectionPattern> */</lastLineDetectionPattern>
         <allowBlankLines>false</allowBlankLines>
         <isMultiline>true</isMultiline>
         <padLines>false</padLines>
