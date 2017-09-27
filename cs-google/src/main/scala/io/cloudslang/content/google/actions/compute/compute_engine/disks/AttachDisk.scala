@@ -16,7 +16,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.{FALSE, TRUE}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
-import io.cloudslang.content.google.services.compute.compute_engine.disks.DiskController
+import io.cloudslang.content.google.services.compute.compute_engine.disks.{DiskController, DiskService}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
 import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
@@ -30,7 +30,7 @@ import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, Succ
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
-import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
+import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty, equals => strEquals}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -83,8 +83,9 @@ class AttachDisk {
     *                           Default: "true"
     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
     *         operation, status of the ZoneOperation if the <asyncInp> is true. If <asyncInp> is false the map will also
-    *         contain the name of the instance, the details of the instance, including the attached disks and the status
-    *         of the operation will be replaced by the status of the instance.
+    *         contain the name of the instance, the details of the instance, including the attached disks and the
+    *         device name of the newly attached disk, and the status of the operation will be replaced by the status of
+    *         the instance.
     *         In case an exception occurs the failure message is provided.
     */
   @Action(name = "Attach Disk",
@@ -96,7 +97,8 @@ class AttachDisk {
       new Output(INSTANCE_NAME),
       new Output(INSTANCE_DETAILS),
       new Output(DISKS),
-      new Output(STATUS)
+      new Output(STATUS),
+      new Output(DEVICE_NAME)
     ),
     responses = Array(
       new Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
@@ -175,15 +177,24 @@ class AttachDisk {
               (STATUS -> status)
           } else {
             val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val disk = DiskService.get(httpTransport, jsonFactory, credential, projectId, zone, source.split("/").lastOption.getOrElse(EMPTY))
+
             val name = defaultIfEmpty(instance.getName, EMPTY)
             val status = defaultIfEmpty(instance.getStatus, EMPTY)
             val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
+            val deviceNameOut = Option(instance.getDisks).getOrElse(List().asJava)
+              .find(attachedDisk => strEquals(attachedDisk.getSource, disk.getSelfLink))
+              .map(_.getDeviceName)
+              .getOrElse(EMPTY)
+
 
             resultMap +
               (INSTANCE_NAME -> name) +
               (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
               (DISKS -> disksNames.mkString(COMMA)) +
-              (STATUS -> status)
+              (STATUS -> status) +
+              (DEVICE_NAME -> deviceNameOut)
+
           }
         case ErrorOperation(error) => getFailureResultsMap(error)
       }
