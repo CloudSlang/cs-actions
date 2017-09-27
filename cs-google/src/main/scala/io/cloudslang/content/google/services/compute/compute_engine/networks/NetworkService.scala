@@ -1,3 +1,12 @@
+/*
+ * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
 package io.cloudslang.content.google.services.compute.compute_engine.networks
 
 import com.google.api.client.auth.oauth2.Credential
@@ -39,20 +48,22 @@ object NetworkService {
       .get(project, networkName)
       .execute()
 
-  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, network: Network, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+  def insert(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, network: Network,
+             async: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .insert(project, network)
       .execute()
-    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, sync,
+    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, async,
       timeout, pollingInterval)
 
   }
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, networkName: String, sync: Boolean, timeout: Long, pollingInterval: Long): Operation = {
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String, networkName: String,
+             async: Boolean, timeout: Long, pollingInterval: Long): Operation = {
     val operation = ComputeService.networksService(httpTransport, jsonFactory, credential)
       .delete(project, networkName)
       .execute()
-    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, sync,
+    ComputeController.awaitSuccessOperation(httpTransport, jsonFactory, credential, project, zone = None, operation, async,
       timeout, pollingInterval)
 
   }

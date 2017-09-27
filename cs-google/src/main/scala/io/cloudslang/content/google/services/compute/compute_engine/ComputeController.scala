@@ -1,3 +1,12 @@
+/*
+ * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
 package io.cloudslang.content.google.services.compute.compute_engine
 
 import com.google.api.client.auth.oauth2.Credential
@@ -17,11 +26,11 @@ import scala.language.postfixOps
   */
 object ComputeController {
   def awaitSuccessOperation(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
-                            zone: Option[String], operation: Operation, sync: Boolean, timeout: Long, pollingInterval: Long): Operation =
-    if (sync) {
-      Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation, pollingInterval), if (timeout == 0) Inf else timeout seconds)
-    } else {
+                            zone: Option[String], operation: Operation, async: Boolean, timeout: Long, pollingInterval: Long): Operation =
+    if (async) {
       operation
+    } else {
+      Await.result(updateOperationProgress(httpTransport, jsonFactory, credential, projectId, zone, operation, pollingInterval), if (timeout == 0) Inf else timeout seconds)
     }
 
   def updateOperationProgress(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,

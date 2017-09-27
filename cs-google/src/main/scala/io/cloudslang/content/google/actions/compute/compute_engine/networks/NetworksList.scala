@@ -1,3 +1,12 @@
+/*
+ * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
 package io.cloudslang.content.google.actions.compute.compute_engine.networks
 
 import java.util
@@ -109,11 +118,9 @@ class NetworksList {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val networkDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
-
       val resultList = NetworkService.list(httpTransport, jsonFactory, credential, projectId, filterOpt, orderByOpt)
         .map { network: Network => if (prettyPrint) network.toPrettyString else network.toString }
-        .mkString(SQR_LEFT_BRACKET, networkDelimiter, SQR_RIGHT_BRACKET)
+        .mkString(SQR_LEFT_BRACKET, if (prettyPrint) COMMA_NEW_LINE else COMMA, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
     } catch {
       case e: Throwable => getFailureResultsMap(e)

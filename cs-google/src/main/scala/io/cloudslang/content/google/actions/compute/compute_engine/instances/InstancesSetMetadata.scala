@@ -1,3 +1,12 @@
+/*
+ * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
 package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
@@ -5,18 +14,19 @@ import java.util
 import com.google.api.services.compute.model.Metadata.Items
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
-import io.cloudslang.content.constants.BooleanValues.FALSE
+import io.cloudslang.content.constants.BooleanValues.TRUE
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.{InstanceController, InstanceService}
 import io.cloudslang.content.google.utils.Constants.{COMMA, NEW_LINE, TIMEOUT_EXCEPTION}
 import io.cloudslang.content.google.utils.action.DefaultValues._
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.{INSTANCE_DETAILS, METADATA, STATUS, ZONE_OPERATION_NAME}
-import io.cloudslang.content.google.utils.action.InputNames._
+import io.cloudslang.content.google.utils.action.GoogleOutputNames._
+import io.cloudslang.content.google.utils.action.InputNames.{ZONE_OPERATION_NAME, _}
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.{ErrorOperation, OperationStatus, SuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
@@ -45,15 +55,15 @@ class InstancesSetMetadata {
     *                           itemsKeysList must be equal with the length of the itemsValuesList.
     * @param itemsDelimiterInp  The delimiter to split the <itemsKeysListInp> and <itemsValuesListInp>
     *                           Default: ','
-    * @param syncInp            Optional - Boolean specifying whether the operation to run sync or async.
+    * @param asyncInp           Optional - Boolean specifying whether the operation to run sync or async.
     *                           Valid values: "true", "false"
-    *                           Default: "false"
-    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    *                           Default: "true"
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the async input is set to "false".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
     *                           Default: "30"
     * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
-    *                           is executed, if the sync input is set to "true".
+    *                           is executed, if the async input is set to "false".
     *                           Valid values: Any positive number including 0.
     *                           Default: "1"
     * @param proxyHostInp       Optional - proxy server used to connect to Google Cloud API. If empty no proxy will
@@ -93,7 +103,7 @@ class InstancesSetMetadata {
               @Param(value = ITEMS_VALUES_LIST) itemsValuesListInp: String,
               @Param(value = ITEMS_DELIMITER) itemsDelimiterInp: String,
 
-              @Param(value = SYNC) syncInp: String,
+              @Param(value = ASYNC) asyncInp: String,
               @Param(value = TIMEOUT) timeoutInp: String,
               @Param(value = POLLING_INTERVAL) pollingIntervalInp: String,
 
@@ -111,14 +121,14 @@ class InstancesSetMetadata {
     val itemsValuesList = defaultIfEmpty(itemsValuesListInp, EMPTY)
     val itemsDelimiter = defaultIfEmpty(itemsDelimiterInp, DEFAULT_ITEMS_DELIMITER)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-    val syncStr = defaultIfEmpty(syncInp, FALSE)
+    val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
 
     val validationStream = validateProxyPort(proxyPortStr) ++
       validatePairedLists(itemsKeysList, itemsValuesList, itemsDelimiter, ITEMS_KEYS_LIST, ITEMS_VALUES_LIST) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(syncStr, SYNC) ++
+      validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
@@ -127,7 +137,7 @@ class InstancesSetMetadata {
     }
 
     try {
-      val sync = toBoolean(syncStr)
+      val async = toBoolean(asyncStr)
       val timeout = toLong(timeoutStr)
       val pollingInterval = convertSecondsToMilli(toDouble(pollingIntervalStr))
       val prettyPrint = toBoolean(prettyPrintStr)
@@ -138,26 +148,28 @@ class InstancesSetMetadata {
 
       val items: List[Items] = InstanceController.createMetadataItems(itemsKeysList, itemsValuesList, itemsDelimiter)
 
-      val operation = InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items, sync, timeout, pollingInterval)
+      OperationStatus(InstanceService.setMetadata(httpTransport, jsonFactory, credential, projectId, zone, instanceName, items, async, timeout, pollingInterval)) match {
+        case SuccessOperation(operation) =>
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
+            (ZONE_OPERATION_NAME -> operation.getName)
 
-      val resultMap = getSuccessResultsMap(toPretty(prettyPrint, operation)) +
-        (ZONE_OPERATION_NAME -> operation.getName)
+          if (async) {
+            val status = defaultIfEmpty(operation.getStatus, EMPTY)
+            resultMap +
+              (STATUS -> status)
+          } else {
+            val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
+            val status = defaultIfEmpty(instance.getStatus, EMPTY)
+            val name = defaultIfEmpty(instance.getName, EMPTY)
+            val metadata = Option(instance.getMetadata.getItems).getOrElse(List().asJava)
 
-      if (sync) {
-        val instance = InstanceService.get(httpTransport, jsonFactory, credential, projectId, zone, instanceName)
-        val status = defaultIfEmpty(instance.getStatus, EMPTY)
-        val name = defaultIfEmpty(instance.getName, EMPTY)
-        val metadata = Option(instance.getMetadata.getItems).getOrElse(List().asJava)
-
-        resultMap +
-          (INSTANCE_NAME -> name) +
-          (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
-          (METADATA -> metadata.map(toPretty(prettyPrint, _)).mkString(COMMA)) +
-          (STATUS -> status)
-      } else {
-        val status = defaultIfEmpty(operation.getStatus, EMPTY)
-        resultMap +
-          (STATUS -> status)
+            resultMap +
+              (INSTANCE_NAME -> name) +
+              (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
+              (METADATA -> metadata.map(toPretty(prettyPrint, _)).mkString(COMMA)) +
+              (STATUS -> status)
+          }
+        case ErrorOperation(error) => getFailureResultsMap(error)
       }
 
     } catch {

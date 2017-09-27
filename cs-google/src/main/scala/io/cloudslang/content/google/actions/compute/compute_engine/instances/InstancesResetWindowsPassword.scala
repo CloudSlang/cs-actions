@@ -1,3 +1,12 @@
+/*
+ * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
 package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
@@ -45,12 +54,12 @@ class InstancesResetWindowsPassword {
     *                           and time on the server.
     *                           Valid values: Any positive number
     *                           Default: 300
-    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the sync input is set to "true".
+    * @param timeoutInp         Optional - The time, in seconds, to wait for a response if the async input is set to "false".
     *                           If the value is 0, the operation will wait until zone operation progress is 100.
     *                           Valid values: Any positive number including 0.
     *                           Default: "30"
     * @param pollingIntervalInp Optional - The time, in seconds, to wait before a new request that verifies if the operation
-    *                           finished is executed, if the sync input is set to "true".
+    *                           finished is executed, if the async input is set to "false".
     *                           Valid values: Any positive number including 0.
     *                           Default: "1"
     * @param proxyHost          Optional - Proxy server used to connect to Google Cloud API. If empty no proxy will
