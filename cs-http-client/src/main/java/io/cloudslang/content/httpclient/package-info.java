@@ -1,12 +1,12 @@
-/*******************************************************************************
- * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ */
 /**
  *
  *     The 'Http Client' does an http request and a parsing of the response. It provides features like: http autentication, http secure, connection pool, cookies, proxy. To acomplish this it uses the third parties from Apache: HttpClient 4.3, HttpCore 4.3. It also uses the JCIFS library from the Samba for the 'NTLM' authentication.
