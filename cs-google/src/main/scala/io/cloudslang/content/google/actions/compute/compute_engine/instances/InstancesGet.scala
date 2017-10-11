@@ -11,6 +11,7 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
 
+import com.google.api.services.compute.model.NetworkInterface
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
@@ -69,7 +70,8 @@ class InstancesGet {
       new Output(RETURN_RESULT),
       new Output(INSTANCE_ID),
       new Output(INSTANCE_NAME),
-      new Output(IPS),
+      new Output(INTERNAL_IPS),
+      new Output(EXTERNAL_IPS),
       new Output(STATUS),
       new Output(METADATA),
       new Output(TAGS),
@@ -121,10 +123,15 @@ class InstancesGet {
       val name = defaultIfEmpty(instance.getName, EMPTY)
       val disksNames = Option(instance.getDisks).getOrElse(List().asJava).map(_.getDeviceName)
 
+      val accessConfigs = networkInterfaces
+        .flatMap((networkInterface: NetworkInterface) => Option(networkInterface.getAccessConfigs))
+        .map(_.get(0))
+
       getSuccessResultsMap(toPretty(prettyPrint, instance)) +
         (INSTANCE_ID -> instanceId) +
         (INSTANCE_NAME -> name) +
-        (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
+        (INTERNAL_IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
+        (EXTERNAL_IPS -> accessConfigs.map(_.getNatIP).mkString(COMMA)) +
         (STATUS -> status) +
         (METADATA -> metadata.map(toPretty(prettyPrint, _)).mkString(COMMA)) +
         (TAGS -> tags.mkString(COMMA)) +
