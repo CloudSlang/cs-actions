@@ -191,7 +191,8 @@ class InstancesInsert {
       new Output(EXCEPTION),
       new Output(ZONE_OPERATION_NAME),
       new Output(INSTANCE_NAME),
-      new Output(IPS),
+      new Output(INTERNAL_IPS),
+      new Output(EXTERNAL_IPS),
       new Output(STATUS)
 
     ),
@@ -385,11 +386,16 @@ class InstancesInsert {
             val status = defaultIfEmpty(instance.getStatus, EMPTY)
             val name = defaultIfEmpty(instance.getName, EMPTY)
 
+            val accessConfigs = networkInterfaces
+              .flatMap((networkInterface: NetworkInterface) => Option(networkInterface.getAccessConfigs))
+              .map(_.get(0))
+
             resultMap +
               (INSTANCE_ID -> instanceId) +
               (INSTANCE_DETAILS -> toPretty(prettyPrint, instance)) +
               (INSTANCE_NAME -> name) +
-              (IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
+              (INTERNAL_IPS -> networkInterfaces.map(_.getNetworkIP).mkString(COMMA)) +
+              (EXTERNAL_IPS -> accessConfigs.map(_.getNatIP).mkString(COMMA)) +
               (STATUS -> status)
           }
         case ErrorOperation(error) => getFailureResultsMap(error)
