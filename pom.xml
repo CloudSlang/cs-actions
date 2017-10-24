@@ -56,6 +56,7 @@
     <properties>
         <!--Maven versions-->
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
@@ -201,6 +202,15 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
                 </plugin>
+                <!-- you can run the checkstyle report via "mvn checkstyle:checkstyle" -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                    <configuration>
+                        <configLocation>${project.parent.basedir}/google-checkstyle-rules.xml</configLocation>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -239,6 +249,27 @@
             <!--</plugin>-->
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <!-- add checkstyle to project reports -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <configuration>
+                    <configLocation>${project.parent.basedir}/google-checkstyle-rules.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
         <profile>
