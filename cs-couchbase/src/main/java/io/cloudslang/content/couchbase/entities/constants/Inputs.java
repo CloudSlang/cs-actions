@@ -26,6 +26,7 @@ public class Inputs {
     public static class BucketInputs {
         public static final String BUCKET_NAME = "bucketName";
         public static final String BUCKET_TYPE = "bucketType";
+        public static final String BUCKETS = "buckets";
         public static final String CONFLICT_RESOLUTION_TYPE = "conflictResolutionType";
         public static final String COUCHBASE_PROXY_PORT = "couchbaseProxyPort";
         public static final String EVICTION_POLICY = "evictionPolicy";

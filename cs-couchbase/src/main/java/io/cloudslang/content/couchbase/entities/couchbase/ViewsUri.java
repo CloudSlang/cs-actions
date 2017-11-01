@@ -16,7 +16,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * 4/28/2017.
  */
 public enum ViewsUri {
-    GET_DESIGN_DOC_INFO("GetDesignDocsInfo", "/pools/default/buckets");
+    GET_DESIGN_DOC_INFO("GetDesignDocsInfo", "/buckets");
 
     private final String key;
     private final String value;
@@ -26,10 +26,10 @@ public enum ViewsUri {
         this.value = value;
     }
 
-    public static String getValue(String key) {
-        for (ViewsUri uri : ViewsUri.values()) {
+    public static String getViewsUriValue(String key) {
+        for (ViewsUri uri : values()) {
             if (uri.getKey().equalsIgnoreCase(key)) {
-                return uri.getValue();
+                return uri.getViewsUriValue();
             }
         }
 
@@ -40,7 +40,7 @@ public enum ViewsUri {
         return key;
     }
 
-    private String getValue() {
+    private String getViewsUriValue() {
         return value;
     }
 }

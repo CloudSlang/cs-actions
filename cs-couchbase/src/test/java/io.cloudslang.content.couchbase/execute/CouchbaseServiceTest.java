@@ -384,6 +384,21 @@ public class CouchbaseServiceTest {
         verify(csHttpClientMock, never()).execute(eq(httpClientInputs));
     }
 
+    @Test
+    public void testGetDestinationClusterReference() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("anonymous", "credentials", "", "",
+                "", "", "", "", "", "", "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetDestinationClusterReference", "cluster", "http://somewhere.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://somewhere.couchbase.com:8091/pools/default/remoteClusters", httpClientInputs.getUrl());
+        assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
     private CommonInputs getCommonInputs(String action, String api, String endpoint) {
         return new CommonInputs.Builder()
                 .withAction(action)

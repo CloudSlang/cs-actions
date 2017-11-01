@@ -31,7 +31,7 @@ public enum RecoveryType {
     }
 
     public static String getValue(String input) {
-        for (RecoveryType type : RecoveryType.values()) {
+        for (RecoveryType type : values()) {
             if (type.getValue().equalsIgnoreCase(input)) {
                 return type.getValue();
             }
