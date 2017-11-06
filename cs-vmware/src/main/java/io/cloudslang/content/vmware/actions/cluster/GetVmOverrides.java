@@ -26,6 +26,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_VM_NAME_OR_ID_OR_NONE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
@@ -84,18 +85,18 @@ public class GetVmOverrides {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
 
-    public Map<String, String> getVmOverrides(@Param(value = HOST, required = true) String host,
-                                              @Param(value = PORT) String port,
-                                              @Param(value = PROTOCOL) String protocol,
-                                              @Param(value = USERNAME, required = true) String username,
-                                              @Param(value = PASSWORD, encrypted = true, required = true) String password,
-                                              @Param(value = TRUST_EVERYONE) String trustEveryone,
-                                              @Param(value = CLOSE_SESSION) String closeSession,
-                                              @Param(value = HOSTNAME, required = true) String hostname,
-                                              @Param(value = VM_NAME) String virtualMachineName,
-                                              @Param(value = VM_ID) String virtualMachineId,
-                                              @Param(value = CLUSTER_NAME, required = true) String clusterName,
-                                              @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
+    public static Map<String, String> getVmOverrides(@Param(value = HOST, required = true) String host,
+                                                     @Param(value = PORT) String port,
+                                                     @Param(value = PROTOCOL) String protocol,
+                                                     @Param(value = USERNAME, required = true) String username,
+                                                     @Param(value = PASSWORD, encrypted = true, required = true) String password,
+                                                     @Param(value = TRUST_EVERYONE) String trustEveryone,
+                                                     @Param(value = CLOSE_SESSION) String closeSession,
+                                                     @Param(value = HOSTNAME, required = true) String hostname,
+                                                     @Param(value = VM_NAME) String virtualMachineName,
+                                                     @Param(value = VM_ID) String virtualMachineId,
+                                                     @Param(value = CLUSTER_NAME, required = true) String clusterName,
+                                                     @Param(value = VMWARE_GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Connection>> globalSessionObject) {
         try {
             final HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
                     .withHost(host)
@@ -103,7 +104,7 @@ public class GetVmOverrides {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, FALSE))
                     .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();

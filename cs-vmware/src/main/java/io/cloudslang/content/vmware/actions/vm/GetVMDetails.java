@@ -16,6 +16,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.constants.Outputs;
@@ -89,7 +90,7 @@ public class GetVMDetails {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, BooleanValues.FALSE))
                     .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();

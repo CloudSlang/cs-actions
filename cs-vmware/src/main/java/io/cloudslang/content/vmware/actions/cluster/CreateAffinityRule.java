@@ -26,6 +26,7 @@ import io.cloudslang.content.vmware.utils.InputUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.ErrorMessages.PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
@@ -105,7 +106,7 @@ public class CreateAffinityRule {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, FALSE))
                     .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();

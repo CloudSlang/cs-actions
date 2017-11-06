@@ -25,6 +25,7 @@ import io.cloudslang.content.vmware.services.VmService;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.vmware.constants.Inputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -87,7 +88,7 @@ public class PowerOffVM {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withTrustEveryone(defaultIfEmpty(trustEveryone, TRUE))
+                    .withTrustEveryone(defaultIfEmpty(trustEveryone, FALSE))
                     .withCloseSession(defaultIfEmpty(closeSession, TRUE))
                     .withGlobalSessionObject(globalSessionObject)
                     .build();
