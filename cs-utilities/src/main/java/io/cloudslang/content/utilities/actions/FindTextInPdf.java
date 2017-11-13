@@ -17,7 +17,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utilities.services.PdfParseService;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -27,19 +28,17 @@ import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.utilities.entities.constants.Descriptions.InputsDescription.DEFAULT_VALUE_DESC;
-import static io.cloudslang.content.utilities.entities.constants.Descriptions.InputsDescription.INITIAL_VALUE_DESC;
+import static io.cloudslang.content.utilities.entities.constants.Descriptions.InputsDescription.*;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.OperationDescription.FIND_TEXT_IN_PDF_OPERATION_DESC;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.*;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.ResultsDescription.FAILURE_DESC;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.ResultsDescription.SUCCESS_DESC;
-import static io.cloudslang.content.utilities.entities.constants.Inputs.PATH_TO_FILE;
-import static io.cloudslang.content.utilities.entities.constants.Inputs.TEXT;
+import static io.cloudslang.content.utilities.entities.constants.Inputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.String.valueOf;
-import static org.apache.commons.lang.StringUtils.countMatches;
 import static org.apache.commons.lang3.BooleanUtils.toBoolean;
+import static org.apache.commons.lang3.StringUtils.countMatches;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -74,12 +73,12 @@ public class FindTextInPdf {
             })
     public Map<String, String> execute(
             @Param(value = TEXT, required = true, description = INITIAL_VALUE_DESC) String text,
-            @Param(value = TEXT, description = INITIAL_VALUE_DESC) String ignoreCase,
+            @Param(value = IGNORE_CASE, description = IGNORE_CASE_DESC) String ignoreCase,
             @Param(value = PATH_TO_FILE, required = true, description = DEFAULT_VALUE_DESC) String pathToFile) {
 
         try {
-            final File file = new File(pathToFile);
-            final String pdfContent = PdfParseService.getPdfContent(text, file).trim().replace("\n", "");
+            final Path path = Paths.get(pathToFile);
+            final String pdfContent = PdfParseService.getPdfContent(path).trim().replace("\r\n", "");
             final boolean validIgnoreCase = toBoolean(defaultIfEmpty(ignoreCase, FALSE));
 
             if (validIgnoreCase)

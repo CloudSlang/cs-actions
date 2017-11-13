@@ -10,32 +10,19 @@
 
 package io.cloudslang.content.utilities.services;
 
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.pdf.PDFParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.jetbrains.annotations.NotNull;
-import org.xml.sax.SAXException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Created by marisca on 7/11/2017.
  */
 public class PdfParseService {
 
-    public static String getPdfContent(@NotNull final String content, final File file) throws IOException, TikaException, SAXException {
-        final BodyContentHandler handler = new BodyContentHandler();
-        final Metadata metadata = new Metadata();
-        final FileInputStream inputStream = new FileInputStream(file);
-        final ParseContext context = new ParseContext();
-
-        final PDFParser pdfparser = new PDFParser();
-        pdfparser.parse(inputStream, handler, metadata, context);
-
-        return handler.toString();
+    public static String getPdfContent(final Path path) throws IOException {
+        final PDDocument document = PDDocument.load(path.toFile());
+        return new PDFTextStripper().getText(document);
     }
 }

@@ -22,6 +22,7 @@ public class Descriptions {
 
     public static class InputsDescription {
         public static final String INITIAL_VALUE_DESC = "The initial string.";
+        public static final String IGNORE_CASE_DESC = "A variable used to check if the comparison should ignore the case of the letters.";
         public static final String DEFAULT_VALUE_DESC = "The default value used to replace the initial string.";
         public static final String TRIM_DESC = "A variable used to check if the initial string is blank or empty.";
     }

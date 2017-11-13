@@ -19,5 +19,6 @@ public class Inputs {
     public static final String DEFAULT_VALUE = "defaultValue";
     public static final String TRIM = "trim";
     public static final String TEXT = "text";
+    public static final String IGNORE_CASE = "ignoreCase";
     public static final String PATH_TO_FILE = "pathToFile";
 }
