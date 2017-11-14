@@ -25,6 +25,7 @@ public class Descriptions {
         public static final String IGNORE_CASE_DESC = "A variable used to check if the comparison should ignore the case of the letters.";
         public static final String DEFAULT_VALUE_DESC = "The default value used to replace the initial string.";
         public static final String TRIM_DESC = "A variable used to check if the initial string is blank or empty.";
+        public static final String PASSWORD_DESC = "Password used to decrypt the PDF file.";
     }
 
     public static class OutputsDescription {

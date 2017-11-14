@@ -21,8 +21,18 @@ import java.nio.file.Path;
  */
 public class PdfParseService {
 
-    public static String getPdfContent(final Path path) throws IOException {
-        final PDDocument document = PDDocument.load(path.toFile());
-        return new PDFTextStripper().getText(document);
+    public static String getPdfContent(final Path path, final String password) throws IOException {
+        final PDDocument document;
+
+        if (password.isEmpty()) {
+            document = PDDocument.load(path.toFile());
+        } else {
+            document = PDDocument.load(path.toFile(), password);
+        }
+
+        final String pdfContent = new PDFTextStripper().getText(document);
+        document.close();
+
+        return pdfContent;
     }
 }

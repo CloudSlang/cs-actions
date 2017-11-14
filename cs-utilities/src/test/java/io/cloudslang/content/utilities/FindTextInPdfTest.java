@@ -38,7 +38,7 @@ public class FindTextInPdfTest {
             URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-1.pdf");
             if (resource != null) {
                 File file = new File(resource.toURI());
-                final Map<String, String> result = findTextInPdf.execute("This", "false", file.toString());
+                final Map<String, String> result = findTextInPdf.execute("This", "false", file.toString(), "");
                 assertEquals(SUCCESS, result.get(RETURN_CODE));
                 assertEquals("1", result.get(RETURN_RESULT));
             }
@@ -53,7 +53,7 @@ public class FindTextInPdfTest {
             URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-1.pdf");
             if (resource != null) {
                 File file = new File(resource.toURI());
-                final Map<String, String> result = findTextInPdf.execute("This", "true", file.toString());
+                final Map<String, String> result = findTextInPdf.execute("This", "true", file.toString(), "");
                 assertEquals(SUCCESS, result.get(RETURN_CODE));
                 assertEquals("3", result.get(RETURN_RESULT));
             }
@@ -68,7 +68,7 @@ public class FindTextInPdfTest {
             URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-1.pdf");
             if (resource != null) {
                 File file = new File(resource.toURI());
-                final Map<String, String> result = findTextInPdf.execute("Most PDF readers have the ability to link", "false", file.toString());
+                final Map<String, String> result = findTextInPdf.execute("Most PDF readers have the ability to link", "false", file.toString(), "");
                 assertEquals(SUCCESS, result.get(RETURN_CODE));
                 assertEquals("1", result.get(RETURN_RESULT));
             }
@@ -83,7 +83,7 @@ public class FindTextInPdfTest {
             URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-1.pdf");
             if (resource != null) {
                 File file = new File(resource.toURI());
-                final Map<String, String> result = findTextInPdf.execute("This content will not be found", "false", file.toString());
+                final Map<String, String> result = findTextInPdf.execute("This content will not be found", "false", file.toString(), "");
                 assertEquals(SUCCESS, result.get(RETURN_CODE));
                 assertEquals("0", result.get(RETURN_RESULT));
             }
@@ -98,7 +98,7 @@ public class FindTextInPdfTest {
             URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-1.pdf");
             if (resource != null) {
                 File file = new File(resource.toURI());
-                final Map<String, String> result = findTextInPdf.execute("This", "false", file.toString() + ".wrong");
+                final Map<String, String> result = findTextInPdf.execute("This", "false", file.toString() + ".wrong", "");
                 System.out.println(result);
                 assertEquals(FAILURE, result.get(RETURN_CODE));
             }
@@ -113,7 +113,7 @@ public class FindTextInPdfTest {
             URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-1.pdf");
             if (resource != null) {
                 File file = new File(resource.toURI());
-                final Map<String, String> result = findTextInPdf.execute("Vertical text, such as this, should still be recognized", "false", file.toString());
+                final Map<String, String> result = findTextInPdf.execute("Vertical text, such as this, should still be recognized", "false", file.toString(), "");
                 assertEquals(SUCCESS, result.get(RETURN_CODE));
                 assertEquals("1", result.get(RETURN_RESULT));
             }
@@ -128,7 +128,7 @@ public class FindTextInPdfTest {
             URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-1.pdf");
             if (resource != null) {
                 File file = new File(resource.toURI());
-                final Map<String, String> result = findTextInPdf.execute("Even if the text isn't in the main body of the page, such as a footnote", "false", file.toString());
+                final Map<String, String> result = findTextInPdf.execute("Even if the text isn't in the main body of the page, such as a footnote", "false", file.toString(), "");
                 assertEquals(SUCCESS, result.get(RETURN_CODE));
                 assertEquals("1", result.get(RETURN_RESULT));
             }
@@ -142,9 +142,35 @@ public class FindTextInPdfTest {
         try {
             URI resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf").toURI();
             File file = new File(resource);
-            final Map<String, String> result = findTextInPdf.execute("CloudSlang logo", "false", file.toString());
+            final Map<String, String> result = findTextInPdf.execute("CloudSlang logo", "false", file.toString(), "");
             assertEquals(SUCCESS, result.get(RETURN_CODE));
             assertEquals("1", result.get(RETURN_RESULT));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void samplePdfSuccessfulTestPasswordProtected() {
+        try {
+            URI resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf").toURI();
+            File file = new File(resource);
+            final Map<String, String> result = findTextInPdf.execute("sample", "false", file.toString(), "a1s2d3f4g5h");
+            assertEquals(SUCCESS, result.get(RETURN_CODE));
+            assertEquals("1", result.get(RETURN_RESULT));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void samplePdfFailureTestInvalidPassword() {
+        try {
+            URI resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf").toURI();
+            File file = new File(resource);
+            final Map<String, String> result = findTextInPdf.execute("sample", "false", file.toString(), "invalid-pass");
+            assertEquals(FAILURE, result.get(RETURN_CODE));
+            assertEquals("Cannot decrypt PDF, the password is incorrect", result.get(RETURN_RESULT));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

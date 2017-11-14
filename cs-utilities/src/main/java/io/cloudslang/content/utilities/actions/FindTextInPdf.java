@@ -47,13 +47,14 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class FindTextInPdf {
 
     /**
-     * This operation checks if a texgiit input is found in a PDF file.
+     * This operation checks if a text input is found in a PDF file.
      *
      * @param text       The text to be searched for in the PDF file.
      * @param ignoreCase Whether to ignore if characters of the text are lowercase or uppercase.
      *                   Valid values: "true", "false". For any other value the ignoreCase will be set to "false".
      *                   Default Value: "false"
      * @param pathToFile The full path to the PDF file.
+     * @param password   The password for the PDF file.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - The number of occurrences of the text in the PDF file.
      * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -74,11 +75,13 @@ public class FindTextInPdf {
     public Map<String, String> execute(
             @Param(value = TEXT, required = true, description = INITIAL_VALUE_DESC) String text,
             @Param(value = IGNORE_CASE, description = IGNORE_CASE_DESC) String ignoreCase,
-            @Param(value = PATH_TO_FILE, required = true, description = DEFAULT_VALUE_DESC) String pathToFile) {
+            @Param(value = PATH_TO_FILE, required = true, description = DEFAULT_VALUE_DESC) String pathToFile,
+            @Param(value = PASSWORD, description = PASSWORD_DESC, encrypted = true) String password) {
 
         try {
             final Path path = Paths.get(pathToFile);
-            final String pdfContent = PdfParseService.getPdfContent(path).trim().replace(System.lineSeparator(), "");
+            final String pdfPassword = defaultIfEmpty(password, "");
+            final String pdfContent = PdfParseService.getPdfContent(path, pdfPassword).trim().replace(System.lineSeparator(), "");
             final boolean validIgnoreCase = toBoolean(defaultIfEmpty(ignoreCase, FALSE));
 
             if (validIgnoreCase)
