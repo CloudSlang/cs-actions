@@ -47,7 +47,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class FindTextInPdf {
 
     /**
-     * This operation checks if a text input is found in a PDF file.
+     * This operation checks if a texgiit input is found in a PDF file.
      *
      * @param text       The text to be searched for in the PDF file.
      * @param ignoreCase Whether to ignore if characters of the text are lowercase or uppercase.
@@ -78,7 +78,7 @@ public class FindTextInPdf {
 
         try {
             final Path path = Paths.get(pathToFile);
-            final String pdfContent = PdfParseService.getPdfContent(path).trim().replace("\r\n", "");
+            final String pdfContent = PdfParseService.getPdfContent(path).trim().replace(System.lineSeparator(), "");
             final boolean validIgnoreCase = toBoolean(defaultIfEmpty(ignoreCase, FALSE));
 
             if (validIgnoreCase)
