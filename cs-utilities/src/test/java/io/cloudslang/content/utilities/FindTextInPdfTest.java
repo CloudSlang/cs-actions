@@ -101,7 +101,6 @@ public class FindTextInPdfTest {
                 final Map<String, String> result = findTextInPdf.execute("This", "false", file.toString() + ".wrong");
                 System.out.println(result);
                 assertEquals(FAILURE, result.get(RETURN_CODE));
-                assertTrue(result.get(RETURN_RESULT).contains("The system cannot find the file specified"));
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
