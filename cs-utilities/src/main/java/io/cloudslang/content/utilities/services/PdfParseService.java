@@ -16,23 +16,30 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static java.lang.String.valueOf;
+import static org.apache.commons.lang3.StringUtils.countMatches;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 /**
  * Created by marisca on 7/11/2017.
  */
 public class PdfParseService {
 
     public static String getPdfContent(final Path path, final String password) throws IOException {
-        final PDDocument document;
-
-        if (password.isEmpty()) {
-            document = PDDocument.load(path.toFile());
-        } else {
-            document = PDDocument.load(path.toFile(), password);
+        try (final PDDocument document = getPdfDocument(path, password)) {
+            return new PDFTextStripper().getText(document);
         }
+    }
 
-        final String pdfContent = new PDFTextStripper().getText(document);
-        document.close();
+    private static PDDocument getPdfDocument(final Path path, final String password) throws IOException {
+        if (isEmpty(password))
+            return PDDocument.load(path.toFile());
+        return PDDocument.load(path.toFile(), password);
+    }
 
-        return pdfContent;
+    public static String getOccurrences(final String pdfContent, final String text, boolean ignoreCase) {
+        if (ignoreCase)
+            return valueOf(countMatches(pdfContent.toLowerCase(), text.toLowerCase()));
+        return valueOf(countMatches(pdfContent, text));
     }
 }

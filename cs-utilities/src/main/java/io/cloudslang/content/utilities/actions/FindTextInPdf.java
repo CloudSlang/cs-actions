@@ -16,6 +16,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utilities.services.PdfParseService;
+import io.cloudslang.content.utils.BooleanUtilities;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +25,6 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
@@ -36,9 +36,9 @@ import static io.cloudslang.content.utilities.entities.constants.Descriptions.Re
 import static io.cloudslang.content.utilities.entities.constants.Inputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static java.lang.String.valueOf;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.BooleanUtils.toBoolean;
-import static org.apache.commons.lang3.StringUtils.countMatches;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -51,7 +51,7 @@ public class FindTextInPdf {
      *
      * @param text       The text to be searched for in the PDF file.
      * @param ignoreCase Whether to ignore if characters of the text are lowercase or uppercase.
-     *                   Valid values: "true", "false". For any other value the ignoreCase will be set to "false".
+     *                   Valid values: "true", "false".
      *                   Default Value: "false"
      * @param pathToFile The full path to the PDF file.
      * @param password   The password for the PDF file.
@@ -80,14 +80,14 @@ public class FindTextInPdf {
 
         try {
             final Path path = Paths.get(pathToFile);
-            final String pdfPassword = defaultIfEmpty(password, "");
-            final String pdfContent = PdfParseService.getPdfContent(path, pdfPassword).trim().replace(System.lineSeparator(), "");
-            final boolean validIgnoreCase = toBoolean(defaultIfEmpty(ignoreCase, FALSE));
+            final String pdfPassword = defaultIfEmpty(password, EMPTY);
+            final String pdfContent = PdfParseService.getPdfContent(path, pdfPassword).trim().replace(System.lineSeparator(), EMPTY);
+            final boolean validIgnoreCase = BooleanUtilities.isValid(ignoreCase);
+            if (!validIgnoreCase) {
+                throw new RuntimeException(format("Invalid boolean value for ignoreCase parameter: %s", ignoreCase));
+            }
 
-            if (validIgnoreCase)
-                return getSuccessResultsMap(valueOf(countMatches(pdfContent.toLowerCase(), text.toLowerCase())));
-
-            return getSuccessResultsMap(valueOf(countMatches(pdfContent, text)));
+            return getSuccessResultsMap(PdfParseService.getOccurrences(pdfContent, text, toBoolean(ignoreCase)));
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
