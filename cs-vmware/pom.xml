@@ -1,40 +1,32 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <!--
-        (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
-        All rights reserved. This program and the accompanying materials
-        are made available under the terms of the Apache License v2.0 which accompany this distribution.
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-        The Apache License is available at
-        http://www.apache.org/licenses/LICENSE-2.0
-    -->
+    <modelVersion>4.0.0</modelVersion>
+
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-vmware</artifactId>
     <version>0.0.20-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>VMware java actions</description>
+    <description>VMWare Java actions</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
     <scm>
         <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
         <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
-    <developers>
-        <developer>
-            <name>Mihail Cristian Tusa</name>
-            <email>tusa.mihai@gmail.com</email>
-            <organization>CloudSlang contributor</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-    </developers>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -47,19 +39,50 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>Mihail Cristian Tusa</name>
+            <email>tusa.mihai@gmail.com</email>
+            <organization>CloudSlang contributor</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+    </developers>
+
+    <properties>
+        <!--Maven versions-->
+        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <license-maven-plugin.version>3.0</license-maven-plugin.version>
+        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+        <!--Dependencies versions-->
+        <score-content-sdk.version>1.10.6</score-content-sdk.version>
+        <cs-commons.version>0.0.4</cs-commons.version>
+        <jackson-databind.version>2.8.2</jackson-databind.version>
+        <commons-compress.version>1.12</commons-compress.version>
+        <commons-io.version>2.5</commons-io.version>
+        <gson.version>2.7</gson.version>
+        <!--Misc properties-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <custom.nexus>overwritten_by_ci</custom.nexus>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
-            <version>1.10.6</version>
+            <version>${score-content-sdk.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
-            <version>0.0.4</version>
+            <version>${cs-commons.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.vmware</groupId>
             <artifactId>vim25</artifactId>
@@ -67,29 +90,25 @@
             <scope>system</scope>
             <systemPath>${vmware_path}vim25-1.0.jar</systemPath>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.8.2</version>
+            <version>${jackson-databind.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.12</version>
+            <version>${commons-compress.version}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>${commons-io.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.7</version>
+            <version>${gson.version}</version>
         </dependency>
 
         <!--Testing dependencies-->
@@ -99,7 +118,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
@@ -118,21 +136,18 @@
             <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
             <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-reflect</artifactId>
             <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
@@ -145,18 +160,49 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.8</version>
-                </plugin>
-                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>${maven-source-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
-                            <phase>DISABLE_FORKED_LIFECYCLE_MSOURCES-13</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -196,19 +242,11 @@
                     </dependency>
                 </dependencies>
             </plugin>-->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
             <!--License checker for build-->
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
+                <version>${license-maven-plugin.version}</version>
                 <configuration>
                     <header>${project.basedir}/license.template</header>
                     <headerDefinitions>
@@ -238,6 +276,7 @@
             </plugin>
         </plugins>
     </build>
+
     <profiles>
         <profile>
             <id>windows</id>
@@ -258,21 +297,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.1</version>
-                    </plugin>
-                    <plugin>
-                        <inherited>true</inherited>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources-no-fork</id>
-                                <inherited>true</inherited>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <version>${maven-deploy-plugin.version}</version>
                     </plugin>
                 </plugins>
             </build>
@@ -296,92 +321,29 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.1</version>
-                    </plugin>
-                    <plugin>
-                        <inherited>true</inherited>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources-no-fork</id>
-                                <inherited>true</inherited>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <version>${maven-deploy-plugin.version}</version>
                     </plugin>
                 </plugins>
             </build>
         </profile>
         <profile>
-            <id>release-internal-profile</id>
+            <id>deploy-internal</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.2</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.1</version>
-                    </plugin>
-                    <plugin>
-                        <inherited>true</inherited>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
+                        <version>${maven-deploy-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>attach-sources-no-fork</id>
-                                <inherited>true</inherited>
+                                <id>custom-deployment-to-nexus</id>
                                 <goals>
-                                    <goal>jar-no-fork</goal>
+                                    <goal>deploy</goal>
                                 </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>release-external-profile</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.2</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.1</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.3</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
+                                <phase>deploy</phase>
+                                <configuration>
+                                    <altDeploymentRepository>${custom.nexus}</altDeploymentRepository>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
