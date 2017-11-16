@@ -36,7 +36,7 @@ public enum BucketType {
             return MEMCACHED.getValue();
         }
 
-        for (BucketType bucket : BucketType.values()) {
+        for (BucketType bucket : values()) {
             if (bucket.getValue().equalsIgnoreCase(input)) {
                 return bucket.getValue();
             }

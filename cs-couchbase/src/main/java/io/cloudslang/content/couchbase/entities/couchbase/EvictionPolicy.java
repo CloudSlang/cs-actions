@@ -36,7 +36,7 @@ public enum EvictionPolicy {
             return VALUE_ONLY.getValue();
         }
 
-        for (EvictionPolicy policy : EvictionPolicy.values()) {
+        for (EvictionPolicy policy : values()) {
             if (policy.getValue().equalsIgnoreCase(input)) {
                 return policy.getValue();
             }

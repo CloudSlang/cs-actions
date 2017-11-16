@@ -11,9 +11,13 @@ package io.cloudslang.content.couchbase.factory.buckets;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_ALL_BUCKETS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.DELETE_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.SLASH;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKETS;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -25,14 +29,19 @@ public class BucketsUriFactory {
         // prevent instantiation
     }
 
-    public static String getBucketsUri(InputsWrapper wrapper) {
-        switch (wrapper.getCommonInputs().getAction()) {
+    public static String getBucketsUriValue(InputsWrapper wrapper) {
+        String action = wrapper.getCommonInputs().getAction();
+        switch (action) {
+            case CREATE_OR_EDIT_BUCKET:
+                return BUCKETS;
+            case GET_ALL_BUCKETS:
+                return BUCKETS;
             case GET_BUCKET:
-                return wrapper.getBucketInputs().getBucketName();
+                return BUCKETS + SLASH + wrapper.getBucketInputs().getBucketName();
             case GET_BUCKET_STATISTICS:
-                return wrapper.getBucketInputs().getBucketName();
+                return BUCKETS + SLASH + wrapper.getBucketInputs().getBucketName();
             case DELETE_BUCKET:
-                return wrapper.getBucketInputs().getBucketName();
+                return BUCKETS + SLASH + wrapper.getBucketInputs().getBucketName();
             default:
                 return EMPTY;
         }

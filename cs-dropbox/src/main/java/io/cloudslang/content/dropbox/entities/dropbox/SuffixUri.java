@@ -30,7 +30,7 @@ public enum SuffixUri {
     }
 
     public static String getSuffixUri(String key) {
-        for (SuffixUri suffixUri : SuffixUri.values()) {
+        for (SuffixUri suffixUri : values()) {
             if (suffixUri.getKey().equalsIgnoreCase(key)) {
                 return suffixUri.getValue();
             }

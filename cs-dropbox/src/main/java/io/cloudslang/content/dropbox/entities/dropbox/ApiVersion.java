@@ -25,7 +25,7 @@ public enum ApiVersion {
     }
 
     public static String getApiVersion(String key) {
-        for (ApiVersion version : ApiVersion.values()) {
+        for (ApiVersion version : values()) {
             if (version.name().equalsIgnoreCase(key)) {
                 return version.getValue();
             }

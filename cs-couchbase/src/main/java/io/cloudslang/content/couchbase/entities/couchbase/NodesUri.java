@@ -16,9 +16,9 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * 5/9/2017.
  */
 public enum NodesUri {
-    FAIL_OVER_NODE("FailOverNode", "/controller/failOver"),
-    GRACEFUL_FAIL_OVER_NODE("GracefulFailOverNode", "/controller/startGracefulFailover"),
-    SET_RECOVERY_TYPE("SetRecoveryType", "/controller/setRecoveryType");
+    FAIL_OVER("FailOverNode", "/failOver"),
+    GRACEFUL_FAIL_OVER("GracefulFailOverNode", "/startGracefulFailover"),
+    SET_RECOVERY_TYPE("SetRecoveryType", "/setRecoveryType");
 
     private final String key;
     private final String value;
@@ -28,10 +28,10 @@ public enum NodesUri {
         this.value = value;
     }
 
-    public static String getValue(String key) {
-        for (NodesUri uri : NodesUri.values()) {
+    public static String getNodesUriValue(String key) {
+        for (NodesUri uri : values()) {
             if (uri.getKey().equalsIgnoreCase(key)) {
-                return uri.getValue();
+                return uri.getNodesUriValue();
             }
         }
 
@@ -42,7 +42,7 @@ public enum NodesUri {
         return key;
     }
 
-    private String getValue() {
+    private String getNodesUriValue() {
         return value;
     }
 }
