@@ -31,6 +31,8 @@ public class RemoteSecureCopyInputs {
     private String knownHostsPolicy;
     private String knownHostsPath;
     private String timeout;
+    private String proxyHost;
+    private String proxyPort;
 
     public RemoteSecureCopyInputs(String srcPath, String destHost, String destPath, String destUsername) {
         this.srcPath = srcPath;
@@ -159,4 +161,19 @@ public class RemoteSecureCopyInputs {
         this.timeout = timeout;
     }
 
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(String proxyPort) {
+        this.proxyPort = proxyPort;
+    }
 }

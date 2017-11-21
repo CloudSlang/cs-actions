@@ -64,6 +64,9 @@ public class SCPCopier {
             JSch jsch = new JSch();
             session = jsch.getSession(remoteSecureCopyInputs.getDestUsername(), remoteSecureCopyInputs.getDestHost(), StringUtils.toInt(remoteSecureCopyInputs.getDestPort(), Constants.DEFAULT_PORT));
 
+            String proxyHost = remoteSecureCopyInputs.getProxyHost();
+            if (!StringUtils.isEmpty(proxyHost)) session.setProxy(new ProxyHTTP(proxyHost, StringUtils.toInt(remoteSecureCopyInputs.getProxyPort(), Constants.DEFAULT_PROXY_PORT)));
+
             establishKnownHostsConfiguration(ConnectionUtils.resolveKnownHosts(remoteSecureCopyInputs.getKnownHostsPolicy(), remoteSecureCopyInputs.getKnownHostsPath()), jsch, session);
             establishPrivateKeyFile(ConnectionUtils.getKeyFile(remoteSecureCopyInputs.getDestPrivateKeyFile(), remoteSecureCopyInputs.getDestPassword()), jsch, session, false);
 
@@ -150,6 +153,9 @@ public class SCPCopier {
 
             JSch jsch = new JSch();
             session = jsch.getSession(remoteSecureCopyInputs.getSrcUsername(), remoteSecureCopyInputs.getSrcHost(), StringUtils.toInt(remoteSecureCopyInputs.getSrcPort(), Constants.DEFAULT_PORT));
+
+            String proxyHost = remoteSecureCopyInputs.getProxyHost();
+            if (!StringUtils.isEmpty(proxyHost)) session.setProxy(new ProxyHTTP(proxyHost, StringUtils.toInt(remoteSecureCopyInputs.getProxyPort(), Constants.DEFAULT_PROXY_PORT)));
 
             establishKnownHostsConfiguration(ConnectionUtils.resolveKnownHosts(remoteSecureCopyInputs.getKnownHostsPolicy(), remoteSecureCopyInputs.getKnownHostsPath()), jsch, session);
             establishPrivateKeyFile(ConnectionUtils.getKeyFile(remoteSecureCopyInputs.getSrcPrivateKeyFile(), remoteSecureCopyInputs.getSrcPassword()), jsch, session, true);

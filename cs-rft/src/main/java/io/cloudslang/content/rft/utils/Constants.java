@@ -28,6 +28,7 @@ public class Constants {
     public static final int DEFAULT_TIMEOUT = 90000;
     public static final String DEFAULT_KNOWN_HOSTS_POLICY = "strict";
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
+    public static final int DEFAULT_PROXY_PORT = 8080;
 
     public static final class InputNames {
         public static final String SOURCE_HOST = "sourceHost";
@@ -45,6 +46,8 @@ public class Constants {
         public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
         public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
         public static final String TIMEOUT = "timeout";
+        public static final String PROXY_HOST = "proxyHost";
+        public static final String PROXY_PORT = "proxyPort";
 
     }
 
