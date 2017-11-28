@@ -30,6 +30,7 @@ public class DBInputNames extends InputNames {
     public static final String TRUST_ALL_ROOTS = "trustAllRoots";
     public static final String TRUST_STORE = "trustStore";
     public static final String TRUST_STORE_PASSWORD = "trustStorePassword";
+    public static final String AUTH_LIBRARY_PATH = "authLibraryPath";
     public static final String DATABASE_POOLING_PROPERTIES = "databasePoolingProperties";
     public static final String RESULT_SET_TYPE = "resultSetType";
     public static final String RESULT_SET_CONCURRENCY = "resultSetConcurrency";

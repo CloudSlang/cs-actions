@@ -53,6 +53,7 @@ public class DBOtherValues {
     public static final String DB2_DRIVER = "com.ibm.db2.jcc.DB2Driver";
     public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
     public static final String POSTGRESQL_DRIVER = "org.postgresql.Driver";
+    public static final String MSSQL_FILE_DRIVER = "sqljdbc_auth.dll";
 
     public static final String KEY_COLUMNS = "%s - Columns";
     public static final String KEY_FILES = "%s - Files";

@@ -47,14 +47,15 @@ public class SQLInputs {
     private String trustStore;
     private String trustStorePassword;
     private boolean trustAllRoots;
+    private String authLibraryPath;
     private String colDelimiter;
     private String rowDelimiter;
     private Integer resultSetType;
     private Integer resultSetConcurrency;
     private List<String> sqlCommands = new ArrayList<>();
 
-    @java.beans.ConstructorProperties({"sqlCommand", "dbServer", "dbName", "dbPort", "dbType", "key", "username", "password", "authenticationType", "instance", "ignoreCase", "timeout", "dbUrl", "dbClass", "isNetcool", "lRowsFiles", "lRowsNames", "skip", "strDelim", "strColumns", "lRows", "iUpdateCount", "databasePoolingProperties", "trustStore", "trustStorePassword", "trustAllRoots", "colDelimiter", "rowDelimiter", "resultSetType", "resultSetConcurrency", "sqlCommands"})
-    SQLInputs(String sqlCommand, String dbServer, String dbName, int dbPort, String dbType, String key, String username, String password, String authenticationType, String instance, boolean ignoreCase, int timeout, String dbUrl, String dbClass, boolean isNetcool, List<List<String>> lRowsFiles, List<List<String>> lRowsNames, long skip, String strDelim, String strColumns, List<String> lRows, int iUpdateCount, Properties databasePoolingProperties, String trustStore, String trustStorePassword, boolean trustAllRoots, String colDelimiter, String rowDelimiter, Integer resultSetType, Integer resultSetConcurrency, List<String> sqlCommands) {
+    @java.beans.ConstructorProperties({"sqlCommand", "dbServer", "dbName", "dbPort", "dbType", "key", "username", "password", "authenticationType", "instance", "ignoreCase", "timeout", "dbUrl", "dbClass", "isNetcool", "lRowsFiles", "lRowsNames", "skip", "strDelim", "strColumns", "lRows", "iUpdateCount", "databasePoolingProperties", "trustStore", "trustStorePassword", "trustAllRoots", "authLibraryPath", "colDelimiter", "rowDelimiter", "resultSetType", "resultSetConcurrency", "sqlCommands"})
+    SQLInputs(String sqlCommand, String dbServer, String dbName, int dbPort, String dbType, String key, String username, String password, String authenticationType, String instance, boolean ignoreCase, int timeout, String dbUrl, String dbClass, boolean isNetcool, List<List<String>> lRowsFiles, List<List<String>> lRowsNames, long skip, String strDelim, String strColumns, List<String> lRows, int iUpdateCount, Properties databasePoolingProperties, String trustStore, String trustStorePassword, boolean trustAllRoots, String authLibraryPath, String colDelimiter, String rowDelimiter, Integer resultSetType, Integer resultSetConcurrency, List<String> sqlCommands) {
         this.sqlCommand = sqlCommand;
         this.dbServer = dbServer;
         this.dbName = dbName;
@@ -81,6 +82,7 @@ public class SQLInputs {
         this.trustStore = trustStore;
         this.trustStorePassword = trustStorePassword;
         this.trustAllRoots = trustAllRoots;
+        this.authLibraryPath = authLibraryPath;
         this.colDelimiter = colDelimiter;
         this.rowDelimiter = rowDelimiter;
         this.resultSetType = resultSetType;
@@ -300,6 +302,14 @@ public class SQLInputs {
         this.trustAllRoots = trustAllRoots;
     }
 
+    public String getAuthLibraryPath() {
+        return this.authLibraryPath;
+    }
+
+    public void setAuthLibraryPath(String authLibraryPath) {
+        this.authLibraryPath = authLibraryPath;
+    }
+
     public String getColDelimiter() {
         return this.colDelimiter;
     }
@@ -412,6 +422,10 @@ public class SQLInputs {
         final Object other$trustStorePassword = other.getTrustStorePassword();
         if (this$trustStorePassword == null ? other$trustStorePassword != null : !this$trustStorePassword.equals(other$trustStorePassword))
             return false;
+        final Object this$authLibraryPath = this.getAuthLibraryPath();
+        final Object other$authLibraryPath = other.getAuthLibraryPath();
+        if (this$authLibraryPath == null ? other$authLibraryPath != null : !this$authLibraryPath.equals(other$authLibraryPath))
+            return false;
         if (this.isTrustAllRoots() != other.isTrustAllRoots()) return false;
         final Object this$colDelimiter = this.getColDelimiter();
         final Object other$colDelimiter = other.getColDelimiter();
@@ -484,7 +498,8 @@ public class SQLInputs {
         result = result * PRIME + ($trustStore == null ? 43 : $trustStore.hashCode());
         final Object $trustStorePassword = this.getTrustStorePassword();
         result = result * PRIME + ($trustStorePassword == null ? 43 : $trustStorePassword.hashCode());
-        result = result * PRIME + (this.isTrustAllRoots() ? 79 : 97);
+        final Object $authLibraryPath = this.getAuthLibraryPath();
+        result = result * PRIME + ($authLibraryPath == null ? 43 : $authLibraryPath.hashCode());
         final Object $colDelimiter = this.getColDelimiter();
         result = result * PRIME + ($colDelimiter == null ? 43 : $colDelimiter.hashCode());
         final Object $rowDelimiter = this.getRowDelimiter();
@@ -503,7 +518,7 @@ public class SQLInputs {
     }
 
     public String toString() {
-        return "io.cloudslang.content.database.utils.SQLInputs(sqlCommand=" + this.getSqlCommand() + ", dbServer=" + this.getDbServer() + ", dbName=" + this.getDbName() + ", dbPort=" + this.getDbPort() + ", dbType=" + this.getDbType() + ", key=" + this.getKey() + ", username=" + this.getUsername() + ", password=" + this.getPassword() + ", authenticationType=" + this.getAuthenticationType() + ", instance=" + this.getInstance() + ", ignoreCase=" + this.isIgnoreCase() + ", timeout=" + this.getTimeout() + ", dbUrl=" + this.getDbUrl() + ", dbClass=" + this.getDbClass() + ", isNetcool=" + this.isNetcool() + ", lRowsFiles=" + this.getLRowsFiles() + ", lRowsNames=" + this.getLRowsNames() + ", skip=" + this.getSkip() + ", strDelim=" + this.getStrDelim() + ", strColumns=" + this.getStrColumns() + ", lRows=" + this.getLRows() + ", iUpdateCount=" + this.getIUpdateCount() + ", databasePoolingProperties=" + this.getDatabasePoolingProperties() + ", trustStore=" + this.getTrustStore() + ", trustStorePassword=" + this.getTrustStorePassword() + ", trustAllRoots=" + this.isTrustAllRoots() + ", colDelimiter=" + this.getColDelimiter() + ", rowDelimiter=" + this.getRowDelimiter() + ", resultSetType=" + this.getResultSetType() + ", resultSetConcurrency=" + this.getResultSetConcurrency() + ", sqlCommands=" + this.getSqlCommands() + ")";
+        return "io.cloudslang.content.database.utils.SQLInputs(sqlCommand=" + this.getSqlCommand() + ", dbServer=" + this.getDbServer() + ", dbName=" + this.getDbName() + ", dbPort=" + this.getDbPort() + ", dbType=" + this.getDbType() + ", key=" + this.getKey() + ", username=" + this.getUsername() + ", password=" + this.getPassword() + ", authenticationType=" + this.getAuthenticationType() + ", instance=" + this.getInstance() + ", ignoreCase=" + this.isIgnoreCase() + ", timeout=" + this.getTimeout() + ", dbUrl=" + this.getDbUrl() + ", dbClass=" + this.getDbClass() + ", isNetcool=" + this.isNetcool() + ", lRowsFiles=" + this.getLRowsFiles() + ", lRowsNames=" + this.getLRowsNames() + ", skip=" + this.getSkip() + ", strDelim=" + this.getStrDelim() + ", strColumns=" + this.getStrColumns() + ", lRows=" + this.getLRows() + ", iUpdateCount=" + this.getIUpdateCount() + ", databasePoolingProperties=" + this.getDatabasePoolingProperties() + ", trustStore=" + this.getTrustStore() + ", trustStorePassword=" + this.getTrustStorePassword() + ", trustAllRoots=" + this.isTrustAllRoots() + ", authLibraryPath=" + this.getAuthLibraryPath() + ", colDelimiter=" + this.getColDelimiter() + ", rowDelimiter=" + this.getRowDelimiter() + ", resultSetType=" + this.getResultSetType() + ", resultSetConcurrency=" + this.getResultSetConcurrency() + ", sqlCommands=" + this.getSqlCommands() + ")";
     }
 
     public static class SQLInputsBuilder {
@@ -533,6 +548,7 @@ public class SQLInputs {
         private String trustStore;
         private String trustStorePassword;
         private boolean trustAllRoots;
+        private String authLibraryPath;
         private String colDelimiter;
         private String rowDelimiter;
         private Integer resultSetType;
@@ -643,6 +659,11 @@ public class SQLInputs {
             return this;
         }
 
+        public SQLInputs.SQLInputsBuilder authLibraryPath(String authLibraryPath) {
+            this.authLibraryPath = authLibraryPath;
+            return this;
+        }
+
         public SQLInputs.SQLInputsBuilder colDelimiter(String colDelimiter) {
             this.colDelimiter = colDelimiter;
             return this;
@@ -669,11 +690,11 @@ public class SQLInputs {
         }
 
         public SQLInputs build() {
-            return new SQLInputs(sqlCommand, dbServer, dbName, dbPort, dbType, key, username, password, authenticationType, instance, ignoreCase, timeout, dbUrl, dbClass, isNetcool, lRowsFiles, lRowsNames, skip, strDelim, strColumns, lRows, iUpdateCount, databasePoolingProperties, trustStore, trustStorePassword, trustAllRoots, colDelimiter, rowDelimiter, resultSetType, resultSetConcurrency, sqlCommands);
+            return new SQLInputs(sqlCommand, dbServer, dbName, dbPort, dbType, key, username, password, authenticationType, instance, ignoreCase, timeout, dbUrl, dbClass, isNetcool, lRowsFiles, lRowsNames, skip, strDelim, strColumns, lRows, iUpdateCount, databasePoolingProperties, trustStore, trustStorePassword, trustAllRoots, authLibraryPath, colDelimiter, rowDelimiter, resultSetType, resultSetConcurrency, sqlCommands);
         }
 
         public String toString() {
-            return "io.cloudslang.content.database.utils.SQLInputs.SQLInputsBuilder(sqlCommand=" + this.sqlCommand + ", dbServer=" + this.dbServer + ", dbName=" + this.dbName + ", dbPort=" + this.dbPort + ", dbType=" + this.dbType + ", key=" + this.key + ", username=" + this.username + ", password=" + this.password + ", authenticationType=" + this.authenticationType + ", instance=" + this.instance + ", ignoreCase=" + this.ignoreCase + ", timeout=" + this.timeout + ", dbUrl=" + this.dbUrl + ", dbClass=" + this.dbClass + ", isNetcool=" + this.isNetcool + ", lRowsFiles=" + this.lRowsFiles + ", lRowsNames=" + this.lRowsNames + ", skip=" + this.skip + ", strDelim=" + this.strDelim + ", strColumns=" + this.strColumns + ", lRows=" + this.lRows + ", iUpdateCount=" + this.iUpdateCount + ", databasePoolingProperties=" + this.databasePoolingProperties + ", trustStore=" + this.trustStore + ", trustStorePassword=" + this.trustStorePassword + ", trustAllRoots=" + this.trustAllRoots + ", colDelimiter=" + this.colDelimiter + ", rowDelimiter=" + this.rowDelimiter + ", resultSetType=" + this.resultSetType + ", resultSetConcurrency=" + this.resultSetConcurrency + ", sqlCommands=" + this.sqlCommands + ")";
+            return "io.cloudslang.content.database.utils.SQLInputs.SQLInputsBuilder(sqlCommand=" + this.sqlCommand + ", dbServer=" + this.dbServer + ", dbName=" + this.dbName + ", dbPort=" + this.dbPort + ", dbType=" + this.dbType + ", key=" + this.key + ", username=" + this.username + ", password=" + this.password + ", authenticationType=" + this.authenticationType + ", instance=" + this.instance + ", ignoreCase=" + this.ignoreCase + ", timeout=" + this.timeout + ", dbUrl=" + this.dbUrl + ", dbClass=" + this.dbClass + ", isNetcool=" + this.isNetcool + ", lRowsFiles=" + this.lRowsFiles + ", lRowsNames=" + this.lRowsNames + ", skip=" + this.skip + ", strDelim=" + this.strDelim + ", strColumns=" + this.strColumns + ", lRows=" + this.lRows + ", iUpdateCount=" + this.iUpdateCount + ", databasePoolingProperties=" + this.databasePoolingProperties + ", trustStore=" + this.trustStore + ", trustStorePassword=" + this.trustStorePassword + ", trustAllRoots=" + this.trustAllRoots + ", authLibraryPath=" + this.authLibraryPath + ", colDelimiter=" + this.colDelimiter + ", rowDelimiter=" + this.rowDelimiter + ", resultSetType=" + this.resultSetType + ", resultSetConcurrency=" + this.resultSetConcurrency + ", sqlCommands=" + this.sqlCommands + ")";
         }
     }
 }

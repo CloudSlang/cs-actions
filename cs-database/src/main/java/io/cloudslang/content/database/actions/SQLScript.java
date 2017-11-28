@@ -19,11 +19,13 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
@@ -57,14 +59,25 @@ public class SQLScript {
      * @param databaseName              The name of the database.
      * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
      *                                  Default: sql
-     *                                  Values: sql
-     *                                  Note: currently, the only valid value is sql, more are planed
+     *                                  Values: sql, windows
      * @param dbClass                   The classname of the JDBC driver to use.
      * @param dbURL                     The url required to load up the driver and make your connection.
      * @param delimiter                 The delimiter to use <sqlCommands>
      * @param sqlCommands               All the SQL commands that you want to run using the <delimiter>
      * @param scriptFileName            SQL script file name. The command in the file need to have ';' to indicate the end of the command
      *                                  Note: this is mutual exclusive with <sqlCommands>
+     * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
+     *                                  Default value: false
+     *                                  Valid values: true, false
+     *                                  Note: If trustAllRoots is set to 'false', a trustStore and a trustStorePassword must be provided.
+     * @param trustStore                The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with,
+     *                                  or from Certificate Authorities that you trust to identify other parties.
+     *                                  If the trustAllRoots input is set to 'true' this input is ignored.
+     * @param trustStorePassword        The password associated with the trustStore file.
+     * @param authLibraryPath           The path to the folder where sqljdbc_auth.dll is located. This path must be provided when using windows authentication.
+     *                                  Note: The sqljdbc_auth.dll can be found inside the sqljdbc driver. The driver can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=11774.
+     *                                  The downloaded jar should be extracted and the library can be found in the 'auth' folder.
+     *                                  The path provided should be the path to the folder where the sqljdbc_auth.dll library is located, not the path to the file itself.
      * @param databasePoolingProperties Properties for database pooling configuration. Pooling is disabled by default.
      *                                  Default: db.pooling.enable=false
      *                                  Example: db.pooling.enable=true
@@ -91,8 +104,8 @@ public class SQLScript {
             })
     public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
                                        @Param(value = DB_TYPE) String dbType,
-                                       @Param(value = USERNAME, required = true) String username,
-                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
+                                       @Param(value = USERNAME) String username,
+                                       @Param(value = PASSWORD, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
                                        @Param(value = DATABASE_NAME, required = true) String databaseName,
@@ -102,26 +115,29 @@ public class SQLScript {
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = SQL_COMMANDS) String sqlCommands,
                                        @Param(value = SCRIPT_FILE_NAME) String scriptFileName,
-//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-//                                       @Param(value = TRUST_STORE) String trustStore,
-//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(value = TRUST_STORE) String trustStore,
+                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = AUTH_LIBRARY_PATH) String authLibraryPath,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
+        username = defaultIfEmpty(username, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-//        trustStore = defaultIfEmpty(trustStore, EMPTY);
-//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlScriptInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, sqlCommands, scriptFileName, /*trustAllRoots, trustStore, trustStorePassword,*/
-                resultSetType, resultSetConcurrency);
+                databaseName, authenticationType, sqlCommands, scriptFileName, trustAllRoots, trustStore, trustStorePassword,
+                resultSetType, resultSetConcurrency, authLibraryPath);
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
@@ -141,9 +157,10 @@ public class SQLScript {
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .strDelim(delimiter)
                 .sqlCommands(getSqlCommands(sqlCommands, scriptFileName, delimiter))
-//                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
-//                .trustStore(trustStore)
-//                .trustStorePassword(trustStorePassword)
+                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .authLibraryPath(authLibraryPath)
                 .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
                 .resultSetType(getResultSetType(resultSetType))
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
