@@ -37,6 +37,7 @@ import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUNT;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlScriptInputs;
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -157,7 +158,7 @@ public class SQLScript {
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .strDelim(delimiter)
                 .sqlCommands(getSqlCommands(sqlCommands, scriptFileName, delimiter))
-                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustAllRoots(toBoolean(trustAllRoots))
                 .trustStore(trustStore)
                 .trustStorePassword(trustStorePassword)
                 .authLibraryPath(authLibraryPath)

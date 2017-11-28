@@ -36,6 +36,7 @@ import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryTabularInputs;
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -154,7 +155,7 @@ public class SQLQueryTabular {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustAllRoots(toBoolean(trustAllRoots))
                 .trustStore(trustStore)
                 .trustStorePassword(trustStorePassword)
                 .authLibraryPath(authLibraryPath)

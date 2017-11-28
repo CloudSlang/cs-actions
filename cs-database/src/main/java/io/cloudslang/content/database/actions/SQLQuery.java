@@ -42,6 +42,7 @@ import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -161,7 +162,7 @@ public class SQLQuery {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        final boolean ignoreCaseBool = BooleanUtilities.toBoolean(ignoreCase);
+        final boolean ignoreCaseBool = toBoolean(ignoreCase);
         dbType = getDbType(dbType);
 
         final SQLInputs sqlInputs = SQLInputs.builder()
@@ -176,7 +177,7 @@ public class SQLQuery {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
+                .trustAllRoots(toBoolean(trustAllRoots))
                 .trustStore(trustStore)
                 .trustStorePassword(trustStorePassword)
                 .authLibraryPath(authLibraryPath)
