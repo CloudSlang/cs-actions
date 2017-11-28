@@ -53,13 +53,7 @@ public class ConnectionService {
 
         for (final String currentUrl : dbUrls) {
             try {
-                final Connection dbCon;
-                if (AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType()) && MSSQL_DB_TYPE.equalsIgnoreCase(sqlInputs.getDbType())) {
-                    dbCon = dbConnectionManager.getConnection(enumDbType, currentUrl, SPACE, SPACE, properties);
-                } else {
-                    dbCon = dbConnectionManager.getConnection(enumDbType, currentUrl, sqlInputs.getUsername(),
-                            sqlInputs.getPassword(), properties); //closing of the connection should not be handled here( no try with resources)
-                }
+                final Connection dbCon = dbConnectionManager.getConnection(enumDbType, sqlInputs.getAuthenticationType(), currentUrl, sqlInputs.getUsername(), sqlInputs.getPassword(), properties);
                 sqlInputs.setDbUrl(currentUrl);
                 return dbCon;
             } catch (TotalMaxPoolSizeExceedException e) {

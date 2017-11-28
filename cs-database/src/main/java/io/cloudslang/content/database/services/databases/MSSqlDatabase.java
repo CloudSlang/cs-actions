@@ -38,23 +38,6 @@ import static org.apache.commons.lang3.StringUtils.join;
  * Created by victor on 13.01.2017.
  */
 public class MSSqlDatabase implements SqlDatabase {
-    private static final String TRUE = Boolean.TRUE.toString();
-    private static final String EQUALS = "=";
-    private static final String ENCRYPT = "encrypt";
-    private static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
-    private static final String EMPTY_DRIVER_PATH_EXCEPTION = "The authDriverPath is empty.";
-    private static final String DRIVER_PATH_NOT_ABSOLUTE_EXCEPTION = "The authDriverPath provided is not absolute.";
-    private static final String NOT_THE_SHORTEST_PATH_EXCEPTION = "The path provided for the authDriverPath is not a valid one. The path should be the shortest possible, i.e. normalized.";
-    private static final String JAVA_LIBRARY_PATH = "java.library.path";
-    private static final String CURRENT_DIRECTORY_NOTATION = ".";
-    private static final String SYS_PATHS = "sys_paths";
-    private static final String NEW_LINE = "\n";
-    private static final String SYMBOLIC_PATH_EXCEPTION = "The library path provided should be an absolute path not a symbolic link.";
-    private static final String INVALID_DIRECTORY_PATH_EXCEPTION = "The provided path does not point to a valid directory.";
-    private static final String INVALID_PATH = "The provided path is invalid.";
-    private static final String PATH_SEPARATOR = "path.separator";
-    private static final String INACCESSIBLE_OR_INEXISTENT_SYS_PATHS_FIELD_EXCEPTION = "Field named 'sys_paths' could not be found or it is not accessible.";
-
     private List<String> supportedJdbcDrivers;
 
     private static String addSslEncryptionToConnection(boolean trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
@@ -119,7 +102,7 @@ public class MSSqlDatabase implements SqlDatabase {
                 exceptions.add(DRIVER_PATH_NOT_ABSOLUTE_EXCEPTION);
             }
             if (!libraryPath.equals(libraryPath.normalize())) {
-                exceptions.add(NEW_LINE + NOT_THE_SHORTEST_PATH_EXCEPTION);
+                exceptions.add(NOT_THE_SHORTEST_PATH_EXCEPTION);
             }
         } catch (IOException e) {
             exceptions.add(INVALID_PATH);

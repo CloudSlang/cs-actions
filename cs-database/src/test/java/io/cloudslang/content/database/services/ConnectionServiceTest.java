@@ -87,7 +87,7 @@ public class ConnectionServiceTest {
         doNothing().when(MSSqlDatabase.class, "loadWindowsAuthentication", anyString());
 
         when(DBConnectionManager.getInstance()).thenReturn(dbConnectionManagerMock);
-        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
+        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
     }
 
     @Test

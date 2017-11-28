@@ -19,6 +19,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.MSSQL_DB_TYPE;
+import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -158,18 +160,20 @@ public class DBConnectionManager {
      * @return a Connection to db
      * @throws SQLException
      */
-    public synchronized Connection getConnection(DBType aDbType, String aDbUrl, String aUsername, String aPassword, Properties properties)
+    public synchronized Connection getConnection(DBType aDbType, String aAuthType, String aDbUrl, String aUsername, String aPassword, Properties properties)
             throws SQLException {
         if (isEmpty(aDbUrl)) {
             throw new SQLException("Failed to check out connection dbUrl is empty");
         }
 
-        if (isEmpty(aUsername)) {
-            throw new SQLException("Failed to check out connection,username is empty. dburl = " + aDbUrl);
-        }
+        if (aDbType == null || !(MSSQL_DB_TYPE.equalsIgnoreCase(aDbType.toString()) && AUTH_WINDOWS.equalsIgnoreCase(aAuthType))) {
+            if (isEmpty(aUsername)) {
+                throw new SQLException("Failed to check out connection,username is empty. dburl = " + aDbUrl);
+            }
 
-        if (isEmpty(aPassword)) {
-            throw new SQLException("Failed to check out connection, password is empty. username = " + aUsername + " dbUrl = " + aDbUrl);
+            if (isEmpty(aPassword)) {
+                throw new SQLException("Failed to check out connection, password is empty. username = " + aUsername + " dbUrl = " + aDbUrl);
+            }
         }
 
         customizeDBConnectionManager(properties);
