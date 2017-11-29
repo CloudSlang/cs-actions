@@ -22,6 +22,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -34,6 +35,8 @@ import java.util.Properties;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
@@ -46,8 +49,8 @@ public class ConnectionServiceTest {
 
     public static final String CUSTOM_CLASS_DRIVER = "org.h2.Driver";
     public static String CUSTOM_URL = "jdbc:h2:tcp://localhost/~/test";
-    private SQLInputs sqlInputs;
 
+    private SQLInputs sqlInputs;
     @Spy
     private ConnectionService connectionServiceSpy = new ConnectionService();
 
@@ -76,8 +79,15 @@ public class ConnectionServiceTest {
         sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
         mockStatic(DBConnectionManager.class);
+
+        PowerMockito.mockStatic(MSSqlDatabase.class);
+
+        doCallRealMethod().when(MSSqlDatabase.class, "addSslEncryptionToConnection", anyBoolean(), anyString(), anyString(), anyString());
+
+        doNothing().when(MSSqlDatabase.class, "loadWindowsAuthentication", anyString());
+
         when(DBConnectionManager.getInstance()).thenReturn(dbConnectionManagerMock);
-        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
+        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
     }
 
     @Test

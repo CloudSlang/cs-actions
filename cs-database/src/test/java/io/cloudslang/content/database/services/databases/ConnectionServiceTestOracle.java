@@ -69,7 +69,7 @@ public class ConnectionServiceTestOracle {
 
         mockStatic(DBConnectionManager.class);
         when(DBConnectionManager.getInstance()).thenReturn(dbConnectionManagerMock);
-        PowerMockito.when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
+        PowerMockito.when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
 
     }
 

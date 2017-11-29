@@ -44,10 +44,10 @@ public class SQLCommandTest {
 
     @Test
     public void execute() throws Exception {
-        final Map<String, String> resultMap = new SQLCommand().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        final Map<String, String> resultMap = new SQLCommand().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
         assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
-        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ncommand input is empty."));
+        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ntrustStore or trustStorePassword is mandatory if trustAllRoots is false\ncommand input is empty."));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SQLCommandTest {
         when(SQLCommandService.executeSqlCommand(any(SQLInputs.class))).thenReturn(res);
 
         final Map<String, String> resultMap = sqlCommand.execute("1", ORACLE_DB_TYPE, "username", "Password", EMPTY, "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, DBMS_OUTPUT, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+                AUTH_SQL, EMPTY, EMPTY, DBMS_OUTPUT, "true", EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));

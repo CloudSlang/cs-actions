@@ -43,10 +43,10 @@ public class SQLQueryTabularTest {
 
     @Test
     public void executeFailValidation() throws Exception {
-        final Map<String, String> resultMap = new SQLQueryTabular().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        final Map<String, String> resultMap = new SQLQueryTabular().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
         assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
-        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ncommand input is empty."));
+        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ntrustStore or trustStorePassword is mandatory if trustAllRoots is false\ncommand input is empty."));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class SQLQueryTabularTest {
         when(SQLQueryTabularService.execSqlQueryTabular(any(SQLInputs.class))).thenReturn(res);
 
         final Map<String, String> resultMap = sqlQueryTabular.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
