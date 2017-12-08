@@ -1,3 +1,12 @@
+/*
+ * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+*/
 package io.cloudslang.content.utilities.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -92,8 +101,8 @@ public class OsDetector {
     private static final String POWERSHELL_OPERATION_TIMEOUT = "powershellOperationTimeout";
     private static final String DEFAULT_ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
     private static final String DETECTION = " detection";
-    public static final String KNOWN_HOSTS_STRICT = "strict";
-    public static final String BASIC_AUTH = "basic";
+    private static final String KNOWN_HOSTS_STRICT = "strict";
+    private static final String BASIC_AUTH = "basic";
 
     // Allow whitespace, any letter, any digit, dash, comma, dot, equals
     private final Pattern ALLOWED_CHARACTERS = Pattern.compile("[ a-zA-Z0-9\\-,.=]*");
