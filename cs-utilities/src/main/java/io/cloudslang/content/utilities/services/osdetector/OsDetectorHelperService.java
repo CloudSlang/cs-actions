@@ -42,6 +42,7 @@ import static org.apache.commons.lang3.StringUtils.length;
 import static org.apache.commons.lang3.StringUtils.strip;
 import static org.apache.commons.lang3.StringUtils.substring;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+import static org.apache.commons.lang3.math.NumberUtils.max;
 
 /**
  * Created by Tirla Florin-Alin on 24/11/2017.
@@ -51,8 +52,8 @@ public class OsDetectorHelperService {
     private static final String MAC_OS_VERSION_KEY = "ProductVersion:";
 
     public String cropValue(String stdOut, String begin, String end) {
-        if (contains(stdOut, begin)) {
-            return trimToEmpty(substring(stdOut, indexOfIgnoreCase(stdOut, begin) + length(begin), indexOfIgnoreCase(stdOut, end, indexOfIgnoreCase(stdOut, begin) + length(begin))));
+        if (containsIgnoreCase(stdOut, begin)) {
+            return trimToEmpty(substring(stdOut, indexOfIgnoreCase(stdOut, begin) + length(begin), max(0, indexOfIgnoreCase(stdOut, end, indexOfIgnoreCase(stdOut, begin) + length(begin)))));
         } else {
             return "";
         }
