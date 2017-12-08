@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
 */
-package io.cloudslang.content.utilities.util;
+package io.cloudslang.content.utilities.services.osdetector;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +46,7 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 /**
  * Created by Tirla Florin-Alin on 24/11/2017.
  **/
-public class OsDetectorUtils {
+public class OsDetectorHelperService {
     private static final String MAC_OS_NAME_KEY = "ProductName:";
     private static final String MAC_OS_VERSION_KEY = "ProductVersion:";
 

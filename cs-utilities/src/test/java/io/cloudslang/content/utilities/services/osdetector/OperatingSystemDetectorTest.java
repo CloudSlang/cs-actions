@@ -2,7 +2,6 @@ package io.cloudslang.content.utilities.services.osdetector;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,18 +30,18 @@ public class OperatingSystemDetectorTest {
     private LocalOsDetectorService localOsDetectorService;
 
     @Mock
-    private OsDetectorUtils osDetectorUtils;
+    private OsDetectorHelperService osDetectorHelperService;
 
     private OperatingSystemDetector operatingSystemDetector;
 
     @Before
     public void setUp() {
-        operatingSystemDetector = new OperatingSystemDetector(sshOsDetectorService, powershellOsDetectorService, nmapOsDetectorService, localOsDetectorService, osDetectorUtils);
+        operatingSystemDetector = new OperatingSystemDetector(sshOsDetectorService, powershellOsDetectorService, nmapOsDetectorService, localOsDetectorService, osDetectorHelperService);
     }
 
     @Test
     public void testDetectOsWithAllDetectorsFailed() {
-        doReturn(false).when(osDetectorUtils).foundOperatingSystem(any(OperatingSystemDetails.class));
+        doReturn(false).when(osDetectorHelperService).foundOperatingSystem(any(OperatingSystemDetails.class));
         doReturn(new OperatingSystemDetails()).when(localOsDetectorService).detect(any(OsDetectorInputs.class));
         doReturn(new OperatingSystemDetails()).when(sshOsDetectorService).detect(any(OsDetectorInputs.class));
         doReturn(new OperatingSystemDetails()).when(powershellOsDetectorService).detect(any(OsDetectorInputs.class));

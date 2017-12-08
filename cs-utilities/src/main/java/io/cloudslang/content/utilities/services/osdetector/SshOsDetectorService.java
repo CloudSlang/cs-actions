@@ -15,7 +15,6 @@ import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 
 import java.util.Map;
 
@@ -29,11 +28,11 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  **/
 public class SshOsDetectorService implements OsDetectorService {
     private static final String SSH = "SSH";
-    private final OsDetectorUtils osDetectorUtils;
+    private final OsDetectorHelperService osDetectorHelperService;
     private final ScoreSSHShellCommand scoreSSHShellCommand;
 
-    public SshOsDetectorService(OsDetectorUtils osDetectorUtils, ScoreSSHShellCommand scoreSSHShellCommand) {
-        this.osDetectorUtils = osDetectorUtils;
+    public SshOsDetectorService(OsDetectorHelperService osDetectorHelperService, ScoreSSHShellCommand scoreSSHShellCommand) {
+        this.osDetectorHelperService = osDetectorHelperService;
         this.scoreSSHShellCommand = scoreSSHShellCommand;
     }
 
@@ -42,7 +41,7 @@ public class SshOsDetectorService implements OsDetectorService {
         OperatingSystemDetails operatingSystemDetails = new OperatingSystemDetails();
         Map<String, String> execute = scoreSSHShellCommand.execute(getSshShellInputs(osDetectorInputs));
 
-        return osDetectorUtils.processOutput(operatingSystemDetails, execute, SSH);
+        return osDetectorHelperService.processOutput(operatingSystemDetails, execute, SSH);
     }
 
     private SSHShellInputs getSshShellInputs(OsDetectorInputs osDetectorInputs) {

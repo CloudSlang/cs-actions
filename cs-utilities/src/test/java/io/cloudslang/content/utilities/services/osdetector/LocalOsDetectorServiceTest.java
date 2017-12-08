@@ -2,7 +2,6 @@ package io.cloudslang.content.utilities.services.osdetector;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,14 +21,14 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(PowerMockRunner.class)
 public class LocalOsDetectorServiceTest {
     @Mock
-    private OsDetectorUtils osDetectorUtils;
+    private OsDetectorHelperService osDetectorHelperService;
 
     private LocalOsDetectorService localOsDetectorService;
 
     @Before
     public void setUp() {
-        localOsDetectorService = new LocalOsDetectorService(osDetectorUtils);
-        doReturn("fam").when(osDetectorUtils).resolveOsFamily(anyString());
+        localOsDetectorService = new LocalOsDetectorService(osDetectorHelperService);
+        doReturn("fam").when(osDetectorHelperService).resolveOsFamily(anyString());
     }
 
     @Test

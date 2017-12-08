@@ -27,7 +27,7 @@ import io.cloudslang.content.utilities.services.osdetector.NmapOsDetectorService
 import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetector;
 import io.cloudslang.content.utilities.services.osdetector.PowerShellOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.SshOsDetectorService;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
+import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -327,18 +327,18 @@ public class OsDetector {
                     .withWinrmLocale(defaultIfEmpty(winrmLocale, InputDefaults.WINRM_LOCALE.getValue()))
                     .build();
 
-            OsDetectorUtils osDetectorUtils = new OsDetectorUtils();
-            NmapOsDetectorService nmapOsDetectorService = new NmapOsDetectorService(osDetectorUtils);
-            OperatingSystemDetector service = new OperatingSystemDetector(new SshOsDetectorService(osDetectorUtils, new ScoreSSHShellCommand()),
-                    new PowerShellOsDetectorService(osDetectorUtils, new WSManRemoteShellService()),
+            OsDetectorHelperService osDetectorHelperService = new OsDetectorHelperService();
+            NmapOsDetectorService nmapOsDetectorService = new NmapOsDetectorService(osDetectorHelperService);
+            OperatingSystemDetector service = new OperatingSystemDetector(new SshOsDetectorService(osDetectorHelperService, new ScoreSSHShellCommand()),
+                    new PowerShellOsDetectorService(osDetectorHelperService, new WSManRemoteShellService()),
                     nmapOsDetectorService,
-                    new LocalOsDetectorService(osDetectorUtils), osDetectorUtils);
+                    new LocalOsDetectorService(osDetectorHelperService), osDetectorHelperService);
 
             validateNmapInputs(osDetectorInputs, nmapOsDetectorService);
 
             OperatingSystemDetails os = service.detectOs(osDetectorInputs);
             Map<String, String> returnResult;
-            if (osDetectorUtils.foundOperatingSystem(os)) {
+            if (osDetectorHelperService.foundOperatingSystem(os)) {
                 returnResult = getSuccessResultsMap("Successfully detected the operating system.");
                 returnResult.put(OS_FAMILY, os.getFamily());
                 returnResult.put(OS_NAME, os.getName());

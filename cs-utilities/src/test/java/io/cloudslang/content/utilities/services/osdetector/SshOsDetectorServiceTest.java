@@ -4,7 +4,6 @@ import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(PowerMockRunner.class)
 public class SshOsDetectorServiceTest {
     @Mock
-    private OsDetectorUtils osDetectorUtils;
+    private OsDetectorHelperService osDetectorHelperService;
 
     @Mock
     private ScoreSSHShellCommand scoreSSHShellCommand;
@@ -34,7 +33,7 @@ public class SshOsDetectorServiceTest {
 
     @Before
     public void setUp() {
-        sshOsDetectorService = new SshOsDetectorService(osDetectorUtils, scoreSSHShellCommand);
+        sshOsDetectorService = new SshOsDetectorService(osDetectorHelperService, scoreSSHShellCommand);
     }
 
     @Test
@@ -45,7 +44,7 @@ public class SshOsDetectorServiceTest {
         toBeReturnedOsDetails.setFamily("b os fam");
         toBeReturnedOsDetails.setName("b os");
         toBeReturnedOsDetails.setVersion("ultimate");
-        doReturn(toBeReturnedOsDetails).when(osDetectorUtils).processOutput(any(OperatingSystemDetails.class), anyMapOf(String.class, String.class), anyString());
+        doReturn(toBeReturnedOsDetails).when(osDetectorHelperService).processOutput(any(OperatingSystemDetails.class), anyMapOf(String.class, String.class), anyString());
 
         OperatingSystemDetails actualOsDetails = sshOsDetectorService.detect(new OsDetectorInputs.Builder().build());
 

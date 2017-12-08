@@ -12,7 +12,6 @@ package io.cloudslang.content.utilities.services.osdetector;
 import com.google.common.collect.ImmutableList;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -29,10 +28,10 @@ import static org.apache.commons.lang3.SystemUtils.OS_VERSION;
  * Created by Tirla Florin-Alin on 05/12/2017.
  **/
 public class LocalOsDetectorService implements OsDetectorService {
-    private final OsDetectorUtils osDetectorUtils;
+    private final OsDetectorHelperService osDetectorHelperService;
 
-    public LocalOsDetectorService(OsDetectorUtils osDetectorUtils) {
-        this.osDetectorUtils = osDetectorUtils;
+    public LocalOsDetectorService(OsDetectorHelperService osDetectorHelperService) {
+        this.osDetectorHelperService = osDetectorHelperService;
     }
 
     private boolean isLocalAddress(String host) {
@@ -62,7 +61,7 @@ public class LocalOsDetectorService implements OsDetectorService {
             operatingSystemDetails.setName(OS_NAME);
             operatingSystemDetails.setVersion(OS_VERSION);
             operatingSystemDetails.setArchitecture(OS_ARCH);
-            operatingSystemDetails.setFamily(osDetectorUtils.resolveOsFamily(OS_NAME));
+            operatingSystemDetails.setFamily(osDetectorHelperService.resolveOsFamily(OS_NAME));
 
             operatingSystemDetails.addCommandOutput("Local", ImmutableList.of(format("%s is a local address.", host)));
         } else {

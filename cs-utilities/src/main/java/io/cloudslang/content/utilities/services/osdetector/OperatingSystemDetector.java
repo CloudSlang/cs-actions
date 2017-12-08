@@ -11,39 +11,38 @@ package io.cloudslang.content.utilities.services.osdetector;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 
 public class OperatingSystemDetector {
     private final SshOsDetectorService sshOsDetectorService;
     private final PowerShellOsDetectorService powershellOsDetectorService;
     private final NmapOsDetectorService nmapOsDetectorService;
     private final LocalOsDetectorService localOsDetectorService;
-    private final OsDetectorUtils osDetectorUtils;
+    private final OsDetectorHelperService osDetectorHelperService;
 
     public OperatingSystemDetector(SshOsDetectorService sshOsDetectorService, PowerShellOsDetectorService powershellOsDetectorService,
-                                   NmapOsDetectorService nmapOsDetectorService, LocalOsDetectorService localOsDetectorService, OsDetectorUtils osDetectorUtils) {
+                                   NmapOsDetectorService nmapOsDetectorService, LocalOsDetectorService localOsDetectorService, OsDetectorHelperService osDetectorHelperService) {
         this.sshOsDetectorService = sshOsDetectorService;
         this.powershellOsDetectorService = powershellOsDetectorService;
         this.nmapOsDetectorService = nmapOsDetectorService;
         this.localOsDetectorService = localOsDetectorService;
-        this.osDetectorUtils = osDetectorUtils;
+        this.osDetectorHelperService = osDetectorHelperService;
     }
 
     public OperatingSystemDetails detectOs(OsDetectorInputs osDetectorInputs) {
         OperatingSystemDetails localOsSystemDetails = localOsDetectorService.detect(osDetectorInputs);
-        if (osDetectorUtils.foundOperatingSystem(localOsSystemDetails)) {
+        if (osDetectorHelperService.foundOperatingSystem(localOsSystemDetails)) {
             return localOsSystemDetails;
         }
 
         OperatingSystemDetails sshOsSystemDetails = sshOsDetectorService.detect(osDetectorInputs);
         sshOsSystemDetails.collectOsCommandOutputs(localOsSystemDetails);
-        if (osDetectorUtils.foundOperatingSystem(sshOsSystemDetails)) {
+        if (osDetectorHelperService.foundOperatingSystem(sshOsSystemDetails)) {
             return sshOsSystemDetails;
         }
 
         OperatingSystemDetails powershellOsSystemDetails = powershellOsDetectorService.detect(osDetectorInputs);
         powershellOsSystemDetails.collectOsCommandOutputs(sshOsSystemDetails);
-        if (osDetectorUtils.foundOperatingSystem(powershellOsSystemDetails)) {
+        if (osDetectorHelperService.foundOperatingSystem(powershellOsSystemDetails)) {
             return powershellOsSystemDetails;
         }
 

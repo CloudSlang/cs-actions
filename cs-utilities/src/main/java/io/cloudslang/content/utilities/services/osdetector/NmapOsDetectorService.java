@@ -11,7 +11,6 @@ package io.cloudslang.content.utilities.services.osdetector;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 import io.cloudslang.content.utilities.util.ProcessExecutor;
 import io.cloudslang.content.utilities.util.ProcessResponseEntity;
 import org.jetbrains.annotations.NotNull;
@@ -39,10 +38,10 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class NmapOsDetectorService implements OsDetectorService {
     private static final String OS_DETAILS = "OS details: ";
     private static final String NMAP = "Nmap";
-    private final OsDetectorUtils osDetectorUtils;
+    private final OsDetectorHelperService osDetectorHelperService;
 
-    public NmapOsDetectorService(OsDetectorUtils osDetectorUtils) {
-        this.osDetectorUtils = osDetectorUtils;
+    public NmapOsDetectorService(OsDetectorHelperService osDetectorHelperService) {
+        this.osDetectorHelperService = osDetectorHelperService;
     }
 
     @Override
@@ -62,9 +61,9 @@ public class NmapOsDetectorService implements OsDetectorService {
 
                 if (!isEmpty(stdOut)) {
                     nmapCommandOutput.add(stdOut);
-                    String osName = osDetectorUtils.cropValue(stdOut, OS_DETAILS, System.lineSeparator());
+                    String osName = osDetectorHelperService.cropValue(stdOut, OS_DETAILS, System.lineSeparator());
                     operatingSystemDetails.setName(osName);
-                    operatingSystemDetails.setFamily(osDetectorUtils.resolveOsFamily(osName));
+                    operatingSystemDetails.setFamily(osDetectorHelperService.resolveOsFamily(osName));
                 }
                 if (!isEmpty(stdErrors)) {
                     nmapCommandOutput.add(stdErrors);

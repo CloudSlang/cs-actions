@@ -4,7 +4,6 @@ import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(PowerMockRunner.class)
 public class PowerShellOsDetectorServiceTest {
     @Mock
-    private OsDetectorUtils osDetectorUtils;
+    private OsDetectorHelperService osDetectorHelperService;
 
     @Mock
     private WSManRemoteShellService wsManRemoteShellService;
@@ -41,7 +40,7 @@ public class PowerShellOsDetectorServiceTest {
 
     @Before
     public void setUp() {
-        powerShellOsDetectorService = new PowerShellOsDetectorService(osDetectorUtils, wsManRemoteShellService);
+        powerShellOsDetectorService = new PowerShellOsDetectorService(osDetectorHelperService, wsManRemoteShellService);
     }
 
     @Test
@@ -53,7 +52,7 @@ public class PowerShellOsDetectorServiceTest {
         toBeReturnedOsDetails.setFamily("b os fam");
         toBeReturnedOsDetails.setName("b os");
         toBeReturnedOsDetails.setVersion("ultimate");
-        doReturn(toBeReturnedOsDetails).when(osDetectorUtils).processOutput(any(OperatingSystemDetails.class), anyMapOf(String.class, String.class), anyString());
+        doReturn(toBeReturnedOsDetails).when(osDetectorHelperService).processOutput(any(OperatingSystemDetails.class), anyMapOf(String.class, String.class), anyString());
 
         OperatingSystemDetails actualOsDetails = powerShellOsDetectorService.detect(new OsDetectorInputs.Builder().withPowerShellTimeout("007").build());
 

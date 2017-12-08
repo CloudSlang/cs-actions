@@ -3,7 +3,6 @@ package io.cloudslang.content.utilities.services.osdetector;
 import com.google.common.collect.ImmutableList;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 import io.cloudslang.content.utilities.util.ProcessExecutor;
 import io.cloudslang.content.utilities.util.ProcessResponseEntity;
 import org.junit.Before;
@@ -34,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({NmapOsDetectorService.class})
 public class NmapOsDetectorServiceTest {
     @Mock
-    private OsDetectorUtils osDetectorUtils;
+    private OsDetectorHelperService osDetectorHelperService;
 
     @Mock
     private ProcessExecutor processExecutor;
@@ -46,7 +45,7 @@ public class NmapOsDetectorServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        nmapOsDetectorService = new NmapOsDetectorService(osDetectorUtils);
+        nmapOsDetectorService = new NmapOsDetectorService(osDetectorHelperService);
         whenNew(ProcessExecutor.class).withNoArguments().thenReturn(processExecutor);
     }
 
@@ -118,8 +117,8 @@ public class NmapOsDetectorServiceTest {
     @Test
     public void testNmapDetectionWithSuccess() throws InterruptedException, ExecutionException, TimeoutException, IOException {
         doReturn(new ProcessResponseEntity("stdout", "stderr", 0, false)).when(processExecutor).execute(anyString(), anyInt());
-        doReturn("b os").when(osDetectorUtils).cropValue(anyString(), anyString(), anyString());
-        doReturn("b os fam").when(osDetectorUtils).resolveOsFamily(anyString());
+        doReturn("b os").when(osDetectorHelperService).cropValue(anyString(), anyString(), anyString());
+        doReturn("b os fam").when(osDetectorHelperService).resolveOsFamily(anyString());
         OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detect(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         assertEquals("b os", actualOsDetails.getName());

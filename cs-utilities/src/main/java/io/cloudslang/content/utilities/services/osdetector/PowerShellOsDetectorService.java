@@ -13,7 +13,6 @@ import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +33,11 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  **/
 public class PowerShellOsDetectorService implements OsDetectorService {
     private static final String POWER_SHELL = "PowerShell";
-    private final OsDetectorUtils osDetectorUtils;
+    private final OsDetectorHelperService osDetectorHelperService;
     private final WSManRemoteShellService wsManRemoteShellService;
 
-    public PowerShellOsDetectorService(OsDetectorUtils osDetectorUtils, WSManRemoteShellService wsManRemoteShellService) {
-        this.osDetectorUtils = osDetectorUtils;
+    public PowerShellOsDetectorService(OsDetectorHelperService osDetectorHelperService, WSManRemoteShellService wsManRemoteShellService) {
+        this.osDetectorHelperService = osDetectorHelperService;
         this.wsManRemoteShellService = wsManRemoteShellService;
     }
 
@@ -47,7 +46,7 @@ public class PowerShellOsDetectorService implements OsDetectorService {
         OperatingSystemDetails operatingSystemDetails = new OperatingSystemDetails();
         Map<String, String> execute = runCommandUsingPowershell(getWsManRequestInputs(wsManRequestInputs));
 
-        return osDetectorUtils.processOutput(operatingSystemDetails, execute, POWER_SHELL);
+        return osDetectorHelperService.processOutput(operatingSystemDetails, execute, POWER_SHELL);
     }
 
     private Map<String, String> runCommandUsingPowershell(WSManRequestInputs wsManRequestInputs) {

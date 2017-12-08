@@ -13,7 +13,7 @@ import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
 import io.cloudslang.content.utilities.services.osdetector.NmapOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetector;
-import io.cloudslang.content.utilities.util.OsDetectorUtils;
+import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +45,7 @@ public class OsDetectorTest {
     private OperatingSystemDetector operatingSystemDetector;
 
     @Mock
-    private OsDetectorUtils osDetectorUtils;
+    private OsDetectorHelperService osDetectorHelperService;
 
     @Mock
     private NmapOsDetectorService nmapOsDetectorService;
@@ -54,7 +54,7 @@ public class OsDetectorTest {
 
     @Before
     public void setUp() throws Exception {
-        whenNew(OsDetectorUtils.class).withNoArguments().thenReturn(osDetectorUtils);
+        whenNew(OsDetectorHelperService.class).withNoArguments().thenReturn(osDetectorHelperService);
         whenNew(NmapOsDetectorService.class).withAnyArguments().thenReturn(nmapOsDetectorService);
         whenNew(OperatingSystemDetector.class).withAnyArguments().thenReturn(operatingSystemDetector);
     }
@@ -140,7 +140,7 @@ public class OsDetectorTest {
         returnedOsDetails.addCommandOutput("some detector", singletonList("some output"));
 
         doReturn(returnedOsDetails).when(operatingSystemDetector).detectOs(any(OsDetectorInputs.class));
-        doReturn(true).when(osDetectorUtils).foundOperatingSystem(any(OperatingSystemDetails.class));
+        doReturn(true).when(osDetectorHelperService).foundOperatingSystem(any(OperatingSystemDetails.class));
 
         Map<String, String> actualResult = osDetector.executeCommand(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
